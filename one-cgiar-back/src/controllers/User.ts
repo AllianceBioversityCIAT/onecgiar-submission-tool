@@ -35,11 +35,15 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const createUsers = async (req: Request, res: Response) => {
-    const { username, password, role } = req.body;
+    const { firstname, lastname, username, password, role, email, is_cgiar } = req.body;
     const user = new User();
+    user.firstname = firstname;
+    user.lastname = lastname;
     user.username = username;
     user.password = password;
     user.role = role;
+    user.email = email;
+    user.is_cgiar = is_cgiar;
 
     // validate
     const validationOpt = { validationError: { target: false, value: false } };
@@ -50,7 +54,9 @@ export const createUsers = async (req: Request, res: Response) => {
 
     const userRepository = getRepository(User);
     try {
-        user.hashPassword();
+        if (!user.is_cgiar) {
+            user.hashPassword();
+        }
         await userRepository.save(user);
     } catch (error) {
         console.log(error);
@@ -62,12 +68,15 @@ export const createUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     let user;
     const { id } = req.params;
-    const { username, role } = req.body;
+    const { firstname, lastname, username, email, role } = req.body;
 
     const userRepository = getRepository(User);
     try {
         user = await userRepository.findOneOrFail(id);
+        user.firstname = firstname;
+        user.lastname = lastname;
         user.username = username;
+        user.email = email;
         user.role = role;
     } catch (error) {
         console.log(error);
