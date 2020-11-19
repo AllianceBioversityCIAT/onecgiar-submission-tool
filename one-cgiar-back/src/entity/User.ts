@@ -1,26 +1,40 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { MinLength, IsNotEmpty } from 'class-validator'
+import { MinLength, IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
 
 @Entity()
-@Unique(['username'])
+@Unique(['username', 'email'])
 export class User {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    @MinLength(6)
     @IsNotEmpty()
+    firstname: string
+
+    @Column()
+    @IsNotEmpty()
+    lastname: string
+
+    @Column()
+    @MinLength(4)
+    @IsNotEmpty({ message: 'The username is required' })
     username: string
 
     @Column()
-    @MinLength(6)
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'The email is required' })
+    @IsEmail({}, { message: 'Incorrect email' })
+    email: string;
+
+    @Column({ nullable: true })
     password: string
 
     @Column()
     @IsNotEmpty()
     role: string
+
+    @Column({ default: false })
+    is_cgiar: boolean;
 
     @Column()
     @CreateDateColumn()
@@ -36,7 +50,12 @@ export class User {
     }
 
     checkPassword(password: string):boolean {
-        return bcrypt.compareSync(password, this.password)
+        try {
+            return bcrypt.compareSync(password, this.password);
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
     }
 
 }
