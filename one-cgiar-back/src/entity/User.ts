@@ -29,8 +29,7 @@ export class User {
     @Column({ nullable: true })
     password: string
 
-    @Column()
-    @IsNotEmpty()
+    @Column({ default: 'SGD' })
     role: string
 
     @Column({ default: false })
