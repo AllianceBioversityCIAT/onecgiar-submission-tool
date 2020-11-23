@@ -54,7 +54,7 @@ export const createUsers = async (req: Request, res: Response) => {
 
     const userRepository = getRepository(User);
     try {
-        if (!user.is_cgiar) {
+        if (!is_cgiar) {
             user.hashPassword();
         }
         await userRepository.save(user);
@@ -68,7 +68,7 @@ export const createUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     let user;
     const { id } = req.params;
-    const { firstname, lastname, username, email, role } = req.body;
+    const { firstname, lastname, username, email, password, role, is_cgiar } = req.body;
 
     const userRepository = getRepository(User);
     try {
@@ -77,7 +77,13 @@ export const updateUser = async (req: Request, res: Response) => {
         user.lastname = lastname;
         user.username = username;
         user.email = email;
+        user.password = password;
         user.role = role;
+        user.is_cgiar = is_cgiar;
+        if (!is_cgiar) {
+            user.hashPassword();
+        }
+        await userRepository.save(user);
     } catch (error) {
         console.log(error);
         return res.status(404).json({ msg: 'User not found' });
