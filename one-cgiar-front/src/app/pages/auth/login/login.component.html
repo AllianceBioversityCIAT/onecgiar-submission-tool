@@ -1,17 +1,16 @@
 <div class="login-form">
   <mat-card>
     <mat-card-content>
-      <h1>LOGIN</h1>
       <form [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
         <mat-form-field class="full-width-input">
           <input
             text="text"
-            formControlName="username"
+            formControlName="email"
             matInput
-            placeholder="Username"
+            placeholder="Email"
             required
           />
-          <mat-error *ngIf="checkField('username')">
+          <mat-error *ngIf="checkField('email')">
             {{ loginForm.errorMessage }}
           </mat-error>
         </mat-form-field>
@@ -34,7 +33,7 @@
           [disabled]="loginForm.baseForm.invalid"
           type="submit"
           mat-raised-button
-          color="primary"
+          class="login-button"
         >
           Login
         </button>

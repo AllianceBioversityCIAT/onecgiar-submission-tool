@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements AfterViewInit, OnInit, OnDestroy {
-  displayedColumns: string[] = ['id', 'role', 'username', 'actions'];
+  displayedColumns: string[] = ['id', 'role', 'email', 'actions'];
   dataSource = new MatTableDataSource();
 
   private destroy$ = new Subject<any>();

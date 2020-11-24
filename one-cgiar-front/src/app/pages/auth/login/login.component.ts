@@ -22,11 +22,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loginForm.baseForm.get('role').setValidators(null);
     this.loginForm.baseForm.get('role').updateValueAndValidity();
-    // const userData = {
-    //   username: "sarama",
-    //   password: "abcd.1234"
-    // }
-    // this.authSvc.login(userData).subscribe((res) => console.log('login'));
   }
 
   ngOnDestroy(): void {

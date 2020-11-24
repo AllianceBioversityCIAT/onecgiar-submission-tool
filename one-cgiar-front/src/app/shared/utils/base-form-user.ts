@@ -3,14 +3,15 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class BaseFormUser {
+  private isValidEmail = /\S+@\S+\.\S+/;
   errorMessage = null;
 
   constructor(private fb: FormBuilder) {}
 
   baseForm = this.fb.group({
-    username: [
+    email: [
       '',
-      [Validators.required],
+      [Validators.required, Validators.pattern(this.isValidEmail)],
     ],
     password: ['', [Validators.required, Validators.minLength(5)]],
     role: ['', [Validators.required]],

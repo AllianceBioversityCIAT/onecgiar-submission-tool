@@ -4,12 +4,12 @@
     <form [formGroup]="userForm.baseForm">
       <mat-form-field class="full-width-input">
         <input
-          formControlName="username"
+          formControlName="email"
           matInput
-          placeholder="Username"
+          placeholder="Email"
           required
         />
-        <mat-error *ngIf="checkField('username')">
+        <mat-error *ngIf="checkField('email')">
           {{ userForm.errorMessage }}
         </mat-error>
       </mat-form-field>

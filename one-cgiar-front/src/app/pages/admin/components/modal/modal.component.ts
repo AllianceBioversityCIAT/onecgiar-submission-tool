@@ -54,7 +54,7 @@ export class ModalComponent implements OnInit {
 
   private pathFormData(): void {
     this.userForm.baseForm.patchValue({
-      username: this.data?.user?.username,
+      email: this.data?.user?.email,
       role: this.data?.user?.role,
     });
   }
