@@ -5,9 +5,10 @@ import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { MaterialModule } from '@app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, FooterComponent],
   imports: [
     CommonModule,
     LoginRoutingModule,
