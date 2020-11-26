@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm'
 import { MinLength, IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
+import { Initiative } from './Initiative'
 
 @Entity()
 @Unique(['username', 'email'])
@@ -42,6 +43,9 @@ export class User {
     @Column()
     @UpdateDateColumn()
     updatedAt: Date
+
+    @OneToMany(type => Initiative, initiative => initiative.user)
+    initiatives: Initiative[];
 
     hashPassword():void {
         const salt = bcrypt.genSaltSync(10)
