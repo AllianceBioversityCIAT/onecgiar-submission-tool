@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm'
 import { IsNotEmpty } from 'class-validator'
+import { User } from './User'
 
 @Entity()
 export class Initiative {
@@ -49,5 +50,9 @@ export class Initiative {
     @Column()
     @UpdateDateColumn()
     updatedAt: Date
+
+    @ManyToOne(type => User, user => user.initiatives)
+    @JoinColumn({ name: 'initiative_fk_user' })
+    user: User;
 
 }
