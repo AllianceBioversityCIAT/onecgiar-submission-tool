@@ -7,6 +7,7 @@ import { createConnection } from 'typeorm'
 
 import userRoutes from './routes/User'
 import authRoutes from './routes/Auth'
+import initiativeRoutes from './routes/Initiative'
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,6 +24,7 @@ createConnection()
         // routes
         app.use(userRoutes);
         app.use(authRoutes);
+        app.use(initiativeRoutes);
 
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
