@@ -11,9 +11,10 @@ import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
+import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent],
+  declarations: [AppComponent, HeaderComponent, CreateInitiativeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,

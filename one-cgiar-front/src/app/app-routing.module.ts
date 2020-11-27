@@ -3,7 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { CheckLoginGuard } from '@shared/guards/check-login.guard';
 import { CheckHomeGuard } from '@shared/guards/check-home.guard';
+import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
+
 const routes: Routes = [
+  {
+    path: 'create-initiative', component: CreateInitiativeComponent
+  },
   {
     path: 'home',
     loadChildren: () =>
