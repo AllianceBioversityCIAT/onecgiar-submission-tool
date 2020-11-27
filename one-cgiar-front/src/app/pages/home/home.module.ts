@@ -6,10 +6,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { InitTableComponent } from '@app/shared/components/init-table/init-table.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, NavbarComponent],
+  declarations: [HomeComponent, NavbarComponent, InitTableComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
