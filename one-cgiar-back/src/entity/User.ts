@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import { MinLength, IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
+import { Roles } from './Roles'
 import { Initiative } from './Initiative'
 
 @Entity()
@@ -30,8 +31,9 @@ export class User {
     @Column({ nullable: true })
     password: string
 
-    @Column({ default: 'SGD' })
-    role: string
+    @ManyToMany(() => Roles, roles => roles.users)
+    @JoinTable()
+    roles: Roles[];
 
     @Column({ default: false })
     is_cgiar: boolean;
