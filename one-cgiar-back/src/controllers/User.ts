@@ -2,13 +2,15 @@ import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 import { validate } from 'class-validator'
 import { User } from '../entity/User'
+import { Roles } from '../entity/Roles';
 
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
     const userRepository = getRepository(User);
     let users;
 
     try {
-        users = await userRepository.find();
+        users = await userRepository.find({ relations: ['roles'] });
+        return res.json(users)
     } catch (error) {
         console.log(error);
         return res.status(404).json({ msg: 'Something went wrong' });
@@ -26,7 +28,7 @@ export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const userRepository = getRepository(User);
     try {
-        const user = await userRepository.findOneOrFail(id);
+        const user = await userRepository.findOneOrFail(id, { relations: ['roles'] });
         res.send(user);
     } catch (error) {
         console.log(error);
@@ -35,13 +37,14 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const createUsers = async (req: Request, res: Response) => {
-    const { firstname, lastname, username, password, role, email, is_cgiar } = req.body;
+    const { firstname, lastname, username, password, roles, email, is_cgiar } = req.body;
     const user = new User();
+    const roleRepository = getRepository(Roles);
     user.firstname = firstname;
     user.lastname = lastname;
     user.username = username;
     user.password = password;
-    user.role = role;
+    user.roles = roles;
     user.email = email;
     user.is_cgiar = is_cgiar;
 
@@ -68,7 +71,7 @@ export const createUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     let user;
     const { id } = req.params;
-    const { firstname, lastname, username, email, password, role, is_cgiar } = req.body;
+    const { firstname, lastname, username, email, password, roles, is_cgiar } = req.body;
 
     const userRepository = getRepository(User);
     try {
@@ -78,7 +81,7 @@ export const updateUser = async (req: Request, res: Response) => {
         user.username = username;
         user.email = email;
         user.password = password;
-        user.role = role;
+        user.roles = roles;
         user.is_cgiar = is_cgiar;
         if (!is_cgiar) {
             user.hashPassword();
