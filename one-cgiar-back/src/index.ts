@@ -6,6 +6,7 @@ import helmet from 'helmet'
 import { createConnection } from 'typeorm'
 
 import userRoutes from './routes/User'
+import rolesRoutes from './routes/Roles'
 import authRoutes from './routes/Auth'
 import initiativeRoutes from './routes/Initiative'
 
@@ -23,6 +24,7 @@ createConnection()
 
         // routes
         app.use(userRoutes);
+        app.use(rolesRoutes);
         app.use(authRoutes);
         app.use(initiativeRoutes);
 
