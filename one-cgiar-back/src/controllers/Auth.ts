@@ -45,9 +45,9 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user.id, email: user.email }, config.jwtSecret, { expiresIn: '7h' });
 
         const name = user.email;
-        const role = user.role;
+        const roles = user.roles;
 
-        res.json({ msg: 'OK', token, name, role });
+        res.json({ msg: 'OK', token, name, roles });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ msg: 'email or password failed' });
