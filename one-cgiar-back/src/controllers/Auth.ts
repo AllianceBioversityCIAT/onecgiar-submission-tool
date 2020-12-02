@@ -20,6 +20,7 @@ export const login = async (req: Request, res: Response) => {
         let cgiar_user = await userRepository.findOne({
             where:
                 { email, is_cgiar: 1 },
+                relations: ['roles']
         });
         if (cgiar_user) {
             let is_cgiar = await validateAD(cgiar_user, password);
@@ -31,9 +32,8 @@ export const login = async (req: Request, res: Response) => {
             res.status(404).json({ msg: 'Missing required email and password fields.' })
         } else {
             user = await userRepository.findOneOrFail({
-                where:
-                    { email }
-
+                where: { email },
+                relations: ['roles']
             });
         }
 

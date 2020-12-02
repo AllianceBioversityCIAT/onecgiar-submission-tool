@@ -39,7 +39,6 @@ export const getUser = async (req: Request, res: Response) => {
 export const createUsers = async (req: Request, res: Response) => {
     const { firstname, lastname, username, password, roles, email, is_cgiar } = req.body;
     const user = new User();
-    const roleRepository = getRepository(Roles);
     user.firstname = firstname;
     user.lastname = lastname;
     user.username = username;
