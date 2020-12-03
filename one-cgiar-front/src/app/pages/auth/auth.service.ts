@@ -7,6 +7,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { UserResponse, User, Roles } from '@shared/models/user.interface';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 const helper = new JwtHelperService();
 
@@ -15,6 +16,19 @@ const helper = new JwtHelperService();
 })
 export class AuthService {
   private user = new BehaviorSubject<UserResponse>(null);
+  generalInformationForm = new FormGroup({
+    initiativeName: new FormControl('', Validators.required),
+    leadContact: new FormControl('', Validators.email),
+    actionArea: new FormControl('', Validators.required),
+    globalBudget: new FormControl('', Validators.required),
+  });
+  narrativesForm = new FormGroup({
+    challenge: new FormControl('', Validators.required),
+    objectives: new FormControl('', Validators.email),
+    results: new FormControl('', Validators.required),
+    activities: new FormControl('', Validators.required),
+    highlights: new FormControl('', Validators.required),
+  });
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
@@ -73,4 +87,13 @@ export class AuthService {
     window.alert(errorMessage);
     return throwError(errorMessage);
   }
+
+  saveGeneralInformation(): void {
+    console.log('formulario guardado', this.generalInformationForm);
+  }
+
+  submitForm(): void {
+    console.log('formulario sometido', this.generalInformationForm);
+  }
+
 }

@@ -1,1 +1,7 @@
 <p>create-initiative works!</p>
+<app-general-information></app-general-information>
+<app-narratives></app-narratives>
+<app-geographic-scope></app-geographic-scope>
+<button type="submit" (click)="_auth.submitForm()" [disabled]="_auth.generalInformationForm.invalid" mat-raised-button class="login-button">
+    Submit
+</button>

@@ -12,9 +12,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
 import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
+import { GeneralInformationComponent } from './shared/components/general-information/general-information.component';
+import { NarrativesComponent } from './shared/components/narratives/narratives.component';
+import { GeographicScopeComponent } from './shared/components/geographic-scope/geographic-scope.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, CreateInitiativeComponent],
+  declarations: [AppComponent, HeaderComponent, CreateInitiativeComponent, GeneralInformationComponent, NarrativesComponent, GeographicScopeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,

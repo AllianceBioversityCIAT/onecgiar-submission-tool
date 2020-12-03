@@ -1,0 +1,38 @@
+<p>general-information works!</p>
+<div class="container">
+    <div class="row">
+        <form [formGroup]="_auth.generalInformationForm">
+            <div class="col">
+                <mat-form-field>
+                    <input type="text" formControlName="initiativeName" matInput placeholder="Initiave Name" required />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <input type="text" formControlName="leadContact" matInput placeholder="Lead contact email"
+                        required />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="standard">
+                    <mat-label>Choose an option</mat-label>
+                    <mat-select formControlName="actionArea">
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2">Option 2</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width-input">
+                    <input type="number" formControlName="globalBudget" matInput placeholder="Global budget" required />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="login-button">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
