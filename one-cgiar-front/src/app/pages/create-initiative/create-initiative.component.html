@@ -1,7 +1,20 @@
+<app-navbar></app-navbar>
 <p>create-initiative works!</p>
-<app-general-information></app-general-information>
-<app-narratives></app-narratives>
-<app-geographic-scope></app-geographic-scope>
-<button type="submit" (click)="_auth.submitForm()" [disabled]="_auth.generalInformationForm.invalid" mat-raised-button class="login-button">
-    Submit
-</button>
+<div class="initiative-container">
+    <div class="menu-container">
+        <app-menu></app-menu>
+        <div class="button-container">
+            <button type="submit" (click)="_auth.submitForm()" [disabled]="_auth.generalInformationForm.invalid"
+                mat-raised-button class="submit-button">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <mat-card class="card-container">
+        <div class="initiative-identification">ID: 1</div>
+        <router-outlet></router-outlet>
+    </mat-card>
+
+
+</div>
