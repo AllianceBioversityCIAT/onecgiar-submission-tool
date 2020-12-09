@@ -1,0 +1,30 @@
+<div class="key-partners-container">
+    <strong class="key-partners-title">Key partners</strong>
+    <div class="key-partners-form">
+        <mat-form-field class="chip-list">
+            <mat-label>Key partners</mat-label>
+            <mat-chip-list #chipList aria-label="Partner selection">
+                <mat-chip *ngFor="let partner of partners" [selectable]="selectable" [removable]="removable"
+                    (removed)="remove(partner)">
+                    {{partner}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Select partners" #partnerInput [formControl]="partnerCtrl" [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let partner of filteredPartners | async" [value]="partner">
+                    {{partner}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <p class="add-partner-text">If you do not find the key partner as part of the drop-down list, please request to
+            add it by clicking here.</p>
+        <div class="key-partners-save">
+            <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
