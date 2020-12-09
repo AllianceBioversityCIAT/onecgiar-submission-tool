@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="menu-title">Stages</div>
+    <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenPC = true" (closed)="panelOpenPC = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Pre-Concept
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="menu-options">
+                <p routerLinkActive="isActive" routerLink="/create-initiative/general-information-pc">General Information</p>
+                <p routerLinkActive="isActive" routerLink="/create-initiative/narratives-pc">Narratives</p>
+                <p routerLinkActive="isActive" routerLink="/create-initiative/geographic-scope-pc">Geographic scope</p>
+                <p routerLinkActive="isActive" routerLink="/create-initiative/key-partners-pc">Key partners</p>
+                <p routerLinkActive="isActive" routerLink="/create-initiative/feedback-pc">Feedback</p>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="panelOpenC = true" (closed)="panelOpenC = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Concept
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="menu-options">
+                <p>General Information</p>
+                <p>Narratives</p>
+                <p>Projection of benefits</p>
+                <p>Initial theory of change</p>
+                <p>Work packages</p>
+                <p>Key partners</p>
+                <p>Significant changes</p>
+                <p>Feedback</p>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="panelOpenFP = true" (closed)="panelOpenFP = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Full Proposal
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="menu-options">
+                <p>General Information</p>
+                <p>General Information</p>
+                <p>General Information</p>
+                <p>General Information</p>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

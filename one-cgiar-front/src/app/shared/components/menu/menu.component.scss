@@ -1,0 +1,42 @@
+.container {
+    padding: 0 3rem;
+}
+
+.menu-title {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-size: 1.8em;
+    font-weight: bold;
+    padding: 1rem 0;
+}
+
+.mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+mat-panel-title {
+    font-weight: bold;
+}
+
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 10em;
+}
+
+p {
+    background: #fff;
+    padding: 4px 0;
+}
+
+.isActive {
+    background: #0779A4;
+    color: #fff;
+}
+
+p:hover {
+    background: #0779A4;
+    color: #fff;
+}
