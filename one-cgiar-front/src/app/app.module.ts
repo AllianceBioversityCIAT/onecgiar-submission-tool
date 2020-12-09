@@ -11,13 +11,42 @@ import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { InitTableComponent } from './shared/components/init-table/init-table.component';
+import { HomeComponent } from './pages/home/home.component';
 import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
 import { GeneralInformationComponent } from './shared/components/general-information/general-information.component';
 import { NarrativesComponent } from './shared/components/narratives/narratives.component';
 import { GeographicScopeComponent } from './shared/components/geographic-scope/geographic-scope.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { KeyPartnersComponent } from './shared/components/key-partners/key-partners.component';
+import { FeedbackComponent } from './shared/components/feedback/feedback.component';
+import { CountryControlComponent } from './shared/components/country-control/country-control.component';
+import { RegionControlComponent } from './shared/components/region-control/region-control.component';
+import { MenuComponent } from './shared/components/menu/menu.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, CreateInitiativeComponent, GeneralInformationComponent, NarrativesComponent, GeographicScopeComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    FooterComponent,
+    HeaderComponent,
+    NavbarComponent,
+    NotFoundComponent,
+    HomeComponent,
+    InitTableComponent,
+    CreateInitiativeComponent,
+    GeneralInformationComponent,
+    NarrativesComponent,
+    GeographicScopeComponent,
+    KeyPartnersComponent,
+    FeedbackComponent,
+    CountryControlComponent,
+    RegionControlComponent,
+    MenuComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
@@ -33,4 +62,4 @@ import { GeographicScopeComponent } from './shared/components/geographic-scope/g
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
