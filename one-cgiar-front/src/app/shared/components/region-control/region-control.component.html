@@ -1,0 +1,18 @@
+<mat-form-field class="chip-list">
+    <mat-label>Key regions</mat-label>
+    <mat-chip-list #chipList aria-label="Region selection">
+        <mat-chip *ngFor="let region of regions" [selectable]="selectableRegion" [removable]="removableRegion"
+            (removed)="removeRegion(region)">
+            {{region}}
+            <mat-icon matChipRemove *ngIf="removableRegion">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Select regions" #regionInput [formControl]="regionCtrl" [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addRegion($event)">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedRegion($event)">
+        <mat-option *ngFor="let region of filteredRegions | async" [value]="region">
+            {{region}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>
