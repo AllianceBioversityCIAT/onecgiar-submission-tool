@@ -1,1 +1,16 @@
-<p>geographic-scope works!</p>
+<div class="geographic-scope-container">
+    <strong class="geographic-scope-title">Geographic Scope</strong>
+    <div class="geographic-scope-form">
+        <p>¿Does the initiative have a global dimension?</p>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="yes">Yes</mat-button-toggle>
+            <mat-button-toggle value="no">No</mat-button-toggle>
+        </mat-button-toggle-group>
+        <app-region-control></app-region-control>
+        <app-country-control></app-country-control>
+        <div class="geographic-scope-save">
+            <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+    </div>

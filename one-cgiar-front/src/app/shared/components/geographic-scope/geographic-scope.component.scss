@@ -1,0 +1,36 @@
+mat-button-toggle-group {
+    margin: 0 0 12px 12px;
+}
+
+.geographic-scope-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  margin: 1rem auto;
+}
+
+.geographic-scope-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+
+.geographic-scope-form {
+  width: 100%;
+}
+  
+.geographic-scope-full-width {
+  width: 100%;
+}
+
+.geographic-scope-save {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save-button {
+  background-color: #0779A4;
+  text-decoration: none;
+  color: #fff;
+  width: 100px;
+}

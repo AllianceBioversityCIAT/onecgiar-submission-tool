@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@app/pages/auth/auth.service';
 
 @Component({
   selector: 'app-geographic-scope',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GeographicScopeComponent implements OnInit {
 
-  constructor() { }
+  constructor(public _auth:AuthService) { }
 
   ngOnInit(): void {
+  }
+
+  onSave(generalInformationForm): void {
+    console.log("GUARDANDO",generalInformationForm.value);
   }
 
 }
