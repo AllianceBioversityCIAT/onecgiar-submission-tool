@@ -7,11 +7,11 @@ import { CreateInitiativeComponent } from './pages/create-initiative/create-init
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { GeneralInformationComponent } from './shared/components/general-information/general-information.component';
-import { NarrativesComponent } from './shared/components/narratives/narratives.component';
-import { GeographicScopeComponent } from './shared/components/geographic-scope/geographic-scope.component';
-import { KeyPartnersComponent } from './shared/components/key-partners/key-partners.component';
-import { FeedbackComponent } from './shared/components/feedback/feedback.component';
+import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
+import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';
+import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
+import { KeyPartnersComponent } from './shared/components/preconcept/key-partners/key-partners.component';
+import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 
 const routes: Routes = [
   {
