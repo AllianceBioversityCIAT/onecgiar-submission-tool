@@ -7,20 +7,29 @@ mat-dialog-actions {
 }
 
 mat-icon {
-    color: #ff0000;
+    color: #666666;
+}
+
+p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-typography {
+    width: 50rem;
 }
 
 .close {
     background: #3D85C6;
     color: #fff;
 }
-
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
+  
+.full-width {
     width: 100%;
 }
-  
-.example-full-width {
-    width: 100%;
+
+.select-coordinator {
+    display: flex;
+    flex-direction: column;
 }

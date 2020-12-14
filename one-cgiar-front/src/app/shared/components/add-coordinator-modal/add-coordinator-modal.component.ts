@@ -17,6 +17,8 @@ export class AddCoordinatorModalComponent implements OnInit {
 
   constructor() { }
 
+  coordinator = '';
+
   myControl = new FormControl();
   options: User[] = [
     { name: 'Manuel Almanzar', email: 'M.R.Almanzar@cgiar.org' },
