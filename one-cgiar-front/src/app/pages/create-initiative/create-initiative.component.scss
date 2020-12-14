@@ -1,5 +1,5 @@
 .initiative-container {
-    padding: 0 4rem;
+    padding: 2rem 4rem 0 4rem;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -33,9 +33,20 @@
 }
 
 .initiative-identification {
+    align-items: center;
     background: #0779A4;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     color: #fff;
     padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.initiative-id {
+    font-size: 1.2em;
+}
+
+.manage-button {
+    border-radius: 20px;
 }
