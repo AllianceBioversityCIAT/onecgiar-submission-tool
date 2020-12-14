@@ -1,0 +1,19 @@
+<mat-dialog-content class="mat-typography">
+    <mat-form-field class="example-full-width">
+        <mat-label>Assignee</mat-label>
+        <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option.name}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <!-- <mat-selection-list>
+        <mat-list-option *ngFor="let option of filteredOptions | async | coordinatorFilter: ''">
+            {{option.name}}
+        </mat-list-option>
+    </mat-selection-list> -->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button class="close" mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>

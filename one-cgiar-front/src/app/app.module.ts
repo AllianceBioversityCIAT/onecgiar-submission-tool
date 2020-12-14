@@ -26,6 +26,10 @@ import { FeedbackComponent } from './shared/components/preconcept/feedback/feedb
 import { CountryControlComponent } from './shared/components/preconcept/country-control/country-control.component';
 import { RegionControlComponent } from './shared/components/preconcept/region-control/region-control.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
+import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
+import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
+import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +49,11 @@ import { MenuComponent } from './shared/components/menu/menu.component';
     FeedbackComponent,
     CountryControlComponent,
     RegionControlComponent,
-    MenuComponent
+    MenuComponent,
+    NarrativesConceptComponent,
+    CoordinatorModalComponent,
+    AddCoordinatorModalComponent,
+    CoordinatorFilterPipe
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
