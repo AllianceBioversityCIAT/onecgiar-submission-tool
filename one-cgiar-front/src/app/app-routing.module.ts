@@ -12,6 +12,7 @@ import { NarrativesComponent } from './shared/components/preconcept/narratives/n
 import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
 import { KeyPartnersComponent } from './shared/components/preconcept/key-partners/key-partners.component';
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
+import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 
 const routes: Routes = [
   {
@@ -31,14 +32,17 @@ const routes: Routes = [
       {
         path: 'feedback-pc', component: FeedbackComponent,
       },
+      {
+        path: 'narratives-c', component: NarrativesConceptComponent,
+      },
     ]
   },
   {
     path: 'home', component: HomeComponent,
-      canActivate: [CheckHomeGuard],
+    canActivate: [CheckHomeGuard],
   },
   {
-    path: 'notFound', component: NotFoundComponent, 
+    path: 'notFound', component: NotFoundComponent,
   },
   {
     path: 'admin',
@@ -55,4 +59,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

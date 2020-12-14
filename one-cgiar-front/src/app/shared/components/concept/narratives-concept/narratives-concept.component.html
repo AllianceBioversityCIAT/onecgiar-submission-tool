@@ -1,0 +1,30 @@
+<div class="narratives-container">
+    <strong class="narratives-title">Narratives</strong>
+    <form [formGroup]="_auth.narrativesForm" class="narratives-form">
+        <mat-form-field class="narratives-full-width">
+            <p><strong>Challenge statement: </strong><span class="asterisk">* </span> <span class="preconcept-label"> Pre-concept</span></p>
+            <p class="description-field"><i>Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed</i></p>
+            <textarea type="text" formControlName="challenge" matInput required></textarea>
+        </mat-form-field>
+        <mat-form-field class="narratives-full-width">
+            <p><strong>Measurable objectives: </strong><span class="asterisk">* </span> <span class="preconcept-label"> Pre-concept</span></p>
+            <p class="description-field"><i>Concise, preferably quantitative, objective statement</i></p>
+            <textarea type="text" formControlName="objectives" matInput required></textarea>
+        </mat-form-field>
+        <mat-form-field class="narratives-full-width">
+            <p><strong>Results: </strong><span class="asterisk">* </span> <span class="preconcept-label"> Pre-concept</span></p>
+            <p class="description-field"><i>Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas</i></p>
+            <textarea type="text" formControlName="results" matInput required></textarea>
+        </mat-form-field>
+        <mat-form-field class="narratives-full-width">
+            <p><strong>Highlights: </strong><span class="asterisk">* </span> <span class="preconcept-label"> Pre-concept</span></p>
+            <p class="description-field"><i>Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities</i></p>
+            <textarea type="text" formControlName="highlights" matInput required></textarea>
+        </mat-form-field>
+        <div class="narratives-save">
+            <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
