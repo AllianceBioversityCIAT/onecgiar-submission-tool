@@ -1,11 +1,13 @@
-.footer {
+footer {
   bottom: 0;
   background-color: #fff;
-  padding: 0 12rem 2rem 12rem;
+  display: flex;
+  justify-content: center;
 }
 
 .note-login {
   padding:  0 0 2rem 0;
   font-size: 0.8rem;
   line-height: 1.2;
+  width: 30rem;
 }
