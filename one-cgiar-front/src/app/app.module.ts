@@ -31,6 +31,7 @@ import { CoordinatorModalComponent } from './shared/components/coordinator-modal
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
 import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
+import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { GeneralInformationConceptComponent } from './shared/components/concept/
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
-    GeneralInformationConceptComponent
+    GeneralInformationConceptComponent,
+    TheoryOfChangeComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

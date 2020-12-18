@@ -14,6 +14,7 @@ import { KeyPartnersComponent } from './shared/components/preconcept/key-partner
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
+import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,9 @@ const routes: Routes = [
       },
       {
         path: 'narratives-c', component: NarrativesConceptComponent,
+      },
+      {
+        path: 'theory-of-change-c', component: TheoryOfChangeComponent,
       },
     ]
   },

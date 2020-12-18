@@ -22,6 +22,9 @@ export class RequestsService {
     results: new FormControl('', Validators.required),
     highlights: new FormControl('', Validators.required),
   });
+  theoryOfChangeFormCs = new FormGroup({
+    narrative: new FormControl('', Validators.required),
+  });
 
   constructor() { }
 
@@ -52,6 +55,10 @@ export class RequestsService {
 
   saveNarratives(): void {
     console.log('formulario guardado', this.narrativesFormCs);
+  }
+
+  saveTheoryOfChange(): void {
+    console.log('formulario guardado', this.theoryOfChangeFormCs);
   }
 
   submitForm(): void {
