@@ -24,7 +24,7 @@ export class AuthService {
   });
   narrativesForm = new FormGroup({
     challenge: new FormControl('', Validators.required),
-    objectives: new FormControl('', Validators.email),
+    objectives: new FormControl('', Validators.required),
     results: new FormControl('', Validators.required),
     activities: new FormControl('', Validators.required),
     highlights: new FormControl('', Validators.required),
