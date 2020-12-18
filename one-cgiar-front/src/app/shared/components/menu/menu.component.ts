@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@app/pages/auth/auth.service';
+import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
   selector: 'app-menu',
@@ -11,7 +13,7 @@ export class MenuComponent implements OnInit {
   panelOpenC = false;
   panelOpenFP = false;
 
-  constructor() { }
+  constructor(public _auth:AuthService, public _requests: RequestsService) { }
 
   ngOnInit(): void {
   }

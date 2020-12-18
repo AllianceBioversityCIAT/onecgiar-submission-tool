@@ -1,19 +1,49 @@
 <div class="container">
     <div class="menu-title">Stages</div>
     <mat-accordion>
-        <mat-expansion-panel (opened)="panelOpenPC = true" (closed)="panelOpenPC = false">
+        <mat-expansion-panel *ngIf="false" (opened)="panelOpenPC = true" (closed)="panelOpenPC = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     Pre-Concept
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class="menu-options">
-                <p routerLinkActive="isActive" routerLink="/create-initiative/general-information-pc">General Information</p>
-                <p routerLinkActive="isActive" routerLink="/create-initiative/narratives-pc">Narratives</p>
-                <p routerLinkActive="isActive" routerLink="/create-initiative/geographic-scope-pc">Geographic scope</p>
-                <p routerLinkActive="isActive" routerLink="/create-initiative/key-partners-pc">Key partners</p>
-                <p routerLinkActive="isActive" routerLink="/create-initiative/feedback-pc">Feedback</p>
-            </div>
+            <mat-list class="menu-options">
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-pc">
+                    <span>General Information</span>
+                    <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_auth.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-pc">
+                    <span>Narratives</span>
+                    <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_auth.narrativesForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/geographic-scope-pc">
+                    <span>Geographic scope</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_auth.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-pc">
+                    <span>Key partners</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_auth.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/feedback-pc">
+                    <span>Feedback</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_auth.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+            </mat-list>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="panelOpenC = true" (closed)="panelOpenC = false">
             <mat-expansion-panel-header>
@@ -21,16 +51,41 @@
                     Concept
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class="menu-options">
-                <p>General Information</p>
-                <p routerLinkActive="isActive" routerLink="/create-initiative/narratives-c">Narratives</p>
-                <p>Projection of benefits</p>
-                <p>Initial theory of change</p>
-                <p>Work packages</p>
-                <p>Key partners</p>
-                <p>Significant changes</p>
-                <p>Feedback</p>
-            </div>
+            <mat-list class="menu-options">
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-c">
+                    <span>General Information</span>
+                    <button mat-icon-button aria-label="Verified icon" [disabled]="_requests.generalInformationFormCs.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-c">
+                    <span>Narratives</span>
+                    <button mat-icon-button aria-label="Verified icon" [disabled]="_requests.narrativesFormCs.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/theory-change-c">
+                    <span>Initial theory of change</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_requests.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/work-packages-c">
+                    <span>Work packages</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_requests.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-c">
+                    <span>Key partners</span>
+                    <!-- <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_requests.generalInformationForm.invalid">
+                        <mat-icon>verified</mat-icon>
+                    </button> -->
+                </mat-list-item>
+            </mat-list>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="panelOpenFP = true" (closed)="panelOpenFP = false">
             <mat-expansion-panel-header>
@@ -38,12 +93,12 @@
                     Full Proposal
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class="menu-options">
-                <p>General Information</p>
-                <p>General Information</p>
-                <p>General Information</p>
-                <p>General Information</p>
-            </div>
+            <mat-list class="menu-options">
+                <mat-list-item>General Information</mat-list-item>
+                <mat-list-item>General Information</mat-list-item>
+                <mat-list-item>General Information</mat-list-item>
+                <mat-list-item>General Information</mat-list-item>
+            </mat-list>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

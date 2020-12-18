@@ -23,10 +23,12 @@ mat-panel-title {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: 10em;
+    width: 15em;
 }
 
-p {
+.list-option {
+    display: flex;
+    flex-direction: row;
     background: #fff;
     padding: 4px 0;
     cursor: pointer;
@@ -41,3 +43,19 @@ p:hover {
     background: #0779A4;
     color: #fff;
 }
+
+mat-list-item {
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    button {
+        position: absolute;
+        right: 0;
+        color: #4CAF50;
+    }
+}
+
+mat-list-item:focus {
+    outline: none;
+
+} 
