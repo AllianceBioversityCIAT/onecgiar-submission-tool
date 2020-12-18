@@ -3,9 +3,9 @@
   <h3>Coordinators: <span class="asterisk">* </span></h3>
   <p class="description-field"><i>The following persons will also have access to edit this initiative</i></p>
   <div class="coordinators-container">
-    <div class="coordinators">
-      <span>Jaime Duque</span>
-      <span>J.Duque@cgiar.org</span>
+    <div class="coordinators" *ngFor="let coordinator of _requests.addedCoordinator" (click)="_requests.removeCoordinator(coordinator)">
+      <span>{{coordinator.name}}</span>
+      <span>{{coordinator.email}}</span>
       <mat-icon>delete</mat-icon>
     </div>
     <div class="add-coordinator">

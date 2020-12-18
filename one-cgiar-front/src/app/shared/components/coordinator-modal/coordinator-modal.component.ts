@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCoordinatorModalComponent } from '../add-coordinator-modal/add-coordinator-modal.component';
+import { RequestsService } from '../../services/requests.service';
 
 @Component({
   selector: 'app-coordinator-modal',
@@ -9,7 +10,7 @@ import { AddCoordinatorModalComponent } from '../add-coordinator-modal/add-coord
 })
 export class CoordinatorModalComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, public _requests: RequestsService) { }
 
   openDialog() {
     const dialogRef = this.dialog.open(AddCoordinatorModalComponent, { panelClass: 'custom-dialog-container' });
