@@ -1,23 +1,13 @@
 <mat-dialog-content class="mat-typography">
     <mat-form-field class="full-width">
         <mat-label>Assignee</mat-label>
-        <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="coordinator">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-            <!-- <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option.name}}
-            </mat-option> -->
-        </mat-autocomplete>
+        <input type="text" matInput [formControl]="myControl" [(ngModel)]="coordinator">
     </mat-form-field>
-    <!-- <mat-selection-list>
-        <mat-list-option *ngFor="let option of options | coordinatorFilter: coordinator">
-            {{option.name}}
-        </mat-list-option>
-    </mat-selection-list> -->
-    <!-- <div class="select-coordinator"> -->
-        <p *ngFor="let option of options | coordinatorFilter: coordinator">
-            <span>{{option.name}}</span> <span>{{option.email}}</span> <mat-icon>person_add</mat-icon>
-        </p>
-    <!-- </div> -->
+    <p *ngFor="let coordinator of _requests.coordinatorList | coordinatorFilter: coordinator"
+        (click)="_requests.addCoordinator(coordinator)">
+        <span>{{coordinator.name}}</span> <span>{{coordinator.email}}</span>
+        <mat-icon>person_add</mat-icon>
+    </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button class="close" mat-button mat-dialog-close>close</button>
