@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@app/pages/auth/auth.service';
+import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
   selector: 'app-narratives-concept',
@@ -8,7 +8,7 @@ import { AuthService } from '@app/pages/auth/auth.service';
 })
 export class NarrativesConceptComponent implements OnInit {
 
-  constructor(public _auth:AuthService) { }
+  constructor(public _requests: RequestsService) { }
 
   ngOnInit(): void {
   }
