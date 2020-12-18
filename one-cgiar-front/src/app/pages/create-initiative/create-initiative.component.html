@@ -3,7 +3,7 @@
     <div class="menu-container">
         <app-menu></app-menu>
         <div class="button-container">
-            <button type="submit" (click)="_auth.submitForm()" [disabled]="_auth.generalInformationForm.invalid"
+            <button type="submit" (click)="_auth.submitForm()" [disabled]="_requests.generalInformationFormCs.invalid || _requests.narrativesFormCs.invalid"
                 mat-raised-button class="submit-button">
                 Submit
             </button>
@@ -13,7 +13,10 @@
     <mat-card class="card-container">
         <div class="initiative-identification">
             <span class="initiative-id">ID: 1</span>
-            <button class="manage-button" mat-raised-button (click)="openDialog()">Manage access</button>
+            <button class="manage-button" mat-raised-button (click)="openDialog()">
+                Manage access
+                <mat-icon>settings</mat-icon>
+            </button>
         </div>
         <router-outlet></router-outlet>
     </mat-card>
