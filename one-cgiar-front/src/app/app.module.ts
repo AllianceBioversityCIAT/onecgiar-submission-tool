@@ -30,6 +30,7 @@ import { NarrativesConceptComponent } from './shared/components/concept/narrativ
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
+import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
     NarrativesConceptComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
-    CoordinatorFilterPipe
+    CoordinatorFilterPipe,
+    GeneralInformationConceptComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

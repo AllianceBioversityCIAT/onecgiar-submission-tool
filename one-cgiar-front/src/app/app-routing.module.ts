@@ -13,6 +13,7 @@ import { GeographicScopeComponent } from './shared/components/preconcept/geograp
 import { KeyPartnersComponent } from './shared/components/preconcept/key-partners/key-partners.component';
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
+import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,9 @@ const routes: Routes = [
       },
       {
         path: 'feedback-pc', component: FeedbackComponent,
+      },
+      {
+        path: 'general-information-c', component: GeneralInformationConceptComponent,
       },
       {
         path: 'narratives-c', component: NarrativesConceptComponent,

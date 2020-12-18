@@ -1,0 +1,27 @@
+<div class="general-information-container animate__animated animate__fadeIn">
+    <strong class="general-information-title">General information</strong>
+    <form [formGroup]="_requests.generalInformationFormCs" class="general-information-form">
+        <mat-form-field class="general-information-full-width">
+            <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
+            <input type="text" formControlName="initiativeName" matInput required />
+        </mat-form-field>
+        <mat-form-field class="general-information-full-width">
+            <p><strong>Lead name: </strong><span class="asterisk">* </span></p>
+            <input type="text" formControlName="leadContact" matInput required />
+        </mat-form-field>
+        <mat-form-field appearance="standard" class="general-information-full-width">
+            <p><strong>Primary CGIAR Action Area: </strong><span class="asterisk">* </span></p>
+            <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i></p>
+            <mat-select formControlName="actionArea">
+                <mat-option value="1">Action Area 1: Systems Transformation</mat-option>
+                <mat-option value="2">Action Area 2: Sustainable Production</mat-option>
+                <mat-option value="3">Action Area 3: Genetic Gains</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="general-information-save">
+            <button type="submit" (click)="_requests.saveGeneralInformation()" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
