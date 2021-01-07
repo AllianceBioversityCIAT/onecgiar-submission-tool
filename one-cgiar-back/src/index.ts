@@ -10,6 +10,7 @@ import rolesRoutes from './routes/Roles'
 import authRoutes from './routes/Auth'
 import initiativeRoutes from './routes/Initiative'
 
+const parentDir = require('path').resolve(process.cwd(), '../');
 const PORT = process.env.PORT || 3000;
 
 createConnection()
@@ -27,6 +28,9 @@ createConnection()
         app.use(rolesRoutes);
         app.use(authRoutes);
         app.use(initiativeRoutes);
+        app.get('/', (req, res) => {
+            res.sendFile(parentDir + "/one-cgiar-front/dist/login/index.html")
+        });
 
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
