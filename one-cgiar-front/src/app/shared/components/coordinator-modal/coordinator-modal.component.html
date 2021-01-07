@@ -3,10 +3,10 @@
   <h3>Coordinators: <span class="asterisk">* </span></h3>
   <p class="description-field"><i>The following persons will also have access to edit this initiative</i></p>
   <div class="coordinators-container">
-    <div class="coordinators" *ngFor="let coordinator of _requests.addedCoordinator" (click)="_requests.removeCoordinator(coordinator)">
+    <div class="coordinators" *ngFor="let coordinator of _requests.addedCoordinator">
       <span>{{coordinator.name}}</span>
       <span>{{coordinator.email}}</span>
-      <mat-icon>delete</mat-icon>
+      <mat-icon (click)="_requests.removeCoordinator(coordinator)">delete</mat-icon>
     </div>
     <div class="add-coordinator">
       <strong (click)="openDialog()">+ Add coordinator</strong>
