@@ -10,10 +10,7 @@ import rolesRoutes from './routes/Roles'
 import authRoutes from './routes/Auth'
 import initiativeRoutes from './routes/Initiative'
 
-import config from './config/config'
-
-const parentDir = require('path').resolve(process.cwd(), '../');
-const PORT = config.port || 3000;
+const PORT = process.env.PORT || 3000;
 
 createConnection()
     .then(async () => {
@@ -23,16 +20,13 @@ createConnection()
         app.use(cors());
         app.use(morgan('dev'));
         app.use(helmet());
-        app.use(express.static(parentDir + '/one-cgiar-front/dist/login'));
+        app.use(express.json());
 
         // routes
         app.use(userRoutes);
         app.use(rolesRoutes);
         app.use(authRoutes);
         app.use(initiativeRoutes);
-        app.get('/', (req, res) => {
-            res.sendFile(parentDir + "/one-cgiar-front/dist/login/index.html")
-        });
 
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
