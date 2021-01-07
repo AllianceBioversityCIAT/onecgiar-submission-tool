@@ -10,8 +10,10 @@ import rolesRoutes from './routes/Roles'
 import authRoutes from './routes/Auth'
 import initiativeRoutes from './routes/Initiative'
 
+import config from './config/config'
+
 const parentDir = require('path').resolve(process.cwd(), '../');
-const PORT = process.env.PORT || 3000;
+const PORT = config.port || 3000;
 
 createConnection()
     .then(async () => {
@@ -21,7 +23,7 @@ createConnection()
         app.use(cors());
         app.use(morgan('dev'));
         app.use(helmet());
-        app.use(express.json());
+        app.use(express.static(parentDir + '/one-cgiar-front/dist/login'));
 
         // routes
         app.use(userRoutes);
