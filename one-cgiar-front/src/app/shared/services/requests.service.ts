@@ -24,6 +24,7 @@ export class RequestsService {
   });
   theoryOfChangeFormCs = new FormGroup({
     narrative: new FormControl('', Validators.required),
+    uploadDocuments: new FormControl('', Validators.required),
   });
 
   constructor() { }

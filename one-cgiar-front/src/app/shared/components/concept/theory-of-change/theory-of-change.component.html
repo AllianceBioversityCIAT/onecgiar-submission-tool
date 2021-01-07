@@ -2,18 +2,29 @@
     <strong class="theory-of-change-title">Initial theory of change</strong>
     <form [formGroup]="_requests.theoryOfChangeFormCs" class="theory-of-change-form">
         <mat-form-field class="theory-of-change-full-width">
-            <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span class="asterisk">* </span></p>
+            <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
+                    class="asterisk">* </span></p>
             <textarea type="text" formControlName="narrative" matInput required></textarea>
         </mat-form-field>
-        <div class="download-container">
-            <button type="submit" (click)="_requests.submitForm()" mat-raised-button class="download-button">
+        <a class="download-container" href="/assets/example.pdf" target="_blank">
+            <button type="button" mat-raised-button class="download-button">
                 Download guide
             </button>
+        </a>
+
+        <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
+            <div class="files" *ngFor="let selected of listOfFiles; let index = index">
+                <strong>{{selected}}</strong>
+                <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
+            </div>
         </div>
+
         <div class="upload-container">
             <mat-icon>cloud_upload</mat-icon>
             Click here to choose a file or drag it here
+            <input class="nonstylefile" #attachments type="file" formControlName="uploadDocuments" required (change)="onFileChanged($event)" #fileInput multiple="true">
         </div>
+
         <div class="theory-of-change-save">
             <button type="submit" (click)="_requests.saveTheoryOfChange()" mat-raised-button class="save-button">
                 Save

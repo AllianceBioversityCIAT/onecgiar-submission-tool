@@ -35,6 +35,7 @@ p {
 .download-container {
     display: flex;
     justify-content: center;
+    text-decoration: none;
 }
 
 .download-button {
@@ -47,15 +48,44 @@ p {
     width: 9em;
 }
 
+.download-button:hover {
+    background-color: #7bc45d;
+}
+
+.uploaded-files {
+    border: 2px solid #b1b0b0;
+    margin: 2rem 10rem;
+}
+
+.files {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 4rem;
+}
+
+.delete-icon {
+    color: #d30000;
+    cursor: pointer;
+}
+
 .upload-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     cursor: pointer;
     flex-direction: column;
     border: 2px dotted #b1b0b0;
     margin: 2rem 10rem;
     height: 10rem;
+    .nonstylefile {
+        position: absolute;
+        text-decoration: none;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
 }
   
 .save-button {
@@ -63,4 +93,8 @@ p {
     text-decoration: none;
     color: #fff;
     width: 100px;
+}
+
+.save-button:hover {
+    background-color: #0c96c9;
 }
