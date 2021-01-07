@@ -4,7 +4,9 @@ import * as jwt from 'jsonwebtoken'
 import { validate } from 'class-validator'
 import { User } from '../entity/Users'
 import config from '../config/config'
-let ActiveDirectory = require('activedirectory')
+let ActiveDirectory = require('activedirectory');
+
+const jwtSecret = process.env.jwtSecret;
 
 export const login = async (req: Request, res: Response) => {
     let { email, password } = req.body;
@@ -20,7 +22,7 @@ export const login = async (req: Request, res: Response) => {
         let cgiar_user = await userRepository.findOne({
             where:
                 { email, is_cgiar: 1 },
-                relations: ['roles']
+            relations: ['roles']
         });
         if (cgiar_user) {
             let is_cgiar = await validateAD(cgiar_user, password);
@@ -42,7 +44,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ msg: 'email or password failed' });
         }
 
-        const token = jwt.sign({ userId: user.id, email: user.email }, config.jwtSecret, { expiresIn: '7h' });
+        const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
 
         const name = user.email;
         const roles = [];

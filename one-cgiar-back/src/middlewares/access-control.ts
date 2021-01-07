@@ -27,15 +27,18 @@ const getPermissions = async () => {
         LEFT JOIN permissions perm ON perm.id = per_rol.permission_id
         WHERE
             per_rol.role_id IN (${rolesIds});
-    `
-    const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-        permissionSQL,
-        {},
-        {}
-    );
-    let permissions = await queryRunner.connection.query(query, parameters);
-
-    return permissions;
+    `;
+    if(rolesIds.length > 0){
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            permissionSQL,
+            {},
+            {}
+        );
+        let permissions = await queryRunner.connection.query(query, parameters);
+        return permissions;
+    }else{
+        return[]
+    }
 }
 
 export const startAccsCtrl = async () => {
