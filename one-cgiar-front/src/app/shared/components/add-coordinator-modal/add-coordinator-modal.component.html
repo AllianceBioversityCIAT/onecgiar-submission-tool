@@ -3,10 +3,9 @@
         <mat-label>Assignee</mat-label>
         <input type="text" matInput [formControl]="myControl" [(ngModel)]="coordinator">
     </mat-form-field>
-    <p *ngFor="let coordinator of _requests.coordinatorList | coordinatorFilter: coordinator"
-        (click)="_requests.addCoordinator(coordinator)">
+    <p *ngFor="let coordinator of _requests.coordinatorList | coordinatorFilter: coordinator">
         <span>{{coordinator.name}}</span> <span>{{coordinator.email}}</span>
-        <mat-icon>person_add</mat-icon>
+        <mat-icon (click)="_requests.addCoordinator(coordinator)">person_add</mat-icon>
     </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
