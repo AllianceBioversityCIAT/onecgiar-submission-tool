@@ -12,12 +12,12 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
         console.log(error);
-        return res.status(401).json({ msg: 'Not authorized' });
+        return res.status(401).json({ msg: `Not authorized: ${error.message}` });
     }
 
-    const { userId, username } = jwtPayload;
+    const { userId, first_name, last_name } = jwtPayload;
 
-    const newToken = jwt.sign({userId, username}, config.jwtSecret, {expiresIn: '7h'});
+    const newToken = jwt.sign({userId, first_name, last_name}, config.jwtSecret, {expiresIn: '7h'});
     res.setHeader('token', newToken);
     next();
 

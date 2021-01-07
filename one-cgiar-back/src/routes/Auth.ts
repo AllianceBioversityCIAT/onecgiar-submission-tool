@@ -5,9 +5,9 @@ import { checkJwt } from '../middlewares/jwt'
 const router = Router();
 
 // login
-router.post('/auth/login', login);
+router.post('/login', login);
 
 // change password
-router.post('/auth/change-password', [checkJwt], changePassword);
+router.post('/change-password', [checkJwt], changePassword);
 
 export default router;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { getRepository } from 'typeorm'
-import { User } from '../entity/User'
+import { User } from '../entity/Users'
 
 export const checkRole = (roles: Array<string>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -16,9 +16,10 @@ export const checkRole = (roles: Array<string>) => {
         }
 
         // check
-        const checked = roles.some(role => {
-            return user.roles.some(userRole => userRole.acronym === role)
-        })
+        const checked = false;
+        // roles.some(role => {
+        //     // return user.roles.some(userRole => userRole.acronym === role)
+        // })
         if (checked) {
             next();
         } else {

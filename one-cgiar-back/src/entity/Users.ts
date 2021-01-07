@@ -1,27 +1,22 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import { MinLength, IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
-import { Roles } from './Roles'
-import { Initiative } from './Initiative'
+import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
+import { Roles } from './Roles';
 
 @Entity()
-@Unique(['username', 'email'])
-export class User {
+@Unique(['email'])
+export class User extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
     @IsNotEmpty()
-    firstname: string
+    first_name: string
 
     @Column()
     @IsNotEmpty()
-    lastname: string
-
-    @Column()
-    @MinLength(4)
-    @IsNotEmpty({ message: 'The username is required' })
-    username: string
+    last_name: string
 
     @Column()
     @IsNotEmpty({ message: 'The email is required' })
@@ -31,24 +26,23 @@ export class User {
     @Column({ nullable: true })
     password: string
 
-    @ManyToMany(() => Roles, roles => roles.users)
-    @JoinTable()
-    roles: Roles[];
-
     @Column({ default: false })
     is_cgiar: boolean;
 
-    @Column()
-    @CreateDateColumn()
-    createdAt: Date
-
-    @Column()
-    @UpdateDateColumn()
-    updatedAt: Date
-
-    @OneToMany(type => Initiative, initiative => initiative.user)
-    initiatives: Initiative[];
-
+    @ManyToMany(type => Roles)
+    @JoinTable({
+        name: "roles_by_users", // table name for the junction table of this relation
+        joinColumn: {
+            name: "user_id",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "role_id",
+            referencedColumnName: "id"
+        }
+    })
+    roles: Roles[];
+  
     hashPassword():void {
         const salt = bcrypt.genSaltSync(10)
         this.password = bcrypt.hashSync(this.password, salt)

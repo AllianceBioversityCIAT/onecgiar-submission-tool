@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 import * as jwt from 'jsonwebtoken'
 import { validate } from 'class-validator'
-import { User } from '../entity/User'
+import { User } from '../entity/Users'
 import config from '../config/config'
 let ActiveDirectory = require('activedirectory')
 
@@ -45,7 +45,8 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user.id, email: user.email }, config.jwtSecret, { expiresIn: '7h' });
 
         const name = user.email;
-        const roles = user.roles;
+        const roles = [];
+        //  user.roles;
 
         res.json({ msg: 'OK', token, name, roles });
     } catch (error) {
