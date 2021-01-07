@@ -51,9 +51,17 @@ h3 {
     cursor: pointer;
 }
 
+.add-coordinator:hover {
+    color: #469424;
+}
+
 mat-icon {
-    color: #ff0000;
+    color: #d30000;
     cursor: pointer;
+}
+
+mat-icon:hover {
+    color: #ff0000;
 }
 
 .close {
