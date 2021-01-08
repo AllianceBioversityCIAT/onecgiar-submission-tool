@@ -1,7 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Unique } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { User } from './Users';
-import { RolesHandler } from "../helpers/RolesHandler";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
 import { Roles } from "./Roles";
 

@@ -1,17 +1,16 @@
-import { MigrationInterface, QueryRunner, getRepository } from "typeorm";
-import { User } from "../entity/Users";
+import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
 import { Roles } from "../entity/Roles";
 import { Permissions } from "../entity/Permissions";
+import { Users } from "../entity/Users";
 
-export class CreateAdminUser1610048364000 implements MigrationInterface {
+export class CreateAdminRolePermissionsUser1610124813721 implements MigrationInterface {
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
+    public async up(queryRunner: QueryRunner): Promise<any> {
         /***
-         * 
-         *  create role
-         *  
-         */
+       * 
+       *  create role
+       *  
+       */
 
         let role = new Roles();
         role.acronym = 'ADM';
@@ -62,7 +61,7 @@ export class CreateAdminUser1610048364000 implements MigrationInterface {
          *  
          */
 
-        let user = new User();
+        let user = new Users();
         user.first_name = "admin";
         user.last_name = "one";
         user.password = "admin";
@@ -70,12 +69,11 @@ export class CreateAdminUser1610048364000 implements MigrationInterface {
         user.is_cgiar = false;
         user.roles = [createdRole];
         user.hashPassword();
-        const userRepository = getRepository(User);
+        const userRepository = getRepository(Users);
         await userRepository.save(user);
-
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: QueryRunner): Promise<any> {
     }
 
 }
