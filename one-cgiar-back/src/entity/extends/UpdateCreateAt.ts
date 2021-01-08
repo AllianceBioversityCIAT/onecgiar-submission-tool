@@ -3,11 +3,11 @@ import {Column, CreateDateColumn} from "typeorm";
 export abstract  class UpdatedCreatedAt {
 
     @Column()
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date
 
     @Column()
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp', onUpdate: 'CURRENT_TIMESTAMP', nullable: true })
     updated_at: Date
 
 }

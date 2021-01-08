@@ -3,7 +3,7 @@ import { getRepository, In } from 'typeorm'
 import { validate } from 'class-validator'
 import { Roles } from '../entity/Roles'
 import { Permissions } from '../entity/Permissions'
-import { User } from '../entity/Users'
+import { Users } from '../entity/Users'
 import { accessCtrl } from '../middlewares/access-control'
 
 export const getAllRoles = async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const createRole = async (req: Request, res: Response) => {
     const { description, acronym, name } = req.body
     const role = new Roles();
     const rolesRepository = getRepository(Roles);
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     const userId = res.locals.jwtPayload.userId;
     const validationOpt = { validationError: { target: false, value: false } };
 
@@ -118,7 +118,7 @@ export const createPermission = async (req: Request, res: Response) => {
     const permission = new Permissions();
     const permissionRepository = getRepository(Permissions);
     const rolesRepository = getRepository(Roles);
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     const userId = res.locals.jwtPayload.userId;
     const validationOpt = { validationError: { target: false, value: false } };
 

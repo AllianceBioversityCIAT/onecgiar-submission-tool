@@ -6,7 +6,7 @@ import { Roles } from './Roles';
 
 @Entity()
 @Unique(['email'])
-export class User extends UpdatedCreatedAt {
+export class Users extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 

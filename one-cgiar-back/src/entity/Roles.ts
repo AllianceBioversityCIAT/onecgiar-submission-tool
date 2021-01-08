@@ -1,9 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Unique } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { User } from './Users';
-import { RolesHandler } from "../helpers/RolesHandler";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
-import { Permissions } from "./Permissions";
 
 
 @Entity()
@@ -24,6 +21,6 @@ export class Roles extends UpdatedCreatedAt {
     @IsNotEmpty({ message: 'Acronym is required' })
     description: string
 
-   
+
 
 }

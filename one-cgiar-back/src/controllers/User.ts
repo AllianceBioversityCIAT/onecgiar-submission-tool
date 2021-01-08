@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { getRepository, In } from 'typeorm'
 import { validate } from 'class-validator'
-import { User } from '../entity/Users'
+import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
 import { accessCtrl } from '../middlewares/access-control';
 // import { Roles } from '../entity/Roles';
 
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     let users;
 
     try {
@@ -23,7 +23,7 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
 
 export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     try {
         const user = await userRepository.findOneOrFail(id);
         res.json({ data: user, msg: 'User data' });
@@ -35,9 +35,9 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
-    const user = new User();
+    const user = new Users();
     const userId = res.locals.jwtPayload.userId;
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     const rolesRepository = getRepository(Roles);
 
     user.first_name = first_name;

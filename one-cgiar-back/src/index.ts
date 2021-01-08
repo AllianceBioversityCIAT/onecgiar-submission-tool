@@ -18,7 +18,7 @@ if (!process.env.PORT) {
 
 const parentDir = require('path').resolve(process.cwd(), '../');
 const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
-const HOST = process.env.LOCALHOST;
+const HOST = process.env.HOST;
 
 createConnection()
     .then(async () => {
@@ -31,10 +31,7 @@ createConnection()
             { frameguard: false }
         ));
         app.use(bodyParser.json());
-        // app.use(cors());
-        // app.use(morgan('dev'));
-        // app.use(helmet());
-        // app.use(express.json());
+        
 
         // routes
         app.use("/api", Routes);
@@ -54,4 +51,7 @@ createConnection()
             console.log(`Server started on port ${PORT} and host ${HOST}!`);
         });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+        console.log('error typeorm connection')
+        console.log(error);
+    });
