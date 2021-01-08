@@ -1,34 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Unique } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { User } from './User';
-import { RolesHandler } from "../helpers/RolesHandler";
+import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
 
 
 @Entity()
-export class Roles {
+@Unique(['acronym', 'name'])
+export class Roles extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column()
+    @IsNotEmpty({ message: 'Name is required' })
+    name: string;
 
     @Column()
     @IsNotEmpty({ message: 'Acronym is required' })
     acronym: string;
 
-    @Column({
-        type: "enum",
-        enum: RolesHandler,
-        default: RolesHandler.sgd
-    })
-    description: RolesHandler
-
     @Column()
-    @CreateDateColumn()
-    createdAt: Date;
+    @IsNotEmpty({ message: 'Acronym is required' })
+    description: string
 
-    @Column()
-    @UpdateDateColumn()
-    updatedAt: Date;
 
-    @ManyToMany(() => User, user => user.roles)
-    users: User[];
 
 }

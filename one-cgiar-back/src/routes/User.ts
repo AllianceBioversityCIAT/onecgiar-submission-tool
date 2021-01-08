@@ -7,18 +7,20 @@ import { RolesHandler } from '../helpers/RolesHandler'
 const router = Router()
 
 // get all users
-router.get('/users', [checkJwt,checkRole([RolesHandler.admin])], getUsers);
+// router.get('/', getUsers);
+router.get('/', [checkJwt], getUsers);
 
 // create an user
-router.post('/users', [checkJwt,checkRole([RolesHandler.admin])], createUsers);
+// router.post('/', createUsers);
+router.post('/', [checkJwt], createUsers);
 
 // get user by id
-router.get('/users/:id', [checkJwt,checkRole([RolesHandler.admin])], getUser);
+// router.get('/:id', [checkJwt,checkRole([RolesHandler.admin])], getUser);
 
 // update user
-router.put('/users/:id', [checkJwt,checkRole([RolesHandler.admin])], updateUser);
+// router.put('/:id', [checkJwt,checkRole([RolesHandler.admin])], updateUser);
 
 // delete user
-router.delete('/users/:id', [checkJwt,checkRole([RolesHandler.admin])], deleteUser);
+// router.delete('/:id', [checkJwt,checkRole([RolesHandler.admin])], deleteUser);
 
 export default router;

@@ -1,70 +1,90 @@
 import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
+import { getRepository, In } from 'typeorm'
 import { validate } from 'class-validator'
-import { User } from '../entity/User'
+import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
+import { accessCtrl } from '../middlewares/access-control';
+// import { Roles } from '../entity/Roles';
 
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     let users;
 
     try {
-        users = await userRepository.find({ relations: ['roles'] });
-        return res.json(users)
+        users = await userRepository.find();
+        return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
-        return res.status(404).json({ msg: 'Something went wrong' });
+        return res.status(404).json({ msg: 'Something went wrong', data: error });
     }
 
-    if (users.length > 0) {
-        return res.json(users);
-    } else {
-        return res.status(404).json({ msg: 'No Results' });
-    }
 
 };
 
 export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     try {
-        const user = await userRepository.findOneOrFail(id, { relations: ['roles'] });
-        res.send(user);
+        const user = await userRepository.findOneOrFail(id);
+        res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: 'No results' });
+        res.status(404).json({ msg: 'Something went wrong', data: error });
     }
 };
 
 export const createUsers = async (req: Request, res: Response) => {
-    const { firstname, lastname, username, password, roles, email, is_cgiar } = req.body;
-    const user = new User();
-    user.firstname = firstname;
-    user.lastname = lastname;
-    user.username = username;
+    const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
+    const user = new Users();
+    const userId = res.locals.jwtPayload.userId;
+    const userRepository = getRepository(Users);
+    const rolesRepository = getRepository(Roles);
+
+    user.first_name = first_name;
+    user.last_name = last_name;
     user.password = password;
-    user.roles = roles;
     user.email = email;
     user.is_cgiar = is_cgiar;
-
-    // validate
-    const validationOpt = { validationError: { target: false, value: false } };
-    const errors = await validate(user, validationOpt);
-    if (errors.length > 0) {
-        return res.status(400).json(errors);
-    }
-
-    const userRepository = getRepository(User);
     try {
-        if (!is_cgiar) {
-            user.hashPassword();
+
+
+        let user = await userRepository.findOne(userId, { relations: ['roles'] });
+        let rolesAcronyms = user.roles.map(role => role.acronym);
+        const permission = accessCtrl.can(rolesAcronyms).createAny('user');
+
+        if (permission.granted) {
+            // validate
+            const validationOpt = { validationError: { target: false, value: false } };
+            const errors = await validate(user, validationOpt);
+            if (errors.length > 0) {
+                return res.status(400).json(errors);
+            }
+            const rolesDB = await rolesRepository.find({
+                select: ['id'],
+                where: { id: In(roles) },
+                order: { created_at: "ASC" },
+            });
+
+            if (rolesDB && rolesDB.length > 0)
+                user.roles = rolesDB;
+            else
+                return res.status(400).json({ data: rolesDB, msg: 'None role found' });
+
+            if (!is_cgiar) {
+                user.hashPassword();
+            }
+            await userRepository.save(user);
+        } else {
+            // resource is forbidden for this user/role
+            res.status(403).end();
         }
-        await userRepository.save(user);
+        // res.send('User created -- ');
+
+
     } catch (error) {
         console.log(error);
-        return res.status(409).json({ msg: 'Username already exist' });
+        return res.status(409).json({ msg: 'User can not be created', data: error });
     }
-    res.send('User created');
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -77,7 +97,7 @@ export const updateUser = async (req: Request, res: Response) => {
         user = await userRepository.findOneOrFail(id);
         user.firstname = firstname;
         user.lastname = lastname;
-        user.username = username;
+        // user.username = username;
         user.email = email;
         user.password = password;
         user.roles = roles;

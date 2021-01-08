@@ -2,4 +2,8 @@ node_modules
 build
 dist
 ormconfig.json
-src/config/config.ts
+src/config/*
+/nodemon.json
+/todo.txt
+/docs/DB/DB.sql
+/.env
