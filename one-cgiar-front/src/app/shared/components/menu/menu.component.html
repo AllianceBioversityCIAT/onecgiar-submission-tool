@@ -17,8 +17,7 @@
                 </mat-list-item>
                 <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-pc">
                     <span>Narratives</span>
-                    <button mat-icon-button aria-label="Verified icon"
-                        [disabled]="_auth.narrativesForm.invalid">
+                    <button mat-icon-button aria-label="Verified icon" [disabled]="_auth.narrativesForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
@@ -54,7 +53,8 @@
             <mat-list class="menu-options">
                 <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-c">
                     <span>General Information</span>
-                    <button mat-icon-button aria-label="Verified icon" [disabled]="_requests.generalInformationFormCs.invalid">
+                    <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_requests.generalInformationFormCs.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
@@ -71,13 +71,28 @@
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/work-packages-c">
-                    <span>Work packages</span>
+                <!-- <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/work-packages-c"> -->
+                    <mat-expansion-panel (opened)="panelOpenWP = true" (closed)="panelOpenWP = false">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Work packages
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-list class="menu-options-wp">
+                            <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/work-packages-c">
+                                <span>Work package 1</span>
+                                <button mat-icon-button aria-label="Verified icon"
+                                    [disabled]="_requests.workPackageInformationCs.invalid">
+                                    <mat-icon>verified</mat-icon>
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-expansion-panel>
                     <!-- <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_requests.generalInformationForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button> -->
-                </mat-list-item>
+                <!-- </mat-list-item> -->
                 <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-c">
                     <span>Key partners</span>
                     <!-- <button mat-icon-button aria-label="Verified icon"

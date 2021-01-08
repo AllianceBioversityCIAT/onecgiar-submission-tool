@@ -26,6 +26,11 @@ export class RequestsService {
     narrative: new FormControl('', Validators.required),
     uploadDocuments: new FormControl('', Validators.required),
   });
+  workPackageInformationCs = new FormGroup({
+    name: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    results: new FormControl('', Validators.required),
+  });
 
   constructor() { }
 
@@ -60,6 +65,10 @@ export class RequestsService {
 
   saveTheoryOfChange(): void {
     console.log('formulario guardado', this.theoryOfChangeFormCs);
+  }
+
+  saveWorkPackageInformation(): void {
+    console.log('formulario guardado', this.workPackageInformationCs);
   }
 
   submitForm(): void {

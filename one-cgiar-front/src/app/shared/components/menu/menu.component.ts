@@ -11,6 +11,7 @@ export class MenuComponent implements OnInit {
 
   panelOpenPC = false;
   panelOpenC = false;
+  panelOpenWP = false;
   panelOpenFP = false;
 
   constructor(public _auth:AuthService, public _requests: RequestsService) { }

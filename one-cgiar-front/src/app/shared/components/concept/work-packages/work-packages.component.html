@@ -1,0 +1,32 @@
+<div class="work-packages-container">
+    <strong class="work-packages-title">Work package</strong>
+</div>
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Information">
+        <form [formGroup]="_requests.workPackageInformationCs" class="narratives-form">
+            <mat-form-field class="narratives-full-width">
+                <p><strong>Name: </strong><span class="asterisk">* </span></p>
+                <textarea type="text" formControlName="name" matInput required></textarea>
+            </mat-form-field>
+            <mat-form-field class="narratives-full-width">
+                <p><strong>Ensure both science/research and innovation/impact pathway content: </strong><span class="asterisk">* </span></p>
+                <textarea type="text" formControlName="description" matInput required></textarea>
+            </mat-form-field>
+            <mat-form-field class="narratives-full-width">
+                <p><strong>Results: </strong><span class="asterisk">* </span></p>
+                <textarea type="text" formControlName="results" matInput required></textarea>
+            </mat-form-field>
+            <div class="narratives-save">
+                <button type="submit" (click)="_requests.saveWorkPackageInformation()" mat-raised-button class="save-button">
+                    Save
+                </button>
+            </div>
+        </form>
+    </mat-tab>
+    <mat-tab label="Geographic scope">
+        Content 2
+    </mat-tab>
+    <mat-tab label="Projection of benefits">
+        Content 3
+    </mat-tab>
+</mat-tab-group>

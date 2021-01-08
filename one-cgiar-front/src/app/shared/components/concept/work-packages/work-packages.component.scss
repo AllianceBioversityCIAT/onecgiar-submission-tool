@@ -1,0 +1,44 @@
+.work-packages-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 1rem auto;
+}
+  
+.work-packages-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+
+.narratives-form {
+    width: 90%;
+    margin: 1rem auto;
+}
+    
+.narratives-full-width {
+    width: 100%;
+}
+
+p {
+    color: #0779A4;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+  
+.narratives-save {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.save-button {
+    background-color: #0779A4;
+    text-decoration: none;
+    color: #fff;
+    width: 100px;
+}
+
+.save-button:hover {
+    background-color: #0c96c9;
+}

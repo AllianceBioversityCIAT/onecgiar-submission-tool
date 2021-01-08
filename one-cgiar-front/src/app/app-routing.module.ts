@@ -15,6 +15,7 @@ import { FeedbackComponent } from './shared/components/preconcept/feedback/feedb
 import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
+import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,9 @@ const routes: Routes = [
       },
       {
         path: 'theory-of-change-c', component: TheoryOfChangeComponent,
+      },
+      {
+        path: 'work-packages-c', component: WorkPackagesComponent,
       },
     ]
   },
