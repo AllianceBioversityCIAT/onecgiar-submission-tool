@@ -1,9 +1,14 @@
-import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
-import * as jwt from 'jsonwebtoken'
-import { validate } from 'class-validator'
-import { Users } from '../entity/Users'
-import config from '../config/config'
+import { Request, Response } from 'express';
+import { getRepository } from 'typeorm';
+import * as jwt from 'jsonwebtoken';
+import { validate } from 'class-validator';
+import { Users } from '../entity/Users';
+import config from '../config/config';
+
+
+require('dotenv').config();
+
+
 let ActiveDirectory = require('activedirectory');
 
 const jwtSecret = process.env.jwtSecret;

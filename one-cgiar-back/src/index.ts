@@ -31,14 +31,20 @@ createConnection()
             { frameguard: false }
         ));
         app.use(bodyParser.json());
-        
+        app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
+
 
         // routes
         app.use("/api", Routes);
 
+        //load front
+        app.get('/', (req, res) => {
+            res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
+        });
+
         app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
-            // res.status(200).sendFile(parentDir + "/supportpacks-front/dist/melsp/index.html");
+            res.status(200).sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html");
         });
 
         app.use((err: any, req: any, res: { setHeader: (arg0: string, arg1: string) => void; }, next: any) => {

@@ -92,7 +92,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { firstname, lastname, username, email, password, roles, is_cgiar } = req.body;
 
-    const userRepository = getRepository(User);
+    const userRepository = getRepository(Users);
     try {
         user = await userRepository.findOneOrFail(id);
         user.firstname = firstname;
@@ -129,8 +129,8 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const userRepository = getRepository(User);
-    let user: User;
+    const userRepository = getRepository(Users);
+    let user: Users;
 
     try {
         user = await userRepository.findOneOrFail(id);
