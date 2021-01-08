@@ -1,0 +1,53 @@
+.initiative-container {
+    padding: 2rem 4rem 0 4rem;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-button {
+    background-color: #6AA84F;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5em;
+    margin: 1.5rem 0;
+    width: 9em;
+}
+
+.card-container {
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.initiative-identification {
+    align-items: center;
+    background: #0779A4;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    color: #fff;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.initiative-id {
+    font-size: 1.2em;
+}
+
+.manage-button {
+    border-radius: 20px;
+    color: #0779A4;
+}

@@ -6,12 +6,11 @@ table {
     width: 100%;
 }
   
-.mat-form-field {
-    font-size: 14px;
-    width: 100%;
-}
-  
 td, th {
     width: 25%;
 }
-  
+
+th {
+    background-color: #0779A4;
+    color: #fff;
+}

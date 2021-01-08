@@ -1,0 +1,36 @@
+.key-partners-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    margin: 1rem auto;
+}
+
+.key-partners-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+
+.key-partners-form {
+    width: 100%;
+  }
+
+.chip-list {
+    width: 100%;
+}
+
+.add-partner-text {
+    padding: 0;
+}
+
+.key-partners-save {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.save-button {
+    background-color: #0779A4;
+    text-decoration: none;
+    color: #fff;
+    width: 100px;
+}

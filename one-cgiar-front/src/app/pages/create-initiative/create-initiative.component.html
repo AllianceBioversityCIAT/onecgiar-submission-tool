@@ -1,1 +1,25 @@
-<p>create-initiative works!</p>
+<app-navbar></app-navbar>
+<div class="initiative-container">
+    <div class="menu-container">
+        <app-menu></app-menu>
+        <div class="button-container">
+            <button type="submit" (click)="_auth.submitForm()" [disabled]="_requests.generalInformationFormCs.invalid || _requests.narrativesFormCs.invalid"
+                mat-raised-button class="submit-button">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <mat-card class="card-container">
+        <div class="initiative-identification">
+            <span class="initiative-id">ID: 1</span>
+            <button class="manage-button" mat-raised-button (click)="openDialog()">
+                Manage access
+                <mat-icon>settings</mat-icon>
+            </button>
+        </div>
+        <router-outlet></router-outlet>
+    </mat-card>
+
+
+</div>

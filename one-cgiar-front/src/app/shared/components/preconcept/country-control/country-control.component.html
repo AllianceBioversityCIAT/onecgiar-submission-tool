@@ -1,0 +1,18 @@
+<mat-form-field class="chip-list">
+    <mat-label>Key countries</mat-label>
+    <mat-chip-list #chipList aria-label="Country selection">
+        <mat-chip *ngFor="let country of countries" [selectable]="selectableCountry" [removable]="removableCountry"
+            (removed)="removeCountry(country)">
+            {{country}}
+            <mat-icon matChipRemove *ngIf="removableCountry">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Select countries" #countryInput [formControl]="countryCtrl" [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addCountry($event)">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCountry($event)">
+        <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+            {{country}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

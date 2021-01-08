@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CoordinatorModalComponent } from '@app/shared/components/coordinator-modal/coordinator-modal.component';
+import { RequestsService } from '@app/shared/services/requests.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-create-initiative',
@@ -7,9 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateInitiativeComponent implements OnInit {
 
-  constructor() { }
+  constructor(public _auth: AuthService, public _requests: RequestsService, public dialog: MatDialog) { }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(CoordinatorModalComponent, { panelClass: 'custom-dialog-container' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   ngOnInit(): void {
+  }
+
+  onSave(generalInformationForm): void {
+    console.log("GUARDANDO", generalInformationForm.value);
   }
 
 }

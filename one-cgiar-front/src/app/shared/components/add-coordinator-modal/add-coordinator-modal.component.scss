@@ -1,0 +1,36 @@
+mat-dialog-content {
+    padding: 1rem 5rem;
+}
+
+mat-dialog-actions {
+    padding: 1rem 2rem;
+}
+
+mat-icon {
+    color: #666666;
+    cursor: pointer;
+}
+
+p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-typography {
+    width: 50rem;
+}
+
+.close {
+    background: #0779A4;
+    color: #fff;
+}
+  
+.full-width {
+    width: 100%;
+}
+
+.select-coordinator {
+    display: flex;
+    flex-direction: column;
+}

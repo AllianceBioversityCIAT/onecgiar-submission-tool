@@ -1,0 +1,14 @@
+<mat-dialog-content class="mat-typography">
+    <mat-form-field class="full-width">
+        <mat-label>Assignee</mat-label>
+        <input type="text" matInput [formControl]="myControl" [(ngModel)]="coordinator">
+    </mat-form-field>
+    <p *ngFor="let coordinator of _requests.coordinatorList | coordinatorFilter: coordinator"
+        (click)="_requests.addCoordinator(coordinator)">
+        <span>{{coordinator.name}}</span> <span>{{coordinator.email}}</span>
+        <mat-icon>person_add</mat-icon>
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button class="close" mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>

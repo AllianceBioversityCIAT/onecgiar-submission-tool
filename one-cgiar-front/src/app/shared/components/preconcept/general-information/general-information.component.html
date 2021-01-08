@@ -1,0 +1,27 @@
+<div class="general-information-container">
+    <strong class="general-information-title">General information</strong>
+    <form [formGroup]="_auth.generalInformationForm" class="general-information-form">
+        <mat-form-field class="general-information-full-width">
+            <input type="text" formControlName="initiativeName" matInput placeholder="Initiave Name" required />
+        </mat-form-field>
+        <mat-form-field class="general-information-full-width">
+            <input type="text" formControlName="leadContact" matInput placeholder="Lead contact email" required />
+        </mat-form-field>
+        <mat-form-field appearance="standard" class="general-information-full-width">
+            <mat-label>Choose an option</mat-label>
+            <mat-select formControlName="actionArea">
+                <mat-option value="option1">Action Area 1: Systems Transformation</mat-option>
+                <mat-option value="option2">Action Area 2: Sustainable Production</mat-option>
+                <mat-option value="option3">Action Area 3: Genetic Gains</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="general-information-full-width">
+            <input type="number" formControlName="globalBudget" matInput placeholder="Global budget" required />
+        </mat-form-field>
+        <div class="general-information-save">
+            <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+    </form>
+</div>

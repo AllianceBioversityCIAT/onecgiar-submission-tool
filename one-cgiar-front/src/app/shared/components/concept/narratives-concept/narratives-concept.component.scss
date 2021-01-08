@@ -1,0 +1,45 @@
+.narratives-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    margin: 1rem auto;
+}
+  
+.narratives-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+  
+.narratives-form {
+    width: 100%;
+}
+    
+.narratives-full-width {
+    width: 100%;
+}
+
+p {
+    color: #0779A4;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.description-field {
+    color: #666666;
+    font-size: 0.8rem;
+}
+  
+.narratives-save {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.save-button {
+    background-color: #0779A4;
+    text-decoration: none;
+    color: #fff;
+    width: 100px;
+}
