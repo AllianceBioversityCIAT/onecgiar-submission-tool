@@ -34,6 +34,8 @@ export class RequestsService {
 
   constructor() { }
 
+  urlId;
+
   addedCoordinator: User[] = [
     { id: 1, name: 'Jaime Duque', email: 'J.Duque@cgiar.org' }
   ];

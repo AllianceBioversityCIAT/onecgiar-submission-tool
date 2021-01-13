@@ -8,6 +8,8 @@ import { AuthService } from '@app/pages/auth/auth.service';
 })
 export class GeographicScopeComponent implements OnInit {
 
+  globalDimension = false;
+
   constructor(public _auth:AuthService) { }
 
   ngOnInit(): void {

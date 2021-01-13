@@ -47,6 +47,9 @@ const routes: Routes = [
       {
         path: 'work-packages-c', component: WorkPackagesComponent,
       },
+      {
+        path: 'work-packages-c/:id', component: WorkPackagesComponent,
+      },
     ]
   },
   {
