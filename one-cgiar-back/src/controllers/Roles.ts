@@ -26,8 +26,6 @@ export const createRole = async (req: Request, res: Response) => {
     const { description, acronym, name } = req.body
     const role = new Roles();
     const rolesRepository = getRepository(Roles);
-    const userRepository = getRepository(Users);
-    const userId = res.locals.jwtPayload.userId;
     const validationOpt = { validationError: { target: false, value: false } };
 
     role.description = description;
@@ -37,26 +35,13 @@ export const createRole = async (req: Request, res: Response) => {
 
     try {
 
-        let user = await userRepository.findOne(userId, { relations: ['roles'] });
-        let rolesAcronyms = user.roles.map(role => role.acronym);
-        const per = accessCtrl.can(rolesAcronyms).createAny('permission');
-
-        if (per.granted) {
-            // validate
-            const errors = await validate(role, validationOpt);
-            if (errors.length > 0) {
-                return res.status(400).json(errors);
-            }
-            let createdRole = await rolesRepository.save(role);
-            res.json({ msg: 'Role created', data: createdRole });
-        } else {
-            // resource is forbidden for this user/role
-            res.status(403).end();
+        const errors = await validate(role, validationOpt);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
         }
-
-
-
-
+        let createdRole = await rolesRepository.save(role);
+        res.json({ msg: 'Role created', data: createdRole });
+       
     } catch (error) {
         console.log(error);
         return res.status(409).json({ msg: 'Role creation error', data: error });

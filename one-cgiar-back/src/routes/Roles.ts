@@ -2,13 +2,12 @@ import { Router } from 'express'
 import { getAllRoles, createRole, editRole, deleteRole, createPermission, getAllPermissions } from '../controllers/Roles'
 import { checkJwt } from '../middlewares/jwt'
 import { checkRole } from '../middlewares/role'
-import { RolesHandler } from '../helpers/RolesHandler'
 
 const router = Router()
 
 // create role
 // router.post("/", createRole);
-router.post("/", [checkJwt], createRole);
+router.post("/", [checkJwt, checkRole('roles')], createRole);
 
 // get roles
 router.get("/", getAllRoles);

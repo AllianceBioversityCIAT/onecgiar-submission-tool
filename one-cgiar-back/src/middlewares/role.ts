@@ -1,29 +1,27 @@
 import { Request, Response, NextFunction } from 'express'
 import { getRepository } from 'typeorm'
 import { Users } from '../entity/Users'
+import { accessCtrl } from './access-control'
 
-export const checkRole = (roles: Array<string>) => {
+export const checkRole = (entityName: string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const { userId } = res.locals.jwtPayload;
         const userRepository = getRepository(Users);
-        let user: Users;
 
         try {
-            user = await userRepository.findOneOrFail(userId, { relations: ['roles'] });
+            let user = await userRepository.findOne(userId, { relations: ['roles'] });
+            let rolesAcronyms = user.roles.map(role => role.acronym);
+            const permission = accessCtrl.can(rolesAcronyms).createAny(entityName);
+            if (permission.granted) {
+                next();
+            }else{
+                res.status(401).json({ msg: 'No authorized' });
+            }
+    
         } catch (error) {
+            console.log('check role permissions');
             console.log(error);
             return res.status(401).json({ msg: 'No authorized' });
-        }
-
-        // check
-        const checked = false;
-        // roles.some(role => {
-        //     // return user.roles.some(userRole => userRole.acronym === role)
-        // })
-        if (checked) {
-            next();
-        } else {
-            res.status(401).json({ msg: 'No authorized' });
         }
     }
 }
