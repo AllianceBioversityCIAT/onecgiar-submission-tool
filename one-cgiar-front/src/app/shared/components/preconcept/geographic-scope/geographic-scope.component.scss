@@ -1,5 +1,9 @@
 mat-button-toggle-group {
-    margin: 0 0 12px 12px;
+  margin: 0 0 12px 12px;
+}
+
+p {
+  color: #0779A4;
 }
 
 .geographic-scope-container {
@@ -10,13 +14,45 @@ mat-button-toggle-group {
   margin: 1rem auto;
 }
 
-.geographic-scope-title {
-    font-size: 1.4em;
-    padding: 1rem 0;
+.geographic-scope-form {
+  margin: 1rem auto;
+  width: 100%;
 }
 
-.geographic-scope-form {
-  width: 100%;
+.yes-button {
+  background-color: #eeeeee;
+  text-decoration: none;
+  color: #000000;
+  margin: 0 0.5rem 0 0;
+  outline: none;
+}
+
+.yes-button:focus {
+  background-color: #7bc45d;
+  color: #ffffff;
+}
+
+.yes-button:hover {
+  background-color: #7bc45d;
+  color: #ffffff;
+}
+
+.no-button {
+  background-color: #eeeeee;
+  text-decoration: none;
+  color: #000000;
+  margin: 0 0 0 0.5rem;
+  outline: none;
+}
+
+.no-button:focus {
+  background-color: #cc0000;
+  color: #ffffff;
+}
+
+.no-button:hover {
+  background-color: #cc0000;
+  color: #ffffff;
 }
   
 .geographic-scope-full-width {
