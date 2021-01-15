@@ -46,6 +46,31 @@ export class RequestsService {
     { id: 4, name: 'Felipe Elvira', email: 'F.Elvira@cgiar.org' }
   ];
 
+  workPackages = [
+    {
+      name: 'Work package 1',
+      id: 1
+    }
+  ];
+
+  addWorkPackage() {
+    let data = {
+      name: '',
+      id: 999
+    }
+    data.name = `Work package ${this.workPackages.length + 1}`;
+    data.id = this.workPackages.length + 1;
+    this.workPackages.push(data);
+    // this.workPackages.push(`Work package ${this.workPackages.length + 1}`);
+  }
+
+  removeWorkPackage() {
+    this.workPackages.splice(this.urlId - 1);
+    // this.workPackages.forEach((value, index) => {
+    //   if (value.id == workPackage.id) this.workPackages.splice(index, 1);
+    // });
+  }
+
   addCoordinator(coordinator: User) {
     console.log('coordinator', coordinator);
     this.addedCoordinator.push(coordinator);

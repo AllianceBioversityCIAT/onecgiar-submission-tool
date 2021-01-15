@@ -1,8 +1,24 @@
+.delete-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1rem 0 1rem;
+}
+
+mat-icon {
+    color: #d30000;
+    cursor: pointer;
+    font-size: 1.8rem;
+}
+
+mat-icon:hover {
+    color: #ff0000;
+}
+
 .work-packages-container {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 1rem auto;
+    margin: 0.5rem auto;
 }
   
 .work-packages-title {
@@ -41,4 +57,25 @@ p {
 
 .save-button:hover {
     background-color: #0c96c9;
+}
+
+.projection-benefits-container {
+    width: 90%;
+    margin: 1rem auto;
+}
+
+mat-panel-title {
+    justify-content: center;
+}
+
+.contribution-container {
+    display: flex;
+    align-items: center;
+    background-color: #FAFAFA;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    flex-direction: column;
+    border: 2px dotted #b1b0b0;
+    height: 10rem;
 }

@@ -1,15 +1,20 @@
+<div class="delete-container">
+    <mat-icon (click)="_requests.removeWorkPackage()">delete</mat-icon>
+</div>
 <div class="work-packages-container">
     <strong class="work-packages-title">Work package</strong>
 </div>
 <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Information">
+
         <form [formGroup]="_requests.workPackageInformationCs" class="narratives-form">
             <mat-form-field class="narratives-full-width">
                 <p><strong>Name: </strong><span class="asterisk">* </span></p>
                 <textarea type="text" formControlName="name" matInput required></textarea>
             </mat-form-field>
             <mat-form-field class="narratives-full-width">
-                <p><strong>Ensure both science/research and innovation/impact pathway content: </strong><span class="asterisk">* </span></p>
+                <p><strong>Ensure both science/research and innovation/impact pathway content: </strong><span
+                        class="asterisk">* </span></p>
                 <textarea type="text" formControlName="description" matInput required></textarea>
             </mat-form-field>
             <mat-form-field class="narratives-full-width">
@@ -17,16 +22,81 @@
                 <textarea type="text" formControlName="results" matInput required></textarea>
             </mat-form-field>
             <div class="narratives-save">
-                <button type="submit" (click)="_requests.saveWorkPackageInformation()" mat-raised-button class="save-button">
+                <button type="submit" (click)="_requests.saveWorkPackageInformation()" mat-raised-button
+                    class="save-button">
                     Save
                 </button>
             </div>
         </form>
+
     </mat-tab>
     <mat-tab label="Geographic scope">
+
         <app-geographic-scope></app-geographic-scope>
+
     </mat-tab>
     <mat-tab label="Projection of benefits">
-        Content 3
+
+        <div class="projection-benefits-container">
+            <mat-accordion>
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Nutrition, health & food security
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="contribution-container">
+                        <p>I'm visible because I am open</p>
+                    </div>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Poverty reduction, livelihoods & jobs
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <p>I'm visible because I am open</p>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Gender equality, youth & social inclusion
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <p>I'm visible because I am open</p>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Climate adaptation & mitigation
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <p>I'm visible because I am open</p>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Environmental health & biodiversity
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <p>I'm visible because I am open</p>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
     </mat-tab>
 </mat-tab-group>

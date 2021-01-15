@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class WorkPackagesComponent implements OnInit {
 
+  panelOpenState = false;
+
   constructor(public _requests: RequestsService, public activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
