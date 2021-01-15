@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 export class CreateAuthTables1610116030194 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
-        console.log('corro?');
+        console.log('running migration for Auth tables / process');
         await queryRunner.createTable(new Table({
             name: 'users',
             columns: [
