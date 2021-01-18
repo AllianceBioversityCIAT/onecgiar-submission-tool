@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 
 @Component({
   selector: 'app-work-packages',
@@ -11,7 +13,7 @@ export class WorkPackagesComponent implements OnInit {
 
   panelOpenState = false;
 
-  constructor(public _requests: RequestsService, public activatedRoute: ActivatedRoute) { }
+  constructor(public _requests: RequestsService, public activatedRoute: ActivatedRoute, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(resp => {
@@ -22,6 +24,14 @@ export class WorkPackagesComponent implements OnInit {
 
   onSave(informationForm): void {
     console.log("GUARDANDO", informationForm.value);
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, { panelClass: 'custom-dialog-container' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 }

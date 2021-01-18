@@ -50,7 +50,7 @@ p {
   
 .save-button {
     background-color: #0779A4;
-    text-decoration: none;
+    outline: none;
     color: #fff;
     width: 100px;
 }
@@ -70,12 +70,36 @@ mat-panel-title {
 
 .contribution-container {
     display: flex;
-    align-items: center;
     background-color: #FAFAFA;
-    justify-content: center;
-    position: relative;
-    cursor: pointer;
     flex-direction: column;
     border: 2px dotted #b1b0b0;
-    height: 10rem;
+    padding: 0 1.5rem;
+    margin: 1rem 0;
+}
+
+table, th, td {
+  border: 1px solid #0779A4;
+  border-collapse: collapse;
+}
+
+.set-data-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+}
+
+.remove-contribution-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5rem 0 0 0;
+}
+
+.set-data-button {
+    background-color: #0779A4;
+    outline: none;
+    color: #fff;
+}
+
+.set-data-button:hover {
+    background-color: #0c96c9;
 }

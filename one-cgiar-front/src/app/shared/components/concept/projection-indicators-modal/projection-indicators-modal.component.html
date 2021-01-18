@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Year mapping</h2>
+<mat-dialog-content>
+    <p class="description-field"><i>Please indicate a range of the target values for this indicator</i></p>
+    <div class="projection-container" *ngFor="let range of _requests.ranges">
+        <div class="range">
+            <mat-form-field>
+                <p><strong>Select year: </strong><span class="asterisk">* </span></p>
+                <mat-select>
+                    <mat-option value="1">2020</mat-option>
+                    <mat-option value="2">2021</mat-option>
+                    <mat-option value="3">2022</mat-option>
+                    <mat-option value="3">2023</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <p><strong>Low scenario (number): </strong><span class="asterisk">* </span></p>
+                <input type="number" matInput required />
+            </mat-form-field>
+            <mat-form-field>
+                <p><strong> High scenario (number): </strong><span class="asterisk">* </span></p>
+                <input type="number" matInput required />
+            </mat-form-field>
+            <div class="remove-range">
+                <mat-icon (click)="_requests.removeRangeProjection(range)">delete</mat-icon>
+            </div>
+        </div>
+    </div>
+    <div class="add-range">
+        <button type="submit" mat-raised-button class="add-range-button" (click)="_requests.addRangeProjection()">
+            add ranges and years
+        </button>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button class="close" mat-button mat-dialog-close>close</button>
+    <button class="save" mat-button [mat-dialog-close]="true" cdkFocusInitial>save</button>
+</mat-dialog-actions>

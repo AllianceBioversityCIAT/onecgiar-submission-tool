@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 export interface User {
   id: number;
@@ -32,73 +32,118 @@ export class RequestsService {
     results: new FormControl('', Validators.required),
   });
 
-  constructor() { }
+    constructor() { }
 
-  urlId;
+urlId;
 
-  addedCoordinator: User[] = [
-    { id: 1, name: 'Jaime Duque', email: 'J.Duque@cgiar.org' }
-  ];
+addedCoordinator: User[] = [
+  { id: 1, name: 'Jaime Duque', email: 'J.Duque@cgiar.org' }
+];
 
-  coordinatorList: User[] = [
-    { id: 2, name: 'Manuel Almanzar', email: 'M.R.Almanzar@cgiar.org' },
-    { id: 3, name: 'Yecksin Zuñiga', email: 'Y.Zuniga@cgiar.org' },
-    { id: 4, name: 'Felipe Elvira', email: 'F.Elvira@cgiar.org' }
-  ];
+coordinatorList: User[] = [
+  { id: 2, name: 'Manuel Almanzar', email: 'M.R.Almanzar@cgiar.org' },
+  { id: 3, name: 'Yecksin Zuñiga', email: 'Y.Zuniga@cgiar.org' },
+  { id: 4, name: 'Felipe Elvira', email: 'F.Elvira@cgiar.org' }
+];
 
-  workPackages = [
-    {
-      name: 'Work package 1',
-      id: 1
-    }
-  ];
-
-  addWorkPackage() {
-    let data = {
-      name: '',
-      id: 999
-    }
-    data.name = `Work package ${this.workPackages.length + 1}`;
-    data.id = this.workPackages.length + 1;
-    this.workPackages.push(data);
-    // this.workPackages.push(`Work package ${this.workPackages.length + 1}`);
+workPackages = [
+  {
+    name: 'Work package 1',
+    id: 1
   }
+];
 
-  removeWorkPackage() {
-    this.workPackages.splice(this.urlId - 1);
-    // this.workPackages.forEach((value, index) => {
-    //   if (value.id == workPackage.id) this.workPackages.splice(index, 1);
-    // });
+contributions = [
+  {
+    id: 1
   }
+];
 
-  addCoordinator(coordinator: User) {
-    console.log('coordinator', coordinator);
-    this.addedCoordinator.push(coordinator);
+ranges = [
+  {
+    id: 1,
+    low: null,
+    high: null
   }
+];
 
-  removeCoordinator(coordinator: User) {
-    this.addedCoordinator.forEach((value,index)=>{
-        if(value.id==coordinator.id) this.addedCoordinator.splice(index,1);
-    });
-} 
-
-  saveGeneralInformation(): void {
-    console.log('formulario guardado', this.generalInformationFormCs);
+addWorkPackage() {
+  let data = {
+    name: '',
+    id: 999
   }
+  data.name = `Work package ${this.workPackages.length + 1}`;
+  data.id = this.workPackages.length + 1;
+  this.workPackages.push(data);
+  // this.workPackages.push(`Work package ${this.workPackages.length + 1}`);
+}
 
-  saveNarratives(): void {
-    console.log('formulario guardado', this.narrativesFormCs);
-  }
+removeWorkPackage() {
+  this.workPackages.splice(this.urlId - 1);
+  // this.workPackages.forEach((value, index) => {
+  //   if (value.id == workPackage.id) this.workPackages.splice(index, 1);
+  // });
+}
 
-  saveTheoryOfChange(): void {
-    console.log('formulario guardado', this.theoryOfChangeFormCs);
-  }
+addCoordinator(coordinator: User) {
+  console.log('coordinator', coordinator);
+  this.addedCoordinator.push(coordinator);
+}
 
-  saveWorkPackageInformation(): void {
-    console.log('formulario guardado', this.workPackageInformationCs);
-  }
+removeCoordinator(coordinator: User) {
+  this.addedCoordinator.forEach((value, index) => {
+    if (value.id == coordinator.id) this.addedCoordinator.splice(index, 1);
+  });
+}
 
-  submitForm(): void {
-    console.log('formulario sometido', this.generalInformationFormCs);
+addContribution() {
+  let contributionData = {
+    id: 999
   }
+  contributionData.id = this.contributions.length + 1;
+  this.contributions.push(contributionData);
+}
+
+removeContribution(contribution: any) {
+  // this.contributions = this.contributions.filter(({ id }) => id !== contribution.id);
+  this.contributions.forEach((value, index) => {
+    if (value.id == contribution.id) this.contributions.splice(index, 1);
+  });
+}
+
+addRangeProjection() {
+  let rangeData = {
+    id: 2,
+    low: null,
+    high: null
+  }
+  rangeData.id = this.ranges.length + 1;
+  this.ranges.push(rangeData);
+}
+
+removeRangeProjection(range: any) {
+  this.ranges.forEach((value, index) => {
+    if (value.id == range.id) this.ranges.splice(index, 1);
+  });
+}
+
+saveGeneralInformation(): void {
+  console.log('formulario guardado', this.generalInformationFormCs);
+}
+
+saveNarratives(): void {
+  console.log('formulario guardado', this.narrativesFormCs);
+}
+
+saveTheoryOfChange(): void {
+  console.log('formulario guardado', this.theoryOfChangeFormCs);
+}
+
+saveWorkPackageInformation(): void {
+  console.log('formulario guardado', this.workPackageInformationCs);
+}
+
+submitForm(): void {
+  console.log('formulario sometido', this.generalInformationFormCs);
+}
 }
