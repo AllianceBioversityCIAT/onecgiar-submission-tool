@@ -39,10 +39,10 @@
 
         <div class="projection-benefits-container">
             <mat-accordion>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let impactArea of _requests.impactAreas">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            Nutrition, health & food security
+                            {{impactArea.name}}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
@@ -53,30 +53,22 @@
                         <mat-form-field appearance="standard">
                             <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span class="asterisk">* </span></p>
                             <mat-select>
-                                <mat-option value="1">Action Area 1: Systems Transformation</mat-option>
-                                <mat-option value="2">Action Area 2: Sustainable Production</mat-option>
-                                <mat-option value="3">Action Area 3: Genetic Gains</mat-option>
+                                <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
 
                         <table>
                             <tr>
                                 <th></th>
-                                <th>2020</th>
-                                <th>2022</th>
-                                <th>2024</th>
+                                <th *ngFor="let item of projectionRanges">{{item.year}}</th>
                             </tr>
                             <tr>
                                 <td>Low scenario</td>
-                                <td>50</td>
-                                <td>50</td>
-                                <td>50</td>
+                                <td *ngFor="let item of projectionRanges">{{item.low}}</td>
                             </tr>
                             <tr>
                                 <td>High scenario</td>
-                                <td>94</td>
-                                <td>94</td>
-                                <td>94</td>
+                                <td *ngFor="let item of projectionRanges">{{item.high}}</td>
                             </tr>
                         </table>
 
@@ -101,7 +93,7 @@
 
                 </mat-expansion-panel>
 
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             Poverty reduction, livelihoods & jobs
@@ -143,7 +135,7 @@
 
                     <p>I'm visible because I am open</p>
 
-                </mat-expansion-panel>
+                </mat-expansion-panel> -->
             </mat-accordion>
         </div>
 
