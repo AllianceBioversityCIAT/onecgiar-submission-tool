@@ -18,6 +18,12 @@
                 <mat-option value="3">Action Area 3: Genetic Gains</mat-option>
             </mat-select>
         </mat-form-field>
+        <mat-form-field class="general-information-full-width">
+            <p><strong>Please highlight what has changed since the previous stage, and why: </strong><span class="asterisk">* </span></p>
+            <textarea type="text" formControlName="changesPreviousStage" matInput required (keydown)="wordCounter()" #text></textarea>
+            <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
+            <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
+        </mat-form-field>
         <div class="general-information-save">
             <button type="submit" (click)="_requests.saveGeneralInformation()" mat-raised-button class="save-button">
                 Save

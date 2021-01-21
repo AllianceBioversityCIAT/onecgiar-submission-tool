@@ -15,6 +15,7 @@ export class RequestsService {
     initiativeName: new FormControl('', Validators.required),
     leadContact: new FormControl('', Validators.email),
     actionArea: new FormControl('', Validators.required),
+    changesPreviousStage: new FormControl('', Validators.required),
   });
   narrativesFormCs = new FormGroup({
     challenge: new FormControl('', Validators.required),
