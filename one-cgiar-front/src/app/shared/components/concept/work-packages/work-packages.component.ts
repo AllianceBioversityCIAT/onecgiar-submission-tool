@@ -26,6 +26,14 @@ export class WorkPackagesComponent implements OnInit {
     // console.log(this.projectionRanges)
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this._requests.urlId = undefined;
+    // console.log('cerrrradooooo')
+  }
+
+
   onSave(informationForm): void {
     console.log("GUARDANDO", informationForm.value);
   }
