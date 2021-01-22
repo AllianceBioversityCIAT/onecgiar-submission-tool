@@ -23,9 +23,10 @@ export const getAllRoles = async (req: Request, res: Response) => {
 
 export const createRole = async (req: Request, res: Response) => {
 
-    const { description, acronym, name } = req.body
+    const { description, acronym, name, permissions } = req.body
     const role = new Roles();
     const rolesRepository = getRepository(Roles);
+    const permissionRepository = getRepository(Permissions);
     const validationOpt = { validationError: { target: false, value: false } };
 
     role.description = description;
@@ -40,8 +41,19 @@ export const createRole = async (req: Request, res: Response) => {
             return res.status(400).json(errors);
         }
         let createdRole = await rolesRepository.save(role);
-        res.json({ msg: 'Role created', data: createdRole });
-       
+
+        if (permissions.length > 0) {
+            for (let index = 0; index < permissions.length; index++) {
+                const permission = permissions[index] as Permissions;
+                permission.roles = [createdRole];
+            }
+
+            let createdPermissions = await permissionRepository.save(permissions)
+            res.json({ msg: 'Role created', data: { createdRole, createdPermissions } });
+        }
+        else
+            res.json({ msg: 'Role created', data: createdRole });
+
     } catch (error) {
         console.log(error);
         return res.status(409).json({ msg: 'Role creation error', data: error });
@@ -103,8 +115,6 @@ export const createPermission = async (req: Request, res: Response) => {
     const permission = new Permissions();
     const permissionRepository = getRepository(Permissions);
     const rolesRepository = getRepository(Roles);
-    const userRepository = getRepository(Users);
-    const userId = res.locals.jwtPayload.userId;
     const validationOpt = { validationError: { target: false, value: false } };
 
     permission.action = action;
@@ -114,37 +124,27 @@ export const createPermission = async (req: Request, res: Response) => {
 
     try {
 
-        let user = await userRepository.findOne(userId, { relations: ['roles'] });
-        let rolesAcronyms = user.roles.map(role => role.acronym);
-        const per = accessCtrl.can(rolesAcronyms).createAny('permissions');
-        console.log(per)
-        if (per.granted) {
-            // validate
-            const errors = await validate(permission, validationOpt);
-            if (errors.length > 0) {
-                return res.status(400).json(errors);
-            }
-
-
-            const rolesDB = await rolesRepository.find({
-                select: ['id'],
-                where: { id: In(roles) },
-                order: { created_at: "ASC" },
-            });
-
-            if (rolesDB && rolesDB.length > 0)
-                permission.roles = rolesDB;
-            else
-                return res.status(400).json({ data: rolesDB, msg: 'None role found' });
-
-
-            let createdPermission = await permissionRepository.save(permission);
-            res.json({ msg: 'Role permission', data: createdPermission });
+        const errors = await validate(permission, validationOpt);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
         }
-        else {
-            // resource is forbidden for this user/role
-            res.status(403).end();
-        }
+
+
+        const rolesDB = await rolesRepository.find({
+            select: ['id'],
+            where: { id: In(roles) },
+            order: { created_at: "ASC" },
+        });
+
+        if (rolesDB && rolesDB.length > 0)
+            permission.roles = rolesDB;
+        else
+            return res.status(400).json({ data: rolesDB, msg: 'None role found' });
+
+
+        let createdPermission = await permissionRepository.save(permission);
+        res.json({ msg: 'Role permission', data: createdPermission });
+
 
     } catch (error) {
         console.log(error);

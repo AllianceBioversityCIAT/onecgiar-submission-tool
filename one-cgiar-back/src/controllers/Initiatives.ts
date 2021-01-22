@@ -25,13 +25,16 @@ export const getInitiatives = async (req: Request, res: Response) => {
 }
 
 export const createInitiative = async (req: Request, res: Response) => {
-    const { name, user, is_coordinator, is_lead, is_owner } = req.body;
+    const { name, user, is_coordinator, is_lead, is_owner, current_stage } = req.body;
     const userRepository = getRepository(Users);
     const initiativesRepository = getRepository(Initiatives);
     const initiativesByUsersRepository = getRepository(InitiativesByUsers);
+    const initiativesByStagesRepository = getRepository(InitiativesByStages);
+    const stageRepository = getRepository(Stages);
 
     const initiative = new Initiatives();
     const initByUsr = new InitiativesByUsers();
+    const newInitStg = new InitiativesByStages();
     initiative.name = name;
 
     try {
@@ -53,6 +56,12 @@ export const createInitiative = async (req: Request, res: Response) => {
             initByUsr.is_coordinator = is_coordinator;
             initByUsr.is_lead = is_lead;
             initByUsr.is_owner = is_owner;
+            if(current_stage){
+                let sltdStage = await stageRepository.findOne(current_stage);
+                newInitStg.initiative = createdInitiative;
+                newInitStg.stage = sltdStage;
+                let result = await initiativesByStagesRepository.save(newInitStg);
+            }
 
             let createdIniByUsr = await initiativesByUsersRepository.save(initByUsr);
             res.json({ msg: 'Initiative created', data: createdInitiative });

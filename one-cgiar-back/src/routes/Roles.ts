@@ -6,20 +6,16 @@ import { checkRole } from '../middlewares/role'
 const router = Router()
 
 // create role
-// router.post("/", createRole);
-router.post("/", [checkJwt, checkRole('roles')], createRole);
+router.post("/", [checkJwt, checkRole('roles', 'createAny')], createRole);
 
 // get roles
 router.get("/", getAllRoles);
-// router.get("/", [checkJwt,checkRole([RolesHandler.admin])], getAllRoles);
 
 // edit role
-// router.put("/:id", editRole);
-router.put("/:id", [checkJwt], editRole);
+router.put("/:id", [checkJwt, checkRole('roles', 'updateAny')], editRole);
 
 // delete role
-// router.delete("/:id", deleteRole);
-router.delete("/:id", [checkJwt], deleteRole);
+router.delete("/:id", [checkJwt, checkRole('roles', 'deleteAny')], deleteRole);
 
 /***
  * 
@@ -29,11 +25,9 @@ router.delete("/:id", [checkJwt], deleteRole);
 
 
 // create permission
-// router.post("/permissions", createPermission);
-router.post("/permissions", [checkJwt], createPermission);
+// router.post("/permissions", [checkJwt, checkRole('roles')], createPermission);
 
 // get permission
-// router.get("/permissions", getAllPermissions);
 router.get("/permissions", [checkJwt], getAllPermissions);
 
 export default router;

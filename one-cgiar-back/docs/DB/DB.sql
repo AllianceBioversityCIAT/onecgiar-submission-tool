@@ -59,6 +59,8 @@ CREATE TABLE `permissions_by_roles` (
   CONSTRAINT `FK_c73c26f64f6477062784c991f0b` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+
 ------ stages and initiatives -----------
 
 
@@ -79,7 +81,7 @@ CREATE TABLE `stages` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UQ_33444257b15e655f155_stages` (`description`),
+  UNIQUE KEY `UQ_33444257b15e655f155_stages` (`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -93,8 +95,8 @@ CREATE TABLE `initiatives_by_users` (
   `is_coordinator` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `IDX_1ac95dad03d3a20b495aa6f7a1` (`initiativeId`),
-  KEY `IDX_8b4c7595b7f033d7e492d6a2d9` (`userId`),
+  KEY `IDX_1ac95dad03d3a20b495aa6f7a1_initiativeId` (`initiativeId`),
+  KEY `IDX_8b4c7595b7f033d7e492d6a2d9_userId` (`userId`),
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_1ac95dad03d3a20b495bb6f7a19_initiatives` FOREIGN KEY (`initiativeId`) REFERENCES `initiatives` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_8b4c7595b7f033d7e492cca2d96_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -107,8 +109,8 @@ CREATE TABLE `initiatives_by_stages` (
   `stageId` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `IDX_1ac95dad03d3a20b495aa6f7a1` (`initiativeId`),
-  KEY `IDX_8b4c7595b7f033d7e492d6a2d9` (`stageId`),
+  KEY `IDX_1ac95dad03220020b495aa6f7a1_initiativeId` (`initiativeId`),
+  KEY `IDX_8b4c7595b78822d7e492d6a2d9_stageId` (`stageId`),
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_1ac922a20b495bb6f7a19_initiatives` FOREIGN KEY (`initiativeId`) REFERENCES `initiatives` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_8b4c2233d7e492cca2d96_stages` FOREIGN KEY (`stageId`) REFERENCES `stages` (`id`) ON DELETE CASCADE
@@ -135,7 +137,7 @@ CREATE TABLE `key_partners` (
   `initvStgId` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `IDX__initvStgId` (`initvStgId`),
+  KEY `IDX_134654646767_initvStgId` (`initvStgId`),
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_8b4c2233d99492cca2d96_initv_stages` FOREIGN KEY (`initvStgId`) REFERENCES `initiatives_by_stages` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
