@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm'
 import { Users } from '../entity/Users'
 import { accessCtrl } from './access-control'
 
-export const checkRole = (entityName: string) => {
+export const checkRole = (entityName: string, validationMeth: string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const { userId } = res.locals.jwtPayload;
         const userRepository = getRepository(Users);
@@ -11,7 +11,7 @@ export const checkRole = (entityName: string) => {
         try {
             let user = await userRepository.findOne(userId, { relations: ['roles'] });
             let rolesAcronyms = user.roles.map(role => role.acronym);
-            const permission = accessCtrl.can(rolesAcronyms).createAny(entityName);
+            const permission = accessCtrl.can(rolesAcronyms)[validationMeth](entityName);
             if (permission.granted) {
                 next();
             }else{

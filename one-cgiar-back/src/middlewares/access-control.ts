@@ -2,6 +2,7 @@ import { createQueryBuilder, getConnection, getRepository, In } from "typeorm";
 import { Permissions } from "../entity/Permissions";
 import { Roles } from "../entity/Roles";
 import { AccessControl } from 'accesscontrol';
+import { stringify } from "querystring";
 
 export const accessCtrl = new AccessControl();
 
@@ -45,7 +46,8 @@ export const startAccsCtrl = async () => {
 
 
     let grantsObject = await getPermissions();
+
     accessCtrl.setGrants(grantsObject);
-    // console.log(accessCtrl.getGrants());
+    // console.log(JSON.stringify(accessCtrl.getGrants()));
     return accessCtrl;
 }
