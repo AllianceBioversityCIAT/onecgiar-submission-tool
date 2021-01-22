@@ -33,6 +33,7 @@ import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
 import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
+import { ProjectionIndicatorsModalComponent } from './shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { WorkPackagesComponent } from './shared/components/concept/work-packages
     CoordinatorFilterPipe,
     GeneralInformationConceptComponent,
     TheoryOfChangeComponent,
-    WorkPackagesComponent
+    WorkPackagesComponent,
+    ProjectionIndicatorsModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

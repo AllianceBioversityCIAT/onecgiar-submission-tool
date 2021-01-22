@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 
 @Component({
   selector: 'app-work-packages',
@@ -8,13 +11,39 @@ import { RequestsService } from '@app/shared/services/requests.service';
 })
 export class WorkPackagesComponent implements OnInit {
 
-  constructor(public _requests: RequestsService) { }
+  panelOpenState = false;
+
+  projectionRanges = this._requests.projectionBenefitsRangeCs.controls.range.value;
+
+  constructor(public _requests: RequestsService, public activatedRoute: ActivatedRoute, public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    // console.log(this._requests.impactAreas)
+    this.activatedRoute.params.subscribe(resp => {
+      this._requests.urlId = resp['id'];
+      console.log(resp['id']);
+    })
+    // console.log(this.projectionRanges)
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this._requests.urlId = undefined;
+    // console.log('cerrrradooooo')
+  }
+
+
   onSave(informationForm): void {
-    console.log("GUARDANDO",informationForm.value);
+    console.log("GUARDANDO", informationForm.value);
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, { panelClass: 'custom-dialog-container' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 }

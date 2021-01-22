@@ -1,13 +1,12 @@
 <div class="geographic-scope-container">
-    <strong class="geographic-scope-title">Geographic Scope</strong>
     <div class="geographic-scope-form">
-        <p>¿Does the initiative have a global dimension?</p>
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle value="yes">Yes</mat-button-toggle>
-            <mat-button-toggle value="no">No</mat-button-toggle>
-        </mat-button-toggle-group>
-        <app-region-control></app-region-control>
-        <app-country-control></app-country-control>
+        <p><strong>¿Does the initiative have a global dimension?</strong></p>
+        <div>
+            <button type="button" mat-raised-button class="yes-button" (click)="globalDimension = false">Yes</button>
+            <button type="button" mat-raised-button class="no-button" (click)="globalDimension = true">No</button>
+        </div>
+        <app-region-control *ngIf="globalDimension == true"></app-region-control>
+        <app-country-control *ngIf="globalDimension == true"></app-country-control>
         <div class="geographic-scope-save">
             <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
                 Save

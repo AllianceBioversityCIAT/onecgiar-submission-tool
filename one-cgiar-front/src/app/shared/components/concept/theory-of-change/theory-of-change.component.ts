@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
@@ -9,6 +9,15 @@ import { RequestsService } from '@app/shared/services/requests.service';
 export class TheoryOfChangeComponent implements OnInit {
 
   constructor(public _requests: RequestsService) { }
+
+  wordCount: any;
+
+  @ViewChild("text") text: ElementRef;
+  words: any;
+  wordCounter() {
+    this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
+    this.words = this.wordCount ? this.wordCount.length : 0;
+  }
 
   ngOnInit(): void {
   }

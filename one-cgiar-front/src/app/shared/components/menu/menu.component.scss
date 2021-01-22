@@ -57,5 +57,21 @@ mat-list-item {
 
 mat-list-item:focus {
     outline: none;
-
 } 
+
+.add-container {
+    display: flex;
+}
+
+.add-button {
+    background-color: #6AA84F;
+    border-radius: 20px;
+    outline: none;
+    color: #fff;
+    font-size: 1.2em;
+    margin: 1rem 0;
+}
+
+.add-button:hover {
+    background-color: #7bc45d;
+}

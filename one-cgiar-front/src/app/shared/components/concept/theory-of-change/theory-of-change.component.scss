@@ -77,6 +77,7 @@ p {
     cursor: pointer;
     flex-direction: column;
     border: 2px dotted #b1b0b0;
+    background-color: #FAFAFA;
     margin: 2rem 10rem;
     height: 10rem;
     .nonstylefile {
@@ -93,6 +94,7 @@ p {
     text-decoration: none;
     color: #fff;
     width: 100px;
+    margin: 1.5rem 0;
 }
 
 .save-button:hover {

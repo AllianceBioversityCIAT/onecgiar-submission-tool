@@ -22,8 +22,8 @@
             placeholder="Password"
             required
           />
-          <button mat-icon-button matSuffix (click)="hide = !hide">
-            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          <button mat-icon-button matSuffix>
+            <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
           </button>
           <mat-error *ngIf="checkField('password')">
             {{ loginForm.errorMessage }}

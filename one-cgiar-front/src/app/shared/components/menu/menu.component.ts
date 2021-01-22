@@ -14,7 +14,7 @@ export class MenuComponent implements OnInit {
   panelOpenWP = false;
   panelOpenFP = false;
 
-  constructor(public _auth:AuthService, public _requests: RequestsService) { }
+  constructor(public _auth: AuthService, public _requests: RequestsService) { }
 
   ngOnInit(): void {
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
@@ -7,6 +7,15 @@ import { RequestsService } from '@app/shared/services/requests.service';
   styleUrls: ['./narratives-concept.component.scss']
 })
 export class NarrativesConceptComponent implements OnInit {
+
+  wordCount: any;
+
+  @ViewChild("text") text: ElementRef;
+  words: any;
+  wordCounter() {
+    this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
+    this.words = this.wordCount ? this.wordCount.length : 0;
+  }
 
   constructor(public _requests: RequestsService) { }
 
