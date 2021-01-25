@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express'
-import { getRepository, In } from 'typeorm'
+import { getConnection, getRepository, In } from 'typeorm'
 import { ActionAreasByInitiativeStage } from '../entity/ActionAreasByInitiativeStage';
 import { Initiatives } from '../entity/Initiatives'
 import { InitiativesByStages } from '../entity/InititativesByStages';
@@ -9,6 +9,9 @@ import { KeyPartners } from '../entity/KeyPartner';
 import { Stages } from '../entity/Stages';
 import { TOCFiles } from '../entity/TOCFiles';
 import { Users } from '../entity/Users';
+
+
+require('dotenv').config();
 
 export const getInitiatives = async (req: Request, res: Response) => {
     const initiativesRepo = getRepository(Initiatives);
@@ -56,7 +59,7 @@ export const createInitiative = async (req: Request, res: Response) => {
             initByUsr.is_coordinator = is_coordinator;
             initByUsr.is_lead = is_lead;
             initByUsr.is_owner = is_owner;
-            if(current_stage){
+            if (current_stage) {
                 let sltdStage = await stageRepository.findOne(current_stage);
                 newInitStg.initiative = createdInitiative;
                 newInitStg.stage = sltdStage;
@@ -64,7 +67,7 @@ export const createInitiative = async (req: Request, res: Response) => {
             }
 
             let createdIniByUsr = await initiativesByUsersRepository.save(initByUsr);
-            res.json({ msg: 'Initiative created', data: createdInitiative });
+            res.json({ msg: 'Initiative created', data: { createdInitiative, initiative_by_stage: newInitStg } });
         }
         else
             return res.status(400).json({ data: userDB, msg: 'None user found' });
@@ -102,25 +105,52 @@ export const createStage = async (req: Request, res: Response) => {
 
 export const assignStageToInitiative = async (req: Request, res: Response) => {
 
-    const { stageId, initiativeId } = req.body;
+    const { stageInitiativeId, stageId, stageData } = req.body;
+
     const stageRepo = getRepository(Stages);
-    const initiativeRepo = getRepository(Initiatives);
     const stageByInitiRepo = getRepository(InitiativesByStages);
-    const stageInitiative = new InitiativesByStages();
+    const queryRunner = getConnection().createQueryBuilder();
+
+    let rawData;
 
     try {
 
         let stage = await stageRepo.findOneOrFail(stageId);
-        let initiative = await initiativeRepo.findOneOrFail(initiativeId);
-        stageInitiative.initiative = initiative;
-        stageInitiative.stage = stage;
-        const errors = await validate(stageInitiative);
-        if (errors.length > 0) {
-            return res.status(400).json(errors);
+        let initiativeStage = await stageByInitiRepo.findOneOrFail(stageInitiativeId);
+        let table_name = `${stage.description.split(' ').join('_').toLocaleLowerCase()}_info`
+        let table_schema = process.env.DB_NAME;
+
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            `
+            SELECT
+                COLUMN_NAME
+            FROM
+                INFORMATION_SCHEMA.COLUMNS
+            WHERE
+                TABLE_NAME =:table_name
+            AND TABLE_SCHEMA =:table_schema
+            `,
+            { table_name, table_schema },
+            {}
+        );
+        console.log(query, parameters);
+        rawData = await queryRunner.connection.query(query, parameters);
+
+        if(rawData){
+
+        }else{
+            return res.status(400).json({msg:'None stage schema found.'});
         }
 
-        let assignedStageToInit = await stageByInitiRepo.save(stageInitiative);
-        res.json({ msg: 'Stage assigned to Initiative', data: assignedStageToInit });
+        // stageInitiative.initiative = initiative;
+        // stageInitiative.stage = stage;
+        // const errors = await validate(stageInitiative);
+        // if (errors.length > 0) {
+        //     return res.status(400).json(errors);
+        // }
+
+        // let assignedStageToInit = await stageByInitiRepo.save(stageInitiative);
+        // res.json({ msg: 'Stage assigned to Initiative', data: assignedStageToInit });
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not assign stage to initiative." });
@@ -213,3 +243,9 @@ export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
 
 
 }
+
+/***
+ *
+ *
+ *
+ ***/
