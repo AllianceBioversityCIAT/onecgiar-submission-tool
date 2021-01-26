@@ -1,8 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm'
-import { MinLength, IsNotEmpty, IsEmail } from 'class-validator'
+import { IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { Roles } from './Roles';
+import { InitiativesByUsers } from './InititativesByUsers';
 
 @Entity()
 @Unique(['email'])
@@ -42,13 +43,16 @@ export class Users extends UpdatedCreatedAt {
         }
     })
     roles: Roles[];
-  
-    hashPassword():void {
+
+    @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.user)
+    public initiatives!: InitiativesByUsers[];
+
+    hashPassword(): void {
         const salt = bcrypt.genSaltSync(10)
         this.password = bcrypt.hashSync(this.password, salt)
     }
 
-    checkPassword(password: string):boolean {
+    checkPassword(password: string): boolean {
         try {
             return bcrypt.compareSync(password, this.password);
         } catch (error) {

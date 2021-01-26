@@ -4,7 +4,6 @@ import { validate } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
 import { accessCtrl } from '../middlewares/access-control';
-// import { Roles } from '../entity/Roles';
 
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
     const userRepository = getRepository(Users);
@@ -36,7 +35,6 @@ export const getUser = async (req: Request, res: Response) => {
 export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
     const user = new Users();
-    const userId = res.locals.jwtPayload.userId;
     const userRepository = getRepository(Users);
     const rolesRepository = getRepository(Roles);
 
@@ -47,38 +45,27 @@ export const createUsers = async (req: Request, res: Response) => {
     user.is_cgiar = is_cgiar;
     try {
 
-
-        let user = await userRepository.findOne(userId, { relations: ['roles'] });
-        let rolesAcronyms = user.roles.map(role => role.acronym);
-        const permission = accessCtrl.can(rolesAcronyms).createAny('user');
-
-        if (permission.granted) {
-            // validate
-            const validationOpt = { validationError: { target: false, value: false } };
-            const errors = await validate(user, validationOpt);
-            if (errors.length > 0) {
-                return res.status(400).json(errors);
-            }
-            const rolesDB = await rolesRepository.find({
-                select: ['id'],
-                where: { id: In(roles) },
-                order: { created_at: "ASC" },
-            });
-
-            if (rolesDB && rolesDB.length > 0)
-                user.roles = rolesDB;
-            else
-                return res.status(400).json({ data: rolesDB, msg: 'None role found' });
-
-            if (!is_cgiar) {
-                user.hashPassword();
-            }
-            await userRepository.save(user);
-        } else {
-            // resource is forbidden for this user/role
-            res.status(403).end();
+        // validate
+        const errors = await validate(user);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
         }
-        // res.send('User created -- ');
+        const rolesDB = await rolesRepository.find({
+            select: ['id'],
+            where: { id: In(roles) },
+            order: { created_at: "ASC" },
+        });
+
+        if (rolesDB && rolesDB.length > 0)
+            user.roles = rolesDB;
+        else
+            return res.status(400).json({ data: rolesDB, msg: 'None role found' });
+
+        if (!is_cgiar) {
+            user.hashPassword();
+        }
+        let userCreated = await userRepository.save(user);
+        res.status(201).json({ msg: 'User created', data: userCreated });
 
 
     } catch (error) {
@@ -97,7 +84,6 @@ export const updateUser = async (req: Request, res: Response) => {
         user = await userRepository.findOneOrFail(id);
         user.firstname = firstname;
         user.lastname = lastname;
-        // user.username = username;
         user.email = email;
         user.password = password;
         user.roles = roles;
