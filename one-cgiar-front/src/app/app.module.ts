@@ -9,6 +9,7 @@ import { HeaderComponent } from '@shared/components/header/header.component';
 import { MaterialModule } from '@app/material.module';
 import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { QuillModule } from 'ngx-quill';
 
 import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
@@ -34,6 +35,8 @@ import { GeneralInformationConceptComponent } from './shared/components/concept/
 import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
 import { ProjectionIndicatorsModalComponent } from './shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
+import { KeyPartnersConceptComponent } from './shared/components/concept/key-partners-concept/key-partners-concept.component';
+import { AddPartnersModalComponent } from './shared/components/concept/add-partners-modal/add-partners-modal.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +64,9 @@ import { ProjectionIndicatorsModalComponent } from './shared/components/concept/
     GeneralInformationConceptComponent,
     TheoryOfChangeComponent,
     WorkPackagesComponent,
-    ProjectionIndicatorsModalComponent
+    ProjectionIndicatorsModalComponent,
+    KeyPartnersConceptComponent,
+    AddPartnersModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -72,7 +77,8 @@ import { ProjectionIndicatorsModalComponent } from './shared/components/concept/
     SidebarModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    QuillModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AdminInterceptor, multi: true },

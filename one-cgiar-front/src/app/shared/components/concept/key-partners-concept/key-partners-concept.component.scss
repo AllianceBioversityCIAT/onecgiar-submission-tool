@@ -1,0 +1,94 @@
+.partners-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    margin: 1rem auto;
+}
+  
+.partners-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+  
+.partners-form {
+    width: 100%;
+}
+    
+.partners-full-width {
+    width: 100%;
+}
+
+p {
+    color: #0779A4;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.description-field {
+    color: #666666;
+    font-size: 0.8rem;
+}
+
+table, th, td {
+    border: 1px solid #0779A4;
+    border-collapse: collapse;
+}
+
+table {
+    margin: 2rem 0 1rem 0;
+    width: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.edit {
+    color: #666666;
+    cursor: pointer;
+}
+
+.edit:hover {
+    color: #7c7c7c;
+}
+
+.delete {
+    color: #d30000;
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: #ff0000;
+}
+
+.set-data-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 3rem 0;
+}
+
+.set-data-button {
+    background-color: #0779A4;
+    outline: none;
+    color: #fff;
+}
+  
+.partners-save {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.save-button {
+    background-color: #0779A4;
+    text-decoration: none;
+    color: #fff;
+    width: 100px;
+    margin: 1.5rem 0;
+}
+
+.save-button:hover {
+    background-color: #0c96c9;
+}
