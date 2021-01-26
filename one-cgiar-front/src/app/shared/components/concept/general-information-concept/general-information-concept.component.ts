@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
-
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -17,13 +16,33 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
+  modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+      [{ 'direction': 'rtl' }],                         // text direction
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+      ['clean'],                                         // remove formatting button
+      ['link', 'image', 'video']                         // link and image, video
+    ]
+  };
+
   constructor(public _requests: RequestsService) { }
 
   ngOnInit(): void {
+    // $('textarea').trumbowyg();
   }
 
   onSave(generalInformationForm): void {
-    console.log("GUARDANDO",generalInformationForm.value);
+    console.log("GUARDANDO", generalInformationForm.value);
   }
 
 }
