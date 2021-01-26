@@ -1,0 +1,48 @@
+h2 {
+    background-color: #0779A4;
+    color: #fff;
+    display: flex;
+    font-size: 1.5rem;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+mat-dialog-content {
+    padding: 1rem 5rem;
+}
+
+mat-dialog-actions {
+    padding: 1rem 2rem;
+}
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 50rem;
+    margin: 0.5rem 0;
+}
+
+p {
+    color: #0779A4;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.add-partner-text {
+    font-style: italic;
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
+.close {
+    background: #0779A4;
+    color: #fff;
+}
+
+.save {
+    background: #6AA84F;
+    color: #fff;
+}
