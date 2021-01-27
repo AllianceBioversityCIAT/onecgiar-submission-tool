@@ -16,6 +16,7 @@ import { NarrativesConceptComponent } from './shared/components/concept/narrativ
 import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
+import { KeyPartnersConceptComponent } from './shared/components/concept/key-partners-concept/key-partners-concept.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,9 @@ const routes: Routes = [
       },
       {
         path: 'work-packages-c/:id', component: WorkPackagesComponent,
+      },
+      {
+        path: 'key-partners-c', component: KeyPartnersConceptComponent,
       },
     ]
   },

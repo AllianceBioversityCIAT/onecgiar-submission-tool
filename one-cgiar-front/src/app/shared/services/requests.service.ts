@@ -35,14 +35,27 @@ export class RequestsService {
   projectionBenefitsRangeCs = new FormGroup({
     range: new FormArray([
       new FormGroup({
-        year: new FormControl('2020'),
+        year: new FormControl('2021'),
         low: new FormControl('1'),
         high: new FormControl('2'),
       }),
       new FormGroup({
-        year: new FormControl('2021'),
+        year: new FormControl('2022'),
         low: new FormControl('3'),
         high: new FormControl('4'),
+      })
+    ]),
+  });
+  keyPartnersCs = new FormGroup({
+    advantage: new FormControl('', Validators.required),
+    partner: new FormArray([
+      new FormGroup({
+        key: new FormControl('CIMMYT'),
+        description: new FormControl('Lorem ipsum dolor sit amet, consectetur adipiscing elit'),
+      }),
+      new FormGroup({
+        key: new FormControl('ICRAF'),
+        description: new FormControl('Lorem ipsum dolor sit amet, consectetur adipiscing elit'),
       })
     ]),
   });
@@ -282,11 +295,15 @@ export class RequestsService {
     console.log('formulario guardado', this.workPackageInformationCs);
   }
 
+  saveKeyPartners(): void {
+    console.log('formulario guardado', this.keyPartnersCs);
+  }
+
   submitForm(): void {
     console.log('formulario sometido', this.generalInformationFormCs);
   }
 
   saveIndicators(): void {
-    console.log('formulario de la gran puta', this.projectionBenefitsRangeCs)
+    console.log('formulario guardado', this.projectionBenefitsRangeCs);
   }
 }

@@ -94,21 +94,16 @@
                             </button>
                         </div>
                     </mat-expansion-panel>
-                    <!-- <button mat-icon-button aria-label="Verified icon"
-                        [disabled]="_requests.generalInformationForm.invalid">
-                        <mat-icon>verified</mat-icon>
-                    </button> -->
-                <!-- </mat-list-item> -->
                 <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-c">
                     <span>Key partners</span>
-                    <!-- <button mat-icon-button aria-label="Verified icon"
-                        [disabled]="_requests.generalInformationForm.invalid">
+                    <button mat-icon-button aria-label="Verified icon"
+                        [disabled]="_requests.keyPartnersCs.invalid">
                         <mat-icon>verified</mat-icon>
-                    </button> -->
+                    </button>
                 </mat-list-item>
             </mat-list>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="panelOpenFP = true" (closed)="panelOpenFP = false">
+        <mat-expansion-panel *ngIf="false" (opened)="panelOpenFP = true" (closed)="panelOpenFP = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     Full Proposal
