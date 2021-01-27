@@ -1,8 +1,9 @@
 import { validate } from 'class-validator';
-import { Request, Response } from 'express'
-import { getConnection, getRepository, In } from 'typeorm'
+import e, { Request, Response } from 'express'
+import { getConnection, getManager, getRepository, In, QueryRunner } from 'typeorm'
 import { ActionAreasByInitiativeStage } from '../entity/ActionAreasByInitiativeStage';
-import { Initiatives } from '../entity/Initiatives'
+import { ConceptInfo } from '../entity/ConceptInfo';
+import { Initiatives, InterfInfoStage } from '../entity/Initiatives'
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
 import { KeyPartners } from '../entity/KeyPartner';
@@ -12,6 +13,9 @@ import { Users } from '../entity/Users';
 
 
 require('dotenv').config();
+
+
+
 
 export const getInitiatives = async (req: Request, res: Response) => {
     const initiativesRepo = getRepository(Initiatives);
@@ -109,37 +113,47 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
 
     const stageRepo = getRepository(Stages);
     const stageByInitiRepo = getRepository(InitiativesByStages);
-    const queryRunner = getConnection().createQueryBuilder();
+    const qN = getConnection().createQueryRunner();
 
-    let rawData;
+    /**
+     * 
+     * 
+     */
 
     try {
 
         let stage = await stageRepo.findOneOrFail(stageId);
+        let tableName = `${stage.description.split(' ').join('_').toLocaleLowerCase()}_info`;
         let initiativeStage = await stageByInitiRepo.findOneOrFail(stageInitiativeId);
-        let table_name = `${stage.description.split(' ').join('_').toLocaleLowerCase()}_info`
-        let table_schema = process.env.DB_NAME;
+        let newData = getRepoConstStage( `${stage.description.split(' ').join('_').toLocaleLowerCase()}`);
+        newData.initvStg = initiativeStage;
 
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `
-            SELECT
-                COLUMN_NAME
-            FROM
-                INFORMATION_SCHEMA.COLUMNS
-            WHERE
-                TABLE_NAME =:table_name
-            AND TABLE_SCHEMA =:table_schema
-            `,
-            { table_name, table_schema },
-            {}
-        );
-        console.log(query, parameters);
-        rawData = await queryRunner.connection.query(query, parameters);
+        const columns = (await qN.getTable(tableName)!).columns.map(c => c.name);
+        const tableRepo = getConnection().manager;
 
-        if(rawData){
 
-        }else{
-            return res.status(400).json({msg:'None stage schema found.'});
+        if (columns.length > 0) {
+            // let values: Record<string, any> = {};
+            columns.forEach(ele => {
+                // let ele = e;
+                // console.log(newEmptyEntity[ele] = stageData[ele]);
+                if (ele === 'initvStgId') {
+                    newData[ele] = initiativeStage;
+                }
+                else if (ele !== 'created_at' && ele !== 'updated_at' && ele !== 'id') {
+                    newData[ele] = stageData[ele]
+                }
+            });
+
+            console.log(newData);
+            const insertedData = await tableRepo.save(newData);
+            // const insertedData = await tableRepo.save(newEmptyEntity);
+
+            console.log(insertedData)
+            res.json({ msg: `${stage.description} stage data has been saved `, data: insertedData });
+
+        } else {
+            return res.status(400).json({ msg: 'None stage schema found.' });
         }
 
         // stageInitiative.initiative = initiative;
@@ -153,10 +167,41 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         // res.json({ msg: 'Stage assigned to Initiative', data: assignedStageToInit });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not assign stage to initiative." });
+        res.status(404).json({ msg: "Could not assign stage to initiative.", data: error });
     }
 
 }
+
+function getRepoConstStage(tableName: string) {
+    switch (tableName) {
+        case 'pre_concept':
+            return null;
+            break;
+        case 'concept':
+            return new ConceptInfo();
+            break;
+        case 'full_proposal':
+            return null;
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+/***
+ *
+ *
+ *
+ ***/
 
 export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
@@ -244,8 +289,4 @@ export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
 
 }
 
-/***
- *
- *
- *
- ***/
+

@@ -39,7 +39,7 @@ export class ConceptInfo extends UpdatedCreatedAt {
 
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()
-    initvStg: InitiativesByStages;
+    initvStg!: InitiativesByStages;
 
 
 
