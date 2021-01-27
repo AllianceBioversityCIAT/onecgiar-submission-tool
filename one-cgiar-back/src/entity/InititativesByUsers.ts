@@ -11,7 +11,7 @@ export class InitiativesByUsers extends UpdatedCreatedAt {
     @ManyToOne(() => Users, user => user.initiatives)
     public user!: Users;
 
-    @ManyToOne(() => Initiatives, initiative => initiative.users)
+    @ManyToOne(() => Initiatives, initiative => initiative.userByStages)
     public initiative!: Initiatives;
 
     @Column('tinyint')

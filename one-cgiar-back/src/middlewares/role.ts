@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm'
 import { Users } from '../entity/Users'
 import { accessCtrl } from './access-control'
 
-export const checkRole = (entityName: string, validationMeth: string) => {
+export const checkRole = (entityName: string, permissionActions: string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const { userId } = res.locals.jwtPayload;
         const userRepository = getRepository(Users);
@@ -11,13 +11,13 @@ export const checkRole = (entityName: string, validationMeth: string) => {
         try {
             let user = await userRepository.findOne(userId, { relations: ['roles'] });
             let rolesAcronyms = user.roles.map(role => role.acronym);
-            const permission = accessCtrl.can(rolesAcronyms)[validationMeth](entityName);
+            const permission = accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
             if (permission.granted) {
                 next();
             }else{
                 res.status(401).json({ msg: 'No authorized' });
             }
-    
+
         } catch (error) {
             console.log('check role permissions');
             console.log(error);
@@ -25,3 +25,16 @@ export const checkRole = (entityName: string, validationMeth: string) => {
         }
     }
 }
+
+// const validateMultipleAction = (rolesAcronyms: string[], permissionActions: string, entityName: string) => {
+//     const actions = permissionActions.split(',');
+//     if (actions.length === 1) {
+//         return accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
+//     } else {
+
+//         actions.forEach(action => {
+//             console.log(accessCtrl.can(rolesAcronyms)[action](entityName).granted)
+//         });
+
+//     }
+// }

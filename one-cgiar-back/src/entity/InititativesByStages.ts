@@ -12,7 +12,7 @@ export class InitiativesByStages extends UpdatedCreatedAt {
     @ManyToOne(() => Stages, stage => stage.initiatives)
     public stage!: Stages;
 
-    @ManyToOne(() => Initiatives, initiative => initiative.stages)
+    @ManyToOne(() => Initiatives, initiative => initiative.initvByStages)
     public initiative!: Initiatives;
 
 }
