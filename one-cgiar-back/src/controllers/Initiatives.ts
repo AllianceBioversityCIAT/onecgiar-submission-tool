@@ -16,13 +16,17 @@ require('dotenv').config();
 
 
 
-
+/**
+ * All Initiatives 
+ * @param req 
+ * @param res 
+ */
 export const getInitiatives = async (req: Request, res: Response) => {
     const initiativesRepo = getRepository(Initiatives);
     let initiatives;
 
     try {
-        initiatives = await initiativesRepo.find();
+        initiatives = await initiativesRepo.find({ relations: ['initvByStages', 'initvByStages.stage', 'userByStages', 'userByStages.user'] });
         res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
 
     } catch (error) {
@@ -30,6 +34,71 @@ export const getInitiatives = async (req: Request, res: Response) => {
         res.status(404).json({ msg: "Could not get any initiatives." });
     }
 }
+
+/**
+ * 
+ * @param req userId
+ * @param res 
+ */
+export const getInitiativesByUser = async (req: Request, res: Response) => {
+    console.log(req.params)
+    const { userId } = req.params;
+    const queryRunner = getConnection().createQueryBuilder();
+    const conceptRepo = getRepository(ConceptInfo);
+
+    let initiatives,
+        initvSQL =
+            ` 
+        SELECT
+            initvStg.id AS initvStgId,
+            stage.description AS currentStage,
+            initvStg.active AS initvStageIsActive,
+            initvStg.status AS initvStageStatus,
+            initvStgUsr.is_coordinator AS isCoordinator,
+            initvStgUsr.is_lead AS isLead,
+            initvStgUsr.is_owner AS isOwner
+
+        FROM
+            initiatives_by_users initvStgUsr
+        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
+        LEFT JOIN stages stage ON stage.id = initvStg.stageId
+        WHERE
+            initvStgUsr.userId = ${userId}
+    `;
+
+    try {
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            initvSQL,
+            {},
+            {}
+        );
+        initiatives = await queryRunner.connection.query(query, parameters);
+        let initiativesIds = initiatives.map(init => init.initvStgId);
+        /**
+              * more stages to be added
+              */
+        const concepts = await conceptRepo.find({
+            where: {
+                initvStg: In(initiativesIds)
+            },
+            relations: ['initvStg']
+
+        });
+        initiatives.forEach(initiative => {
+            initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
+        });
+        /**
+         * more stages to be added
+         */
+        res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get any initiatives." });
+    }
+}
+
+
 
 export const createInitiative = async (req: Request, res: Response) => {
     const { name, user, is_coordinator, is_lead, is_owner, current_stage } = req.body;
@@ -125,7 +194,7 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         let stage = await stageRepo.findOneOrFail(stageId);
         let tableName = `${stage.description.split(' ').join('_').toLocaleLowerCase()}_info`;
         let initiativeStage = await stageByInitiRepo.findOneOrFail(stageInitiativeId);
-        let newData = getRepoConstStage( `${stage.description.split(' ').join('_').toLocaleLowerCase()}`);
+        let newData = getRepoConstStage(`${stage.description.split(' ').join('_').toLocaleLowerCase()}`);
         newData.initvStg = initiativeStage;
 
         const columns = (await qN.getTable(tableName)!).columns.map(c => c.name);
@@ -155,16 +224,6 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         } else {
             return res.status(400).json({ msg: 'None stage schema found.' });
         }
-
-        // stageInitiative.initiative = initiative;
-        // stageInitiative.stage = stage;
-        // const errors = await validate(stageInitiative);
-        // if (errors.length > 0) {
-        //     return res.status(400).json(errors);
-        // }
-
-        // let assignedStageToInit = await stageByInitiRepo.save(stageInitiative);
-        // res.json({ msg: 'Stage assigned to Initiative', data: assignedStageToInit });
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not assign stage to initiative.", data: error });

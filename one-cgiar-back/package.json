@@ -9,7 +9,8 @@
         "start-dev": "nodemon",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
         "migration": "ts-node ./node_modules/typeorm/cli.js migration:run",
-        "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync"
+        "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
+        "typeorm": "ts-node ./node_modules/typeorm/cli.js"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
