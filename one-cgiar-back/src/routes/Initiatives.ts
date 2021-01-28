@@ -14,7 +14,7 @@ router.get("/:userId", [checkJwt, checkRole('initiatives', 'readOwn')], getIniti
 
 
 // create initiatives
-router.post("/", [checkJwt, checkRole('initiatives', 'createAny')], createInitiative);
+router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], createInitiative);
 
 // assign stage to initiative
 router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateAny')], assignStageToInitiative);
