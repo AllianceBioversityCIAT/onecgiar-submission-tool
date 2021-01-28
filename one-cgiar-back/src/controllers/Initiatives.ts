@@ -37,21 +37,22 @@ export const getInitiatives = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req userId
+ * @param req params:userId
  * @param res 
  */
 export const getInitiativesByUser = async (req: Request, res: Response) => {
-    console.log(req.params)
+
+
     const { userId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
     const conceptRepo = getRepository(ConceptInfo);
 
     let initiatives,
-        initvSQL =
-            ` 
+        initvSQL =` 
         SELECT
             initvStg.id AS initvStgId,
             stage.description AS currentStage,
+            stage.id AS currentStageId,
             initvStg.active AS initvStageIsActive,
             initvStg.status AS initvStageStatus,
             initvStgUsr.is_coordinator AS isCoordinator,
@@ -81,7 +82,8 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             where: {
                 initvStg: In(initiativesIds)
             },
-            relations: ['initvStg']
+            relations: ['initvStg'],
+            select: ["name", "action_area_description", "action_area_id"]
 
         });
         initiatives.forEach(initiative => {
@@ -99,7 +101,11 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 }
 
 
-
+/**
+ * 
+ * @param req params:{ name, user, is_coordinator, is_lead, is_owner, current_stage }
+ * @param res 
+ */
 export const createInitiative = async (req: Request, res: Response) => {
     const { name, user, is_coordinator, is_lead, is_owner, current_stage } = req.body;
     const userRepository = getRepository(Users);
