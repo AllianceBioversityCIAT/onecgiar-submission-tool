@@ -25,7 +25,7 @@ router.delete("/:id", [checkJwt, checkRole('roles', 'deleteAny')], deleteRole);
 
 
 // create permission
-// router.post("/permissions", [checkJwt, checkRole('roles')], createPermission);
+router.post("/permissions", [checkJwt, checkRole('roles', 'createAny')], createPermission);
 
 // get permission
 router.get("/permissions", [checkJwt], getAllPermissions);
