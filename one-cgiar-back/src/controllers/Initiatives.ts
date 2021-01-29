@@ -43,7 +43,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
 export const getInitiativesByUser = async (req: Request, res: Response) => {
 
 
-    const { userId } = req.params;
+    const { userId } = res.locals.jwtPayload;
     const queryRunner = getConnection().createQueryBuilder();
     const conceptRepo = getRepository(ConceptInfo);
 
@@ -157,7 +157,11 @@ export const createInitiative = async (req: Request, res: Response) => {
     }
 }
 
-
+/**
+ * 
+ * @param req params:{ description, active, start_date, end_date }
+ * @param res 
+ */
 export const createStage = async (req: Request, res: Response) => {
 
     const { description, active, start_date, end_date } = req.body;
@@ -182,6 +186,11 @@ export const createStage = async (req: Request, res: Response) => {
 }
 
 
+/**
+ * 
+ * @param req params:{ stageInitiativeId, stageId, stageData }
+ * @param res 
+ */
 export const assignStageToInitiative = async (req: Request, res: Response) => {
 
     const { stageInitiativeId, stageId, stageData } = req.body;
@@ -208,10 +217,7 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
 
 
         if (columns.length > 0) {
-            // let values: Record<string, any> = {};
             columns.forEach(ele => {
-                // let ele = e;
-                // console.log(newEmptyEntity[ele] = stageData[ele]);
                 if (ele === 'initvStgId') {
                     newData[ele] = initiativeStage;
                 }
@@ -220,11 +226,8 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
                 }
             });
 
-            console.log(newData);
+            // console.log(newData);
             const insertedData = await tableRepo.save(newData);
-            // const insertedData = await tableRepo.save(newEmptyEntity);
-
-            console.log(insertedData)
             res.json({ msg: `${stage.description} stage data has been saved `, data: insertedData });
 
         } else {

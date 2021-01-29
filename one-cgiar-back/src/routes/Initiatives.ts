@@ -9,32 +9,21 @@ const router = Router();
 router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
 
 // get initiatives by user
-router.get("/:userId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativesByUser);
-
-
+router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativesByUser);
 
 // create initiatives
 router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], createInitiative);
 
-// assign stage to initiative
-router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateAny')], assignStageToInitiative);
-
 // create stages
-// router.post("/stages", [checkJwt], createStage);
-// router.post("/", [checkJwt, checkRole('stages')], createStage);
+router.post("/stages", [checkJwt, checkRole('stages', 'createOwn')], createStage);
 
-
-
-// assign action area to stage by initiative
-// router.post("/assign-area", [checkJwt], assignActArsByInitvStg);
-// router.post("/", [checkJwt, checkRole('stages')], assignActArsByInitvStg);
+// assign stage to initiative
+router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], assignStageToInitiative);
 
 // assign action area to stage by initiative
-// router.post("/assign-partner", [checkJwt], assignKeyPartnerByInitvStg);
-// router.post("/", [checkJwt, checkRole('stages')], assignKeyPartnerByInitvStg);
+router.post("/assign-partner", [checkJwt, checkRole('stages', 'updateOwn')], assignKeyPartnerByInitvStg);
 
 // assign TOC file to stage by initiative
-// router.post("/assign-files", [checkJwt], assignTOCFilesByInitvStg);
-// router.post("/", [checkJwt, checkRole('stages')], assignTOCFilesByInitvStg);
+router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assignTOCFilesByInitvStg);
 
 export default router;

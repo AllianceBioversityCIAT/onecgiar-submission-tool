@@ -19,10 +19,10 @@ export class Initiatives extends UpdatedCreatedAt {
     @IsNotEmpty()
     name: string
 
-    @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.id)
+    @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.user)
     public userByStages!: InitiativesByUsers[];
     
-    @OneToMany(() => InitiativesByStages, initiativeByStages => initiativeByStages.id)
+    @OneToMany(() => InitiativesByStages, initiativeByStages => initiativeByStages.initiative)
     public initvByStages!: InitiativesByStages[];
 
 }
