@@ -22,6 +22,7 @@ export class CreateAdminRolePermissionsUser1610124813721 implements MigrationInt
 
         let createdRole = await rolesRepository.save(role);
         console.log(createdRole)
+        console.log(role)
 
 
         /***
@@ -30,47 +31,177 @@ export class CreateAdminRolePermissionsUser1610124813721 implements MigrationInt
          *  
          */
 
-        const permission_create_user = new Permissions();
-        const permission_create_role = new Permissions();
-        const permission_create_permission = new Permissions();
 
-        permission_create_user.action = 'create:any';
-        permission_create_user.name = 'create.user.admin';
-        permission_create_user.resource = 'users';
-        permission_create_user.attributes = '*';
-        permission_create_user.roles = [createdRole];
+        let newPermissions = permissionRepository.create([
+            {
+                resource: 'users',
+                action: 'create:Any',
+                name: 'create.user.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'users',
+                action: 'read:Any',
+                name: 'read.user.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'users',
+                action: 'update:Any',
+                name: 'update.user.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'users',
+                action: 'delete:Any',
+                name: 'delete.user.admin',
+                attributes: '*',
+                roles: [role]
+            },
 
-        permission_create_role.action = 'create:any';
-        permission_create_role.name = 'create.roles.admin';
-        permission_create_role.resource = 'roles';
-        permission_create_role.attributes = '*';
-        permission_create_role.roles = [createdRole];
 
-        permission_create_permission.action = 'create:any';
-        permission_create_permission.name = 'create.permission.admin';
-        permission_create_permission.resource = 'permissions';
-        permission_create_permission.attributes = '*';
-        permission_create_permission.roles = [createdRole];
 
-        let createdPrmssions = await permissionRepository.save([permission_create_permission, permission_create_role, permission_create_user]);
-        console.log(createdPrmssions)
+
+            {
+                resource: 'roles',
+                action: 'create:Any',
+                name: 'create.role.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'roles',
+                action: 'read:Any',
+                name: 'read.role.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'roles',
+                action: 'update:Any',
+                name: 'update.role.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'roles',
+                action: 'delete:Any',
+                name: 'delete.role.admin',
+                attributes: '*',
+                roles: [role]
+            },
+
+
+
+
+            {
+                resource: 'permissions',
+                action: 'create:Any',
+                name: 'create.permission.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'permissions',
+                action: 'read:Any',
+                name: 'read.permission.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'permissions',
+                action: 'update:Any',
+                name: 'update.permission.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'permissions',
+                action: 'delete:Any',
+                name: 'delete.permission.admin',
+                attributes: '*',
+                roles: [role]
+            },
+
+
+
+
+
+            {
+                resource: 'initiatives',
+                action: 'create:Any',
+                name: 'create.initiative.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'initiatives',
+                action: 'read:Any',
+                name: 'read.initiative.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'initiatives',
+                action: 'update:Any',
+                name: 'update.initiative.admin',
+                attributes: '*',
+                roles: [role]
+            },
+            {
+                resource: 'initiatives',
+                action: 'delete:Any',
+                name: 'delete.initiative.admin',
+                attributes: '*',
+                roles: [role]
+            },
+        ]);
+        console.log(newPermissions);
+        console.log(newPermissions[0]);
+
+        let createdPrmssions = await permissionRepository.save(newPermissions);
+        console.log(createdPrmssions);
 
         /***
          * 
-         *  create admin user
+         *  create admins user
          *  
          */
+        const userRepository = getRepository(Users);
 
         let user = new Users();
-        user.first_name = "admin";
-        user.last_name = "one";
-        user.password = "admin";
-        user.email = "admin_one@cgiar.org";
-        user.is_cgiar = false;
+        user.first_name = "Felipe";
+        user.last_name = "Elvira";
+        user.password = null;
+        user.email = "f.elvira@cgiar.org";
+        user.is_cgiar = true;
         user.roles = [createdRole];
-        user.hashPassword();
-        const userRepository = getRepository(Users);
-        await userRepository.save(user);
+        // user.hashPassword();
+
+        let user2 = new Users();
+        user2.first_name = "Jaime";
+        user2.last_name = "Duque";
+        user2.password = null;
+        user2.email = "j.duque@cgiar.org";
+        user2.is_cgiar = true;
+        user2.roles = [createdRole];
+        // user2.hashPassword();
+
+        let user3 = new Users();
+        user3.first_name = "Hector";
+        user3.last_name = "Tobón";
+        user3.password = null;
+        user3.email = "h.f.tobon@cgiar.org";
+        user3.is_cgiar = true;
+        user3.roles = [createdRole];
+        // user3.hashPassword();
+
+
+
+        await userRepository.save([user, user2, user3]);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
