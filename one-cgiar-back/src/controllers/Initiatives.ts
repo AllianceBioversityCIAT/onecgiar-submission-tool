@@ -48,7 +48,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
     const conceptRepo = getRepository(ConceptInfo);
 
     let initiatives,
-        initvSQL =` 
+        initvSQL = ` 
         SELECT
             initvStg.id AS initvStgId,
             stage.description AS currentStage,
@@ -75,6 +75,9 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
         );
         initiatives = await queryRunner.connection.query(query, parameters);
         let initiativesIds = initiatives.map(init => init.initvStgId);
+        if (initiatives.length == 0)
+            res.status(200).json({ data: initiatives, msg: 'None initiative found' });
+
         /**
               * more stages to be added
               */
@@ -256,12 +259,6 @@ function getRepoConstStage(tableName: string) {
             break;
     }
 }
-
-
-
-
-
-
 
 
 

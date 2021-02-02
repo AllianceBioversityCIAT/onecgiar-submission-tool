@@ -8,7 +8,7 @@
         "start": "set debug=* && npx tsnd ./src/index.ts --respawn --transpileOnly",
         "start-dev": "nodemon",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
-        "migration": "ts-node ./node_modules/typeorm/cli.js migration:run",
+        "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js"
     },
