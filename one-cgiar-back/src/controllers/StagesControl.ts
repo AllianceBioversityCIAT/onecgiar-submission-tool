@@ -89,11 +89,11 @@ export const getInitiativeConcept = async (req: Request, res: Response) => {
             {}
         );
         conceptInfo = await queryRunner.connection.query(query, parameters);
-        console.log(query, parameters, userId)
-        if(conceptInfo.length == 0)
-            res.status(304).json({ msg: 'Concept info for empty', data: conceptInfo });
-
-        res.json({ msg: 'Concept info for stage', data: conceptInfo });
+        // console.log(conceptInfo, parameters)
+        if (conceptInfo.length == 0)
+            res.sendStatus(304);
+        else
+            res.json({ msg: 'Concept info for stage', data: conceptInfo });
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not get concept info." });
