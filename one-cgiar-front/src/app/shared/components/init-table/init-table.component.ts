@@ -13,8 +13,8 @@ export interface UserData {
 
 /** Constants used to fill up our data base. */
 const NAMES: string[] = [
-  'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-  'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
+  'Jaime Duque', 'Hector Tobón', 'Felipe Elvira', 'Yecksin Zuñiga', 'Claudia Castiblanco', 'Manuel Almanzar', 'Margarita Ramirez', 'Diego Perez', 'Kenji Tanaka', 'Santiago Galvez',
+  'Donal Menzies', 'Porscha Stiger', 'Andres Rojas', 'Luis Becerra', 'Santiago Restrepo', 'Johanna Rojas', 'Jose Molina', 'Claudia Loucel', 'Susana Cardona'
 ];
 const STATE: string[] = [
   'All fields complete', 'Editing', 'All fields complete', 'Editing', 'All fields complete', 'Editing', 'All fields complete', 'Editing', 'All fields complete', 'Editing',
@@ -25,8 +25,8 @@ const ACTIONAREA: string[] = [
   'Genetic Gains', 'Sustainable production', 'Systems Transformation', 'Genetic Gains', 'Sustainable production'
 ];
 const STAGE: string[] = [
-  'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept',
-  'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept', 'Pre-concept'
+  'Concept', 'Concept', 'Concept', 'Concept', 'Concept', 'Concept', 'Concept', 'Concept', 'Concept', 'Concept',
+  'Concept', 'Concept', 'Concept', 'Concept', 'Concept'
 ];
 
 @Component({
