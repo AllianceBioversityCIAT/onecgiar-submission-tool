@@ -30,6 +30,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 initvStg.id AS initvStgId,
                 stage.description AS currentStage,
                 stage.id AS currentStageId,
+                stage.name AS currentStageName,
                 initvStg.active AS initvStageIsActive,
                 initvStg.status AS initvStageStatus,
                 initvStgUsr.is_coordinator AS isCoordinator,
@@ -98,6 +99,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initvStg.id AS initvStgId,
             stage.description AS currentStage,
             stage.id AS currentStageId,
+            stage.name AS currentStageName,
             initvStg.active AS initvStageIsActive,
             initvStg.status AS initvStageStatus,
             initvStgUsr.is_coordinator AS isCoordinator,
@@ -318,7 +320,7 @@ function getRepoConstStage(tableName: string) {
 
 export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
-    const { action_area_id, initiative_by_stage_id } = req.body;
+    const { action_area_id, initvStgId } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const actArsRepo = getRepository(ActionAreasByInitiativeStage);
 
@@ -326,7 +328,7 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
     actionArea.action_area_id = action_area_id;
     try {
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initiative_by_stage_id);
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         actionArea.initvStg = initiativeStg;
 
         const errors = await validate(actionArea);
@@ -345,7 +347,7 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 }
 
 export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) => {
-    const { key_partner_id, initiative_by_stage_id, toc_description, comparative_advantage } = req.body;
+    const { key_partner_id, initvStgId, toc_description, comparative_advantage } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const keyPartnesRepo = getRepository(KeyPartners);
 
@@ -356,7 +358,7 @@ export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) =>
 
     try {
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initiative_by_stage_id);
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         keyPartner.initvStg = initiativeStg;
 
         const errors = await validate(keyPartner);
@@ -374,7 +376,7 @@ export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) =>
 }
 
 export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
-    const { url, initiative_by_stage_id, narrative } = req.body;
+    const { url, initvStgId, narrative } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const tocFilesRepo = getRepository(TOCFiles);
 
@@ -383,7 +385,7 @@ export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
     tocFile.narrative = narrative;
     try {
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initiative_by_stage_id);
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         tocFile.initvStg = initiativeStg;
 
         const errors = await validate(tocFile);
