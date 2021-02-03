@@ -11,6 +11,11 @@ import { InitiativesByStages } from '../entity/InititativesByStages';
  * **
  */
 
+ /**
+ * 
+ * @param req params:{ name, challenge, objectives, results, highlights, action_area_id, action_area_description, initiative_by_stage_id }
+ * @param res 
+ */
 export const createConcept = async (req: Request, res: Response) => {
     const { name, challenge, objectives, results, highlights, action_area_id, action_area_description, initiative_by_stage_id } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
