@@ -22,12 +22,57 @@ require('dotenv').config();
  * @param res 
  */
 export const getInitiatives = async (req: Request, res: Response) => {
-    const initiativesRepo = getRepository(Initiatives);
-    let initiatives;
+    const conceptRepo = getRepository(ConceptInfo);
+    const queryRunner = getConnection().createQueryBuilder();
+    let initiatives,
+        initvSQL = ` 
+            SELECT
+                initvStg.id AS initvStgId,
+                stage.description AS currentStage,
+                stage.id AS currentStageId,
+                initvStg.active AS initvStageIsActive,
+                initvStg.status AS initvStageStatus,
+                initvStgUsr.is_coordinator AS isCoordinator,
+                initvStgUsr.is_lead AS isLead,
+                initvStgUsr.is_owner AS isOwner
+
+            FROM
+                initiatives_by_users initvStgUsr
+            LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
+            LEFT JOIN stages stage ON stage.id = initvStg.stageId
+        `;
 
     try {
-        initiatives = await initiativesRepo.find({ relations: ['initvByStages', 'initvByStages.stage', 'userByStages', 'userByStages.user'] });
-        res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            initvSQL,
+            {},
+            {}
+        );
+        initiatives = await queryRunner.connection.query(query, parameters);
+        let initiativesIds = initiatives.map(init => init.initvStgId);
+        if (initiatives.length == 0)
+            res.sendStatus(204)
+        else {
+            /**
+             * more stages to be added
+             */
+            const concepts = await conceptRepo.find({
+                where: {
+                    initvStg: In(initiativesIds)
+                },
+                relations: ['initvStg'],
+                select: ["name", "action_area_description", "action_area_id"]
+
+            });
+            initiatives.forEach(initiative => {
+                initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
+            });
+            /**
+             * more stages to be added
+             */
+            res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+
+        }
 
     } catch (error) {
         console.log(error);
@@ -37,7 +82,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:userId
+ * @param req 
  * @param res 
  */
 export const getInitiativesByUser = async (req: Request, res: Response) => {
@@ -76,26 +121,29 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
         initiatives = await queryRunner.connection.query(query, parameters);
         let initiativesIds = initiatives.map(init => init.initvStgId);
         if (initiatives.length == 0)
-            res.status(200).json({ data: initiatives, msg: 'None initiative found' });
+            res.sendStatus(204)
+        else {
+            /**
+             * more stages to be added
+             */
+            const concepts = await conceptRepo.find({
+                where: {
+                    initvStg: In(initiativesIds)
+                },
+                relations: ['initvStg'],
+                select: ["name", "action_area_description", "action_area_id"]
 
-        /**
-              * more stages to be added
-              */
-        const concepts = await conceptRepo.find({
-            where: {
-                initvStg: In(initiativesIds)
-            },
-            relations: ['initvStg'],
-            select: ["name", "action_area_description", "action_area_id"]
+            });
+            initiatives.forEach(initiative => {
+                initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
+            });
+            /**
+             * more stages to be added
+             */
+            res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
 
-        });
-        initiatives.forEach(initiative => {
-            initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
-        });
-        /**
-         * more stages to be added
-         */
-        res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+        }
+
 
     } catch (error) {
         console.log(error);
