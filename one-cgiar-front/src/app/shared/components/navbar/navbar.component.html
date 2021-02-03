@@ -1,7 +1,8 @@
 <div class="navbar-content">
-    <p class="navbar-title" routerLink="/home">My Initiatives</p>
+    <div class="navbar-title" routerLink="/home">My Initiatives</div>
     <div class="navbar-opt">
         <p class="navbar-user">{{user?.name}}</p>
+        <!-- <p class="navbar-user">{{user?.roles[0].acronym}}</p> -->
         <button mat-raised-button class="navbar-logout" (click)="onExit()">
             Logout
         </button>

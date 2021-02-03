@@ -6,22 +6,27 @@
     background-image: url("../../../../assets/images/header-menu-bar.png");
     font-size: 1.2em;
     justify-content: space-between;
+    padding: 0 3rem 0 5rem;
 }
 
 .navbar-title {
     color: #fff;
-    display: block;
-    padding: 0 10rem;
-    margin: 0 2px;
+    display: flex;
+    cursor: pointer;
     font-weight: bold;
     font-size: 1.1em;
+    outline: none;
+    padding: 1.3rem 0.5rem;
+}
+
+.navbar-title:hover {
+    background: #066D94;
 }
 
 .navbar-opt {
     display: flex;
     align-items: center;
     color: #fff;
-    padding: 0 3rem;
 }
 
 .navbar-user {
