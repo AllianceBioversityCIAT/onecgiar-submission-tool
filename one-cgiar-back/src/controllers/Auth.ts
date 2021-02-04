@@ -52,7 +52,7 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
 
         const name = user.email;
-        const roles = [];
+        const roles = user.roles;
         //  user.roles;
 
         res.json({ msg: 'OK', token, name, roles });
