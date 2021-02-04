@@ -7,55 +7,6 @@ import { WorkPackages } from '../entity/WorkPackages';
 
 /**
  * 
- * @param req params:{ name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId }
- * @param res 
- */
-export const createConcept = async (req: Request, res: Response) => {
-    const { name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const concptInfoRepo = getRepository(ConceptInfo);
-
-    const conceptInf = new ConceptInfo();
-    conceptInf.name = name;
-    conceptInf.challenge = challenge;
-    conceptInf.objectives = objectives;
-    conceptInf.results = results;
-    conceptInf.highlights = highlights;
-    conceptInf.action_area_description = action_area_description;
-    conceptInf.action_area_id = action_area_id;
-    conceptInf.initvStg = initvStgId;
-
-    try {
-
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId, { relations: ['stage'] });
-        conceptInf.initvStg = initiativeStg;
-
-
-        /**
-         * check if initiative have a concept
-         */
-        if (initiativeStg.stage.description.toLowerCase() == 'concept')
-            res.sendStatus(500)
-        else {
-
-            const errors = await validate(conceptInf);
-            if (errors.length > 0) {
-                return res.status(400).json(errors);
-            }
-
-            // let createdconceptInf = await concptInfoRepo.save(conceptInf);
-            res.json({ msg: 'Concept info created', data: [] });
-        }
-
-
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not create concept info." });
-    }
-}
-
-/**
- * 
  * @param req params:{ stageId, initiativeId }
  * @param res 
  */
@@ -115,6 +66,89 @@ export const getInitiativeConcept = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * 
+ * @param req params:{ name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId }
+ * @param res 
+ */
+export const createConcept = async (req: Request, res: Response) => {
+    const { name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId } = req.body;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const concptInfoRepo = getRepository(ConceptInfo);
+
+    const conceptInf = new ConceptInfo();
+    conceptInf.name = name;
+    conceptInf.challenge = challenge;
+    conceptInf.objectives = objectives;
+    conceptInf.results = results;
+    conceptInf.highlights = highlights;
+    conceptInf.action_area_description = action_area_description;
+    conceptInf.action_area_id = action_area_id;
+    conceptInf.initvStg = initvStgId;
+
+    try {
+
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId, { relations: ['stage'] });
+        conceptInf.initvStg = initiativeStg;
+
+
+        /**
+         * check if initiative have a concept
+         */
+        if (initiativeStg.stage.description.toLowerCase() == 'concept')
+            res.sendStatus(500)
+        else {
+
+            const errors = await validate(conceptInf);
+            if (errors.length > 0) {
+                return res.status(400).json(errors);
+            }
+
+            let createdconceptInf = await concptInfoRepo.save(conceptInf);
+            res.json({ msg: 'Concept info created', data: createdconceptInf });
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not create concept info." });
+    }
+}
+
+/**
+ * 
+ * @param req params:{ id, name, challenge, objectives, results, highlights, action_area_id, action_area_description }
+ * @param res 
+ */
+export const updateConcept = async (req: Request, res: Response) => {
+    const { id, name, challenge, objectives, results, highlights, action_area_id, action_area_description } = req.params;
+    const concptInfoRepo = getRepository(ConceptInfo);
+
+    let conceptInf = new ConceptInfo();
+
+    try {
+        conceptInf = await concptInfoRepo.findOneOrFail(id);
+        conceptInf.name = (name) ? name: conceptInf.name;
+        conceptInf.challenge = (challenge) ? challenge: conceptInf.challenge;
+        conceptInf.objectives = (objectives) ? objectives: conceptInf.objectives;
+        conceptInf.results = (results) ? results: conceptInf.results;
+        conceptInf.highlights = (highlights) ? highlights: conceptInf.highlights;
+        conceptInf.action_area_id = (action_area_id) ? parseInt(action_area_id): conceptInf.action_area_id;
+        conceptInf.action_area_description = (action_area_description) ? action_area_description: conceptInf.action_area_description;
+
+        const errors = await validate(conceptInf);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        let updatedconceptInf = await concptInfoRepo.save(conceptInf);
+        res.json({ msg: 'Concept info updated', data: updatedconceptInf });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not update concept info." });
+    }
+}
 
 /**
  * 
@@ -157,22 +191,18 @@ export const createWorkPackage = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateWorkPackage = async (req: Request, res: Response) => {
-    const { id, name, results, pathwayContent, isGlobal, initvStgId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
+    const { id, name, results, pathwayContent, isGlobal } = req.body;
     const wpRepo = getRepository(WorkPackages);
 
     let workPackage = new WorkPackages();
     try {
         
         workPackage = await wpRepo.findOneOrFail(id);
-        workPackage.results = results;
-        workPackage.name = name;
-        workPackage.pathway_content = pathwayContent;
-        workPackage.is_global = isGlobal;
-
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-        workPackage.initvStg = initiativeStg;
-
+        workPackage.results = (results) ? results: workPackage.results;
+        workPackage.name = (name) ? name: workPackage.name;
+        workPackage.pathway_content = (pathwayContent) ? pathwayContent: workPackage.pathway_content;
+        workPackage.is_global = (isGlobal) ? isGlobal: workPackage.is_global;
+        
         const errors = await validate(workPackage);
         if (errors.length > 0) {
             return res.status(400).json(errors);

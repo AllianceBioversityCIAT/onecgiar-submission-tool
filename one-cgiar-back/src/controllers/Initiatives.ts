@@ -30,7 +30,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 initvStg.id AS initvStgId,
                 stage.description AS currentStage,
                 stage.id AS currentStageId,
-                stage.name AS currentStageName,
+                initiative.name AS initiativeName,
                 initvStg.active AS initvStageIsActive,
                 initvStg.status AS initvStageStatus,
                 initvStgUsr.is_coordinator AS isCoordinator,
@@ -41,6 +41,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 initiatives_by_users initvStgUsr
             LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
             LEFT JOIN stages stage ON stage.id = initvStg.stageId
+            LEFT JOIN initiatives initiative ON initiative.id = initvStg.initiativeId
         `;
 
     try {
@@ -99,7 +100,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initvStg.id AS initvStgId,
             stage.description AS currentStage,
             stage.id AS currentStageId,
-            stage.name AS currentStageName,
+            initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
             initvStg.status AS initvStageStatus,
             initvStgUsr.is_coordinator AS isCoordinator,
@@ -110,6 +111,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initiatives_by_users initvStgUsr
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
+        LEFT JOIN initiatives initiative ON initiative.id = initvStg.initiativeId
         WHERE
             initvStgUsr.userId = ${userId}
     `;
