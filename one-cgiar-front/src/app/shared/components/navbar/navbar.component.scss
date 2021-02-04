@@ -19,6 +19,10 @@
     padding: 1.3rem 0.5rem;
 }
 
+.isActive {
+    background: #066D94; 
+}
+
 .navbar-title:hover {
     background: #066D94;
 }
@@ -29,9 +33,22 @@
     color: #fff;
 }
 
-.navbar-user {
+.user-information {
+    background: #4DABCC;
+    display: block;
+    text-align: center;
+    padding: 0.7rem 3.5rem;
+}
+
+.navbar-name {
     margin: 0;
-    padding: 0 2rem;
+    font-size: 0.80em;
+}
+
+.navbar-role {
+    background: #0779A4;
+    border-radius: 20px;
+    margin: 0;
     font-size: 0.80em;
 }
 
@@ -40,9 +57,10 @@
     text-decoration: none;
     background: #444;
     padding: 0 1rem;
-    font-size: 0.70em;
+    font-size: 0.9em;
     font-weight: lighter;
     border-radius: 10px;
+    margin: 0 0 0 1rem;
 }
 
 .navbar-logout:hover {

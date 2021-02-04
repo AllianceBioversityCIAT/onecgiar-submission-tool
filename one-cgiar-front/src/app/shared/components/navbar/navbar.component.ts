@@ -7,8 +7,12 @@ import { AuthService } from '@auth/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+
   public isUser: boolean = false;
-  public user: any = null; 
+  public user: any = null;
+  public name: string = null;
+  public role: string = null;
+
   constructor(public authSvc: AuthService) {}
 
   ngOnInit(): void {
@@ -16,6 +20,9 @@ export class NavbarComponent implements OnInit {
       console.log('OnInit', user);
       this.isUser = true;
       this.user = user;
+      let roles = this.user.roles.find(role => role.acronym);
+      this.name = this.user?.name;
+      this.role = roles?.acronym;
     })
   }
 
