@@ -9,6 +9,7 @@ export class CreateWorkPackagesTables1612291348180 implements MigrationInterface
         await queryRunner.query(`
             CREATE TABLE work_packages (
                 id int(11) NOT NULL AUTO_INCREMENT,
+                active tinyint(2) NOT NULL DEFAULT 1,
                 name varchar(500) COLLATE utf8_bin NOT NULL,
                 results varchar(1000) COLLATE utf8_bin NOT NULL,
                 pathway_content varchar(1000) COLLATE utf8_bin NOT NULL,
