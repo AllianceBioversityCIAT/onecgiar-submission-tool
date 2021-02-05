@@ -9,7 +9,7 @@ export class RegionsByWorkPackages extends UpdatedCreatedAt {
 
     @OneToOne(() => WorkPackages)
     @JoinColumn()
-    wrkPkgId!: WorkPackages;
+    wrkPkg!: WorkPackages;
 
     @Column({type: 'int'})
     region_id: number;

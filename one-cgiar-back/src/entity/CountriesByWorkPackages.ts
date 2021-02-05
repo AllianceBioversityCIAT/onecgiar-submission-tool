@@ -3,13 +3,13 @@ import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { WorkPackages } from './WorkPackages';
 
 @Entity('countries_by_work_packages')
-export class CountriessByWorkPackages extends UpdatedCreatedAt {
+export class CountriesByWorkPackages extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
     @OneToOne(() => WorkPackages)
     @JoinColumn()
-    wrkPkgId!: WorkPackages;
+    wrkPkg!: WorkPackages;
 
     @Column({type: 'int'})
     country_id: number;

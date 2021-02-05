@@ -10,6 +10,7 @@ import { KeyPartners } from '../entity/KeyPartner';
 import { Stages } from '../entity/Stages';
 import { TOCFiles } from '../entity/TOCFiles';
 import { Users } from '../entity/Users';
+import { getClaActionAreas } from './clarisa';
 
 
 require('dotenv').config();
@@ -405,5 +406,25 @@ export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
 
 
 }
+
+
+
+/**
+ * 
+ * CLARISA getters
+ * 
+ */
+
+export const getActionAreas = async (req: Request, res: Response) => {
+    try {
+        const actionAreas = await getClaActionAreas();
+        res.json({ msg: 'Action areas.', data: actionAreas });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get action areas." });
+    }
+}
+
+
 
 

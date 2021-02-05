@@ -2,8 +2,11 @@ import { validate } from 'class-validator';
 import { Request, Response } from 'express'
 import { getConnection, getRepository, In } from 'typeorm'
 import { ConceptInfo } from '../entity/ConceptInfo';
+import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { InitiativesByStages } from '../entity/InititativesByStages';
+import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { WorkPackages } from '../entity/WorkPackages';
+import { getClaActionAreas } from './clarisa';
 
 /**
  * 
@@ -96,7 +99,7 @@ export const createConcept = async (req: Request, res: Response) => {
          * check if initiative have a concept
          */
         if (initiativeStg.stage.description.toLowerCase() == 'concept')
-            res.sendStatus(500)
+            res.sendStatus(403)
         else {
 
             const errors = await validate(conceptInf);
@@ -128,13 +131,13 @@ export const updateConcept = async (req: Request, res: Response) => {
 
     try {
         conceptInf = await concptInfoRepo.findOneOrFail(id);
-        conceptInf.name = (name) ? name: conceptInf.name;
-        conceptInf.challenge = (challenge) ? challenge: conceptInf.challenge;
-        conceptInf.objectives = (objectives) ? objectives: conceptInf.objectives;
-        conceptInf.results = (results) ? results: conceptInf.results;
-        conceptInf.highlights = (highlights) ? highlights: conceptInf.highlights;
-        conceptInf.action_area_id = (action_area_id) ? parseInt(action_area_id): conceptInf.action_area_id;
-        conceptInf.action_area_description = (action_area_description) ? action_area_description: conceptInf.action_area_description;
+        conceptInf.name = (name) ? name : conceptInf.name;
+        conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
+        conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
+        conceptInf.results = (results) ? results : conceptInf.results;
+        conceptInf.highlights = (highlights) ? highlights : conceptInf.highlights;
+        conceptInf.action_area_id = (action_area_id) ? parseInt(action_area_id) : conceptInf.action_area_id;
+        conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
 
         const errors = await validate(conceptInf);
         if (errors.length > 0) {
@@ -196,13 +199,13 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
     let workPackage = new WorkPackages();
     try {
-        
+
         workPackage = await wpRepo.findOneOrFail(id);
-        workPackage.results = (results) ? results: workPackage.results;
-        workPackage.name = (name) ? name: workPackage.name;
-        workPackage.pathway_content = (pathwayContent) ? pathwayContent: workPackage.pathway_content;
-        workPackage.is_global = (isGlobal) ? isGlobal: workPackage.is_global;
-        
+        workPackage.results = (results) ? results : workPackage.results;
+        workPackage.name = (name) ? name : workPackage.name;
+        workPackage.pathway_content = (pathwayContent) ? pathwayContent : workPackage.pathway_content;
+        workPackage.is_global = (isGlobal) ? isGlobal : workPackage.is_global;
+
         const errors = await validate(workPackage);
         if (errors.length > 0) {
             return res.status(400).json(errors);
@@ -214,7 +217,77 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not update work package info." });
+        res.status(404).json({ msg: "Could not update work package." });
+    }
+
+}
+
+/**
+ * 
+ * @param req params: { isGlobal, wrkPkgId, regionId, countryId }
+ * @param res 
+ */
+export const addRegionWorkPackage = async (req: Request, res: Response) => {
+    const { isGlobal, wrkPkgId, regionId, countryId } = req.body;
+    const wpRepo = getRepository(WorkPackages);
+    const regionRepo = getRepository(RegionsByWorkPackages);
+    const countryRepo = getRepository(CountriesByWorkPackages);
+
+    const wrkRegion = new RegionsByWorkPackages();
+    const wrkCountry = new CountriesByWorkPackages();
+
+    try {
+        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        workPackage.is_global = (isGlobal) ? isGlobal : workPackage.is_global;
+
+        const errors = await validate(workPackage);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        wrkRegion.region_id = regionId;
+        wrkRegion.wrkPkg = workPackage;
+
+        wrkCountry.country_id = countryId;
+        wrkCountry.wrkPkg = workPackage;
+
+        let savedRegion = await regionRepo.save(wrkRegion);
+        let savedCountry = await countryRepo.save(wrkCountry);
+
+        res.json({ msg: 'Work package updated: Region / country added', data: { workPackage, savedRegion, savedCountry } });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not add region / country to work package.", data: error });
+    }
+}
+
+/**
+ * 
+ * @param req params: { wrkPkgId }
+ * @param res 
+ */
+export const getRegionWorkPackage = async (req: Request, res: Response) => {
+
+    const { wrkPkgId } = req.params;
+
+    const wpRepo = getRepository(WorkPackages);
+    const regionRepo = getRepository(RegionsByWorkPackages);
+    const countryRepo = getRepository(CountriesByWorkPackages);
+
+    
+    try {
+        const l = await getClaActionAreas();
+        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        console.log(l);
+
+        const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
+        const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
+
+        res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get regions / countries from work package.", data: error });
     }
 
 }

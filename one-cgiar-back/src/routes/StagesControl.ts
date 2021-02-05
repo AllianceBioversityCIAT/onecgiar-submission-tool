@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createConcept, createWorkPackage, getInitiativeConcept, updateWorkPackage } from '../controllers/StageConcept';
+import { addRegionWorkPackage, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, updateWorkPackage } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -22,6 +22,12 @@ router.get("/:initiativeId/stage/:stageId", [checkJwt, checkRole('initiatives', 
 
 // create work package
 router.post("/concept/packages", [checkJwt, checkRole('initiatives', 'createOwn')], createWorkPackage);
+
+// get regions to work packages
+router.get("/concept/packages/regions/:wrkPkgId", [checkJwt, checkRole('initiatives', 'readOwn')], getRegionWorkPackage);
+
+// add regions to work packages
+router.post("/concept/packages/regions", [checkJwt, checkRole('initiatives', 'createOwn')], addRegionWorkPackage);
 
 // update work package
 router.patch("/concept/packages", [checkJwt, checkRole('initiatives', 'createOwn')], updateWorkPackage);
