@@ -15,41 +15,40 @@ import { WorkPackages } from '../entity/WorkPackages';
 
 export const getInitiativeConcept = async (req: Request, res: Response) => {
     const { userId } = res.locals.jwtPayload;
-    const { stageId, initiativeId } = req.params;
+    const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
 
 
     let conceptInfo,
         conceptQuery = ` 
-            SELECT
-                initvStg.id AS initvStgId,
-                stage.description AS stageDesc,
-                stage.active AS stageIsActive,
-                concept.id AS conceptInfoId,
-                concept.name AS conceptName,
-                concept.challenge AS conceptChallenge,
-                concept.objectives AS conceptObjectives,
-                concept.results AS conceptResults,
-                concept.highlights AS conceptHighlights,
-                concept.action_area_description AS conceptActAreDes,
-                concept.action_area_id AS conceptActAreId
-                ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStg.id) as workPackagesIds
-                ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStg.id) as workPackagesNames
-            FROM
-                initiatives_by_stages initvStg
-            LEFT JOIN stages stage ON stage.id = initvStg.initiativeId
-            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgId
-            LEFT JOIN initiatives_by_users initvUsr ON initvUsr.initiativeId = initvStg.initiativeId
+        SELECT
+            initvStgs.id AS initvStgId,
+            stage.description AS stageDesc,
+            stage.active AS stageIsActive,
+            concept.id AS conceptInfoId,
+            concept.name AS conceptName,
+            concept.challenge AS conceptChallenge,
+            concept.objectives AS conceptObjectives,
+            concept.results AS conceptResults,
+            concept.highlights AS conceptHighlights,
+            concept.action_area_description AS conceptActAreDes,
+            concept.action_area_id AS conceptActAreId
+            ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
+            ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
+        FROM
+                initiatives_by_stages initvStgs
+        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
+        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+        LEFT JOIN initiatives_by_users initvUsr ON initvUsr.initiativeId = initvStgs.initiativeId
 
-            WHERE stage.id =:stageId
-            AND initvStg.initiativeId =:initiativeId
+            WHERE initvStgs.id =:initvStgId
             AND initvUsr.userId =:userId;
         `;
 
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             conceptQuery,
-            { stageId, initiativeId, userId },
+            { initvStgId, userId },
             {}
         );
         conceptInfo = await queryRunner.connection.query(query, parameters);

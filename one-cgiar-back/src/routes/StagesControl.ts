@@ -17,7 +17,8 @@ const router = Router();
 router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
 
 // get initiatives concept
-router.get("/:initiativeId/stage/:stageId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
+router.get("/concept/:initvStgId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
+// router.get("/:initiativeId/stage/:stageId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
 
 
 // create work package

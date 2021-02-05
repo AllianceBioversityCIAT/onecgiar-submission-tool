@@ -10,7 +10,8 @@
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
-        "typeorm": "ts-node ./node_modules/typeorm/cli.js"
+        "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+        "migration:generate": "npm run typeorm -- migration:generate -n"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",

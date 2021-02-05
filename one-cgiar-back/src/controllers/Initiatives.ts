@@ -10,7 +10,7 @@ import { KeyPartners } from '../entity/KeyPartner';
 import { Stages } from '../entity/Stages';
 import { TOCFiles } from '../entity/TOCFiles';
 import { Users } from '../entity/Users';
-import { getClaActionAreas } from './clarisa';
+import { getClaActionAreas } from './Clarisa';
 
 
 require('dotenv').config();
