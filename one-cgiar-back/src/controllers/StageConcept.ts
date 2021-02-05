@@ -6,7 +6,6 @@ import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { WorkPackages } from '../entity/WorkPackages';
-import { getClaActionAreas } from './clarisa';
 
 /**
  * 
@@ -98,7 +97,9 @@ export const createConcept = async (req: Request, res: Response) => {
         /**
          * check if initiative have a concept
          */
-        if (initiativeStg.stage.description.toLowerCase() == 'concept')
+        const _concept = await concptInfoRepo.findOne({ where: { initvStg: initiativeStg.id } })
+        console.log(_concept)
+        if (_concept)
             res.sendStatus(403)
         else {
 
@@ -275,11 +276,11 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
     const regionRepo = getRepository(RegionsByWorkPackages);
     const countryRepo = getRepository(CountriesByWorkPackages);
 
-    
+
     try {
-        const l = await getClaActionAreas();
         const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
-        console.log(l);
+        // const l = await getClaActionAreas();
+        // console.log(l);
 
         const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
         const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
