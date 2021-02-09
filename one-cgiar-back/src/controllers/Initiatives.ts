@@ -8,7 +8,7 @@ import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
 import { KeyPartners } from '../entity/KeyPartner';
 import { Stages } from '../entity/Stages';
-import { TOCFiles } from '../entity/TOCFiles';
+import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { getClaActionAreas } from './Clarisa';
 
@@ -378,13 +378,13 @@ export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) =>
     }
 }
 
-export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
+export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
     const { url, initvStgId, narrative } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
-    const tocFilesRepo = getRepository(TOCFiles);
+    const TOCsRepo = getRepository(TOCs);
 
-    const tocFile = new TOCFiles();
-    tocFile.url = url;
+    const tocFile = new TOCs();
+    // tocFile.url = url;
     tocFile.narrative = narrative;
     try {
 
@@ -396,7 +396,7 @@ export const assignTOCFilesByInitvStg = async (req: Request, res: Response) => {
             return res.status(400).json(errors);
         }
 
-        let createdtocFile = await tocFilesRepo.save(tocFile);
+        let createdtocFile = await TOCsRepo.save(tocFile);
         res.json({ msg: 'TOC file assigned to initiative by stage', data: createdtocFile });
 
     } catch (error) {
