@@ -3,8 +3,10 @@ import { Request, Response } from 'express'
 import { getConnection, getRepository, In } from 'typeorm'
 import { ConceptInfo } from '../entity/ConceptInfo';
 import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
+import { Files } from '../entity/Files';
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
+import { TOCs } from '../entity/TOCs';
 import { WorkPackages } from '../entity/WorkPackages';
 
 /**
@@ -224,6 +226,36 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
 /**
  * 
+ * @param req params: { wrkPkgId }
+ * @param res 
+ */
+export const getRegionWorkPackage = async (req: Request, res: Response) => {
+
+    const { wrkPkgId } = req.params;
+
+    const wpRepo = getRepository(WorkPackages);
+    const regionRepo = getRepository(RegionsByWorkPackages);
+    const countryRepo = getRepository(CountriesByWorkPackages);
+
+
+    try {
+        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        // const l = await getClaActionAreas();
+        // console.log(l);
+
+        const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
+        const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
+
+        res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get regions / countries from work package.", data: error });
+    }
+
+}
+
+/**
+ * 
  * @param req params: { isGlobal, wrkPkgId, regionId, countryId }
  * @param res 
  */
@@ -262,32 +294,150 @@ export const addRegionWorkPackage = async (req: Request, res: Response) => {
     }
 }
 
+
+
+
 /**
  * 
- * @param req params: { wrkPkgId }
+ * @param req params:{ initvStgId, narrative }
  * @param res 
  */
-export const getRegionWorkPackage = async (req: Request, res: Response) => {
+export const addTOCConcept = async (req: Request, res: Response) => {
+    const { initvStgId, narrative } = req.body;
+    const tocsRepo = getRepository(TOCs);
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const filesRepo = getRepository(Files);
 
-    const { wrkPkgId } = req.params;
-
-    const wpRepo = getRepository(WorkPackages);
-    const regionRepo = getRepository(RegionsByWorkPackages);
-    const countryRepo = getRepository(CountriesByWorkPackages);
-
+    const newTOC = new TOCs();
 
     try {
-        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
-        // const l = await getClaActionAreas();
-        // console.log(l);
+        let iniStg = await initvStgRepo.findOne(initvStgId);
+        newTOC.narrative = narrative;
+        newTOC.initvStg = iniStg;
 
-        const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
-        const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
+        let svdTOC = await tocsRepo.save(newTOC);
+        const files = req['files'];
 
-        res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
+        if (files) {
+
+            let filesArr = [];
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index];
+                filesArr.push(
+                    {
+                        active: true,
+                        url: element.path,
+                        name: element.originalname
+                    }
+                )
+            }
+            const _files = filesRepo.create(filesArr);
+            _files.forEach(file => {
+                file.tocs = svdTOC;
+            });
+            let savdFiles = await filesRepo.save(_files);
+
+            res.status(200).json({ msg: "TOC added to concept", data: { svdTOC, savdFiles } });
+        } else {
+            throw new Error('None files found');
+        }
+
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not get regions / countries from work package.", data: error });
+        res.status(404).json({ msg: "Could not add TOC file in concept.", data: error });
+    }
+}
+
+/**
+ * 
+ * @param req params:{ tocId, narrative }
+ * @param res 
+ */
+export const updateTOCConcept = async (req: Request, res: Response) => {
+    const { tocId, narrative } = req.body;
+    const tocsRepo = getRepository(TOCs);
+
+    try {
+        const toc = await tocsRepo.findOneOrFail(tocId);
+        toc.narrative = narrative;
+
+        let _toc = await tocsRepo.save(toc);
+        res.status(200).json({ msg: "TOC narrative updated in concept", data: { _toc } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not update TOC narrative in concept.", data: error });
+    }
+
+}
+
+
+/**
+ * 
+ * @param req params:{ tocId }
+ * @param res 
+ */
+export const addTOCFile = async (req: Request, res: Response) => {
+    const { tocId } = req.body;
+    const tocsRepo = getRepository(TOCs);
+    const filesRepo = getRepository(Files);
+
+    try {
+        const toc = await tocsRepo.findOneOrFail(tocId);
+        const files = req['files'];
+
+        if (files) {
+
+            let filesArr = [];
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index];
+                filesArr.push(
+                    {
+                        active: true,
+                        url: element.path,
+                        name: element.originalname
+                    }
+                )
+            }
+            const _files = filesRepo.create(filesArr);
+            _files.forEach(file => {
+                file.tocs = toc;
+            });
+            let savdFiles = await filesRepo.save(_files);
+
+            res.status(200).json({ msg: "File added to TOC", data: { toc, savdFiles } });
+        } else {
+            throw new Error('None files found');
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not add file to TOC.", data: error });
+    }
+
+}
+
+
+
+/**
+ * 
+ * @param req params:{ fileId, active, url, name }
+ * @param res 
+ */
+export const updateTOCFile = async (req: Request, res: Response) => {
+    const { fileId, active, url, name } = req.body;
+    const filesRepo = getRepository(Files);
+
+    try {
+        const file = await filesRepo.findOneOrFail(fileId);
+        file.active = (active) ? active : file.active;
+        file.url = (url) ? url : file.url;
+        file.name = (name) ? name : file.name;
+
+        let _file = await filesRepo.save(file);
+        res.status(200).json({ msg: "File updated in TOC.", data: { _file } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not update file in TOC.", data: error });
     }
 
 }

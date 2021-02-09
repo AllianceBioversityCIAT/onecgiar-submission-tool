@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { addRegionWorkPackage, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, updateWorkPackage } from '../controllers/StageConcept';
+import { addRegionWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
+import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
 
 
@@ -15,6 +16,9 @@ const router = Router();
 
 // create initiatives concept
 router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
+
+// create initiatives concept
+router.patch("/concept", [checkJwt, checkRole('initiatives', 'updateOwn')], updateConcept);
 
 // get initiatives concept
 router.get("/concept/:initvStgId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
@@ -32,5 +36,19 @@ router.post("/concept/packages/regions", [checkJwt, checkRole('initiatives', 'cr
 
 // update work package
 router.patch("/concept/packages", [checkJwt, checkRole('initiatives', 'createOwn')], updateWorkPackage);
+
+// add TOC to initiative
+router.post("/concept/tocs/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCConcept);
+
+// update TOC in initiative
+router.patch("/concept/tocs/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCConcept);
+
+// add file in TOC
+router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCFile);
+
+// update file in TOC
+router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
+
+
 
 export default router;

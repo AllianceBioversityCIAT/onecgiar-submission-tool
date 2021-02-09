@@ -1,13 +1,16 @@
 import { IsNotEmpty } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { InitiativesByStages } from './InititativesByStages';
+import { TOCs } from './TOCs';
 
-@Entity('toc_files')
-export class TOCFiles extends UpdatedCreatedAt {
-    
+@Entity('files')
+export class Files extends UpdatedCreatedAt {
+
     @PrimaryGeneratedColumn()
     id: number
+
+    @Column('tinyint')
+    active: boolean
 
     @Column({length: '1000'})
     @IsNotEmpty()
@@ -15,8 +18,9 @@ export class TOCFiles extends UpdatedCreatedAt {
 
     @Column({length: '1000'})
     @IsNotEmpty()
-    narrative: string
+    name: string
 
-    @ManyToOne(() => InitiativesByStages, initvStg => initvStg.id)
-    public initvStg!: InitiativesByStages;
+    @ManyToOne(() => TOCs, tocs => tocs.id)
+    public tocs!: TOCs;
+
 }
