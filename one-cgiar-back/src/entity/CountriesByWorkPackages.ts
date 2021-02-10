@@ -7,6 +7,9 @@ export class CountriesByWorkPackages extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @OneToOne(() => WorkPackages)
     @JoinColumn()
     wrkPkg!: WorkPackages;

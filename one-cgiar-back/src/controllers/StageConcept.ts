@@ -5,6 +5,7 @@ import { ConceptInfo } from '../entity/ConceptInfo';
 import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { Files } from '../entity/Files';
 import { InitiativesByStages } from '../entity/InititativesByStages';
+import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { TOCs } from '../entity/TOCs';
 import { WorkPackages } from '../entity/WorkPackages';
@@ -155,6 +156,9 @@ export const updateConcept = async (req: Request, res: Response) => {
     }
 }
 
+
+
+
 /**
  * 
  * @param req params: { name, results, pathway_content, is_global, initvStgId }
@@ -243,8 +247,8 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         // const l = await getClaActionAreas();
         // console.log(l);
 
-        const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
-        const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
+        const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
+        const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
         res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
     } catch (error) {
@@ -293,6 +297,63 @@ export const addRegionWorkPackage = async (req: Request, res: Response) => {
         res.status(404).json({ msg: "Could not add region / country to work package.", data: error });
     }
 }
+
+
+
+/**
+ * 
+ * @param req params: { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName }
+ * @param res 
+ */
+export const addProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
+    const { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName } = req.body;
+    const prjBfnRepo = getRepository(ProjectionBenefits);
+    const wpRepo = getRepository(WorkPackages);
+    let prjtedBfnt: ProjectionBenefits;
+    try {
+
+
+        if (id) {
+            prjtedBfnt = await prjBfnRepo.findOne(id);
+            prjtedBfnt.notes = (notes) ? notes : prjtedBfnt.notes;
+            prjtedBfnt.impact_area_id = (impactAreaId) ? impactAreaId : prjtedBfnt.impact_area_id;
+            prjtedBfnt.impact_area_indicator_id = (impactAreaIndicatorId) ? impactAreaIndicatorId : prjtedBfnt.impact_area_indicator_id;
+            prjtedBfnt.impact_area_indicator_name = (impactAreaIndicatorName) ? impactAreaIndicatorName : prjtedBfnt.impact_area_indicator_name;
+            prjtedBfnt.impact_area_name = (impactAreaName) ? impactAreaName : prjtedBfnt.impact_area_name;
+        } else {
+            prjtedBfnt = new ProjectionBenefits();
+            const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+            prjtedBfnt.notes = notes;
+            prjtedBfnt.impact_area_id = impactAreaId;
+            prjtedBfnt.impact_area_indicator_id = impactAreaIndicatorId;
+            prjtedBfnt.impact_area_indicator_name = impactAreaIndicatorName;
+            prjtedBfnt.impact_area_name = impactAreaName;
+            prjtedBfnt.wrkPkg = workPackage;
+        }
+
+        const errors = await validate(prjtedBfnt);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        let svdPrjtdBfnt = await prjBfnRepo.save(prjtedBfnt);
+
+        res.json({ msg: 'Projected benefit added to work package', data: { svdPrjtdBfnt } });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not add projected benefi to work package.", data: error });
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -416,7 +477,23 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * 
+ * @param req params:{ tocId }
+ * @param res 
+ */
+export const getTOCFiles = async (req: Request, res: Response) => {
+    const { tocId } = req.params;
+    const filesRepo = getRepository(Files);
 
+    try {
+        const files = await filesRepo.find({ where: { tocs: tocId } })
+        res.status(200).json({ msg: "TOC files", data: { files } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get files from TOC.", data: error });
+    }
+}
 
 /**
  * 

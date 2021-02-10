@@ -8,6 +8,9 @@ export class ImpactTimeFrames extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @Column({length: '4'})
     @IsNotEmpty()
     year: string
@@ -21,7 +24,4 @@ export class ImpactTimeFrames extends UpdatedCreatedAt {
     @OneToOne(() => ProjectionBenefits)
     @JoinColumn()
     proBnftId!: ProjectionBenefits;
-
-    @Column('tinyint')
-    active: boolean
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addRegionWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage } from '../controllers/StageConcept';
+import { addProjectedBenefitWorkPackage, addRegionWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, getTOCFiles, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -26,16 +26,23 @@ router.get("/concept/:initvStgId", [checkJwt, checkRole('initiatives', 'readOwn'
 
 
 // create work package
-router.post("/concept/packages", [checkJwt, checkRole('initiatives', 'createOwn')], createWorkPackage);
+router.post("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], createWorkPackage);
 
 // get regions to work packages
-router.get("/concept/packages/regions/:wrkPkgId", [checkJwt, checkRole('initiatives', 'readOwn')], getRegionWorkPackage);
+router.get("/concept/packages/regions/:wrkPkgId", [checkJwt, checkRole('packages', 'readOwn')], getRegionWorkPackage);
 
 // add regions to work packages
-router.post("/concept/packages/regions", [checkJwt, checkRole('initiatives', 'createOwn')], addRegionWorkPackage);
+router.post("/concept/packages/regions", [checkJwt, checkRole('packages', 'createOwn')], addRegionWorkPackage);
 
 // update work package
-router.patch("/concept/packages", [checkJwt, checkRole('initiatives', 'createOwn')], updateWorkPackage);
+router.patch("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], updateWorkPackage);
+
+// add benefits to initiative
+router.post("/concept/packages/benefits/", [checkJwt, checkRole('benefits', 'createOwn')], addProjectedBenefitWorkPackage);
+
+
+
+
 
 // add TOC to initiative
 router.post("/concept/tocs/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCConcept);
@@ -48,6 +55,13 @@ router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), u
 
 // update file in TOC
 router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
+
+// update file in TOC
+router.get("/concept/tocs/files/:tocId", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
+
+
+
+
 
 
 
