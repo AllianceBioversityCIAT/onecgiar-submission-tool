@@ -1,44 +1,50 @@
-<div class="login-form">
-  <mat-card>
-    <mat-card-content>
-      <form [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
-        <mat-form-field class="full-width-input">
-          <input
-            text="text"
-            formControlName="email"
-            matInput
-            placeholder="Email"
-            required
-          />
-          <mat-error *ngIf="checkField('email')">
-            {{ loginForm.errorMessage }}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="full-width-input separator">
-          <input
-            [type]="hide ? 'password' : 'text'"
-            formControlName="password"
-            matInput
-            placeholder="Password"
-            required
-          />
-          <button mat-icon-button matSuffix>
-            <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-          </button>
-          <mat-error *ngIf="checkField('password')">
-            {{ loginForm.errorMessage }}
-          </mat-error>
-        </mat-form-field>
-        <button
-          [disabled]="loginForm.baseForm.invalid"
-          type="submit"
-          mat-raised-button
-          class="login-button"
-        >
-          Login
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
-<app-footer></app-footer>
+<body>
+  <header>
+    
+    <div class="one-header">
+      <span><strong>One CGIAR </strong><span class="outline-font">Submission Tool</span></span>
+      <span class="spacer"></span>
+      <i class="cgiar-logo"></i>
+    </div>
+
+  </header>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Sign In</h5>
+            <form class="form-signin" [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
+              <mat-form-field class="full-width-input">
+                <input class="form-control" text="text" formControlName="email" matInput placeholder="Email" required />
+                <mat-error *ngIf="checkField('email')">
+                  {{ loginForm.errorMessage }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="full-width-input separator">
+                <input class="form-control" [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
+                <button mat-icon-button matSuffix>
+                  <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+                </button>
+                <mat-error *ngIf="checkField('password')">
+                  {{ loginForm.errorMessage }}
+                </mat-error>
+              </mat-form-field>
+
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+              <hr class="my-4">
+              <div class="note">
+                <span><strong>PLEASE NOTE:</strong> that by using the system, you consent to the information being used
+                  by the
+                  System Management Office. The information you input should therefore be complete and suitable for an
+                  external
+                  audience and funders.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
