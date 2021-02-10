@@ -16,17 +16,17 @@
             <h5 class="card-title text-center">Sign In</h5>
             <form class="form-signin" [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
               <mat-form-field class="full-width-input">
-                <input class="form-control" text="text" formControlName="email" matInput placeholder="Email" required />
+                <input text="text" formControlName="email" matInput placeholder="Email" required />
                 <mat-error *ngIf="checkField('email')">
                   {{ loginForm.errorMessage }}
                 </mat-error>
               </mat-form-field>
 
               <mat-form-field class="full-width-input separator">
-                <input class="form-control" [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
-                <button mat-icon-button matSuffix>
+                <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
+                <div mat-icon-button matSuffix>
                   <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-                </button>
+                </div>
                 <mat-error *ngIf="checkField('password')">
                   {{ loginForm.errorMessage }}
                 </mat-error>
