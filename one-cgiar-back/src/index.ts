@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { createConnection } from 'typeorm';
 import { startAccsCtrl } from './middlewares/access-control';
+import { startMulter } from './middlewares/multer';
 
 
 import Routes from './routes';
@@ -23,14 +24,17 @@ const HOST = process.env.HOST;
 createConnection()
     .then(async () => {
         const app = express();
-        startAccsCtrl();
-
+        app.use(bodyParser.urlencoded({ extended: true}));
+        app.use(bodyParser.json());
+        
         // middlewares
+        startAccsCtrl();
+        startMulter(parentDir);
+
         app.use(cors());
         app.use(helmet(
             { frameguard: false }
         ));
-        app.use(bodyParser.json());
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
 
 
