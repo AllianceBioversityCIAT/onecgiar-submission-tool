@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateInitiativeModalComponent } from '@app/shared/components/concept/create-initiative-modal/create-initiative-modal.component';
 import { AuthService } from '@auth/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
 
@@ -13,7 +15,7 @@ export class HomeComponent implements OnInit {
   public user: any = null;
   public data: any = [];
 
-  constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService) { }
+  constructor(public dialog: MatDialog, public authSvc: AuthService, public initiativesSvc: InitiativesService) { }
 
   ngOnInit(): void {
     this.authSvc.user$.subscribe((user) => {
@@ -42,18 +44,30 @@ export class HomeComponent implements OnInit {
   }
 
   getInitiatives() {
-    if (this.user.roles.find(role => role.acronym == 'ADM')) {
-      this.initiativesSvc.getAllInitiatives().subscribe(data => {
-        this.data = data.data;
-        console.log('getInitiatives', this.data);
-      });
-    } else {
-      this.initiativesSvc.getInitiativesByUser().subscribe(data => {
-        this.data = data.data;
-        console.log('getInitiativesByUser', this.data);
-      });
+    if (this.user) {
+      if (this.user.roles?.find(role => role.acronym == 'ADM')) {
+        this.initiativesSvc.getAllInitiatives().subscribe(data => {
+          this.data = data.data;
+          console.log('getInitiatives', this.data);
+          const initvStgId = data.initvStgId;
+          console.log(initvStgId);
+          localStorage.setItem('initvStgId', initvStgId);
+        });
+      } else {
+        this.initiativesSvc.getInitiativesByUser().subscribe(data => {
+          this.data = data.data;
+          console.log('getInitiativesByUser', this.data);
+        });
+      }
     }
+  }
 
+  openDialog() {
+    const dialogRef = this.dialog.open(CreateInitiativeModalComponent, { panelClass: 'custom-dialog-container' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 }
