@@ -23,5 +23,5 @@ export class ImpactTimeFrames extends UpdatedCreatedAt {
 
     @OneToOne(() => ProjectionBenefits)
     @JoinColumn()
-    proBnftId!: ProjectionBenefits;
+    proBnft!: ProjectionBenefits;
 }

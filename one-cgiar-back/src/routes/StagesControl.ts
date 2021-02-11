@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addProjectedBenefitWorkPackage, addRegionWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, getTOCFiles, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage } from '../controllers/StageConcept';
+import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, getTOCFiles, getWorkPackages, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -17,30 +17,48 @@ const router = Router();
 // create initiatives concept
 router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
 
-// create initiatives concept
+// update initiatives concept
 router.patch("/concept", [checkJwt, checkRole('initiatives', 'updateOwn')], updateConcept);
 
 // get initiatives concept
-router.get("/concept/:initvStgId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
-// router.get("/:initiativeId/stage/:stageId", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
+router.get("/concept/:initvStgId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
 
+
+
+
+// read work packages
+router.get("/concept/packages", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 
 // create work package
 router.post("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], createWorkPackage);
 
-// get regions to work packages
-router.get("/concept/packages/regions/:wrkPkgId", [checkJwt, checkRole('packages', 'readOwn')], getRegionWorkPackage);
-
-// add regions to work packages
-router.post("/concept/packages/regions", [checkJwt, checkRole('packages', 'createOwn')], addRegionWorkPackage);
-
 // update work package
 router.patch("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], updateWorkPackage);
 
-// add benefits to initiative
-router.post("/concept/packages/benefits/", [checkJwt, checkRole('benefits', 'createOwn')], addProjectedBenefitWorkPackage);
 
 
+// get regions to work packages
+router.get("/concept/packages/geo-scope/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getRegionWorkPackage);
+
+// add / remove regions to work packages
+router.patch("/concept/packages/regions", [checkJwt, checkRole('packages', 'createOwn')], upsertRegionWorkPackage);
+
+// add / remove countries to work packages
+router.patch("/concept/packages/countries", [checkJwt, checkRole('packages', 'createOwn')], upsertCountryWorkPackage);
+
+
+
+// get regions to work packages
+router.get("/concept/packages/benefits/:wrkPkgId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getProjectedBenefitWorkPackage);
+
+// add / remove benefits to work package
+router.patch("/concept/packages/benefits", [checkJwt, checkRole('benefits', 'createOwn')], upsertProjectedBenefitWorkPackage);
+
+// add / remove time frame to benefits
+router.patch("/concept/packages/benefits/timeframes", [checkJwt, checkRole('benefits', 'createOwn')], upsertTimeFrameProjectedBenefit);
+
+// get regions to work packages
+router.get("/concept/packages/benefits/timeframes/:wrkPkgId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getTimeFramesProjectedBenefit);
 
 
 
@@ -57,7 +75,7 @@ router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), u
 router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
 
 // update file in TOC
-router.get("/concept/tocs/files/:tocId", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
+router.get("/concept/tocs/files/:tocId([0-9]+)", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
 
 
 

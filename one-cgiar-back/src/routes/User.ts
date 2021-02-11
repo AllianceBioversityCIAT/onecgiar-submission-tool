@@ -14,12 +14,12 @@ router.get('/', [checkJwt], getUsers);
 router.post('/', [checkJwt, checkRole('users', 'createAny')], createUsers);
 
 // get user by id
-router.get('/:id', [checkJwt,checkRole('users', 'getAny')], getUser);
+router.get('/:id([0-9]+)', [checkJwt,checkRole('users', 'getAny')], getUser);
 
 // update user
-router.put('/:id', [checkJwt,checkRole('users', 'updateAny')], updateUser);
+router.put('/:id([0-9]+)', [checkJwt,checkRole('users', 'updateAny')], updateUser);
 
 // delete user
-router.delete('/:id', [checkJwt,checkRole('users', 'deleteAny')], deleteUser);
+router.delete('/:id([0-9]+)', [checkJwt,checkRole('users', 'deleteAny')], deleteUser);
 
 export default router;
