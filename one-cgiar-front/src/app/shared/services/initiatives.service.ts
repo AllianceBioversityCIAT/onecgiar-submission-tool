@@ -53,6 +53,11 @@ export class InitiativesService {
     }));
   }
 
+  createInitiative(body:any): Observable<any> {
+    console.log('initiative', body);
+    return this.postQuery('/initiatives', body);
+  }
+
   postConcept(body: any, description: string): Observable<any> {
     body.action_area_description = description;
     console.log('description', description);
