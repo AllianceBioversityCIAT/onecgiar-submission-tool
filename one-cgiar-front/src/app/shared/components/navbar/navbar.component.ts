@@ -13,16 +13,19 @@ export class NavbarComponent implements OnInit {
   public name: string = null;
   public role: string = null;
 
-  constructor(public authSvc: AuthService) {}
+  constructor(public authSvc: AuthService) { }
 
   ngOnInit(): void {
     this.authSvc.user$.subscribe((user) => {
-      console.log('OnInit', user);
-      this.isUser = true;
-      this.user = user;
-      let roles = this.user.roles.find(role => role.acronym);
-      this.name = this.user?.name;
-      this.role = roles?.acronym;
+      if (user) {
+        console.log('OnInit', user);
+        this.isUser = true;
+        this.user = user;
+        let roles = this.user.roles?.find(role => role.acronym);
+        this.name = this.user?.name;
+        this.role = roles?.acronym;
+      }
+
     })
   }
 
