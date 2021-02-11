@@ -9,6 +9,9 @@ export class KeyPartners extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @Column({type: 'int'})
     key_partner_id: number;
 

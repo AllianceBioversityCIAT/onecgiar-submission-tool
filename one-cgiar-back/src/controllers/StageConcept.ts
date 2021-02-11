@@ -1,10 +1,13 @@
 import { validate } from 'class-validator';
+import { countReset } from 'console';
 import { Request, Response } from 'express'
 import { getConnection, getRepository, In } from 'typeorm'
 import { ConceptInfo } from '../entity/ConceptInfo';
 import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { Files } from '../entity/Files';
+import { ImpactTimeFrames } from '../entity/ImpactTimeFrames';
 import { InitiativesByStages } from '../entity/InititativesByStages';
+import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { TOCs } from '../entity/TOCs';
 import { WorkPackages } from '../entity/WorkPackages';
@@ -109,8 +112,8 @@ export const createConcept = async (req: Request, res: Response) => {
                 return res.status(400).json(errors);
             }
 
-            let createdconceptInf = await concptInfoRepo.save(conceptInf);
-            res.json({ msg: 'Concept info created', data: createdconceptInf });
+            let conceptInfo = await concptInfoRepo.save(conceptInf);
+            res.json({ msg: 'Concept info created', data: conceptInfo });
         }
 
 
@@ -146,12 +149,35 @@ export const updateConcept = async (req: Request, res: Response) => {
             return res.status(400).json(errors);
         }
 
-        let updatedconceptInf = await concptInfoRepo.save(conceptInf);
-        res.json({ msg: 'Concept info updated', data: updatedconceptInf });
+        let conceptInfo = await concptInfoRepo.save(conceptInf);
+        res.json({ msg: 'Concept info updated', data: conceptInfo });
 
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not update concept info." });
+    }
+}
+
+
+
+
+/**
+ * 
+ * @param req params: { initvStgId }
+ * @param res 
+ */
+export const getWorkPackages = async (req: Request, res: Response) => {
+    const { initvStgId } = req.params;
+    const wpRepo = getRepository(WorkPackages);
+
+    try {
+
+        const workPackages = await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
+        res.json({ msg: 'Work packages', data: workPackages });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get work packages." });
     }
 }
 
@@ -165,24 +191,24 @@ export const createWorkPackage = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
     const wpRepo = getRepository(WorkPackages);
 
-    let newWP = new WorkPackages();
-    newWP.name = name;
-    newWP.results = results;
-    newWP.pathway_content = pathwayContent;
-    newWP.is_global = isGlobal;
+    let workPackage = new WorkPackages();
+    workPackage.name = name;
+    workPackage.results = results;
+    workPackage.pathway_content = pathwayContent;
+    workPackage.is_global = isGlobal;
     try {
 
         let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-        newWP.initvStg = initiativeStg;
+        workPackage.initvStg = initiativeStg;
 
-        const errors = await validate(newWP);
+        const errors = await validate(workPackage);
         if (errors.length > 0) {
             return res.status(400).json(errors);
         }
 
-        newWP = await wpRepo.save(newWP);
+        workPackage = await wpRepo.save(workPackage);
 
-        res.json({ msg: 'Work package created', data: newWP });
+        res.json({ msg: 'Work package created', data: workPackage });
 
     } catch (error) {
         console.log(error);
@@ -243,8 +269,8 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         // const l = await getClaActionAreas();
         // console.log(l);
 
-        const regions = await regionRepo.find({ where: { wrkPkg: workPackage } });
-        const countries = await countryRepo.find({ where: { wrkPkg: workPackage } });
+        const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
+        const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
         res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
     } catch (error) {
@@ -256,43 +282,234 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params: { isGlobal, wrkPkgId, regionId, countryId }
+ * @param req params:  { wrkPkgId, regionId, active }
  * @param res 
  */
-export const addRegionWorkPackage = async (req: Request, res: Response) => {
-    const { isGlobal, wrkPkgId, regionId, countryId } = req.body;
+export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
+    const { wrkPkgId, regionId, active } = req.body;
     const wpRepo = getRepository(WorkPackages);
     const regionRepo = getRepository(RegionsByWorkPackages);
-    const countryRepo = getRepository(CountriesByWorkPackages);
 
-    const wrkRegion = new RegionsByWorkPackages();
-    const wrkCountry = new CountriesByWorkPackages();
+    let wrkRegion: RegionsByWorkPackages;
 
     try {
         const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
-        workPackage.is_global = (isGlobal) ? isGlobal : workPackage.is_global;
 
-        const errors = await validate(workPackage);
+        wrkRegion = await regionRepo.findOne({ where: { region_id: regionId, wrkPkg: workPackage } });
+        if (wrkRegion) {
+            wrkRegion.active = active;
+        } else {
+            wrkRegion = new RegionsByWorkPackages();
+            wrkRegion.active = active;
+            wrkRegion.wrkPkg = workPackage;
+            wrkRegion.region_id = regionId;
+        }
+
+        const errors = await validate(wrkRegion);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+        let region = await regionRepo.save(wrkRegion);
+
+        res.json({ msg: 'Work package region updated.', data: { region } });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not update region in work package.", data: error });
+    }
+}
+
+
+/**
+ * 
+ * @param req params:  { wrkPkgId, countryId, active }
+ * @param res 
+ */
+export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
+    const { wrkPkgId, countryId, active } = req.body;
+    const wpRepo = getRepository(WorkPackages);
+    const regionRepo = getRepository(CountriesByWorkPackages);
+
+    let cntryRegion: CountriesByWorkPackages;
+
+    try {
+        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+
+        cntryRegion = await regionRepo.findOne({ where: { region_id: countryId, wrkPkg: workPackage } });
+        if (cntryRegion) {
+            cntryRegion.active = active;
+        } else {
+            cntryRegion = new CountriesByWorkPackages();
+            cntryRegion.active = active;
+            cntryRegion.wrkPkg = workPackage;
+            cntryRegion.country_id = countryId;
+        }
+
+        const errors = await validate(cntryRegion);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+        let country = await regionRepo.save(cntryRegion);
+
+        res.json({ msg: 'Work package country updated.', data: { country } });
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not update country in work package.", data: error });
+    }
+}
+
+
+
+
+
+
+
+/**
+ * 
+ * @param req params: { wrkPkgId }
+ * @param res 
+ */
+export const getProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
+    const { wrkPkgId } = req.params;
+    const pbRepo = getRepository(ProjectionBenefits);
+
+    try {
+        const projectedBenefits = await pbRepo.find({ where: { wrkPkg: wrkPkgId, active: true } });
+        res.json({ msg: 'Projected benefits from work package', data: { projectedBenefits } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get projected benefit from work package.", data: error });
+    }
+}
+
+
+/**
+ * 
+ * @param req params: { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName }
+ * @param res 
+ */
+export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
+    const { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName, active } = req.body;
+    const prjBfnRepo = getRepository(ProjectionBenefits);
+    const wpRepo = getRepository(WorkPackages);
+    let prjtedBfnt: ProjectionBenefits;
+    try {
+
+
+        if (id) {
+            prjtedBfnt = await prjBfnRepo.findOne({ where: { id: id, wrkPkg: wrkPkgId } });
+            prjtedBfnt.notes = (notes) ? notes : prjtedBfnt.notes;
+            prjtedBfnt.active = (active) ? active : prjtedBfnt.active;
+            prjtedBfnt.impact_area_indicator_id = (impactAreaIndicatorId) ? impactAreaIndicatorId : prjtedBfnt.impact_area_indicator_id;
+            prjtedBfnt.impact_area_indicator_name = (impactAreaIndicatorName) ? impactAreaIndicatorName : prjtedBfnt.impact_area_indicator_name;
+        } else {
+            prjtedBfnt = new ProjectionBenefits();
+            const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+            prjtedBfnt.notes = notes;
+            prjtedBfnt.impact_area_id = impactAreaId;
+            prjtedBfnt.impact_area_indicator_id = impactAreaIndicatorId;
+            prjtedBfnt.impact_area_indicator_name = impactAreaIndicatorName;
+            prjtedBfnt.impact_area_name = impactAreaName;
+            prjtedBfnt.wrkPkg = workPackage;
+            prjtedBfnt.active = active;
+        }
+
+        const errors = await validate(prjtedBfnt);
         if (errors.length > 0) {
             return res.status(400).json(errors);
         }
 
-        wrkRegion.region_id = regionId;
-        wrkRegion.wrkPkg = workPackage;
+        let projectedBenefit = await prjBfnRepo.save(prjtedBfnt);
 
-        wrkCountry.country_id = countryId;
-        wrkCountry.wrkPkg = workPackage;
+        res.json({ msg: 'Projected benefit added to work package', data: { projectedBenefit } });
 
-        let savedRegion = await regionRepo.save(wrkRegion);
-        let savedCountry = await countryRepo.save(wrkCountry);
-
-        res.json({ msg: 'Work package updated: Region / country added', data: { workPackage, savedRegion, savedCountry } });
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not add region / country to work package.", data: error });
+        res.status(404).json({ msg: "Could not add projected benefit to work package.", data: error });
     }
 }
+
+
+
+
+
+/**
+ * 
+ * @param req params: { prjctBnftId }
+ * @param res 
+ */
+export const getTimeFramesProjectedBenefit = async (req: Request, res: Response) => {
+    const { prjctBnftId } = req.params;
+    const tfRepo = getRepository(ImpactTimeFrames);
+
+    try {
+        const timeFrames = await tfRepo.find({ where: { proBnft: prjctBnftId, active: true } });
+        res.json({ msg: 'Time frames from projected benefit', data: { timeFrames } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get time frames from projected benefit.", data: error });
+    }
+}
+
+
+/**
+ * 
+ * @param req params: { id, prjtBenefitId, year, lowScenario, highScenario, active }
+ * @param res 
+ */
+export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Response) => {
+    const { id, prjtBenefitId, year, lowScenario, highScenario, active } = req.body;
+    const prjBfnRepo = getRepository(ProjectionBenefits);
+    const tfRepo = getRepository(ImpactTimeFrames);
+
+    let timeFrame: ImpactTimeFrames;
+
+    try {
+
+        const prjtBnefit = await prjBfnRepo.findOne(prjtBenefitId);
+
+        if (id) {
+            timeFrame = await tfRepo.findOne(id);
+            timeFrame.active = (active) ? active : timeFrame.active;
+            timeFrame.high_scenario = (highScenario) ? highScenario : timeFrame.high_scenario;
+            timeFrame.low_scenario = (lowScenario) ? lowScenario : timeFrame.low_scenario;
+            timeFrame.year = (year) ? year : timeFrame.year;
+        } else {
+            timeFrame = new ImpactTimeFrames();
+            timeFrame.proBnft = prjtBnefit;
+            timeFrame.active = active;
+            timeFrame.low_scenario = lowScenario;
+            timeFrame.high_scenario = highScenario;
+            timeFrame.proBnft = prjtBnefit;
+            timeFrame.year = year;
+        }
+
+        const errors = await validate(timeFrame);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        let impactTimeFrame = await tfRepo.save(timeFrame);
+
+        res.json({ msg: 'Impact time frame added to projected benefit', data: { impactTimeFrame } });
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not add impact time frame to projected benefit.", data: error });
+    }
+
+}
+
+
+
+
+
+
+
 
 
 
@@ -315,7 +532,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
         newTOC.narrative = narrative;
         newTOC.initvStg = iniStg;
 
-        let svdTOC = await tocsRepo.save(newTOC);
+        let TOC = await tocsRepo.save(newTOC);
         const files = req['files'];
 
         if (files) {
@@ -333,11 +550,11 @@ export const addTOCConcept = async (req: Request, res: Response) => {
             }
             const _files = filesRepo.create(filesArr);
             _files.forEach(file => {
-                file.tocs = svdTOC;
+                file.tocs = TOC;
             });
-            let savdFiles = await filesRepo.save(_files);
+            let Files = await filesRepo.save(_files);
 
-            res.status(200).json({ msg: "TOC added to concept", data: { svdTOC, savdFiles } });
+            res.status(200).json({ msg: "TOC added to concept", data: { TOC, Files } });
         } else {
             throw new Error('None files found');
         }
@@ -382,7 +599,7 @@ export const addTOCFile = async (req: Request, res: Response) => {
     const filesRepo = getRepository(Files);
 
     try {
-        const toc = await tocsRepo.findOneOrFail(tocId);
+        const TOC = await tocsRepo.findOneOrFail(tocId);
         const files = req['files'];
 
         if (files) {
@@ -400,11 +617,11 @@ export const addTOCFile = async (req: Request, res: Response) => {
             }
             const _files = filesRepo.create(filesArr);
             _files.forEach(file => {
-                file.tocs = toc;
+                file.tocs = TOC;
             });
-            let savdFiles = await filesRepo.save(_files);
+            let Files = await filesRepo.save(_files);
 
-            res.status(200).json({ msg: "File added to TOC", data: { toc, savdFiles } });
+            res.status(200).json({ msg: "File added to TOC", data: { TOC, Files } });
         } else {
             throw new Error('None files found');
         }
@@ -416,7 +633,23 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * 
+ * @param req params:{ tocId }
+ * @param res 
+ */
+export const getTOCFiles = async (req: Request, res: Response) => {
+    const { tocId } = req.params;
+    const filesRepo = getRepository(Files);
 
+    try {
+        const Files = await filesRepo.find({ where: { tocs: tocId } })
+        res.status(200).json({ msg: "TOC files", data: { Files } });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get files from TOC.", data: error });
+    }
+}
 
 /**
  * 
@@ -433,8 +666,8 @@ export const updateTOCFile = async (req: Request, res: Response) => {
         file.url = (url) ? url : file.url;
         file.name = (name) ? name : file.name;
 
-        let _file = await filesRepo.save(file);
-        res.status(200).json({ msg: "File updated in TOC.", data: { _file } });
+        let Files = await filesRepo.save(file);
+        res.status(200).json({ msg: "File updated in TOC.", data: { Files } });
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not update file in TOC.", data: error });

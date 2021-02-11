@@ -11,6 +11,9 @@ export class RegionsByWorkPackages extends UpdatedCreatedAt {
     @JoinColumn()
     wrkPkg!: WorkPackages;
 
+    @Column('tinyint')
+    active: boolean
+
     @Column({type: 'int'})
     region_id: number;
 }

@@ -9,6 +9,9 @@ export class WorkPackages extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @Column({length: '500'})
     @IsNotEmpty()
     name: string
