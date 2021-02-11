@@ -16,7 +16,7 @@
             <!-- Status Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Initiative Name </th>
-                <td mat-cell *matCellDef="let row"> {{row.initiativeName}} </td>
+                <td mat-cell *matCellDef="let row" class="pointer" routerLink="/create-initiative/general-information-c/{{row.initvStgId}}"> {{row.initiativeName}} </td>
             </ng-container>
 
             <!-- Initiative Name Column -->
