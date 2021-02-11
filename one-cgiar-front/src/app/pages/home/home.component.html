@@ -2,7 +2,7 @@
 <app-init-table [data]="data"></app-init-table>
 <div class="button-container">
     <!-- <button routerLink="/create-initiative/general-information-c" type="submit" mat-raised-button class="initiative-button"> -->
-    <button (click)="openDialog()" type="submit" mat-raised-button class="initiative-button">
+    <button (click)="openDialog()" type="submit" mat-raised-button class="initiative-button" *ngIf="role === 'ADM'">
         <mat-icon>add</mat-icon>
         <strong>Create an initiative</strong>
     </button>

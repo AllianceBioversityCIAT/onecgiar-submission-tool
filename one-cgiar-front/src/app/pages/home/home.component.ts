@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   public isUser: boolean = false;
   public user: any = null;
   public data: any = [];
+  public role: string = null;
 
   constructor(public dialog: MatDialog, public authSvc: AuthService, public initiativesSvc: InitiativesService) { }
 
@@ -22,6 +23,8 @@ export class HomeComponent implements OnInit {
       console.log('OnInit', user);
       this.isUser = true;
       this.user = user;
+      let roles = this.user.roles.find(role => role.acronym);
+      this.role = roles.acronym;
       this.getInitiatives();
     })
     // let body = {
@@ -49,9 +52,6 @@ export class HomeComponent implements OnInit {
         this.initiativesSvc.getAllInitiatives().subscribe(data => {
           this.data = data.data;
           console.log('getInitiatives', this.data);
-          const initvStgId = data.initvStgId;
-          console.log(initvStgId);
-          localStorage.setItem('initvStgId', initvStgId);
         });
       } else {
         this.initiativesSvc.getInitiativesByUser().subscribe(data => {
