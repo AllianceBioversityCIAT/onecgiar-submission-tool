@@ -8,6 +8,9 @@ export class InitiativesByUsers extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @ManyToOne(() => Users, user => user.initiatives)
     public user!: Users;
 

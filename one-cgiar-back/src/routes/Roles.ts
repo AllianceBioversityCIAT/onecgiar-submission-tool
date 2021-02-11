@@ -12,10 +12,10 @@ router.post("/", [checkJwt, checkRole('roles', 'createAny')], createRole);
 router.get("/", getAllRoles);
 
 // edit role
-router.put("/:id", [checkJwt, checkRole('roles', 'updateAny')], editRole);
+router.put("/:id([0-9]+)", [checkJwt, checkRole('roles', 'updateAny')], editRole);
 
 // delete role
-router.delete("/:id", [checkJwt, checkRole('roles', 'deleteAny')], deleteRole);
+router.delete("/:id([0-9]+)", [checkJwt, checkRole('roles', 'deleteAny')], deleteRole);
 
 /***
  * 

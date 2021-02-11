@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { Initiatives } from './Initiatives';
 import { Stages } from './Stages';
@@ -9,6 +9,9 @@ export class InitiativesByStages extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+    
     @ManyToOne(() => Stages, stage => stage.initiatives)
     public stage!: Stages;
 

@@ -8,9 +8,12 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('tinyint')
+    active: boolean
+
     @OneToOne(() => WorkPackages)
     @JoinColumn()
-    wrkPkgId!: WorkPackages;
+    wrkPkg!: WorkPackages;
 
     @Column({type: 'int'})
     impact_area_id: number;
