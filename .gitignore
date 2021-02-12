@@ -1,2 +1,4 @@
 /one-cgiar-front/dist/*
 /uploads
+/one-cgiar-front/src/environments/environment.ts
+/one-cgiar-front/src/environments/environment.prod.ts
