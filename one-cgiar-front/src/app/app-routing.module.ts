@@ -37,7 +37,7 @@ const routes: Routes = [
         path: 'feedback-pc', component: FeedbackComponent,
       },
       {
-        path: 'general-information-c', component: GeneralInformationConceptComponent,
+        path: 'general-information-c/:id', component: GeneralInformationConceptComponent,
       },
       {
         path: 'narratives-c', component: NarrativesConceptComponent,

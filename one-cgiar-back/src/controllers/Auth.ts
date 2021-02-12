@@ -53,9 +53,10 @@ export const login = async (req: Request, res: Response) => {
 
         const name = user.email;
         const roles = user.roles;
+        const id = user.id;
         //  user.roles;
 
-        res.json({ msg: 'OK', token, name, roles });
+        res.json({ msg: 'OK', token, name, roles, id });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ msg: 'email or password failed' });

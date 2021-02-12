@@ -1,6 +1,7 @@
 import { takeUntil } from 'rxjs/operators';
 import { UtilsService } from './shared/services/utils.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
   opened = false;
   private destroy$ = new Subject<any>();
 
-  constructor(private utilsSvc: UtilsService) {}
+  constructor(private utilsSvc: UtilsService, public router: Router) {}
 
   ngOnInit(): void {
     this.utilsSvc.sidebarOpened$

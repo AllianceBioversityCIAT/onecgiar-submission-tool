@@ -1,41 +1,111 @@
-.login-form {
-  padding: 4rem 1rem;
+body {
+  background: url('/assets/images/login_background.jpg') top center no-repeat;
+  background-size: cover!important;
+  overflow: hidden;
+}
 
-  mat-card {
-    max-width: 350px;
-    margin: 2rem auto;
-    text-align: center;
-    background-color: #f7f7f7;
-    border: 1px solid #ECECEC;
-    padding: 24px;
-    border-radius: 20px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  }
+body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  background: rgba(34,34,34,.8);
+}
 
-  .mat-form-field-label{
-    color:green !important;
-  }
-  .mat-form-field-underline{
-    background-color:green !important;
-  }
+:root {
+  --input-padding-x: 1.5rem;
+  --input-padding-y: .75rem;
+}
 
-  .full-width-input,
-  button {
-    width: 100%;
-  }
+.card-signin {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+}
 
-  .separator {
-    margin-bottom: 2rem;
-  }
+.card-signin .card-title {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  font-size: 1.5rem;
+}
 
-  .login-button {
-    background-color: #2BA6CB;
-    border-bottom: 3px solid #1E94B8;
-    border-radius: 2px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.5em;
-    width: 100px;
-  }
+.card-signin .card-body {
+  padding: 2rem;
+}
 
+.form-signin {
+  width: 100%;
+}
+
+.form-signin .btn {
+  font-size: 80%;
+  border-radius: 5rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+
+mat-form-field {
+  display: block;
+}
+
+header {
+  position: relative;
+}
+
+.note {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-align: justify;
+}
+
+.one-header {
+  font-size: 2em;
+  color: #ffff;
+  background-color: rgba(19,19,19,.4);
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.outline-font {
+  font-weight: 100;
+}
+
+.cgiar-logo {
+  content: url("/assets/images/cgiar_logo.png");
+  width: 4.5rem;
+  filter: contrast(0) brightness(5);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.full-width-input,
+button {
+  width: 100%;
+}
+
+.separator {
+  margin-bottom: 2rem;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(19,19,19,.4);
+  color: white;
+  text-align: center;
+}
+
+p {
+  margin: 12px 0;
 }
