@@ -129,13 +129,14 @@ export const createConcept = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateConcept = async (req: Request, res: Response) => {
-    const { id, name, challenge, objectives, results, highlights, action_area_id, action_area_description } = req.params;
+    const { id, name, challenge, objectives, results, highlights, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
 
-    let conceptInf = new ConceptInfo();
+    let conceptInf:ConceptInfo;
 
     try {
         conceptInf = await concptInfoRepo.findOneOrFail(id);
+        console.log(id, conceptInf)
         conceptInf.name = (name) ? name : conceptInf.name;
         conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
         conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
