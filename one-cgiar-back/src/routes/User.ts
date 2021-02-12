@@ -6,7 +6,6 @@ import { checkRole } from '../middlewares/role';
 const router = Router()
 
 // get all users
-// router.get('/', getUsers);
 router.get('/', [checkJwt], getUsers);
 
 // create an user
