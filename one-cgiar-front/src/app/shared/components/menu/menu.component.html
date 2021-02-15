@@ -51,14 +51,14 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options">
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-c">
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-c/{{this.initiativesSvc.initvStgId}}">
                     <span>General Information</span>
                     <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_requests.generalInformationFormCs.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-c">
+                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-c/{{this.initiativesSvc.initvStgId}}">
                     <span>Narratives</span>
                     <button mat-icon-button aria-label="Verified icon" [disabled]="_requests.narrativesFormCs.invalid">
                         <mat-icon>verified</mat-icon>

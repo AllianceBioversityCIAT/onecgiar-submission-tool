@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@app/pages/auth/auth.service';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
@@ -14,9 +16,8 @@ export class MenuComponent implements OnInit {
   panelOpenWP = false;
   panelOpenFP = false;
 
-  constructor(public _auth: AuthService, public _requests: RequestsService) { }
+  constructor(public _auth: AuthService, public _requests: RequestsService, public activatedRoute: ActivatedRoute, public initiativesSvc: InitiativesService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }
