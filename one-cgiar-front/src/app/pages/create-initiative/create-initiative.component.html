@@ -12,7 +12,7 @@
 
     <mat-card class="card-container">
         <div class="initiative-identification">
-            <span class="initiative-id">ID: 1</span>
+            <span class="initiative-id">ID: {{this.initiativesSvc.initvStgId}}</span>
             <button *ngIf="false" class="manage-button" mat-raised-button (click)="openDialog()">
                 Manage access
                 <mat-icon>settings</mat-icon>
