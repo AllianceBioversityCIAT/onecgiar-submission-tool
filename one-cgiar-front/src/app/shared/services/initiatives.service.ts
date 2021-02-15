@@ -20,7 +20,7 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.get<any>(URL, { headers });
   }
 
@@ -30,7 +30,7 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.post<any>(URL, body, { headers });
   }
 
@@ -40,7 +40,7 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.patch<any>(URL, body, { headers });
   }
 

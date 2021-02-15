@@ -42,7 +42,7 @@ export class AuthService {
   }
   login(authData: User): Observable<UserResponse | void> {
     return this.http
-      .post<UserResponse>(`${environment.API_URL}/auth/login`, authData)
+      .post<UserResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
         map((user: UserResponse) => {
           // console.log('RESPONSE->', user);
