@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Create Initiative</h2>
-<form [formGroup]="createInitiativeForm" (ngSubmit)="onSubmit()" class="general-information-form">
+<form [formGroup]="createInitiativeForm" (ngSubmit)="onSubmit()">
 <mat-dialog-content>
     <div class="modal-container">
         <mat-form-field class="partners-full-width">
             <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
-            <input formControlName="name" type="text" matInput required />
+            <textarea formControlName="name" type="text" matInput required></textarea>
         </mat-form-field>
     </div>
 </mat-dialog-content>

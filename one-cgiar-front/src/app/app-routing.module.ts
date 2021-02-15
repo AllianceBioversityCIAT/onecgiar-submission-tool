@@ -40,7 +40,7 @@ const routes: Routes = [
         path: 'general-information-c/:id', component: GeneralInformationConceptComponent,
       },
       {
-        path: 'narratives-c', component: NarrativesConceptComponent,
+        path: 'narratives-c/:id', component: NarrativesConceptComponent,
       },
       {
         path: 'theory-of-change-c', component: TheoryOfChangeComponent,

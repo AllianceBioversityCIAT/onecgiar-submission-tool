@@ -1,6 +1,6 @@
 <div class="narratives-container animate__animated animate__fadeIn">
     <strong class="narratives-title">Narratives</strong>
-    <form [formGroup]="_requests.narrativesFormCs" class="narratives-form">
+    <form [formGroup]="generalInformationForm" (ngSubmit)="getConceptInfo()" class="narratives-form">
         <mat-form-field class="narratives-full-width">
             <p><strong>Challenge statement: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed</i></p>
@@ -30,7 +30,7 @@
             <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
         </mat-form-field>
         <div class="narratives-save">
-            <button type="submit" (click)="_requests.saveNarratives()" mat-raised-button class="save-button">
+            <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>
