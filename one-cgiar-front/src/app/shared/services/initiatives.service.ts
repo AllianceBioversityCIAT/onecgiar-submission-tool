@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 })
 export class InitiativesService {
 
+  public initvStgId: string;
+
   constructor(private http: HttpClient) { }
 
   getQuery(query: string) {
@@ -32,6 +34,25 @@ export class InitiativesService {
     return this.http.post<any>(URL, body, { headers });
   }
 
+  updateQuery(query: string, body: any) {
+    const user = JSON.parse(localStorage.getItem('user')) || null;
+    const token = user.token;
+    const headers = new HttpHeaders({
+      'auth': token
+    });
+    const URL = environment.API_URL + `${query}`;
+    return this.http.patch<any>(URL, body, { headers });
+  }
+
+  getInitiativeById(id: number): Observable<any> {
+    console.log('numero de la funcion')
+    return this.getQuery('/initiatives/own')
+    .pipe(map((data: any) => {
+      console.log('getInitiativeById', data);
+      return data.data.find(resp => resp.initvStgId == id);
+    }));
+  }
+
   getAllInitiatives(): Observable<any> {
     return this.getQuery('/initiatives');
   }
@@ -39,6 +60,10 @@ export class InitiativesService {
   getInitiativesByUser(): Observable<any> {
     return this.getQuery('/initiatives/own');
   }
+
+  getConcept(id): Observable<any> {
+    return this.getQuery(`/stages-control/concept/${id}`);
+  } 
 
   getActionAreaById(id: number): Observable<any> {
     return this.getQuery('/initiatives/areas').pipe(map((data: any) => {
@@ -61,7 +86,16 @@ export class InitiativesService {
   postConcept(body: any, description: string): Observable<any> {
     body.action_area_description = description;
     console.log('description', description);
+    console.log('postConcept', body);
     return this.postQuery('/stages-control/concept', body);
+  }
+
+  updateConcept(body: any, description: string, id:any): Observable<any> {
+    body.action_area_description = description;
+    body.id = id;
+    console.log('body', body);
+    console.log('description', description);
+    return this.updateQuery('/stages-control/concept', body);
   }
 
 }

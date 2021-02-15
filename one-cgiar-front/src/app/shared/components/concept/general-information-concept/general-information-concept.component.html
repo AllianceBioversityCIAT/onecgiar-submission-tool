@@ -1,19 +1,21 @@
 <div class="general-information-container animate__animated animate__fadeIn">
     <strong class="general-information-title">General information</strong>
-    <form [formGroup]="_requests.generalInformationFormCs" class="general-information-form">
+    <form [formGroup]="generalInformationForm" (ngSubmit)="getConceptInfo()" class="general-information-form">
         <mat-form-field class="general-information-full-width">
             <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
-            <input type="text" formControlName="initiativeName" matInput required />
+            <input type="text" formControlName="name" matInput required />
         </mat-form-field>
         <mat-form-field class="general-information-full-width">
-            <p><strong>Lead name: </strong><span class="asterisk">* </span></p>
-            <input type="text" formControlName="leadContact" matInput required />
+            <p><strong>Lead name: </strong>
+                <!-- <span class="asterisk">* </span> -->
+            </p>
+            <input type="text" matInput />
         </mat-form-field>
         <mat-form-field appearance="standard" class="general-information-full-width">
             <p><strong>Primary CGIAR Action Area: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i>
             </p>
-            <mat-select formControlName="actionArea">
+            <mat-select formControlName="action_area_id">
                 <mat-option value="1">Action Area 1: Systems Transformation</mat-option>
                 <mat-option value="2">Action Area 2: Sustainable Production</mat-option>
                 <mat-option value="3">Action Area 3: Genetic Gains</mat-option>
@@ -22,7 +24,7 @@
         <mat-form-field class="general-information-full-width">
             <p><strong>Please highlight what has changed since the previous stage, and why: </strong><span
                     class="asterisk">* </span></p>
-            <textarea type="text" formControlName="changesPreviousStage" matInput required (keydown)="wordCounter()"
+            <textarea type="text" matInput required (keydown)="wordCounter()"
                 #text></textarea>
             <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
@@ -30,7 +32,7 @@
         <!-- <quill-editor class="content-editor"></quill-editor> -->
         <!-- <quill-editor class="content-editor" [placeholder]="''" [modules]="modules"></quill-editor> -->
         <div class="general-information-save">
-            <button type="submit" (click)="_requests.saveGeneralInformation()" mat-raised-button class="save-button">
+            <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>
