@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.authSvc.user$.subscribe((user) => {
       if (user) {
-        console.log('OnInit', user);
+        // console.log('OnInit', user);
         this.isUser = true;
         this.user = user;
         let roles = this.user.roles?.find(role => role.acronym);
