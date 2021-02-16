@@ -102,7 +102,7 @@ export const createConcept = async (req: Request, res: Response) => {
          * check if initiative have a concept
          */
         const _concept = await concptInfoRepo.findOne({ where: { initvStg: initiativeStg.id } })
-        console.log(_concept)
+        // console.log(_concept)
         if (_concept)
             res.sendStatus(403)
         else {
