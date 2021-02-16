@@ -1,6 +1,6 @@
 <div class="theory-of-change-container animate__animated animate__fadeIn">
     <strong class="theory-of-change-title">Initial theory of change</strong>
-    <form [formGroup]="_requests.theoryOfChangeFormCs" class="theory-of-change-form">
+    <form [formGroup]="theoryOfChangeForm" (ngSubmit)="onSubmit()" class="theory-of-change-form">
         <mat-form-field class="theory-of-change-full-width">
             <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
                     class="asterisk">* </span></p>
@@ -24,11 +24,11 @@
         <div class="upload-container">
             <mat-icon>cloud_upload</mat-icon>
             Click here to choose a file or drag it here
-            <input class="nonstylefile" #attachments type="file" formControlName="uploadDocuments" required (change)="onFileChanged($event)" #fileInput multiple="true">
+            <input class="nonstylefile" #attachments type="file" required (change)="onFileChanged($event.target.files)" #fileInput multiple="true">
         </div>
 
         <div class="theory-of-change-save">
-            <button type="submit" (click)="_requests.saveTheoryOfChange()" mat-raised-button class="save-button">
+            <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>

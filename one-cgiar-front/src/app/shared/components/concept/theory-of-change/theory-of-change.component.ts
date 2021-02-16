@@ -1,4 +1,7 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
@@ -8,7 +11,15 @@ import { RequestsService } from '@app/shared/services/requests.service';
 })
 export class TheoryOfChangeComponent implements OnInit {
 
-  constructor(public _requests: RequestsService) { }
+  public theoryOfChangeForm: FormGroup;
+  public initvStgId: any;
+  public fileToUpload: any;
+
+  constructor(public _requests: RequestsService, private initiativesSvc: InitiativesService, public activatedRoute: ActivatedRoute) { 
+    this.theoryOfChangeForm = new FormGroup({
+      narrative: new FormControl('', Validators.required)
+    });
+  }
 
   wordCount: any;
 
@@ -22,6 +33,16 @@ export class TheoryOfChangeComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onSubmit() {
+    const body = {
+      initvStgId: this.initiativesSvc.initvStgId,
+      narrative: this.theoryOfChangeForm.get('narrative').value
+    };
+    this.initiativesSvc.postFile(this.fileToUpload, body).subscribe(resp => {
+      console.log('resp', resp);
+    })
+  }
+
   onSave(theoryOfChangeForm): void {
     console.log("GUARDANDO", theoryOfChangeForm.value);
   }
@@ -31,14 +52,16 @@ export class TheoryOfChangeComponent implements OnInit {
   fileList: File[] = [];
   listOfFiles: any[] = [];
 
-  onFileChanged(event: any) {
-    for (var i = 0; i <= event.target.files.length - 1; i++) {
-      var selectedFile = event.target.files[i];
-      this.fileList.push(selectedFile);
-      this.listOfFiles.push(selectedFile.name)
-    }
+  onFileChanged(files: FileList) {
+    console.log('files', files);
+    this.fileToUpload = files.item(0);
+    // for (var i = 0; i <= event.target.files.length - 1; i++) {
+    //   var selectedFile = event.target.files[i];
+    //   this.fileList.push(selectedFile);
+    //   this.listOfFiles.push(selectedFile.name)
+    // }
 
-    this.attachment.nativeElement.value = '';
+    // this.attachment.nativeElement.value = '';
   }
 
   removeSelectedFile(index) {
