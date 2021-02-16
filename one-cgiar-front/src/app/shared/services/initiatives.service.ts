@@ -112,9 +112,9 @@ export class InitiativesService {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
     const formData: FormData = new FormData();
-    formData.append('files', fileToUpload, fileToUpload.name);
     formData.append('initvStgId', body.initvStgId);
     formData.append('narrative', body.narrative);
+    formData.append('files', fileToUpload, fileToUpload.name);
     return this.http.post(endpoint, formData, { headers: new HttpHeaders({'auth': token}) });
   }
 

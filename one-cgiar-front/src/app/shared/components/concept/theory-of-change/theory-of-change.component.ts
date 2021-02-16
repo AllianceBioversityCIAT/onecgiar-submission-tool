@@ -40,6 +40,7 @@ export class TheoryOfChangeComponent implements OnInit {
     };
     this.initiativesSvc.postFile(this.fileToUpload, body).subscribe(resp => {
       console.log('resp', resp);
+      console.log('initvStgId TOC', body.initvStgId);
     })
   }
 
