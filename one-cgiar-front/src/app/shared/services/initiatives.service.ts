@@ -20,7 +20,7 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.get<any>(URL, { headers });
   }
 
@@ -30,7 +30,7 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.post<any>(URL, body, { headers });
   }
 
@@ -40,17 +40,17 @@ export class InitiativesService {
     const headers = new HttpHeaders({
       'auth': token
     });
-    const URL = environment.API_URL + `${query}`;
+    const URL = environment.apiUrl + `${query}`;
     return this.http.patch<any>(URL, body, { headers });
   }
 
   getInitiativeById(id: number): Observable<any> {
     console.log('numero de la funcion')
     return this.getQuery('/initiatives/own')
-    .pipe(map((data: any) => {
-      console.log('getInitiativeById', data);
-      return data.data.find(resp => resp.initvStgId == id);
-    }));
+      .pipe(map((data: any) => {
+        console.log('getInitiativeById', data);
+        return data.data.find(resp => resp.initvStgId == id);
+      }));
   }
 
   getAllInitiatives(): Observable<any> {
@@ -63,7 +63,11 @@ export class InitiativesService {
 
   getConcept(id): Observable<any> {
     return this.getQuery(`/stages-control/concept/${id}`);
-  } 
+  }
+
+  getActionAreas(): Observable<any> {
+    return this.getQuery(`/initiatives/areas`);
+  }
 
   getActionAreaById(id: number): Observable<any> {
     return this.getQuery('/initiatives/areas').pipe(map((data: any) => {
@@ -78,7 +82,7 @@ export class InitiativesService {
     }));
   }
 
-  createInitiative(body:any): Observable<any> {
+  createInitiative(body: any): Observable<any> {
     console.log('initiative', body);
     return this.postQuery('/initiatives', body);
   }
@@ -90,12 +94,28 @@ export class InitiativesService {
     return this.postQuery('/stages-control/concept', body);
   }
 
-  updateConcept(body: any, description: string, id:any): Observable<any> {
+  updateConcept(body: any, description: string, id: any): Observable<any> {
     body.action_area_description = description;
     body.id = id;
     console.log('body', body);
     console.log('description', description);
     return this.updateQuery('/stages-control/concept', body);
+  }
+
+  createTheoryOfChange(body: any): Observable<any> {
+    console.log('toc', body);
+    return this.postQuery('/stages-control/concept/tocs', body);
+  }
+
+  postFile(fileToUpload: File, body: any): Observable<any> {
+    const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
+    const user = JSON.parse(localStorage.getItem('user')) || null;
+    const token = user.token;
+    const formData: FormData = new FormData();
+    formData.append('files', fileToUpload, fileToUpload.name);
+    formData.append('initvStgId', body.initvStgId);
+    formData.append('narrative', body.narrative);
+    return this.http.post(endpoint, formData, { headers: new HttpHeaders({'auth': token}) });
   }
 
 }

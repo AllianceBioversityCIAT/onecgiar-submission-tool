@@ -43,7 +43,7 @@ const routes: Routes = [
         path: 'narratives-c/:id', component: NarrativesConceptComponent,
       },
       {
-        path: 'theory-of-change-c', component: TheoryOfChangeComponent,
+        path: 'theory-of-change-c/:id', component: TheoryOfChangeComponent,
       },
       {
         path: 'work-packages-c', component: WorkPackagesComponent,

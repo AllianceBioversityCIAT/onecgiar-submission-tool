@@ -13,31 +13,31 @@ export class UsersService {
 
   getAll(): Observable<User[]> {
     return this.http
-      .get<User[]>(`${environment.API_URL}/users`)
+      .get<User[]>(`${environment.apiUrl}/users`)
       .pipe(catchError(this.handlerError));
   }
 
   getById(userId: number): Observable<User> {
     return this.http
-      .get<any>(`${environment.API_URL}/users/${userId}`)
+      .get<any>(`${environment.apiUrl}/users/${userId}`)
       .pipe(catchError(this.handlerError));
   }
 
   new(user: User): Observable<User> {
     return this.http
-      .post<User>(`${environment.API_URL}/users`, user)
+      .post<User>(`${environment.apiUrl}/users`, user)
       .pipe(catchError(this.handlerError));
   }
 
   update(userId: number, user: User): Observable<User> {
     return this.http
-      .patch<User>(`${environment.API_URL}/users/${userId}`, user)
+      .patch<User>(`${environment.apiUrl}/users/${userId}`, user)
       .pipe(catchError(this.handlerError));
   }
 
   delete(userId: number): Observable<{}> {
     return this.http
-      .delete<User>(`${environment.API_URL}/users/${userId}`)
+      .delete<User>(`${environment.apiUrl}/users/${userId}`)
       .pipe(catchError(this.handlerError));
   }
 
