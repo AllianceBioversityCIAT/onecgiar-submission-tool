@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import Swal from 'sweetalert2';
 
 import { UserResponse, User, Roles } from '@shared/models/user.interface';
 import { catchError, map } from 'rxjs/operators';
@@ -84,7 +85,12 @@ export class AuthService {
     if (err) {
       errorMessage = `Error: code ${err.message}`;
     }
-    window.alert(errorMessage);
+    Swal.fire({
+      icon: 'error',
+      title: 'Something went wrong! Try again',
+      showConfirmButton: false,
+      timer: 2000
+    });
     return throwError(errorMessage);
   }
 
