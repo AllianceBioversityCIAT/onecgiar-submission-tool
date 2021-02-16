@@ -107,14 +107,18 @@ export class InitiativesService {
     return this.postQuery('/stages-control/concept/tocs', body);
   }
 
-  postFile(fileToUpload: File, body: any): Observable<any> {
+  postFile(fileToUpload: File[], body: any): Observable<any> {
     const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
     const formData: FormData = new FormData();
     formData.append('initvStgId', body.initvStgId);
     formData.append('narrative', body.narrative);
-    formData.append('files', fileToUpload, fileToUpload.name);
+      console.log('fileToUpload[0]', fileToUpload);
+      fileToUpload.forEach((file) => {
+      formData.append('files', file, file.name);
+    })
+    // formData.append('files', fileToUpload, fileToUpload.name);
     return this.http.post(endpoint, formData, { headers: new HttpHeaders({'auth': token}) });
   }
 

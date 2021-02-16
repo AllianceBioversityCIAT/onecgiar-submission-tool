@@ -14,6 +14,12 @@
             </button>
         </a>
 
+        <!-- <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
+            <div class="files" *ngFor="let selected of listOfFiles; let index = index">
+                <strong>{{selected}}</strong>
+                <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
+            </div>
+        </div> -->
         <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
             <div class="files" *ngFor="let selected of listOfFiles; let index = index">
                 <strong>{{selected}}</strong>
