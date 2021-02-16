@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 
 @Component({
@@ -47,6 +48,12 @@ export class CreateInitiativeModalComponent implements OnInit {
       // })
       // localStorage.setItem('initvStgId', initvStgId);
       this.router.navigate([`/create-initiative/general-information-c/${initvStgId}`]);
+      Swal.fire({
+        icon: 'success',
+        title: 'Narrative has been saved',
+        showConfirmButton: false,
+        timer: 2000
+      })
     });
   }
 

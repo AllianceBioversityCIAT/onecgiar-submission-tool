@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 @Component({
@@ -106,6 +107,12 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.initiativesSvc.postConcept(this.generalInformationForm.value, resp).subscribe(resp => {
         console.log('concept', resp);
       })
+      Swal.fire({
+        icon: 'success',
+        title: 'General information has been saved',
+        showConfirmButton: false,
+        timer: 2000
+      })
     })
   }
 
@@ -114,6 +121,12 @@ export class GeneralInformationConceptComponent implements OnInit {
       console.log('resp', resp);
       this.initiativesSvc.updateConcept(this.generalInformationForm.value, resp, id).subscribe(resp => {
         console.log('concept', resp);
+      })
+      Swal.fire({
+        icon: 'success',
+        title: 'General information has been saved',
+        showConfirmButton: false,
+        timer: 2000
       })
     })
   }

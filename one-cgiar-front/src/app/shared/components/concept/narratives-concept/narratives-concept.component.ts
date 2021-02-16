@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 
@@ -72,6 +73,12 @@ export class NarrativesConceptComponent implements OnInit {
       console.log('concept info', resp);
       this.updateConceptInfo(resp.data[0].conceptInfoId);
       console.log('si existe')
+    })
+    Swal.fire({
+      icon: 'success',
+      title: 'Narrative has been saved',
+      showConfirmButton: false,
+      timer: 2000
     })
   }
 
