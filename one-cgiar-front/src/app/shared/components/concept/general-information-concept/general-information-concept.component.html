@@ -16,12 +16,10 @@
             <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i>
             </p>
             <mat-select formControlName="action_area_id">
-                <mat-option value="1">Action Area 1: Systems Transformation</mat-option>
-                <mat-option value="2">Action Area 2: Sustainable Production</mat-option>
-                <mat-option value="3">Action Area 3: Genetic Gains</mat-option>
+                <mat-option *ngFor="let actionArea of actionAreas" [value]="actionArea.id">{{actionArea.description}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field class="general-information-full-width">
+        <mat-form-field class="general-information-full-width" *ngIf="false">
             <p><strong>Please highlight what has changed since the previous stage, and why: </strong><span
                     class="asterisk">* </span></p>
             <textarea type="text" matInput required (keydown)="wordCounter()"

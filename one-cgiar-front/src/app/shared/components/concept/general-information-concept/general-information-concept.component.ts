@@ -12,6 +12,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   public generalInformationForm: FormGroup;
   public initvStgId: any;
+  public actionAreas: any[] = [];
 
   wordCount: any;
 
@@ -61,6 +62,7 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.initvStgId = resp['id'];
       this.initiativesSvc.initvStgId = resp['id'];
       console.log('id del concept en general information', resp['id']);
+      this.initiativesSvc.getActionAreas().subscribe(resp => this.actionAreas = resp.data);
       this.initiativesSvc.getConcept(this.initvStgId).subscribe(resp => {
         console.log('response getConcept', resp)
         this.generalInformationForm.controls['initvStgId'].setValue(this.initvStgId);
@@ -72,6 +74,7 @@ export class GeneralInformationConceptComponent implements OnInit {
           })
         } else {
           this.generalInformationForm.controls['name'].setValue(resp.data[0].conceptName);
+          this.generalInformationForm.controls['action_area_id'].setValue(resp.data[0].conceptActAreId);
         }
         
         console.log('resp.data[0].conceptActAreId', resp.data[0].conceptActAreId);
