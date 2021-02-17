@@ -10,6 +10,7 @@ import { MaterialModule } from '@app/material.module';
 import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
@@ -81,6 +82,7 @@ import { CreateInitiativeModalComponent } from './shared/components/concept/crea
     ReactiveFormsModule,
     FormsModule,
     QuillModule.forRoot(),
+    NgxSpinnerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AdminInterceptor, multi: true },
