@@ -132,7 +132,7 @@ export const updateConcept = async (req: Request, res: Response) => {
     const { id, name, challenge, objectives, results, highlights, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
 
-    let conceptInf:ConceptInfo;
+    let conceptInf: ConceptInfo;
 
     try {
         conceptInf = await concptInfoRepo.findOneOrFail(id);
@@ -641,14 +641,17 @@ export const addTOCFile = async (req: Request, res: Response) => {
  */
 export const getTOCFiles = async (req: Request, res: Response) => {
     const { tocId } = req.params;
+    const tocRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
     try {
+        let TOC = await tocRepo.findOne(tocId);
         const Files = await filesRepo.find({ where: { tocs: tocId } })
-        res.status(200).json({ msg: "TOC files", data: { Files } });
+        TOC['files'] = Files;
+        res.status(200).json({ msg: "TOC adn files", data: TOC });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not get files from TOC.", data: error });
+        res.status(404).json({ msg: "Could not get TOC.", data: error });
     }
 }
 
