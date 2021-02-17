@@ -50,7 +50,7 @@ export class CreateInitiativeModalComponent implements OnInit {
       this.router.navigate([`/create-initiative/general-information-c/${initvStgId}`]);
       Swal.fire({
         icon: 'success',
-        title: 'Narrative has been saved',
+        title: 'Initiative has been saved',
         showConfirmButton: false,
         timer: 2000
       })
