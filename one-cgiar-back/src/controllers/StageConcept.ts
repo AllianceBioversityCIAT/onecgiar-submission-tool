@@ -572,11 +572,11 @@ export const addTOCConcept = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateTOCConcept = async (req: Request, res: Response) => {
-    const { tocId, narrative } = req.body;
+    const { id, narrative } = req.body;
     const tocsRepo = getRepository(TOCs);
 
     try {
-        const toc = await tocsRepo.findOneOrFail(tocId);
+        const toc = await tocsRepo.findOneOrFail(id);
         toc.narrative = narrative;
 
         let _toc = await tocsRepo.save(toc);
