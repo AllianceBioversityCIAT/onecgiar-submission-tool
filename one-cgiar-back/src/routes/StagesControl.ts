@@ -27,7 +27,7 @@ router.get("/concept/:initvStgId([0-9]+)", [checkJwt, checkRole('initiatives', '
 
 
 // read work packages
-router.get("/concept/packages", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
+router.get("/concept/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 
 // create work package
 router.post("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], createWorkPackage);
