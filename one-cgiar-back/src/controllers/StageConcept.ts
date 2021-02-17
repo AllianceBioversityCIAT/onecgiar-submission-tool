@@ -636,19 +636,19 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ tocId }
+ * @param req params:{ initvStgId }
  * @param res 
  */
 export const getTOCFiles = async (req: Request, res: Response) => {
-    const { tocId } = req.params;
+    const { initvStgId } = req.params;
     const tocRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
     try {
-        let TOC = await tocRepo.findOne(tocId);
-        const Files = await filesRepo.find({ where: { tocs: tocId } })
+        let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
+        const Files = await filesRepo.find({ where: { tocs: TOC.id } })
         TOC['files'] = Files;
-        res.status(200).json({ msg: "TOC adn files", data: TOC });
+        res.status(200).json({ msg: "TOC and files", data: TOC });
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not get TOC.", data: error });
@@ -678,3 +678,6 @@ export const updateTOCFile = async (req: Request, res: Response) => {
     }
 
 }
+
+
+
