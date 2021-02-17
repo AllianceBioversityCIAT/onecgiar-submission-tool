@@ -74,8 +74,8 @@ router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), u
 // update file in TOC
 router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
 
-// update file in TOC
-router.get("/concept/tocs/files/:tocId([0-9]+)", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
+// get files in TOC
+router.get("/concept/tocs/:tocId([0-9]+)/files", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
 
 
 

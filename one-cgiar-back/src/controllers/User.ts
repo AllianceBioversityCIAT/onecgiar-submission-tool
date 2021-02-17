@@ -3,8 +3,8 @@ import { getRepository, In } from 'typeorm'
 import { validate } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
-import { accessCtrl } from '../middlewares/access-control';
 
+// get all users
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
     const userRepository = getRepository(Users);
     let users;
@@ -20,6 +20,29 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
 
 };
 
+// get users by roles
+export const getUsersByRoles = async (req: Request, res: Response): Promise<Response> => {
+    const { roles } = req.query;
+    const userRepository = getRepository(Users);
+    let users;
+    try {
+        users = await userRepository.createQueryBuilder("users")
+            .innerJoinAndSelect("users.roles", "roles")
+            .where("roles.id In(:roles)", { roles })
+            // .getSql()
+            .getMany();
+            
+        // console.log(users)
+        return res.json({ data: users, msg: 'Users by roles list' });
+    } catch (error) {
+        console.log(error);
+        return res.status(404).json({ msg: 'Something went wrong', data: error });
+    }
+
+}
+
+
+// get user by id
 export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const userRepository = getRepository(Users);
@@ -32,6 +55,7 @@ export const getUser = async (req: Request, res: Response) => {
     }
 };
 
+// create new user
 export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
     const user = new Users();
@@ -74,6 +98,7 @@ export const createUsers = async (req: Request, res: Response) => {
     }
 };
 
+// update new user
 export const updateUser = async (req: Request, res: Response) => {
     let user;
     const { id } = req.params;
@@ -113,6 +138,7 @@ export const updateUser = async (req: Request, res: Response) => {
     res.status(201).json({ msg: 'User update' });
 };
 
+// delete user
 export const deleteUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const userRepository = getRepository(Users);
