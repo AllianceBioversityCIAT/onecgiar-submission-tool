@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { CreateInitiativeModalComponent } from '@app/shared/components/concept/create-initiative-modal/create-initiative-modal.component';
 import { AuthService } from '@auth/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   public data: any = [];
   public role: string = null;
 
-  constructor(public dialog: MatDialog, public authSvc: AuthService, public initiativesSvc: InitiativesService) { }
+  constructor(public dialog: MatDialog, public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.authSvc.user$.subscribe((user) => {
@@ -26,6 +27,7 @@ export class HomeComponent implements OnInit {
       let roles = this.user.roles.find(role => role.acronym);
       this.role = roles.acronym;
       this.getInitiatives();
+      this.spinner();
     })
     // let body = {
     //   name: "Initial Concept: Test Third from VSC",
@@ -44,6 +46,13 @@ export class HomeComponent implements OnInit {
     //     console.log('concept', resp);
     //   })
     // })
+  }
+
+  spinner(): void {
+    this.spinnerService.show();
+    setTimeout(() => {
+      this.spinnerService.hide();
+    }, 1500);
   }
 
   getInitiatives() {
