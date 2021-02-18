@@ -138,9 +138,13 @@ export class InitiativesService {
     return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
   }
 
+  createWorkPackages(body: any): Observable<any> {
+    return this.postQuery(`stages-control/concept/packages`, body);
+  }
+
   getWorkPackageById(id: number): Observable<any> {
     console.log('numero de la funcion')
-    return this.getQuery('/stages-control/concept/packages')
+    return this.getQuery(`/stages-control/concept/packages/${id}`)
       .pipe(map((data: any) => {
         console.log('getWorkPackageById', data);
         return data.data.find(resp => resp.initvStgId == id);

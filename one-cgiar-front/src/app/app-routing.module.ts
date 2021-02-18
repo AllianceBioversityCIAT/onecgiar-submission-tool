@@ -49,7 +49,7 @@ const routes: Routes = [
         path: 'work-packages-c', component: WorkPackagesComponent,
       },
       {
-        path: 'work-packages-c/:id', component: WorkPackagesComponent,
+        path: 'work-packages-c/:idIni/:id', component: WorkPackagesComponent,
       },
       {
         path: 'key-partners-c', component: KeyPartnersConceptComponent,

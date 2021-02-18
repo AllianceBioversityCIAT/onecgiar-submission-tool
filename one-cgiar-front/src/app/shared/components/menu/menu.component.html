@@ -79,7 +79,7 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <mat-list class="menu-options-wp" *ngFor="let workPackage of _requests.workPackages">
-                            <mat-list-item class="workPackage-{{workPackage.id}}" routerLink="/create-initiative/work-packages-c/{{workPackage.id}}" [ngClass]="{'isActive' : _requests.urlId == workPackage.id}">
+                            <mat-list-item class="workPackage-{{workPackage.id}}" routerLink="/create-initiative/work-packages-c/{{this.initiativesSvc.initvStgId}}/{{workPackage.id}}" [ngClass]="{'isActive' : _requests.urlId == workPackage.id}">
                                 <span>{{workPackage.name}}</span>
                                 <button mat-icon-button aria-label="Verified icon"
                                     [disabled]="_requests.workPackageInformationCs.invalid">
