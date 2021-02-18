@@ -1,6 +1,6 @@
 <div class="theory-of-change-container animate__animated animate__fadeIn">
     <strong class="theory-of-change-title">Initial theory of change</strong>
-    <form [formGroup]="theoryOfChangeForm" (ngSubmit)="onSubmit()" class="theory-of-change-form">
+    <form [formGroup]="theoryOfChangeForm" (ngSubmit)="getTocs()" class="theory-of-change-form">
         <mat-form-field class="theory-of-change-full-width">
             <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
                     class="asterisk">* </span></p>
@@ -14,15 +14,9 @@
             </button>
         </a>
 
-        <!-- <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
-            <div class="files" *ngFor="let selected of listOfFiles; let index = index">
-                <strong>{{selected}}</strong>
-                <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
-            </div>
-        </div> -->
         <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
             <div class="files" *ngFor="let selected of listOfFiles; let index = index">
-                <strong>{{selected}}</strong>
+                <strong>{{selected.name ? selected.name : selected}}</strong>
                 <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
             </div>
         </div>

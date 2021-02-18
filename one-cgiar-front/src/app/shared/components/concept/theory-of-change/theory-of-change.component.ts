@@ -15,11 +15,13 @@ export class TheoryOfChangeComponent implements OnInit {
   public theoryOfChangeForm: FormGroup;
   public initvStgId: any;
   public fileToUpload: any;
-
+  // public tocId: any;
   public fileList: File[] = [];
   public listOfFiles: any[] = [];
+  public tocData: any;
+  public createTOC: any = false;
 
-  constructor(public _requests: RequestsService, private initiativesSvc: InitiativesService, public activatedRoute: ActivatedRoute) { 
+  constructor(public _requests: RequestsService, private initiativesSvc: InitiativesService, public activatedRoute: ActivatedRoute) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl('', Validators.required)
     });
@@ -35,6 +37,21 @@ export class TheoryOfChangeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(resp => {
+      this.initvStgId = resp['id'];
+      let toc$ = this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+        // this.createTOC = false;
+        console.log('TOC', resp);
+        this.tocData = resp;
+        this.theoryOfChangeForm.controls['narrative'].setValue(resp.data.narrative);
+        this.listOfFiles = resp.data.files; //ojo
+        console.log('listOfFiles', this.listOfFiles)
+        toc$.unsubscribe();
+      }, error => {
+        // this.createTOC = true;
+        console.log('aqui esta el error', error)
+      })
+    })
   }
 
   onSubmit() {
@@ -43,13 +60,58 @@ export class TheoryOfChangeComponent implements OnInit {
       narrative: this.theoryOfChangeForm.get('narrative').value
     };
     console.log('this.fileList', this.fileList)
-    this.initiativesSvc.postFile(this.fileList, body).subscribe(resp => {
+    // this.initiativesSvc.getTOCFiles(7).subscribe(resp => {
+    //   console.log('resp', resp);
+    //   console.log('initvStgId TOC', body.initvStgId);
+    // })
+    this.initiativesSvc.createTheoryOfChange(this.fileList, body).subscribe(resp => {
       console.log('resp', resp);
       console.log('initvStgId TOC', body.initvStgId);
     })
+  }
+
+  onUpdate(id) {
+    // const body = {
+    //   initvStgId: this.initiativesSvc.initvStgId,
+    //   narrative: this.theoryOfChangeForm.get('narrative').value
+    // };
+    console.log('%cid onUpdate', 'color: #37FF73');
+    console.log(id)
+    console.log(`this.theoryOfChangeForm.get('narrative').value`, this.theoryOfChangeForm.get('narrative').value)
+    this.initiativesSvc.updateTheoryOfChange(this.theoryOfChangeForm.get('narrative').value, id).subscribe(resp => {
+      console.log('resp', resp);
+    }, error => {
+      console.log('aqui esta el error', error)
+    })
+  }
+
+  getTocs() {
+    let toc$ = this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+      this.createTOC = false;
+      let idToc = 99999;
+      this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+        console.log('getTheoryOfChange', resp)
+        idToc = resp.data.id;
+        console.log('%cthis.tocData', 'background: #222; color: #37FF73');
+        console.log('resp', this.tocData)
+        this.onUpdate(idToc);
+        console.log('si existe');
+      })
+      toc$.unsubscribe();
+    }, error => {
+      this.createTOC = true;
+      console.log('no existe');
+      this.onSubmit();
+    })
+    console.log('%centrando a getTocs', 'color: #37FF73');
+    // this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+    console.log('%cconsumiento getTheoryOfChange', 'color: #37FF73');
+    console.log('toc info', this.tocData);
+    // this.tocId = resp.data.id;
+    // })
     Swal.fire({
       icon: 'success',
-      title: 'Theory of change has been saved',
+      title: 'Initial theory of change has been saved',
       showConfirmButton: false,
       timer: 2000
     })

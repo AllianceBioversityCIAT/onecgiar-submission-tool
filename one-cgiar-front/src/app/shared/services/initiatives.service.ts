@@ -102,24 +102,49 @@ export class InitiativesService {
     return this.updateQuery('/stages-control/concept', body);
   }
 
-  createTheoryOfChange(body: any): Observable<any> {
-    console.log('toc', body);
-    return this.postQuery('/stages-control/concept/tocs', body);
-  }
-
-  postFile(fileToUpload: File[], body: any): Observable<any> {
+  createTheoryOfChange(fileToUpload: File[], body: any): Observable<any> {
     const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
     const formData: FormData = new FormData();
     formData.append('initvStgId', body.initvStgId);
     formData.append('narrative', body.narrative);
-      console.log('fileToUpload[0]', fileToUpload);
-      fileToUpload.forEach((file) => {
+    console.log('fileToUpload[0]', fileToUpload);
+    fileToUpload.forEach((file) => {
       formData.append('files', file, file.name);
     })
     // formData.append('files', fileToUpload, fileToUpload.name);
-    return this.http.post(endpoint, formData, { headers: new HttpHeaders({'auth': token}) });
+    return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
+  }
+
+  // updateTheoryOfChange(body: any, id: any): Observable<any> {
+  //   const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
+  //   const user = JSON.parse(localStorage.getItem('user')) || null;
+  //   const token = user.token;
+  //   body.id = id;
+  //   return this.http.patch(endpoint, body, { headers: new HttpHeaders({ 'auth': token }) });
+  // }
+  updateTheoryOfChange(body: any, id: number): Observable<any> {
+    // body['id'] = id;
+    // console.log('body', body);
+    let sample = {
+      id: id,
+      narrative: body
+    }
+    return this.updateQuery('/stages-control/concept/tocs', sample);
+  }
+
+  getTheoryOfChange(id: number): Observable<any> {
+    return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
+  }
+
+  getWorkPackageById(id: number): Observable<any> {
+    console.log('numero de la funcion')
+    return this.getQuery('/stages-control/concept/packages')
+      .pipe(map((data: any) => {
+        console.log('getWorkPackageById', data);
+        return data.data.find(resp => resp.initvStgId == id);
+      }));
   }
 
 }
