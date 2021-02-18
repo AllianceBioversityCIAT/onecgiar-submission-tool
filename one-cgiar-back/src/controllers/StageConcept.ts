@@ -681,3 +681,16 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 
 
 
+/**
+ * 
+ * @param req params:{ initvStgId, comparative_advantage }
+ * @param res 
+ */
+export const upsertPartnerships = async (req: Request, res: Response) => {}
+
+/**
+ * 
+ * @param req params:{ initvStgId }
+ * @param res 
+ */
+export const getPartnerships = async (req: Request, res: Response) => {}
