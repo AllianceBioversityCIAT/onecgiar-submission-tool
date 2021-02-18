@@ -350,19 +350,19 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 }
 
 export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) => {
-    const { key_partner_id, initvStgId, toc_description, comparative_advantage } = req.body;
+    const { key_partner_id, initvStgId, description, comparative_advantage } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const keyPartnesRepo = getRepository(KeyPartners);
 
     const keyPartner = new KeyPartners();
     keyPartner.key_partner_id = key_partner_id;
-    keyPartner.toc_description = toc_description;
+    keyPartner.description = description;
     keyPartner.comparative_advantage = comparative_advantage;
 
     try {
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-        keyPartner.initvStg = initiativeStg;
+        // let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
+        // keyPartner.initvStg = initiativeStg;
 
         const errors = await validate(keyPartner);
         if (errors.length > 0) {
