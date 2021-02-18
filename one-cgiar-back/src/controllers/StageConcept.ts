@@ -7,6 +7,7 @@ import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { Files } from '../entity/Files';
 import { ImpactTimeFrames } from '../entity/ImpactTimeFrames';
 import { InitiativesByStages } from '../entity/InititativesByStages';
+import { Partnerships } from '../entity/Partnerships';
 import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { TOCs } from '../entity/TOCs';
@@ -636,17 +637,18 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ initvStgId }
+ * @param req params:{ tocId }
  * @param res 
  */
 export const getTOCFiles = async (req: Request, res: Response) => {
-    const { initvStgId } = req.params;
+    const { tocId } = req.params;
     const tocRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
     try {
-        let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
-        const Files = await filesRepo.find({ where: { tocs: TOC.id } })
+        let TOC = await tocRepo.findOne(tocId);
+        // console.log(TOC)
+        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1} })
         TOC['files'] = Files;
         res.status(200).json({ msg: "TOC and files", data: TOC });
     } catch (error) {
@@ -666,7 +668,7 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 
     try {
         const file = await filesRepo.findOneOrFail(fileId);
-        file.active = (active) ? active : file.active;
+        file.active = active;
         file.url = (url) ? url : file.url;
         file.name = (name) ? name : file.name;
 
@@ -686,11 +688,39 @@ export const updateTOCFile = async (req: Request, res: Response) => {
  * @param req params:{ initvStgId, comparative_advantage }
  * @param res 
  */
-export const upsertPartnerships = async (req: Request, res: Response) => {}
+export const upsertPartnerships = async (req: Request, res: Response) => {
+    const { initvStgId, id, comparative_advantage } = req.body;
+    const partRepo = getRepository(Partnerships);
+    const initvStgRepo = getRepository(InitiativesByStages);
+    let partnership: Partnerships;
+    try {
+        const initvStg = await initvStgRepo.findOne(initvStgId);
+
+        if (id) {
+            partnership = await partRepo.findOne(id);
+            partnership.comparative_advantage = (comparative_advantage) ? comparative_advantage : partnership.comparative_advantage;
+        } else {
+            partnership = new Partnerships();
+            partnership.comparative_advantage = comparative_advantage;
+            partnership.initvStg = initvStg;
+        }
+
+        partnership = await partRepo.save(partnership);
+
+        res.json({ msg: 'Work packages', data: partnership });
+
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: "Could not get work packages." });
+    }
+}
 
 /**
  * 
  * @param req params:{ initvStgId }
  * @param res 
  */
-export const getPartnerships = async (req: Request, res: Response) => {}
+export const getPartnerships = async (req: Request, res: Response) => { }
