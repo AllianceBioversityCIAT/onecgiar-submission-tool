@@ -11,7 +11,7 @@
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
-        "migration:generate": "npm run typeorm -- migration:generate -n"
+        "migration:generate": "npm run typeorm -- migration:create -n"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
