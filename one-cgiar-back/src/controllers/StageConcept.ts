@@ -709,9 +709,6 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
 
         res.json({ msg: 'Work packages', data: partnership });
 
-
-
-
     } catch (error) {
         console.log(error);
         res.status(404).json({ msg: "Could not get work packages." });
