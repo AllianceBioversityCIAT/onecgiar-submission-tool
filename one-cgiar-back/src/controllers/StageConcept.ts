@@ -637,18 +637,19 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ tocId }
+ * @param req params:{ initvStgId }
  * @param res 
  */
 export const getTOCFiles = async (req: Request, res: Response) => {
-    const { tocId } = req.params;
+    const { initvStgId } = req.params;
     const tocRepo = getRepository(TOCs);
+    // const initvStgRepo = getRepository(InitiativesByStages);
     const filesRepo = getRepository(Files);
 
     try {
-        let TOC = await tocRepo.findOne(tocId);
+        let TOC = await tocRepo.findOneOrFail({ where: { initvStg: initvStgId } });
         // console.log(TOC)
-        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1} })
+        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } })
         TOC['files'] = Files;
         res.status(200).json({ msg: "TOC and files", data: TOC });
     } catch (error) {
