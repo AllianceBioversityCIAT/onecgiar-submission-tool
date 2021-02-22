@@ -21,9 +21,9 @@ export class NavbarComponent implements OnInit {
         // console.log('OnInit', user);
         this.isUser = true;
         this.user = user;
-        let roles = this.user.roles?.find(role => role.acronym);
+        let roles = this.user.roles?.find(role => role.name);
         this.name = this.user?.name;
-        this.role = roles?.acronym;
+        this.role = roles?.name;
       }
 
     })
