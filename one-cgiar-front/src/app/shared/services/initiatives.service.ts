@@ -138,6 +138,36 @@ export class InitiativesService {
     return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
   }
 
+  getTocFilesById(id: number): Observable<any> {
+    console.log('numero de la funcion')
+    return this.getQuery(`/stages-control/concept/tocs/${id}/files`)
+      .pipe(map((data: any) => {
+        console.log('getTocFilesById', data.files.find(resp => resp.id == id));
+        // return data.data.find(resp => resp.initvStgId == id);
+      }));
+  }
+
+  // createTOCFiles(body: any): Observable<any> {
+  //   return this.postQuery(`/stages-control/concept/tocs/files`, body);
+  // }
+
+  createTOCFiles(fileToUpload: File[], body: any): Observable<any> {
+    const endpoint = `${environment.apiUrl}/stages-control/concept/tocs/files`;
+    const user = JSON.parse(localStorage.getItem('user')) || null;
+    const token = user.token;
+    const formData: FormData = new FormData();
+    formData.append('tocId', body.tocId);
+    console.log('fileToUpload[0]', fileToUpload);
+    fileToUpload.forEach((file) => {
+      formData.append('files', file, file.name);
+    })
+    return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
+  }
+
+  updateTOCFiles(body: any): Observable<any> {
+    return this.updateQuery(`/stages-control/concept/tocs/files`, body);
+  }
+
   createWorkPackages(body: any): Observable<any> {
     return this.postQuery(`stages-control/concept/packages`, body);
   }
