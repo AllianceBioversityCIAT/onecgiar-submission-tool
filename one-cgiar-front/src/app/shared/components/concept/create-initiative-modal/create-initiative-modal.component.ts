@@ -47,7 +47,7 @@ export class CreateInitiativeModalComponent implements OnInit {
       //       console.log('concept', resp);
       // })
       // localStorage.setItem('initvStgId', initvStgId);
-      this.router.navigate([`/create-initiative/general-information-c/${initvStgId}`]);
+      this.router.navigate([`/initiative/${initvStgId}/stage-2/general-information`]);
       Swal.fire({
         icon: 'success',
         title: 'Initiative has been saved',

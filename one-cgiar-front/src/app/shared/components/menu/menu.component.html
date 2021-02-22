@@ -8,34 +8,34 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options">
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-pc">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/general-information-pc">
                     <span>General Information</span>
                     <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_auth.generalInformationForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-pc">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/narratives-pc">
                     <span>Narratives</span>
                     <button mat-icon-button aria-label="Verified icon" [disabled]="_auth.narrativesForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/geographic-scope-pc">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/geographic-scope-pc">
                     <span>Geographic scope</span>
                     <!-- <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_auth.generalInformationForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button> -->
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-pc">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/key-partners-pc">
                     <span>Key partners</span>
                     <!-- <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_auth.generalInformationForm.invalid">
                         <mat-icon>verified</mat-icon>
                     </button> -->
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/feedback-pc">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/feedback-pc">
                     <span>Feedback</span>
                     <!-- <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_auth.generalInformationForm.invalid">
@@ -51,27 +51,27 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options">
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/general-information-c/{{this.initiativesSvc.initvStgId}}">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/{{this.initiativesSvc.initvStgId}}/stage-2/general-information">
                     <span>General Information</span>
                     <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_requests.generalInformationFormCs.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/narratives-c/{{this.initiativesSvc.initvStgId}}">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/{{this.initiativesSvc.initvStgId}}/stage-2/narratives">
                     <span>Narratives</span>
                     <button mat-icon-button aria-label="Verified icon" [disabled]="_requests.narrativesFormCs.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/theory-of-change-c/{{this.initiativesSvc.initvStgId}}">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/{{this.initiativesSvc.initvStgId}}/stage-2/theory-of-change">
                     <span>Initial theory of change</span>
                     <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_requests.theoryOfChangeFormCs.invalid">
                         <mat-icon>verified</mat-icon>
                     </button>
                 </mat-list-item>
-                <!-- <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/work-packages-c"> -->
+                <!-- <mat-list-item routerLinkActive="isActive" routerLink="/initiative/work-packages-c"> -->
                     <mat-expansion-panel (opened)="panelOpenWP = true" (closed)="panelOpenWP = false">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -79,7 +79,7 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <mat-list class="menu-options-wp" *ngFor="let workPackage of _requests.workPackages">
-                            <mat-list-item class="workPackage-{{workPackage.id}}" routerLink="/create-initiative/work-packages-c/{{this.initiativesSvc.initvStgId}}/{{workPackage.id}}" [ngClass]="{'isActive' : _requests.urlId == workPackage.id}">
+                            <mat-list-item class="workPackage-{{workPackage.id}}" routerLink="/initiative/{{this.initiativesSvc.initvStgId}}/stage-2/work-packages/{{workPackage.id}}" [ngClass]="{'isActive' : _requests.urlId == workPackage.id}">
                                 <span>{{workPackage.name}}</span>
                                 <button mat-icon-button aria-label="Verified icon"
                                     [disabled]="_requests.workPackageInformationCs.invalid">
@@ -94,7 +94,7 @@
                             </button>
                         </div>
                     </mat-expansion-panel>
-                <mat-list-item routerLinkActive="isActive" routerLink="/create-initiative/key-partners-c">
+                <mat-list-item routerLinkActive="isActive" routerLink="/initiative/{{this.initiativesSvc.initvStgId}}/stage-2/key-partners">
                     <span>Key partners</span>
                     <button mat-icon-button aria-label="Verified icon"
                         [disabled]="_requests.keyPartnersCs.invalid">

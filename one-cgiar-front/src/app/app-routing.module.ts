@@ -20,7 +20,7 @@ import { KeyPartnersConceptComponent } from './shared/components/concept/key-par
 
 const routes: Routes = [
   {
-    path: 'create-initiative', component: CreateInitiativeComponent, children: [
+    path: 'initiative', component: CreateInitiativeComponent, children: [
       {
         path: 'general-information-pc', component: GeneralInformationComponent,
       },
@@ -37,27 +37,27 @@ const routes: Routes = [
         path: 'feedback-pc', component: FeedbackComponent,
       },
       {
-        path: 'general-information-c/:id', component: GeneralInformationConceptComponent,
+        path: ':id/stage-2/general-information', component: GeneralInformationConceptComponent,
       },
       {
-        path: 'narratives-c/:id', component: NarrativesConceptComponent,
+        path: ':id/stage-2/narratives', component: NarrativesConceptComponent,
       },
       {
-        path: 'theory-of-change-c/:id', component: TheoryOfChangeComponent,
+        path: ':id/stage-2/theory-of-change', component: TheoryOfChangeComponent,
       },
       {
         path: 'work-packages-c', component: WorkPackagesComponent,
       },
       {
-        path: 'work-packages-c/:idIni/:id', component: WorkPackagesComponent,
+        path: ':idIni/stage-2/work-packages/:id', component: WorkPackagesComponent,
       },
       {
-        path: 'key-partners-c', component: KeyPartnersConceptComponent,
+        path: ':id/stage-2/key-partners', component: KeyPartnersConceptComponent,
       },
     ]
   },
   {
-    path: 'home', component: HomeComponent,
+    path: 'initiatives', component: HomeComponent,
     canActivate: [CheckHomeGuard],
   },
   {

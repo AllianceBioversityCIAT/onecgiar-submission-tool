@@ -17,7 +17,7 @@ export class CheckLoginGuard implements CanActivate {
       map((user: UserResponse) => {
         // user ? null : true
         if (user) {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/initiatives']);
           return false
         } else {
           return true
