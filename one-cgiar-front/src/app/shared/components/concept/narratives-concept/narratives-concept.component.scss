@@ -48,3 +48,9 @@ p {
 .save-button:hover {
     background-color: #0c96c9;
 }
+
+textarea {  
+    overflow: hidden;
+    display: block;
+    width: 100%;
+}

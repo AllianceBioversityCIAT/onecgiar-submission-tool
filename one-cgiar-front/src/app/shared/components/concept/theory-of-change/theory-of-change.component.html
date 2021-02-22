@@ -4,7 +4,7 @@
         <mat-form-field class="theory-of-change-full-width">
             <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
                     class="asterisk">* </span></p>
-            <textarea type="text" formControlName="narrative" matInput required (keydown)="wordCounter()" #text></textarea>
+            <textarea matInput type="text" formControlName="narrative" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="30"></textarea>
             <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
         </mat-form-field>
