@@ -67,7 +67,7 @@ export class TheoryOfChangeComponent implements OnInit {
     this.initiativesSvc.createTheoryOfChange(this.fileList, body).subscribe(resp => {
       console.log('resp', resp);
       console.log('initvStgId TOC', body.initvStgId);
-    })
+    });
   }
 
   onUpdate(id) {
@@ -82,7 +82,7 @@ export class TheoryOfChangeComponent implements OnInit {
       console.log('resp', resp);
     }, error => {
       console.log('aqui esta el error', error)
-    })
+    });
   }
 
   getTocs() {
@@ -143,6 +143,19 @@ export class TheoryOfChangeComponent implements OnInit {
     this.listOfFiles.splice(index, 1);
     // delete file from FileList
     this.fileList.splice(index, 1);
+
+    this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+      let idTocFile = resp.data.files.find(resp => resp.id);
+      console.log('idTocFile', idTocFile)
+      const body = {
+        fileId: idTocFile.id,
+        active: 0
+      };
+      console.log('body', body)
+      this.initiativesSvc.updateTOCFiles(body).subscribe(resp => {
+        console.log('archivo borrado', resp)
+      })
+    })
   }
 
 }
