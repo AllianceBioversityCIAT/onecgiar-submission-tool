@@ -44,6 +44,7 @@ export class InitiativesService {
     return this.http.patch<any>(URL, body, { headers });
   }
 
+  // Query to get an initiative by ID
   getInitiativeById(id: number): Observable<any> {
     console.log('numero de la funcion')
     return this.getQuery('/initiatives/own')
@@ -53,22 +54,27 @@ export class InitiativesService {
       }));
   }
 
+  // Query to get all the initiatives
   getAllInitiatives(): Observable<any> {
     return this.getQuery('/initiatives');
   }
 
+  // Query to get all the initiatives by user
   getInitiativesByUser(): Observable<any> {
     return this.getQuery('/initiatives/own');
   }
 
+  // Query to get the concept information (general information and narratives section)
   getConcept(id): Observable<any> {
     return this.getQuery(`/stages-control/concept/${id}`);
   }
 
+  // Query to get the action areas
   getActionAreas(): Observable<any> {
     return this.getQuery(`/initiatives/areas`);
   }
 
+  // Query to get action areas by ID
   getActionAreaById(id: number): Observable<any> {
     return this.getQuery('/initiatives/areas').pipe(map((data: any) => {
       let result;
@@ -82,26 +88,36 @@ export class InitiativesService {
     }));
   }
 
+  // Query to get theory of change information by ID
+  getTheoryOfChange(id: number): Observable<any> {
+    return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
+  }
+
+  // Query to geta work package by ID
+  getWorkPackageById(id: number): Observable<any> {
+    console.log('numero de la funcion')
+    return this.getQuery(`/stages-control/concept/packages/${id}`)
+      .pipe(map((data: any) => {
+        console.log('getWorkPackageById', data);
+        return data.data.find(resp => resp.initvStgId == id);
+      }));
+  }
+
+  // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
     console.log('initiative', body);
     return this.postQuery('/initiatives', body);
   }
 
-  postConcept(body: any, description: string): Observable<any> {
+  // Query to create concept information (general information and narratives section)
+  createConcept(body: any, description: string): Observable<any> {
     body.action_area_description = description;
     console.log('description', description);
-    console.log('postConcept', body);
+    console.log('createConcept', body);
     return this.postQuery('/stages-control/concept', body);
   }
 
-  updateConcept(body: any, description: string, id: any): Observable<any> {
-    body.action_area_description = description;
-    body.id = id;
-    console.log('body', body);
-    console.log('description', description);
-    return this.updateQuery('/stages-control/concept', body);
-  }
-
+  // Query to create theory of change (narrative and files)
   createTheoryOfChange(fileToUpload: File[], body: any): Observable<any> {
     const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
     const user = JSON.parse(localStorage.getItem('user')) || null;
@@ -117,40 +133,7 @@ export class InitiativesService {
     return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
   }
 
-  // updateTheoryOfChange(body: any, id: any): Observable<any> {
-  //   const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
-  //   const user = JSON.parse(localStorage.getItem('user')) || null;
-  //   const token = user.token;
-  //   body.id = id;
-  //   return this.http.patch(endpoint, body, { headers: new HttpHeaders({ 'auth': token }) });
-  // }
-  updateTheoryOfChange(body: any, id: number): Observable<any> {
-    // body['id'] = id;
-    // console.log('body', body);
-    let sample = {
-      id: id,
-      narrative: body
-    }
-    return this.updateQuery('/stages-control/concept/tocs', sample);
-  }
-
-  getTheoryOfChange(id: number): Observable<any> {
-    return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
-  }
-
-  getTocFilesById(id: number): Observable<any> {
-    console.log('numero de la funcion')
-    return this.getQuery(`/stages-control/concept/tocs/${id}/files`)
-      .pipe(map((data: any) => {
-        console.log('getTocFilesById', data.files.find(resp => resp.id == id));
-        // return data.data.find(resp => resp.initvStgId == id);
-      }));
-  }
-
-  // createTOCFiles(body: any): Observable<any> {
-  //   return this.postQuery(`/stages-control/concept/tocs/files`, body);
-  // }
-
+  // Query to create the files of the theory of change (Only files)
   createTOCFiles(fileToUpload: File[], body: any): Observable<any> {
     const endpoint = `${environment.apiUrl}/stages-control/concept/tocs/files`;
     const user = JSON.parse(localStorage.getItem('user')) || null;
@@ -164,21 +147,32 @@ export class InitiativesService {
     return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
   }
 
-  updateTOCFiles(body: any): Observable<any> {
-    return this.updateQuery(`/stages-control/concept/tocs/files`, body);
-  }
-
+  // Query to create a work package
   createWorkPackages(body: any): Observable<any> {
     return this.postQuery(`stages-control/concept/packages`, body);
   }
 
-  getWorkPackageById(id: number): Observable<any> {
-    console.log('numero de la funcion')
-    return this.getQuery(`/stages-control/concept/packages/${id}`)
-      .pipe(map((data: any) => {
-        console.log('getWorkPackageById', data);
-        return data.data.find(resp => resp.initvStgId == id);
-      }));
+  // Query to update concept information (general information and narratives section)
+  updateConcept(body: any, description: string, id: any): Observable<any> {
+    body.action_area_description = description;
+    body.id = id;
+    console.log('body', body);
+    console.log('description', description);
+    return this.updateQuery('/stages-control/concept', body);
+  }
+
+  // Query to update the narrative of a theory of change (Only narrative)
+  updateTheoryOfChange(body: any, id: number): Observable<any> {
+    let sample = {
+      id: id,
+      narrative: body
+    }
+    return this.updateQuery('/stages-control/concept/tocs', sample);
+  }
+
+  // Query to delete the files
+  deleteTOCFiles(body: any): Observable<any> {
+    return this.updateQuery(`/stages-control/concept/tocs/files`, body);
   }
 
 }

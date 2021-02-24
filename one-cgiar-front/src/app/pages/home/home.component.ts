@@ -29,23 +29,6 @@ export class HomeComponent implements OnInit {
       this.getInitiatives();
       this.spinner();
     })
-    // let body = {
-    //   name: "Initial Concept: Test Third from VSC",
-    //   challenge: "this is a challenge example",
-    //   objectives: "these are the objectives: 1, 2 3",
-    //   results: "these are the results ",
-    //   highlights: "123",
-    //   action_area_description: "Action Area description",
-    //   action_area_id: "1",
-    //   initvStgId: 18
-    // };
-    // console.log(body);
-    // this.initiativesSvc.getActionAreaById(Number(body.action_area_id)).subscribe(resp => {
-    //   console.log('resp',resp);
-    //   this.initiativesSvc.postConcept(body, resp).subscribe(resp => {
-    //     console.log('concept', resp);
-    //   })
-    // })
   }
 
   spinner(): void {

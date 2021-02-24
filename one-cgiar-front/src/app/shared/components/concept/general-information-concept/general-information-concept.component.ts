@@ -104,7 +104,7 @@ export class GeneralInformationConceptComponent implements OnInit {
   onSubmit() {
     this.initiativesSvc.getActionAreaById(Number(this.generalInformationForm.value.action_area_id)).subscribe(resp => {
       console.log('resp', resp);
-      this.initiativesSvc.postConcept(this.generalInformationForm.value, resp).subscribe(resp => {
+      this.initiativesSvc.createConcept(this.generalInformationForm.value, resp).subscribe(resp => {
         console.log('concept', resp);
       })
       Swal.fire({

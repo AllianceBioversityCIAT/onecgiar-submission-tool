@@ -29,24 +29,9 @@ export class CreateInitiativeModalComponent implements OnInit {
   }
 
   onSubmit() {
-    // let body = {
-    //     name: "prueba 33",
-    //     challenge: "this is a challenge example",
-    //     objectives: "these are the objectives: 1, 2 3",
-    //     results: "these are the results ",
-    //     highlights: "123",
-    //     action_area_description: "Action Area description",
-    //     action_area_id: "1",
-    //     initvStgId: 9999
-    //   };
     this.initiativesSvc.createInitiative(this.createInitiativeForm.value).subscribe(resp => {
       console.log('initiative id', resp.data.createdInitiative.id);
       const initvStgId = resp.data.createdInitiative.id;
-      // body.initvStgId = initvStgId;
-      // this.initiativesSvc.postConcept(body, '').subscribe(resp => {
-      //       console.log('concept', resp);
-      // })
-      // localStorage.setItem('initvStgId', initvStgId);
       this.router.navigate([`/initiative/${initvStgId}/stage-2/general-information`]);
       Swal.fire({
         icon: 'success',

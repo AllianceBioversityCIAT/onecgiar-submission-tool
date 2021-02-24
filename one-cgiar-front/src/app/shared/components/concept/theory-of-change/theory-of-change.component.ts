@@ -60,21 +60,14 @@ export class TheoryOfChangeComponent implements OnInit {
       narrative: this.theoryOfChangeForm.get('narrative').value
     };
     console.log('this.fileList', this.fileList)
-    // this.initiativesSvc.getTOCFiles(7).subscribe(resp => {
-    //   console.log('resp', resp);
-    //   console.log('initvStgId TOC', body.initvStgId);
-    // })
     this.initiativesSvc.createTheoryOfChange(this.fileList, body).subscribe(resp => {
       console.log('resp', resp);
       console.log('initvStgId TOC', body.initvStgId);
     });
+    
   }
 
   onUpdate(id) {
-    // const body = {
-    //   initvStgId: this.initiativesSvc.initvStgId,
-    //   narrative: this.theoryOfChangeForm.get('narrative').value
-    // };
     console.log('%cid onUpdate', 'color: #37FF73');
     console.log(id)
     console.log(`this.theoryOfChangeForm.get('narrative').value`, this.theoryOfChangeForm.get('narrative').value)
@@ -82,6 +75,20 @@ export class TheoryOfChangeComponent implements OnInit {
       console.log('resp', resp);
     }, error => {
       console.log('aqui esta el error', error)
+    });
+  }
+
+  onUpdateFile() {
+    this.initiativesSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+      let tocId = resp.data.id;
+      console.log('tocId', resp.data.id)
+      const body = {
+        tocId: tocId,
+      };
+      console.log('body onUpdateFile', body)
+      this.initiativesSvc.createTOCFiles(this.fileList, body).subscribe(resp => {
+        console.log('archivo creado', resp)
+      })
     });
   }
 
@@ -96,7 +103,8 @@ export class TheoryOfChangeComponent implements OnInit {
         console.log('resp', this.tocData)
         this.onUpdate(idToc);
         console.log('si existe');
-      })
+      });
+      this.onUpdateFile();
       toc$.unsubscribe();
     }, error => {
       this.createTOC = true;
@@ -152,7 +160,7 @@ export class TheoryOfChangeComponent implements OnInit {
         active: 0
       };
       console.log('body', body)
-      this.initiativesSvc.updateTOCFiles(body).subscribe(resp => {
+      this.initiativesSvc.deleteTOCFiles(body).subscribe(resp => {
         console.log('archivo borrado', resp)
       })
     })

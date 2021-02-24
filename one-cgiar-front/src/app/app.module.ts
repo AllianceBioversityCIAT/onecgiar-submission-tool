@@ -85,7 +85,7 @@ import { CreateInitiativeModalComponent } from './shared/components/concept/crea
     NgxSpinnerModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AdminInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: AdminInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
