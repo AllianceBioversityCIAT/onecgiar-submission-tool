@@ -29,6 +29,11 @@ In the root of **one-cgiar-front** create a file and call it: **proxy.conf.json*
     }
 }
 ```
+
+Also, you have to create a folder called **uploads** in the root of **one-cgiar-front.**
+
+**The element tree should look like this in your code editor: [element tree](https://www.screencast.com/t/sIfSnVeF3)**
+
 Once done, run:
 ```bash
 npm start
