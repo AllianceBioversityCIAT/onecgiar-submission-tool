@@ -9,6 +9,7 @@ import { startMulter } from './middlewares/multer';
 
 
 import Routes from './routes';
+import { errorHandler } from './middlewares/error-handler';
 
 
 require('dotenv').config();
@@ -17,6 +18,18 @@ if (!process.env.PORT) {
     process.exit(1);
 }
 
+// get the unhandled rejection and throw it to another fallback handler we already have.
+process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
+    throw reason;
+});
+
+process.on('uncaughtException', (error: Error) => {
+    errorHandler.handleError(error);
+    if (!errorHandler.isTrustedError(error)) {
+        process.exit(1);
+    }
+});
+
 const parentDir = require('path').resolve(process.cwd(), '../');
 const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 const HOST = process.env.HOST;
@@ -24,9 +37,9 @@ const HOST = process.env.HOST;
 createConnection()
     .then(async () => {
         const app = express();
-        app.use(bodyParser.urlencoded({ extended: true}));
+        app.use(bodyParser.urlencoded({ extended: true }));
         app.use(bodyParser.json());
-        
+
         // middlewares
         startAccsCtrl();
         startMulter(parentDir);

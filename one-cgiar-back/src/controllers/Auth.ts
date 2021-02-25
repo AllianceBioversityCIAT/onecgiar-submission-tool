@@ -4,6 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import { validate } from 'class-validator';
 import { Users } from '../entity/Users';
 import config from '../config/config';
+import { APIError } from '../handlers/BaseError';
+import { HttpStatusCode } from '../handlers/Constants';
 
 
 require('dotenv').config();
@@ -15,14 +17,19 @@ const jwtSecret = process.env.jwtSecret;
 
 export const login = async (req: Request, res: Response) => {
     let { email, password } = req.body;
-    if (!(email && password)) {
-        return res.status(400).json({ msg: 'email and password are required' });
-    }
 
     const userRepository = getRepository(Users);
     let user: Users;
 
     try {
+        if (!(email && password)) {
+            throw new APIError(
+                'INVALID',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                'Missing required fields: email or password.'
+            );
+        }
         email = email.trim().toLowerCase();
         let cgiar_user = await userRepository.findOne({
             where:
@@ -35,8 +42,6 @@ export const login = async (req: Request, res: Response) => {
                 user = cgiar_user;
             }
 
-        } else if (!(email && password)) {
-            res.status(404).json({ msg: 'Missing required email and password fields.' })
         } else {
             user = await userRepository.findOneOrFail({
                 where: { email },
@@ -46,7 +51,12 @@ export const login = async (req: Request, res: Response) => {
 
         // check password
         if (!cgiar_user && !user.checkPassword(password)) {
-            return res.status(400).json({ msg: 'email or password failed' });
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'User not found in active directory.'
+            );
         }
 
         const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
@@ -54,12 +64,10 @@ export const login = async (req: Request, res: Response) => {
         const name = user.email;
         const roles = user.roles;
         const id = user.id;
-        //  user.roles;
 
         res.json({ msg: 'OK', token, name, roles, id });
     } catch (error) {
-        console.log(error);
-        return res.status(400).json({ msg: 'email or password failed' });
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 };
@@ -68,36 +76,47 @@ export const changePassword = async (req: Request, res: Response) => {
     const { userId } = res.locals.jwtPayload;
     const { oldPassword, newPassword } = req.body;
 
-    if (!(oldPassword && newPassword)) {
-        res.status(400).json({ msg: 'Old and new password are required' });
-    }
 
     const userRepository = getRepository(Users);
     let user: Users;
 
     try {
+        if (!(oldPassword && newPassword)) {
+            throw new APIError(
+                'BAD_REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                'Old and new passwords are required.'
+            );
+        }
         user = await userRepository.findOneOrFail(userId);
+        if (!user.checkPassword(oldPassword)) {
+            throw new APIError(
+                'UNAUTHORIZED',
+                HttpStatusCode.UNAUTHORIZED,
+                true,
+                'Check your old password.'
+            );
+        }
+
+        user.password = newPassword;
+        const validationOpt = { validationError: { target: false, value: false } };
+        const errors = await validate(user, validationOpt);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        // hash password
+        user.hashPassword();
+        userRepository.save(user);
+
+        res.json({ msg: 'Password updated' });
     } catch (error) {
         console.log(error);
-        res.status(400).json({ msg: 'Something was wrong' });
+        // res.status(400).json({ msg: 'Something was wrong' });
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
-    if (!user.checkPassword(oldPassword)) {
-        return res.status(401).json({ msg: 'Check your old password' });
-    }
-
-    user.password = newPassword;
-    const validationOpt = { validationError: { target: false, value: false } };
-    const errors = await validate(user, validationOpt);
-    if (errors.length > 0) {
-        return res.status(400).json(errors);
-    }
-
-    // hash password
-    user.hashPassword();
-    userRepository.save(user);
-
-    res.json({ msg: 'Password updated' });
 
 }
 
