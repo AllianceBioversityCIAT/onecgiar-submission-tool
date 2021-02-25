@@ -7,3 +7,4 @@ src/config/*
 /todo.txt
 /docs/DB/DB.sql
 /.env
+/logs
