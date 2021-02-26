@@ -4,15 +4,15 @@
         <div class="modal-container">
             <mat-form-field class="partners-full-width">
                 <p><strong>First name: </strong><span class="asterisk">* </span></p>
-                <textarea formControlName="first_name" type="text" matInput required></textarea>
+                <input type="text" formControlName="first_name" matInput required />
             </mat-form-field>
             <mat-form-field class="partners-full-width">
                 <p><strong>Last name: </strong><span class="asterisk">* </span></p>
-                <textarea formControlName="last_name" type="text" matInput required></textarea>
+                <input type="text" formControlName="last_name" matInput required />
             </mat-form-field>
             <mat-form-field class="partners-full-width">
                 <p><strong>Email: </strong><span class="asterisk">* </span></p>
-                <textarea formControlName="email" type="email" matInput required></textarea>
+                <input type="email" formControlName="email" matInput required />
             </mat-form-field>
             <mat-form-field class="partners-full-width">
                 <p><strong>Is CGIAR: </strong><span class="asterisk">* </span></p>
@@ -23,12 +23,8 @@
             </mat-form-field>
             <mat-form-field class="partners-full-width">
                 <p><strong>Password: </strong><span class="asterisk">* </span></p>
-                <textarea formControlName="password" type="text" matInput required></textarea>
+                <input type="text" formControlName="password" matInput required />
             </mat-form-field>
-            <!-- <mat-form-field class="partners-full-width">
-                <p><strong>Is CGIAR: </strong><span class="asterisk">* </span></p>
-                <textarea formControlName="is_cgiar" type="text" matInput required></textarea>
-            </mat-form-field> -->
             <mat-form-field appearance="standard" class="partners-full-width">
                 <p><strong>Roles: </strong><span class="asterisk">* </span></p>
                 <mat-select formControlName="roles" multiple matInput required>
