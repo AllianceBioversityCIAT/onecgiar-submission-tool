@@ -1,15 +1,15 @@
 <h2 mat-dialog-title>Create Initiative</h2>
 <form [formGroup]="createInitiativeForm" (ngSubmit)="onSubmit()">
-<mat-dialog-content>
-    <div class="modal-container">
-        <mat-form-field class="partners-full-width">
-            <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
-            <textarea formControlName="name" type="text" matInput required></textarea>
-        </mat-form-field>
-    </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button class="cancel" mat-button mat-dialog-close>cancel</button>
-    <button class="create" mat-button [mat-dialog-close]="true" cdkFocusInitial type="submit">create</button>
-</mat-dialog-actions>
+    <mat-dialog-content>
+        <div class="modal-container">
+            <mat-form-field class="partners-full-width">
+                <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
+                <textarea formControlName="name" type="text" matInput required></textarea>
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="cancel" mat-button mat-dialog-close>cancel</button>
+        <button class="create" mat-button [mat-dialog-close]="true" cdkFocusInitial type="submit">create</button>
+    </mat-dialog-actions>
 </form>

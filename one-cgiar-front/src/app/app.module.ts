@@ -39,6 +39,7 @@ import { ProjectionIndicatorsModalComponent } from './shared/components/concept/
 import { KeyPartnersConceptComponent } from './shared/components/concept/key-partners-concept/key-partners-concept.component';
 import { AddPartnersModalComponent } from './shared/components/concept/add-partners-modal/add-partners-modal.component';
 import { CreateInitiativeModalComponent } from './shared/components/concept/create-initiative-modal/create-initiative-modal.component';
+import { CreateUserModalComponent } from './shared/components/create-user-modal/create-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { CreateInitiativeModalComponent } from './shared/components/concept/crea
     ProjectionIndicatorsModalComponent,
     KeyPartnersConceptComponent,
     AddPartnersModalComponent,
-    CreateInitiativeModalComponent
+    CreateInitiativeModalComponent,
+    CreateUserModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
