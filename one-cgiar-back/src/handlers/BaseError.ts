@@ -20,7 +20,8 @@ class BaseError extends Error {
 
 //free to extend the BaseError
 class APIError extends BaseError {
-    constructor(name, httpCode = HttpStatusCode.INTERNAL_SERVER, isOperational = true, description = 'internal server error') {
+    constructor(name, httpCode = HttpStatusCode.INTERNAL_SERVER, isOperational = true, description = 'internal server error')
+    {
         super(name, httpCode, description, isOperational);
         logger.error(
             name,
@@ -31,6 +32,7 @@ class APIError extends BaseError {
             }
         );
     }
+   
 }
 
 export { APIError, BaseError }

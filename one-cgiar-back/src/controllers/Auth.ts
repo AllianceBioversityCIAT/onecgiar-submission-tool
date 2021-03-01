@@ -22,6 +22,7 @@ export const login = async (req: Request, res: Response) => {
     let user: Users;
 
     try {
+        console.log(!(email && password))
         if (!(email && password)) {
             throw new APIError(
                 'INVALID',
@@ -66,7 +67,8 @@ export const login = async (req: Request, res: Response) => {
         const id = user.id;
 
         res.json({ msg: 'OK', token, name, roles, id });
-    } catch (error) {
+    } catch (e) {
+        let error = new APIError(e)
         return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
@@ -111,8 +113,8 @@ export const changePassword = async (req: Request, res: Response) => {
         userRepository.save(user);
 
         res.json({ msg: 'Password updated' });
-    } catch (error) {
-        console.log(error);
+    } catch(e) {
+        let error = new APIError(e)
         // res.status(400).json({ msg: 'Something was wrong' });
         return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
