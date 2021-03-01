@@ -1,6 +1,6 @@
 # one-cgiar-front
 
-This is the front end project to the web platform called Submission Tool, the objective of this web platform is submit scientific initiatives. *This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.2.*
+This is the front end project of the web platform called Submission Tool, the objective of this web platform is submit scientific initiatives. *This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.2.*
 
 
 ## Getting Started and Installing
@@ -15,7 +15,7 @@ Open your terminal, move to the project folder and install the dependencies.
 cd onecgiar-submission-tool/one-cgiar-front
 npm install
 ```
-In the root of **one-cgiar-front** create a file and call it: **proxy.conf.json** next, add the next code lines:
+In the root of **one-cgiar-front** folder, create a file and call it: **proxy.conf.json** and add the next code lines:
 ```
 {
     "/api": {
@@ -32,7 +32,7 @@ In the root of **one-cgiar-front** create a file and call it: **proxy.conf.json*
 
 Also, you have to create a folder called **uploads** in the root of **one-cgiar-front.**
 
-**The element tree should look like this in your code editor: [element tree](https://www.screencast.com/t/sIfSnVeF3)**
+**The element tree should look like this in your code editor: [element tree image](https://www.screencast.com/t/sIfSnVeF3)**
 
 Once done, run:
 ```bash
@@ -52,10 +52,11 @@ Port: 22
 Connection type: SSH
 ```
 
-and click in open button.
+**you should have something like this: [PuTTY image](https://www.screencast.com/t/bnhEztS8pxQ)**
+and then, click in **open** button.
 
 After that, you would see something like this:
-[login PuTTY](https://www.screencast.com/t/jeie6FoZh). *Contact someone related to the project to provide you the access credentials*
+[login PuTTY image](https://www.screencast.com/t/jeie6FoZh). *Contact someone related to the project to provide you the access credentials*
 
 once you access to the server, run:
 ```bash

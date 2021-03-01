@@ -64,12 +64,46 @@ mat-icon:hover {
     color: #ff0000;
 }
 
-.close {
-    background: #0779A4;
+.add-button {
+    background-color: #4c7939;
+    text-decoration: none;
     color: #fff;
+    width: 100px;
+    margin: 1.5rem 0;
 }
 
-.save {
-    background: #6AA84F;
+.add-button:hover {
+    background-color: #6AA84F;
+}
+
+.close-button {
+    background-color: #0779A4;
+    text-decoration: none;
     color: #fff;
+    width: 100px;
+    margin: 1.5rem 1rem;
+}
+
+.close-button:hover {
+    background-color: #0c96c9;
+}
+
+.save-button {
+    background-color: #4c7939;
+    text-decoration: none;
+    color: #fff;
+    width: 100px;
+    margin: 1.5rem 0;
+}
+
+.save-button:hover {
+    background-color: #6AA84F;
+}
+
+.btns-coordinator-modal {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 3.1rem;
 }
