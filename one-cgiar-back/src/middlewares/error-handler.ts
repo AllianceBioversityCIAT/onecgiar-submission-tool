@@ -1,9 +1,9 @@
-import { BaseError } from "../handlers/BaseError";
+import { APIError, BaseError } from "../handlers/BaseError";
 import { logger } from "../handlers/Logger";
 
 class ErrorHandler {
     public async handleError(err: Error): Promise<void> {
-        console.log(err)
+        console.log('handleError ')
         await logger.error(
             'Error message from the centralized error-handling component',
             err,

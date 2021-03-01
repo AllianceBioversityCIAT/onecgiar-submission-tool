@@ -1,4 +1,4 @@
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 import { countReset } from 'console';
 import { Request, Response } from 'express'
 import { getConnection, getRepository, In } from 'typeorm'
@@ -14,6 +14,7 @@ import { TOCs } from '../entity/TOCs';
 import { WorkPackages } from '../entity/WorkPackages';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
+import { logger } from '../handlers/Logger';
 
 /**
  * 
@@ -71,6 +72,10 @@ export const getInitiativeConcept = async (req: Request, res: Response) => {
         else
             res.json({ msg: 'Concept info for stage', data: conceptInfo });
     } catch (error) {
+        await logger.error(
+            'Error message from the getInitiativeConcept controller',
+            error,
+        );
         return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
@@ -90,16 +95,16 @@ export const createConcept = async (req: Request, res: Response) => {
     const concptInfoRepo = getRepository(ConceptInfo);
 
     const conceptInf = new ConceptInfo();
-    conceptInf.name = name;
-    conceptInf.challenge = challenge;
-    conceptInf.objectives = objectives;
-    conceptInf.results = results;
-    conceptInf.highlights = highlights;
-    conceptInf.action_area_description = action_area_description;
-    conceptInf.action_area_id = action_area_id;
-    conceptInf.initvStg = initvStgId;
 
     try {
+        conceptInf.name = name;
+        conceptInf.challenge = challenge;
+        conceptInf.objectives = objectives;
+        conceptInf.results = results;
+        conceptInf.highlights = highlights;
+        conceptInf.action_area_description = action_area_description;
+        conceptInf.action_area_id = action_area_id;
+        conceptInf.initvStg = initvStgId;
 
         let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId, { relations: ['stage'] });
         conceptInf.initvStg = initiativeStg;
@@ -110,13 +115,25 @@ export const createConcept = async (req: Request, res: Response) => {
          */
         const _concept = await concptInfoRepo.findOne({ where: { initvStg: initiativeStg.id } })
         // console.log(_concept)
-        if (_concept)
-            res.sendStatus(403)
+        if (!_concept) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Concept Information not found.'
+            );
+        }
         else {
 
             const errors = await validate(conceptInf);
             if (errors.length > 0) {
-                return res.status(400).json(errors);
+                const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+                throw new APIError(
+                    'BAD REQUEST',
+                    HttpStatusCode.BAD_REQUEST,
+                    true,
+                    message
+                );
             }
 
             let conceptInfo = await concptInfoRepo.save(conceptInf);
@@ -125,8 +142,11 @@ export const createConcept = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not create concept info." });
+        await logger.error(
+            'Error message from the createConcept controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -143,7 +163,7 @@ export const updateConcept = async (req: Request, res: Response) => {
 
     try {
         conceptInf = await concptInfoRepo.findOneOrFail(id);
-        console.log(id, conceptInf)
+
         conceptInf.name = (name) ? name : conceptInf.name;
         conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
         conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
@@ -154,15 +174,24 @@ export const updateConcept = async (req: Request, res: Response) => {
 
         const errors = await validate(conceptInf);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
 
         let conceptInfo = await concptInfoRepo.save(conceptInf);
         res.json({ msg: 'Concept info updated', data: conceptInfo });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update concept info." });
+        await logger.error(
+            'Error message from the updateConcept controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -181,11 +210,23 @@ export const getWorkPackages = async (req: Request, res: Response) => {
     try {
 
         const workPackages = await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
-        res.json({ msg: 'Work packages', data: workPackages });
+        if (workPackages.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Workpackages not found for initiative.'
+            );
+        } else {
+            res.json({ msg: 'Work packages', data: workPackages });
+        }
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get work packages." });
+        await logger.error(
+            'Error message from the getWorkPackages controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -199,19 +240,25 @@ export const createWorkPackage = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
     const wpRepo = getRepository(WorkPackages);
 
-    let workPackage = new WorkPackages();
-    workPackage.name = name;
-    workPackage.results = results;
-    workPackage.pathway_content = pathwayContent;
-    workPackage.is_global = isGlobal;
     try {
+        let workPackage = new WorkPackages();
+        workPackage.name = name;
+        workPackage.results = results;
+        workPackage.pathway_content = pathwayContent;
+        workPackage.is_global = isGlobal;
 
         let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         workPackage.initvStg = initiativeStg;
 
         const errors = await validate(workPackage);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
 
         workPackage = await wpRepo.save(workPackage);
@@ -219,8 +266,11 @@ export const createWorkPackage = async (req: Request, res: Response) => {
         res.json({ msg: 'Work package created', data: workPackage });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not create work package info." });
+        await logger.error(
+            'Error message from the createWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -233,9 +283,8 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
     const { id, name, results, pathwayContent, isGlobal } = req.body;
     const wpRepo = getRepository(WorkPackages);
 
-    let workPackage = new WorkPackages();
     try {
-
+        let workPackage = new WorkPackages();
         workPackage = await wpRepo.findOneOrFail(id);
         workPackage.results = (results) ? results : workPackage.results;
         workPackage.name = (name) ? name : workPackage.name;
@@ -244,7 +293,13 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
         const errors = await validate(workPackage);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
 
         workPackage = await wpRepo.save(workPackage);
@@ -252,8 +307,11 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         res.json({ msg: 'Work package updated', data: workPackage });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update work package." });
+        await logger.error(
+            'Error message from the updateWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -274,16 +332,16 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
     try {
         const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
-        // const l = await getClaActionAreas();
-        // console.log(l);
-
         const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
         const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
         res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get regions / countries from work package.", data: error });
+        await logger.error(
+            'Error message from the getRegionWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -315,15 +373,24 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
 
         const errors = await validate(wrkRegion);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
         let region = await regionRepo.save(wrkRegion);
 
         res.json({ msg: 'Work package region updated.', data: { region } });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update region in work package.", data: error });
+        await logger.error(
+            'Error message from the upsertRegionWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -338,9 +405,9 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
     const wpRepo = getRepository(WorkPackages);
     const regionRepo = getRepository(CountriesByWorkPackages);
 
-    let cntryRegion: CountriesByWorkPackages;
 
     try {
+        let cntryRegion: CountriesByWorkPackages;
         const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
 
         cntryRegion = await regionRepo.findOne({ where: { region_id: countryId, wrkPkg: workPackage } });
@@ -355,15 +422,24 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
 
         const errors = await validate(cntryRegion);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
         let country = await regionRepo.save(cntryRegion);
 
         res.json({ msg: 'Work package country updated.', data: { country } });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update country in work package.", data: error });
+        await logger.error(
+            'Error message from the upsertCountryWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -384,10 +460,22 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
 
     try {
         const projectedBenefits = await pbRepo.find({ where: { wrkPkg: wrkPkgId, active: true } });
-        res.json({ msg: 'Projected benefits from work package', data: { projectedBenefits } });
+        if (projectedBenefits.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Projection benefits not found.'
+            );
+        } else {
+            res.json({ msg: 'Projected benefits from work package', data: { projectedBenefits } });
+        }
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get projected benefit from work package.", data: error });
+        await logger.error(
+            'Error message from the getProjectedBenefitWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -399,11 +487,10 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
  */
 export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
     const { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName, active } = req.body;
-    const prjBfnRepo = getRepository(ProjectionBenefits);
-    const wpRepo = getRepository(WorkPackages);
-    let prjtedBfnt: ProjectionBenefits;
     try {
-
+        const prjBfnRepo = getRepository(ProjectionBenefits);
+        const wpRepo = getRepository(WorkPackages);
+        let prjtedBfnt: ProjectionBenefits;
 
         if (id) {
             prjtedBfnt = await prjBfnRepo.findOne({ where: { id: id, wrkPkg: wrkPkgId } });
@@ -425,7 +512,13 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
 
         const errors = await validate(prjtedBfnt);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
 
         let projectedBenefit = await prjBfnRepo.save(prjtedBfnt);
@@ -434,8 +527,11 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
 
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not add projected benefit to work package.", data: error });
+        await logger.error(
+            'Error message from the upsertProjectedBenefitWorkPackage controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -454,10 +550,22 @@ export const getTimeFramesProjectedBenefit = async (req: Request, res: Response)
 
     try {
         const timeFrames = await tfRepo.find({ where: { proBnft: prjctBnftId, active: true } });
-        res.json({ msg: 'Time frames from projected benefit', data: { timeFrames } });
+        if (timeFrames.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Time frames not found.'
+            );
+        } else {
+            res.json({ msg: 'Time frames from projected benefit', data: { timeFrames } });
+        }
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get time frames from projected benefit.", data: error });
+        await logger.error(
+            'Error message from the getTimeFramesProjectedBenefit controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -469,21 +577,30 @@ export const getTimeFramesProjectedBenefit = async (req: Request, res: Response)
  */
 export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Response) => {
     const { id, prjtBenefitId, year, lowScenario, highScenario, active } = req.body;
-    const prjBfnRepo = getRepository(ProjectionBenefits);
-    const tfRepo = getRepository(ImpactTimeFrames);
-
-    let timeFrame: ImpactTimeFrames;
 
     try {
+        const prjBfnRepo = getRepository(ProjectionBenefits);
+        const tfRepo = getRepository(ImpactTimeFrames);
+
+        let timeFrame: ImpactTimeFrames;
 
         const prjtBnefit = await prjBfnRepo.findOne(prjtBenefitId);
 
         if (id) {
             timeFrame = await tfRepo.findOne(id);
-            timeFrame.active = (active) ? active : timeFrame.active;
-            timeFrame.high_scenario = (highScenario) ? highScenario : timeFrame.high_scenario;
-            timeFrame.low_scenario = (lowScenario) ? lowScenario : timeFrame.low_scenario;
-            timeFrame.year = (year) ? year : timeFrame.year;
+            if (!timeFrame) {
+                throw new APIError(
+                    'NOT FOUND',
+                    HttpStatusCode.NOT_FOUND,
+                    true,
+                    'Time frames not found.'
+                );
+            } else {
+                timeFrame.active = (active) ? active : timeFrame.active;
+                timeFrame.high_scenario = (highScenario) ? highScenario : timeFrame.high_scenario;
+                timeFrame.low_scenario = (lowScenario) ? lowScenario : timeFrame.low_scenario;
+                timeFrame.year = (year) ? year : timeFrame.year;
+            }
         } else {
             timeFrame = new ImpactTimeFrames();
             timeFrame.proBnft = prjtBnefit;
@@ -496,7 +613,13 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
 
         const errors = await validate(timeFrame);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
 
         let impactTimeFrame = await tfRepo.save(timeFrame);
@@ -506,8 +629,11 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
 
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not add impact time frame to projected benefit.", data: error });
+        await logger.error(
+            'Error message from the upsertTimeFrameProjectedBenefit controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -529,13 +655,13 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
  */
 export const addTOCConcept = async (req: Request, res: Response) => {
     const { initvStgId, narrative } = req.body;
-    const tocsRepo = getRepository(TOCs);
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const filesRepo = getRepository(Files);
-
-    const newTOC = new TOCs();
 
     try {
+        const tocsRepo = getRepository(TOCs);
+        const initvStgRepo = getRepository(InitiativesByStages);
+        const filesRepo = getRepository(Files);
+
+        const newTOC = new TOCs();
         let iniStg = await initvStgRepo.findOne(initvStgId);
         newTOC.narrative = narrative;
         newTOC.initvStg = iniStg;
@@ -564,12 +690,20 @@ export const addTOCConcept = async (req: Request, res: Response) => {
 
             res.status(200).json({ msg: "TOC added to concept", data: { TOC, Files } });
         } else {
-            throw new Error('None files found');
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None files found.'
+            );
         }
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not add TOC file in concept.", data: error });
+        await logger.error(
+            'Error message from the addTOCConcept controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -589,8 +723,11 @@ export const updateTOCConcept = async (req: Request, res: Response) => {
         let _toc = await tocsRepo.save(toc);
         res.status(200).json({ msg: "TOC narrative updated in concept", data: { _toc } });
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update TOC narrative in concept.", data: error });
+        await logger.error(
+            'Error message from the updateTOCConcept controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -631,12 +768,20 @@ export const addTOCFile = async (req: Request, res: Response) => {
 
             res.status(200).json({ msg: "File added to TOC", data: { TOC, Files } });
         } else {
-            throw new Error('None files found');
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None files found.'
+            );
         }
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not add file to TOC.", data: error });
+        await logger.error(
+            'Error message from the addTOCFile controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -655,12 +800,24 @@ export const getTOCFiles = async (req: Request, res: Response) => {
     try {
         let TOC = await tocRepo.findOneOrFail({ where: { initvStg: initvStgId } });
         // console.log(TOC)
-        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } })
-        TOC['files'] = Files;
-        res.status(200).json({ msg: "TOC and files", data: TOC });
+        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } });
+        if (Files.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None files found.'
+            );
+        } else {
+            TOC['files'] = Files;
+            res.status(200).json({ msg: "TOC and files", data: TOC });
+        }
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get TOC.", data: error });
+        await logger.error(
+            'Error message from the getTOCFiles controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
@@ -682,8 +839,11 @@ export const updateTOCFile = async (req: Request, res: Response) => {
         let Files = await filesRepo.save(file);
         res.status(200).json({ msg: "File updated in TOC.", data: { Files } });
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not update file in TOC.", data: error });
+        await logger.error(
+            'Error message from the updateTOCFile controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 
 }
@@ -711,14 +871,25 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
             partnership.comparative_advantage = comparative_advantage;
             partnership.initvStg = initvStg;
         }
+        if (!partnership) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None files found.'
+            );
+        }
 
         partnership = await partRepo.save(partnership);
 
         res.json({ msg: 'Work packages', data: partnership });
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get work packages." });
+        await logger.error(
+            'Error message from the updateTOCFile controller',
+            error,
+        );
+        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
 }
 
