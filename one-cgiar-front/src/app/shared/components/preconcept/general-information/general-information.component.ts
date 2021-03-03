@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@app/pages/auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-general-information',

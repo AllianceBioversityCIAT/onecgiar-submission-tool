@@ -1,5 +1,5 @@
 import { UtilsService } from './../../services/utils.service';
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

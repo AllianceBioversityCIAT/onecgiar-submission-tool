@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '@app/pages/auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 

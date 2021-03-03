@@ -5,7 +5,7 @@ import { environment } from '@env/environment';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { UserResponse, User, Roles } from '@shared/models/user.interface';
+import { ServerResponse, User, Roles } from '@shared/models/user.interface';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,10 +13,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 const helper = new JwtHelperService();
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  private user = new BehaviorSubject<UserResponse>(null);
+
+  private user = new BehaviorSubject<ServerResponse>(null);
   generalInformationForm = new FormGroup({
     initiativeName: new FormControl('', Validators.required),
     leadContact: new FormControl('', Validators.email),
@@ -34,24 +35,24 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
   }
-  get user$(): Observable<UserResponse> {
+  get user$(): Observable<ServerResponse> {
     return this.user.asObservable();
   }
 
-  get userValue(): UserResponse {
+  get userValue(): ServerResponse {
     return this.user.getValue();
   }
-  login(authData: User): Observable<UserResponse | void> {
+  login(authData: User): Observable<ServerResponse | void> {
     return this.http
-      .post<UserResponse>(`${environment.apiUrl}/auth/login`, authData)
+      .post<ServerResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
-        map((user: UserResponse) => {
+        map((user: ServerResponse) => {
           // console.log('RESPONSE->', user);
           this.saveLocalStorage(user);
           this.user.next(user);
           return user;
         }),
-        catchError((err) => this.handlerError(err))
+        // catchError((err) => this.handlerError(err))
       );
   }
 
@@ -66,7 +67,6 @@ export class AuthService {
 
     if (user) {
       const isExpired = helper.isTokenExpired(user.token);
-
       if (isExpired) {
         this.logout();
       } else {
@@ -75,24 +75,24 @@ export class AuthService {
     }
   }
 
-  private saveLocalStorage(user: UserResponse): void {
-    const { userId, message, ...rest } = user;
-    localStorage.setItem('user', JSON.stringify(rest));
+  private saveLocalStorage(response: ServerResponse): void {
+    // const { userId, message, ...rest } = user;
+    localStorage.setItem('user', JSON.stringify(response.response));
   }
 
-  private handlerError(err): Observable<never> {
-    let errorMessage = 'An errror occured retrienving data';
-    if (err) {
-      errorMessage = `Error: code ${err.message}`;
-    }
-    Swal.fire({
-      icon: 'error',
-      title: 'Something went wrong! Try again',
-      showConfirmButton: false,
-      timer: 2000
-    });
-    return throwError(errorMessage);
-  }
+  // private handlerError(err): Observable<never> {
+  //   let errorMessage = 'An errror occured retrienving data';
+  //   if (err) {
+  //     errorMessage = `Error: code ${err.message}`;
+  //   }
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Something went wrong! Try again',
+  //     showConfirmButton: false,
+  //     timer: 2000
+  //   });
+  //   return throwError(errorMessage);
+  // }
 
   saveGeneralInformation(): void {
     console.log('formulario guardado', this.generalInformationForm);

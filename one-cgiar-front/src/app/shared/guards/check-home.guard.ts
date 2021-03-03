@@ -1,7 +1,7 @@
-import { UserResponse } from './../models/user.interface';
+import { ServerResponse } from './../models/user.interface';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AuthService } from '../../pages/auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { Observable } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ export class CheckHomeGuard implements CanActivate {
   canActivate(): Observable<any> {
     return this.authSvc.user$.pipe(
       take(1),
-      map((user: UserResponse) => {
+      map((user: ServerResponse) => {
         if (user) {
           return true
         } else {

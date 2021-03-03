@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BaseFormUser } from '@shared/utils/base-form-user';
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authSvc: AuthService,
     private router: Router,
     public loginForm: BaseFormUser,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm.baseForm.get('role').setValidators(null);

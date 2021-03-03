@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CreateInitiativeModalComponent } from '@app/shared/components/concept/create-initiative-modal/create-initiative-modal.component';
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
 
 @Component({

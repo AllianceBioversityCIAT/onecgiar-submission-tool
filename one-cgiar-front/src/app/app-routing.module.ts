@@ -5,7 +5,7 @@ import { CheckLoginGuard } from '@shared/guards/check-login.guard';
 import { CheckHomeGuard } from '@shared/guards/check-home.guard';
 import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/auth/login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
 import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';

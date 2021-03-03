@@ -5,7 +5,7 @@ import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/a
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { AuthService } from '@app/pages/auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-key-partners',

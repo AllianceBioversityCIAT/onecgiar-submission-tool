@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CoordinatorModalComponent } from '@app/shared/components/coordinator-modal/coordinator-modal.component';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { RequestsService } from '@app/shared/services/requests.service';
-import { AuthService } from '../auth/auth.service';
+import { CoordinatorModalComponent } from '@shared/components/coordinator-modal/coordinator-modal.component';
+import { InitiativesService } from '@shared/services/initiatives.service';
+import { RequestsService } from '@shared/services/requests.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-create-initiative',

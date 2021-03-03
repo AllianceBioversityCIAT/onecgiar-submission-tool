@@ -1,6 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +12,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
-import { AdminInterceptor } from '@shared/interceptors/admin-interceptor';
+import { HttpRequestInterceptor } from '@shared/interceptors/http-request.interceptor';
+import { ErrorInterceptor } from '@shared/interceptors/error.interceptor';
+import { AppErrorHandler } from '@shared/utils/app-error-handler';
+
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -20,7 +23,7 @@ import { CreateInitiativeComponent } from './pages/create-initiative/create-init
 import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
 import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';
 import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
-import { LoginComponent } from './pages/auth/login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { KeyPartnersComponent } from './shared/components/preconcept/key-partners/key-partners.component';
@@ -87,7 +90,9 @@ import { CreateUserModalComponent } from './shared/components/create-user-modal/
     NgxSpinnerModule
   ],
   providers: [
-    // { provide: HTTP_INTERCEPTORS, useClass: AdminInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: AppErrorHandler },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

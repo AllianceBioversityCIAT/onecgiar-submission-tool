@@ -1,4 +1,4 @@
-import { UserResponse } from './../../models/user.interface';
+import { ServerResponse } from './../../models/user.interface';
 import {
   Component,
   OnInit,
@@ -7,7 +7,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
 import { Roles } from '@app/shared/models/user.interface';
 
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // console.log('isLogged', this.isLogged);
     this.authSvc.user$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user: UserResponse) => {
+      .subscribe((user: ServerResponse) => {
         this.isLogged = user ? true : false;
         // console.log('isLogged', this.isLogged, user);
         this.isAdmin = user?.role;
