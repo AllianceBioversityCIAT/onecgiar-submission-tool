@@ -6,6 +6,7 @@ import { Users } from '../entity/Users';
 import config from '../config/config';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
+import { ResponseHandler } from '../handlers/Response';
 
 
 require('dotenv').config();
@@ -22,7 +23,6 @@ export const login = async (req: Request, res: Response) => {
     let user: Users;
 
     try {
-        console.log(!(email && password))
         if (!(email && password)) {
             throw new APIError(
                 'INVALID',
@@ -44,10 +44,18 @@ export const login = async (req: Request, res: Response) => {
             }
 
         } else {
-            user = await userRepository.findOneOrFail({
+            user = await userRepository.findOne({
                 where: { email },
                 relations: ['roles']
             });
+            if (!user) {
+                throw new APIError(
+                    'NOT_FOUND',
+                    HttpStatusCode.NOT_FOUND,
+                    true,
+                    'User not found.'
+                );
+            }
         }
 
         // check password
@@ -56,20 +64,18 @@ export const login = async (req: Request, res: Response) => {
                 'NOT FOUND',
                 HttpStatusCode.NOT_FOUND,
                 true,
-                'User not found in active directory.'
+                'User password incorrect.'
             );
         }
 
         const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
-
-        const name = user.email;
+        const name = user.first_name + ' ' + user.last_name;
         const roles = user.roles;
         const id = user.id;
 
-        res.json({ msg: 'OK', token, name, roles, id });
-    } catch (e) {
-        let error = new APIError(e)
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        res.json(new ResponseHandler('User logged.', { token, name, email: user.email, id, roles }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
     }
 
 };
@@ -113,8 +119,9 @@ export const changePassword = async (req: Request, res: Response) => {
         userRepository.save(user);
 
         res.json({ msg: 'Password updated' });
-    } catch(e) {
-        let error = new APIError(e)
+    } catch (error) {
+        // console.log(e)
+        // let error = new ParseError(e)
         // res.status(400).json({ msg: 'Something was wrong' });
         return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
     }
@@ -131,7 +138,7 @@ const validateAD = (one_user, password) => {
             if (err) {
                 if (err.errno == "ENOTFOUND") {
                     let notFound = {
-                        'errno': 'SERVER_NOT_FOUND',
+                        'name': 'SERVER_NOT_FOUND',
                         'description': 'Domain Controller Server not found'
                     };
                     return reject(notFound);
@@ -146,7 +153,7 @@ const validateAD = (one_user, password) => {
             else {
                 console.log('Authentication failed!');
                 let err = {
-                    'errno': 'INVALID_CREDENTIALS',
+                    'name': 'INVALID_CREDENTIALS',
                     'description': 'The supplied credential is invalid'
                 };
                 return reject(err);

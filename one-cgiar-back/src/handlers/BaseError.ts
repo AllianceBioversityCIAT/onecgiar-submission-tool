@@ -1,8 +1,11 @@
 import { HttpStatusCode } from "./Constants";
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError'
+import { QueryFailedError } from "typeorm/error/QueryFailedError";
 import { logger } from "./Logger";
 
 class BaseError extends Error {
     public readonly name: string;
+    public readonly description: string;
     public readonly httpCode: HttpStatusCode;
     public readonly isOperational: boolean;
 
@@ -13,15 +16,17 @@ class BaseError extends Error {
         this.name = name;
         this.httpCode = httpCode;
         this.isOperational = isOperational;
+        this.description = description;
 
         Error.captureStackTrace(this);
     }
 }
 
-//free to extend the BaseError
+
+
+
 class APIError extends BaseError {
-    constructor(name, httpCode = HttpStatusCode.INTERNAL_SERVER, isOperational = true, description = 'internal server error')
-    {
+    constructor(name, httpCode = HttpStatusCode.INTERNAL_SERVER, isOperational = true, description = 'internal server error') {
         super(name, httpCode, description, isOperational);
         logger.error(
             name,
@@ -32,7 +37,7 @@ class APIError extends BaseError {
             }
         );
     }
-   
+
 }
 
 export { APIError, BaseError }

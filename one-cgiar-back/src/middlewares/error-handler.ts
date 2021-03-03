@@ -3,6 +3,7 @@ import { logger } from "../handlers/Logger";
 
 class ErrorHandler {
     public async handleError(err: Error): Promise<void> {
+        // err = new APIError(err)
         console.log('handleError ')
         await logger.error(
             'Error message from the centralized error-handling component',
