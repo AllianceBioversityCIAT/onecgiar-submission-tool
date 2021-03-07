@@ -32,7 +32,7 @@ export class CreateInitiativeModalComponent implements OnInit {
     this.initiativesSvc.createInitiative(this.createInitiativeForm.value).subscribe(resp => {
       console.log('initiative id', resp.data.createdInitiative.id);
       const initvStgId = resp.data.createdInitiative.id;
-      this.router.navigate([`/initiative/${initvStgId}/stage-2/general-information`]);
+      this.router.navigate([`/initiative/${initvStgId}/stages/general-information`]);
       Swal.fire({
         icon: 'success',
         title: 'Initiative has been saved',

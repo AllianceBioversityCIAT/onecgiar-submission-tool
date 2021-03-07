@@ -58,7 +58,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   ngOnInit(): void {
     // $('textarea').trumbowyg();
-    console.log(this.generalInformationForm);
+    console.log('this.generalInformationFor');
     this.activatedRoute.params.subscribe(resp => {
       this.initvStgId = resp['id'];
       this.initiativesSvc.initvStgId = resp['id'];

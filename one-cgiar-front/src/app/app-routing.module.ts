@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { CheckLoginGuard } from '@shared/guards/check-login.guard';
 import { CheckHomeGuard } from '@shared/guards/check-home.guard';
-import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
+import { StagesMenuComponent } from './pages/stages-container/stages-menu.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -20,44 +20,35 @@ import { KeyPartnersConceptComponent } from './shared/components/concept/key-par
 
 const routes: Routes = [
   {
-    path: 'initiative', component: CreateInitiativeComponent, children: [
+    path: 'initiatives', component: StagesMenuComponent, children: [
       {
-        path: 'general-information-pc', component: GeneralInformationComponent,
+        path: ':id/stages',
+        loadChildren: () =>
+          import('./pages/stages-container/stages-menu.module').then((m) => m.StagesMenuModule),
       },
-      {
-        path: 'narratives-pc', component: NarrativesComponent,
-      },
-      {
-        path: 'geographic-scope-pc', component: GeographicScopeComponent,
-      },
-      {
-        path: 'key-partners-pc', component: KeyPartnersComponent,
-      },
-      {
-        path: 'feedback-pc', component: FeedbackComponent,
-      },
-      {
-        path: ':id/stage-2/general-information', component: GeneralInformationConceptComponent,
-      },
-      {
-        path: ':id/stage-2/narratives', component: NarrativesConceptComponent,
-      },
-      {
-        path: ':id/stage-2/theory-of-change', component: TheoryOfChangeComponent,
-      },
-      {
-        path: 'work-packages-c', component: WorkPackagesComponent,
-      },
-      {
-        path: ':idIni/stage-2/work-packages/:id', component: WorkPackagesComponent,
-      },
-      {
-        path: ':id/stage-2/key-partners', component: KeyPartnersConceptComponent,
-      },
+      // {
+      //   path: ':id/stages/general-information', component: GeneralInformationConceptComponent,
+      // },
+      // {
+      //   path: ':id/stages/narratives', component: NarrativesConceptComponent,
+      // },
+      // {
+      //   path: ':id/stages/theory-of-change', component: TheoryOfChangeComponent,
+      // },
+      // {
+      //   path: 'work-packages-c', component: WorkPackagesComponent,
+      // },
+      // {
+      //   path: ':idIni/stages/work-packages/:id', component: WorkPackagesComponent,
+      // },
+      // {
+      //   path: ':id/stages/key-partners', component: KeyPartnersConceptComponent,
+      // },
     ]
   },
+  
   {
-    path: 'initiatives', component: HomeComponent,
+    path: 'home', component: HomeComponent,
     canActivate: [CheckHomeGuard],
   },
   {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignKeyPartnerByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignKeyPartnerByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -13,6 +13,9 @@ router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativ
 
 // create initiatives
 router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], createInitiative);
+
+// create stages
+router.get("/stages", [checkJwt], getStage);
 
 // create stages
 router.post("/stages", [checkJwt, checkRole('stages', 'createAny')], createStage);

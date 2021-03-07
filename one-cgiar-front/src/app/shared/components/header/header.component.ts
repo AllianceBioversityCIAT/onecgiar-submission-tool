@@ -9,7 +9,6 @@ import {
 import { Subject } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
-import { Roles } from '@app/shared/models/user.interface';
 
 @Component({
   selector: 'app-header',

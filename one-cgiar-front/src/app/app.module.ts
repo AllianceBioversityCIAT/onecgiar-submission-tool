@@ -11,6 +11,7 @@ import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { HttpRequestInterceptor } from '@shared/interceptors/http-request.interceptor';
 import { ErrorInterceptor } from '@shared/interceptors/error.interceptor';
@@ -19,7 +20,7 @@ import { AppErrorHandler } from '@shared/utils/app-error-handler';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
-import { CreateInitiativeComponent } from './pages/create-initiative/create-initiative.component';
+import { StagesMenuComponent } from './pages/stages-container/stages-menu.component';
 import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
 import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';
 import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
@@ -43,6 +44,9 @@ import { KeyPartnersConceptComponent } from './shared/components/concept/key-par
 import { AddPartnersModalComponent } from './shared/components/concept/add-partners-modal/add-partners-modal.component';
 import { CreateInitiativeModalComponent } from './shared/components/concept/create-initiative-modal/create-initiative-modal.component';
 import { CreateUserModalComponent } from './shared/components/create-user-modal/create-user-modal.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -54,7 +58,7 @@ import { CreateUserModalComponent } from './shared/components/create-user-modal/
     NotFoundComponent,
     HomeComponent,
     InitTableComponent,
-    CreateInitiativeComponent,
+    StagesMenuComponent,
     GeneralInformationComponent,
     NarrativesComponent,
     GeographicScopeComponent,
@@ -86,7 +90,11 @@ import { CreateUserModalComponent } from './shared/components/create-user-modal/
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    SweetAlert2Module.forRoot(),
     QuillModule.forRoot(),
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     NgxSpinnerModule
   ],
   providers: [

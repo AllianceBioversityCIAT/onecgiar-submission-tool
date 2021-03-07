@@ -175,4 +175,9 @@ export class InitiativesService {
     return this.updateQuery(`/stages-control/concept/tocs/files`, body);
   }
 
+  getStages() {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/stages`).pipe(map(res => res.response))
+    // .pipe().m(res => res.respose);
+  }
+
 }

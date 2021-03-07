@@ -8,8 +8,10 @@ import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
 import { KeyPartners } from '../entity/KeyPartner';
 import { Stages } from '../entity/Stages';
+import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
+import { ResponseHandler } from '../handlers/Response';
 import { getClaActionAreas } from './Clarisa';
 
 
@@ -218,6 +220,29 @@ export const createInitiative = async (req: Request, res: Response) => {
  * @param req params:{ description, active, start_date, end_date }
  * @param res 
  */
+export const getStage = async (req: Request, res: Response) => {
+
+    const stageRepo = getRepository(Stages);
+    const stageMetaRepo = getRepository(StagesMeta);
+
+    try {
+        let stages = await stageRepo.find();
+        let stages_meta = await stageMetaRepo.find({ where: { stage: In(stages.map(stage => stage.id)) } })
+        // let stages = await stageRepo.createQueryBuilder("stages_meta")
+        //     .leftJoinAndSelect("stages_meta.stageId", "stageID")
+        //     .getMany()
+        res.json(new ResponseHandler('Stages.', { stages, stages_meta }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);;
+    }
+}
+
+/**
+ * 
+ * @param req params:{ description, active, start_date, end_date }
+ * @param res 
+ */
 export const createStage = async (req: Request, res: Response) => {
 
     const { description, active, start_date, end_date } = req.body;
@@ -240,7 +265,6 @@ export const createStage = async (req: Request, res: Response) => {
         res.status(404).json({ msg: "Could not create initiatives." });
     }
 }
-
 
 /**
  * 

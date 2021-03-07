@@ -6,11 +6,11 @@ import { RequestsService } from '@shared/services/requests.service';
 import { AuthService } from '@shared/services/auth.service';
 
 @Component({
-  selector: 'app-create-initiative',
-  templateUrl: './create-initiative.component.html',
-  styleUrls: ['./create-initiative.component.scss']
+  selector: 'app-stages-menu',
+  templateUrl: './stages-menu.component.html',
+  styleUrls: ['./stages-menu.component.scss']
 })
-export class CreateInitiativeComponent implements OnInit {
+export class StagesMenuComponent implements OnInit {
 
   constructor(public _auth: AuthService, public _requests: RequestsService, public initiativesSvc: InitiativesService, public dialog: MatDialog) { }
 

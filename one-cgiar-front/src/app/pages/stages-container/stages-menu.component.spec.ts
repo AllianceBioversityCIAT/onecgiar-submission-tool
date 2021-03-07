@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateInitiativeComponent } from './create-initiative.component';
+import { StagesMenuComponent } from './stages-menu.component';
 
-describe('CreateInitiativeComponent', () => {
-  let component: CreateInitiativeComponent;
-  let fixture: ComponentFixture<CreateInitiativeComponent>;
+describe('StagesMenuComponent', () => {
+  let component: StagesMenuComponent;
+  let fixture: ComponentFixture<StagesMenuComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateInitiativeComponent ]
+      declarations: [ StagesMenuComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateInitiativeComponent);
+    fixture = TestBed.createComponent(StagesMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

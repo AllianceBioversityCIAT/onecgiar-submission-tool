@@ -3,9 +3,8 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import Swal from 'sweetalert2';
 
-import { ServerResponse, User, Roles } from '@shared/models/user.interface';
+import { ServerResponse, User } from '@shared/models/user.interface';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -46,13 +45,11 @@ export class AuthService {
     return this.http
       .post<ServerResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
-        map((user: ServerResponse) => {
-          // console.log('RESPONSE->', user);
-          this.saveLocalStorage(user);
-          this.user.next(user);
-          return user;
+        map((srvRes: ServerResponse) => {
+          this.saveLocalStorage(srvRes);
+          this.user.next(srvRes.response);
+          return srvRes.response;
         }),
-        // catchError((err) => this.handlerError(err))
       );
   }
 
@@ -72,28 +69,15 @@ export class AuthService {
       } else {
         this.user.next(user);
       }
+    }else{
+      this.logout();
     }
   }
 
   private saveLocalStorage(response: ServerResponse): void {
-    // const { userId, message, ...rest } = user;
     localStorage.setItem('user', JSON.stringify(response.response));
   }
-
-  // private handlerError(err): Observable<never> {
-  //   let errorMessage = 'An errror occured retrienving data';
-  //   if (err) {
-  //     errorMessage = `Error: code ${err.message}`;
-  //   }
-  //   Swal.fire({
-  //     icon: 'error',
-  //     title: 'Something went wrong! Try again',
-  //     showConfirmButton: false,
-  //     timer: 2000
-  //   });
-  //   return throwError(errorMessage);
-  // }
-
+  
   saveGeneralInformation(): void {
     console.log('formulario guardado', this.generalInformationForm);
   }

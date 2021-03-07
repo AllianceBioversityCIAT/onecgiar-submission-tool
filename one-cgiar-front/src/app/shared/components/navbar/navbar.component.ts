@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@shared/services/auth.service';
+import { LoggerService } from "@shared/services/logger.service";
 
 @Component({
   selector: 'app-navbar',
@@ -13,12 +15,11 @@ export class NavbarComponent implements OnInit {
   public name: string = null;
   public role: string = null;
 
-  constructor(public authSvc: AuthService) { }
+  constructor(public authSvc: AuthService, private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.authSvc.user$.subscribe((user) => {
       if (user) {
-        // console.log('OnInit', user);
         this.isUser = true;
         this.user = user;
         let roles = this.user.roles?.find(role => role.name);

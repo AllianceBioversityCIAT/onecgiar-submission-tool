@@ -1,4 +1,4 @@
-export type Roles = 'SUSCRIPTOR' | 'ADMIN';
+// export type Roles;
 
 export interface User {
   email: string;
@@ -6,7 +6,7 @@ export interface User {
   token: string;
   name: string;
   id: number;
-  role: Roles;
+  role: [];
 }
 
 export interface ServerResponse extends User {

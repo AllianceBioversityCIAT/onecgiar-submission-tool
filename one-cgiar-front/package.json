@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host=0.0.0.0 --port=4200 --disable-host-check",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,6 +25,7 @@
     "@angular/router": "~10.0.3",
     "@auth0/angular-jwt": "^5.0.1",
     "@popperjs/core": "^2.6.0",
+    "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
     "jquery": "^3.5.1",

@@ -7,6 +7,9 @@ import Swal from 'sweetalert2';
 export class NotificationService {
 
   constructor() { }
+  showCustomss(obj: {}): void {
+    Swal.fire(obj);
+  }
   showSuccess(message: string): void {
     Swal.fire({
       icon: 'success',

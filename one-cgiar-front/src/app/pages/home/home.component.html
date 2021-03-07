@@ -1,17 +1,5 @@
 <app-navbar></app-navbar>
 <app-init-table [data]="data"></app-init-table>
-<ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
-  size="medium"
-  color="#fff"
-  type="ball-scale-multiple"
->
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
   <p style="font-size: 20px; color: white">Loading...</p>
 </ngx-spinner>
-<div class="button-container">
-    <!-- <button routerLink="/create-initiative/general-information-c" type="submit" mat-raised-button class="initiative-button"> -->
-    <button (click)="openDialog()" type="submit" mat-raised-button class="initiative-button" *ngIf="role === 'ADM'">
-        <mat-icon>add</mat-icon>
-        <strong>Create an initiative</strong>
-    </button>
-</div>
