@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getInitiativeConcept, getRegionWorkPackage, getTOCFiles, getWorkPackages, updateConcept, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships } from '../controllers/StageConcept';
+import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -15,13 +15,13 @@ const router = Router();
 
 
 // create initiatives concept
-router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
+// router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
 
 // update initiatives concept
-router.patch("/concept", [checkJwt, checkRole('initiatives', 'updateOwn')], updateConcept);
+router.patch("/concept/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
 
 // get initiatives concept
-router.get("/concept/:initvStgId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativeConcept);
+router.get("/concept/:initvStgId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptGeneralInfo);
 
 
 

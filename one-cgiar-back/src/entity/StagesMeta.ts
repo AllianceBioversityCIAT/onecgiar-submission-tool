@@ -31,6 +31,9 @@ export class StagesMeta extends UpdatedCreatedAt {
     @Column('tinyint')
     visible: boolean
 
+    @Column('int')
+    order: number
+
     @ManyToOne(() => Stages, stage => stage.id)
     stage: Stages;
 }

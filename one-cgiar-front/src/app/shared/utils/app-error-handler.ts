@@ -9,7 +9,7 @@ import { NgxSpinnerService } from "ngx-spinner";
     providedIn: 'root'
 })
 export class AppErrorHandler implements ErrorHandler {
-    
+
     constructor(private injector: Injector, private spinner: NgxSpinnerService) { }
 
     handleError(error: Error | HttpErrorResponse) {
@@ -24,14 +24,13 @@ export class AppErrorHandler implements ErrorHandler {
 
         if (error instanceof HttpErrorResponse) {
             // Server Error
-            if(typeof error.error === 'object' && error.error !== null){
+            if (typeof error.error === 'object' && error.error !== null) {
                 message = error.error['description']
                 // stackTrace = error.error['description']
-            }else{
+            } else {
                 message = errorService.getServerMessage(error);
                 stackTrace = errorService.getServerStack(error);
             }
-            this.spinner.hide();
             notifier.showError(message);
         } else {
             // Client Error
@@ -40,7 +39,8 @@ export class AppErrorHandler implements ErrorHandler {
             stackTrace = errorService.getClientStack(error);
             // this.auth.logout();
         }
-        
+
+        this.spinner.hide();
         // Always log errors
         logger.logError(message, stackTrace);
 

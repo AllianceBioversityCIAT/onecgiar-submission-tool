@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { UtilsHandler } from '@shared/utils/utils';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { RequestsService } from '@app/shared/services/requests.service';
+import { InitiativesService } from '@shared/services/initiatives.service';
+import { RequestsService } from '@shared/services/requests.service';
+import { StagesMenuService } from '@shared/services/stages-menu.service';
+
 
 @Component({
   selector: 'app-menu',
@@ -13,11 +15,17 @@ export class MenuComponent implements OnInit {
   stages: [];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
+  subMenusFormValidation: {};
   // stageUrl;
-  constructor(public _requests: RequestsService, public router: Router, public initiativesSvc: InitiativesService) { }
+  constructor(public _requests: RequestsService, public router: Router, public initiativesSvc: InitiativesService, public stgMenuSvc: StagesMenuService) { }
 
   ngOnInit(): void {
     this.getStages();
+    this.stgMenuSvc.menu.subscribe(
+      menu => {
+        this.subMenusFormValidation = menu;
+      }
+    )
   }
 
   getStages() {
@@ -25,28 +33,35 @@ export class MenuComponent implements OnInit {
       .subscribe(
         res => {
 
-          // console.log(this.activatedRoute.toString())
-
           res.stages.map(stage => {
             stage.groups = [];
-            res.stages_meta.forEach(meta => {
+            res.stagesMeta.forEach(meta => {
               if (meta.stage_name == stage.description)
                 stage.groups.push(meta)
             });
-            stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by')
+            // stage.grouped = this.utilsHandler.groupData(stage.groups)
+            stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by');
+            // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          // this.stages_meta = res.stages_meta
+          // console.log(this.stages)
         }
       )
   }
 
-  parseStageUrl(meta: any) {
+  parseStageUrl(meta: any, section: string) {
     const snapshot = this.router.routerState.snapshot;
-    const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) +'stages/';
-    const stage = meta.value[0].stage_name.toLowerCase().split(' ').join('-');
-    const section =  meta.key.toLowerCase().split(' ').join('-');
-    return `${baseUrl}${stage}/${section}`
+    const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
+    const stage = meta.description.toLowerCase().split(' ').join('-');
+    return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
   }
+
+  validateSubMenuForm(stageName: any, subMenu: string) {
+    stageName = stageName.toLowerCase().split(' ').join('_');
+    subMenu = subMenu.toLowerCase().split(' ').join('_');
+    return this.subMenusFormValidation[stageName][subMenu];
+  }
+
+
 
 }

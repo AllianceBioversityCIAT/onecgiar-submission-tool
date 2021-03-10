@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { SharedModule } from '@shared/modules/shared-module.module'
 import { StagesMenuRoutingModule } from './stages-menu-routing.module';
 
 
@@ -8,7 +8,8 @@ import { StagesMenuRoutingModule } from './stages-menu-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    StagesMenuRoutingModule
+    StagesMenuRoutingModule,
+    // SharedModule
   ]
 })
 export class StagesMenuModule { }

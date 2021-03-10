@@ -4,6 +4,7 @@ import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 import { AllInitiatives } from '../models/initiative.interface';
 import { map } from 'rxjs/operators';
+const sectionPath = 'initiatives'
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,23 @@ import { map } from 'rxjs/operators';
 export class InitiativesService {
 
   public initvStgId: string;
+  actionAreas: [];
+  stages: [];
+  stagesMeta: [];
 
-  constructor(private http: HttpClient) { }
+  allInitiatives: [];
+  ownInitiatives: [];
+
+  usersByInitiative: [];
+
+  constructor(public http: HttpClient) { }
+
+  // get initvStgId():string{
+  //   return this.initvStgId;
+  // }
+  // set initvStgId(val: string){
+  //   this.initvStgId = val;
+  // }
 
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;
@@ -52,40 +68,6 @@ export class InitiativesService {
         console.log('getInitiativeById', data);
         return data.data.find(resp => resp.initvStgId == id);
       }));
-  }
-
-  // Query to get all the initiatives
-  getAllInitiatives(): Observable<any> {
-    return this.getQuery('/initiatives');
-  }
-
-  // Query to get all the initiatives by user
-  getInitiativesByUser(): Observable<any> {
-    return this.getQuery('/initiatives/own');
-  }
-
-  // Query to get the concept information (general information and narratives section)
-  getConcept(id): Observable<any> {
-    return this.getQuery(`/stages-control/concept/${id}`);
-  }
-
-  // Query to get the action areas
-  getActionAreas(): Observable<any> {
-    return this.getQuery(`/initiatives/areas`);
-  }
-
-  // Query to get action areas by ID
-  getActionAreaById(id: number): Observable<any> {
-    return this.getQuery('/initiatives/areas').pipe(map((data: any) => {
-      let result;
-      data.data.forEach(element => {
-        if (element.id == id) {
-          result = element;
-        }
-      });
-      console.log('action area encontrado', result);
-      return result.description;
-    }));
   }
 
   // Query to get theory of change information by ID
@@ -152,15 +134,6 @@ export class InitiativesService {
     return this.postQuery(`stages-control/concept/packages`, body);
   }
 
-  // Query to update concept information (general information and narratives section)
-  updateConcept(body: any, description: string, id: any): Observable<any> {
-    body.action_area_description = description;
-    body.id = id;
-    console.log('body', body);
-    console.log('description', description);
-    return this.updateQuery('/stages-control/concept', body);
-  }
-
   // Query to update the narrative of a theory of change (Only narrative)
   updateTheoryOfChange(body: any, id: number): Observable<any> {
     let sample = {
@@ -175,9 +148,56 @@ export class InitiativesService {
     return this.updateQuery(`/stages-control/concept/tocs/files`, body);
   }
 
+  // get stages
   getStages() {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/stages`).pipe(map(res => res.response))
-    // .pipe().m(res => res.respose);
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/stages`).pipe(map(res => {
+      this.stages = res.response.stages;
+      this.stagesMeta = res.response.stagesMeta;
+      return { stages: res.response.stages, stagesMeta: res.response.stagesMeta }
+    }));;
+  }
+
+
+  // Query to get the action areas
+  getActionAreas() {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/areas`).pipe(map(res => {
+      this.actionAreas = res.response.actionAreas;
+      return res.response.actionAreas
+    }));
+  }
+
+  // Query to get all the initiatives
+  getAllInitiatives(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
+      this.allInitiatives = res.response.initiatives;
+      return res.response.initiatives
+    }));
+  }
+
+  // Query to get all the initiatives by user
+  getInitiativesByUser(): Observable<any> {
+    return this.getQuery(`/${sectionPath}/own`).pipe(map(res => {
+      this.ownInitiatives = res.response.initiatives;
+      return res.response.initiatives
+    }));
+  }
+
+  // Query to get all the users by initiative
+  getUsersByInitiative(initvStgId): Observable<any> {
+    return this.getQuery(`/${sectionPath}/${initvStgId}/users`).pipe(map(res => {
+      this.usersByInitiative = res.response.users;
+      return res.response.users
+    }));
+  }
+
+
+  // Query to get action areas by ID
+  getActionAreaById(id: number): Observable<any> {
+    return this.getQuery(`/${sectionPath}/areas`).pipe(map(res => {
+      this.actionAreas = res.response.actionAreas;
+      return res.response.actionAreas.find(area => area.id == id)
+    }));
+
   }
 
 }

@@ -1,3 +1,6 @@
+import { APIError } from "../handlers/BaseError";
+import { HttpStatusCode } from "../handlers/Constants";
+
 const got = require('got');
 require('dotenv').config();
 
@@ -15,7 +18,12 @@ export const getClaActionAreas = async () => {
         return JSON.parse(actionAreas.body);
     } catch (error) {
         console.log(error)
-        throw new Error(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
     }
 
 }

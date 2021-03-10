@@ -23,7 +23,7 @@ mat-panel-title {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: 16em;
+    // width: 16em;
 }
 
 .list-option {
@@ -35,12 +35,12 @@ mat-panel-title {
 }
 
 .isActive {
-    background: #0779A4;
+    background: #0779a4;
     color: #fff;
 }
 
 p:hover {
-    background: #0779A4;
+    background: #0779a4;
     color: #fff;
 }
 
@@ -51,20 +51,22 @@ mat-list-item {
     button {
         position: absolute;
         right: 0;
-        color: #4CAF50;
+    }
+    button.valid {
+        color: #4caf50;
     }
 }
 
 mat-list-item:focus {
     outline: none;
-} 
+}
 
 .add-container {
     display: flex;
 }
 
 .add-button {
-    background-color: #6AA84F;
+    background-color: #6aa84f;
     border-radius: 20px;
     outline: none;
     color: #fff;

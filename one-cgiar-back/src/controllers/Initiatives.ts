@@ -75,13 +75,13 @@ export const getInitiatives = async (req: Request, res: Response) => {
             /**
              * more stages to be added
              */
-            res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+            // res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+            res.json(new ResponseHandler('All Initiatives.', { initiatives }));
 
         }
 
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get any initiatives." });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -147,17 +147,49 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             /**
              * more stages to be added
              */
-            res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+            res.json(new ResponseHandler('User Initiatives.', { initiatives }));
 
         }
 
-
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get any initiatives." });
+        return res.status(error.httpCode).json(error);
     }
 }
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ */
+export const getUsersByInitiative = async (req: Request, res: Response) => {
+    const { initvStgId } = req.params;
+    const queryRunner = getConnection().createQueryBuilder();
+    const querySql = `
+        SELECT
+            initvUsr.*, users.first_name AS first_name,
+            users.last_name AS last_name,
+            users.email AS email
+        FROM
+            initiatives_by_users initvUsr
+        LEFT JOIN users users ON users.id = initvUsr.userId
+        WHERE
+            initiativeId = :initvStgId;
+    `;
+
+    let users;
+
+    try {
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            querySql,
+            { initvStgId },
+            {}
+        );
+        users = await queryRunner.connection.query(query, parameters);
+        res.json(new ResponseHandler('Users by Initiative.', { users }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+}
 
 /**
  * 
@@ -227,11 +259,9 @@ export const getStage = async (req: Request, res: Response) => {
 
     try {
         let stages = await stageRepo.find();
-        let stages_meta = await stageMetaRepo.find({ where: { stage: In(stages.map(stage => stage.id)) } })
-        // let stages = await stageRepo.createQueryBuilder("stages_meta")
-        //     .leftJoinAndSelect("stages_meta.stageId", "stageID")
-        //     .getMany()
-        res.json(new ResponseHandler('Stages.', { stages, stages_meta }));
+        let stagesMeta = await stageMetaRepo.find({ where: { stage: In(stages.map(stage => stage.id)) }, order: { order: 'ASC' } });
+
+        res.json(new ResponseHandler('Stages.', { stages, stagesMeta }));
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);;
@@ -442,10 +472,9 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
         const actionAreas = await getClaActionAreas();
-        res.json({ msg: 'Action areas.', data: actionAreas });
+        res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not get action areas." });
+        return res.status(error.httpCode).json(error);;
     }
 }
 

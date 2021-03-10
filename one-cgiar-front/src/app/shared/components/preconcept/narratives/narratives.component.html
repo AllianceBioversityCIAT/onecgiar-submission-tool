@@ -1,6 +1,6 @@
 <div class="narratives-container">
     <strong class="narratives-title">Narratives</strong>
-    <form [formGroup]="_auth.narrativesForm" class="narratives-form">
+    <form [formGroup]="" class="narratives-form">
         <mat-form-field class="narratives-full-width">
             <input type="text" formControlName="challenge" matInput placeholder="Challenge" required />
         </mat-form-field>
@@ -17,7 +17,7 @@
             <input type="text" formControlName="highlights" matInput placeholder="Highlights" required />
         </mat-form-field>
         <div class="narratives-save">
-            <button type="submit" (click)="_auth.saveGeneralInformation()" mat-raised-button class="save-button">
+            <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>

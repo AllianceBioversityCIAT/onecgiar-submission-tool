@@ -11,10 +11,12 @@ import { Partnerships } from '../entity/Partnerships';
 import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { TOCs } from '../entity/TOCs';
+import { Users } from '../entity/Users';
 import { WorkPackages } from '../entity/WorkPackages';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { logger } from '../handlers/Logger';
+import { ResponseHandler } from '../handlers/Response';
 
 /**
  * 
@@ -22,7 +24,7 @@ import { logger } from '../handlers/Logger';
  * @param res 
  */
 
-export const getInitiativeConcept = async (req: Request, res: Response) => {
+export const getConceptGeneralInfo = async (req: Request, res: Response) => {
     // const { userId } = res.locals.jwtPayload;
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
@@ -36,14 +38,12 @@ export const getInitiativeConcept = async (req: Request, res: Response) => {
                 initvStgs.id AS initvStgId,
                 stage.description AS stageDesc,
                 stage.active AS stageIsActive,
-                concept.id AS conceptInfoId,
+                (SELECT id FROM users WHERE id = initvUsr.userId) AS conceptLeadId,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = initvUsr.userId) AS conceptLead,
+                concept.id AS conceptId,
                 concept.name AS conceptName,
-                concept.challenge AS conceptChallenge,
-                concept.objectives AS conceptObjectives,
-                concept.results AS conceptResults,
-                concept.highlights AS conceptHighlights,
-                concept.action_area_description AS conceptActAreDes,
-                concept.action_area_id AS conceptActAreId
+                concept.action_area_description AS conceptActAreaDes,
+                concept.action_area_id AS conceptActAreaId
                 ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
                 ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
             FROM
@@ -70,13 +70,9 @@ export const getInitiativeConcept = async (req: Request, res: Response) => {
             );
         }
         else
-            res.json({ msg: 'Concept info for stage', data: conceptInfo });
+            res.json(new ResponseHandler('Concept: General information.', { generaInformation: conceptInfo[0] }));
     } catch (error) {
-        await logger.error(
-            'Error message from the getInitiativeConcept controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 
@@ -137,16 +133,10 @@ export const createConcept = async (req: Request, res: Response) => {
             }
 
             let conceptInfo = await concptInfoRepo.save(conceptInf);
-            res.json({ msg: 'Concept info created', data: conceptInfo });
+            res.json(new ResponseHandler('Concept info created.', { generaInformation: conceptInfo }));
         }
-
-
     } catch (error) {
-        await logger.error(
-            'Error message from the createConcept controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -155,22 +145,34 @@ export const createConcept = async (req: Request, res: Response) => {
  * @param req params:{ id, name, challenge, objectives, results, highlights, action_area_id, action_area_description }
  * @param res 
  */
-export const updateConcept = async (req: Request, res: Response) => {
-    const { id, name, challenge, objectives, results, highlights, action_area_id, action_area_description } = req.body;
+export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
+    // export const updateConcept = async (req: Request, res: Response) => {
+    const { id, initvStgId, name, lead_id, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
+    const userRepo = getRepository(Users);
 
     let conceptInf: ConceptInfo;
 
     try {
-        conceptInf = await concptInfoRepo.findOneOrFail(id);
 
-        conceptInf.name = (name) ? name : conceptInf.name;
-        conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
-        conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
-        conceptInf.results = (results) ? results : conceptInf.results;
-        conceptInf.highlights = (highlights) ? highlights : conceptInf.highlights;
-        conceptInf.action_area_id = (action_area_id) ? parseInt(action_area_id) : conceptInf.action_area_id;
-        conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
+        const leadUser = await userRepo.findOne(lead_id);
+        conceptInf = await concptInfoRepo.findOne(id);
+
+        if (!leadUser) {
+            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
+        }
+
+
+        if (!conceptInf) {
+            conceptInf = new ConceptInfo();
+            conceptInf.name = name;
+            conceptInf.action_area_description = action_area_description;
+            conceptInf.action_area_id = action_area_id;
+        } else {
+            conceptInf.name = (name) ? name : conceptInf.name;
+            conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
+            conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
+        }
 
         const errors = await validate(conceptInf);
         if (errors.length > 0) {
@@ -184,15 +186,12 @@ export const updateConcept = async (req: Request, res: Response) => {
         }
 
         let conceptInfo = await concptInfoRepo.save(conceptInf);
-        res.json({ msg: 'Concept info updated', data: conceptInfo });
+        res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the updateConcept controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
+
 }
 
 

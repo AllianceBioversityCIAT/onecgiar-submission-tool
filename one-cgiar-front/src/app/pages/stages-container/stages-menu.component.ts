@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CoordinatorModalComponent } from '@shared/components/coordinator-modal/coordinator-modal.component';
 import { InitiativesService } from '@shared/services/initiatives.service';
@@ -12,7 +12,7 @@ import { AuthService } from '@shared/services/auth.service';
 })
 export class StagesMenuComponent implements OnInit {
 
-  constructor(public _auth: AuthService, public _requests: RequestsService, public initiativesSvc: InitiativesService, public dialog: MatDialog) { }
+  constructor(public _auth: AuthService, public _requests: RequestsService, private cdRef: ChangeDetectorRef, public initiativesSvc: InitiativesService, public dialog: MatDialog) { }
 
   openDialog() {
     const dialogRef = this.dialog.open(CoordinatorModalComponent, { panelClass: 'custom-dialog-container' });
@@ -29,4 +29,10 @@ export class StagesMenuComponent implements OnInit {
     console.log("GUARDANDO", generalInformationForm.value);
   }
 
+
+  ngAfterViewChecked() {
+    // console.log("! changement de la date du composant !");
+    // this.dateNow = new Date();
+    this.cdRef.detectChanges();
+  }
 }

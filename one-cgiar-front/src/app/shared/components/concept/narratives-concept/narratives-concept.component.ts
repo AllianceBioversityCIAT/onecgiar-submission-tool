@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { RequestsService } from '@app/shared/services/requests.service';
+import { InitiativesService } from '@shared/services/initiatives.service';
+import { ConceptService } from '@shared/services/concept.service';
+import { RequestsService } from '@shared/services/requests.service';
 
 @Component({
   selector: 'app-narratives-concept',
@@ -24,7 +25,7 @@ export class NarrativesConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
-  constructor(public _requests: RequestsService, public initiativesSvc: InitiativesService, public activatedRoute: ActivatedRoute) {
+  constructor(public _requests: RequestsService, public initiativesSvc: InitiativesService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute) {
     this.generalInformationForm = new FormGroup({
       name: new FormControl('', Validators.required),
       challenge: new FormControl('', Validators.required),
@@ -43,7 +44,7 @@ export class NarrativesConceptComponent implements OnInit {
       this.initvStgId = resp['id'];
       this.initiativesSvc.initvStgId = resp['id'];
       console.log('id del concept en narratives', resp['id']);
-      this.initiativesSvc.getConcept(this.initvStgId).subscribe(resp => {
+      this.conceptSvc.getConcept(this.initvStgId).subscribe(resp => {
         console.log('response getConcept', resp)
         this.generalInformationForm.controls['initvStgId'].setValue(this.initvStgId);
         this.generalInformationForm.controls['name'].setValue(resp.data[0].conceptName);
@@ -61,15 +62,18 @@ export class NarrativesConceptComponent implements OnInit {
 
   updateConceptInfo(id) {
     this.initiativesSvc.getActionAreaById(Number(this.generalInformationForm.value.action_area_id)).subscribe(resp => {
-      console.log('resp', resp);
-      this.initiativesSvc.updateConcept(this.generalInformationForm.value, resp, id).subscribe(resp => {
-        console.log('concept', resp);
-      })
+      let body = Object.assign({}, this.generalInformationForm.value);
+      body.action_area_description = resp;
+      body.id = id;
+      console.log('resp', resp, body);
+      // this.conceptSvc.updateConcept(body).subscribe(resp => {
+      //   console.log('concept', resp);
+      // })
     })
   }
 
   getConceptInfo() {
-    this.initiativesSvc.getConcept(this.initvStgId).subscribe(resp => {
+    this.conceptSvc.getConcept(this.initvStgId).subscribe(resp => {
       console.log('concept info', resp);
       this.updateConceptInfo(resp.data[0].conceptInfoId);
       console.log('si existe')
