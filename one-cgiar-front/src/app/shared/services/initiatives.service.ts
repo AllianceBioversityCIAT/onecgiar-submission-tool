@@ -91,13 +91,7 @@ export class InitiativesService {
     return this.postQuery('/initiatives', body);
   }
 
-  // Query to create concept information (general information and narratives section)
-  createConcept(body: any, description: string): Observable<any> {
-    body.action_area_description = description;
-    console.log('description', description);
-    console.log('createConcept', body);
-    return this.postQuery('/stages-control/concept', body);
-  }
+
 
   // Query to create theory of change (narrative and files)
   createTheoryOfChange(fileToUpload: File[], body: any): Observable<any> {
@@ -176,7 +170,7 @@ export class InitiativesService {
 
   // Query to get all the initiatives by user
   getInitiativesByUser(): Observable<any> {
-    return this.getQuery(`/${sectionPath}/own`).pipe(map(res => {
+    return  this.http.get<any>(`${environment.apiUrl}/${sectionPath}/own`).pipe(map(res => {
       this.ownInitiatives = res.response.initiatives;
       return res.response.initiatives
     }));
@@ -184,7 +178,7 @@ export class InitiativesService {
 
   // Query to get all the users by initiative
   getUsersByInitiative(initvStgId): Observable<any> {
-    return this.getQuery(`/${sectionPath}/${initvStgId}/users`).pipe(map(res => {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initvStgId}/users`).pipe(map(res => {
       this.usersByInitiative = res.response.users;
       return res.response.users
     }));
@@ -193,11 +187,12 @@ export class InitiativesService {
 
   // Query to get action areas by ID
   getActionAreaById(id: number): Observable<any> {
-    return this.getQuery(`/${sectionPath}/areas`).pipe(map(res => {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/areas`).pipe(map(res => {
       this.actionAreas = res.response.actionAreas;
       return res.response.actionAreas.find(area => area.id == id)
     }));
 
   }
+
 
 }
