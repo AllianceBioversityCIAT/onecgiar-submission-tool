@@ -163,8 +163,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
         }
         
-        const initvStg = await initvStgRepo.findOne(initvStgId);
-        // const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
+        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
         }

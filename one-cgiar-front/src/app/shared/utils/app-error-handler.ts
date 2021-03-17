@@ -23,6 +23,7 @@ export class AppErrorHandler implements ErrorHandler {
         let stackTrace;
 
         if (error instanceof HttpErrorResponse) {
+            console.log('server error', error)
             // Server Error
             if (typeof error.error === 'object' && error.error !== null) {
                 message = error.error['description']

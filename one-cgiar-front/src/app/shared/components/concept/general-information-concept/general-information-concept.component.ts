@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ErrorService } from '@app/shared/services/error.service';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -26,7 +27,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
-  constructor(public stgMenuSvc: StagesMenuService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
+  constructor(private errorService: ErrorService, public stgMenuSvc: StagesMenuService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
       name: new FormControl('', Validators.required),
@@ -96,40 +97,10 @@ export class GeneralInformationConceptComponent implements OnInit {
           this.spinnerService.hide('general-information');
         },
         error => {
-          console.log(error)
+          // console.log(error, this.errorService.getServerMessage(error))
           this.spinnerService.hide('general-information');
         }
       )
   }
-
-  // onSubmit() {
-  //   this.initiativesSvc.getActionAreaById(Number(this.generalInformationForm.value.action_area_id)).subscribe(resp => {
-  //     console.log('resp', resp);
-  //     this.initiativesSvc.createConcept(this.generalInformationForm.value, resp).subscribe(resp => {
-  //       console.log('concept', resp);
-  //     })
-  //     Swal.fire({
-  //       icon: 'success',
-  //       title: 'General information has been saved',
-  //       showConfirmButton: false,
-  //       timer: 2000
-  //     })
-  //   })
-  // }
-
-  // onClickUpdate(id) {
-  //   this.initiativesSvc.getActionAreaById(Number(this.generalInformationForm.value.action_area_id)).subscribe(resp => {
-  //     console.log('resp', resp);
-  //     this.initiativesSvc.updateConcept(this.generalInformationForm.value, resp, id).subscribe(resp => {
-  //       console.log('concept', resp);
-  //     })
-  //     Swal.fire({
-  //       icon: 'success',
-  //       title: 'General information has been saved',
-  //       showConfirmButton: false,
-  //       timer: 2000
-  //     })
-  //   })
-  // }
 
 }
