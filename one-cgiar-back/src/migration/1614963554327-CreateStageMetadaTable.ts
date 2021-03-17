@@ -7,7 +7,7 @@ export class CreateStageMetadaTable1614963554327 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE stages_meta (
                 id int(11) NOT NULL AUTO_INCREMENT,
-                order int(11) NOT NULL DEFAULT 0,
+                order int(11) DEFAULT NULL,
                 group_by varchar(500) COLLATE utf8_bin DEFAULT NULL,
                 col_name varchar(250) COLLATE utf8_bin DEFAULT NULL,
                 display_name varchar(250) COLLATE utf8_bin DEFAULT NULL,
