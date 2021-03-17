@@ -108,7 +108,9 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initvStg.status AS initvStageStatus,
             initvStgUsr.is_coordinator AS isCoordinator,
             initvStgUsr.is_lead AS isLead,
-            initvStgUsr.is_owner AS isOwner
+            initvStgUsr.is_owner AS isOwner,
+            (SELECT id FROM stages WHERE active = true) AS activeStageId,
+            (SELECT description FROM stages WHERE active = true) AS activeStageName
 
         FROM
             initiatives_by_users initvStgUsr

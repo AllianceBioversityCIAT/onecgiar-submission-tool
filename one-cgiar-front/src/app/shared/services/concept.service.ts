@@ -26,7 +26,11 @@ export class ConceptService extends InitiativesService {
       }));
   }
   upsertGeneralInformation(body: {}) {
-    return this.http.patch<any>(`${environment.apiUrl}/${sectionPath}/concept/general-information`, body).pipe(map(res => res.response));
+    return this.http.patch<any>(`${environment.apiUrl}/${sectionPath}/concept/general-information`, body)
+      .pipe(map(res => {
+        this.generaInformation = res.response.generaInformation
+        return res.response.generaInformation
+      }));
   }
 
   // // Query to create concept information (general information and narratives section)

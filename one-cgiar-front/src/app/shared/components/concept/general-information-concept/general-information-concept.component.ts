@@ -28,10 +28,11 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   constructor(public stgMenuSvc: StagesMenuService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
     this.generalInformationForm = new FormGroup({
+      conceptId: new FormControl(''),
       name: new FormControl('', Validators.required),
       lead_name: new FormControl('', Validators.required),
       lead_id: new FormControl('', Validators.required),
-      action_area_description: new FormControl('', Validators.required),
+      action_area_description: new FormControl(''),
       action_area_id: new FormControl('', Validators.required),
       initvStgId: new FormControl(this.initvStgId, Validators.required),
     });
@@ -58,7 +59,9 @@ export class GeneralInformationConceptComponent implements OnInit {
       let gnrlInfo = res[1];
       this.actionAreas = res[0];
       this.usersByInitiative = res[2];
+      console.log(gnrlInfo)
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+      this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
       this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
       this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
@@ -75,9 +78,26 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   }
 
-  
-  upsertGeneralInfo() {
 
+  upsertGeneralInfo() {
+    console.log(this.generalInformationForm.value);
+    this.spinnerService.show('general-information');
+    this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
+      subscribe(
+        gnrlInfo => {
+          console.log(gnrlInfo, this.generalInformationForm.value)
+          this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+          this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
+
+          this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
+          this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
+
+          this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
+          this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
+          console.log(gnrlInfo, this.generalInformationForm.value)
+          this.spinnerService.hide('general-information');
+        }
+      )
   }
 
   // onSubmit() {
