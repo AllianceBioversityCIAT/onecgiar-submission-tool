@@ -162,10 +162,9 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         if (leadUser == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
         }
-
-        // console.log(conceptInf, conceptId)
-        // console.log(conceptId == null)
+        
         const initvStg = await initvStgRepo.findOne(initvStgId);
+        // const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
         }
@@ -188,18 +187,15 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         }
 
         let upsertedInfo = await concptInfoRepo.save(conceptInf);
-        // console.log(upsertedInfo)
 
         /**
          * update initiative name
          */
 
-        console.log(initvStg.initiative.id)
         const initiative = await initiativeRepo.findOne(initvStg.initiative.id);
-        console.log(initiative)
         initiative.name = upsertedInfo.name;
         let updatedInitiative = await initiativeRepo.save(initiative);
-
+        
 
         let conceptQuery = ` 
         SELECT

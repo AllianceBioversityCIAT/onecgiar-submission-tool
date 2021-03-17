@@ -85,7 +85,6 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
       subscribe(
         gnrlInfo => {
-          console.log(gnrlInfo, this.generalInformationForm.value)
           this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
           this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
@@ -94,7 +93,10 @@ export class GeneralInformationConceptComponent implements OnInit {
 
           this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
           this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
-          console.log(gnrlInfo, this.generalInformationForm.value)
+          this.spinnerService.hide('general-information');
+        },
+        error => {
+          console.log(error)
           this.spinnerService.hide('general-information');
         }
       )
