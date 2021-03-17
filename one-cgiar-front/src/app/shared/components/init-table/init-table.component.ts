@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { CreateInitiativeModalComponent } from '../concept/create-initiative-modal/create-initiative-modal.component';
+import { CreateInitiativeModalComponent } from '../create-initiative-modal/create-initiative-modal.component';
 
 export interface TableData {
   initvStgId: string;

@@ -42,11 +42,11 @@ import { WorkPackagesComponent } from './shared/components/concept/work-packages
 import { ProjectionIndicatorsModalComponent } from './shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 import { KeyPartnersConceptComponent } from './shared/components/concept/key-partners-concept/key-partners-concept.component';
 import { AddPartnersModalComponent } from './shared/components/concept/add-partners-modal/add-partners-modal.component';
-import { CreateInitiativeModalComponent } from './shared/components/concept/create-initiative-modal/create-initiative-modal.component';
 import { CreateUserModalComponent } from './shared/components/create-user-modal/create-user-modal.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
 
 @NgModule({
   declarations: [
