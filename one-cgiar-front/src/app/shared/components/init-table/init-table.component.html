@@ -46,9 +46,8 @@
             <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell text-center" colspan="12">None Initiatives found.</td>
             </tr>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         </table>
-
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
     <div class="button-container mt-3">
             <button (click)="openDialog()" type="submit" mat-raised-button class="initiative-button mat-elevation-z8">
