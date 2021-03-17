@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
+// import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({
   selector: 'app-create-initiative-modal',
@@ -32,7 +33,7 @@ export class CreateInitiativeModalComponent implements OnInit {
     this.initiativesSvc.createInitiative(this.createInitiativeForm.value).subscribe(resp => {
       console.log('initiative id', resp.data.createdInitiative.id);
       const initvStgId = resp.data.createdInitiative.id;
-      this.router.navigate([`/initiative/${initvStgId}/stages/general-information`]);
+      this.router.navigate([`/initiatives/${initvStgId}/stages/concept/general-information`]);
       Swal.fire({
         icon: 'success',
         title: 'Initiative has been saved',
