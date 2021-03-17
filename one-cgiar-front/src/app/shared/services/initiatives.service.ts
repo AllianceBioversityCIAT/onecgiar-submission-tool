@@ -171,8 +171,8 @@ export class InitiativesService {
   // Query to get all the initiatives by user
   getInitiativesByUser(): Observable<any> {
     return  this.http.get<any>(`${environment.apiUrl}/${sectionPath}/own`).pipe(map(res => {
-      this.ownInitiatives = res.response.initiatives;
-      return res.response.initiatives
+      this.ownInitiatives = res?.response.initiatives;
+      return res?.response.initiatives
     }));
   }
 
