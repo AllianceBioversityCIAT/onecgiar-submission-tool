@@ -47,14 +47,14 @@ export class NarrativesConceptComponent implements OnInit {
       this.conceptSvc.getConcept(this.initvStgId).subscribe(resp => {
         console.log('response getConcept', resp)
         this.generalInformationForm.controls['initvStgId'].setValue(this.initvStgId);
-        this.generalInformationForm.controls['name'].setValue(resp.data[0].conceptName);
-        this.generalInformationForm.controls['challenge'].setValue(resp.data[0].conceptChallenge);
-        this.generalInformationForm.controls['objectives'].setValue(resp.data[0].conceptObjectives);
-        this.generalInformationForm.controls['results'].setValue(resp.data[0].conceptResults);
-        this.generalInformationForm.controls['highlights'].setValue(resp.data[0].conceptHighlights);
-        this.generalInformationForm.controls['action_area_id'].setValue(resp.data[0].conceptActAreId);
-        this.generalInformationForm.controls['action_area_description'].setValue(resp.data[0].conceptActAreDes);
-        this.generalInformationForm.value.initvStgId = resp.data[0].initvStgId;
+        this.generalInformationForm.controls['name'].setValue(resp.conceptName);
+        this.generalInformationForm.controls['challenge'].setValue(resp.conceptChallenge);
+        this.generalInformationForm.controls['objectives'].setValue(resp.conceptObjectives);
+        this.generalInformationForm.controls['results'].setValue(resp.conceptResults);
+        this.generalInformationForm.controls['highlights'].setValue(resp.conceptHighlights);
+        this.generalInformationForm.controls['action_area_id'].setValue(resp.conceptActAreId);
+        this.generalInformationForm.controls['action_area_description'].setValue(resp.conceptActAreDes);
+        this.generalInformationForm.value.initvStgId = resp.initvStgId;
         console.log(this.generalInformationForm);
       });
     });
@@ -75,7 +75,7 @@ export class NarrativesConceptComponent implements OnInit {
   getConceptInfo() {
     this.conceptSvc.getConcept(this.initvStgId).subscribe(resp => {
       console.log('concept info', resp);
-      this.updateConceptInfo(resp.data[0].conceptInfoId);
+      this.updateConceptInfo(resp.conceptInfoId);
       console.log('si existe')
     })
     Swal.fire({
