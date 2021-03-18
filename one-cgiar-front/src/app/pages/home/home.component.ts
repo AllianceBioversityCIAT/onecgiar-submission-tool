@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
 
       }
     })
+    this.getStages();
   }
 
 
@@ -46,6 +47,16 @@ export class HomeComponent implements OnInit {
         this.spinnerService.hide();
       });
     }
+  }
+
+
+  getStages() {
+    this.initiativesSvc.getStages()
+      .subscribe(
+        resp => {
+          // console.log(resp);
+        }
+      )
   }
 
 
