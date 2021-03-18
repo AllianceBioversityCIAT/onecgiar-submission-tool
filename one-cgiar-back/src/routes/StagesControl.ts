@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships } from '../controllers/StageConcept';
+import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createConcept, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships, getConceptNarratives, upsertConceptNarratives } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -17,12 +17,17 @@ const router = Router();
 // create initiatives concept
 // router.post("/concept", [checkJwt, checkRole('initiatives', 'createOwn')], createConcept);
 
-// update initiatives concept
+// update initiatives concept general information
 router.patch("/concept/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
 
-// get initiatives concept
+// get initiatives concept general information
 router.get("/concept/:initvStgId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptGeneralInfo);
 
+// get initiatives concept narratives
+router.get("/concept/:initvStgId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);
+
+// update initiatives concept narratives
+router.patch("/concept/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptNarratives);
 
 
 
