@@ -162,7 +162,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         if (leadUser == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
         }
-        
+
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
@@ -194,7 +194,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         const initiative = await initiativeRepo.findOne(initvStg.initiative.id);
         initiative.name = upsertedInfo.name;
         let updatedInitiative = await initiativeRepo.save(initiative);
-        
+
 
         let conceptQuery = ` 
         SELECT
@@ -257,15 +257,10 @@ export const getWorkPackages = async (req: Request, res: Response) => {
                 'Workpackages not found for initiative.'
             );
         } else {
-            res.json({ msg: 'Work packages', data: workPackages });
+            res.json(new ResponseHandler('Work packages.', { workPackages }));
         }
-
     } catch (error) {
-        await logger.error(
-            'Error message from the getWorkPackages controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -302,14 +297,10 @@ export const createWorkPackage = async (req: Request, res: Response) => {
 
         workPackage = await wpRepo.save(workPackage);
 
-        res.json({ msg: 'Work package created', data: workPackage });
+        res.json(new ResponseHandler('Work package created.', { workPackage }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the createWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -343,14 +334,10 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
         workPackage = await wpRepo.save(workPackage);
 
-        res.json({ msg: 'Work package updated', data: workPackage });
+        res.json(new ResponseHandler('Work package updated.', { workPackage }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the updateWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -374,13 +361,10 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
         const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
-        res.json({ msg: 'Regions / countries by work package', data: { regions, countries } });
+        res.json(new ResponseHandler('Regions / countries by work package.', { regions, countries }));
+
     } catch (error) {
-        await logger.error(
-            'Error message from the getRegionWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -423,13 +407,10 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
         let region = await regionRepo.save(wrkRegion);
 
         res.json({ msg: 'Work package region updated.', data: { region } });
+        res.json(new ResponseHandler('Work package region updated.', { region }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the upsertRegionWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -471,14 +452,10 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
         }
         let country = await regionRepo.save(cntryRegion);
 
-        res.json({ msg: 'Work package country updated.', data: { country } });
+        res.json(new ResponseHandler('Work package country updated.', { country }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the upsertCountryWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -507,14 +484,11 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
                 'Projection benefits not found.'
             );
         } else {
-            res.json({ msg: 'Projected benefits from work package', data: { projectedBenefits } });
+            res.json(new ResponseHandler('Projected benefits from work package.', { projectedBenefits }));
         }
+
     } catch (error) {
-        await logger.error(
-            'Error message from the getProjectedBenefitWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -562,15 +536,10 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
 
         let projectedBenefit = await prjBfnRepo.save(prjtedBfnt);
 
-        res.json({ msg: 'Projected benefit added to work package', data: { projectedBenefit } });
-
+        res.json(new ResponseHandler('Projected benefit added to work package.', { projectedBenefit }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the upsertProjectedBenefitWorkPackage controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -597,14 +566,10 @@ export const getTimeFramesProjectedBenefit = async (req: Request, res: Response)
                 'Time frames not found.'
             );
         } else {
-            res.json({ msg: 'Time frames from projected benefit', data: { timeFrames } });
+            res.json(new ResponseHandler('Time frames from projected benefit.', { timeFrames }));
         }
     } catch (error) {
-        await logger.error(
-            'Error message from the getTimeFramesProjectedBenefit controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -663,16 +628,10 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
 
         let impactTimeFrame = await tfRepo.save(timeFrame);
 
-        res.json({ msg: 'Impact time frame added to projected benefit', data: { impactTimeFrame } });
-
-
-
+        // res.json({ msg: 'Impact time frame added to projected benefit', data: { impactTimeFrame } });
+        res.json(new ResponseHandler('Impact time frame added to projected benefit.', { impactTimeFrame }));
     } catch (error) {
-        await logger.error(
-            'Error message from the upsertTimeFrameProjectedBenefit controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -727,7 +686,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
             });
             let Files = await filesRepo.save(_files);
 
-            res.status(200).json({ msg: "TOC added to concept", data: { TOC, Files } });
+            res.json(new ResponseHandler('TOC added to concept.', { TOC, Files }));
         } else {
             throw new APIError(
                 'NOT FOUND',
@@ -738,11 +697,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        await logger.error(
-            'Error message from the addTOCConcept controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -760,13 +715,9 @@ export const updateTOCConcept = async (req: Request, res: Response) => {
         toc.narrative = narrative;
 
         let _toc = await tocsRepo.save(toc);
-        res.status(200).json({ msg: "TOC narrative updated in concept", data: { _toc } });
+        res.json(new ResponseHandler('TOC narrative updated in concept.', { TOC: _toc }));
     } catch (error) {
-        await logger.error(
-            'Error message from the updateTOCConcept controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -804,8 +755,7 @@ export const addTOCFile = async (req: Request, res: Response) => {
                 file.tocs = TOC;
             });
             let Files = await filesRepo.save(_files);
-
-            res.status(200).json({ msg: "File added to TOC", data: { TOC, Files } });
+            res.json(new ResponseHandler('File added to TOC.', { TOC, Files }));
         } else {
             throw new APIError(
                 'NOT FOUND',
@@ -815,12 +765,9 @@ export const addTOCFile = async (req: Request, res: Response) => {
             );
         }
 
+
     } catch (error) {
-        await logger.error(
-            'Error message from the addTOCFile controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -837,8 +784,16 @@ export const getTOCFiles = async (req: Request, res: Response) => {
     const filesRepo = getRepository(Files);
 
     try {
-        let TOC = await tocRepo.findOneOrFail({ where: { initvStg: initvStgId } });
-        // console.log(TOC)
+        let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
+
+        if (TOC == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Theory of change not found.'
+            );
+        }
         const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } });
         if (Files.length == 0) {
             throw new APIError(
@@ -849,14 +804,11 @@ export const getTOCFiles = async (req: Request, res: Response) => {
             );
         } else {
             TOC['files'] = Files;
-            res.status(200).json({ msg: "TOC and files", data: TOC });
+            // res.status(200).json({ msg: "TOC and files", data: TOC });
+            res.json(new ResponseHandler('TOC and files.', { TOC }));
         }
     } catch (error) {
-        await logger.error(
-            'Error message from the getTOCFiles controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -876,13 +828,9 @@ export const updateTOCFile = async (req: Request, res: Response) => {
         file.name = (name) ? name : file.name;
 
         let Files = await filesRepo.save(file);
-        res.status(200).json({ msg: "File updated in TOC.", data: { Files } });
+        res.json(new ResponseHandler('Files.', { Files }));
     } catch (error) {
-        await logger.error(
-            'Error message from the updateTOCFile controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -891,7 +839,7 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ initvStgId, comparative_advantage }
+ * @param req params:{ initvStgId, id, comparative_advantage }
  * @param res 
  */
 export const upsertPartnerships = async (req: Request, res: Response) => {
@@ -921,14 +869,11 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
 
         partnership = await partRepo.save(partnership);
 
-        res.json({ msg: 'Work packages', data: partnership });
+        // res.json({ msg: 'Work packages', data: partnership });
+        res.json(new ResponseHandler('Work packages.', { partnership }));
 
     } catch (error) {
-        await logger.error(
-            'Error message from the updateTOCFile controller',
-            error,
-        );
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 }
 
