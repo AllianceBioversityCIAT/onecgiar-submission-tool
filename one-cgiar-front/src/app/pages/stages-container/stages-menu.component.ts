@@ -4,6 +4,7 @@ import { CoordinatorModalComponent } from '@shared/components/coordinator-modal/
 import { InitiativesService } from '@shared/services/initiatives.service';
 import { RequestsService } from '@shared/services/requests.service';
 import { AuthService } from '@shared/services/auth.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -12,7 +13,15 @@ import { AuthService } from '@shared/services/auth.service';
 })
 export class StagesMenuComponent implements OnInit {
 
-  constructor(public _auth: AuthService, public _requests: RequestsService, private cdRef: ChangeDetectorRef, public initiativesSvc: InitiativesService, public dialog: MatDialog) { }
+  constructor(
+    public _auth: AuthService,
+    public _requests: RequestsService, 
+    private cdRef: ChangeDetectorRef, 
+    public initiativesSvc: InitiativesService, 
+    public dialog: MatDialog,
+    public _interactionsService:InteractionsService 
+    
+    ) { }
 
   openDialog() {
     const dialogRef = this.dialog.open(CoordinatorModalComponent, { panelClass: 'custom-dialog-container' });
@@ -23,6 +32,7 @@ export class StagesMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._interactionsService.collapseHeader=true;
   }
 
   onSave(generalInformationForm): void {

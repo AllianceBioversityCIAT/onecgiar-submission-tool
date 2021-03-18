@@ -9,6 +9,7 @@ import {
 import { Subject } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +24,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @Output() toggleSidenav = new EventEmitter<void>();
 
-  constructor(private authSvc: AuthService) {}
+  constructor(
+    private authSvc: AuthService,
+    public _interactionsService:InteractionsService
+    ) {}
 
   ngOnInit(): void {
     // console.log('isLogged', this.isLogged);

@@ -1,14 +1,17 @@
 .one-header {
-  font-family: sans-serif;
-  font-size: 2em;
-  color: #7d7d7d;
-  background-color: #fff;
-  margin: 2rem 0;
+  font-family: Poppins;
+  color: #e2e2e2;
+  background-color: rgb(51, 51, 51);
+  // margin: 2rem 0;
+}
+
+.outline-font {
+  font-weight: 200;
 }
 
 .cgiar-logo {
   content: url("../../../../assets/images/cgiar_logo.png");
-  width: 6rem;
+  filter: contrast(0) brightness(5);
 }
 
 .spacer {
@@ -18,4 +21,27 @@
 a {
   text-decoration: none;
   color: #fff;
+}
+
+
+.collapseHeader{
+  font-size: 1em;
+  padding: 0px 80px;
+  .cgiar-logo{
+    width: 2.5rem;
+    transition: all .3s ease-in;
+    }
+    height: 55px !important;
+  transition: all .3s ease-in;
+}
+
+.noCollapseHeader{
+  font-size: 2em;
+  padding: 50px 80px;
+  .cgiar-logo{
+  width: 4rem;
+  transition: all .3s ease-in;
+  }
+  height: 64px !important;
+  transition: all .3s ease-in;
 }

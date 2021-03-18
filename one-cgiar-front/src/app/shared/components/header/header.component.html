@@ -1,10 +1,10 @@
-<mat-toolbar class="one-header">
+<mat-toolbar class="one-header" [ngClass]="{'collapseHeader': _interactionsService.collapseHeader,'noCollapseHeader':!_interactionsService.collapseHeader}">
   <ng-container *ngIf="isAdmin === 'admin'">
     <button mat-icon-button (click)="onToggleSidenav()">
       <mat-icon>menu</mat-icon>
     </button>
   </ng-container>
-  <span><strong>One CGIAR </strong><u>Submission Tool</u></span>
+  <span><strong>One CGIAR </strong><span class="outline-font">Submission Tool</span></span>
   <span class="spacer"></span>
   <i class="cgiar-logo"></i>
 </mat-toolbar>
