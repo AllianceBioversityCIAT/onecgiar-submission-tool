@@ -1,7 +1,7 @@
 <div class="container">
     <div class="menu-title">Stages</div>
     <mat-accordion>
-        <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;">
+        <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{stage.description}}
