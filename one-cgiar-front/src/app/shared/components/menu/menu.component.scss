@@ -77,3 +77,30 @@ mat-list-item:focus {
 .add-button:hover {
     background-color: #7bc45d;
 }
+
+// mat-expansion-panel{
+//     background: rgb(73,82,81);
+//     background: linear-gradient(139deg, rgba(73,82,81,1) 0%, rgba(58,63,69,1) 35%, rgba(49,52,57,1) 100%);
+//     mat-panel-title{
+//         color: rgb(241, 241, 241);
+//     }
+//     mat-list {
+//         mat-list-item{
+//             color: rgb(207, 207, 207);
+
+//         }
+//     }
+
+// }
+// .mat-expansion-panel:hover  .mat-expansion-indicator::after,
+// .mat-expansion-panel:focus  .mat-expansion-indicator::after{
+//   color: yellow;
+// }
+
+// .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+//     color: white !important;
+// }
+
+// ::ng-deep .specific-class > .mat-expansion-indicator:after {
+//     color: white;
+//   }
