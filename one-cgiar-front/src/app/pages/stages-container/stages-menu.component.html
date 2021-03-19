@@ -29,29 +29,33 @@
 <!-- <div class="row">
 </div> -->
 
-<div class="row">
-    <div class="col-md-3">
-        <app-menu></app-menu>
-        <div class="button-container">
-            <button type="submit" 
-                [disabled]="_requests.generalInformationFormCs.invalid || _requests.narrativesFormCs.invalid"
-                mat-raised-button class="submit-button">
-                Submit
-            </button>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <mat-card class="card-container">
-            <div class="initiative-identification">
-                <span class="initiative-id">ID: {{this.initiativesSvc.initvStgId}}</span>
-                <button class="manage-button" mat-raised-button (click)="openDialog()">
-                    Manage access
-                    <mat-icon>settings</mat-icon>
+<div class="custom-container">
+    <div class="row">
+        <div class="col-sm-4">
+            <app-menu></app-menu>
+            <div class="button-container">
+                <button type="submit" 
+                    [disabled]="_requests.generalInformationFormCs.invalid || _requests.narrativesFormCs.invalid"
+                    mat-raised-button class="submit-button">
+                    Submit
                 </button>
             </div>
-            <router-outlet></router-outlet>
-        </mat-card>
+        </div>
+        <div class="col-sm-8">
+            <mat-card class="card-container">
+                <div class="initiative-identification">
+                    <span class="initiative-id">ID: {{this.initiativesSvc.initvStgId}}</span>
+                    <button class="manage-button" mat-raised-button (click)="openDialog()">
+                        Manage access
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                </div>
+                <router-outlet></router-outlet>
+            </mat-card>
+        </div>
     </div>
+    
 </div>
 
 <!-- <app-footer></app-footer> -->
+
