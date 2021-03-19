@@ -1,4 +1,4 @@
-<mat-toolbar class="one-header" [ngClass]="{'collapseHeader': _interactionsService.collapseHeader,'noCollapseHeader':!_interactionsService.collapseHeader}">
+<mat-toolbar *ngIf="_interactionsService.showHeader" class="one-header" [ngClass]="{'collapseHeader': _interactionsService.collapseHeader,'noCollapseHeader':!_interactionsService.collapseHeader}">
   <ng-container *ngIf="isAdmin === 'admin'">
     <button mat-icon-button (click)="onToggleSidenav()">
       <mat-icon>menu</mat-icon>

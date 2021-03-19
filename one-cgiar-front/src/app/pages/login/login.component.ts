@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BaseFormUser } from '@shared/utils/base-form-user';
 import { AuthService } from '@shared/services/auth.service';
 import { Subscription } from 'rxjs';
+import { InteractionsService } from '../../shared/services/interactions.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,11 +18,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authSvc: AuthService,
     private router: Router,
     public loginForm: BaseFormUser,
-  ) { }
+    public _interactionsService:InteractionsService
+  ) { 
+    this._interactionsService.showHeader = false;
+  }
 
   ngOnInit(): void {
     this.loginForm.baseForm.get('role').setValidators(null);
     this.loginForm.baseForm.get('role').updateValueAndValidity();
+   
   }
 
   ngOnDestroy(): void {
@@ -38,6 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.authSvc.login(formValue).subscribe((res) => {
         if (res) {
           this.router.navigate(['/home']);
+          this._interactionsService.showHeader = true;
           // console.log('login', res);
         }
       })
