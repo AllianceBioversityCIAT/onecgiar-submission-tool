@@ -139,8 +139,8 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
  * @param req params: { conceptId, initvStgId, challenge, results, highlights, objectives }
  * @param res 
  */
- export const upsertConceptNarratives = async (req: Request, res: Response) => {
-     
+export const upsertConceptNarratives = async (req: Request, res: Response) => {
+
     const { conceptId, initvStgId, challenge, results, highlights, objectives } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -534,11 +534,12 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
                 true,
                 message
             );
-        }
-        let region = await regionRepo.save(wrkRegion);
+        } else {
+            let region = await regionRepo.save(wrkRegion);
 
-        res.json({ msg: 'Work package region updated.', data: { region } });
-        res.json(new ResponseHandler('Work package region updated.', { region }));
+            res.json(new ResponseHandler('Work package region updated.', { region }));
+
+        }
 
     } catch (error) {
         return res.status(error.httpCode).json(error);
@@ -580,10 +581,10 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
                 true,
                 message
             );
+        } else {
+            let country = await regionRepo.save(cntryRegion);
+            res.json(new ResponseHandler('Work package country updated.', { country }));
         }
-        let country = await regionRepo.save(cntryRegion);
-
-        res.json(new ResponseHandler('Work package country updated.', { country }));
 
     } catch (error) {
         return res.status(error.httpCode).json(error);
