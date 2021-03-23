@@ -54,6 +54,9 @@ body {
 .pointer {
   cursor: pointer;
 }
+span{
+  outline: none;
+}
 
 mat-sidenav-content{
   background-color: #fafafa !important;
