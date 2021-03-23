@@ -68,7 +68,6 @@ export class ConceptService extends InitiativesService {
   upsertNarratives(body: {}) {
     return this.http.patch<any>(`${environment.apiUrl}/${sectionPath}/concept/narratives`, body)
       .pipe(map(res => {
-        console.log(res)
         this.narratives = res.response.narratives
         return res.response.narratives
       }));

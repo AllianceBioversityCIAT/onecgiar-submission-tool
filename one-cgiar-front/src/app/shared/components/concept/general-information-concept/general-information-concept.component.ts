@@ -60,7 +60,7 @@ export class GeneralInformationConceptComponent implements OnInit {
       let gnrlInfo = res[1];
       this.actionAreas = res[0];
       this.usersByInitiative = res[2];
-      console.log(gnrlInfo)
+
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
@@ -73,7 +73,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     });
     this.generalInformationForm.valueChanges.subscribe(
       result => {
-        this.stgMenuSvc.conceptFormStatus({ general_information: this.generalInformationForm.status })
+        this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status, initvStgId)
+        // this.stgMenuSvc.conceptFormStatus('concept', 'general_information', this.generalInformationForm.status)
       }
     );
 

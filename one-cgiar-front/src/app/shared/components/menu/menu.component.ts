@@ -59,6 +59,7 @@ export class MenuComponent implements OnInit {
   validateSubMenuForm(stageName: any, subMenu: string) {
     stageName = stageName.toLowerCase().split(' ').join('_');
     subMenu = subMenu.toLowerCase().split(' ').join('_');
+    // console.log(stageName, subMenu, this.subMenusFormValidation)
     return this.subMenusFormValidation[stageName][subMenu];
   }
 

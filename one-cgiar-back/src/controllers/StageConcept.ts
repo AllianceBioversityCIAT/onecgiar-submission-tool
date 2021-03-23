@@ -200,7 +200,7 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
         );
         let narratives = await queryRunner.connection.query(query, parameters);
 
-        console.log(narratives)
+        // console.log(narratives)
 
         res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
 
@@ -437,7 +437,7 @@ export const createWorkPackage = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params: { id, name, results, pathway_content, is_global, initvStgId }
+ * @param req params: { id, name, results, pathway_content, is_global }
  * @param res 
  */
 export const updateWorkPackage = async (req: Request, res: Response) => {

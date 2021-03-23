@@ -15,7 +15,7 @@
             <!-- Name Column -->
             <ng-container matColumnDef="initiativeName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Initiative Name </th>
-                <td mat-cell *matCellDef="let row" class="pointer"
+                <td mat-cell *matCellDef="let row" class="pointer" (click)="initiativesSvc.initvStgId = row.initvStgId"
                     routerLink="/initiatives/{{row.initvStgId}}/stages/{{parseStageLink(row.currentStage)}}">
                     {{row.initiativeName}}
                 </td>

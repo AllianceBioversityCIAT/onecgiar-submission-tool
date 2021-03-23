@@ -11,7 +11,7 @@ const sectionPath = 'initiatives'
 })
 export class InitiativesService {
 
-  public initvStgId: string;
+  initvStgId: string;
   actionAreas: [];
   stages: [];
   stagesMeta: [];
