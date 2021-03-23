@@ -12,6 +12,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./work-package.component.scss'],
 })
 export class WorkPackageComponent implements OnInit {
+  animationSize=500;
+  animationSizeActive=true;
   @Input() workPackageData: any;
   workPackageId: number | string;
   initiativeId: any;
@@ -74,4 +76,5 @@ export class WorkPackageComponent implements OnInit {
     this.createWorkPackageForm.controls['results'].setValue(results);
     this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
   }
+
 }

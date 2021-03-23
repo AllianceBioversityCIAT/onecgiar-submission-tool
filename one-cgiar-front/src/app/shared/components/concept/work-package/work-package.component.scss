@@ -35,25 +35,28 @@
 button{
   outline: none;
 }
-
-mat-expansion-panel-header{
-    transition: background-color .3s ease-in;
-    background-color: #0779A4;
-    mat-panel-title{
-        color: white;
-    }
-    mat-panel-description{
-        color: white;
-    }
-   
-    &:hover,&:focus{
-        background-color: #178db8 !important;
-        transition: background-color .2s ease-in;
-    }
-    
+.WP_id{
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+}
+mat-panel-title{
+    justify-content: unset !important;
+    margin-left: 80px;
 }
 
-
+.figure{
+    position: absolute;
+    background-color: #0779A4;
+    border-radius: 45%;
+    z-index: 0;
+    left: -100px;
+    top: -330px;
+    transition: all .3s ease-in-out;
+}
 .work-packages-container {
     display: flex;
     align-items: center;
