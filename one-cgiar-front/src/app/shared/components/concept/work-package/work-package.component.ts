@@ -34,7 +34,7 @@ export class WorkPackageComponent implements OnInit {
       name: new FormControl('', Validators.required),
       pathwayContent: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
-      isGlobal: new FormControl(true, Validators.required),
+      // isGlobal: new FormControl(true, Validators.required),
       id: new FormControl('', Validators.required),
     });
   }
@@ -78,7 +78,7 @@ export class WorkPackageComponent implements OnInit {
     this.createWorkPackageForm.controls['name'].setValue(name);
     this.createWorkPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.createWorkPackageForm.controls['results'].setValue(results);
-    this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
+    // this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
     this.createWorkPackageForm.controls['id'].setValue(id);
   }
 

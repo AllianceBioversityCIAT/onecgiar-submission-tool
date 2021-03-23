@@ -9,7 +9,7 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 export class WorkPackagesComponent implements OnInit {
 
   workPackagesList=[];
-
+  noWp = false;
 
   constructor(public activatedRoute: ActivatedRoute, public initiativesSvc: InitiativesService) {
   }
@@ -19,6 +19,9 @@ export class WorkPackagesComponent implements OnInit {
       this.initiativesSvc.getAllIWorkPackages(resp['id']).subscribe(resp => {
         this.workPackagesList = resp.response.workPackages;
         console.log('resp', this.workPackagesList);
+      },
+      err=>{
+        this.noWp = true;
       })
     })
   }
