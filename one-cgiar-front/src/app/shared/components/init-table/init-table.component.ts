@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { CreateInitiativeModalComponent } from '@shared/components/create-initiative-modal/create-initiative-modal.component';
 
 export interface TableData {
@@ -30,7 +31,7 @@ export class InitTableComponent implements AfterViewInit {
 
 
 
-  constructor(public dialog: MatDialog, private activeRoute: ActivatedRoute) {
+  constructor(public dialog: MatDialog, private activeRoute: ActivatedRoute, public initiativesSvc: InitiativesService) {
   }
 
   ngOnChanges(changes: SimpleChanges) {

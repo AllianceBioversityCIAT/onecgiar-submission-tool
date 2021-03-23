@@ -6,6 +6,7 @@ import { InitiativesService } from '@shared/services/initiatives.service';
 import { ConceptService } from '@shared/services/concept.service';
 import { RequestsService } from '@shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 
 @Component({
   selector: 'app-narratives-concept',
@@ -26,7 +27,7 @@ export class NarrativesConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
-  constructor(public _requests: RequestsService, public initiativesSvc: InitiativesService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
+  constructor(public stgMenuSvc: StagesMenuService, public initiativesSvc: InitiativesService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
     this.narrativesForm = new FormGroup({
       challenge: new FormControl('', Validators.required),
       objectives: new FormControl('', Validators.required),
@@ -73,7 +74,15 @@ export class NarrativesConceptComponent implements OnInit {
       this.narrativesForm.controls['highlights'].setValue(resp.conceptHiglights);
       this.narrativesForm.controls['conceptId'].setValue(resp.conceptId);
       this.spinnerService.hide('narratives');
-    })
+    });
+    // this.stgMenuSvc.menuObj.concept.narratives = this.narrativesForm.status
+    // console.log(this.narrativesForm, this.stgMenuSvc.menuObj.concept)
+    this.narrativesForm.valueChanges.subscribe(
+      result => {
+        this.stgMenuSvc.setFormStageStatus('concept', 'narratives', this.narrativesForm.status, initvStgId)
+        // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
+      }
+    );
   }
 
 }
