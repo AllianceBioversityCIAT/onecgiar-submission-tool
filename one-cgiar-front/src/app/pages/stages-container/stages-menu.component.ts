@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@shared/services/initiatives.service';
 import { ActivatedRoute } from '@angular/router';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -15,6 +16,7 @@ export class StagesMenuComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     public initiativesSvc: InitiativesService,
     public stageMenu: StagesMenuService,
+    public _interactionsService: InteractionsService,
 
   ) { }
 
@@ -22,6 +24,7 @@ export class StagesMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._interactionsService.collapseHeader=true;
     this.activatedRoute.params.subscribe(resp => {
       this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
     });
