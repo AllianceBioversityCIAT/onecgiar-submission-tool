@@ -407,10 +407,10 @@ export const createWorkPackage = async (req: Request, res: Response) => {
 
     try {
         let workPackage = new WorkPackages();
-        workPackage.name = name;
-        workPackage.results = results;
-        workPackage.pathway_content = pathwayContent;
-        workPackage.is_global = isGlobal;
+        workPackage.name = name || null;
+        workPackage.results = results || null;
+        workPackage.pathway_content = pathwayContent || null;
+        workPackage.is_global = isGlobal || null;
 
         let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         workPackage.initvStg = initiativeStg;

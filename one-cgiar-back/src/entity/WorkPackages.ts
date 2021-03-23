@@ -13,15 +13,12 @@ export class WorkPackages extends UpdatedCreatedAt {
     active: boolean
 
     @Column({length: '500'})
-    @IsNotEmpty()
     name: string
     
     @Column({length: '1000'})
-    @IsNotEmpty()
     results: string
     
     @Column({length: '1000'})
-    @IsNotEmpty()
     pathway_content: string
 
     @Column('tinyint')
