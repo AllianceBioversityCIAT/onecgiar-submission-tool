@@ -3,6 +3,7 @@
     <mat-accordion class="example-headers-align" multi>
         <app-work-package [workPackageData]="item" *ngFor="let item of workPackagesList"></app-work-package>
     </mat-accordion>
+    <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
 </div>
 <br>
 

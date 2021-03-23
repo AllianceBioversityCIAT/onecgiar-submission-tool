@@ -2,7 +2,6 @@
 
 <mat-expansion-panel style="margin-top: 5px;" >
     <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive">
-        <!-- <div style="background-color: aqua; width: 100%; height: 100%;">hello</div> -->
         <button mat-raised-button color="" class="WP_id">Id: {{workPackageData.id}}</button>
         <div class="figure" 
         [style.width.px]="animationSizeActive ? 500: 2000" 
@@ -12,16 +11,9 @@
         </div>
 
         <mat-panel-title style="z-index: 1; color: white;">
-            <!-- <button mat-raised-button color="primary">  {{workPackageData.name}}</button> -->
             {{workPackageData.name}}
         </mat-panel-title>
-        <!-- <mat-panel-description> -->
-            <!-- Inform the date you wish to travel -->
-            
-            <!-- <button mat-icon-button color="warn" aria-label="Example icon button with a menu icon">
-                <mat-icon>delete</mat-icon>
-            </button> -->
-      <!-- </mat-panel-description> -->
+
     </mat-expansion-panel-header>
 
     <mat-tab-group mat-align-tabs="center">

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { InteractionsService } from '../../../services/interactions.service';
 
 @Component({
   selector: 'app-work-package',
@@ -33,8 +34,8 @@ export class WorkPackageComponent implements OnInit {
       name: new FormControl('', Validators.required),
       pathwayContent: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
-      isGlobal: new FormControl(true, Validators.required),
-      initvStgId: new FormControl(this.initvStgId, Validators.required),
+      // isGlobal: new FormControl(true, Validators.required),
+      id: new FormControl('', Validators.required),
     });
   }
 
@@ -46,6 +47,9 @@ export class WorkPackageComponent implements OnInit {
   onUpdate(): void {
     console.log('%cReady to update','background: #222; color: #ffff00');
     console.log(  this.createWorkPackageForm);
+    this.initiativesSvc.updateWorkPackage(this.createWorkPackageForm.value).subscribe(resp=>{
+      console.log(resp);
+    });
   }
 
   openDialog() {
@@ -74,7 +78,8 @@ export class WorkPackageComponent implements OnInit {
     this.createWorkPackageForm.controls['name'].setValue(name);
     this.createWorkPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.createWorkPackageForm.controls['results'].setValue(results);
-    this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
+    // this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
+    this.createWorkPackageForm.controls['id'].setValue(id);
   }
 
 }

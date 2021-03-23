@@ -128,6 +128,14 @@ export class InitiativesService {
     return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
   }
 
+  // Query to update a work package
+  updateWorkPackage(body: any): Observable<any> {
+    // return this.postQuery(`/stages-control/concept/packages`, body);
+    console.log('%cUpdate WP with data: ','background: #222; color: #ffff00');
+    console.log(body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages`,body);;
+  }
+
   // Query to create a work package
   createWorkPackages(body: any): Observable<any> {
     return this.postQuery(`stages-control/concept/packages`, body);
