@@ -1,0 +1,148 @@
+.example-action-buttons {
+    padding-bottom: 20px;
+  }
+  
+   .mat-expansion-panel-header-title,
+   .mat-expansion-panel-header-description {
+    flex-basis: 0;
+  }
+  
+   .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+   .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  
+  ///jjjjjjjjjjj
+  .delete-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1rem 0 1rem;
+}
+
+// mat-icon {
+//     color: #d30000;
+//     cursor: pointer;
+//     font-size: 1.8rem;
+// }
+
+// mat-icon:hover {
+//     color: #ff0000;
+// }
+button{
+  outline: none;
+}
+.WP_id{
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+}
+mat-panel-title{
+    justify-content: unset !important;
+    margin-left: 80px;
+}
+
+.figure{
+    position: absolute;
+    background-color: #0779A4;
+    border-radius: 45%;
+    z-index: 0;
+    left: -100px;
+    top: -330px;
+    transition: all .3s ease-in-out;
+}
+.work-packages-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0.5rem auto;
+}
+  
+.work-packages-title {
+    font-size: 1.4em;
+    padding: 1rem 0;
+}
+
+.narratives-form {
+    width: 90%;
+    margin: 1rem auto;
+}
+    
+.narratives-full-width {
+    width: 100%;
+}
+
+p {
+    color: #0779A4;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+  
+.narratives-save {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.save-button {
+    background-color: #0779A4;
+    outline: none;
+    color: #fff;
+    width: 100px;
+}
+
+.save-button:hover {
+    background-color: #0c96c9;
+}
+
+.projection-benefits-container {
+    width: 90%;
+    margin: 1rem auto;
+}
+
+mat-panel-title {
+    justify-content: center;
+}
+
+.contribution-container {
+    display: flex;
+    background-color: #FAFAFA;
+    flex-direction: column;
+    border: 2px dotted #b1b0b0;
+    padding: 0 1.5rem;
+    margin: 1rem 0;
+}
+
+table, th, td {
+  border: 1px solid #0779A4;
+  border-collapse: collapse;
+}
+
+.set-data-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+}
+
+.remove-contribution-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5rem 0 0 0;
+}
+
+.set-data-button {
+    background-color: #0779A4;
+    outline: none;
+    color: #fff;
+}
+
+.set-data-button:hover {
+    background-color: #0c96c9;
+}

@@ -1,0 +1,124 @@
+
+
+<mat-expansion-panel style="margin-top: 5px;" >
+    <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive">
+        <!-- <div style="background-color: aqua; width: 100%; height: 100%;">hello</div> -->
+        <button mat-raised-button color="" class="WP_id">Id: {{workPackageData.id}}</button>
+        <div class="figure" 
+        [style.width.px]="animationSizeActive ? 500: 2000" 
+        [style.height.px]="animationSizeActive ? 500: 2000"
+        [style.borderRadius]="animationSizeActive ? '45%': '0px'"
+        >
+        </div>
+
+        <mat-panel-title style="z-index: 1; color: white;">
+            <!-- <button mat-raised-button color="primary">  {{workPackageData.name}}</button> -->
+            {{workPackageData.name}}
+        </mat-panel-title>
+        <!-- <mat-panel-description> -->
+            <!-- Inform the date you wish to travel -->
+            
+            <!-- <button mat-icon-button color="warn" aria-label="Example icon button with a menu icon">
+                <mat-icon>delete</mat-icon>
+            </button> -->
+      <!-- </mat-panel-description> -->
+    </mat-expansion-panel-header>
+
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Information">
+    
+            <form [formGroup]="createWorkPackageForm" (ngSubmit)="onUpdate()" class="narratives-form">
+                <mat-form-field class="narratives-full-width">
+                    <p><strong>Name: </strong><span class="asterisk">* </span></p>
+                    <textarea type="text" formControlName="name" matInput required></textarea>
+                </mat-form-field>
+                <mat-form-field class="narratives-full-width">
+                    <p><strong>Ensure both science/research and innovation/impact pathway content: </strong><span
+                            class="asterisk">* </span></p>
+                    <textarea type="text" formControlName="pathwayContent" matInput required></textarea>
+                </mat-form-field>
+                <mat-form-field class="narratives-full-width">
+                    <p><strong>Results: </strong><span class="asterisk">* </span></p>
+                    <textarea type="text" formControlName="results" matInput required></textarea>
+                </mat-form-field>
+                <div class="narratives-save">
+                    <button type="submit" mat-raised-button class="save-button">
+                        Save
+                    </button>
+                </div>
+            </form>
+    
+        </mat-tab>
+        <mat-tab label="Geographic scope">
+    
+            <app-geographic-scope></app-geographic-scope>
+    
+        </mat-tab>
+        <mat-tab label="Projection of benefits">
+    
+            <div class="projection-benefits-container">
+                <mat-accordion>
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                        *ngFor="let impactArea of _requests.impactAreas">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{impactArea.name}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+    
+                        <div class="contribution-container" *ngFor="let contribution of _requests.contributions">
+                            <div class="remove-contribution-container">
+                                <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
+                            </div>
+                            <mat-form-field appearance="standard">
+                                <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span
+                                        class="asterisk">* </span></p>
+                                <mat-select>
+                                    <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+    
+                            <table>
+                                <tr>
+                                    <th></th>
+                                    <th *ngFor="let item of projectionRanges">{{item.year}}</th>
+                                </tr>
+                                <tr>
+                                    <td>Low scenario</td>
+                                    <td *ngFor="let item of projectionRanges">{{item.low}}</td>
+                                </tr>
+                                <tr>
+                                    <td>High scenario</td>
+                                    <td *ngFor="let item of projectionRanges">{{item.high}}</td>
+                                </tr>
+                            </table>
+    
+                            <div class="set-data-container">
+                                <button type="submit" mat-raised-button class="set-data-button" (click)="openDialog()">
+                                    set ranges and years
+                                </button>
+                            </div>
+    
+                            <mat-form-field>
+                                <p><strong>Add any notes on methodology and sources here: </strong></p>
+                                <input type="text" matInput required />
+                            </mat-form-field>
+    
+                        </div>
+    
+                        <div class="set-data-container">
+                            <button type="submit" mat-raised-button class="set-data-button"
+                                (click)="_requests.addContribution()">
+                                add new contribution
+                            </button>
+                        </div>
+    
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+    
+        </mat-tab>
+    </mat-tab-group>
+    
+</mat-expansion-panel>

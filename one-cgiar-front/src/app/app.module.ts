@@ -47,6 +47,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
+import { WorkPackageComponent } from './shared/components/concept/work-package/work-package.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { CreateInitiativeModalComponent } from './shared/components/create-initi
     KeyPartnersConceptComponent,
     AddPartnersModalComponent,
     CreateInitiativeModalComponent,
-    CreateUserModalComponent
+    CreateUserModalComponent,
+    WorkPackageComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
