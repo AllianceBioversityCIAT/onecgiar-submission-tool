@@ -81,7 +81,6 @@ export class GeneralInformationConceptComponent implements OnInit {
 
 
   upsertGeneralInfo() {
-    console.log(this.generalInformationForm.value);
     this.spinnerService.show('general-information');
     this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
       subscribe(

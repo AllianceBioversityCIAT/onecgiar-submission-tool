@@ -191,18 +191,18 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
         LEFT JOIN stages stage ON stage.id = initvStgs.stageId
         LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
 
-		WHERE initvStgs.id =:conceptId;
+		WHERE concept.id =:conceptId;
     `;
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             conceptQuery,
             { conceptId: conceptInf.id },
             {}
         );
-        let conceptInfo = await queryRunner.connection.query(query, parameters);
+        let narratives = await queryRunner.connection.query(query, parameters);
 
+        console.log(narratives)
 
-
-        res.json(new ResponseHandler('Concept narratives upserted.', { narratives: conceptInfo[0] }));
+        res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
 
     } catch (error) {
         return res.status(error.httpCode).json(error);

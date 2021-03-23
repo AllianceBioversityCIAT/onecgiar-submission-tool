@@ -1,6 +1,6 @@
 <div class="narratives-container animate__animated animate__fadeIn">
     <strong class="narratives-title">Narratives</strong>
-    <form [formGroup]="generalInformationForm" (ngSubmit)="getConceptInfo()" class="narratives-form">
+    <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form">
         <mat-form-field class="narratives-full-width">
             <p><strong>Challenge statement: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed</i></p>
@@ -34,5 +34,6 @@
                 Save
             </button>
         </div>
+        <ngx-spinner [fullScreen]="false" name='narratives'></ngx-spinner>
     </form>
 </div>

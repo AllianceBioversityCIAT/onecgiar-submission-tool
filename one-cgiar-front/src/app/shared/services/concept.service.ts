@@ -18,6 +18,11 @@ export class ConceptService extends InitiativesService {
     super(http);
   }
 
+  /**
+   * 
+   * @param id 
+   * @returns general-informatio
+   */
   getConcept(id) {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/concept/${id}/general-information`)
       .pipe(map(res => {
@@ -25,6 +30,13 @@ export class ConceptService extends InitiativesService {
         return res.response.generaInformation
       }));
   }
+
+
+  /**
+   * 
+   * @param body : {} 
+   * @returns general-informatio
+   */
   upsertGeneralInformation(body: {}) {
     return this.http.patch<any>(`${environment.apiUrl}/${sectionPath}/concept/general-information`, body)
       .pipe(map(res => {
@@ -33,12 +45,34 @@ export class ConceptService extends InitiativesService {
       }));
   }
 
-  // // Query to create concept information (general information and narratives section)
-  // createConcept(body: any, description: string): Observable<any> {
-  //   body.action_area_description = description;
-  //   console.log('description', description);
-  //   console.log('createConcept', body);
-  //   return this.postQuery('/stages-control/concept', body);
-  // }
+
+  /**
+   * 
+   * @param id 
+   * @returns general-informatio
+   */
+
+  getConceptNarratives(id) {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/concept/${id}/narratives`)
+      .pipe(map(res => {
+        this.narratives = res.response.narratives
+        return res.response.narratives
+      }));
+  }
+
+  /**
+   * 
+   * @param body : {} 
+   * @returns general-informatio
+   */
+  upsertNarratives(body: {}) {
+    return this.http.patch<any>(`${environment.apiUrl}/${sectionPath}/concept/narratives`, body)
+      .pipe(map(res => {
+        console.log(res)
+        this.narratives = res.response.narratives
+        return res.response.narratives
+      }));
+  }
+
 
 }
