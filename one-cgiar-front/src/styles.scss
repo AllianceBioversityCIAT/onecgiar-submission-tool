@@ -55,6 +55,10 @@ body {
   cursor: pointer;
 }
 
+mat-sidenav-content{
+  background-color: #fafafa !important;
+}
+
 
 @media screen and (min-width: 1400px) {
   .custom-container {

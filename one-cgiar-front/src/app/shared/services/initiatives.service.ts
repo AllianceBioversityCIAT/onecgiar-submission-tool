@@ -77,12 +77,17 @@ export class InitiativesService {
 
   // Query to geta work package by ID
   getWorkPackageById(id: number): Observable<any> {
-    console.log('numero de la funcion')
-    return this.getQuery(`/stages-control/concept/packages/${id}`)
+    return this.getQuery(`${environment.apiUrl}/stages-control/concept/packages/${id}`)
       .pipe(map((data: any) => {
         console.log('getWorkPackageById', data);
         return data.data.find(resp => resp.initvStgId == id);
       }));
+  }
+
+    // Query to get all the WorkPackages
+  getAllIWorkPackages(id:number): Observable<any> {
+    console.log('%c'+`${environment.apiUrl}/stages-control/concept/packages/${id}`,'background: #222; color: #ffff00');
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 
   // Query to create an initiative (Only users with admin role can do this)
