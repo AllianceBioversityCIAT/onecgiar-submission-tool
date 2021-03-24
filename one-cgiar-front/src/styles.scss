@@ -54,8 +54,8 @@ body {
 .pointer {
   cursor: pointer;
 }
-span{
-  outline: none;
+span,button{
+  outline: none !important;
 }
 
 mat-sidenav-content{

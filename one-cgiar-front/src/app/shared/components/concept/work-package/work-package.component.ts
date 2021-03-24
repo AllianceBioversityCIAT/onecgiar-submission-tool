@@ -40,8 +40,11 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.workPackageData.name);
     this.setFormData();
+    if (!this.workPackageData.name) {
+      this.animationSizeActive=false;
+      console.log('%cfalse','background: #222; color: #ffff00');
+    }
   }
 
   onUpdate(): void {
@@ -73,8 +76,6 @@ export class WorkPackageComponent implements OnInit {
       results,
       updated_at,
     } = this.workPackageData;
-    console.log(this.workPackageData);
-    console.log(name);
     this.createWorkPackageForm.controls['name'].setValue(name);
     this.createWorkPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.createWorkPackageForm.controls['results'].setValue(results);

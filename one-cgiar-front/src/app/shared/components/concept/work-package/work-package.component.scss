@@ -16,7 +16,7 @@
 //     margin-left: 8px;
 //   }
   
-  ///jjjjjjjjjjj
+
   .delete-container {
     display: flex;
     justify-content: flex-end;
@@ -45,17 +45,17 @@ button{
 }
 mat-panel-title{
     justify-content: unset !important;
-    margin-left: 80px;
+    margin-left: 10px;
 }
 
 .figure{
     position: absolute;
-    background-color: #0779A4;
+    // background-color: #0779A4;
     border-radius: 45%;
     z-index: 0;
     left: -100px;
     top: -330px;
-    transition: all .3s ease-in-out;
+    transition: all .5s ease-in-out;
 }
 .work-packages-container {
     display: flex;
