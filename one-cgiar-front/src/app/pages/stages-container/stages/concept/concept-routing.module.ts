@@ -5,6 +5,7 @@ import { NarrativesConceptComponent } from '../../../../shared/components/concep
 import { TheoryOfChangeComponent } from '../../../../shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from '../../../../shared/components/concept/work-packages/work-packages.component';
 import { KeyPartnersComponent } from '../../../../shared/components/preconcept/key-partners/key-partners.component';
+import { KeyPartnersConceptComponent } from '../../../../shared/components/concept/key-partners-concept/key-partners-concept.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: 'key-partners',
-        component: KeyPartnersComponent,
+        component: KeyPartnersConceptComponent,
       },
     ]
        
