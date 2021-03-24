@@ -450,7 +450,8 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         workPackage.results = (results) ? results : workPackage.results;
         workPackage.name = (name) ? name : workPackage.name;
         workPackage.pathway_content = (pathwayContent) ? pathwayContent : workPackage.pathway_content;
-        workPackage.is_global = (isGlobal) ? isGlobal : workPackage.is_global;
+        workPackage.is_global = isGlobal;
+        // workPackage.is_global = (isGlobal != null) ? isGlobal : workPackage.is_global;
 
         const errors = await validate(workPackage);
         if (errors.length > 0) {
@@ -640,7 +641,8 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
         if (id) {
             prjtedBfnt = await prjBfnRepo.findOne({ where: { id: id, wrkPkg: wrkPkgId } });
             prjtedBfnt.notes = (notes) ? notes : prjtedBfnt.notes;
-            prjtedBfnt.active = (active) ? active : prjtedBfnt.active;
+            prjtedBfnt.active = active;
+            // prjtedBfnt.active = (active) ? active : prjtedBfnt.active;
             prjtedBfnt.impact_area_indicator_id = (impactAreaIndicatorId) ? impactAreaIndicatorId : prjtedBfnt.impact_area_indicator_id;
             prjtedBfnt.impact_area_indicator_name = (impactAreaIndicatorName) ? impactAreaIndicatorName : prjtedBfnt.impact_area_indicator_name;
         } else {
@@ -732,7 +734,8 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
                     'Time frames not found.'
                 );
             } else {
-                timeFrame.active = (active) ? active : timeFrame.active;
+                timeFrame.active = active;
+                // timeFrame.active = (active) ? active : timeFrame.active;
                 timeFrame.high_scenario = (highScenario) ? highScenario : timeFrame.high_scenario;
                 timeFrame.low_scenario = (lowScenario) ? lowScenario : timeFrame.low_scenario;
                 timeFrame.year = (year) ? year : timeFrame.year;

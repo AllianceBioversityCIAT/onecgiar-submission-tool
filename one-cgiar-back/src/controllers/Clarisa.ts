@@ -27,3 +27,34 @@ export const getClaActionAreas = async () => {
     }
 
 }
+
+export const getClaCountries = async () => {
+    try {
+        const countries = await got(clarisaHost + 'countries', { headers: clarisaHeader });
+        return JSON.parse(countries.body);
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
+export const getClaRegions = async () => {
+    try {
+        const regions = await got(clarisaHost + 'un-regions', { headers: clarisaHeader });
+        return JSON.parse(regions.body);
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
