@@ -3,12 +3,13 @@
     <mat-accordion class="example-headers-align" multi>
         <app-work-package [workPackageData]="item" *ngFor="let item of workPackagesList"></app-work-package>
     </mat-accordion>
-    <h1 *ngIf="_interactionsService.noWp" class="noWp">There are not work packages...</h1>
+    <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
     <br>
-    <div class="button-container" [style.display]="'flex'" [style.justifyContent]="_interactionsService.noWp?'center':'initial'">
+    <div class="button-container" [style.display]="'flex'" [style.justifyContent]="noWp?'center':'initial'">
         <button mat-raised-button (click)="addWorkPackage()" *ngIf="initvStgId != null" ><mat-icon>add</mat-icon>Add Work Package</button>
 
     </div>
+    <ngx-spinner [fullScreen]="false" name='work-packages'></ngx-spinner>
 </div>
 <br>
 
