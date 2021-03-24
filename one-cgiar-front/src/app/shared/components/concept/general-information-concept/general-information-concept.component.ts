@@ -5,6 +5,8 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ErrorService } from '@app/shared/services/error.service';
+import Swal from 'sweetalert2';
+import { InteractionsService } from '../../../services/interactions.service';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -27,7 +29,14 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
-  constructor(private errorService: ErrorService, public stgMenuSvc: StagesMenuService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
+  constructor(
+    private errorService: ErrorService, 
+    public stgMenuSvc: StagesMenuService, 
+    public conceptSvc: ConceptService, 
+    public activatedRoute: ActivatedRoute, 
+    private spinnerService: NgxSpinnerService,
+    private interactionsService:InteractionsService
+    ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
       name: new FormControl('', Validators.required),
@@ -95,6 +104,7 @@ export class GeneralInformationConceptComponent implements OnInit {
           this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
           this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
           this.spinnerService.hide('general-information');
+          this.interactionsService.successMessage('General information has been saved')
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))

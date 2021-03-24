@@ -28,7 +28,8 @@ export class WorkPackageComponent implements OnInit {
     public _requests: RequestsService,
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public initiativesSvc: InitiativesService
+    public initiativesSvc: InitiativesService,
+    private interactionsService:InteractionsService
   ) {
     this.createWorkPackageForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -51,6 +52,7 @@ export class WorkPackageComponent implements OnInit {
     console.log('%cReady to update','background: #222; color: #ffff00');
     console.log(  this.createWorkPackageForm);
     this.initiativesSvc.updateWorkPackage(this.createWorkPackageForm.value).subscribe(resp=>{
+      this.interactionsService.successMessage('Work package ' +this.createWorkPackageForm.value.name+ ' information has been saved')
       console.log(resp);
     });
   }

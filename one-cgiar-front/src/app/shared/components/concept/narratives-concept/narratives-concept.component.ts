@@ -7,6 +7,8 @@ import { ConceptService } from '@shared/services/concept.service';
 import { RequestsService } from '@shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
+import { InteractionsService } from '../../../services/interactions.service';
+
 
 @Component({
   selector: 'app-narratives-concept',
@@ -27,7 +29,14 @@ export class NarrativesConceptComponent implements OnInit {
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
-  constructor(public stgMenuSvc: StagesMenuService, public initiativesSvc: InitiativesService, public conceptSvc: ConceptService, public activatedRoute: ActivatedRoute, private spinnerService: NgxSpinnerService) {
+  constructor(
+    public stgMenuSvc: StagesMenuService, 
+    public initiativesSvc: InitiativesService, 
+    public conceptSvc: ConceptService, 
+    public activatedRoute: ActivatedRoute,
+    private spinnerService: NgxSpinnerService,
+    private interactionsService:InteractionsService
+    ) {
     this.narrativesForm = new FormGroup({
       challenge: new FormControl('', Validators.required),
       objectives: new FormControl('', Validators.required),
@@ -57,6 +66,8 @@ export class NarrativesConceptComponent implements OnInit {
           this.narrativesForm.controls['highlights'].setValue(narratives.conceptHiglights);
           this.narrativesForm.controls['conceptId'].setValue(narratives.conceptId);
           this.spinnerService.hide('narratives');
+          this.interactionsService.successMessage('Narratives information has been saved')
+
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))
