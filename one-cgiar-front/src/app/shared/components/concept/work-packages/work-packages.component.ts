@@ -28,7 +28,6 @@ export class WorkPackagesComponent implements OnInit {
   getAllIWorkPackages(){
     let suscrip = this.initiativesSvc.getAllIWorkPackages(this.initvStgId).subscribe(resp => {
       this.workPackagesList = resp.response.workPackages;
-      console.log('resp', this.workPackagesList);
       suscrip.unsubscribe();
     },
     err=>{

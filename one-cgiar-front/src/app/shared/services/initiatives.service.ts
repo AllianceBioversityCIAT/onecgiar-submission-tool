@@ -86,7 +86,6 @@ export class InitiativesService {
 
     // Query to get all the WorkPackages
   getAllIWorkPackages(id:number): Observable<any> {
-    console.log('%c'+`${environment.apiUrl}/stages-control/concept/packages/${id}`,'background: #222; color: #ffff00');
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 

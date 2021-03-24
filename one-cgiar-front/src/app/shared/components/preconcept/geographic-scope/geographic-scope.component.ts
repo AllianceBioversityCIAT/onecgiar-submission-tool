@@ -17,7 +17,6 @@ export class GeographicScopeComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    console.log(this.workPackageData.is_global);
     this.globalDimension = this.workPackageData.is_global;
   }
 
