@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '@shared/services/auth.service';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'app-geographic-scope',
@@ -8,15 +9,22 @@ import { AuthService } from '@shared/services/auth.service';
 })
 export class GeographicScopeComponent implements OnInit {
 
-  globalDimension = false;
-
-  constructor(public _auth:AuthService) { }
+  globalDimension;
+  @Input() workPackageData: any;
+  constructor(
+    public _auth:AuthService,
+    public initiativesSvc: InitiativesService
+    ) { }
 
   ngOnInit(): void {
+    console.log(this.workPackageData.is_global);
+    this.globalDimension = this.workPackageData.is_global;
   }
 
-  onSave(generalInformationForm): void {
-    console.log("GUARDANDO",generalInformationForm.value);
+  updateWorkPackage(resp): void {
+    this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:resp}).subscribe(resp=>{
+      console.log(resp);
+    });
   }
 
 }

@@ -19,7 +19,7 @@ p {
   width: 100%;
 }
 
-.yes-button {
+.normal-button {
   background-color: #eeeeee;
   text-decoration: none;
   color: #000000;
@@ -27,33 +27,39 @@ p {
   outline: none;
 }
 
-.yes-button:focus {
+.yes-button {
   background-color: #7bc45d;
   color: #ffffff;
-}
-
-.yes-button:hover {
-  background-color: #7bc45d;
-  color: #ffffff;
+  text-decoration: none;
+  margin: 0 0.5rem 0 0;
 }
 
 .no-button {
-  background-color: #eeeeee;
+  background-color: #cc0000;
+  color: #ffffff;
   text-decoration: none;
-  color: #000000;
-  margin: 0 0 0 0.5rem;
-  outline: none;
+  margin: 0 0.5rem 0 0;
 }
 
-.no-button:focus {
-  background-color: #cc0000;
-  color: #ffffff;
-}
+// .yes-button:focus {
+//   background-color: #7bc45d;
+//   color: #ffffff;
+// }
 
-.no-button:hover {
-  background-color: #cc0000;
-  color: #ffffff;
-}
+
+
+// .no-button {
+//   background-color: #eeeeee;
+//   text-decoration: none;
+//   color: #000000;
+//   margin: 0 0 0 0.5rem;
+//   outline: none;
+// }
+
+// .no-button:focus {
+//   background-color: #cc0000;
+//   color: #ffffff;
+// }
   
 .geographic-scope-full-width {
   width: 100%;
