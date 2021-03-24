@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignKeyPartnerByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignKeyPartnerByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative, getRegions, getCountries } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -38,5 +38,9 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
 
 //get Action areas
 router.get("/areas", [checkJwt], getActionAreas);
+//get regions
+router.get("/regions", [checkJwt], getRegions);
+//get countries
+router.get("/countries", [checkJwt], getCountries);
 
 export default router;
