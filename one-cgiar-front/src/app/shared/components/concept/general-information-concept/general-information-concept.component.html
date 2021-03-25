@@ -1,10 +1,19 @@
 <div class="general-information-container animate__animated animate__fadeIn">
+    
     <strong class="general-information-title">General information</strong>
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
-        <mat-form-field class="general-information-full-width">
+        <custom-textarea *ngIf="fName" (value)="setFormValue($event,'name')"
+           [options]="
+           {
+            required:true,
+            readonly:false,
+            text:fName
+           }">
+        </custom-textarea>
+        <!-- <mat-form-field class="general-information-full-width">
             <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
             <input type="text" formControlName="name" matInput required />
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field class="general-information-full-width">
             <p><strong>Lead name: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Indicate the leadership of this Initiative</i>

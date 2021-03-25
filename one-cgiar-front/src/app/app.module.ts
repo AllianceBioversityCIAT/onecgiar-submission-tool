@@ -48,6 +48,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
 import { WorkPackageComponent } from './shared/components/concept/work-package/work-package.component';
+import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,7 @@ import { WorkPackageComponent } from './shared/components/concept/work-package/w
     AddPartnersModalComponent,
     CreateInitiativeModalComponent,
     CreateUserModalComponent,
-    WorkPackageComponent
+    WorkPackageComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -97,7 +98,8 @@ import { WorkPackageComponent } from './shared/components/concept/work-package/w
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    CustomFormsModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },

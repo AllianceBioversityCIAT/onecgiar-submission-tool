@@ -1,0 +1,31 @@
+
+<div [formGroup]="formTextarea">
+
+
+
+
+<div [ngSwitch]="options.readonly">
+    <!-- <div *ngSwitchCase="false || null">
+    </div> -->
+
+    <div *ngSwitchCase="true">
+
+        <p class="readonly_text_title"><strong>Initiative name: </strong></p>
+        <p class="readonly_text">{{options.text}}</p>
+
+    </div>
+
+    <div *ngSwitchDefault>
+
+        <mat-form-field class="general-information-full-width">
+            <p><strong>Initiative name: </strong><span [hidden]="!options.required" class="asterisk">* </span></p>
+            <input type="text" formControlName="text" matInput required (ngModelChange)="setValue()"/>
+        </mat-form-field>
+
+    </div>
+
+    </div>
+
+
+
+</div>

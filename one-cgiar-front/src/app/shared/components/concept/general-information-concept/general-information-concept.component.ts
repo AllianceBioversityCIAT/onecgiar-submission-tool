@@ -18,7 +18,7 @@ export class GeneralInformationConceptComponent implements OnInit {
   public initvStgId: any;
   public actionAreas: [];
   public usersByInitiative: [];
-
+  fName="";
   wordCount: any;
 
 
@@ -66,11 +66,14 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.conceptSvc.getConcept(initvStgId).toPromise(),
       this.conceptSvc.getUsersByInitiative(initvStgId).toPromise(),
     ]).then(res => {
+      
       let gnrlInfo = res[1];
       this.actionAreas = res[0];
       this.usersByInitiative = res[2];
 
-      this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+      this.fName = gnrlInfo.conceptName;
+
+      // this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
       this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
@@ -111,6 +114,10 @@ export class GeneralInformationConceptComponent implements OnInit {
           this.spinnerService.hide('general-information');
         }
       )
+  }
+
+  setFormValue(value,name){
+    this.generalInformationForm.controls[name].setValue(value);
   }
 
 }
