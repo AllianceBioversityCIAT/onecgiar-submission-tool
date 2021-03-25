@@ -9,15 +9,15 @@ import { textareaOptions } from '../../../models/forms-options/textarea-options.
 })
 export class TextareaComponent implements OnInit {
   @Input() options:textareaOptions;
-  @Output() value = new EventEmitter<any>();
   formTextarea:FormGroup;
 
   constructor() { }
    
   ngOnInit(): void {
     this.formTextarea = new FormGroup({
-      text: new FormControl(this.options.inputValue, Validators.required),
+      text: new FormControl(this.options.form.value[this.options.formControlName], Validators.required),
      });
+     this.setValue();
   }
   
   setValue(){

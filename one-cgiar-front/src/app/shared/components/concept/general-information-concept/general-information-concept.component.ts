@@ -39,7 +39,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
-      name: new FormControl('', Validators.required),
+      name: new FormControl(null, Validators.required),
       lead_name: new FormControl('', Validators.required),
       lead_id: new FormControl('', Validators.required),
       action_area_description: new FormControl(''),
@@ -71,9 +71,9 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.actionAreas = res[0];
       this.usersByInitiative = res[2];
 
-      this.fName = gnrlInfo.conceptName;
+      // this.fName = gnrlInfo.conceptName;
 
-      // this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+      this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
       this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
@@ -115,9 +115,4 @@ export class GeneralInformationConceptComponent implements OnInit {
         }
       )
   }
-
-  setFormValue(value,name){
-    this.generalInformationForm.controls[name].setValue(value);
-  }
-
 }

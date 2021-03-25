@@ -2,12 +2,11 @@
     
     <strong class="general-information-title">General information</strong>
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
-        <custom-textarea *ngIf="fName" (value)="setFormValue($event,'name')"
+        <custom-textarea *ngIf="generalInformationForm.value.name != null" 
            [options]="
            {
             required:true,
             readonly:false,
-            inputValue:fName,
             inputTitle:'Initiative name:',
             form:generalInformationForm,
             formControlName:'name'

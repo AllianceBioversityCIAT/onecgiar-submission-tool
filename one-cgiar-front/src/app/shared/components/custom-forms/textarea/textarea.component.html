@@ -11,7 +11,7 @@
     <div *ngSwitchCase="true">
 
         <p class="readonly_text_title"><strong>{{options.inputTitle}} </strong></p>
-        <p class="readonly_text">{{options.inputValue}}</p>
+        <p class="readonly_text">{{options.form.value[options.formControlName]}}</p>
 
     </div>
 
