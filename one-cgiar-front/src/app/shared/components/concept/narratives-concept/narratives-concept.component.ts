@@ -38,7 +38,7 @@ export class NarrativesConceptComponent implements OnInit {
     private interactionsService:InteractionsService
     ) {
     this.narrativesForm = new FormGroup({
-      challenge: new FormControl('', Validators.required),
+      challenge: new FormControl(null, Validators.required),
       objectives: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
       highlights: new FormControl('', Validators.required),

@@ -1,6 +1,19 @@
 <div class="narratives-container animate__animated animate__fadeIn">
     <strong class="narratives-title">Narratives</strong>
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form">
+
+        <!-- <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
+        [options]="
+        {
+         required:true,
+         readonly:false,
+         description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed',
+         inputTitle:'Challenge statement:',
+         form:narrativesForm,
+         formControlName:'challenge'
+        }">
+     </custom-textarea> -->
+
         <mat-form-field class="narratives-full-width">
             <p><strong>Challenge statement: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed</i></p>
@@ -8,6 +21,7 @@
             <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
         </mat-form-field>
+
         <mat-form-field class="narratives-full-width">
             <p><strong>Measurable objectives: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise, preferably quantitative, objective statement</i></p>
