@@ -16,7 +16,7 @@ export class TextareaComponent implements OnInit {
    
   ngOnInit(): void {
     this.formTextarea = new FormGroup({
-      text: new FormControl(this.options.text, Validators.required),
+      text: new FormControl(this.options.inputValue, Validators.required),
      });;
   }
   
