@@ -17,11 +17,11 @@ export class TextareaComponent implements OnInit {
   ngOnInit(): void {
     this.formTextarea = new FormGroup({
       text: new FormControl(this.options.inputValue, Validators.required),
-     });;
+     });
   }
   
   setValue(){
-    this.value.emit(this.formTextarea.value.text);
+    this.options.form.controls[this.options.formControlName].setValue(this.formTextarea.value.text);
   }
 
 }
