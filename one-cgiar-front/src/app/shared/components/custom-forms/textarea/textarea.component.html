@@ -19,6 +19,7 @@
 
         <mat-form-field class="general-information-full-width">
             <p><strong>{{options.inputTitle}} </strong><span [hidden]="!options.required" class="asterisk">* </span></p>
+            <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
             <input type="text" formControlName="text" matInput required (ngModelChange)="setValue()"/>
         </mat-form-field>
 

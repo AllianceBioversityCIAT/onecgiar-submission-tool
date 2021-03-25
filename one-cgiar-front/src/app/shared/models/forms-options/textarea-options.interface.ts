@@ -3,4 +3,5 @@ export interface textareaOptions{
     readonly?:boolean
     inputValue:string
     inputTitle:string
+    description?:string
 }
