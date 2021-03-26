@@ -1,22 +1,11 @@
 <div class="general-information-container animate__animated animate__fadeIn">
     
     <strong class="general-information-title">General information</strong>
-    <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
+    <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form" *ngIf="showForm">
 
-        <custom-textarea *ngIf="generalInformationForm.value.name != null" 
-           [options]="
-           {
-            required:true,
-            readonly:false,
-            inputTitle:'Initiative name:',
-            form:generalInformationForm,
-            formControlName:'name'
-           }">
-        </custom-textarea>
+        <custom-textarea [options]="{required:true, readonly:false, inputTitle:'Initiative name:', form:generalInformationForm, formControlName:'name'}"></custom-textarea>
 
-        <custom-select *ngIf="generalInformationForm.value.lead_id != null && usersByInitiative != undefined "
-        [options]="
-        {
+        <custom-select [options]="{
          required:true,
          readonly:false,
          inputTitle:'Lead name',
@@ -26,10 +15,9 @@
          selectList:this.usersByInitiative,
          selectItemName:'first_name',
          selectItemId:'userId'
-        }">
-        ></custom-select>
+        }"></custom-select>
 
-        <custom-select *ngIf="generalInformationForm.value.action_area_id != null"
+        <custom-select 
         [options]="
         {
          required:true,

@@ -24,6 +24,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   @ViewChild("text") text: ElementRef;
   words: any;
+  showForm=false;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
@@ -82,6 +83,7 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
       this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
       this.spinnerService.hide('general-information');
+      this.showForm=true;
     });
     this.generalInformationForm.valueChanges.subscribe(
       result => {
@@ -108,6 +110,7 @@ export class GeneralInformationConceptComponent implements OnInit {
           this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
           this.spinnerService.hide('general-information');
           this.interactionsService.successMessage('General information has been saved')
+          this.showForm=true;
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))
