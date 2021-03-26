@@ -1,0 +1,9 @@
+<mat-form-field appearance="standard" class="general-information-full-width">
+    <p><strong>{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+    <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
+    </p>
+    <mat-select [formControl]="selectInput" (ngModelChange)="setValue()" >
+        <mat-option *ngFor="let actionArea of options.selectList" [value]="actionArea.id">{{actionArea.description}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

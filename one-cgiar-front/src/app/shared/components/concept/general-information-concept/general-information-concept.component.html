@@ -2,6 +2,7 @@
     
     <strong class="general-information-title">General information</strong>
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
+
         <custom-textarea *ngIf="generalInformationForm.value.name != null" 
            [options]="
            {
@@ -12,6 +13,7 @@
             formControlName:'name'
            }">
         </custom-textarea>
+
         <!-- <mat-form-field class="general-information-full-width">
             <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
             <input type="text" formControlName="name" matInput required />
@@ -27,7 +29,8 @@
             </mat-select>
             <input type="text" matInput />
         </mat-form-field>
-        <mat-form-field appearance="standard" class="general-information-full-width">
+
+        <!-- <mat-form-field appearance="standard" class="general-information-full-width">
             <p><strong>Primary CGIAR Action Area: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i>
             </p>
@@ -35,7 +38,20 @@
                 <mat-option *ngFor="let actionArea of actionAreas" [value]="actionArea.id">{{actionArea.description}}
                 </mat-option>
             </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
+
+        <custom-select *ngIf="generalInformationForm.value.action_area_id != null"
+        [options]="
+        {
+         required:true,
+         readonly:false,
+         inputTitle:'Primary CGIAR Action Area',
+         form:generalInformationForm,
+         formControlName:'action_area_id',
+         description:'Indicate to which CGIAR Action Area this initiative is contributing to',
+         selectList:this.actionAreas
+        }">
+        ></custom-select>
 
         <div class="general-information-save">
             <button type="submit" mat-raised-button [disabled]="generalInformationForm.invalid" class="save-button">

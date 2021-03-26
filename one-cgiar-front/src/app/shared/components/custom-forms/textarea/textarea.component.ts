@@ -17,7 +17,6 @@ export class TextareaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.options.maxWords);
     this.textareaInput = new FormControl(this.options.form.value[this.options.formControlName], [
       Validators.required,
       this.options.maxWords ? this.maxWordsValidator(): Validators.required
@@ -38,11 +37,7 @@ export class TextareaComponent implements OnInit {
   }
   
   maxWordsValidator(): ValidatorFn {  
-    // if (this.options.maxWords) {
       return  (control: AbstractControl): { [key: string]: any } | null => this.words < this.options.maxWords ? null:{maxWords: control.value};
-    // }else{
-    //   return (control: AbstractControl): { [key: string]: any } | null => (null)
-    // }
   }
 
 }
