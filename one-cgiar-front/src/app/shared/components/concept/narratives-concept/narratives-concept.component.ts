@@ -19,16 +19,6 @@ export class NarrativesConceptComponent implements OnInit {
 
   public narrativesForm: FormGroup;
   public initvStgId: any;
-
-  wordCount: any;
-
-  @ViewChild("text") text: ElementRef;
-  words: any;
-  wordCounter() {
-    this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
-    this.words = this.wordCount ? this.wordCount.length : 0;
-  }
-
   constructor(
     public stgMenuSvc: StagesMenuService, 
     public initiativesSvc: InitiativesService, 

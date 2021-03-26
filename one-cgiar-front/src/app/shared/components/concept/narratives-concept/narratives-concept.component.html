@@ -2,46 +2,42 @@
     <strong class="narratives-title">Narratives</strong>
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form">
 
-        <!-- <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
+        <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
         [options]="
         {
          required:true,
          readonly:false,
          description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed',
-         inputTitle:'Challenge statement:',
+         inputTitle:'Challenge statement',
          form:narrativesForm,
-         formControlName:'challenge'
+         formControlName:'challenge',
+         maxWords:5
         }">
-     </custom-textarea> -->
+     </custom-textarea>
 
-        <mat-form-field class="narratives-full-width">
+        <!-- <mat-form-field class="narratives-full-width">
             <p><strong>Challenge statement: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed</i></p>
-            <textarea matInput type="text" formControlName="challenge" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
+            <textarea matInput type="text" formControlName="challenge" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
             <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <mat-form-field class="narratives-full-width">
             <p><strong>Measurable objectives: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise, preferably quantitative, objective statement</i></p>
-            <textarea matInput type="text" formControlName="objectives" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
-            <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
-            <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
+            <textarea matInput type="text" formControlName="objectives" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
+
         </mat-form-field>
         <mat-form-field class="narratives-full-width">
             <p><strong>Results: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas</i></p>
-            <textarea matInput type="text" formControlName="results" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
-            <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
-            <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
+            <textarea matInput type="text" formControlName="results" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
         </mat-form-field>
         <mat-form-field class="narratives-full-width">
             <p><strong>Highlights: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities</i></p>
-            <textarea matInput type="text" formControlName="highlights" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
-            <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
-            <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
+            <textarea matInput type="text" formControlName="highlights" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
         </mat-form-field>
         <div class="narratives-save">
             <button type="submit" mat-raised-button class="save-button">
