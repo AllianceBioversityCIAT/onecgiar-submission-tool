@@ -11,17 +11,15 @@ export class SelectComponent implements OnInit {
 
   @Input() options:selectOptions;
   selectInput:FormControl;
-  wordCount: any;
-  // @ViewChild("text") text: ElementRef;
-  words: any;
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.options.maxWords);
     this.selectInput = new FormControl(this.options.form.value[this.options.formControlName], [
       Validators.required,
     ]);
-
+    console.log('%c'+this.options.formControlName,'background: #222; color: #ffff00');
+    console.log(this.options.selectList);
+    console.log(this.options.form.value[this.options.formControlName]);
      this.setValue();
   }
 

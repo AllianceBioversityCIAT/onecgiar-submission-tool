@@ -14,31 +14,20 @@
            }">
         </custom-textarea>
 
-        <!-- <mat-form-field class="general-information-full-width">
-            <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
-            <input type="text" formControlName="name" matInput required />
-        </mat-form-field> -->
-        <mat-form-field class="general-information-full-width">
-            <p><strong>Lead name: </strong><span class="asterisk">* </span></p>
-            <p class="description-field"><i>Indicate the leadership of this Initiative</i>
-            </p>
-            <mat-select formControlName="lead_id">
-                <mat-option *ngFor="let user of usersByInitiative" [value]="user.userId">
-                    {{user.first_name}} {{user.last_name}}
-                </mat-option>
-            </mat-select>
-            <input type="text" matInput />
-        </mat-form-field>
-
-        <!-- <mat-form-field appearance="standard" class="general-information-full-width">
-            <p><strong>Primary CGIAR Action Area: </strong><span class="asterisk">* </span></p>
-            <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i>
-            </p>
-            <mat-select formControlName="action_area_id">
-                <mat-option *ngFor="let actionArea of actionAreas" [value]="actionArea.id">{{actionArea.description}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field> -->
+        <custom-select *ngIf="generalInformationForm.value.lead_id != null && usersByInitiative != undefined "
+        [options]="
+        {
+         required:true,
+         readonly:false,
+         inputTitle:'Lead name',
+         form:generalInformationForm,
+         formControlName:'lead_id',
+         description:'Indicate the leadership of this Initiative',
+         selectList:this.usersByInitiative,
+         selectItemName:'first_name',
+         selectItemId:'userId'
+        }">
+        ></custom-select>
 
         <custom-select *ngIf="generalInformationForm.value.action_area_id != null"
         [options]="
@@ -49,7 +38,9 @@
          form:generalInformationForm,
          formControlName:'action_area_id',
          description:'Indicate to which CGIAR Action Area this initiative is contributing to',
-         selectList:this.actionAreas
+         selectList:this.actionAreas,
+         selectItemName:'description',
+         selectItemId:'id'
         }">
         ></custom-select>
 
@@ -61,3 +52,32 @@
         <ngx-spinner [fullScreen]="false" name='general-information'></ngx-spinner>
     </form>
 </div>
+
+
+
+                <!-- <mat-form-field class="general-information-full-width">
+            <p><strong>Initiative name: </strong><span class="asterisk">* </span></p>
+            <input type="text" formControlName="name" matInput required />
+        </mat-form-field> -->
+
+                <!-- <mat-form-field appearance="standard" class="general-information-full-width">
+            <p><strong>Primary CGIAR Action Area: </strong><span class="asterisk">* </span></p>
+            <p class="description-field"><i>Indicate to which CGIAR Action Area this initiative is contributing to</i>
+            </p>
+            <mat-select formControlName="action_area_id">
+                <mat-option *ngFor="let actionArea of actionAreas" [value]="actionArea.id">{{actionArea.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field> -->
+
+                <!-- <mat-form-field class="general-information-full-width">
+            <p><strong>Lead name: </strong><span class="asterisk">* </span></p>
+            <p class="description-field"><i>Indicate the leadership of this Initiative</i>
+            </p>
+            <mat-select formControlName="lead_id">
+                <mat-option *ngFor="let user of usersByInitiative" [value]="user.userId">
+                    {{user.first_name}} {{user.last_name}}
+                </mat-option>
+            </mat-select>
+            <input type="text" matInput />
+        </mat-form-field> -->

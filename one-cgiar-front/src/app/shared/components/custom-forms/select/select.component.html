@@ -3,7 +3,7 @@
     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
     </p>
     <mat-select [formControl]="selectInput" (ngModelChange)="setValue()" >
-        <mat-option *ngFor="let actionArea of options.selectList" [value]="actionArea.id">{{actionArea.description}}
+        <mat-option *ngFor="let item of options.selectList" [value]="item[options.selectItemId]">{{item[options.selectItemName]}}
         </mat-option>
     </mat-select>
 </mat-form-field>

@@ -40,8 +40,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
       name: new FormControl(null, Validators.required),
-      lead_name: new FormControl('', Validators.required),
-      lead_id: new FormControl('', Validators.required),
+      lead_name: new FormControl(null, Validators.required),
+      lead_id: new FormControl(null, Validators.required),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       initvStgId: new FormControl(this.initvStgId, Validators.required),
