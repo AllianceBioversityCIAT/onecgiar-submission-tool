@@ -29,9 +29,9 @@ export class NarrativesConceptComponent implements OnInit {
     ) {
     this.narrativesForm = new FormGroup({
       challenge: new FormControl(null, Validators.required),
-      objectives: new FormControl('', Validators.required),
-      results: new FormControl('', Validators.required),
-      highlights: new FormControl('', Validators.required),
+      objectives: new FormControl(null, Validators.required),
+      results: new FormControl(null, Validators.required),
+      highlights: new FormControl(null, Validators.required),
       conceptId: new FormControl(''),
       initvStgId: new FormControl(this.initvStgId, Validators.required),
     });

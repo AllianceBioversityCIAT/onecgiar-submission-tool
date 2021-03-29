@@ -3,17 +3,35 @@
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form">
 
         <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
-        [options]="
-        {
-         required:true,
-         readonly:false,
-         description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed',
-         inputTitle:'Challenge statement',
-         form:narrativesForm,
-         formControlName:'challenge',
-         maxWords:500
-        }">
-     </custom-textarea>
+        [options]="{ form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement', 
+         description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed'}">
+        </custom-textarea>
+
+        <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
+        [options]="{ form:narrativesForm,formControlName:'objectives',inputTitle:'Measurable objectives', 
+         description:'Concise, preferably quantitative, objective statement'}">
+        </custom-textarea>
+        
+        <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
+        [options]="{ form:narrativesForm,formControlName:'results',inputTitle:'Results', 
+         description:'Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas'}">
+        </custom-textarea>
+
+        <custom-textarea *ngIf="narrativesForm.value.challenge != null" 
+        [options]="{ form:narrativesForm,formControlName:'highlights',inputTitle:'Highlights', 
+         description:'Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities'}">
+        </custom-textarea>
+
+        <div class="narratives-save">
+            <button type="submit" mat-raised-button class="save-button">
+                Save
+            </button>
+        </div>
+        <ngx-spinner [fullScreen]="false" name='narratives'></ngx-spinner>
+    </form>
+</div>
+
+
 
         <!-- <mat-form-field class="narratives-full-width">
             <p><strong>Challenge statement: </strong><span class="asterisk">* </span></p>
@@ -23,27 +41,21 @@
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
         </mat-form-field> -->
 
-        <mat-form-field class="narratives-full-width">
+
+        <!-- <mat-form-field class="narratives-full-width">
             <p><strong>Measurable objectives: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Concise, preferably quantitative, objective statement</i></p>
             <textarea matInput type="text" formControlName="objectives" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
+        </mat-form-field> -->
 
-        </mat-form-field>
-        <mat-form-field class="narratives-full-width">
+        <!-- <mat-form-field class="narratives-full-width">
             <p><strong>Results: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas</i></p>
             <textarea matInput type="text" formControlName="results" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
-        </mat-form-field>
-        <mat-form-field class="narratives-full-width">
+        </mat-form-field> -->
+
+        <!-- <mat-form-field class="narratives-full-width">
             <p><strong>Highlights: </strong><span class="asterisk">* </span></p>
             <p class="description-field"><i>Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities</i></p>
             <textarea matInput type="text" formControlName="highlights" required  #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
-        </mat-form-field>
-        <div class="narratives-save">
-            <button type="submit" mat-raised-button class="save-button">
-                Save
-            </button>
-        </div>
-        <ngx-spinner [fullScreen]="false" name='narratives'></ngx-spinner>
-    </form>
-</div>
+        </mat-form-field> -->
