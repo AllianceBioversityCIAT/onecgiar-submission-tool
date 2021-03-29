@@ -920,6 +920,7 @@ export const getTOCFiles = async (req: Request, res: Response) => {
 
     try {
         let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
+        console.log(TOC)
 
         if (TOC == null) {
             throw new APIError(
