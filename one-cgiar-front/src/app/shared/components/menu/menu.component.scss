@@ -55,6 +55,9 @@ mat-list-item {
     button.valid {
         color: #4caf50;
     }
+    button.invalid {
+        color: #c5c5c5;
+    }
 }
 
 mat-list-item:focus {
