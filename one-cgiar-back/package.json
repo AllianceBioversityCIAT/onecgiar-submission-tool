@@ -8,10 +8,10 @@
         "start": "set debug=* && npx tsnd ./src/index.ts --respawn --transpileOnly",
         "start-dev": "nodemon",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
-        "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
-        "migration:generate": "npm run typeorm -- migration:create -n"
+        "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
+        "migration:create": "npm run typeorm -- migration:create -n"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
