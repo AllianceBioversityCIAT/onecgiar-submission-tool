@@ -14,7 +14,9 @@
         <mat-panel-title style="z-index: 1; color: white;">
             {{workPackageData.name || "untitled"}}
         </mat-panel-title>
-
+        <button mat-icon-button class="icon_verify"  aria-label="Verified icon">
+        <mat-icon [ngClass]="{'icon_verify_valid': !createWorkPackageForm.invalid}">verified</mat-icon>
+       </button>
     </mat-expansion-panel-header>
 
     <mat-tab-group mat-align-tabs="center">

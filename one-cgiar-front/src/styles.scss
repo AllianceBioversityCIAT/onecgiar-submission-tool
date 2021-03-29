@@ -111,3 +111,17 @@ mat-sidenav-content{
   margin-right: auto;
   margin-left: auto;
 }
+
+
+.icon_verify{
+  position: absolute !important;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 35px !important;
+  color: #c5c5c5;
+}
+
+.icon_verify_valid{
+    color: #4caf50;
+}
