@@ -17,15 +17,10 @@ export class SelectComponent implements OnInit {
     this.selectInput = new FormControl(this.options.form.value[this.options.formControlName], [
       Validators.required,
     ]);
-    console.log('%c'+this.options.formControlName,'background: #222; color: #ffff00');
-    console.log(this.options.selectList);
-    console.log(this.options.form.value[this.options.formControlName]);
      this.setValue();
   }
 
-
   setValue(){
-    console.log('%cchange','background: #222; color: #84c3fd');
     this.options.form.controls[this.options.formControlName].setValue(this.selectInput.value);
   }  
 }

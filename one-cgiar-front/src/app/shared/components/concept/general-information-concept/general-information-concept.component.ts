@@ -75,10 +75,6 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.actionAreas = res[0];
       // this.usersByInitiative = res[2];
       this.usersByRoles = res[2].data;
-      console.log(this.usersByRoles);
-      // this.fName = gnrlInfo.conceptName;
-      console.log('%clista','background: #222; color: #fd8484');
-      console.log(gnrlInfo);
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
