@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { textareaOptions } from '../../../models/forms-options/textarea-options.interface';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { Editor,Toolbar } from 'ngx-editor';
 
 @Component({
   selector: 'custom-textarea',
@@ -17,6 +18,10 @@ export class TextareaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    let options={
+      plugins:[]
+    };
+    this.editor = new Editor(options);
     this.textareaInput = new FormControl(this.options.form.value[this.options.formControlName], [
       Validators.required,
       this.options.maxWords ? this.maxWordsValidator(): Validators.required
@@ -40,4 +45,14 @@ export class TextareaComponent implements OnInit {
       return  (control: AbstractControl): { [key: string]: any } | null => this.words < this.options.maxWords ? null:{maxWords: control.value};
   }
 
+  editor: Editor;
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['ordered_list', 'bullet_list'],
+    ['link'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
+  ngOnDestroy(): void {
+    this.editor.destroy();
+  }
 }

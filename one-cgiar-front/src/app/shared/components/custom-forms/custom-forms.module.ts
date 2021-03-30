@@ -5,6 +5,7 @@ import { MaterialModule } from '@app/material.module';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from './input/input.component';
 import { SelectComponent } from './select/select.component';
+import { NgxEditorModule } from 'ngx-editor';
 
 
 
@@ -14,7 +15,12 @@ import { SelectComponent } from './select/select.component';
     CommonModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxEditorModule.forRoot({
+      locals: {
+        bold: 'Boldata',
+      },
+    })
   ],
   exports: [TextareaComponent, InputComponent, SelectComponent]
 })

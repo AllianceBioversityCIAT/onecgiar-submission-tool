@@ -3,7 +3,7 @@
     <strong class="general-information-title">General information</strong>
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form" *ngIf="showForm">
 
-        <custom-textarea [options]="{required:true, readonly:false, inputTitle:'Initiative name:', form:generalInformationForm, formControlName:'name'}"></custom-textarea>
+        <custom-textarea [options]="{required:true, readonly:false, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}"></custom-textarea>
 
         <custom-select [options]="{
          required:true,
@@ -37,8 +37,8 @@
                 Save
             </button>
         </div>
-        <ngx-spinner [fullScreen]="false" name='general-information'></ngx-spinner>
     </form>
+    <ngx-spinner [fullScreen]="false" name='general-information'></ngx-spinner>
 </div>
 
 

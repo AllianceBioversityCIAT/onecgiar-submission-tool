@@ -54,14 +54,14 @@ body {
 .pointer {
   cursor: pointer;
 }
-span,button{
+span,
+button {
   outline: none !important;
 }
 
-mat-sidenav-content{
+mat-sidenav-content {
   background-color: #fafafa !important;
 }
-
 
 @media screen and (min-width: 1400px) {
   .custom-container {
@@ -76,7 +76,6 @@ mat-sidenav-content{
     // background-color: orange !important;
   }
 }
-
 
 @media screen and (max-width: 1200px) {
   .custom-container {
@@ -112,8 +111,7 @@ mat-sidenav-content{
   margin-left: auto;
 }
 
-
-.icon_verify{
+.icon_verify {
   position: absolute !important;
   right: 0;
   top: 50%;
@@ -122,6 +120,14 @@ mat-sidenav-content{
   color: #c5c5c5;
 }
 
-.icon_verify_valid{
-    color: #4caf50;
+.icon_verify_valid {
+  color: #4caf50;
+}
+
+ngx-editor {
+  .NgxEditor {
+    border-radius: 0px !important;
+    border: none!important;
+    border-bottom: 1px solid #a7a7a7 !important;
+  }
 }
