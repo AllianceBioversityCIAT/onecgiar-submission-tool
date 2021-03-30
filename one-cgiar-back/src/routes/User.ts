@@ -9,7 +9,7 @@ const router = Router()
 router.get('/', [checkJwt], getUsers);
 
 // get users by roles
-router.get('/roles', [checkJwt, checkRole('users', 'readAny')], getUsersByRoles);
+router.get('/roles', [checkJwt], getUsersByRoles);
 
 // create an user
 // router.post('/', createUsers);
