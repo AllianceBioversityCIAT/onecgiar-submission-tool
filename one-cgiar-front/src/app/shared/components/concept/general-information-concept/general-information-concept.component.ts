@@ -17,7 +17,9 @@ export class GeneralInformationConceptComponent implements OnInit {
   public generalInformationForm: FormGroup;
   public initvStgId: any;
   public actionAreas: [];
-  public usersByInitiative: [];
+  // public usersByInitiative: [];
+  public usersByRoles: [];
+
   fName="";
   wordCount: any;
 
@@ -65,15 +67,18 @@ export class GeneralInformationConceptComponent implements OnInit {
     Promise.all([
       this.conceptSvc.getActionAreas().toPromise(),
       this.conceptSvc.getConcept(initvStgId).toPromise(),
-      this.conceptSvc.getUsersByInitiative(initvStgId).toPromise(),
+      // this.conceptSvc.getUsersByInitiative(initvStgId).toPromise(),
+      this.conceptSvc.getUsersByRoles().toPromise(),
     ]).then(res => {
       
       let gnrlInfo = res[1];
       this.actionAreas = res[0];
-      this.usersByInitiative = res[2];
-
+      // this.usersByInitiative = res[2];
+      this.usersByRoles = res[2].data;
+      console.log(this.usersByRoles);
       // this.fName = gnrlInfo.conceptName;
-
+      console.log('%clista','background: #222; color: #fd8484');
+      console.log(gnrlInfo);
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
