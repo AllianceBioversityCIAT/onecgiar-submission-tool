@@ -129,5 +129,11 @@ ngx-editor {
     border-radius: 0px !important;
     border: none!important;
     border-bottom: 1px solid #a7a7a7 !important;
+    p{
+      margin: 0px;
+    }
+    .NgxEditor__Content{
+      padding: 0px !important;
+    }
   }
 }

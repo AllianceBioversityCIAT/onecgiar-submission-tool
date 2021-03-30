@@ -7,6 +7,6 @@ export interface textareaOptions{
     description?:string
     form:FormGroup;
     formControlName:string;
-    maxWords:number;
-    editText:string;
+    maxWords?:number;
+    editText?:boolean;
 }
