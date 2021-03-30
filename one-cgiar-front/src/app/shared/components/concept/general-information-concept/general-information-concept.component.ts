@@ -101,17 +101,17 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
       subscribe(
         gnrlInfo => {
-          this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
-          this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
+          // this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+          // this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
-          this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
-          this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
+          // this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
+          // this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
 
-          this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
-          this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
+          // this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
+          // this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
           this.spinnerService.hide('general-information');
           this.interactionsService.successMessage('General information has been saved')
-          this.showForm=true;
+          // this.showForm=true;
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))
