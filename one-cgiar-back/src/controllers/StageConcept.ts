@@ -39,7 +39,7 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
                 stage.description AS stageDesc,
                 stage.active AS stageIsActive,
                 (SELECT id FROM users WHERE id = initvUsr.userId) AS conceptLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = initvUsr.userId) AS conceptLead,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = initvUsr.userId AND initvUsr.is_lead = true) AS conceptLead,
                 concept.id AS conceptId,
                 concept.name AS conceptName,
                 concept.action_area_description AS conceptActAreaDes,
@@ -216,60 +216,60 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
  * @param req params:{ name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId }
  * @param res 
  */
-export const createConcept = async (req: Request, res: Response) => {
-    const { name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const concptInfoRepo = getRepository(ConceptInfo);
+// export const createConcept = async (req: Request, res: Response) => {
+//     const { name, challenge, objectives, results, highlights, action_area_id, action_area_description, initvStgId } = req.body;
+//     const initvStgRepo = getRepository(InitiativesByStages);
+//     const concptInfoRepo = getRepository(ConceptInfo);
 
-    const conceptInf = new ConceptInfo();
+//     const conceptInf = new ConceptInfo();
 
-    try {
-        conceptInf.name = name;
-        conceptInf.challenge = challenge;
-        conceptInf.objectives = objectives;
-        conceptInf.results = results;
-        conceptInf.highlights = highlights;
-        conceptInf.action_area_description = action_area_description;
-        conceptInf.action_area_id = action_area_id;
-        conceptInf.initvStg = initvStgId;
+//     try {
+//         conceptInf.name = name;
+//         conceptInf.challenge = challenge;
+//         conceptInf.objectives = objectives;
+//         conceptInf.results = results;
+//         conceptInf.highlights = highlights;
+//         conceptInf.action_area_description = action_area_description;
+//         conceptInf.action_area_id = action_area_id;
+//         conceptInf.initvStg = initvStgId;
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId, { relations: ['stage'] });
-        conceptInf.initvStg = initiativeStg;
+//         let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId, { relations: ['stage'] });
+//         conceptInf.initvStg = initiativeStg;
 
 
-        /**
-         * check if initiative have a concept
-         */
-        const _concept = await concptInfoRepo.findOne({ where: { initvStg: initiativeStg.id } })
-        // console.log(_concept)
-        if (!_concept) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'Concept Information not found.'
-            );
-        }
-        else {
+//         /**
+//          * check if initiative have a concept
+//          */
+//         const _concept = await concptInfoRepo.findOne({ where: { initvStg: initiativeStg.id } })
+//         // console.log(_concept)
+//         if (!_concept) {
+//             throw new APIError(
+//                 'NOT FOUND',
+//                 HttpStatusCode.NOT_FOUND,
+//                 true,
+//                 'Concept Information not found.'
+//             );
+//         }
+//         else {
 
-            const errors = await validate(conceptInf);
-            if (errors.length > 0) {
-                const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
-                throw new APIError(
-                    'BAD REQUEST',
-                    HttpStatusCode.BAD_REQUEST,
-                    true,
-                    message
-                );
-            }
+//             const errors = await validate(conceptInf);
+//             if (errors.length > 0) {
+//                 const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+//                 throw new APIError(
+//                     'BAD REQUEST',
+//                     HttpStatusCode.BAD_REQUEST,
+//                     true,
+//                     message
+//                 );
+//             }
 
-            let conceptInfo = await concptInfoRepo.save(conceptInf);
-            res.json(new ResponseHandler('Concept info created.', { generaInformation: conceptInfo }));
-        }
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
-}
+//             let conceptInfo = await concptInfoRepo.save(conceptInf);
+//             res.json(new ResponseHandler('Concept info created.', { generaInformation: conceptInfo }));
+//         }
+//     } catch (error) {
+//         return res.status(error.httpCode).json(error);
+//     }
+// }
 
 /**
  * 
@@ -280,7 +280,8 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     // export const updateConcept = async (req: Request, res: Response) => {
     const { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
-    const initvStgRepo = getRepository(InitiativesByStages)
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const initvUsrsRepo = getRepository(InitiativesByUsers);
     const initiativeRepo = getRepository(Initiatives);
     const userRepo = getRepository(Users);
     const queryRunner = getConnection().createQueryBuilder();
@@ -309,11 +310,49 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             conceptInf.challenge = '';
             conceptInf.results = '';
             conceptInf.highlights = '';
+
+            const initvUser = new InitiativesByUsers();
+            initvUser.is_lead = true;
+            initvUser.is_owner = true;
+            initvUser.is_coordinator = false;
+            initvUser.initiative = initvStg.initiative;
+            initvUser.user = leadUser;
+
+            await initvUsrsRepo.save(initvUser);
+
+
         } else {
             conceptInf = await concptInfoRepo.findOne(conceptId);
             conceptInf.name = (name) ? name : conceptInf.name;
             conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
             conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
+
+            const initvUsers = await initvUsrsRepo.find({ where: { initiative: initvStg.initiative } });
+            if (initvUsers.length > 0) {
+                initvUsers.forEach(
+                    usr => {
+                        usr.is_lead = false;
+                        usr.is_coordinator = true;
+                    }
+                );
+
+                if (initvUsers.find(usr => usr.id == leadUser.id)) {
+                    const index = initvUsers.findIndex(usr => usr.id == leadUser.id)
+                    initvUsers[index].is_lead = true;
+                    initvUsers[index].is_coordinator = false;
+                }
+                await initvUsrsRepo.save(initvUsers);
+
+            } else {
+                const initvUser = new InitiativesByUsers();
+                initvUser.is_lead = true;
+                initvUser.is_owner = true;
+                initvUser.is_coordinator = false;
+                initvUser.initiative = initvStg.initiative;
+                initvUser.user = leadUser;
+                await initvUsrsRepo.save(initvUser);
+
+            }
         }
 
         let upsertedInfo = await concptInfoRepo.save(conceptInf);
