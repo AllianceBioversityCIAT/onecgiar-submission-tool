@@ -193,6 +193,9 @@ export class InitiativesService {
     }));
   }
 
+  getUsersByRoles(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);
+  }
 
   // Query to get action areas by ID
   getActionAreaById(id: number): Observable<any> {
