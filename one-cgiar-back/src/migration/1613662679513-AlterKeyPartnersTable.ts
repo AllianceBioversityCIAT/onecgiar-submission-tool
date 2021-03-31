@@ -9,7 +9,7 @@ export class AlterKeyPartnersTable1613662679513 implements MigrationInterface {
         // await queryRunner.query(`ALTER TABLE key_partners DROP COLUMN comparative_advantage;`);
         // await queryRunner.query(`ALTER TABLE key_partners DROP COLUMN initvStgId;`);
         // await queryRunner.query(`ALTER TABLE key_partners ADD CONSTRAINT FK_845588899492cca2d96_partnershipsId FOREIGN KEY (partnershipsId) REFERENCES partnerships (id) ON DELETE CASCADE;`);
-        await queryRunner.query(`ALTER TABLE key_partners CHANGE COLUMN toc_description description varchar(1000);`);
+        await queryRunner.query(`ALTER TABLE key_partners CHANGE COLUMN toc_description description text;`);
         await queryRunner.query(`ALTER TABLE key_partners ADD COLUMN partnershipsId INT(11) DEFAULT NULL;`);
         await queryRunner.query(`ALTER TABLE key_partners ADD COLUMN key_partner_name VARCHAR(500) NOT NULL AFTER key_partner_id;`);
     }
