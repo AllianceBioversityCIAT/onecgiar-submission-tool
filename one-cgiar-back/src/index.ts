@@ -10,6 +10,7 @@ import { startMulter } from './middlewares/multer';
 
 import Routes from './routes';
 import { errorHandler } from './middlewares/error-handler';
+import path from 'path';
 
 
 require('dotenv').config();
@@ -48,9 +49,11 @@ createConnection()
         app.use(helmet(
             { frameguard: false }
         ));
-        app.use(express.static(parentDir + '/uploads/'));
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
 
+        
+        // public files
+        app.use('/public', express.static(path.join(parentDir, 'uploads')));
 
         // routes
         app.use("/api", Routes);
@@ -59,12 +62,10 @@ createConnection()
         app.get('/', (req, res) => {
             res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
         });
-        // app.get('/uploads', (req, res) => {
-        //     res.sendFile(parentDir + "/uploads/")
-        // });
 
         app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
+            console.log(parentDir + '/uploads')
             res.status(200).sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html");
         });
 
@@ -74,6 +75,7 @@ createConnection()
         });
 
         app.listen(PORT, `${HOST}`, () => {
+            console.log(path.join(parentDir, 'uploads'))
             console.log(`Current parent directory: ${parentDir} `);
             console.log(`Server started on port ${PORT} and host ${HOST}!`);
         });

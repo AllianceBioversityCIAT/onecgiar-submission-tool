@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships, getConceptNarratives, upsertConceptNarratives, getPartnerships } from '../controllers/StageConcept';
+import { upsertProjectedBenefitWorkPackage, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships, getConceptNarratives, upsertConceptNarratives, getPartnerships, upsertTOCandFile } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -64,20 +64,20 @@ router.get("/concept/packages/benefits/timeframes/:wrkPkgId([0-9]+)", [checkJwt,
 
 
 
-// add TOC to initiative
-router.post("/concept/tocs/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCConcept);
-
-// update TOC in initiative
-router.patch("/concept/tocs/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCConcept);
-
-// add file in TOC
-router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCFile);
-
-// update file in TOC
-router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
+// upsert TOC to initiative
+router.patch("/concept/tocs/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], upsertTOCandFile);
 
 // get files in TOC
 router.get("/concept/tocs/:initvStgId([0-9]+)/files", [checkJwt, checkRole('tocs', 'readOwn')], getTOCFiles);
+// update TOC in initiative
+// router.patch("/concept/tocs/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCConcept);
+
+// // add file in TOC
+// router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCFile);
+
+// // update file in TOC
+// router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
+
 
 
 // upsert partnerships
