@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
-import bodyParser from "body-parser";
+// import bodyParser from "body-parser";
 import cors from 'cors';
 import helmet from 'helmet';
 import { createConnection } from 'typeorm';
@@ -37,8 +37,8 @@ const HOST = process.env.HOST;
 createConnection()
     .then(async () => {
         const app = express();
-        app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(bodyParser.json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
 
         // middlewares
         startAccsCtrl();
@@ -48,6 +48,7 @@ createConnection()
         app.use(helmet(
             { frameguard: false }
         ));
+        app.use(express.static(parentDir + '/uploads/'));
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
 
 
@@ -58,6 +59,9 @@ createConnection()
         app.get('/', (req, res) => {
             res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
         });
+        // app.get('/uploads', (req, res) => {
+        //     res.sendFile(parentDir + "/uploads/")
+        // });
 
         app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);

@@ -17,7 +17,6 @@ import { Users } from '../entity/Users';
 import { WorkPackages } from '../entity/WorkPackages';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
-import { logger } from '../handlers/Logger';
 import { ResponseHandler } from '../handlers/Response';
 
 
@@ -158,7 +157,7 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
  * @param res 
  */
 
- export const getConceptGeneralInfo = async (req: Request, res: Response) => {
+export const getConceptGeneralInfo = async (req: Request, res: Response) => {
     // const { userId } = res.locals.jwtPayload;
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
@@ -231,11 +230,11 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     let conceptInf: ConceptInfo;
 
     try {
-
-        const leadUser = await userRepo.findOne(lead_id);
-        if (leadUser == null) {
+        if (lead_id == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
         }
+        const leadUser = await userRepo.findOne(lead_id);
+
 
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
@@ -261,15 +260,13 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             initvUser.user = leadUser;
 
             let initvUserN = await initvUsrsRepo.save(initvUser);
-            // console.log(initvUserN)
 
         } else {
             conceptInf = await concptInfoRepo.findOne(conceptId);
             conceptInf.name = (name) ? name : conceptInf.name;
             conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
             conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
-
-            const initvUsers = await initvUsrsRepo.find({ where: { initiative: initvStg.initiative } });
+            const initvUsers = await initvUsrsRepo.find({ where: { initiative: initvStg.initiative }, relations: ['user'] });
             if (initvUsers.length > 0) {
                 initvUsers.forEach(
                     usr => {
@@ -278,8 +275,8 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
                     }
                 );
 
-                if (initvUsers.find(usr => usr.id == leadUser.id)) {
-                    const index = initvUsers.findIndex(usr => usr.id == leadUser.id)
+                if (initvUsers.find(usr => usr.user.id == leadUser.id)) {
+                    const index = initvUsers.findIndex(usr => usr.user.id == leadUser.id)
                     initvUsers[index].is_lead = true;
                     initvUsers[index].is_coordinator = false;
                 } else {
@@ -290,11 +287,10 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
                     initvUser.initiative = initvStg.initiative;
                     initvUser.user = leadUser;
                     let initvUserN = await initvUsrsRepo.save(initvUser);
-                    console.log(initvUserN)
+                    console.log('initvUserN find else')
                 }
 
                 let initvUserN = await initvUsrsRepo.save(initvUsers);
-                console.log(initvUserN)
 
             } else {
                 const initvUser = new InitiativesByUsers();
@@ -304,7 +300,6 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
                 initvUser.initiative = initvStg.initiative;
                 initvUser.user = leadUser;
                 let initvUserN = await initvUsrsRepo.save(initvUser);
-                // console.log(initvUserN)
 
             }
         }
@@ -338,11 +333,11 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         LEFT JOIN stages stage ON stage.id = initvStgs.stageId
         LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
         
-        WHERE initvStgs.id =:conceptId;
+        WHERE initvStgs.id =:initvStgId;
     `;
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             conceptQuery,
-            { conceptId: conceptInf.id },
+            { initvStgId },
             {}
         );
         let conceptInfo = await queryRunner.connection.query(query, parameters);
@@ -799,6 +794,8 @@ export const addTOCConcept = async (req: Request, res: Response) => {
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
+                console.log(`${__dirname}/`)
+                // console.log(`${element.path}`)
                 filesArr.push(
                     {
                         active: true,
@@ -962,6 +959,11 @@ export const updateTOCFile = async (req: Request, res: Response) => {
     }
 
 }
+
+
+
+
+
 
 
 
