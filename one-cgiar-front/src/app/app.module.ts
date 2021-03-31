@@ -50,6 +50,7 @@ import { CreateInitiativeModalComponent } from './shared/components/create-initi
 import { WorkPackageComponent } from './shared/components/concept/work-package/work-package.component';
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
+import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
     CreateUserModalComponent,
     WorkPackageComponent,
     DevTagComponent,
+    DevPanelComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
