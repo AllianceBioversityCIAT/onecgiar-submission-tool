@@ -8,12 +8,12 @@ export class Partnerships extends UpdatedCreatedAt {
 
     @PrimaryGeneratedColumn()
     id: number
-    
-    @Column({length: '1000'})
+
+    @Column({ type: 'text' })
     @IsNotEmpty()
     comparative_advantage: string
 
     @ManyToOne(() => InitiativesByStages, initvStg => initvStg.id)
     public initvStg!: InitiativesByStages;
-    
+
 }
