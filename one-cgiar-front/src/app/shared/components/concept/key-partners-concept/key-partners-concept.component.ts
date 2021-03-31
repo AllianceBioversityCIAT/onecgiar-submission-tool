@@ -10,8 +10,20 @@ import { AddPartnersModalComponent } from '../add-partners-modal/add-partners-mo
 })
 export class KeyPartnersConceptComponent implements OnInit {
 
-  keyPartners = this._requests.keyPartnersCs.controls.partner.value;
-
+  keyPartners = [
+    {
+      key:"1",
+      description: "lorem"
+    },
+    {
+      key:"2",
+      description: "lorem"
+    },
+    {
+      key:"3",
+      description: "lorem"
+    }
+  ]
   wordCount: any;
 
   @ViewChild("text") text: ElementRef;
@@ -26,12 +38,28 @@ export class KeyPartnersConceptComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(AddPartnersModalComponent, { panelClass: 'custom-dialog-container' });
+  openDialog(i,data) {
+    const dialogRef = this.dialog.open(AddPartnersModalComponent, 
+      { panelClass: 'custom-dialog-container',
+      data
+       });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      console.log('%cresult','background: #222; color: #ffff00');
+      console.log(result);
+      this.editKeyPartner(i,result);
     });
+  }
+
+  removeKeyPartner(index){
+    this.keyPartners.splice(index,1);
+  }
+  addNewKeyPartner(){
+    this.keyPartners.push({key:"New",description: "New"})
+  }
+  editKeyPartner(index,data){
+    this.keyPartners[index].key = data.keyPartner;
+    this.keyPartners[index].description = data.description;
   }
 
 }

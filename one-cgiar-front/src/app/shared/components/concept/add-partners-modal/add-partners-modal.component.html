@@ -1,28 +1,31 @@
 <h2 mat-dialog-title>Add new key partner</h2>
-<mat-dialog-content>
+<div mat-dialog-content class="dialog-content">
     <div class="modal-container">
-        <mat-form-field>
-            <p><strong>Select key partner: </strong><span class="asterisk">* </span></p>
-            <mat-select>
-                <mat-option value="IRRI">IRRI</mat-option>
-                <mat-option value="IITA">IITA</mat-option>
-                <mat-option value="CIAT">CIAT</mat-option>
-                <mat-option value="CIMMYT">CIMMYT</mat-option>
-                <mat-option value="ICRAF">ICRAF</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <custom-select 
+        [options]="
+        {
+         required:true,
+         readonly:false,
+         inputTitle:'Select key partner',
+         form:keyPartnersForm,
+         formControlName:'keyPartner',
+         selectList:this.keyPartnersListExample,
+         selectItemName:'name',
+         selectItemId:'id'
+        }">
+        ></custom-select>
+
         <p class="add-partner-text">If you do not find the key partner as part of the drop-down list, please request to
             add it by clicking here.</p>
-        <mat-form-field class="partners-full-width">
-            <p><strong>Describe how the partner fits within the overall Theory of Change: </strong><span class="asterisk">* </span></p>
-            <textarea type="text" matInput required (keydown)="wordCounter()" #text></textarea>
-            <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
-            <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
-        </mat-form-field>
+
+        <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
+        inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></custom-textarea>
+
+
     </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button class="close" mat-button mat-dialog-close>close</button>
-    <button class="save" mat-button [mat-dialog-close]="true" cdkFocusInitial
-        (click)="_requests.saveKeyPartners()">save</button>
-</mat-dialog-actions>
+</div>
+<div mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="OnClickNo()" >close</button>
+    <button mat-raised-button color="accent" [mat-dialog-close]="keyPartnersForm.value" [disabled]="keyPartnersForm.invalid">save</button>
+</div>
+
