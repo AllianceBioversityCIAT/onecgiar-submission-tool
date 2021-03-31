@@ -10,30 +10,30 @@ export class ConceptInfo extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({length: '1000'})
+    @Column({ length: '1000' })
     @IsNotEmpty()
     name: string
 
-    @Column({length: '1000'})
+    @Column({ type: "text" })
     @IsNotEmpty()
     challenge: string
-    
-    @Column({length: '1000'})
+
+    @Column({ type: "text" })
     @IsNotEmpty()
     objectives: string
-    
-    @Column({length: '1000'})
+
+    @Column({ type: "text" })
     @IsNotEmpty()
     results: string
-    
-    @Column({length: '1000'})
+
+    @Column({ type: "text" })
     @IsNotEmpty()
     highlights: string
 
-    @Column({type: 'int'})
+    @Column({ type: 'int' })
     action_area_id: number;
 
-    @Column({length: '500'})
+    @Column({ length: '500' })
     @IsNotEmpty()
     action_area_description: string;
 
