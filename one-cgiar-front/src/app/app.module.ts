@@ -49,6 +49,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
 import { WorkPackageComponent } from './shared/components/concept/work-package/work-package.component';
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
+import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { CustomFormsModule } from './shared/components/custom-forms/custom-forms
     CreateInitiativeModalComponent,
     CreateUserModalComponent,
     WorkPackageComponent,
+    DevTagComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

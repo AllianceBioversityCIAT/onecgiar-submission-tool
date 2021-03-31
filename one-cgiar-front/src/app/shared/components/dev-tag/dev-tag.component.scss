@@ -1,0 +1,34 @@
+p{
+    font-family: poppins;
+    margin: 0px 10px;
+    padding: 0;
+}
+
+.cont{
+    position: fixed;
+    background-color: white;
+    border-radius: 5px;
+    z-index: 1000;
+    margin: 4px;
+    margin-right: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+.left{
+    left:0;
+    transition: all .3s ease-in-out;
+}
+
+.rigth{
+    right: 0;
+    transition: all .3s ease-in-out;
+}
+
+mat-icon{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+}

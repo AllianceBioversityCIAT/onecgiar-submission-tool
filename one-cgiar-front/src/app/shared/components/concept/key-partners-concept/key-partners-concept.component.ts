@@ -45,9 +45,12 @@ export class KeyPartnersConceptComponent implements OnInit {
        });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('%cresult','background: #222; color: #ffff00');
-      console.log(result);
-      this.editKeyPartner(i,result);
+      if (result) {
+        console.log('%cresult','background: #222; color: #ffff00');
+        console.log(result);
+        this.editKeyPartner(i,result);
+      }
+
     });
   }
 
