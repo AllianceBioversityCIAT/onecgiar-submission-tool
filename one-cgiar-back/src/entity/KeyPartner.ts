@@ -14,19 +14,15 @@ export class KeyPartners extends UpdatedCreatedAt {
     active: boolean
 
     @Column({ type: 'int' })
+    @IsNotEmpty()
     key_partner_id: number;
 
     @Column({ length: '1000' })
-    @IsNotEmpty()
     key_partner_name: string
 
-    @Column({ length: '1000' })
+    @Column({ type: "text" })
     @IsNotEmpty()
     description: string
-
-    @Column({ length: '1000' })
-    @IsNotEmpty()
-    comparative_advantage: string
 
     @ManyToOne(() => Partnerships, partnerships => partnerships.id)
     public partnerships!: Partnerships;

@@ -405,34 +405,34 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
 }
 
-export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) => {
-    const { key_partner_id, initvStgId, description, comparative_advantage } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const keyPartnesRepo = getRepository(KeyPartners);
+// export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) => {
+//     const { key_partner_id, initvStgId, description, comparative_advantage } = req.body;
+//     const initvStgRepo = getRepository(InitiativesByStages);
+//     const keyPartnesRepo = getRepository(KeyPartners);
 
-    const keyPartner = new KeyPartners();
-    keyPartner.key_partner_id = key_partner_id;
-    keyPartner.description = description;
-    keyPartner.comparative_advantage = comparative_advantage;
+//     const keyPartner = new KeyPartners();
+//     keyPartner.key_partner_id = key_partner_id;
+//     keyPartner.description = description;
+//     keyPartner.comparative_advantage = comparative_advantage;
 
-    try {
+//     try {
 
-        // let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-        // keyPartner.initvStg = initiativeStg;
+//         // let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
+//         // keyPartner.initvStg = initiativeStg;
 
-        const errors = await validate(keyPartner);
-        if (errors.length > 0) {
-            return res.status(400).json(errors);
-        }
+//         const errors = await validate(keyPartner);
+//         if (errors.length > 0) {
+//             return res.status(400).json(errors);
+//         }
 
-        let createdkeyPartner = await keyPartnesRepo.save(keyPartner);
-        res.json({ msg: 'Key partner assigned to initiative by stage', data: createdkeyPartner });
+//         let createdkeyPartner = await keyPartnesRepo.save(keyPartner);
+//         res.json({ msg: 'Key partner assigned to initiative by stage', data: createdkeyPartner });
 
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "Could not assign key partner to initiative stage." });
-    }
-}
+//     } catch (error) {
+//         console.log(error);
+//         res.status(404).json({ msg: "Could not assign key partner to initiative stage." });
+//     }
+// }
 
 export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
     const { url, initvStgId, narrative } = req.body;

@@ -9,6 +9,7 @@ import { ImpactTimeFrames } from '../entity/ImpactTimeFrames';
 import { Initiatives } from '../entity/Initiatives';
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
+import { KeyPartners } from '../entity/KeyPartner';
 import { Partnerships } from '../entity/Partnerships';
 import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
@@ -287,7 +288,6 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
                     initvUser.initiative = initvStg.initiative;
                     initvUser.user = leadUser;
                     let initvUserN = await initvUsrsRepo.save(initvUser);
-                    console.log('initvUserN find else')
                 }
 
                 let initvUserN = await initvUsrsRepo.save(initvUsers);
@@ -969,17 +969,26 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ initvStgId, id, comparative_advantage }
+ * @param req params:{ initvStgId, id, comparative_advantage, key_partners }
  * @param res 
  */
 export const upsertPartnerships = async (req: Request, res: Response) => {
-    const { initvStgId, id, comparative_advantage } = req.body;
+    const { initvStgId, id, comparative_advantage, key_partners } = req.body;
     const partRepo = getRepository(Partnerships);
+    const keyPartnersRepo = getRepository(KeyPartners)
     const initvStgRepo = getRepository(InitiativesByStages);
     let partnership: Partnerships;
     try {
-        const initvStg = await initvStgRepo.findOne(initvStgId);
+        if (initvStgId == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None initiative by stage sent.'
+            );
+        }
 
+        const initvStg = await initvStgRepo.findOne(initvStgId);
         if (id) {
             partnership = await partRepo.findOne(id);
             partnership.comparative_advantage = (comparative_advantage) ? comparative_advantage : partnership.comparative_advantage;
@@ -988,21 +997,20 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
             partnership.comparative_advantage = comparative_advantage;
             partnership.initvStg = initvStg;
         }
-        if (!partnership) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'None files found.'
-            );
-        }
-
+        
         partnership = await partRepo.save(partnership);
+        
+        key_partners.forEach(kp => {
+            kp['partnerships'] = partnership
+        });
 
-        // res.json({ msg: 'Work packages', data: partnership });
-        res.json(new ResponseHandler('Work packages.', { partnership }));
+        let keyPartners = await keyPartnersRepo.save(key_partners);
+
+
+        res.json(new ResponseHandler('Key Partners updated.', { partnership, keyPartners }));
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 }

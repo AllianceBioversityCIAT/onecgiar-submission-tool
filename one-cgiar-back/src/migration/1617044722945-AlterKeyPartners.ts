@@ -3,8 +3,8 @@ import {MigrationInterface, QueryRunner} from "typeorm";
 export class AlterKeyPartners1617044722945 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('Alter table stages_meta')
-        await queryRunner.query(`ALTER TABLE stages_meta ADD COLUMN table_name TEXT DEFAULT NULL AFTER col_name;`);
+        console.log('Alter table key_partners')
+        await queryRunner.query(`ALTER TABLE key_partners ADD COLUMN active tinyint(2) DEFAULT NULL AFTER id;`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
