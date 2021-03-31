@@ -15,15 +15,15 @@
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
-            <tr *ngFor="let item of keyPartners">
+            <tr *ngFor="let item of keyPartners; let i = index">
                 <td>{{item.key}}</td>
                 <td>{{item.description}}</td>
-                <td class="center"><mat-icon class="edit">edit</mat-icon></td>
-                <td class="center"><mat-icon class="delete">delete</mat-icon></td>
+                <td class="center"><mat-icon class="edit" (click)="openDialog(i,item)">edit</mat-icon></td>
+                <td class="center"><mat-icon class="delete" (click)="removeKeyPartner(i)">delete</mat-icon></td>
             </tr>
         </table>
         <div class="set-data-container">
-            <button type="submit" mat-raised-button class="set-data-button" (click)="openDialog()">
+            <button type="submit" mat-raised-button class="set-data-button" (click)="addNewKeyPartner()">
                 add new key partner
             </button>
         </div>

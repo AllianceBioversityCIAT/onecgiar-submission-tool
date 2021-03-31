@@ -7,6 +7,7 @@ export class InteractionsService {
   collapseHeader = false;
   showHeader = true;
   noWp = false;
+  requests=[];
   constructor() { }
 
   successMessage(title:string){

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -7,11 +7,15 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
+import { InteractionsService } from '../services/interactions.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
 
-  constructor(private authSvc: AuthService) { }
+  constructor(
+    private authSvc: AuthService,
+    private _interactions: InteractionsService
+    ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
@@ -23,7 +27,9 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         }
       });
     }
-
+    if (isDevMode()) {
+      this._interactions.requests.push(request);
+    }
     return next.handle(request);
   }
   
