@@ -27,7 +27,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         }
       });
     }
-    console.log(request);
     if (isDevMode()) {
       this._interactions.requests.push(request);
     }
