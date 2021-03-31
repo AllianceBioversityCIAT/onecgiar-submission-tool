@@ -21,6 +21,13 @@ import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 
 
+// import path from 'path';
+
+// const parentDir = path.resolve(process.cwd(), '../');
+const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+
+
 /**
  * 
  * @param req params:{ initvStgId }
@@ -794,12 +801,12 @@ export const addTOCConcept = async (req: Request, res: Response) => {
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
-                console.log(`${__dirname}/`)
-                // console.log(`${element.path}`)
+                // console.log(`${__dirname}/`)
+                console.log(`${host}/${element.path}`)
                 filesArr.push(
                     {
                         active: true,
-                        url: element.path,
+                        url: `${host}/${element.path}`,
                         name: element.originalname
                     }
                 )
@@ -830,21 +837,21 @@ export const addTOCConcept = async (req: Request, res: Response) => {
  * @param req params:{ tocId, narrative }
  * @param res 
  */
-export const updateTOCConcept = async (req: Request, res: Response) => {
-    const { id, narrative } = req.body;
-    const tocsRepo = getRepository(TOCs);
+// export const updateTOCConcept = async (req: Request, res: Response) => {
+//     const { id, narrative } = req.body;
+//     const tocsRepo = getRepository(TOCs);
 
-    try {
-        const toc = await tocsRepo.findOneOrFail(id);
-        toc.narrative = narrative;
+//     try {
+//         const toc = await tocsRepo.findOneOrFail(id);
+//         toc.narrative = narrative;
 
-        let _toc = await tocsRepo.save(toc);
-        res.json(new ResponseHandler('TOC narrative updated in concept.', { TOC: _toc }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
+//         let _toc = await tocsRepo.save(toc);
+//         res.json(new ResponseHandler('TOC narrative updated in concept.', { TOC: _toc }));
+//     } catch (error) {
+//         return res.status(error.httpCode).json(error);
+//     }
 
-}
+// }
 
 
 /**
@@ -852,24 +859,37 @@ export const updateTOCConcept = async (req: Request, res: Response) => {
  * @param req params:{ tocId }
  * @param res 
  */
-export const addTOCFile = async (req: Request, res: Response) => {
-    const { tocId } = req.body;
+export const upsertTOCandFile = async (req: Request, res: Response) => {
+    const { initvStgId, narrative } = req.body;
     const tocsRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
+
     try {
-        const TOC = await tocsRepo.findOneOrFail(tocId);
+        let TOC = await tocsRepo.findOne({ where: { initvStg: initvStgId } });
         const files = req['files'];
+
+        if (TOC == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'TOC not found.'
+            );
+        }
+        TOC.narrative = (narrative) ? narrative : TOC.narrative;
+        TOC = await tocsRepo.save(TOC)
 
         if (files) {
 
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
+                console.log(`${host}/public/${new Date().getFullYear()}/initiatives/${initvStgId}/${element.originalname}`)
                 filesArr.push(
                     {
                         active: true,
-                        url: element.path,
+                        url: `${host}/public/${new Date().getFullYear()}/${initvStgId}/${element.originalname}`,
                         name: element.originalname
                     }
                 )
@@ -909,7 +929,6 @@ export const getTOCFiles = async (req: Request, res: Response) => {
 
     try {
         let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
-        console.log(TOC)
 
         if (TOC == null) {
             throw new APIError(
