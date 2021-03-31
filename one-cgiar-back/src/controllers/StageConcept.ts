@@ -975,7 +975,7 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 export const upsertPartnerships = async (req: Request, res: Response) => {
     const { initvStgId, id, comparative_advantage, key_partners } = req.body;
     const partRepo = getRepository(Partnerships);
-    const keyPartnersRepo = getRepository(KeyPartners)
+    const keyPartnersRepo = getRepository(KeyPartners);
     const initvStgRepo = getRepository(InitiativesByStages);
     let partnership: Partnerships;
     try {
@@ -997,9 +997,9 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
             partnership.comparative_advantage = comparative_advantage;
             partnership.initvStg = initvStg;
         }
-        
+
         partnership = await partRepo.save(partnership);
-        
+
         key_partners.forEach(kp => {
             kp['partnerships'] = partnership
         });
@@ -1020,4 +1020,29 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
  * @param req params:{ initvStgId }
  * @param res 
  */
-export const getPartnerships = async (req: Request, res: Response) => { }
+export const getPartnerships = async (req: Request, res: Response) => {
+    const { initvStgId } = req.params;
+    const partRepo = getRepository(Partnerships);
+    const keyPartnersRepo = getRepository(KeyPartners);
+    // const initvStgRepo = getRepository(InitiativesByStages);
+
+    let partnership: Partnerships, keyPartners: KeyPartners[];
+    try {
+        if (initvStgId == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'None initiative by stage sent.'
+            );
+        }
+        partnership = await partRepo.findOne({ where: { initvStg: initvStgId } });
+        keyPartners = await keyPartnersRepo.find({ where: { partnerships: partnership } });
+
+        res.json(new ResponseHandler('Key Partners list.', { partnership, keyPartners }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
