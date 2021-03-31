@@ -870,16 +870,13 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
         const files = req['files'];
 
         if (TOC == null) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'TOC not found.'
-            );
-        }
-        TOC.narrative = (narrative) ? narrative : TOC.narrative;
-        TOC = await tocsRepo.save(TOC)
-
+            TOC = new TOCs();
+            TOC.narrative = narrative;
+        }else{
+            TOC.narrative = (narrative) ? narrative : TOC.narrative;
+        }        
+        TOC = await tocsRepo.save(TOC);
+        
         if (files) {
 
             let filesArr = [];
