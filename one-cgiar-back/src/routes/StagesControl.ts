@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships, getConceptNarratives, upsertConceptNarratives } from '../controllers/StageConcept';
+import { upsertProjectedBenefitWorkPackage, addTOCConcept, addTOCFile, createWorkPackage, getConceptGeneralInfo, getRegionWorkPackage, getTOCFiles, getWorkPackages, upsertConceptGeneralInformation, updateTOCConcept, updateTOCFile, updateWorkPackage, upsertCountryWorkPackage, upsertRegionWorkPackage, upsertTimeFrameProjectedBenefit, getProjectedBenefitWorkPackage, getTimeFramesProjectedBenefit, upsertPartnerships, getConceptNarratives, upsertConceptNarratives, getPartnerships } from '../controllers/StageConcept';
 import { checkJwt } from '../middlewares/jwt';
 import { uploadFile } from '../middlewares/multer';
 import { checkRole } from '../middlewares/role';
@@ -82,6 +82,9 @@ router.get("/concept/tocs/:initvStgId([0-9]+)/files", [checkJwt, checkRole('tocs
 
 // upsert partnerships
 router.patch("/concept/partnership/", [checkJwt, checkRole('partnerships', 'updateOwn')], upsertPartnerships);
+
+// get partnerships
+router.get("/concept/:initvStgId([0-9]+)/partnership/", [checkJwt, checkRole('partnerships', 'updateOwn')], getPartnerships);
 
 
 
