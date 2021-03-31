@@ -15,8 +15,8 @@
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
-            <tr *ngFor="let item of keyPartners; let i = index">
-                <td>{{item.key}}</td>
+            <tr *ngFor="let item of partnership.key_partners; let i = index">
+                <td>{{item.key_partner_name}}</td>
                 <td>{{item.description}}</td>
                 <td class="center"><mat-icon class="edit" (click)="openDialog(i,item)">edit</mat-icon></td>
                 <td class="center"><mat-icon class="delete" (click)="removeKeyPartner(i)">delete</mat-icon></td>
@@ -28,7 +28,7 @@
             </button>
         </div>
         <div class="partners-save">
-            <button type="submit" (click)="_requests.saveKeyPartners()" mat-raised-button class="save-button">
+            <button type="submit" (click)="savePartnership()" mat-raised-button class="save-button">
                 Save
             </button>
         </div>

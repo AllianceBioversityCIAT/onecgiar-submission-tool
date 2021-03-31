@@ -2,12 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core'
 import { RequestsService } from '@app/shared/services/requests.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-export interface DialogData {
-  animal: string;
-  name: string;
-}
-
 @Component({
   selector: 'app-add-partners-modal',
   templateUrl: './add-partners-modal.component.html',
@@ -54,7 +48,7 @@ export class AddPartnersModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddPartnersModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: any
     ) {
       this.keyPartnersForm = new FormGroup({
         keyPartner: new FormControl(null, Validators.required),

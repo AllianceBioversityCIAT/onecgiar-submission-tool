@@ -89,6 +89,11 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 
+    // Query to get Partnership By Initiative Id
+  getPartnershipByInitiativeId(id:number): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
+  }
+
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
     console.log('initiative', body);
@@ -135,6 +140,11 @@ export class InitiativesService {
   // Query to create a work package
   createWorkPackage(body: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/stages-control/concept/packages`, body);
+  }
+
+  // Query to create a work package
+  createPartnership(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/partnership`, body);
   }
 
   // Query to update the narrative of a theory of change (Only narrative)
