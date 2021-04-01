@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { selectOptions} from '../../../models/forms-options/select-options.interface';
 
 @Component({
@@ -14,13 +15,17 @@ export class SelectComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.selectInput = new FormControl(this.options.form.value[this.options.formControlName], [
+    this.selectInput = new FormControl(this.options.form.value[this.options.formControlId], [
       Validators.required,
     ]);
-     this.setValue();
+     this.setValue(null);
   }
 
-  setValue(){
-    this.options.form.controls[this.options.formControlName].setValue(this.selectInput.value);
+  setValue(event: MatSelectChange){
+    if (event && this.options.formControlName) {
+      this.options.form.controls[this.options.formControlName].setValue(event.source.triggerValue);
+    }
+
+    this.options.form.controls[this.options.formControlId].setValue(this.selectInput.value);
   }  
 }

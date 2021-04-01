@@ -41,17 +41,13 @@ export class AddPartnersModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
       this.keyPartnersForm = new FormGroup({
-        // key_partner_name: new FormControl(null, Validators.required),
+        key_partner_name: new FormControl(this.data.key_partner_name, Validators.required),
         description: new FormControl(this.data.description, Validators.required),
         key_partner_id:new FormControl(this.data.key_partner_id, Validators.required),
       });
      }
 
   ngOnInit(): void {
-    console.log(this.data);
-    console.log(this.keyPartnersForm.value);
-    // this.keyPartnersForm.controls['description'].setValue(this.data.description);
-    // this.keyPartnersForm.controls['key_partner_id'].setValue(this.data.key_partner_id);
   }
 
   OnClickNo(){

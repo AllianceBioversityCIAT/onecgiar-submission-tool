@@ -116,6 +116,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   editKeyPartner(index,data){
     this.partnership.key_partners[index].key_partner_id = data.key_partner_id;
     this.partnership.key_partners[index].description = data.description;
+    this.partnership.key_partners[index].key_partner_name = data.key_partner_name;
   }
 
 }

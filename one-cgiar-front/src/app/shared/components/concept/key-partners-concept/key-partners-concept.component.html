@@ -16,7 +16,7 @@
                 <th>Delete</th>
             </tr>
             <tr *ngFor="let item of partnership.key_partners; let i = index">
-                <td [style.color]="item.active == true?'black':'red'">{{item.key_partner_id}}</td>
+                <td [style.color]="item.active == true?'black':'red'">{{item.key_partner_name}}</td>
                 <td [style.color]="item.active == true?'black':'red'">{{item.description}}</td>
                 <td class="center"><mat-icon class="edit" (click)="openDialog(i,item)">edit</mat-icon></td>
                 <td class="center"><mat-icon class="delete" (click)="removeKeyPartner(i)">delete</mat-icon></td>

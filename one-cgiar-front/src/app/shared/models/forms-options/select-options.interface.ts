@@ -7,6 +7,7 @@ export interface selectOptions{
     description?:string;
     form:FormGroup;
     formControlName:string;
+    formControlId:string;
     maxWords:number;
     selectList:[];
     selectItemName:string;
