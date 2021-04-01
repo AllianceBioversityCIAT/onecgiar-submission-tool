@@ -84,10 +84,11 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   openDialog(i,data) {
+    data.toDisableList = this.convertToDisableList();
     const dialogRef = this.dialog.open(AddPartnersModalComponent, 
       { panelClass: 'custom-dialog-container',
-      data
-       });
+        data
+      });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -97,6 +98,17 @@ export class KeyPartnersConceptComponent implements OnInit {
       }
 
     });
+  }
+
+  convertToDisableList(){
+    let resultList = []
+    for (const iterator of this.partnership.key_partners) {
+      if (iterator.active) {
+        resultList.push(iterator.key_partner_id)
+      }
+      console.log(iterator);
+    }
+    return resultList;
   }
 
   removeKeyPartner(index){

@@ -13,6 +13,7 @@ export class AddPartnersModalComponent implements OnInit {
 
   wordCount: any;
   keyPartnersForm: FormGroup;
+  toDisableList=[];
   keyPartnersListExample=[
     {
       name:"IRRI",
@@ -48,6 +49,15 @@ export class AddPartnersModalComponent implements OnInit {
      }
 
   ngOnInit(): void {
+    this.toDisableList = this.data.toDisableList;
+    console.log(this.toDisableList);
+    for (let index = 0; index < this.toDisableList.length; index++) {
+      if (this.toDisableList[index]==this.keyPartnersForm.value.key_partner_id) {
+        this.toDisableList[index]=-1;
+      }
+      // this.toDisableList[index]=-1;
+    }
+    console.log(this.toDisableList);
   }
 
   OnClickNo(){

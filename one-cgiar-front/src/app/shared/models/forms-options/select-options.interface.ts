@@ -12,4 +12,5 @@ export interface selectOptions{
     selectList:[];
     selectItemName:string;
     selectItemId:string|number;
+    toDisableList:[];
 }

@@ -28,4 +28,17 @@ export class SelectComponent implements OnInit {
 
     this.options.form.controls[this.options.formControlId].setValue(this.selectInput.value);
   }  
+
+  disableOption(option){
+    if ( this.options.toDisableList) {
+      for (const id of this.options.toDisableList) {
+        if (option.id==id) {
+          return true;
+        }
+      }
+    }else{
+      return false;
+    }
+  }
+
 }
