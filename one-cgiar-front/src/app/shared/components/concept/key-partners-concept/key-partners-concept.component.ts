@@ -100,7 +100,9 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   removeKeyPartner(index){
-    this.partnership.key_partners.splice(index,1);
+    this.partnership.key_partners[index].active=false;
+    console.log(this.partnership);
+    // this.partnership.key_partners.splice(index,1);
   }
   addNewKeyPartner(){
     let object:keyPartner={
@@ -112,7 +114,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     this.partnership.key_partners.push(object)
   }
   editKeyPartner(index,data){
-    this.partnership.key_partners[index].key_partner_name = data.keyPartner;
+    this.partnership.key_partners[index].key_partner_id = data.key_partner_id;
     this.partnership.key_partners[index].description = data.description;
   }
 

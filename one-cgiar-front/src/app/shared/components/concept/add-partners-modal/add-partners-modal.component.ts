@@ -16,47 +16,42 @@ export class AddPartnersModalComponent implements OnInit {
   keyPartnersListExample=[
     {
       name:"IRRI",
-      id:"1"
+      id: 1
     },
     {
       name:"IITA",
-      id:"2"
+      id: 2
     },
     {
       name:"CIAT",
-      id:"3"
+      id: 3
     },
     {
       name:"CIMMYT",
-      id:"4"
+      id: 4 
     },
     {
       name:"ICRAF",
-      id:"5"
+      id: 5
     }
   ]
-  example={
-    nadame:"asas"
-  }
-  words: any;
-  wordCounter() {
-    console.log("object");
-    console.log(this.data);
-    // this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
-    // this.words = this.wordCount ? this.wordCount.length : 0;
-  }
 
   constructor(
     public dialogRef: MatDialogRef<AddPartnersModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
       this.keyPartnersForm = new FormGroup({
-        keyPartner: new FormControl(null, Validators.required),
-        description: new FormControl(null, Validators.required),
+        // key_partner_name: new FormControl(null, Validators.required),
+        description: new FormControl(this.data.description, Validators.required),
+        key_partner_id:new FormControl(this.data.key_partner_id, Validators.required),
       });
      }
 
   ngOnInit(): void {
+    console.log(this.data);
+    console.log(this.keyPartnersForm.value);
+    // this.keyPartnersForm.controls['description'].setValue(this.data.description);
+    // this.keyPartnersForm.controls['key_partner_id'].setValue(this.data.key_partner_id);
   }
 
   OnClickNo(){
