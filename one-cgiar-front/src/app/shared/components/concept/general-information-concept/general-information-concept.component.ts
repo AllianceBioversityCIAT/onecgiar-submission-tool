@@ -43,7 +43,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
       name: new FormControl(null, Validators.required),
-      lead_name: new FormControl(null, Validators.required),
+      lead_name: new FormControl(null),
       lead_id: new FormControl(null, Validators.required),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
@@ -71,8 +71,8 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.conceptSvc.getUsersByRoles().toPromise(),
     ]).then(res => {
       
-      let gnrlInfo = res[1];
       this.actionAreas = res[0];
+      let gnrlInfo = res[1];
       // this.usersByInitiative = res[2];
       this.usersByRoles = res[2].data;
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
@@ -101,17 +101,17 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
       subscribe(
         gnrlInfo => {
-          this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
-          this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
+          // this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
+          // this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
-          this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
-          this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
+          // this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
+          // this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
 
-          this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
-          this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
+          // this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
+          // this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
           this.spinnerService.hide('general-information');
           this.interactionsService.successMessage('General information has been saved')
-          this.showForm=true;
+          // this.showForm=true;
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))

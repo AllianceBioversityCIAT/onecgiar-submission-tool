@@ -2,8 +2,8 @@
     <p><strong>{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
     </p>
-    <mat-select [formControl]="selectInput" (ngModelChange)="setValue()" >
-        <mat-option *ngFor="let item of options.selectList" [value]="item[options.selectItemId]">{{item[options.selectItemName]}}
+    <mat-select [formControl]="selectInput" (selectionChange)="setValue($event)" >
+        <mat-option *ngFor="let item of options.selectList" [disabled]="disableOption(item)"  [value]="item[options.selectItemId]">{{item[options.selectItemName]}}
         </mat-option>
     </mat-select>
 </mat-form-field>

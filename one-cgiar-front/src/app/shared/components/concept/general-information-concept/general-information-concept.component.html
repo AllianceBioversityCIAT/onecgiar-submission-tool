@@ -10,7 +10,7 @@
          readonly:false,
          inputTitle:'Lead name',
          form:generalInformationForm,
-         formControlName:'lead_id',
+         formControlId:'lead_id',
          description:'Indicate the leadership of this Initiative',
          selectList:this.usersByRoles,
          selectItemName:'first_name',
@@ -24,7 +24,7 @@
          readonly:false,
          inputTitle:'Primary CGIAR Action Area',
          form:generalInformationForm,
-         formControlName:'action_area_id',
+         formControlId:'action_area_id',
          description:'Indicate to which CGIAR Action Area this initiative is contributing to',
          selectList:this.actionAreas,
          selectItemName:'description',
@@ -32,7 +32,7 @@
         }">
         ></custom-select>
         <div class="general-information-save">
-            <button type="submit" color="primary" [disabled]="generalInformationForm.invalid"  mat-raised-buttonclass="save-button">
+            <button mat-raised-button class="save-button" type="submit" color="primary" [disabled]="generalInformationForm.invalid"  mat-raised-buttonclass="save-button">
                 Save
             </button>
         </div>
