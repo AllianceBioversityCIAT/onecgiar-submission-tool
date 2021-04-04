@@ -15,7 +15,7 @@
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
-            <tr *ngFor="let item of partnership.key_partners; let i = index">
+            <tr *ngFor="let item of partnership.key_partners ; let i = index" [style.display]="item.active?'':'none'">
                 <td [style.color]="item.active == true?'black':'red'">{{item.key_partner_name}}</td>
                 <td [style.color]="item.active == true?'black':'red'">{{item.description}}</td>
                 <td class="center"><mat-icon class="edit" (click)="openDialog(i,item)">edit</mat-icon></td>
