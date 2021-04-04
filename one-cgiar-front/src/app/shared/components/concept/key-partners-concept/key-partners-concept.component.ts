@@ -118,7 +118,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
   addNewKeyPartner(){
     let object:keyPartner={
-    key_partner_id: 1,
+    key_partner_id: -1,
     key_partner_name: "New",
     description: "New",
     active: true
