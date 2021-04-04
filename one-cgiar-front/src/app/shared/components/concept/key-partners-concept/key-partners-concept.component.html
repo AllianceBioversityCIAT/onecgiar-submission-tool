@@ -1,13 +1,11 @@
 <div class="partners-container animate__animated animate__fadeIn">
     <strong class="partners-title">Key partners</strong>
-    <form [formGroup]="_requests.keyPartnersCs" class="partners-form">
-        <mat-form-field class="partners-full-width">
-            <p><strong>Comparative advantage: </strong><span class="asterisk">* </span></p>
-            <p class="description-field"><i>Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service providers</i></p>
-            <textarea matInput type="text" formControlName="advantage" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="30"></textarea>
-            <mat-hint align="start"><strong>Max 250 words</strong> </mat-hint>
-            <mat-hint align="end"><strong>{{words}} / 250</strong></mat-hint>
-        </mat-form-field>
+    <form [formGroup]="partnershipForm" class="partners-form" (submit)="savePartnership()" >
+        <custom-textarea *ngIf="partnershipForm.value.comparativeAdvantage != null"
+        [options]="{ form:partnershipForm,formControlName:'comparativeAdvantage',maxWords:250,inputTitle:'Comparative advantage',
+         description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service providers'}">
+        </custom-textarea>
+
         <table>
             <tr class="center">
                 <th>Key Partner</th>
@@ -28,7 +26,7 @@
             </button>
         </div>
         <div class="partners-save">
-            <button type="submit" (click)="savePartnership()" mat-raised-button class="save-button">
+            <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>

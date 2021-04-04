@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddPartnersModalComponent } from '../add-partners-modal/add-partners-modal.component';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -29,7 +30,7 @@ export class KeyPartnersConceptComponent implements OnInit {
       comparative_advantage: "This is a test for a compartive comparative_advantage, UPDATED",
       key_partners:[]
     };
-  
+  partnershipForm: FormGroup;
   // keyPartners:keyPartner[] = []
   wordCount: any;
 
@@ -45,7 +46,11 @@ export class KeyPartnersConceptComponent implements OnInit {
     public dialog: MatDialog,
     public _initiativesSvc: InitiativesService,
     public activatedRoute: ActivatedRoute,
-    ) { }
+    ) {
+      this.partnershipForm = new FormGroup({
+        comparativeAdvantage: new FormControl(null, Validators.required),
+      });
+     }
 
   ngOnInit(): void {
     this.getPartnershipByInitiativeId();
@@ -56,6 +61,9 @@ export class KeyPartnersConceptComponent implements OnInit {
     this.activatedRoute.params.subscribe(resp => {
       this.partnership.initvStgId = resp.id;
       this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe(resp=>{
+
+        this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
+
         this.partnership.key_partners = resp.response.keyPartners;
         console.log('%cpartnerships','background: #222; color: #ffff00');
         console.log(resp);
@@ -76,6 +84,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   savePartnership(){
+    this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
     console.log(this.partnership);
     this._initiativesSvc.createPartnership(this.partnership).subscribe(resp=>{
       console.log(resp);
