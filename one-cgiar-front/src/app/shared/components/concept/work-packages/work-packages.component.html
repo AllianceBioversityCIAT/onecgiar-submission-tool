@@ -1,7 +1,7 @@
 
 <div class="container" style="margin: 20px 0px">
     <mat-accordion class="example-headers-align" multi>
-        <app-work-package [workPackageData]="item" *ngFor="let item of workPackagesList"></app-work-package>
+        <app-work-package [validateAllWP]="validateWorkPackages()"  [workPackageData]="item" [workPackagesList]="workPackagesList" [index]="i"   *ngFor="let item of workPackagesList; let i = index"></app-work-package>
     </mat-accordion>
     <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
     <br>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,9 @@ export class WorkPackageComponent implements OnInit {
   animationSize=500;
   animationSizeActive=true;
   @Input() workPackageData: any;
+  @Input() workPackagesList: any;
+  @Input() index: any;
+  @Output() validateAllWP = new EventEmitter();
   workPackageId: number | string;
   initiativeId: any;
   public initvStgId: any;
@@ -46,6 +49,14 @@ export class WorkPackageComponent implements OnInit {
       this.animationSizeActive=false;
       console.log('%cfalse','background: #222; color: #ffff00');
     }
+    this.workPackagesList[this.index].formValid=this.createWorkPackageForm.invalid?false:true;
+
+    this.createWorkPackageForm.valueChanges.subscribe(
+      result => {
+        this.workPackagesList[this.index].formValid=this.createWorkPackageForm.invalid?false:true;
+        this.validateAllWP.emit();
+      }
+    );
   }
 
   onUpdate(): void {
