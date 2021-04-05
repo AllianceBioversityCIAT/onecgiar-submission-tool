@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InteractionsService } from '../../../services/interactions.service';
 @Component({
@@ -16,7 +17,8 @@ export class WorkPackagesComponent implements OnInit {
   constructor(
     public activatedRoute: ActivatedRoute,
     public initiativesSvc: InitiativesService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    public stgMenuSvc: StagesMenuService, 
    ) {
   }
 
@@ -31,7 +33,6 @@ export class WorkPackagesComponent implements OnInit {
     this.spinnerService.show('work-packages');
     let suscrip = this.initiativesSvc.getAllIWorkPackages(this.initvStgId).subscribe(resp => {
       this.workPackagesList = resp.response.workPackages;
-      
     },
     err=>{
       this.noWp  = true;     
@@ -42,6 +43,7 @@ export class WorkPackagesComponent implements OnInit {
       this.spinnerService.hide('work-packages');
       suscrip.unsubscribe();
     })
+      this.validateWorkPackages();
   }
 
   addWorkPackage(){
@@ -51,6 +53,16 @@ export class WorkPackagesComponent implements OnInit {
       this.getAllIWorkPackages();
     })
     
+  }
+
+  validateWorkPackages(){
+    let formValid = true;
+    for (const workPackage of this.workPackagesList) {
+      if(workPackage.formValid == false){
+        formValid = false;
+      }
+    }
+    this.stgMenuSvc.setFormStageStatus('concept', 'work_packages', formValid?'VALID':'INVALID', this.initvStgId);
   }
 
 }

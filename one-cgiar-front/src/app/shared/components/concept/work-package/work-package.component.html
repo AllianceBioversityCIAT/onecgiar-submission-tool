@@ -37,7 +37,7 @@
                     <textarea type="text" formControlName="results" matInput required></textarea>
                 </mat-form-field>
                 <div class="narratives-save">
-                    <button type="submit" mat-raised-button class="save-button">
+                    <button type="submit" mat-raised-button class="save-button" [disabled]="createWorkPackageForm.invalid">
                         Save
                     </button>
                 </div>
