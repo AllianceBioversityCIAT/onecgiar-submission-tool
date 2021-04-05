@@ -872,11 +872,11 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
         if (TOC == null) {
             TOC = new TOCs();
             TOC.narrative = narrative;
-        }else{
+        } else {
             TOC.narrative = (narrative) ? narrative : TOC.narrative;
-        }        
+        }
         TOC = await tocsRepo.save(TOC);
-        
+
         if (files) {
 
             let filesArr = [];
@@ -936,18 +936,12 @@ export const getTOCFiles = async (req: Request, res: Response) => {
             );
         }
         const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } });
-        if (Files.length == 0) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'None files found.'
-            );
-        } else {
+        // console.log(Files)
+        if (Files.length > 0) {
             TOC['files'] = Files;
-            // res.status(200).json({ msg: "TOC and files", data: TOC });
-            res.json(new ResponseHandler('TOC and files.', { TOC }));
         }
+       
+        res.json(new ResponseHandler('TOC and files.', { TOC }));
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
@@ -959,11 +953,19 @@ export const getTOCFiles = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateTOCFile = async (req: Request, res: Response) => {
-    const { fileId, active, url, name } = req.body;
+    const { id, active, url, name } = req.body;
     const filesRepo = getRepository(Files);
 
     try {
-        const file = await filesRepo.findOneOrFail(fileId);
+        const file = await filesRepo.findOne(id);
+        if(file == null){
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Theory of change file not found.'
+            );
+        }
         file.active = active;
         file.url = (url) ? url : file.url;
         file.name = (name) ? name : file.name;

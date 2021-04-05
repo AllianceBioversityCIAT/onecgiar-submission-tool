@@ -1,10 +1,11 @@
 <div class="theory-of-change-container animate__animated animate__fadeIn">
     <strong class="theory-of-change-title">Initial theory of change</strong>
-    <form [formGroup]="theoryOfChangeForm" (ngSubmit)="getTocs()" class="theory-of-change-form">
+    <form [formGroup]="theoryOfChangeForm" (ngSubmit)="uploadFiles()" class="theory-of-change-form">
         <mat-form-field class="theory-of-change-full-width">
             <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
                     class="asterisk">* </span></p>
-            <textarea matInput type="text" formControlName="narrative" required (keydown)="wordCounter()" #text cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="30"></textarea>
+            <textarea matInput type="text" formControlName="narrative" required (keydown)="wordCounter()" #text
+                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="30"></textarea>
             <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
         </mat-form-field>
@@ -15,22 +16,36 @@
         </a>
 
         <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
-            <div class="files" *ngFor="let selected of listOfFiles; let index = index">
-                <strong>{{selected.name ? selected.name : selected}}</strong>
-                <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
+            <div class="files" *ngFor="let selected of listOfFiles; let index = index ">
+                <!-- {{selected.active }} -->
+                <ng-container *ngIf="selected.active">
+                    <strong>{{selected.name ? selected.name : selected}}</strong>
+                    <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
+                </ng-container>
             </div>
         </div>
 
         <div class="upload-container">
             <mat-icon>cloud_upload</mat-icon>
             Click here to choose a file or drag it here
-            <input class="nonstylefile" #attachments type="file" required (change)="onFileChanged($event.target.files)" #fileInput multiple="true">
+            <input class="nonstylefile" #attachments type="file" required (change)="onSelectFiles($event)" #fileInput
+                multiple="true">
+            <!-- <input class="nonstylefile" #attachments type="file" required (change)="onFileChanged($event.target.files)"
+                #fileInput multiple="true"> -->
         </div>
-
+        <div *ngIf="filesToUpload && filesToUpload.length > 0" class="mb-2" class="uploaded-files">
+            <h2>Files to upload</h2>
+            <div class="files" *ngFor="let selected of filesToUpload; let index = index ">
+                <strong>{{selected.name ? selected.name : selected}}</strong>
+                <mat-icon class="delete-icon" (click)="removeFile(index, filesToUpload)">delete</mat-icon>
+                <!-- </ng-container> -->
+            </div>
+        </div>
         <div class="theory-of-change-save">
             <button type="submit" mat-raised-button class="save-button">
                 Save
             </button>
         </div>
     </form>
+    <ngx-spinner [fullScreen]="false" name='tocs'></ngx-spinner>
 </div>

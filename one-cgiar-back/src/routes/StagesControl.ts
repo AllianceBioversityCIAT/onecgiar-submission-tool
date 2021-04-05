@@ -76,7 +76,7 @@ router.get("/concept/tocs/:initvStgId([0-9]+)/files", [checkJwt, checkRole('tocs
 // router.post("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], addTOCFile);
 
 // // update file in TOC
-// router.patch("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
+router.put("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
 
 
 

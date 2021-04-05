@@ -3,6 +3,7 @@ import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { InitiativesService } from './initiatives.service';
+import { Observable } from 'rxjs';
 
 
 const sectionPath = 'stages-control'
@@ -71,6 +72,30 @@ export class ConceptService extends InitiativesService {
         this.narratives = res.response.narratives
         return res.response.narratives
       }));
+  }
+
+  // Query to get theory of change information by ID
+  getTheoryOfChange(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/tocs/${id}/files`).pipe(map(res => {
+      this.TOC = res.response.TOC;
+      return res.response.TOC;
+    }));
+    // return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
+  }
+
+  //upsert TOC
+  upsertTheoryOfChange(fileToUpload: File[], body: any) {
+    const formData: FormData = new FormData();
+    formData.append('initvStgId', body.initvStgId);
+    formData.append('narrative', body.narrative);
+    // console.log('fileToUpload[0]', fileToUpload);
+    fileToUpload.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/tocs`, formData);
+  }
+  updateTheoryOfChangeFile(data) {
+    return this.http.put<any>(`${environment.apiUrl}/stages-control/concept/tocs/files/`, data);
   }
 
 
