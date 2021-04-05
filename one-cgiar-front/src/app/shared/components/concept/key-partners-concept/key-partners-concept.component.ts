@@ -60,9 +60,12 @@ export class KeyPartnersConceptComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(resp => {
       this.partnership.initvStgId = resp.id;
-      this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe(resp=>{
+      this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe((resp:any)=>{
 
-        this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
+        if (resp.response.partnership?.comparative_advantage) {
+          this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
+        }
+       
 
         this.partnership.key_partners = resp.response.keyPartners;
         console.log('%cpartnerships','background: #222; color: #ffff00');
