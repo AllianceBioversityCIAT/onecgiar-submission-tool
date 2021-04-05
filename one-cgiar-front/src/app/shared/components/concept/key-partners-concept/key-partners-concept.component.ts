@@ -33,6 +33,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   partnershipForm: FormGroup;
   // keyPartners:keyPartner[] = []
   wordCount: any;
+  showFrom=false;
 
   @ViewChild("text") text: ElementRef;
   words: any;
@@ -59,7 +60,8 @@ export class KeyPartnersConceptComponent implements OnInit {
   getPartnershipByInitiativeId(){
 
     this.activatedRoute.params.subscribe(resp => {
-      this.partnership.initvStgId = resp.id;
+      
+      this.partnership.initvStgId = Number(resp.id);
       this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe((resp:any)=>{
 
         if (resp.response.partnership?.comparative_advantage) {
@@ -80,6 +82,10 @@ export class KeyPartnersConceptComponent implements OnInit {
         }
   
       })
+      setTimeout(() => {
+        this.showFrom = true;
+      }, 1000);
+      
      });
 
 
@@ -87,6 +93,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   savePartnership(){
+    console.log('%csavePartnership','background: #222; color: #ffff00');
     this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
     console.log(this.partnership);
     this._initiativesSvc.createPartnership(this.partnership).subscribe(resp=>{
