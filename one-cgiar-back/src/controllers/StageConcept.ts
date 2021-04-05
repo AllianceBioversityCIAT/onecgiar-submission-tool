@@ -866,16 +866,16 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
 
 
     try {
-        let TOC = await tocsRepo.findOne({ where: { initvStg: initvStgId } });
+        let existingTOC = await tocsRepo.findOne({ where: { initvStg: initvStgId } });
         const files = req['files'];
-
-        if (TOC == null) {
-            TOC = new TOCs();
-            TOC.narrative = narrative;
+        if (existingTOC == null) {
+            existingTOC = new TOCs();
+            existingTOC.narrative = narrative;
+            existingTOC.initvStg = initvStgId;
         } else {
-            TOC.narrative = (narrative) ? narrative : TOC.narrative;
+            existingTOC.narrative = (narrative) ? narrative : existingTOC.narrative;
         }
-        TOC = await tocsRepo.save(TOC);
+        const TOC = await tocsRepo.save(existingTOC);
 
         if (files) {
 
@@ -896,7 +896,7 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
                 file.tocs = TOC;
             });
             let Files = await filesRepo.save(_files);
-            res.json(new ResponseHandler('File added to TOC.', { TOC, Files }));
+            res.json(new ResponseHandler('File added to TOC.', { TOC: TOC, Files }));
         } else {
             throw new APIError(
                 'NOT FOUND',
@@ -928,20 +928,17 @@ export const getTOCFiles = async (req: Request, res: Response) => {
         let TOC = await tocRepo.findOne({ where: { initvStg: initvStgId } });
 
         if (TOC == null) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'Theory of change not found.'
-            );
+            res.json(new ResponseHandler('TOC and files.', { TOC }));
+        } else {
+            const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } });
+            // console.log(Files)
+            if (Files.length > 0) {
+                TOC['files'] = Files;
+            }
+
+            res.json(new ResponseHandler('TOC and files.', { TOC }));
+
         }
-        const Files = await filesRepo.find({ where: { tocs: TOC.id, active: 1 } });
-        // console.log(Files)
-        if (Files.length > 0) {
-            TOC['files'] = Files;
-        }
-       
-        res.json(new ResponseHandler('TOC and files.', { TOC }));
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
@@ -958,7 +955,7 @@ export const updateTOCFile = async (req: Request, res: Response) => {
 
     try {
         const file = await filesRepo.findOne(id);
-        if(file == null){
+        if (file == null) {
             throw new APIError(
                 'NOT FOUND',
                 HttpStatusCode.NOT_FOUND,

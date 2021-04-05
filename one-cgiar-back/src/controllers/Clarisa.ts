@@ -61,6 +61,22 @@ export const getClaRegions = async (page) => {
 
 }
 
+export const getClaInstitutions = async (page) => {
+    try {
+        const regions = await got(clarisaHost + 'institutions', { headers: clarisaHeader });
+        return sortAndPaginate(page, regions.body, 'name');
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
+
 const sortAndPaginate = async (page = 1, stringResponse, property?) => {
     const startIndex = (page - 1) * PAGE_SIZE;
     const endIndex = page * PAGE_SIZE

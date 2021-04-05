@@ -1,4 +1,4 @@
-import { Component, OnInit,  ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ConceptService } from '@app/shared/services/concept.service';
@@ -50,9 +50,11 @@ export class TheoryOfChangeComponent implements OnInit {
     this.filesToUpload = [];
     this.conceptSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
       // console.log('TOC', resp);
-      this.tocData = resp;
-      this.theoryOfChangeForm.controls['narrative'].setValue(resp.narrative);
-      this.listOfFiles = resp.files || [];
+      if (resp != null) {
+        this.tocData = resp;
+        this.theoryOfChangeForm.controls['narrative'].setValue(resp.narrative);
+        this.listOfFiles = resp.files || [];
+      }
     }, error => {
       console.log('mostrar el error que no hay archivos', error)
     })

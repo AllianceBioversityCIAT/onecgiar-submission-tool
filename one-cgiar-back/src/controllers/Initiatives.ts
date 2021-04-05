@@ -12,7 +12,7 @@ import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { ResponseHandler } from '../handlers/Response';
-import { getClaActionAreas, getClaCountries, getClaRegions } from './Clarisa';
+import { getClaActionAreas, getClaCountries, getClaInstitutions, getClaRegions } from './Clarisa';
 
 
 require('dotenv').config();
@@ -500,4 +500,13 @@ export const getRegions = async (req: Request, res: Response) => {
     }
 }
 
+export const getInstitutions = async (req: Request, res: Response) => {
+    try {
+        const { page } = req.query;
+        const institutions = await getClaInstitutions(page);
+        res.json(new ResponseHandler('Institutions.', { institutions }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);;
+    }
+}
 
