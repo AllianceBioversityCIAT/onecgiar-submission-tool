@@ -15,6 +15,7 @@ export class InitiativesService {
   actionAreas: [];
   stages: [];
   stagesMeta: [];
+  TOC: {};
 
   allInitiatives: [];
   ownInitiatives: [];
@@ -70,10 +71,6 @@ export class InitiativesService {
       }));
   }
 
-  // Query to get theory of change information by ID
-  getTheoryOfChange(id: number): Observable<any> {
-    return this.getQuery(`/stages-control/concept/tocs/${id}/files`);
-  }
 
   // Query to geta work package by ID
   getWorkPackageById(id: number): Observable<any> {
@@ -84,13 +81,13 @@ export class InitiativesService {
       }));
   }
 
-    // Query to get all the WorkPackages
-  getAllIWorkPackages(id:number): Observable<any> {
+  // Query to get all the WorkPackages
+  getAllIWorkPackages(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 
-    // Query to get Partnership By Initiative Id
-  getPartnershipByInitiativeId(id:number): Observable<any> {
+  // Query to get Partnership By Initiative Id
+  getPartnershipByInitiativeId(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
@@ -102,39 +99,11 @@ export class InitiativesService {
 
 
 
-  // Query to create theory of change (narrative and files)
-  createTheoryOfChange(fileToUpload: File[], body: any): Observable<any> {
-    const endpoint = `${environment.apiUrl}/stages-control/concept/tocs`;
-    const user = JSON.parse(localStorage.getItem('user')) || null;
-    const token = user.token;
-    const formData: FormData = new FormData();
-    formData.append('initvStgId', body.initvStgId);
-    formData.append('narrative', body.narrative);
-    console.log('fileToUpload[0]', fileToUpload);
-    fileToUpload.forEach((file) => {
-      formData.append('files', file, file.name);
-    })
-    // formData.append('files', fileToUpload, fileToUpload.name);
-    return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
-  }
 
-  // Query to create the files of the theory of change (Only files)
-  createTOCFiles(fileToUpload: File[], body: any): Observable<any> {
-    const endpoint = `${environment.apiUrl}/stages-control/concept/tocs/files`;
-    const user = JSON.parse(localStorage.getItem('user')) || null;
-    const token = user.token;
-    const formData: FormData = new FormData();
-    formData.append('tocId', body.tocId);
-    console.log('fileToUpload[0]', fileToUpload);
-    fileToUpload.forEach((file) => {
-      formData.append('files', file, file.name);
-    })
-    return this.http.post(endpoint, formData, { headers: new HttpHeaders({ 'auth': token }) });
-  }
 
   // Query to update a work package
   updateWorkPackage(body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages`,body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages`, body);
   }
 
   // Query to create a work package
@@ -189,7 +158,7 @@ export class InitiativesService {
 
   // Query to get all the initiatives by user
   getInitiativesByUser(): Observable<any> {
-    return  this.http.get<any>(`${environment.apiUrl}/${sectionPath}/own`).pipe(map(res => {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/own`).pipe(map(res => {
       this.ownInitiatives = res?.response.initiatives;
       return res?.response.initiatives
     }));
@@ -203,7 +172,7 @@ export class InitiativesService {
     }));
   }
 
-  getUsersByRoles(): Observable<any>{
+  getUsersByRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);
   }
 
@@ -216,5 +185,7 @@ export class InitiativesService {
 
   }
 
+  
 
+ 
 }

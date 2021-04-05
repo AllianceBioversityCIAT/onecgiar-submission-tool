@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrderByPipe } from '@shared/pipes/order-by.pipe';
+import { OrderByPipe } from '../pipes/order-by.pipe';
+import { ShowActivePipe } from '../pipes/show-active.pipe';
 
 
 @NgModule({
     declarations: [
-        OrderByPipe
+        OrderByPipe, ShowActivePipe
     ],
     exports: [
-        OrderByPipe
+        OrderByPipe, ShowActivePipe
     ],
-    providers: [OrderByPipe],
+    providers: [],
     imports: [
         CommonModule,
     ],
