@@ -5,6 +5,7 @@ import { AddPartnersModalComponent } from '../add-partners-modal/add-partners-mo
 import { InitiativesService } from '../../../services/initiatives.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -47,6 +48,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     public dialog: MatDialog,
     public _initiativesSvc: InitiativesService,
     public activatedRoute: ActivatedRoute,
+    public stgMenuSvc: StagesMenuService
     ) {
       this.partnershipForm = new FormGroup({
         comparativeAdvantage: new FormControl(null, Validators.required),
@@ -58,9 +60,9 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   getPartnershipByInitiativeId(){
-
+    let initvStgId;
     this.activatedRoute.params.subscribe(resp => {
-      
+      initvStgId = resp.id;
       this.partnership.initvStgId = Number(resp.id);
       this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe((resp:any)=>{
 
@@ -88,6 +90,12 @@ export class KeyPartnersConceptComponent implements OnInit {
       
      });
 
+     this.partnershipForm.valueChanges.subscribe(
+      result => {
+        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, initvStgId)
+        // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
+      }
+    );
 
 
   }
