@@ -6,6 +6,7 @@ import { InitiativesService } from '../../../services/initiatives.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -48,7 +49,8 @@ export class KeyPartnersConceptComponent implements OnInit {
     public dialog: MatDialog,
     public _initiativesSvc: InitiativesService,
     public activatedRoute: ActivatedRoute,
-    public stgMenuSvc: StagesMenuService
+    public stgMenuSvc: StagesMenuService,
+    private interactionsService:InteractionsService
     ) {
       this.partnershipForm = new FormGroup({
         comparativeAdvantage: new FormControl(null, Validators.required),
@@ -72,15 +74,9 @@ export class KeyPartnersConceptComponent implements OnInit {
        
 
         this.partnership.key_partners = resp.response.keyPartners;
-        console.log('%cpartnerships','background: #222; color: #ffff00');
-        console.log(resp);
-        console.log(resp.response.keyPartners);
        
         if(resp.response.partnership){
           this.partnership.id = resp.response.partnership.id
-          console.log('%cViene partners ships blueeeee','background: #222; color: #84c3fd');
-        }else{
-          console.log('%cno Viene partners ships reeeeed','background: #222; color: #fd8484');
         }
   
       })
@@ -101,11 +97,12 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   savePartnership(){
-    console.log('%csavePartnership','background: #222; color: #ffff00');
+    // console.log('%csavePartnership','background: #222; color: #ffff00');
     this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
-    console.log(this.partnership);
+    // console.log(this.partnership);
     this._initiativesSvc.createPartnership(this.partnership).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
+      this.interactionsService.successMessage('Key partners information has been saved')
       this.getPartnershipByInitiativeId();
     })
   }
