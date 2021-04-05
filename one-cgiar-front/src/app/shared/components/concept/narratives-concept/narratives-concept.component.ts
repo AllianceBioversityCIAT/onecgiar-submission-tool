@@ -19,6 +19,7 @@ export class NarrativesConceptComponent implements OnInit {
 
   public narrativesForm: FormGroup;
   public initvStgId: any;
+  showForm=false;
   constructor(
     public stgMenuSvc: StagesMenuService, 
     public initiativesSvc: InitiativesService, 
@@ -69,12 +70,15 @@ export class NarrativesConceptComponent implements OnInit {
   getNarrative(initvStgId) {
     this.spinnerService.show('narratives');
     this.conceptSvc.getConceptNarratives(initvStgId).subscribe(resp => {
+
       this.narrativesForm.controls['challenge'].setValue(resp.conceptChallenge);
       this.narrativesForm.controls['objectives'].setValue(resp.conceptObjectives);
       this.narrativesForm.controls['results'].setValue(resp.conceptResults);
       this.narrativesForm.controls['highlights'].setValue(resp.conceptHiglights);
       this.narrativesForm.controls['conceptId'].setValue(resp.conceptId);
       this.spinnerService.hide('narratives');
+
+      this.showForm=true;
     });
     // this.stgMenuSvc.menuObj.concept.narratives = this.narrativesForm.status
     // console.log(this.narrativesForm, this.stgMenuSvc.menuObj.concept)
