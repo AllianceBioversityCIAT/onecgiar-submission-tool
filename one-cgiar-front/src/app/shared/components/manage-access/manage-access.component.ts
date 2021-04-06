@@ -6,13 +6,14 @@ export interface DialogData {
   name: string;
 }
 
+
 @Component({
   selector: 'app-manage-access',
   templateUrl: './manage-access.component.html',
   styleUrls: ['./manage-access.component.scss']
 })
 export class ManageAccessComponent implements OnInit {
-
+  addCoordinatorActive=false;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
@@ -23,6 +24,11 @@ export class ManageAccessComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  addCoordinator(){
+    this.addCoordinatorActive = ! this.addCoordinatorActive
+    console.log("addCoordinator()");
   }
 
 }

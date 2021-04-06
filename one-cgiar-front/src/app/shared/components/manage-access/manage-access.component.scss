@@ -1,14 +1,62 @@
-@import '~@angular/material/theming';
-.bar{
+@import "~@angular/material/theming";
 
-    width: 100%;
-    height: 50px;
-    background-color: blue;
-    position: absolute;
-    top: 0;
+mat-card {
+  @include mat-elevation(7);
+  background-color: #fafafafa;
+  margin-bottom: 3px;
+  position: relative;
 }
 
-mat-card{
-    @include mat-elevation(7);
-    background-color: #fafafafa;
+button mat-icon {
+  margin-right: 5px;
+}
+
+.title_card {
+  margin-right: 30px;
+}
+
+.selected_users {
+  padding: 0px 10px;
+}
+
+.no_selected_users {
+}
+
+.container {
+//   max-height: 700px;
+}
+
+.scroll_container {
+  overflow-y: scroll;
+  max-height: 500px;
+//   border: 1px solid #e0e0e09a;
+  border-radius: 10px;
+//   transition: all .3s ease-in-out;
+}
+
+.scroll_container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scroll_container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+.scroll_container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.scroll_container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.person_add{
+    position: absolute;
+    right: 0;
+    margin-right: 15px;
 }

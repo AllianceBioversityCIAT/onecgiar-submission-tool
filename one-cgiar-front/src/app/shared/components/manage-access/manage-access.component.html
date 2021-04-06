@@ -2,40 +2,53 @@
 <div mat-dialog-content style="width: 100%;">
 <br>
 
-    <div class="container">
-        <mat-card>Simple card</mat-card>
-    </div>
-    <br>
+<div style="margin:0px 10px">
+    <div class="row">
 
-
-    <div class="container">
-        <div class="row">
-
-            <div class="col-sm-6">
-
-                <button type="submit" mat-raised-button class="initiative-button mat-elevation-z8">
-                    <mat-icon>person_add</mat-icon>
-                    <strong>Add coordinator</strong>
-                </button>
-
+        <div [ngClass]="{'col-sm-4': addCoordinatorActive}" [hidden]="!addCoordinatorActive" >
+            <h3>Add users</h3>
+            <div class="scroll_container">
+            <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+                <span class="title_card">User</span>
+                <mat-icon class="person_add">person_add</mat-icon>
+            </mat-card>
             </div>
+    
+        </div>
 
-            <div class="col-sm-6">
-                
-                <button type="submit" align="end" mat-raised-button class="initiative-button mat-elevation-z8">
-                    <mat-icon>add_circle_outline</mat-icon>
-                    <strong>Create coordinator</strong>
-                </button>
-
-            </div>
+        <div class="col-sm-1">
 
         </div>
+    
+        <div [ngClass]="{'col-sm-7': addCoordinatorActive,'col-sm-12 majka': !addCoordinatorActive}">
+            <h3>Manage users</h3>
+            <div class="scroll_container">
+            <mat-card class="selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+                <span class="title_card">User</span>
+                <mat-form-field>
+                <mat-label>Rol</mat-label>
+                <mat-select>
+                  <mat-option >PI - Initiative Coordinator</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-button color="primary"><mat-icon>add</mat-icon>Add rol</button>
+            </mat-card>
+        </div>
+        </div>
+    
     </div>
+</div>
+
+
+
+    <br>
 
 <br>
 <br>
 </div>
-<div mat-dialog-actions align="end">
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="addCoordinator()"><mat-icon>person_add</mat-icon><strong>Add coordinator</strong></button>
+  <button mat-button><mat-icon>add_circle_outline</mat-icon><strong>Create coordinator</strong></button>
+  <!-- <button mat-button (click)="onNoClick()">No Thanks</button> -->
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Close</button>
 </div>

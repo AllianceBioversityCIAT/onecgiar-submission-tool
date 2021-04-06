@@ -24,7 +24,7 @@ export class StagesMenuComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ManageAccessComponent, {
-      width: '50%',
+      width: '85%',
       // height: '50%'
       // data: {name: this.name, animal: this.animal}
     });
