@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Manage Access</h1>
+<div mat-dialog-content style="width: 100%;">
+<br>
+
+    <div class="container">
+        <mat-card>Simple card</mat-card>
+    </div>
+    <br>
+
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <button type="submit" mat-raised-button class="initiative-button mat-elevation-z8">
+                    <mat-icon>person_add</mat-icon>
+                    <strong>Add coordinator</strong>
+                </button>
+
+            </div>
+
+            <div class="col-sm-6">
+                
+                <button type="submit" align="end" mat-raised-button class="initiative-button mat-elevation-z8">
+                    <mat-icon>add_circle_outline</mat-icon>
+                    <strong>Create coordinator</strong>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+<br>
+<br>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

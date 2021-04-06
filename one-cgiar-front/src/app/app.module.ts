@@ -51,6 +51,7 @@ import { WorkPackageComponent } from './shared/components/concept/work-package/w
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
+import { ManageAccessComponent } from './shared/components/manage-access/manage-access.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.compo
     WorkPackageComponent,
     DevTagComponent,
     DevPanelComponent,
+    ManageAccessComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
