@@ -14,6 +14,7 @@ export class WorkPackagesComponent implements OnInit {
   workPackagesList=[];
   initvStgId=null;
   noWp = false;
+  regionsList=[];
   constructor(
     public activatedRoute: ActivatedRoute,
     public initiativesSvc: InitiativesService,
@@ -23,6 +24,12 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let cont=0;
+    this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
+      console.log('%cCLARISA regions','background: #222; color: #ffff00');
+      console.log(resp);
+      this.regionsList = resp.response.regions;
+    })
     this.activatedRoute.params.subscribe(resp => {
       this.initvStgId = resp['id'];
       this.getAllIWorkPackages();

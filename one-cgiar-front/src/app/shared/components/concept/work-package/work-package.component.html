@@ -45,9 +45,40 @@
     
         </mat-tab>
         <mat-tab label="Geographic scope">
-    
+        <form action="" *ngIf="true">
             <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope>
-    
+
+            <br>
+            <div class="row">
+                <div class="col-sm">
+                    <custom-multiple-choice [options]="{
+                        required:true,
+                        readonly:false,
+                        inputTitle:'Select regions',
+                        form:null,
+                        formControlId:'lead_id',
+                        selectList:this.regionsList,
+                        selectItemName:'first_name',
+                        selectItemId:'id'
+                       }"></custom-multiple-choice>
+                </div>
+                <div class="col-sm">
+                    <custom-multiple-choice [options]="{
+                        required:true,
+                        readonly:false,
+                        inputTitle:'Select countries',
+                        form:null,
+                        formControlId:'lead_id',
+                        selectList:this.regionsList,
+                        selectItemName:'first_name',
+                        selectItemId:'id'
+                       }"></custom-multiple-choice>
+                </div>
+            </div>
+
+            <br>
+
+            </form>
         </mat-tab>
         <mat-tab label="Projection of benefits">
     

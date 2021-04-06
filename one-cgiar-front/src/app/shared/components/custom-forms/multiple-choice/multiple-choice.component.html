@@ -1,0 +1,30 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box_container">
+                
+
+                <mat-form-field>
+                    <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                    <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
+                    <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of options.selectList" [value]="option.name" (click)="addItem(option)" [disabled]="disableOption(option)">
+                        <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-chip-list class="example-chip">
+                    <mat-chip class="example-box" selected *ngFor="let item of listSelected">
+                        {{item.name}}
+                        <mat-icon matChipRemove (click)="removeItem()">cancel</mat-icon>
+                    </mat-chip>
+                </mat-chip-list>
+
+            </div>
+        </div>
+    </div>
+    <br>
+</div>

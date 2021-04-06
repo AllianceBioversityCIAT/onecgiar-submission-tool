@@ -91,15 +91,16 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
+    // Query to get Partnership By Initiative Id
+  getCLARISARegionsByPage(page: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?page=${page}`);
+  }
+
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
     console.log('initiative', body);
     return this.postQuery('/initiatives', body);
   }
-
-
-
-
 
   // Query to update a work package
   updateWorkPackage(body: any): Observable<any> {

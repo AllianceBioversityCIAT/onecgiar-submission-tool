@@ -13,11 +13,13 @@ import { InteractionsService } from '../../../services/interactions.service';
   styleUrls: ['./work-package.component.scss'],
 })
 export class WorkPackageComponent implements OnInit {
+  showForm=false;
   animationSize=500;
   animationSizeActive=true;
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
+  @Input() regionsList: [];
   @Output() validateAllWP = new EventEmitter();
   workPackageId: number | string;
   initiativeId: any;
@@ -44,10 +46,19 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
+    //   console.log('%cCLARISA regions','background: #222; color: #ffff00');
+    //   console.log(resp);
+    //   this.regionsList = resp.response.regions;
+    //   this.showForm=true;
+    //   setInterval(()=>{
+    //      console.log("Hello"); 
+    //     this.regionsList.push({name:'test'})
+    //     }, 3000);
+    // })
     this.setFormData();
     if (!this.workPackageData.name) {
       this.animationSizeActive=false;
-      console.log('%cfalse','background: #222; color: #ffff00');
     }
     this.workPackagesList[this.index].formValid=this.createWorkPackageForm.invalid?false:true;
 
