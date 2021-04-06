@@ -5,8 +5,11 @@
 <div style="margin:0px 10px">
     <div class="row">
 
-        <div [ngClass]="{'col-sm-4': addCoordinatorActive}" [hidden]="!addCoordinatorActive" >
-            <h3>Add users</h3>
+        <div [ngClass]="{'col-sm-4 animate__animated animate__fadeInLeft ': addCoordinatorActive}" [hidden]="!addCoordinatorActive" >
+            <mat-form-field style="width: 100%;">
+                <mat-label>Add users</mat-label>
+                <input matInput placeholder="Search users"animate__fadeInLeft>
+            </mat-form-field>
             <div class="scroll_container">
             <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
                 <span class="title_card">User</span>
@@ -20,11 +23,12 @@
 
         </div>
     
-        <div [ngClass]="{'col-sm-7': addCoordinatorActive,'col-sm-12 majka': !addCoordinatorActive}">
+        <div [ngClass]="{'col-sm-7': addCoordinatorActive,'col-sm-12 pretty_padding': !addCoordinatorActive}" >
             <h3>Manage users</h3>
             <div class="scroll_container">
             <mat-card class="selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
                 <span class="title_card">User</span>
+                <br>
                 <mat-form-field>
                 <mat-label>Rol</mat-label>
                 <mat-select>
@@ -32,6 +36,7 @@
                 </mat-select>
               </mat-form-field>
               <button mat-button color="primary"><mat-icon>add</mat-icon>Add rol</button>
+              <mat-icon color="warn" class="person_add">delete</mat-icon>
             </mat-card>
         </div>
         </div>

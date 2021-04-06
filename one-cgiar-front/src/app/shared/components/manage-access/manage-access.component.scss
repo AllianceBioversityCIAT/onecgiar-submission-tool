@@ -17,6 +17,7 @@ button mat-icon {
 
 .selected_users {
   padding: 0px 10px;
+  margin-bottom: 20px;
 }
 
 .no_selected_users {
@@ -28,7 +29,7 @@ button mat-icon {
 
 .scroll_container {
   overflow-y: scroll;
-  max-height: 500px;
+  max-height: 480px;
 //   border: 1px solid #e0e0e09a;
   border-radius: 10px;
 //   transition: all .3s ease-in-out;
@@ -59,4 +60,10 @@ button mat-icon {
     position: absolute;
     right: 0;
     margin-right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.pretty_padding{
+    padding: 0px 250px;
 }
