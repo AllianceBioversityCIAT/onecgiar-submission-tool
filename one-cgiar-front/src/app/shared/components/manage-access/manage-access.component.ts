@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 
 export interface DialogData {
   animal: string;
@@ -15,12 +16,15 @@ export interface DialogData {
 export class ManageAccessComponent implements OnInit {
   addCoordinatorActive=false;
   rolesExample=[1];
+  allUsers=[];
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public initiativesSvc: InitiativesService,
   ) { }
 
   ngOnInit(): void {
+   this.getAllUsers();
   }
 
   onNoClick(): void {
@@ -30,6 +34,13 @@ export class ManageAccessComponent implements OnInit {
   addCoordinator(){
     this.addCoordinatorActive = ! this.addCoordinatorActive
     console.log("addCoordinator()");
+  }
+
+  getAllUsers(){
+    this.initiativesSvc.getAllUsers().subscribe(users=>{
+      console.log(users);
+      this.allUsers = users.data;
+    })
   }
 
 }
