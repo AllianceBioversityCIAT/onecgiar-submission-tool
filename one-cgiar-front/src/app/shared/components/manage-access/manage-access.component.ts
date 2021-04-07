@@ -17,6 +17,7 @@ export class ManageAccessComponent implements OnInit {
   addCoordinatorActive=false;
   rolesExample=[1];
   allUsers=[];
+  allRoles=[];
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -25,6 +26,7 @@ export class ManageAccessComponent implements OnInit {
 
   ngOnInit(): void {
    this.getAllUsers();
+   this.getAllRoles();
   }
 
   onNoClick(): void {
@@ -38,8 +40,15 @@ export class ManageAccessComponent implements OnInit {
 
   getAllUsers(){
     this.initiativesSvc.getAllUsers().subscribe(users=>{
-      console.log(users);
+      console.log(users.data);
       this.allUsers = users.data;
+    })
+  }
+
+  getAllRoles(){
+    this.initiativesSvc.getAllRoles().subscribe(roles=>{
+      console.log(roles.data);
+      this.allRoles = roles.data;
     })
   }
 

@@ -173,6 +173,11 @@ export class InitiativesService {
     }));
   }
 
+  // Query to get all the users 
+  getAllRoles(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/roles`);
+  }
+
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);

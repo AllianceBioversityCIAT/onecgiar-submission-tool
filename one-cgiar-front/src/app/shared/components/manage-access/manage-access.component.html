@@ -18,7 +18,7 @@
               <mat-form-field>
               <mat-label>Rol</mat-label>
               <mat-select>
-                <mat-option >PI - Initiative Coordinator</mat-option>
+                <mat-option [value]="rol.id" *ngFor="let rol of allRoles">{{rol.acronym}} - {{rol.description}}</mat-option>
               </mat-select>
             </mat-form-field>
             <button mat-button color="primary"><mat-icon>add</mat-icon>Add rol</button>
@@ -128,11 +128,12 @@
                 </div>
                 <h3 class="color-primary">Roles</h3>
                 <div class="row">
-                    <div class="col-sm-3" *ngFor="let item of rolesExample">
+                    <div class="col-sm-3" *ngFor="let rol of allRoles">
                         <mat-form-field style="width: 100%;">
                             <mat-label>Rol</mat-label>
                             <mat-select>
-                              <mat-option >PI - Initiative Coordinator</mat-option>
+                                <mat-option [value]="rol.id" *ngFor="let rol of allRoles">{{rol.acronym}} - {{rol.description}}</mat-option>
+
                             </mat-select>
                           </mat-form-field>
                     </div>
