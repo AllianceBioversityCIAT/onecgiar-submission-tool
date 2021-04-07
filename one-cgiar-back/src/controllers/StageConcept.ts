@@ -182,7 +182,7 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
                     (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
                     (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
                     concept.id AS conceptId,
-                    (SELECT name FROM initiatives WHERE id = initvStgs.id ) AS conceptName,
+                    IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ),'Likes are less') AS conceptName,
                     concept.action_area_description AS conceptActAreaDes,
                     concept.action_area_id AS conceptActAreaId
                     ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
