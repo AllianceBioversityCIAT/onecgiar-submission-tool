@@ -15,10 +15,10 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$variable-page-primary: mat-palette($mat-blue, A400);
+$variable-page-primary: mat-palette($mat-blue, 800);
 $variable-page-accent: mat-palette($mat-green, 600);
 // The warn palette is optional (defaults to red).
-$variable-page-warn: mat-palette($mat-red, 900);
+$variable-page-warn: mat-palette($mat-red, 500);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $variable-page-theme: mat-light-theme(
@@ -49,6 +49,16 @@ body {
   overflow-x: hidden;
   padding: 0px 0px 24px 0px;
   width: 100%;
+}
+
+.dialog-no-padding-no-scroll .mat-dialog-container {
+  overflow-x: hidden;
+  overflow-y: none !important;
+  padding: 0px 0px 24px 0px;
+}
+
+.dialog-no-padding-no-scroll .mat-dialog-content{
+  overflow-y: none !important;
 }
 
 .pointer {
@@ -137,3 +147,16 @@ ngx-editor {
     }
   }
 }
+
+
+.color-primary{
+  color: mat-color( $variable-page-primary) !important;
+}
+
+.background-color-primary{
+  background-color: mat-color( $variable-page-primary) !important;
+}
+
+// .mat-dialog-container {
+//   padding: 0px !important;
+// }

@@ -110,7 +110,7 @@ export class KeyPartnersConceptComponent implements OnInit {
   openDialog(i,data) {
     data.toDisableList = this.convertToDisableList();
     const dialogRef = this.dialog.open(AddPartnersModalComponent, 
-      { panelClass: 'custom-dialog-container',
+      { panelClass: 'dialog-no-padding-no-scroll',
         data
       });
 

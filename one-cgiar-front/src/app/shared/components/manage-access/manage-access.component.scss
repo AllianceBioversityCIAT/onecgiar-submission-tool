@@ -1,4 +1,5 @@
 @import "~@angular/material/theming";
+// @import './app.theme';
 
 mat-card {
   @include mat-elevation(7);
@@ -24,15 +25,15 @@ button mat-icon {
 }
 
 .container {
-//   max-height: 700px;
+  //   max-height: 700px;
 }
 
 .scroll_container {
   overflow-y: scroll;
-  max-height: 480px;
-//   border: 1px solid #e0e0e09a;
+  max-height: 50vh;
+  //   border: 1px solid #e0e0e09a;
   border-radius: 10px;
-//   transition: all .3s ease-in-out;
+  //   transition: all .3s ease-in-out;
 }
 
 .scroll_container::-webkit-scrollbar {
@@ -55,15 +56,68 @@ button mat-icon {
   background: #555;
 }
 
-
-.person_add{
-    position: absolute;
-    right: 0;
-    margin-right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+.person_add {
+  position: absolute;
+  right: 0;
+  margin-right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.pretty_padding{
-    padding: 0px 250px;
+.pretty_padding {
+  padding: 0px 250px;
 }
+
+h1 {
+  background-color: #0779a4;
+  color: #fff;
+  display: flex;
+  font-size: 1.5rem;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.custom-container-dialog {
+  margin: 0px 30px 0px 40px;
+}
+
+.floating_menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: blue;
+  width: 100px;
+  height: 100%;
+}
+
+.editar{
+  width: 100%;
+  height: 90%;
+  position: relative;
+  max-width: none;
+}
+
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+td {
+  padding-right: 8px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+

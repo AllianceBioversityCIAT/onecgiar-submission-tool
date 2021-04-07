@@ -1,9 +1,158 @@
 <h1 mat-dialog-title>Manage Access</h1>
-<div mat-dialog-content style="width: 100%;">
+<div  class="editar">
+
+<div class="custom-container-dialog">
+
+    <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">manage_accounts</mat-icon>
+            Manage coordinator
+          </ng-template>
+          <br>
+          <h3>Manage users</h3>
+          <div class="scroll_container">
+          <mat-card class="selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+              <span class="title_card">User</span>
+              <br>
+              <mat-form-field>
+              <mat-label>Rol</mat-label>
+              <mat-select>
+                <mat-option >PI - Initiative Coordinator</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-button color="primary"><mat-icon>add</mat-icon>Add rol</button>
+            <mat-icon color="warn" class="person_add">delete</mat-icon>
+          </mat-card>
+      </div>
+
+
+          
+        </mat-tab>
+      
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">person_add</mat-icon>
+            Add coordinator
+          </ng-template>
+          
+          
+          <br>
+          <div class="row">
+            <br>
+            <div class="col-sm-6" >
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Add users</mat-label>
+                    <input matInput placeholder="Search users"animate__fadeInLeft>
+                </mat-form-field>
+                <div class="scroll_container">
+                <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+                    <span class="title_card">User</span>
+                    <mat-icon class="person_add">person_add</mat-icon>
+                </mat-card>
+                </div>
+        
+            </div>
+        
+            <div class="col-sm-6" >
+                <h2>Users added</h2>
+                <div class="scroll_container">
+                <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+                    <span class="title_card">User</span>
+                    <mat-icon class="person_add">done</mat-icon>
+                </mat-card>
+                </div>
+        
+            </div>
+        
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        </mat-tab>
+      
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">add_circle_outline</mat-icon>
+            Create coordinator
+          </ng-template>
+
+<br>
+<br>
 <br>
 
-<div style="margin:0px 10px">
-    <div class="row">
+       
+          <div class="container">
+            <mat-card style="padding: 10px 50px;">
+                <h2 class="color-primary">Creare coordinator</h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>First name</mat-label>
+                            <input matInput>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Last name</mat-label>
+                            <input matInput>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Email</mat-label>
+                            <input matInput>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-label color="primary">Is cgiar?</mat-label><br>
+                        <mat-radio-group aria-label="Select an option">
+                            <mat-radio-button value="1">Yes</mat-radio-button>
+                            <mat-radio-button value="2">No</mat-radio-button>
+                          </mat-radio-group>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Password</mat-label>
+                            <input matInput>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <mat-divider></mat-divider>
+                        <br>
+                    </div>
+                </div>
+                <h3 class="color-primary">Roles</h3>
+                <div class="row">
+                    <div class="col-sm-3" *ngFor="let item of rolesExample">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Rol</mat-label>
+                            <mat-select>
+                              <mat-option >PI - Initiative Coordinator</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-sm-1">
+                        <button mat-button color="primary" (click)="rolesExample.push(1)"><mat-icon>add</mat-icon>Add rol</button>
+                    </div>
+                </div>
+  
+            </mat-card>
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
+
+    <div class="row" *ngIf="false">
 
         <div [ngClass]="{'col-sm-4 animate__animated animate__fadeInLeft ': addCoordinatorActive}" [hidden]="!addCoordinatorActive" >
             <mat-form-field style="width: 100%;">
@@ -18,12 +167,8 @@
             </div>
     
         </div>
-
-        <div class="col-sm-1">
-
-        </div>
     
-        <div [ngClass]="{'col-sm-7': addCoordinatorActive,'col-sm-12 pretty_padding': !addCoordinatorActive}" >
+        <div [ngClass]="{'col-sm-8': addCoordinatorActive,'col-sm-12 pretty_padding': !addCoordinatorActive}" >
             <h3>Manage users</h3>
             <div class="scroll_container">
             <mat-card class="selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
@@ -44,16 +189,14 @@
     </div>
 </div>
 
-
-
-    <br>
-
-<br>
-<br>
 </div>
+
+
+<!-- 
 <div mat-dialog-actions>
   <button mat-button color="primary" (click)="addCoordinator()"><mat-icon>person_add</mat-icon><strong>Add coordinator</strong></button>
   <button mat-button><mat-icon>add_circle_outline</mat-icon><strong>Create coordinator</strong></button>
-  <!-- <button mat-button (click)="onNoClick()">No Thanks</button> -->
   <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Close</button>
 </div>
+ -->
+

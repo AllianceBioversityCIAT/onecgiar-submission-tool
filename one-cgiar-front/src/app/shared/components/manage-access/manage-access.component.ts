@@ -14,6 +14,7 @@ export interface DialogData {
 })
 export class ManageAccessComponent implements OnInit {
   addCoordinatorActive=false;
+  rolesExample=[1];
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
