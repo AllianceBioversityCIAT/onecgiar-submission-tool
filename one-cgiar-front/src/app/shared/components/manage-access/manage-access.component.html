@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Manage Access</h1>
-<div  class="editar">
+<div  class="dialog_cont">
 
 <div class="custom-container-dialog">
 
@@ -12,7 +12,7 @@
           <br>
           <h3>Manage users</h3>
           <div class="scroll_container">
-          <mat-card class="selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
+          <mat-card class="selected_users" *ngFor="let item of [1,1,1]">
               <span class="title_card">User</span>
               <br>
               <mat-form-field>
@@ -37,42 +37,37 @@
           </ng-template>
           
           
-          <br>
-          <div class="row">
-            <br>
-            <div class="col-sm-6" >
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Add users</mat-label>
-                    <input matInput placeholder="Search users"animate__fadeInLeft>
-                </mat-form-field>
-                <div class="scroll_container">
-                <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
-                    <span class="title_card">User</span>
-                    <mat-icon class="person_add">person_add</mat-icon>
-                </mat-card>
-                </div>
-        
+          <!-- <br> -->
+<div class="custom-container-dialog">
+    <br>
+    <div class="row">
+        <div class="col-sm-6" >
+            <mat-form-field style="width: 100%;">
+                <mat-label>Add users</mat-label>
+                <input matInput placeholder="Search users"animate__fadeInLeft>
+            </mat-form-field>
+            <div class="scroll_container">
+            <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1]">
+                <span class="title_card">User</span>
+                <mat-icon class="person_add">person_add</mat-icon>
+            </mat-card>
             </div>
-        
-            <div class="col-sm-6" >
-                <h2>Users added</h2>
-                <div class="scroll_container">
-                <mat-card class="no_selected_users" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1,1,1]">
-                    <span class="title_card">User</span>
-                    <mat-icon class="person_add">done</mat-icon>
-                </mat-card>
-                </div>
-        
-            </div>
-        
+    
         </div>
-
-
-
-
-
-
-
+    
+        <div class="col-sm-6" >
+            <h2>Users added</h2>
+            <div class="scroll_container">
+            <mat-card class="no_selected_users" *ngFor="let item of [1,1]">
+                <span class="title_card">User</span>
+                <mat-icon class="person_add">done</mat-icon>
+            </mat-card>
+            </div>
+    
+        </div>
+    
+    </div>
+</div>
 
 
 
@@ -144,6 +139,10 @@
                     <div class="col-sm-1">
                         <button mat-button color="primary" (click)="rolesExample.push(1)"><mat-icon>add</mat-icon>Add rol</button>
                     </div>
+                    <div class="col-sm-12" align="end">
+                        <button  mat-raised-button color="primary">Create coordinator  <mat-icon class="tab-icon">add_circle_outline</mat-icon></button>
+                    </div>
+        
                 </div>
   
             </mat-card>
