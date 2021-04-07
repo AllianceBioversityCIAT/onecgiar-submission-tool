@@ -11,6 +11,9 @@ export class InitiativesByStages extends UpdatedCreatedAt {
 
     @Column('tinyint')
     active: boolean
+
+    @Column('text')
+    status: boolean
     
     @ManyToOne(() => Stages, stage => stage.initiatives)
     public stage!: Stages;

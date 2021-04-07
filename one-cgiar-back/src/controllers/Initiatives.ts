@@ -29,7 +29,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
     const queryRunner = getConnection().createQueryBuilder();
     let initiatives,
         initvSQL = ` 
-            SELECT
+        SELECT
                 initvStg.id AS initvStgId,
                 stage.description AS currentStage,
                 stage.id AS currentStageId,
@@ -40,11 +40,11 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 initvStgUsr.is_lead AS isLead,
                 initvStgUsr.is_owner AS isOwner
 
-            FROM
-                initiatives_by_users initvStgUsr
-            LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
-            LEFT JOIN stages stage ON stage.id = initvStg.stageId
-            LEFT JOIN initiatives initiative ON initiative.id = initvStg.initiativeId
+        FROM
+                initiatives initiative
+        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
+        LEFT JOIN stages stage ON stage.id = initvStg.stageId
+        LEFT JOIN initiatives_by_users initvStgUsr ON initvStgUsr.initiativeId = initiative.id
         `;
 
     try {
@@ -56,7 +56,8 @@ export const getInitiatives = async (req: Request, res: Response) => {
         initiatives = await queryRunner.connection.query(query, parameters);
         let initiativesIds = initiatives.map(init => init.initvStgId);
         if (initiatives.length == 0)
-            res.sendStatus(204)
+            // res.sendStatus(204)
+            res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
         else {
             /**
              * more stages to be added
