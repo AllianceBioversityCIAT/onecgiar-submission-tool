@@ -16,6 +16,11 @@ export class WorkPackageComponent implements OnInit {
   showForm=false;
   animationSize=500;
   animationSizeActive=true;
+  selectedList = [{
+    name: "Central Asia",
+    parentRegion: null,
+    um49Code: 143
+  }]
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;

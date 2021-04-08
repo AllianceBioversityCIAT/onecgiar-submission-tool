@@ -10,15 +10,16 @@ import { multipleChoiceOptions } from '../../../models/forms-options/multiple-ch
 export class MultipleChoiceComponent implements OnInit {
   @Input() options:multipleChoiceOptions;
   searchText:string;
-  listSelected = [
-  ]
-  constructor() { }
-  ngOnInit(){ }
+
+  constructor() { 
+  }
+  ngOnInit(){ 
+  }
 
   addItem(item){
     this.searchText = "";
-    this.listSelected.push(item);
-    console.log(this.listSelected);
+    this.options.selectedList.push(item);
+    console.log(this.options.selectedList);
   }
 
   removeItem(){
@@ -26,9 +27,9 @@ export class MultipleChoiceComponent implements OnInit {
   }
 
   disableOption(option){
-    if ( this.listSelected) {
-      for (const item of this.listSelected) {
-        if (option.um49Code==item.um49Code) {
+    if ( this.options.selectedList) {
+      for (const item of this.options.selectedList) {
+        if (option[this.options.selectItemId]==item[this.options.selectItemId]) {
           return true;
         }
       }

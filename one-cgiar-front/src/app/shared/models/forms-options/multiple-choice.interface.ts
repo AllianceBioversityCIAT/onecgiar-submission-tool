@@ -4,10 +4,10 @@ export interface multipleChoiceOptions{
     inputTitle:string;
     description?:string;
     // form:FormGroup;
-    formControlName:string;
-    formControlId:string;
+    chipName:string;
     // maxWords:number;
     selectList:[];
+    selectedList:any[];
     selectItemName:string;
     selectItemId:string|number;
     toDisableList:[];

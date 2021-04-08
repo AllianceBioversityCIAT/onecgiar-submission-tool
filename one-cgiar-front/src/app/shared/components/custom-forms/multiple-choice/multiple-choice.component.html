@@ -17,8 +17,8 @@
                 </mat-form-field>
 
                 <mat-chip-list class="example-chip">
-                    <mat-chip class="example-box" selected *ngFor="let item of listSelected">
-                        {{item.name}}
+                    <mat-chip class="example-box" selected *ngFor="let item of this.options.selectedList">
+                        {{item[options.chipName]}}
                         <mat-icon matChipRemove (click)="removeItem()">cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
