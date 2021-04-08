@@ -22,6 +22,7 @@ export class ManageAccessComponent implements OnInit {
       acronym: "PI",
       created_at: "2021-04-05T14:31:51.000Z",
       description: "Initiative Coordinator",
+      acronym_description: "PI - Initiative Coordinator",
       id: 3,
       name: "pi",
       updated_at: "2021-04-05T14:31:51.000Z",
