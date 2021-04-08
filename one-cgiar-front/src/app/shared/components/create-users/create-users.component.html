@@ -6,6 +6,30 @@
                 <h2 class="color-primary">Register user</h2>
                 <form [formGroup]="createUserForm">
                     <div class="row">
+                        <div class="col-sm-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label >Email</mat-label>
+                                <input matInput formControlName="email">
+                              </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <button mat-raised-button color="primary">Check email</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <h3 class="color-primary" style="display: inline-block;">
+                                <mat-icon aria-hidden="false" aria-label="Example home icon" class="center-icon">email</mat-icon>
+                                The email is <strong>cgiar</strong> 
+                            </h3> 
+                            /
+                            <h3 class="color-primary" style="display: inline-block;">
+                                <mat-icon aria-hidden="false" aria-label="Example home icon" class="center-icon">email</mat-icon>
+                                The email is not <strong>cgiar</strong> 
+                            </h3> 
+                            <!-- <mat-radio-group aria-label="Select an option" formControlName="is_cgiar">
+                                <mat-radio-button [value]="true">Yes</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group> -->
+                        </div>
                         <div class="col-sm-6">
                             <mat-form-field class="example-full-width">
                                 <mat-label >First name</mat-label>
@@ -17,19 +41,6 @@
                                 <mat-label >Last name</mat-label>
                                 <input matInput formControlName="last_name">
                               </mat-form-field>
-                        </div>
-                        <div class="col-sm-6">
-                            <mat-form-field class="example-full-width">
-                                <mat-label >Email</mat-label>
-                                <input matInput formControlName="email">
-                              </mat-form-field>
-                        </div>
-                        <div class="col-sm-6">
-                            <mat-label color="primary">Is cgiar?</mat-label><br>
-                            <mat-radio-group aria-label="Select an option" formControlName="is_cgiar">
-                                <mat-radio-button [value]="true">Yes</mat-radio-button>
-                                <mat-radio-button [value]="false">No</mat-radio-button>
-                            </mat-radio-group>
                         </div>
                         <div class="col-sm-6">
                             <mat-form-field class="example-full-width">
