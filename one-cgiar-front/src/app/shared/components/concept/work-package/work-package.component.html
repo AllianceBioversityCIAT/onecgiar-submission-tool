@@ -51,19 +51,23 @@
             <br>
             <div class="row">
                 <div class="col-sm">
-                    <custom-multiple-choice [options]="{
-                        required:true,
-                        readonly:false,
-                        inputTitle:'Select regions',
-                        form:null,
-                        chipName:'name',
-                        selectList:this.regionsList,
-                        selectedList:this.selectedList,
-                        selectItemName:'first_name',
-                        selectItemId:'um49Code'
-                       }"></custom-multiple-choice>
+                    <div class="box_container">
+                        <custom-multiple-choice [options]="{
+                            required:true,
+                            readonly:false,
+                            inputTitle:'Select regions',
+                            form:null,
+                            chipName:'name',
+                            selectList:this.regionsList,
+                            selectedList:this.selectedList,
+                            selectItemName:'first_name',
+                            selectItemId:'um49Code'
+                           }"></custom-multiple-choice>
+                    </div>
+
                 </div>
                 <div class="col-sm">
+                    <div class="box_container">
                     <custom-multiple-choice [options]="{
                         required:true,
                         readonly:false,
@@ -75,6 +79,7 @@
                         selectItemName:'first_name',
                         selectItemId:'um49Code'
                        }"></custom-multiple-choice>
+                    </div>
                 </div>
             </div>
 

@@ -2,9 +2,6 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="box_container">
-                
-
                 <mat-form-field>
                     <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
@@ -22,8 +19,6 @@
                         <mat-icon matChipRemove (click)="removeItem()">cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
-
-            </div>
         </div>
     </div>
     <br>

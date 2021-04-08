@@ -1,4 +1,4 @@
-
+@import '~@angular/material/theming';
 // .icon_verify{
 //   position: absolute;
 //   right: 0;
@@ -160,3 +160,12 @@ table, th, td {
 .set-data-button:hover {
     background-color: #0c96c9;
 }
+
+.box_container{
+    @include mat-elevation(3);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fafafa;
+    width: 100%;
+ //    height: 400px;
+ }
