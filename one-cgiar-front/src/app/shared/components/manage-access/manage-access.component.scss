@@ -1,12 +1,4 @@
 @import "~@angular/material/theming";
-// @import './app.theme';
-
-mat-card {
-  @include mat-elevation(7);
-  background-color: #fafafafa;
-  margin-bottom: 3px;
-  position: relative;
-}
 
 button mat-icon {
   margin-right: 5px;
@@ -22,6 +14,7 @@ button mat-icon {
 }
 
 .no_selected_users {
+  // border-radius: 30px;
 }
 
 .container {
@@ -40,6 +33,7 @@ button mat-icon {
   height: 500px;
   //   border: 1px solid #e0e0e09a;
   border-radius: 10px;
+  padding: 5px 5px;
   //   transition: all .3s ease-in-out;
 }
 
@@ -116,7 +110,40 @@ td {
   padding-right: 8px;
 }
 
-.mat-radio-button ~ .mat-radio-button {
-  margin-left: 16px;
+
+
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
 }
 
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+mat-card {
+  @include mat-elevation(7);
+  background-color: #fafafafa;
+  margin-bottom: 3px;
+  position: relative;
+}
+
+.botton_close{
+  position: absolute;
+  right: 0;
+  top: 46%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+  cursor: pointer;
+  // font-size: 30px;
+}
+
+.mat-dialog-title{
+  position: relative;
+}

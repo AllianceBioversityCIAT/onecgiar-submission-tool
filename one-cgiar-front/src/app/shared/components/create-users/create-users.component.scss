@@ -1,0 +1,17 @@
+@import "~@angular/material/theming";
+// @import './app.theme';
+
+mat-card {
+  @include mat-elevation(7);
+  background-color: #fafafafa;
+  margin-bottom: 3px;
+  position: relative;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+
+  .example-full-width {
+    width: 90%;
+  }

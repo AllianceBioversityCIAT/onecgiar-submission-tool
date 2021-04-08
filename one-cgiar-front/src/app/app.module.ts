@@ -52,6 +52,7 @@ import { CustomFormsModule } from './shared/components/custom-forms/custom-forms
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
 import { ManageAccessComponent } from './shared/components/manage-access/manage-access.component';
+import { CreateUsersComponent } from './shared/components/create-users/create-users.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { ManageAccessComponent } from './shared/components/manage-access/manage-
     DevTagComponent,
     DevPanelComponent,
     ManageAccessComponent,
+    CreateUsersComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

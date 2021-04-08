@@ -15,7 +15,6 @@ export interface DialogData {
 })
 export class ManageAccessComponent implements OnInit {
   addCoordinatorActive=false;
-  rolesExample=[1];
   allUsers=[];
   allRoles=[];
   constructor(

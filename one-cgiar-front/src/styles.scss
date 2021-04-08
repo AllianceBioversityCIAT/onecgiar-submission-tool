@@ -157,6 +157,25 @@ ngx-editor {
   background-color: mat-color( $variable-page-primary) !important;
 }
 
+.color-accent{
+  color: mat-color( $variable-page-accent) !important;
+}
+
+.background-color-accent{
+  background-color: mat-color( $variable-page-accent) !important;
+}
+
+.color-warn{
+  color: mat-color( $variable-page-warn) !important;
+}
+
+.background-color-warn{
+  background-color: mat-color( $variable-page-warn) !important;
+}
+
+
+
+
 // .mat-dialog-container {
 //   padding: 0px !important;
 // }
