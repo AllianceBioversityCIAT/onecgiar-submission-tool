@@ -14,8 +14,8 @@ export interface DialogData {
   styleUrls: ['./manage-access.component.scss']
 })
 export class ManageAccessComponent implements OnInit {
-  addCoordinatorActive=false;
   allUsers=[];
+  selectedUsers=[]
   allRoles=[];
   selectedRoles=[
     {
@@ -42,15 +42,20 @@ export class ManageAccessComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addCoordinator(){
-    this.addCoordinatorActive = ! this.addCoordinatorActive
-    console.log("addCoordinator()");
+  addCoordinator(user){
+    console.log("addCoordinator");
+      // this.searchText = "";
+      this.selectedUsers.push(user);
+      console.log(user);
   }
 
   getAllUsers(){
     this.initiativesSvc.getAllUsers().subscribe(users=>{
       console.log(users.data);
       this.allUsers = users.data;
+      for (const user of  this.allUsers) {
+        user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+      }
     })
   }
 
@@ -60,7 +65,6 @@ export class ManageAccessComponent implements OnInit {
       this.allRoles = roles.data;
       for (const rol of  this.allRoles) {
         rol.acronym_description = rol.acronym+' - '+rol.description;
-        console.log(rol);
       }
     })
   }

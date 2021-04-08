@@ -77,7 +77,6 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.usersByRoles = res[2].data;
       for (const user of  this.usersByRoles) {
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
-        console.log(user);
       }
       console.log( this.usersByRoles );
 

@@ -13,10 +13,10 @@
                     </mat-autocomplete>
                 </mat-form-field>
 
-                <mat-chip-list class="example-chip">
-                    <mat-chip class="example-box" selected *ngFor="let item of this.options.selectedList">
+                <mat-chip-list class="example-chip" *ngIf="!(options.showChips === false)">
+                    <mat-chip class="example-box" selected *ngFor="let item of this.options.selectedList;let i = index">
                         {{options.chipName?item[options.chipName]:item[options.selectItemName]}}
-                        <mat-icon matChipRemove (click)="removeItem()">cancel</mat-icon>
+                        <mat-icon matChipRemove (click)="removeItem(i)">cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
         </div>

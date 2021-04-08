@@ -22,8 +22,9 @@ export class MultipleChoiceComponent implements OnInit {
     console.log(this.options.selectedList);
   }
 
-  removeItem(){
+  removeItem(index){
     console.log("Remove item");
+    this.options.selectedList.splice(index, 1); 
   }
 
   disableOption(option){
