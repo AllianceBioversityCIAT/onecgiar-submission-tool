@@ -18,7 +18,7 @@ export class GeneralInformationConceptComponent implements OnInit {
   public initvStgId: any;
   public actionAreas: [];
   // public usersByInitiative: [];
-  public usersByRoles: [];
+  public usersByRoles:any [];
 
   fName="";
   wordCount: any;
@@ -75,6 +75,12 @@ export class GeneralInformationConceptComponent implements OnInit {
       let gnrlInfo = res[1];
       // this.usersByInitiative = res[2];
       this.usersByRoles = res[2].data;
+      for (const user of  this.usersByRoles) {
+        user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+        console.log(user);
+      }
+      console.log( this.usersByRoles );
+
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
