@@ -8,14 +8,14 @@
                     <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options.selectList" [value]="option.name" (click)="addItem(option)" [disabled]="disableOption(option)">
-                        <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option.name}}
+                        <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
                       </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
 
                 <mat-chip-list class="example-chip">
                     <mat-chip class="example-box" selected *ngFor="let item of this.options.selectedList">
-                        {{item[options.chipName]}}
+                        {{options.chipName?item[options.chipName]:item[options.selectItemName]}}
                         <mat-icon matChipRemove (click)="removeItem()">cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>

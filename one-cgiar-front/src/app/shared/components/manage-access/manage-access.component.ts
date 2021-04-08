@@ -17,6 +17,16 @@ export class ManageAccessComponent implements OnInit {
   addCoordinatorActive=false;
   allUsers=[];
   allRoles=[];
+  selectedRoles=[
+    {
+      acronym: "PI",
+      created_at: "2021-04-05T14:31:51.000Z",
+      description: "Initiative Coordinator",
+      id: 3,
+      name: "pi",
+      updated_at: "2021-04-05T14:31:51.000Z",
+    }
+  ];
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -48,6 +58,10 @@ export class ManageAccessComponent implements OnInit {
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
       console.log(roles.data);
       this.allRoles = roles.data;
+      for (const rol of  this.allRoles) {
+        rol.acronym_description = rol.acronym+' - '+rol.description;
+        console.log(rol);
+      }
     })
   }
 

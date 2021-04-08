@@ -42,31 +42,28 @@
                                 <mat-accordion class="example-headers-align" style="background-color: #fafafafa;" *ngFor="let user of [1]">
                                     <mat-expansion-panel  hideToggle>
                                       <mat-expansion-panel-header>
-                                        <mat-panel-title>
-                                            Manuel Almanzar
+                                        <mat-panel-title style="margin-top: 10px;">
+                                            <p> <strong>Manuel Almanzar </strong> <br>ManuelAlmanzar@test.com</p>
                                         </mat-panel-title>
                                         <mat-panel-description>
-                                            Roles: ( PI - SGD  )
+                                            
+                                            <mat-chip-list aria-label="Fish selection">
+                                                Roles:
+                                                <mat-chip *ngFor="let rol of selectedRoles" color="primary" selected>{{rol.acronym}}</mat-chip>
+                                              </mat-chip-list>
                                           <mat-icon>edit</mat-icon>
                                         </mat-panel-description>
                                       </mat-expansion-panel-header>
 
                                       <custom-multiple-choice [options]="{
-                                        required:true,
-                                        readonly:false,
-                                        inputTitle:'Select regions',
-                                        form:null,
+                                        inputTitle:'Select roles',
                                         chipName:'description',
                                         selectList:this.allRoles,
-                                        selectedList:[],
-                                        selectItemName:'description',
+                                        selectedList:this.selectedRoles,
+                                        selectItemName:'acronym_description',
                                         selectItemId:'id'
                                        }"></custom-multiple-choice>
 
-                                    <button mat-button color="primary">
-                                        <mat-icon>add</mat-icon>Add rol
-                                    </button>
-                                      
                                     </mat-expansion-panel>
                                 </mat-accordion>
 
