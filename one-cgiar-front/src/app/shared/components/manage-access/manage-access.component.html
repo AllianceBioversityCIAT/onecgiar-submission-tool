@@ -61,7 +61,7 @@
                                             
                                             <mat-chip-list aria-label="Fish selection">
                                                 Roles:
-                                                <mat-chip *ngFor="let rol of selectedRoles" color="primary" selected>{{rol.acronym}}</mat-chip>
+                                                <mat-chip *ngFor="let rol of user.roles" color="primary" selected>{{rol.acronym}}</mat-chip>
                                               </mat-chip-list>
                                           <mat-icon>edit</mat-icon>
                                         </mat-panel-description>
@@ -70,7 +70,7 @@
                                       <custom-multiple-choice [options]="{
                                         inputTitle:'Select roles',
                                         selectList:this.allRoles,
-                                        selectedList:this.selectedRoles,
+                                        selectedList:this.user.roles,
                                         selectItemName:'acronym_description',
                                         selectItemId:'id'
                                        }"></custom-multiple-choice>

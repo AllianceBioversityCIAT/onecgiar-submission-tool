@@ -17,17 +17,6 @@ export class ManageAccessComponent implements OnInit {
   allUsers=[];
   selectedUsers=[]
   allRoles=[];
-  selectedRoles=[
-    {
-      acronym: "PI",
-      created_at: "2021-04-05T14:31:51.000Z",
-      description: "Initiative Coordinator",
-      acronym_description: "PI - Initiative Coordinator",
-      id: 3,
-      name: "pi",
-      updated_at: "2021-04-05T14:31:51.000Z",
-    }
-  ];
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -56,6 +45,15 @@ export class ManageAccessComponent implements OnInit {
       this.allUsers = users.data;
       for (const user of  this.allUsers) {
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+        user.roles=[
+          {
+            acronym: "PI",
+            description: "Initiative Coordinator",
+            acronym_description: "PI - Initiative Coordinator",
+            id: 3,
+            name: "pi",
+          }
+        ];
       }
     })
   }

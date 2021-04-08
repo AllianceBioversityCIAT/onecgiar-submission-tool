@@ -28,4 +28,8 @@ export class CreateUsersComponent implements OnInit {
     console.log(this.createUserForm.value);
   }
 
+  validateUser(){
+    console.log("validate users");
+  }
+
 }
