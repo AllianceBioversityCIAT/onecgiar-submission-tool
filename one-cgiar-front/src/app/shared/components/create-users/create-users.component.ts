@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 
 @Component({
   selector: 'app-create-users',
@@ -14,6 +15,7 @@ export class CreateUsersComponent implements OnInit {
   createUserForm: FormGroup;
   constructor(
     public _initiativesSvc: InitiativesService,
+    private interactionsService:InteractionsService
   ) { 
     this.createUserForm = new FormGroup({
       first_name: new FormControl({value: null, disabled: this.isCgiar}, Validators.required),
@@ -29,12 +31,19 @@ export class CreateUsersComponent implements OnInit {
 
 
   createUser(){
+    this.validateEmail();
     this.createUserForm.controls.is_cgiar.setValue(this.isCgiar);
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
     body.roles=[5];
     this._initiativesSvc.createUser(body).subscribe(resp=>{
       console.log(resp);
+      this.interactionsService.successMessage(`The user ${resp.data.first_name +' '+ resp.data.last_name} has been created`);
+    },
+    err=>{
+      console.log(err);
+      console.log(err.error.msg);
+      this.interactionsService.errorMessage(err.error.msg);
     });
   }
 

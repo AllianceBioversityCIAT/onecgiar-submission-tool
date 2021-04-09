@@ -21,7 +21,7 @@ export class InteractionsService {
 
   errorMessage(title:string){
     Swal.fire({
-      icon: 'success',
+      icon: 'error',
       title: title,
       showConfirmButton: false,
       timer: 2000
