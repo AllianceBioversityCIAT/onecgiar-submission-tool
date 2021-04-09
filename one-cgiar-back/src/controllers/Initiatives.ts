@@ -12,6 +12,8 @@ import { Stages } from '../entity/Stages';
 import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
+import { APIError } from '../handlers/BaseError';
+import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { getClaActionAreas, getClaCountries, getClaInstitutions, getClaRegions } from './Clarisa';
 
@@ -207,14 +209,73 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     let newUsrByInitv: InitiativesByUsers;
     try {
 
-        const usersByInitiative = await initvUsrsRepo.find({ where: { initiative: initiativeId }, relations: ['roles'] });
+        let usersByInitiative = await initvUsrsRepo.find({ where: { initiative: initiativeId }, relations: ['role', 'user'] });
         const user = await userRepo.findOne(userId);
-        const role = await rolesRepo.findOne(roleId);
         const initiative = await initiativesRepo.findOne(initiativeId);
 
-        if (usersByInitiative.length > 0) {
+        const role = await rolesRepo.findOne(roleId);
+        const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
+        const coLeadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
+        const coordinatorRole = await rolesRepo.findOne({ where: { acronym: 'CO' } });
 
-        } else {
+
+        if (role.acronym == 'ADM') {
+            throw new APIError(
+                'UNAUTHORIZED',
+                HttpStatusCode.UNAUTHORIZED,
+                true,
+                'Role not accesible.'
+            );
+        }
+
+        if (usersByInitiative.length > 0) {
+            // let lead = usersByInitiative.find(usrInt => usrInt.role.acronym == 'SGD');
+            // let co_lead = usersByInitiative.find(usrInt => usrInt.role.acronym == 'PI');
+
+            newUsrByInitv = new InitiativesByUsers();
+            newUsrByInitv.active = true;
+            newUsrByInitv.role = role;
+            newUsrByInitv.user = user;
+            newUsrByInitv.initiative = initiative;
+
+            // console.log(co_lead)
+            // console.log(lead)
+
+            if (role.acronym == 'SGD') {
+                usersByInitiative.forEach(initvUsr => {
+                    if (user.id != initvUsr.user.id) {
+                        initvUsr.role = (initvUsr.role.acronym == 'SGD') ? coordinatorRole: initvUsr.role;
+                    }else{
+                        newUsrByInitv.id = initvUsr.id;
+                    }
+                });
+                // console.log(usersByInitiative)
+                // usersByInitiative = await initvUsrsRepo.save(usersByInitiative);
+            }else if(role.acronym == 'PI'){
+                usersByInitiative.forEach(initvUsr => {
+                    if (user.id != initvUsr.user.id) {
+                        initvUsr.role = (initvUsr.role.acronym == 'PI') ? coordinatorRole: initvUsr.role;
+                    }else{
+                        newUsrByInitv.id = initvUsr.id;
+                    }
+                });
+                // console.log(usersByInitiative)
+                // usersByInitiative = await initvUsrsRepo.save(usersByInitiative);
+            }else {
+                usersByInitiative.forEach(initvUsr => {
+                    if (user.id != initvUsr.user.id) {
+                        initvUsr.role = (initvUsr.role.acronym == 'CO') ? coordinatorRole: initvUsr.role;
+                    }else{
+                        newUsrByInitv.id = initvUsr.id;
+                    }
+                });
+            }
+
+            usersByInitiative = await initvUsrsRepo.save(usersByInitiative);
+            newUsrByInitv = await initvUsrsRepo.save(newUsrByInitv);
+
+        }
+        else {
             newUsrByInitv = new InitiativesByUsers();
             newUsrByInitv.active = true;
             newUsrByInitv.role = role;
@@ -227,6 +288,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Assigned user to intiative', { assignedUser: newUsrByInitv }));
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 
