@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { InteractionsService } from '../../../services/interactions.service';
 import { ManageAccessComponent } from '../../manage-access/manage-access.component';
 import { MatDialog } from '@angular/material/dialog';
+import { InitiativesService } from '../../../services/initiatives.service';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -46,7 +47,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     public activatedRoute: ActivatedRoute, 
     private spinnerService: NgxSpinnerService,
     private interactionsService:InteractionsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public _initiativesService:InitiativesService
 
     ) {
     this.generalInformationForm = new FormGroup({
@@ -64,6 +66,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(resp => {
+      this._initiativesService.initvStgId = resp['id'];
       this.conceptSvc.initvStgId = resp['id'];
       this.generalInformationForm.get('initvStgId').setValue(resp['id'])
       this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
@@ -87,7 +90,6 @@ export class GeneralInformationConceptComponent implements OnInit {
 
       //
       let gnrlInfo = res[1];
-      console.log(gnrlInfo);
       this.leads.lead_name = gnrlInfo.conceptLead;
       this.leads.lead_email = gnrlInfo.conceptEmail;
       this.leads.co_lead_name = gnrlInfo.conceptCoLead;

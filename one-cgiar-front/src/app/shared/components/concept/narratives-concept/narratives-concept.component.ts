@@ -40,6 +40,7 @@ export class NarrativesConceptComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(resp => {
+      this.initiativesSvc.initvStgId = resp['id'];
       this.conceptSvc.initvStgId = resp['id'];
       this.narrativesForm.get('initvStgId').setValue(resp['id'])
       this.getNarrative(this.conceptSvc.initvStgId);

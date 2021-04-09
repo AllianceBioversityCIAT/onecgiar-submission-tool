@@ -31,7 +31,6 @@ export class ManageAccessComponent implements OnInit {
    this.getAllUsers();
    this.getAllRoles();
    this.getUsersByInitiative();
-   this.getInitiativeId();
   }
 
   onNoClick(): void {
@@ -65,34 +64,18 @@ export class ManageAccessComponent implements OnInit {
 
   getAllRoles(){
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
-      console.log(roles.data);
       this.allRoles = roles.data;
-      // this.allRoles.splice(0,1)
       for (let index = 0; index < this.allRoles.length; index++) {
         if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
           this.allRoles.splice(index,1)
         }
       }
-      for (const rol of  this.allRoles) {
-        rol.acronym_description = rol.acronym+' - '+rol.description;
-      }
     })
   }
 
   getUsersByInitiative(){
-    console.log('%cid sdnasdasd','background: #222; color: #fd8484');
-    console.log(this.initiativesSvc.initvStgId);
-    this.initiativesSvc.getUsersByInitiative(1).subscribe(resp=>{
+    this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       console.log(resp);
     })
   }
-
-  
-  getInitiativeId(){
-    this.activatedRoute.params.subscribe(resp => {
-      console.log("ruta");
-      console.log(resp);
-    });
-  }
-
 }
