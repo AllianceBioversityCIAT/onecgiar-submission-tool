@@ -152,6 +152,7 @@ const validateAD = (one_user, password) => {
     return new Promise((resolve, reject) => {
         ad.authenticate(ad_user, password, (err, auth) => {
             if (err) {
+                console.log(err)
                 if (err.errno == "ENOTFOUND") {
                     let notFound = {
                         'name': 'SERVER_NOT_FOUND',
@@ -183,8 +184,6 @@ const validateAD = (one_user, password) => {
 
 const searchByEmail = (email) => {
     let ad = new ActiveDirectory(config.active_directory);
-    console.log(ad)
-
     return new Promise((resolve, reject) => {
         ad.findUser(email, (err, user) => {
             if (err) {
