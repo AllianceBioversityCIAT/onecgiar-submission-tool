@@ -44,6 +44,7 @@ export class InitTableComponent implements AfterViewInit {
   }
 
   parseStageLink(stageName: string) {
+    if (stageName == null) return '';
     return stageName.split(' ').join('-').toLowerCase();
   }
 

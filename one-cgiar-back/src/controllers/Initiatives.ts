@@ -35,10 +35,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 stage.id AS currentStageId,
                 initiative.name AS initiativeName,
                 initvStg.active AS initvStageIsActive,
-                initvStg.status AS initvStageStatus,
-                initvStgUsr.is_coordinator AS isCoordinator,
-                initvStgUsr.is_lead AS isLead,
-                initvStgUsr.is_owner AS isOwner
+                initvStg.status AS initvStageStatus
 
         FROM
                 initiatives initiative
@@ -82,6 +79,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 }
@@ -107,9 +105,6 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
             initvStg.status AS initvStageStatus,
-            initvStgUsr.is_coordinator AS isCoordinator,
-            initvStgUsr.is_lead AS isLead,
-            initvStgUsr.is_owner AS isOwner,
             (SELECT id FROM stages WHERE active = true) AS activeStageId,
             (SELECT description FROM stages WHERE active = true) AS activeStageName
 
@@ -155,6 +150,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 }
