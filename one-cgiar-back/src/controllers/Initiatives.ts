@@ -228,9 +228,9 @@ export const createInitiative = async (req: Request, res: Response) => {
             let createdInitiative = await initiativesRepository.save(initiative);
             initByUsr.initiative = createdInitiative;
             initByUsr.user = userDB;
-            initByUsr.is_coordinator = is_coordinator;
-            initByUsr.is_lead = is_lead;
-            initByUsr.is_owner = is_owner;
+            // initByUsr.is_coordinator = is_coordinator;
+            // initByUsr.is_lead = is_lead;
+            // initByUsr.is_owner = is_owner;
             if (current_stage) {
                 let sltdStage = await stageRepository.findOne(current_stage);
                 newInitStg.initiative = createdInitiative;
