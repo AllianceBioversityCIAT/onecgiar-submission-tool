@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 
 export interface DialogData {
@@ -17,15 +18,20 @@ export class ManageAccessComponent implements OnInit {
   allUsers=[];
   selectedUsers=[]
   allRoles=[];
+  initiative;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
+    public activatedRoute: ActivatedRoute,
+
   ) { }
 
   ngOnInit(): void {
    this.getAllUsers();
    this.getAllRoles();
+   this.getUsersByInitiative();
+   this.getInitiativeId();
   }
 
   onNoClick(): void {
@@ -71,6 +77,22 @@ export class ManageAccessComponent implements OnInit {
         rol.acronym_description = rol.acronym+' - '+rol.description;
       }
     })
+  }
+
+  getUsersByInitiative(){
+    console.log('%cid sdnasdasd','background: #222; color: #fd8484');
+    console.log(this.initiativesSvc.initvStgId);
+    this.initiativesSvc.getUsersByInitiative(1).subscribe(resp=>{
+      console.log(resp);
+    })
+  }
+
+  
+  getInitiativeId(){
+    this.activatedRoute.params.subscribe(resp => {
+      console.log("ruta");
+      console.log(resp);
+    });
   }
 
 }
