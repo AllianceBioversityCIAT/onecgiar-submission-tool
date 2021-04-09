@@ -244,7 +244,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
             if (role.acronym == 'SGD') {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role.acronym == 'SGD') ? coordinatorRole: initvUsr.role;
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'SGD') ? coordinatorRole: initvUsr.role;
                     }else{
                         newUsrByInitv.id = initvUsr.id;
                     }
@@ -254,7 +254,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
             }else if(role.acronym == 'PI'){
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role.acronym == 'PI') ? coordinatorRole: initvUsr.role;
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'PI') ? coordinatorRole: initvUsr.role;
                     }else{
                         newUsrByInitv.id = initvUsr.id;
                     }
@@ -264,7 +264,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
             }else {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role.acronym == 'CO') ? coordinatorRole: initvUsr.role;
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'CO') ? coordinatorRole: initvUsr.role;
                     }else{
                         newUsrByInitv.id = initvUsr.id;
                     }
