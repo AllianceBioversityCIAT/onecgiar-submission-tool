@@ -44,7 +44,7 @@ export class GeneralInformationConceptComponent implements OnInit {
       conceptId: new FormControl(''),
       name: new FormControl(null, Validators.required),
       lead_name: new FormControl(null),
-      lead_id: new FormControl(null, Validators.required),
+      lead_id: new FormControl(null),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       initvStgId: new FormControl(this.initvStgId, Validators.required),

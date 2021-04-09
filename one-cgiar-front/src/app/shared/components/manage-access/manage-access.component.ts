@@ -63,9 +63,20 @@ export class ManageAccessComponent implements OnInit {
       this.allRoles = roles.data;
       // this.allRoles.splice(0,1)
       for (let index = 0; index < this.allRoles.length; index++) {
-        if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
-          this.allRoles.splice(index,1)
+        switch (this.allRoles[index].id) {
+          case 1:
+            this.allRoles.splice(index,1)
+          case 2:
+            this.allRoles.splice(index,1)
+          default:
+            break;
         }
+        // if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
+        //   this.allRoles.splice(index,1)
+        // }
+        // if (this.allRoles[index].acronym == "SGD" && this.allRoles[index].id == 2) {
+        //   this.allRoles.splice(index,1)
+        // }
       }
       for (const rol of  this.allRoles) {
         rol.acronym_description = rol.acronym+' - '+rol.description;
