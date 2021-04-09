@@ -228,16 +228,16 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params: { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description }
+ * @param req params: { conceptId, initvStgId, name, action_area_id, action_area_description }
  * @param res 
  */
 
 export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
     // export const updateConcept = async (req: Request, res: Response) => {
-    const { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description } = req.body;
+    const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
     const initvStgRepo = getRepository(InitiativesByStages);
-    const initvUsrsRepo = getRepository(InitiativesByUsers);
+    
     const initiativeRepo = getRepository(Initiatives);
     const userRepo = getRepository(Users);
     const queryRunner = getConnection().createQueryBuilder();
@@ -245,16 +245,12 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     let conceptInf: ConceptInfo;
 
     try {
-        if (lead_id == null) {
-            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Assigned leader not found.')
-        }
-        const leadUser = await userRepo.findOne(lead_id);
-
-
+        
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
         }
+
 
         if (conceptId == null) {
             conceptInf = new ConceptInfo();
@@ -266,58 +262,13 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             conceptInf.challenge = '';
             conceptInf.results = '';
             conceptInf.highlights = '';
-
-            const initvUser = new InitiativesByUsers();
-            // initvUser.is_lead = true;
-            // initvUser.is_owner = true;
-            // initvUser.is_coordinator = false;
-            initvUser.initiative = initvStg.initiative;
-            initvUser.user = leadUser;
-
-            let initvUserN = await initvUsrsRepo.save(initvUser);
-
         } else {
             conceptInf = await concptInfoRepo.findOne(conceptId);
             conceptInf.name = (name) ? name : conceptInf.name;
             conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
             conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
-            const initvUsers = await initvUsrsRepo.find({ where: { initiative: initvStg.initiative }, relations: ['user'] });
-            if (initvUsers.length > 0) {
-                initvUsers.forEach(
-                    usr => {
-                        // usr.is_lead = false;
-                        // usr.is_coordinator = true;
-                    }
-                );
 
-                if (initvUsers.find(usr => usr.user.id == leadUser.id)) {
-                    const index = initvUsers.findIndex(usr => usr.user.id == leadUser.id)
-                    // initvUsers[index].is_lead = true;
-                    // initvUsers[index].is_coordinator = false;
-                } else {
-                    const initvUser = new InitiativesByUsers();
-                    // initvUser.is_lead = true;
-                    // initvUser.is_owner = true;
-                    // initvUser.is_coordinator = false;
-                    initvUser.initiative = initvStg.initiative;
-                    initvUser.user = leadUser;
-                    let initvUserN = await initvUsrsRepo.save(initvUser);
-                }
-
-                let initvUserN = await initvUsrsRepo.save(initvUsers);
-
-            } else {
-                const initvUser = new InitiativesByUsers();
-                // initvUser.is_lead = true;
-                // initvUser.is_owner = true;
-                // initvUser.is_coordinator = false;
-                initvUser.initiative = initvStg.initiative;
-                initvUser.user = leadUser;
-                let initvUserN = await initvUsrsRepo.save(initvUser);
-
-            }
         }
-
         let upsertedInfo = await concptInfoRepo.save(conceptInf);
 
         /**
@@ -334,8 +285,8 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             initvStgs.id AS initvStgId,
             stage.description AS stageDesc,
             stage.active AS stageIsActive,
-            (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
-            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
+           --  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
+           --  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
             concept.id AS conceptId,
             concept.name AS conceptName,
             concept.action_area_description AS conceptActAreaDes,
@@ -365,7 +316,6 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     }
 
 }
-
 
 
 

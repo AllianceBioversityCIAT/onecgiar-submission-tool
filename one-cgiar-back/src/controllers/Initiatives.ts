@@ -7,6 +7,7 @@ import { Initiatives, InterfInfoStage } from '../entity/Initiatives'
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
 import { KeyPartners } from '../entity/KeyPartner';
+import { Roles } from '../entity/Roles';
 import { Stages } from '../entity/Stages';
 import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
@@ -161,7 +162,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
  * @param res 
  */
 export const getUsersByInitiative = async (req: Request, res: Response) => {
-    const { initvStgId } = req.params;
+    const { initiativeId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
     const querySql = `
         SELECT
@@ -172,7 +173,7 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
             initiatives_by_users initvUsr
         LEFT JOIN users users ON users.id = initvUsr.userId
         WHERE
-            initiativeId = :initvStgId;
+            initiativeId = :initiativeId;
     `;
 
     let users;
@@ -180,7 +181,7 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             querySql,
-            { initvStgId },
+            { initiativeId },
             {}
         );
         users = await queryRunner.connection.query(query, parameters);
@@ -189,6 +190,48 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 }
+
+
+/**
+ * 
+ * @param req params:{ userId, roleId }
+ * @param res 
+ */
+export const assignUsersByInitiative = async (req: Request, res: Response) => {
+    const { userId, roleId } = req.body;
+    const { initiativeId } = req.params;
+    const initvUsrsRepo = getRepository(InitiativesByUsers);
+    const initiativesRepo = getRepository(Initiatives);
+    const userRepo = getRepository(Users);
+    const rolesRepo = getRepository(Roles);
+    let newUsrByInitv: InitiativesByUsers;
+    try {
+
+        const usersByInitiative = await initvUsrsRepo.find({ where: { initiative: initiativeId }, relations: ['roles'] });
+        const user = await userRepo.findOne(userId);
+        const role = await rolesRepo.findOne(roleId);
+        const initiative = await initiativesRepo.findOne(initiativeId);
+
+        if (usersByInitiative.length > 0) {
+
+        } else {
+            newUsrByInitv = new InitiativesByUsers();
+            newUsrByInitv.active = true;
+            newUsrByInitv.role = role;
+            newUsrByInitv.user = user;
+            newUsrByInitv.initiative = initiative;
+
+            newUsrByInitv = await initvUsrsRepo.save(newUsrByInitv);
+        }
+
+        res.json(new ResponseHandler('Assigned user to intiative', { assignedUser: newUsrByInitv }));
+
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
 
 /**
  * 
