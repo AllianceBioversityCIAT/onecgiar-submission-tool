@@ -200,7 +200,7 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
  * @param res 
  */
 export const assignUsersByInitiative = async (req: Request, res: Response) => {
-    const { userId, roleId } = req.body;
+    const { userId, roleId, active } = req.body;
     const { initiativeId } = req.params;
     const initvUsrsRepo = getRepository(InitiativesByUsers);
     const initiativesRepo = getRepository(Initiatives);
@@ -229,17 +229,12 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         }
 
         if (usersByInitiative.length > 0) {
-            // let lead = usersByInitiative.find(usrInt => usrInt.role.acronym == 'SGD');
-            // let co_lead = usersByInitiative.find(usrInt => usrInt.role.acronym == 'PI');
 
             newUsrByInitv = new InitiativesByUsers();
-            newUsrByInitv.active = true;
+            newUsrByInitv.active = active;
             newUsrByInitv.role = role;
             newUsrByInitv.user = user;
             newUsrByInitv.initiative = initiative;
-
-            // console.log(co_lead)
-            // console.log(lead)
 
             if (role.acronym == 'SGD') {
                 usersByInitiative.forEach(initvUsr => {
@@ -249,8 +244,6 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
                         newUsrByInitv.id = initvUsr.id;
                     }
                 });
-                // console.log(usersByInitiative)
-                // usersByInitiative = await initvUsrsRepo.save(usersByInitiative);
             }else if(role.acronym == 'PI'){
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
@@ -259,8 +252,6 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
                         newUsrByInitv.id = initvUsr.id;
                     }
                 });
-                // console.log(usersByInitiative)
-                // usersByInitiative = await initvUsrsRepo.save(usersByInitiative);
             }else {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
@@ -277,7 +268,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         }
         else {
             newUsrByInitv = new InitiativesByUsers();
-            newUsrByInitv.active = true;
+            newUsrByInitv.active = active;
             newUsrByInitv.role = role;
             newUsrByInitv.user = user;
             newUsrByInitv.initiative = initiative;
