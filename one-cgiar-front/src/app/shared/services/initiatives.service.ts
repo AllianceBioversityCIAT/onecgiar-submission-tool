@@ -98,7 +98,6 @@ export class InitiativesService {
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
-    console.log('initiative', body);
     return this.postQuery('/initiatives', body);
   }
 
@@ -115,6 +114,13 @@ export class InitiativesService {
   // Query to create a work package
   createPartnership(body: any): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/partnership`, body);
+  }
+
+  // Query to create a user
+  createUser(body: any): Observable<any> {
+    console.log('%c'+`${environment.apiUrl}/users`,'background: #222; color: #ffff00');
+    console.log(body);
+    return this.http.post<any>(`${environment.apiUrl}/users`, body);
   }
 
   // Query to update the narrative of a theory of change (Only narrative)
