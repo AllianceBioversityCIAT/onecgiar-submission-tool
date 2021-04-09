@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative, getRegions, getCountries, getInstitutions } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignActArsByInitvStg, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative, getRegions, getCountries, getInstitutions, assignUsersByInitiative } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -15,7 +15,11 @@ router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativ
 router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], createInitiative);
 
 // get users by initiative
-router.get("/:initvStgId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), getUsersByInitiative);
+router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), getUsersByInitiative);
+
+// get users by initiative
+router.patch("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), assignUsersByInitiative);
+
 
 // get stages
 router.get("/stages", [checkJwt], getStage);
