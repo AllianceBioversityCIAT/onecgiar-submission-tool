@@ -186,6 +186,7 @@ const searchByEmail = (email) => {
     let ad = new ActiveDirectory(config.active_directory);
     return new Promise((resolve, reject) => {
         ad.findUser(email, (err, user) => {
+            console.log(err, user)
             if (err) {
                 if (err.errno == "ENOTFOUND") {
                     let notFound = {
@@ -194,6 +195,13 @@ const searchByEmail = (email) => {
                         'httpCode': 500
                     };
                     return reject(notFound);
+                }else{
+                    let e ={
+                        name: 'SERVER_ERROR',
+                        description: err,
+                        httpcode: 500
+                    }
+                    return reject(e);
                 }
             }
             if (!user) {

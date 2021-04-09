@@ -159,6 +159,11 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 }
 
+
+
+
+//              ----------------------------                TO UPDATE             -------------------------------------            //
+
 /**
  * 
  * @param req params:{ initvStgId }
@@ -179,8 +184,8 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
                     initvStgs.id AS initvStgId,
                     stage.description AS stageDesc,
                     stage.active AS stageIsActive,
-                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
-                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
+                    -- (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
+                    -- (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
                     concept.id AS conceptId,
                     IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS conceptName,
                     concept.action_area_description AS conceptActAreaDes,
@@ -220,14 +225,12 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
 
 }
 
+
 /**
  * 
  * @param req params: { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description }
  * @param res 
  */
-
-//              ----------------------------                TO UPDATE             -------------------------------------            //
-
 
 export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
     // export const updateConcept = async (req: Request, res: Response) => {
