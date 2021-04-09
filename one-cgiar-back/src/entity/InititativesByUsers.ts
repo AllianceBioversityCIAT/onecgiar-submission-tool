@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { Users } from './Users';
 import { Initiatives } from './Initiatives';
+import { Roles } from './Roles';
 
 @Entity('initiatives_by_users')
 export class InitiativesByUsers extends UpdatedCreatedAt {
@@ -16,13 +17,15 @@ export class InitiativesByUsers extends UpdatedCreatedAt {
 
     @ManyToOne(() => Initiatives, initiative => initiative.userByStages)
     public initiative!: Initiatives;
+    
+    @ManyToOne(() => Roles, role => role.id)
+    public role!: Roles;
+    // @Column('tinyint')
+    // is_lead: boolean
 
-    @Column('tinyint')
-    is_lead: boolean
+    // @Column('tinyint')
+    // is_owner: boolean
 
-    @Column('tinyint')
-    is_owner: boolean
-
-    @Column('tinyint')
-    is_coordinator: boolean
+    // @Column('tinyint')
+    // is_coordinator: boolean
 }

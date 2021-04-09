@@ -12,7 +12,7 @@ import { ResponseHandler } from '../handlers/Response';
 require('dotenv').config();
 
 
-let ActiveDirectory = require('activedirectory');
+const ActiveDirectory = require('activedirectory');
 
 const jwtSecret = process.env.jwtSecret;
 
@@ -118,20 +118,36 @@ export const changePassword = async (req: Request, res: Response) => {
         user.hashPassword();
         userRepository.save(user);
 
-        res.json({ msg: 'Password updated' });
+        res.json(new ResponseHandler('Validate user.', { user }));
+        // res.json({ msg: 'Password updated' });
     } catch (error) {
-        // console.log(e)
-        // let error = new ParseError(e)
-        // res.status(400).json({ msg: 'Something was wrong' });
-        return res.status(error.httpCode).json({ msg: error.name, data: error.stack });
+        return res.status(error.httpCode).json(error);
     }
 
 
 }
 
+export const validateCGUser = async (req: Request, res: Response) => {
+    const { email } = req.query;
+
+    try {
+        let validUser = await searchByEmail(email);
+        console.log(validUser);
+        res.json(new ResponseHandler('Validate user.', { user: validUser }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * Active directory functions 
+ * 
+ */
+
 const validateAD = (one_user, password) => {
     let ad = new ActiveDirectory(config.active_directory);
-
     let ad_user = one_user.email;
     return new Promise((resolve, reject) => {
         ad.authenticate(ad_user, password, (err, auth) => {
@@ -139,7 +155,8 @@ const validateAD = (one_user, password) => {
                 if (err.errno == "ENOTFOUND") {
                     let notFound = {
                         'name': 'SERVER_NOT_FOUND',
-                        'description': 'Domain Controller Server not found'
+                        'description': 'Domain Controller Server not found',
+                        'httpCode': 500
                     };
                     return reject(notFound);
                 }
@@ -154,7 +171,8 @@ const validateAD = (one_user, password) => {
                 console.log('Authentication failed!');
                 let err = {
                     'name': 'INVALID_CREDENTIALS',
-                    'description': 'The supplied credential is invalid'
+                    'description': 'The supplied credential is invalid',
+                    'httpCode': 503
                 };
                 return reject(err);
             }
@@ -162,3 +180,34 @@ const validateAD = (one_user, password) => {
         })
     });
 }
+
+const searchByEmail = (email) => {
+    let ad = new ActiveDirectory(config.active_directory);
+    console.log(ad)
+
+    return new Promise((resolve, reject) => {
+        ad.findUser(email, (err, user) => {
+            if (err) {
+                if (err.errno == "ENOTFOUND") {
+                    let notFound = {
+                        'name': 'SERVER_NOT_FOUND',
+                        'description': 'Domain Controller Server not found',
+                        'httpCode': 500
+                    };
+                    return reject(notFound);
+                }
+            }
+            if (!user) {
+                return reject({
+                    name: 'USER_NOT_FOUND',
+                    description: `User: ${email} not found`,
+                    'httpCode': 404
+                });
+            }
+            else {
+                return resolve(JSON.stringify(user))
+            }
+        })
+    })
+}
+
