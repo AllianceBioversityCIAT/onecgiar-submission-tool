@@ -11,21 +11,38 @@
             </div>
 
             <div class="col-sm-6">
-                <custom-text [options]="{inputTitle:'Lead name', value:'Not available'}"></custom-text>
+                <mat-card>
+                    <div class="row icon_cont">
+                        <div class="col-sm-6">
+                            <custom-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></custom-text>
+                        </div>
+                        <div class="col-sm-4">
+                            <custom-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></custom-text>
+                        </div>
+                        <button (click)="openDialog();" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                            <mat-icon >edit</mat-icon>
+                        </button>
+                        
+                    </div>
+                </mat-card>
                 <br>
             </div>
-
+            <div class="col-sm-12"></div>
             <div class="col-sm-6">
-                <custom-text [options]="{inputTitle:'Lead email', value:'Not available'}"></custom-text>
+                <mat-card>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <custom-text [options]="{inputTitle:'Co-Lead name', value:leads.co_lead_name||'Not available'}"></custom-text>
+                        </div>
+                        <div class="col-sm-4">
+                            <custom-text [options]="{inputTitle:'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
+                        </div>
+                        <button (click)="openDialog();" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                            <mat-icon >edit</mat-icon>
+                        </button>
+                    </div>
+                </mat-card>
                 <br>
-            </div>
-
-            <div class="col-sm-6">
-                <custom-text [options]="{inputTitle:'Co-Lead name', value:'Not available'}"></custom-text>
-            </div>
-
-            <div class="col-sm-6">
-                <custom-text [options]="{inputTitle:'Co-Lead email', value:'Not available'}"></custom-text>
             </div>
 
             <div class="col-sm-12">
@@ -39,7 +56,7 @@
              formControlId:'action_area_id',
              description:'Indicate to which CGIAR Action Area this initiative is contributing to',
              selectList:this.actionAreas,
-             selectItemName:'description',
+             selectItemName:'index_name',
              selectItemId:'id'
             }">
                     ></custom-select>

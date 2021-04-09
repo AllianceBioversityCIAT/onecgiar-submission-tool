@@ -7,6 +7,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ErrorService } from '@app/shared/services/error.service';
 import Swal from 'sweetalert2';
 import { InteractionsService } from '../../../services/interactions.service';
+import { ManageAccessComponent } from '../../manage-access/manage-access.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -16,13 +18,18 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   public generalInformationForm: FormGroup;
   public initvStgId: any;
-  public actionAreas: [];
+  public actionAreas:any [];
   // public usersByInitiative: [];
   public usersByRoles:any [];
 
   fName="";
   wordCount: any;
-
+  leads={
+    lead_name:'',
+    lead_email:'',
+    co_lead_name:'',
+    co_lead_email:'',
+  }
 
   @ViewChild("text") text: ElementRef;
   words: any;
@@ -38,7 +45,9 @@ export class GeneralInformationConceptComponent implements OnInit {
     public conceptSvc: ConceptService, 
     public activatedRoute: ActivatedRoute, 
     private spinnerService: NgxSpinnerService,
-    private interactionsService:InteractionsService
+    private interactionsService:InteractionsService,
+    public dialog: MatDialog
+
     ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
@@ -70,8 +79,20 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.conceptSvc.getUsersByRoles().toPromise(),
     ]).then(res => {
       
+      //
       this.actionAreas = res[0];
+      for (let index = 0; index <  this.actionAreas.length; index++) {
+        this.actionAreas[index].index_name =`Action area ${index+1} - ${ this.actionAreas[index].name}`; 
+      }
+
+      //
       let gnrlInfo = res[1];
+      console.log(gnrlInfo);
+      this.leads.lead_name = gnrlInfo.conceptLead;
+      this.leads.lead_email = gnrlInfo.conceptEmail;
+      this.leads.co_lead_name = gnrlInfo.conceptCoLead;
+      this.leads.co_lead_email = gnrlInfo.conceptCoLeadEmail;
+
       this.usersByRoles = res[2].data;
       for (const user of  this.usersByRoles) {
         user.firstN_lastN = user.first_name+' '+user.last_name;
@@ -112,4 +133,17 @@ export class GeneralInformationConceptComponent implements OnInit {
         }
       )
   }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ManageAccessComponent, {
+      width: '100%',
+      height:'90%',
+      panelClass: 'custom-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
 }

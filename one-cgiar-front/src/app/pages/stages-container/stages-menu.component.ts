@@ -27,13 +27,10 @@ export class StagesMenuComponent implements OnInit {
       width: '100%',
       height:'90%',
       panelClass: 'custom-dialog-container'
-      // height: '50%'
-      // data: {name: this.name, animal: this.animal}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // this.animal = result;
     });
   }
 

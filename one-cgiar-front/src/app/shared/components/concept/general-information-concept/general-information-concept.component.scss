@@ -46,3 +46,14 @@ p {
 .save-button:hover {
     background-color: #0c96c9;
 }
+.icon_cont{
+    position: relative;
+}
+
+.floating_icon{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 20px;
+}
