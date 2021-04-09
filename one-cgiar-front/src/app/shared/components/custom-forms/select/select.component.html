@@ -1,9 +1,20 @@
-<mat-form-field appearance="standard" class="general-information-full-width">
-    <p><strong>{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
-    <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
-    </p>
-    <mat-select [formControl]="selectInput" (selectionChange)="setValue($event)" >
-        <mat-option *ngFor="let item of options.selectList" [disabled]="disableOption(item)"  [value]="item[options.selectItemId]">{{item[options.selectItemName]}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+
+<span [ngSwitch]="options.readonly">
+<div *ngSwitchCase="true">
+    <br>
+    <p class="readonly_text_title"><strong>{{options.inputTitle}}: </strong></p>
+    <p class="readonly_text">{{getSelectResult()}}</p>
+</div>
+
+<div *ngSwitchDefault>
+    <mat-form-field appearance="standard" class="general-information-full-width">
+        <p><strong>{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+        <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
+        </p>
+        <mat-select [formControl]="selectInput" (selectionChange)="setValue($event)" >
+            <mat-option *ngFor="let item of options.selectList" [disabled]="disableOption(item)"  [value]="item[options.selectItemId]">{{item[options.selectItemName]}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+</span>

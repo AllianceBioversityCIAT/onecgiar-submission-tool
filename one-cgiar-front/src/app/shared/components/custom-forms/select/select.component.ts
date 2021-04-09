@@ -19,6 +19,9 @@ export class SelectComponent implements OnInit {
       Validators.required,
     ]);
      this.setValue(null);
+     if(this.options.readonly){
+       this.getSelectResult();
+     }
   }
 
   setValue(event: MatSelectChange){
@@ -40,5 +43,17 @@ export class SelectComponent implements OnInit {
       return false;
     }
   }
+
+  getSelectResult(){
+    for (const item of this.options.selectList) {
+      if (item[this.options.selectItemId] == this.selectInput.value) {
+        return item[this.options.selectItemName];
+      }
+
+    }
+  }
+
+
+
 
 }
