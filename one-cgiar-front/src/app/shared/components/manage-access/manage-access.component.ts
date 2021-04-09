@@ -41,17 +41,16 @@ export class ManageAccessComponent implements OnInit {
 
   getAllUsers(){
     this.initiativesSvc.getAllUsers().subscribe(users=>{
-      console.log(users.data);
       this.allUsers = users.data;
       for (const user of  this.allUsers) {
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
         user.roles=[
           {
-            acronym: "PI",
-            description: "Initiative Coordinator",
-            acronym_description: "PI - Initiative Coordinator",
-            id: 3,
-            name: "pi",
+            acronym: "CO",
+            acronym_description: "CO - Initiative coordinator user",
+            description: "Initiative coordinator user",
+            id: 5,
+            name: "Coordinator",
           }
         ];
       }
@@ -62,6 +61,12 @@ export class ManageAccessComponent implements OnInit {
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
       console.log(roles.data);
       this.allRoles = roles.data;
+      // this.allRoles.splice(0,1)
+      for (let index = 0; index < this.allRoles.length; index++) {
+        if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
+          this.allRoles.splice(index,1)
+        }
+      }
       for (const rol of  this.allRoles) {
         rol.acronym_description = rol.acronym+' - '+rol.description;
       }
