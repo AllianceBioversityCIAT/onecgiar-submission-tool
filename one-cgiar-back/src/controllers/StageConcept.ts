@@ -182,7 +182,7 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
                     (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
                     (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
                     concept.id AS conceptId,
-                    IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ),'Likes are less') AS conceptName,
+                    IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS conceptName,
                     concept.action_area_description AS conceptActAreaDes,
                     concept.action_area_id AS conceptActAreaId
                     ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
@@ -225,6 +225,10 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
  * @param req params: { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description }
  * @param res 
  */
+
+//              ----------------------------                TO UPDATE             -------------------------------------            //
+
+
 export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
     // export const updateConcept = async (req: Request, res: Response) => {
     const { conceptId, initvStgId, name, lead_id, action_area_id, action_area_description } = req.body;
@@ -261,9 +265,9 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             conceptInf.highlights = '';
 
             const initvUser = new InitiativesByUsers();
-            initvUser.is_lead = true;
-            initvUser.is_owner = true;
-            initvUser.is_coordinator = false;
+            // initvUser.is_lead = true;
+            // initvUser.is_owner = true;
+            // initvUser.is_coordinator = false;
             initvUser.initiative = initvStg.initiative;
             initvUser.user = leadUser;
 
@@ -278,20 +282,20 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             if (initvUsers.length > 0) {
                 initvUsers.forEach(
                     usr => {
-                        usr.is_lead = false;
-                        usr.is_coordinator = true;
+                        // usr.is_lead = false;
+                        // usr.is_coordinator = true;
                     }
                 );
 
                 if (initvUsers.find(usr => usr.user.id == leadUser.id)) {
                     const index = initvUsers.findIndex(usr => usr.user.id == leadUser.id)
-                    initvUsers[index].is_lead = true;
-                    initvUsers[index].is_coordinator = false;
+                    // initvUsers[index].is_lead = true;
+                    // initvUsers[index].is_coordinator = false;
                 } else {
                     const initvUser = new InitiativesByUsers();
-                    initvUser.is_lead = true;
-                    initvUser.is_owner = true;
-                    initvUser.is_coordinator = false;
+                    // initvUser.is_lead = true;
+                    // initvUser.is_owner = true;
+                    // initvUser.is_coordinator = false;
                     initvUser.initiative = initvStg.initiative;
                     initvUser.user = leadUser;
                     let initvUserN = await initvUsrsRepo.save(initvUser);
@@ -301,9 +305,9 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
 
             } else {
                 const initvUser = new InitiativesByUsers();
-                initvUser.is_lead = true;
-                initvUser.is_owner = true;
-                initvUser.is_coordinator = false;
+                // initvUser.is_lead = true;
+                // initvUser.is_owner = true;
+                // initvUser.is_coordinator = false;
                 initvUser.initiative = initvStg.initiative;
                 initvUser.user = leadUser;
                 let initvUserN = await initvUsrsRepo.save(initvUser);

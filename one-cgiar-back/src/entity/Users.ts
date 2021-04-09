@@ -44,6 +44,16 @@ export class Users extends UpdatedCreatedAt {
     })
     roles: Roles[];
 
+    @Column({ type: 'timestamp'})
+    last_login: Date
+    
+    @Column({ type: 'tinyint'})
+    is_active: boolean
+    
+    @Column({ type: 'timestamp'})
+    active_since: boolean
+
+
     @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.user)
     public initiatives!: InitiativesByUsers[];
 
