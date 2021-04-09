@@ -7,11 +7,12 @@ import { InputComponent } from './input/input.component';
 import { SelectComponent } from './select/select.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { MultipleChoiceComponent } from './multiple-choice/multiple-choice.component';
+import { TextComponent } from './text/text.component';
 
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent],
+  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -23,6 +24,6 @@ import { MultipleChoiceComponent } from './multiple-choice/multiple-choice.compo
       },
     })
   ],
-  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent]
+  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent]
 })
 export class CustomFormsModule { }

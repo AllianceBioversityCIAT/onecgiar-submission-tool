@@ -1,1 +1,41 @@
-<p>input works!</p>
+<div [ngSwitch]="options.readonly">
+    <!-- <div *ngSwitchCase="false || null">
+    </div> -->
+
+    <div *ngSwitchCase="true">
+
+        <p class="readonly_text_title"><strong>{{options.inputTitle}}: </strong></p>
+        <p class="readonly_text">{{options.form.value[options.formControlName]}}</p>
+
+    </div>
+
+    <div *ngSwitchDefault>
+   
+            <mat-form-field class="general-information-full-width">
+
+                <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
+                <input  type="text" [formControl]="textareaInput" matInput required (ngModelChange)="setValue()" >
+                <mat-hint align="start" *ngIf="options.maxWords"><strong>Max {{options.maxWords}} words</strong> </mat-hint>
+                <mat-hint align="end" *ngIf="options.maxWords"><strong><span [style.color]="words <= options.maxWords?'':'red'">{{words}}</span> / {{options.maxWords}}</strong></mat-hint>
+                
+                <mat-error align="start" *ngIf="textareaInput.hasError('maxWords')">
+                    <strong>Max {{options.maxWords}} words</strong> 
+                </mat-error>
+                <mat-error  align="end" *ngIf="textareaInput.hasError('maxWords')">
+                    <strong>{{words}} / <span [style.color]="words <= options.maxWords?'':'black'">{{options.maxWords}}</span></strong>
+               
+                </mat-error>
+                <mat-error *ngIf="textareaInput.hasError('required')">
+                    The <strong>{{options.inputTitle}}</strong> is required
+                </mat-error>
+               
+            </mat-form-field>
+      
+    </div>
+
+</div>
+
+
+
+
