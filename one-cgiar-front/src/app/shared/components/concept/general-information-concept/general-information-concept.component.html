@@ -2,35 +2,84 @@
     
     <strong class="general-information-title">General information</strong>
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form" *ngIf="showForm">
+       <div class="row">
+           <div class="col-sm-12">
+            <custom-textarea [options]="{required:true, readonly:false, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}"></custom-textarea>
+           </div>
+           <div class="col-sm-6">
+            <custom-select [options]="{
+                required:true,
+                readonly:true,
+                inputTitle:'Lead name',
+                form:generalInformationForm,
+                formControlId:'lead_id',
+                description:'Indicate the leadership of this Initiative',
+                selectList:this.usersByRoles,
+                selectItemName:'firstN_lastN',
+                selectItemId:'id'
+               }"></custom-select>
+           </div>
+           <div class="col-sm-6">
+            <custom-select [options]="{
+                required:true,
+                readonly:true,
+                inputTitle:'Lead email',
+                form:generalInformationForm,
+                formControlId:'lead_id',
+                description:'Indicate the leadership of this Initiative',
+                selectList:this.usersByRoles,
+                selectItemName:'email',
+                selectItemId:'id'
+               }"></custom-select>
+           </div>
+           <div class="col-sm-6">
+            <custom-select [options]="{
+                required:true,
+                readonly:true,
+                inputTitle:'Co-Lead name',
+                form:generalInformationForm,
+                formControlId:'lead_id',
+                description:'Indicate the leadership of this Initiative',
+                selectList:this.usersByRoles,
+                selectItemName:'firstN_lastN',
+                selectItemId:'id'
+               }"></custom-select>
+           </div>
+           <div class="col-sm-6">
+            <custom-select [options]="{
+                required:true,
+                readonly:true,
+                inputTitle:'Co-Lead email',
+                form:generalInformationForm,
+                formControlId:'lead_id',
+                description:'Indicate the leadership of this Initiative',
+                selectList:this.usersByRoles,
+                selectItemName:'email',
+                selectItemId:'id'
+               }"></custom-select>
+           </div>
+           <div class="col-sm-12">
 
-        <custom-textarea [options]="{required:true, readonly:false, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}"></custom-textarea>
+            <custom-select 
+            [options]="
+            {
+             required:true,
+             readonly:false,
+             inputTitle:'Primary CGIAR Action Area',
+             form:generalInformationForm,
+             formControlId:'action_area_id',
+             description:'Indicate to which CGIAR Action Area this initiative is contributing to',
+             selectList:this.actionAreas,
+             selectItemName:'description',
+             selectItemId:'id'
+            }">
+            ></custom-select>
+    
+           </div>
+       </div>
 
-        <custom-select [options]="{
-         required:true,
-         readonly:false,
-         inputTitle:'Lead name',
-         form:generalInformationForm,
-         formControlId:'lead_id',
-         description:'Indicate the leadership of this Initiative',
-         selectList:this.usersByRoles,
-         selectItemName:'firstN_lastN_email',
-         selectItemId:'id'
-        }"></custom-select>
 
-        <custom-select 
-        [options]="
-        {
-         required:true,
-         readonly:false,
-         inputTitle:'Primary CGIAR Action Area',
-         form:generalInformationForm,
-         formControlId:'action_area_id',
-         description:'Indicate to which CGIAR Action Area this initiative is contributing to',
-         selectList:this.actionAreas,
-         selectItemName:'description',
-         selectItemId:'id'
-        }">
-        ></custom-select>
+
         <div class="general-information-save">
             <button mat-raised-button class="save-button" type="submit" color="primary" [disabled]="generalInformationForm.invalid"  mat-raised-buttonclass="save-button">
                 Save
