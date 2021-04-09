@@ -67,13 +67,11 @@ export class GeneralInformationConceptComponent implements OnInit {
     Promise.all([
       this.conceptSvc.getActionAreas().toPromise(),
       this.conceptSvc.getConcept(initvStgId).toPromise(),
-      // this.conceptSvc.getUsersByInitiative(initvStgId).toPromise(),
       this.conceptSvc.getUsersByRoles().toPromise(),
     ]).then(res => {
       
       this.actionAreas = res[0];
       let gnrlInfo = res[1];
-      // this.usersByInitiative = res[2];
       this.usersByRoles = res[2].data;
       for (const user of  this.usersByRoles) {
         user.firstN_lastN = user.first_name+' '+user.last_name;
@@ -105,17 +103,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
       subscribe(
         gnrlInfo => {
-          // this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
-          // this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
-
-          // this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
-          // this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
-
-          // this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
-          // this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
           this.spinnerService.hide('general-information');
           this.interactionsService.successMessage('General information has been saved')
-          // this.showForm=true;
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))
