@@ -38,13 +38,6 @@ export class ManageAccessComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addCoordinator(user){
-    console.log("addCoordinator");
-      // this.searchText = "";
-      this.selectedUsers.push(user);
-      console.log(user);
-  }
-
   getAllUsers(){
     this.initiativesSvc.getAllUsers().subscribe(users=>{
       this.allUsers = users.data;
@@ -68,11 +61,21 @@ export class ManageAccessComponent implements OnInit {
     })
   }
 
+  removeInactiveUsers(){
+    for (let index = this.selectedUsers.length-1; index >= 0; index--) {
+      if (this.selectedUsers[index].active == 0) {
+        console.log('%c'+this.selectedUsers[index].first_name,'background: #222; color: #fd8484');
+        this.selectedUsers.splice(index,1);
+      }
+    }
+  }
+
   getUsersByInitiative(){
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       console.log(resp.response.users);
+      this.removeInactiveUsers();
     })
   }
 }

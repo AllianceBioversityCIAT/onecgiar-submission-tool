@@ -23,7 +23,7 @@
                                 <input matInput placeholder="Search users" animate__fadeInLeft>
                             </mat-form-field>
                             <div class="scroll_container">
-                                <mat-card class="no_selected_users pointer" *ngFor="let user of allUsers" (click)="addCoordinator(user)">
+                                <mat-card class="no_selected_users pointer" *ngFor="let user of allUsers">
                                     <div class="row">
                                         <span class="title_card col-sm-6"> <strong>{{user.first_name}}
                                                 {{user.last_name}}</strong></span>

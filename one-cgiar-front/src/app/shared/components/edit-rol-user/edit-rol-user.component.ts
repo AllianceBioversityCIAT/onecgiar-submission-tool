@@ -55,7 +55,9 @@ export class EditRolUserComponent implements OnInit {
     console.log(this.user);
     this.userRolForm.controls.userId.setValue(this.user.userId);
     console.log(this.userRolForm.value);
-    this._initiativesService.assignUserToInitiative(this.userRolForm.value,this._initiativesService.initvStgId).subscribe(resp=>{
+    let body =  this.userRolForm.value;
+    body.active = true;
+    this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
       this.reload.emit();
     });

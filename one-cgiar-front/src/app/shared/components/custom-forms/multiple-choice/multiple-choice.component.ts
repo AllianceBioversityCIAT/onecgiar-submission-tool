@@ -16,11 +16,13 @@ export class MultipleChoiceComponent implements OnInit {
   ngOnInit(){ 
   }
 
-  addItem(item){
-    this.searchText = "";
-    this.options.selectedList.push(item);
-    console.log(this.options.selectedList);
-    console.log(item);
+  addItem(item,disabled){
+    if (!disabled) {
+      this.searchText = "";
+      this.options.selectedList.push(item);
+      console.log(this.options.selectedList);
+      console.log(item);
+    }
   }
 
   removeItem(index){
@@ -39,5 +41,6 @@ export class MultipleChoiceComponent implements OnInit {
       return false;
     }
   }
+  
 
 }
