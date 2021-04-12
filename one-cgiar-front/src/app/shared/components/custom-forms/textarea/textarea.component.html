@@ -4,7 +4,7 @@
 
     <div *ngSwitchCase="true">
 
-        <p class="readonly_text_title"><strong>{{options.inputTitle}}: </strong></p>
+        <p class="readonly_text_title"><strong class="color-primary">{{options.inputTitle}}: </strong></p>
         <p class="readonly_text">{{options.form.value[options.formControlName]}}</p>
 
     </div>
@@ -15,7 +15,7 @@
 
         <div *ngSwitchCase="true">
             <div class="editText">
-                <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                <p><strong class="color-primary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                 <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
                 <ngx-editor [editor]="editor"  [formControl]="textareaInput" (ngModelChange)="setValue()"></ngx-editor>
@@ -25,7 +25,7 @@
         <div *ngSwitchDefault>
             <mat-form-field class="general-information-full-width">
 
-                <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                <p><strong class="color-primary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                 <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                 <textarea  type="text" [formControl]="textareaInput" matInput required (ngModelChange)="setValue()" cdkTextareaAutosize></textarea>
                 <mat-hint align="start" *ngIf="options.maxWords"><strong>Max {{options.maxWords}} words</strong> </mat-hint>

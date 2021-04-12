@@ -53,6 +53,7 @@ import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
 import { ManageAccessComponent } from './shared/components/manage-access/manage-access.component';
 import { CreateUsersComponent } from './shared/components/create-users/create-users.component';
+import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol-user.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { CreateUsersComponent } from './shared/components/create-users/create-us
     DevPanelComponent,
     ManageAccessComponent,
     CreateUsersComponent,
+    EditRolUserComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
