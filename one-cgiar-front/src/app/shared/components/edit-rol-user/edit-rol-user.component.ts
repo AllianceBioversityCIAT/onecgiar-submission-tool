@@ -12,6 +12,7 @@ export class EditRolUserComponent implements OnInit {
   @Input() roles;
   @Output() reload = new EventEmitter();
   activeExpansion=false;
+  CurrentRolChipName;
   public userRolForm: FormGroup;
   constructor(
     public _initiativesService:InitiativesService,
@@ -25,13 +26,28 @@ export class EditRolUserComponent implements OnInit {
   ngOnInit(): void {
     if (this.user.roleId) {
       this.userRolForm.controls.roleId.setValue(this.user.roleId);
+      this.getLocalRolById(this.user.roleId);
     }
+    this.userRolForm.controls.userId.setValue(this.user.userId);
+    this.userRolForm.valueChanges.subscribe(resp=>{
+      this.getLocalRolById(resp.roleId);
+    })
     
   }
 
   removeUserToInitiative(){
     this.activeExpansion = true;
     console.log("function()");
+    let body={
+      userId:this.user.userId,
+      active:0,
+      roleId:this.user.roleId
+    }
+    console.log(body);
+    this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
+      console.log(resp);
+      this.reload.emit();
+    });
   }
 
   assignUserToInitiative(){
@@ -43,6 +59,14 @@ export class EditRolUserComponent implements OnInit {
       console.log(resp);
       this.reload.emit();
     });
+  }
+
+  getLocalRolById(id){
+    for (const rol of this.roles) {
+      if (rol.id == id) {
+        this.CurrentRolChipName = rol.name;
+      }
+    }
   }
 
 }

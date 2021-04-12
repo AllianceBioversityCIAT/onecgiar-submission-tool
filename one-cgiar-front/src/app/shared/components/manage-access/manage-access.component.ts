@@ -76,7 +76,7 @@ export class ManageAccessComponent implements OnInit {
   getUsersByInitiative(){
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       this.selectedUsers = resp.response.users
-      console.log(resp);
+      console.log(resp.response.users);
     })
   }
 }

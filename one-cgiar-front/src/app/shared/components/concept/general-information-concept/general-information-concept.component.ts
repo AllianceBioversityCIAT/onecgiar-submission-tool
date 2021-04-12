@@ -90,7 +90,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
       //
       let gnrlInfo = res[1];
-      console.log(gnrlInfo);
+      // console.log(gnrlInfo);
       this.leads.lead_name = gnrlInfo.conceptLead;
       this.leads.lead_email = gnrlInfo.conceptEmail;
       this.leads.co_lead_name = gnrlInfo.conceptCoLead;
