@@ -20,6 +20,7 @@ export class MultipleChoiceComponent implements OnInit {
     this.searchText = "";
     this.options.selectedList.push(item);
     console.log(this.options.selectedList);
+    console.log(item);
   }
 
   removeItem(index){
@@ -30,7 +31,7 @@ export class MultipleChoiceComponent implements OnInit {
   disableOption(option){
     if ( this.options.selectedList) {
       for (const item of this.options.selectedList) {
-        if (option[this.options.selectItemId]==item[this.options.selectItemId]) {
+        if (option[this.options.selectItemId]==item[this.options.selectedItemId]) {
           return true;
         }
       }

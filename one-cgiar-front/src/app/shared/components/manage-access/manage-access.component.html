@@ -34,7 +34,7 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" *ngIf="showForm">
                             <custom-multiple-choice [options]="{
                                 required:false,
                                 inputTitle:'Select users',
@@ -42,7 +42,8 @@
                                 selectList:this.allUsers,
                                 selectedList:this.selectedUsers,
                                 selectItemName:'firstN_lastN_email',
-                                selectItemId:'id'
+                                selectItemId:'id',
+                                selectedItemId:'userId'
                                }"></custom-multiple-choice>
                         </div>
                         <div class="col-sm-12">

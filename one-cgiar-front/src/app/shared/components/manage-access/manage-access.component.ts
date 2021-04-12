@@ -19,6 +19,7 @@ export class ManageAccessComponent implements OnInit {
   selectedUsers=[]
   allRoles=[];
   initiative;
+  showForm=false;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -47,17 +48,11 @@ export class ManageAccessComponent implements OnInit {
   getAllUsers(){
     this.initiativesSvc.getAllUsers().subscribe(users=>{
       this.allUsers = users.data;
+      console.log(this.allUsers);
       for (const user of  this.allUsers) {
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
-        user.roles=[
-          {
-            acronym: "CO",
-            acronym_description: "CO - Initiative coordinator user",
-            description: "Initiative coordinator user",
-            id: 5,
-            name: "Coordinator",
-          }
-        ];
+        user.userId = user.id;
+        user.active = user.is_active;
       }
     })
   }
@@ -75,7 +70,8 @@ export class ManageAccessComponent implements OnInit {
 
   getUsersByInitiative(){
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
-      this.selectedUsers = resp.response.users
+      this.selectedUsers = resp.response.users;
+      this.showForm=true;
       console.log(resp.response.users);
     })
   }

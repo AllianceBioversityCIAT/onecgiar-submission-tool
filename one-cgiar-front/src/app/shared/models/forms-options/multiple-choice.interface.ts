@@ -6,10 +6,11 @@ export interface multipleChoiceOptions{
     // form:FormGroup;
     chipName:string;
     // maxWords:number;
-    selectList:[];
+    selectList:any[];
     selectedList:any[];
     selectItemName:string;
     selectItemId:string|number;
+    selectedItemId:string|number;
     toDisableList:[];
     showChips:boolean;
 }
