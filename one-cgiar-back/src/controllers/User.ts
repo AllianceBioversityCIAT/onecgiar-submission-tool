@@ -1,8 +1,12 @@
 import { Request, Response } from 'express'
-import { getRepository, In } from 'typeorm'
-import { validate } from 'class-validator'
+import { getRepository, In, QueryFailedError } from 'typeorm'
+import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
+import { APIError } from '../handlers/BaseError';
+import { HttpStatusCode } from '../handlers/Constants';
+import { ResponseHandler } from '../handlers/Response';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 
 // get all users
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
@@ -31,7 +35,7 @@ export const getUsersByRoles = async (req: Request, res: Response): Promise<Resp
             .where("roles.id In(:roles)", { roles })
             // .getSql()
             .getMany();
-            
+
         // console.log(users)
         return res.json({ data: users, msg: 'Users by roles list' });
     } catch (error) {
@@ -58,21 +62,28 @@ export const getUser = async (req: Request, res: Response) => {
 // create new user
 export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
-    const user = new Users();
     const userRepository = getRepository(Users);
     const rolesRepository = getRepository(Roles);
 
+    const user = new Users();
     user.first_name = first_name;
     user.last_name = last_name;
     user.password = password;
     user.email = email;
     user.is_cgiar = is_cgiar;
+    user.is_active = true;
     try {
 
         // validate
         const errors = await validate(user);
         if (errors.length > 0) {
-            return res.status(400).json(errors);
+            const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+            throw new APIError(
+                'BAD REQUEST',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                message
+            );
         }
         const rolesDB = await rolesRepository.find({
             select: ['id'],
@@ -82,19 +93,27 @@ export const createUsers = async (req: Request, res: Response) => {
 
         if (rolesDB && rolesDB.length > 0)
             user.roles = rolesDB;
-        else
-            return res.status(400).json({ data: rolesDB, msg: 'None role found' });
+        else {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Roles not found.'
+            );
+        }
 
         if (!is_cgiar) {
             user.hashPassword();
         }
         let userCreated = await userRepository.save(user);
-        res.status(201).json({ msg: 'User created', data: userCreated });
-
+        res.json(new ResponseHandler('User logged.', { user: userCreated }));
 
     } catch (error) {
-        console.log(error);
-        return res.status(409).json({ msg: 'User can not be created', data: error });
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            error['httpCode'] = HttpStatusCode.INTERNAL_SERVER
+        }
+        return res.status(error.httpCode).json(error);
+        // return res.status(409).json({ msg: 'User can not be created', data: error });
     }
 };
 
@@ -102,7 +121,7 @@ export const createUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     let user;
     const { id } = req.params;
-    const { firstname, lastname, username, email, password, roles, is_cgiar } = req.body;
+    const { firstname, lastname, email, password, roles, is_cgiar } = req.body;
 
     const userRepository = getRepository(Users);
     try {
@@ -113,29 +132,25 @@ export const updateUser = async (req: Request, res: Response) => {
         user.password = password;
         user.roles = roles;
         user.is_cgiar = is_cgiar;
+
+
+        const validationOpt = { validationError: { target: false, value: false } };
+        const errors = await validate(user, validationOpt);
+        if (errors.length > 0) {
+            return res.status(400).json(errors);
+        }
+
         if (!is_cgiar) {
             user.hashPassword();
         }
-        await userRepository.save(user);
+
+
+        user = await userRepository.save(user);
+        res.json(new ResponseHandler('User updated.', { user }));
     } catch (error) {
         console.log(error);
-        return res.status(404).json({ msg: 'User not found' });
+        return res.status(error.httpCode).json(error);
     }
-
-    const validationOpt = { validationError: { target: false, value: false } };
-    const errors = await validate(user, validationOpt);
-    if (errors.length > 0) {
-        return res.status(400).json(errors);
-    }
-
-    try {
-        await userRepository.save(user);
-
-    } catch (error) {
-        console.log(error);
-        return res.status(409).json({ msg: 'Username already in use' });
-    }
-    res.status(201).json({ msg: 'User update' });
 };
 
 // delete user
@@ -145,14 +160,24 @@ export const deleteUser = async (req: Request, res: Response) => {
     let user: Users;
 
     try {
-        user = await userRepository.findOneOrFail(id);
+        user = await userRepository.findOne(id);
+        if (user == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'User not found.'
+            );
+        }
+        user.is_active = false;
+        user = await userRepository.save(user);
+        res.json(new ResponseHandler('User inactivated.', { user }));
     } catch (error) {
-        console.log(error);
-        return res.status(404).json({ msg: 'User not found' });
+        return res.status(error.httpCode).json(error);
     }
 
     // remove user
-    userRepository.delete(id);
-    res.status(201).json({ msg: 'User deleted' });
+    // userRepository.delete(id);
+    // res.status(201).json({ msg: 'User deleted' });
 
 };

@@ -13,6 +13,7 @@ require('dotenv').config();
 
 
 const ActiveDirectory = require('activedirectory');
+const ad = new ActiveDirectory(config.active_directory);
 
 const jwtSecret = process.env.jwtSecret;
 
@@ -34,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
         email = email.trim().toLowerCase();
         let cgiar_user = await userRepository.findOne({
             where:
-                { email, is_cgiar: 1 },
+                { email, is_cgiar: 1, is_active: true },
             relations: ['roles']
         });
         if (cgiar_user) {
@@ -45,7 +46,7 @@ export const login = async (req: Request, res: Response) => {
 
         } else {
             user = await userRepository.findOne({
-                where: { email },
+                where: { email, is_active: true },
                 relations: ['roles']
             });
             if (!user) {
@@ -67,6 +68,8 @@ export const login = async (req: Request, res: Response) => {
                 'User password incorrect.'
             );
         }
+        user.last_login = new Date();
+        user = await userRepository.save(user)
 
         const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
         const name = user.first_name + ' ' + user.last_name;
@@ -131,8 +134,8 @@ export const validateCGUser = async (req: Request, res: Response) => {
     const { email } = req.query;
 
     try {
-        let validUser = await searchByEmail(email);
-        console.log(validUser);
+        let validUser = await searchByEmail(email+'');
+        // console.log(validUser);
         res.json(new ResponseHandler('Validate user.', { user: validUser }));
     } catch (error) {
         return res.status(error.httpCode).json(error);
@@ -147,20 +150,22 @@ export const validateCGUser = async (req: Request, res: Response) => {
  */
 
 const validateAD = (one_user, password) => {
-    let ad = new ActiveDirectory(config.active_directory);
+    // ad = new ActiveDirectory(config.active_directory);
     let ad_user = one_user.email;
     return new Promise((resolve, reject) => {
         ad.authenticate(ad_user, password, (err, auth) => {
             if (err) {
-                console.log(err)
+                let notFound = {
+                    'name': 'SERVER_NOT_FOUND',
+                    'description': `There was an internal server error: ${err.lde_message}`,
+                    'httpCode': 500
+                };
                 if (err.errno == "ENOTFOUND") {
-                    let notFound = {
-                        'name': 'SERVER_NOT_FOUND',
-                        'description': 'Domain Controller Server not found',
-                        'httpCode': 500
-                    };
-                    return reject(notFound);
+                    notFound.name = 'SERVER_NOT_FOUND';
+                    notFound.description = 'Domain Controller Server not found'
                 }
+                // console.log(notFound)
+                return reject(new APIError(notFound));
             }
 
             if (auth) {
@@ -175,7 +180,7 @@ const validateAD = (one_user, password) => {
                     'description': 'The supplied credential is invalid',
                     'httpCode': 503
                 };
-                return reject(err);
+                return reject(new APIError(err));
             }
 
         })
@@ -183,10 +188,9 @@ const validateAD = (one_user, password) => {
 }
 
 const searchByEmail = (email) => {
-    let ad = new ActiveDirectory(config.active_directory);
+    // let ad = new ActiveDirectory(config.active_directory);
     return new Promise((resolve, reject) => {
         ad.findUser(email, (err, user) => {
-            console.log(err, user)
             if (err) {
                 if (err.errno == "ENOTFOUND") {
                     let notFound = {
@@ -194,22 +198,22 @@ const searchByEmail = (email) => {
                         'description': 'Domain Controller Server not found',
                         'httpCode': 500
                     };
-                    return reject(notFound);
-                }else{
-                    let e ={
-                        name: 'SERVER_ERROR',
-                        description: err,
+                    return reject(new APIError(notFound));
+                } else {
+                    let e = {
+                        name: 'SERVER_NOT_FOUND',
+                        description: err.lde_message,
                         httpcode: 500
                     }
-                    return reject(e);
+                    return reject(new APIError(e));
                 }
             }
             if (!user) {
-                return reject({
+                return reject(new APIError({
                     name: 'USER_NOT_FOUND',
                     description: `User: ${email} not found`,
                     'httpCode': 404
-                });
+                }));
             }
             else {
                 return resolve(JSON.stringify(user))
