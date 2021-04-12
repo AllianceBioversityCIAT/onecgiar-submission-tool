@@ -19,7 +19,7 @@
              readonly:false,
              inputTitle:'Select rol',
              form:this.userRolForm,
-             formControlId:'userId',
+             formControlId:'roleId',
              description:'Select role to assign privileges',
              selectList:this.roles,
              selectItemName:'name',
@@ -28,7 +28,7 @@
             ></custom-select>
         </div>
         <div class="col-sm-12" align="end">
-            <button  mat-raised-button color="primary" >Update role<mat-icon class="tab-icon">save</mat-icon></button>
+            <button (click)="assignUserToInitiative()"  mat-raised-button color="primary" >Update role<mat-icon class="tab-icon">save</mat-icon></button>
         </div>
     </div>
 

@@ -124,6 +124,9 @@ export class InitiativesService {
     return this.http.post<any>(`${environment.apiUrl}/users`, body);
   }
 
+  assignUserToInitiative(body: any,initiativeId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/users`, body);
+  }
   // Query to update the narrative of a theory of change (Only narrative)
   updateTheoryOfChange(body: any, id: number): Observable<any> {
     let sample = {
