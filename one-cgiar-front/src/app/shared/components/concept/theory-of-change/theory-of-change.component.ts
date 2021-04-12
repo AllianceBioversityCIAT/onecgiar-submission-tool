@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'app-theory-of-change',
@@ -23,7 +24,13 @@ export class TheoryOfChangeComponent implements OnInit {
   public createTOC: any = false;
   progressInfos: any[];
 
-  constructor(public _requests: RequestsService, private conceptSvc: ConceptService, private spinnerService: NgxSpinnerService, public activatedRoute: ActivatedRoute) {
+  constructor(
+    public _requests: RequestsService, 
+    private conceptSvc: ConceptService, 
+    private spinnerService: NgxSpinnerService, 
+    public activatedRoute: ActivatedRoute,
+    public _initiativesService:InitiativesService
+    ) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl('', Validators.required)
     });
@@ -40,6 +47,7 @@ export class TheoryOfChangeComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(resp => {
+      this._initiativesService.initvStgId = resp['id'];
       this.initvStgId = resp['id'];
       this.getTOCandFiles();
     })

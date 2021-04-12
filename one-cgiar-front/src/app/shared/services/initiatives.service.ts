@@ -22,7 +22,9 @@ export class InitiativesService {
 
   usersByInitiative: [];
 
-  constructor(public http: HttpClient) { }
+  constructor(
+    public http: HttpClient,
+    ) { }
 
   // get initvStgId():string{
   //   return this.initvStgId;
@@ -30,7 +32,6 @@ export class InitiativesService {
   // set initvStgId(val: string){
   //   this.initvStgId = val;
   // }
-
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
@@ -123,6 +124,9 @@ export class InitiativesService {
     return this.http.post<any>(`${environment.apiUrl}/users`, body);
   }
 
+  assignUserToInitiative(body: any,initiativeId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/users`, body);
+  }
   // Query to update the narrative of a theory of change (Only narrative)
   updateTheoryOfChange(body: any, id: number): Observable<any> {
     let sample = {
@@ -173,10 +177,7 @@ export class InitiativesService {
 
   // Query to get all the users by initiative
   getUsersByInitiative(initvStgId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initvStgId}/users`).pipe(map(res => {
-      this.usersByInitiative = res.response.users;
-      return res.response.users
-    }));
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initvStgId}/users`);
   }
 
   // Query to get all the users 

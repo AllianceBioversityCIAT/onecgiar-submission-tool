@@ -31,6 +31,7 @@ export class WorkPackagesComponent implements OnInit {
       this.regionsList = resp.response.regions;
     })
     this.activatedRoute.params.subscribe(resp => {
+      this.initiativesSvc.initvStgId = resp['id'];
       this.initvStgId = resp['id'];
       this.getAllIWorkPackages();
     })

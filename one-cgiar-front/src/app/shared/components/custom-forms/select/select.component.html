@@ -8,7 +8,7 @@
 
 <div *ngSwitchDefault>
     <mat-form-field appearance="standard" class="general-information-full-width">
-        <p><strong>{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+        <p><strong class="color-primary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
         <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
         </p>
         <mat-select [formControl]="selectInput" (selectionChange)="setValue($event)" >

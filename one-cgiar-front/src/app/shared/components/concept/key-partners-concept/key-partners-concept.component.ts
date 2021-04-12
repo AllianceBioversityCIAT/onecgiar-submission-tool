@@ -64,6 +64,8 @@ export class KeyPartnersConceptComponent implements OnInit {
   getPartnershipByInitiativeId(){
     let initvStgId;
     this.activatedRoute.params.subscribe(resp => {
+      this._initiativesSvc.initvStgId = resp['id'];
+
       initvStgId = resp.id;
       this.partnership.initvStgId = Number(resp.id);
       this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe((resp:any)=>{
