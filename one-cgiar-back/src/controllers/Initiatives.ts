@@ -44,7 +44,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
-        LEFT JOIN initiatives_by_users initvStgUsr ON initvStgUsr.initiativeId = initiative.id
+        -- LEFT JOIN initiatives_by_users initvStgUsr ON initvStgUsr.initiativeId = initiative.id
         `;
 
     try {
