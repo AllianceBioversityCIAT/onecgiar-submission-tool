@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 
@@ -10,9 +10,11 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 export class EditRolUserComponent implements OnInit {
   @Input() user:any;
   @Input() roles;
+  @Output() reload = new EventEmitter();
+  activeExpansion=false;
   public userRolForm: FormGroup;
   constructor(
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
   ) { 
     this.userRolForm = new FormGroup({
       userId: new FormControl(''),
@@ -27,12 +29,19 @@ export class EditRolUserComponent implements OnInit {
     
   }
 
+  removeUserToInitiative(){
+    this.activeExpansion = true;
+    console.log("function()");
+  }
+
   assignUserToInitiative(){
+    console.log("assignUserToInitiative");
     console.log(this.user);
     this.userRolForm.controls.userId.setValue(this.user.userId);
     console.log(this.userRolForm.value);
-    this._initiativesService.assignUserToInitiative(this.userRolForm.value,1).subscribe(resp=>{
+    this._initiativesService.assignUserToInitiative(this.userRolForm.value,this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
+      this.reload.emit();
     });
   }
 

@@ -50,7 +50,7 @@
                             <div class="scroll_container">
 
                                 <mat-accordion class="example-headers-align" >
-                                    <app-edit-rol-user *ngFor="let user of selectedUsers" [user]="user" [roles]="allRoles"></app-edit-rol-user>
+                                    <app-edit-rol-user *ngFor="let user of selectedUsers" [user]="user" [roles]="allRoles" initiativeId (reload)="getUsersByInitiative()"></app-edit-rol-user>
                                 </mat-accordion>
 
                             </div>
