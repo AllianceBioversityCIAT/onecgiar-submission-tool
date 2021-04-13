@@ -15,7 +15,7 @@ export class EditRolUserComponent implements OnInit {
   @Input() roles;
   // @Input() selectedUsers;
   @Output() reload = new EventEmitter();
- 
+  colorChip="primary";
   activeExpand=-1;
   activeExpansion=false;
   CurrentRolChipName;
@@ -42,6 +42,10 @@ export class EditRolUserComponent implements OnInit {
       this.getLocalRolById(resp.roleId);
       if (resp.roleId != this.user.roleId) {
        this._interactions.currentUserIdOnlyExpand=-1;
+       this.colorChip="warn";
+      }else{
+       this.colorChip="primary";
+       this._interactions.currentUserIdOnlyExpand=this.user.userId;
       }
     })
 

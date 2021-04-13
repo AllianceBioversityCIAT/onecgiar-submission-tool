@@ -9,7 +9,7 @@
           
           <mat-chip-list aria-label="Fish selection">
               Rol:
-              <mat-chip color="primary" selected *ngIf="CurrentRolChipName">{{CurrentRolChipName}}</mat-chip>
+              <mat-chip [color]="colorChip" selected *ngIf="CurrentRolChipName">{{CurrentRolChipName}}</mat-chip>
             </mat-chip-list>
        
         <button mat-icon-button aria-label="">
