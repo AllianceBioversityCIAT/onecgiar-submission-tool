@@ -19,8 +19,8 @@ export class MultipleChoiceComponent implements OnInit {
   addItem(item,disabled){
     if (!disabled) {
       this.searchText = "";
+      item.new = true;
       this.options.selectedList.push(item);
-      console.log(this.options.selectedList);
       console.log(item);
     }
   }

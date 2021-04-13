@@ -28,5 +28,19 @@ export class InteractionsService {
       timer: 2000
     })
   }
+  
+  currentUserIdOnlyExpand=-1;
+  disableAllExpandBool=false;
+  disableOthersExpand(userId){
+    // console.log(sl+" "+this.user.first_name);
+    console.log("helloo "+ userId);
+    this.disableAllExpandBool=true;
+    this.currentUserIdOnlyExpand = userId;
+  }
+
+  enableAllExpand(){
+    this.disableAllExpandBool=false;
+    // console.log(sl+" "+this.user.first_name);
+  }
 
 }
