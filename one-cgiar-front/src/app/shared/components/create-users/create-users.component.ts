@@ -44,6 +44,8 @@ export class CreateUsersComponent implements OnInit {
       console.log(resp);
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
       this.firstTab.emit();
+      this.showInitial = false;
+      this.createUserForm.reset();
     },
     err=>{
       console.log(err);
