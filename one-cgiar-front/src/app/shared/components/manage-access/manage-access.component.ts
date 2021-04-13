@@ -79,4 +79,9 @@ export class ManageAccessComponent implements OnInit {
       this.removeInactiveUsers();
     })
   }
+
+  firstTab(){
+    this.getAllUsers();
+    this.tabNumber=0; 
+  }
 }
