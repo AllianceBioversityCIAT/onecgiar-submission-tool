@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -10,6 +10,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 })
 export class CreateUsersComponent implements OnInit {
   @Input() allRoles;
+  @Output() firstTab = new EventEmitter();
   showInitial = false;
   isCgiar = false;
   rolesExample=[1];
@@ -42,6 +43,7 @@ export class CreateUsersComponent implements OnInit {
       console.log('%cusers','background: #222; color: #84c3fd');
       console.log(resp);
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
+      this.firstTab.emit();
     },
     err=>{
       console.log(err);

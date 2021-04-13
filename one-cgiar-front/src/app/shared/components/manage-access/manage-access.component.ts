@@ -20,6 +20,7 @@ export class ManageAccessComponent implements OnInit {
   allRoles=[];
   initiative;
   showForm=false;
+  tabNumber=0;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
