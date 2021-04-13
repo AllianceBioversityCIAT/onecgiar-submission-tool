@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { DialogConfirmComponent } from '../dialog-confirm/dialog-confirm.component';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-edit-rol-user',
@@ -13,12 +14,14 @@ export class EditRolUserComponent implements OnInit {
   @Input() user:any;
   @Input() roles;
   @Output() reload = new EventEmitter();
+  activeExpand=-1;
   activeExpansion=false;
   CurrentRolChipName;
   public userRolForm: FormGroup;
   constructor(
     public _initiativesService:InitiativesService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public _interactions: InteractionsService
   ) { 
     this.userRolForm = new FormGroup({
       userId: new FormControl(''),
@@ -27,6 +30,7 @@ export class EditRolUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.user);
     if (this.user.roleId) {
       this.userRolForm.controls.roleId.setValue(this.user.roleId);
       this.getLocalRolById(this.user.roleId);
@@ -35,6 +39,11 @@ export class EditRolUserComponent implements OnInit {
     this.userRolForm.valueChanges.subscribe(resp=>{
       this.getLocalRolById(resp.roleId);
     })
+
+    setTimeout(() => {
+      this.activeExpand = this._interactions.expandWithUserId;
+
+    }, 500);
     
   }
 
@@ -61,6 +70,7 @@ export class EditRolUserComponent implements OnInit {
     body.active = true;
     this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
+      this._interactions.expandWithUserId=-1;
       this.reload.emit();
     });
   }

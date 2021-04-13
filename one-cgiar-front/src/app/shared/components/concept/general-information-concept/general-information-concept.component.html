@@ -19,7 +19,7 @@
                         <div class="col-sm-4">
                             <custom-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></custom-text>
                         </div>
-                        <button (click)="openDialog();" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                        <button (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
                         </button>
                         
@@ -37,7 +37,7 @@
                         <div class="col-sm-4">
                             <custom-text [options]="{inputTitle:'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
                         </div>
-                        <button (click)="openDialog();" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                        <button (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
                         </button>
                     </div>

@@ -28,8 +28,10 @@ export class GeneralInformationConceptComponent implements OnInit {
   leads={
     lead_name:'',
     lead_email:'',
+    lead_id:-1,
     co_lead_name:'',
     co_lead_email:'',
+    co_lead_id:-1
   }
 
   @ViewChild("text") text: ElementRef;
@@ -48,8 +50,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private interactionsService:InteractionsService,
     public dialog: MatDialog,
-    public _initiativesService:InitiativesService
-
+    public _initiativesService:InitiativesService,
+    public _interactions: InteractionsService
     ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
@@ -93,8 +95,10 @@ export class GeneralInformationConceptComponent implements OnInit {
       // console.log(gnrlInfo);
       this.leads.lead_name = gnrlInfo.conceptLead;
       this.leads.lead_email = gnrlInfo.conceptEmail;
+      this.leads.lead_id = gnrlInfo.conceptLeadId;
       this.leads.co_lead_name = gnrlInfo.conceptCoLead;
       this.leads.co_lead_email = gnrlInfo.conceptCoLeadEmail;
+      this.leads.co_lead_id = gnrlInfo.conceptCoLeadId;
 
       this.usersByRoles = res[2].data;
       for (const user of  this.usersByRoles) {
@@ -146,7 +150,24 @@ export class GeneralInformationConceptComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      location.reload();
     });
+  }
+
+  setExpandWithUserId(type){
+    switch (type) {
+      case 'Co-Lead':
+        this._interactions.expandWithUserId =  this.leads.co_lead_id;
+        
+        break;
+
+      case 'Lead':
+        this._interactions.expandWithUserId =  this.leads.lead_id;
+        break;
+    
+      default:
+        break;
+    }
   }
 
 }

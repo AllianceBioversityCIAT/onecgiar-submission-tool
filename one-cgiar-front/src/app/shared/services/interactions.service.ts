@@ -8,6 +8,7 @@ export class InteractionsService {
   showHeader = true;
   noWp = false;
   requests=[];
+  expandWithUserId = -1;
   constructor() { }
 
   successMessage(title:string){
