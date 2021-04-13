@@ -23,7 +23,7 @@ export class CreateUsersComponent implements OnInit {
     this.createUserForm = new FormGroup({
       first_name: new FormControl({value: null, disabled: this.isCgiar}, Validators.required),
       last_name: new FormControl({value: null, disabled: this.isCgiar}, Validators.required),
-      password: new FormControl(null,[Validators.required]),
+      password: new FormControl(null,[Validators.required, Validators.minLength(8)]),
       is_cgiar: new FormControl(null),
       email: new FormControl(null, [Validators.required,Validators.email]),
     });
@@ -67,7 +67,7 @@ export class CreateUsersComponent implements OnInit {
       passInForm.clearValidators();
       passInForm.updateValueAndValidity();
     }else{
-      this.createUserForm.controls.password.setValidators([Validators.required]);
+      this.createUserForm.controls.password.setValidators([Validators.required, Validators.minLength(8)]);
       passInForm.updateValueAndValidity();
     }
   }
