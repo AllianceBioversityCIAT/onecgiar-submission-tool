@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,10 @@ export class InteractionsService {
   noWp = false;
   requests=[];
   expandWithUserId = -1;
-  constructor() { }
+  animateButtonSave = false;
+  constructor(
+    private _snackBar: MatSnackBar
+  ) { }
 
   successMessage(title:string){
     Swal.fire({
@@ -41,6 +45,15 @@ export class InteractionsService {
   enableAllExpand(){
     this.disableAllExpandBool=false;
     // console.log(sl+" "+this.user.first_name);
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration:2000,
+      horizontalPosition:'center',
+      verticalPosition:'top',
+      panelClass: ['marginSnackTop']
+    });
   }
 
 }

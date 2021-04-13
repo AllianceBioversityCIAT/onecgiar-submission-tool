@@ -19,6 +19,7 @@ export class EditRolUserComponent implements OnInit {
   activeExpand=-1;
   activeExpansion=false;
   CurrentRolChipName;
+  
   public userRolForm: FormGroup;
   constructor(
     public _initiativesService:InitiativesService,
@@ -57,6 +58,7 @@ export class EditRolUserComponent implements OnInit {
   }
 
   removeUserToInitiative(){
+    this._interactions.animateButtonSave = false;
     if (!this.user.new) {
       let body={
         userId:this.user.userId,
@@ -76,6 +78,7 @@ export class EditRolUserComponent implements OnInit {
   }
 
   assignUserToInitiative(){
+    this._interactions.animateButtonSave = false;
     console.log("assignUserToInitiative");
     console.log(this.user);
     this.userRolForm.controls.userId.setValue(this.user.userId);
@@ -87,6 +90,7 @@ export class EditRolUserComponent implements OnInit {
       this._interactions.expandWithUserId=-1;
       this.reload.emit();
       this._interactions.disableAllExpandBool = false;
+      this._interactions.animateButtonSave = false;
     });
   }
 
@@ -108,6 +112,23 @@ export class EditRolUserComponent implements OnInit {
       }
       console.log('The dialog was closed');
     });
+  }
+
+  validateExpand(){
+    return this._interactions.disableAllExpandBool?(this._interactions.currentUserIdOnlyExpand!=this.user.userId):false;
+  }
+
+  printSome(){
+    if (this.validateExpand()) {
+      this._interactions.openSnackBar("You have pending changes, please update or cancel the user's info","Ok");
+      this._interactions.animateButtonSave = false;
+      setTimeout(() => {
+        this._interactions.animateButtonSave = true;
+
+      }, 100);
+
+    }
+
   }
 
 }
