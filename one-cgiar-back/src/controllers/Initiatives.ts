@@ -28,23 +28,30 @@ require('dotenv').config();
  * @param res 
  */
 export const getInitiatives = async (req: Request, res: Response) => {
+
+    const { userId } = res.locals.jwtPayload;
+
     const conceptRepo = getRepository(ConceptInfo);
     const queryRunner = getConnection().createQueryBuilder();
     let initiatives,
         initvSQL = ` 
         SELECT
-                initvStg.id AS initvStgId,
-                stage.description AS currentStage,
-                stage.id AS currentStageId,
-                initiative.name AS initiativeName,
-                initvStg.active AS initvStageIsActive,
-                initvStg.status AS initvStageStatus
+            initvStg.id AS initvStgId,
+            stage.description AS currentStage,
+            stage.id AS currentStageId,
+            initiative.name AS initiativeName,
+            initvStg.active AS initvStageIsActive,
+            initvStg.status AS initvStageStatus,
+            (SELECT id FROM stages WHERE active = true) AS activeStageId,
+            (SELECT description FROM stages WHERE active = true) AS activeStageName,
+
+            (SELECT userId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE  LIMIT 1) AS userInitiative
 
         FROM
-                initiatives initiative
+            initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
-        -- LEFT JOIN initiatives_by_users initvStgUsr ON initvStgUsr.initiativeId = initiative.id
+        
         `;
 
     try {
@@ -109,7 +116,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             initvStg.active AS initvStageIsActive,
             initvStg.status AS initvStageStatus,
             (SELECT id FROM stages WHERE active = true) AS activeStageId,
-            (SELECT description FROM stages WHERE active = true) AS activeStageName
+            (SELECT description FROM stages WHERE active = true) AS activeStageName           
 
         FROM
             initiatives_by_users initvStgUsr
@@ -239,24 +246,24 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
             if (role.acronym == 'SGD') {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'SGD') ? coordinatorRole: initvUsr.role;
-                    }else{
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'SGD') ? coordinatorRole : initvUsr.role;
+                    } else {
                         newUsrByInitv.id = initvUsr.id;
                     }
                 });
-            }else if(role.acronym == 'PI'){
+            } else if (role.acronym == 'PI') {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'PI') ? coordinatorRole: initvUsr.role;
-                    }else{
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'PI') ? coordinatorRole : initvUsr.role;
+                    } else {
                         newUsrByInitv.id = initvUsr.id;
                     }
                 });
-            }else {
+            } else {
                 usersByInitiative.forEach(initvUsr => {
                     if (user.id != initvUsr.user.id) {
-                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'CO') ? coordinatorRole: initvUsr.role;
-                    }else{
+                        initvUsr.role = (initvUsr.role && initvUsr.role.acronym == 'CO') ? coordinatorRole : initvUsr.role;
+                    } else {
                         newUsrByInitv.id = initvUsr.id;
                     }
                 });
