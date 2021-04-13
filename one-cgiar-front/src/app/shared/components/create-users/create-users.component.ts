@@ -10,8 +10,10 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 })
 export class CreateUsersComponent implements OnInit {
   @Input() allRoles;
+  showInitial = false;
   isCgiar = false;
   rolesExample=[1];
+  checkedCgiar=false;
   createUserForm: FormGroup;
   constructor(
     public _initiativesSvc: InitiativesService,
@@ -37,8 +39,9 @@ export class CreateUsersComponent implements OnInit {
     body.password = this.isCgiar?null:body.password;
     body.roles=[5];
     this._initiativesSvc.createUser(body).subscribe(resp=>{
+      console.log('%cusers','background: #222; color: #84c3fd');
       console.log(resp);
-      this.interactionsService.successMessage(`The user ${resp.data.first_name +' '+ resp.data.last_name} has been created`);
+      this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
     },
     err=>{
       console.log(err);
@@ -48,17 +51,26 @@ export class CreateUsersComponent implements OnInit {
   }
 
   validateEmail(){
+    this.showInitial = true;
+    this.checkedCgiar = true;
+    let passInForm = this.createUserForm.get('password');
     if (this.createUserForm.value.email != null) {
       this.isCgiar = this.createUserForm.value.email.indexOf("@cgiar.org")>-1?true:false;
     }
     if (this.isCgiar) {
-      this.createUserForm.controls.first_name.setValue("Yecksin");
-      this.createUserForm.controls.last_name.setValue("Guerrero")
-      // this.createUserForm.controls.password.setValue(null)
-      this.createUserForm.controls.password.setValidators([]);
+      this.createUserForm.controls.first_name.setValue("cgiarfirstname");
+      this.createUserForm.controls.last_name.setValue("cgiarlastname")
+      passInForm.clearValidators();
+      passInForm.updateValueAndValidity();
     }else{
       this.createUserForm.controls.password.setValidators([Validators.required]);
+      passInForm.updateValueAndValidity();
     }
+  }
+
+  cleanCheckedCgiar(){
+    console.log("on change");
+    this.checkedCgiar = false;
   }
 
 

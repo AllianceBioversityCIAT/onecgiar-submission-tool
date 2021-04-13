@@ -9,13 +9,13 @@
                         <div class="col-sm-4">
                             <mat-form-field style="width: 100%;">
                                 <mat-label >Email</mat-label>
-                                <input matInput formControlName="email">
+                                <input matInput formControlName="email" (input)="cleanCheckedCgiar()">
                               </mat-form-field>
                         </div>
                         <div class="col-sm-2">
-                            <button mat-raised-button color="primary" (click)="validateEmail()">Check email</button>
+                            <button mat-raised-button color="primary" (click)="validateEmail()" [ngClass]="{'animate__animated animate__infinite animate__pulse': checkedCgiar == false}">Check email</button>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" *ngIf="showInitial">
                             <h3 class="color-primary" style="display: inline-block;" *ngIf="isCgiar">
                                 <mat-icon aria-hidden="false" aria-label="Example home icon" class="center-icon">email</mat-icon>
                                 The email is <strong>cgiar</strong> 
@@ -30,19 +30,20 @@
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group> -->
                         </div>
-                        <div class="col-sm-6">
+
+                        <div class="col-sm-6" *ngIf="showInitial">
                             <mat-form-field class="example-full-width">
                                 <mat-label >First name</mat-label>
                                 <input [readonly]="isCgiar" matInput formControlName="first_name">
                               </mat-form-field>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" *ngIf="showInitial">
                             <mat-form-field class="example-full-width">
                                 <mat-label >Last name</mat-label>
                                 <input [readonly]="isCgiar" matInput formControlName="last_name">
                               </mat-form-field>
                         </div>
-                        <div class="col-sm-6" *ngIf="!isCgiar">
+                        <div class="col-sm-6" *ngIf="!isCgiar && showInitial">
                             <mat-form-field class="example-full-width">
                                 <mat-label>Password</mat-label>
                                 <input matInput type="password" formControlName="password">
@@ -54,7 +55,7 @@
                             <br>
                         </div>
                         <div class="col-sm-12" align="end">
-                            <button (click)="createUser()"  mat-raised-button color="primary" >Register user<mat-icon class="tab-icon">add_circle_outline</mat-icon></button>
+                            <button (click)="createUser()"  mat-raised-button color="primary" [disabled]="createUserForm.invalid || (!checkedCgiar)">Register user<mat-icon class="tab-icon">add_circle_outline</mat-icon></button>
                         </div>
                     </div>
                 </form>
