@@ -171,13 +171,29 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
  */
 
 export const getConceptGeneralInfo = async (req: Request, res: Response) => {
-    // const { userId } = res.locals.jwtPayload;
+    const { userId } = res.locals.jwtPayload;
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
-
-    //initvUsr.userId AND initvUsr.is_lead = true
+    const initvUserRepo = getRepository(InitiativesByUsers);
 
     try {
+
+        /**
+         * Validate user in initiative
+         * 
+         */
+
+        const userInitiative = await initvUserRepo.findOne(userId);
+
+        if(userInitiative == null){
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'User not found in initiative.'
+            );
+        }
+
         let conceptInfo,
             conceptQuery = ` 
             SELECT
