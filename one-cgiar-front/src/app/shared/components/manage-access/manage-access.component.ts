@@ -54,8 +54,12 @@ export class ManageAccessComponent implements OnInit {
   getAllRoles(){
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
       this.allRoles = roles.data;
+      console.log(roles.data);
       for (let index = 0; index < this.allRoles.length; index++) {
         if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
+          this.allRoles.splice(index,1)
+        }
+        if (this.allRoles[index].acronym == "GUEST" && this.allRoles[index].id == 4) {
           this.allRoles.splice(index,1)
         }
       }
