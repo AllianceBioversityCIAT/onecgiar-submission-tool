@@ -10,6 +10,8 @@ import { InteractionsService } from '../../../services/interactions.service';
 import { ManageAccessComponent } from '../../manage-access/manage-access.component';
 import { MatDialog } from '@angular/material/dialog';
 import { InitiativesService } from '../../../services/initiatives.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -19,36 +21,36 @@ export class GeneralInformationConceptComponent implements OnInit {
 
   public generalInformationForm: FormGroup;
   public initvStgId: any;
-  public actionAreas:any [];
+  public actionAreas: any[];
   // public usersByInitiative: [];
-  public usersByRoles:any [];
+  public usersByRoles: any[];
 
-  fName="";
+  fName = "";
   wordCount: any;
-  leads={
-    lead_name:'',
-    lead_email:'',
-    lead_id:-1,
-    co_lead_name:'',
-    co_lead_email:'',
-    co_lead_id:-1
+  leads = {
+    lead_name: '',
+    lead_email: '',
+    lead_id: -1,
+    co_lead_name: '',
+    co_lead_email: '',
+    co_lead_id: -1
   }
 
   @ViewChild("text") text: ElementRef;
   words: any;
-  showForm=false;
+  showForm = false;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
   constructor(
-    private errorService: ErrorService, 
-    public stgMenuSvc: StagesMenuService, 
-    public conceptSvc: ConceptService, 
-    public activatedRoute: ActivatedRoute, 
+    private errorService: AppErrorHandler,
+    public stgMenuSvc: StagesMenuService,
+    public conceptSvc: ConceptService,
+    public activatedRoute: ActivatedRoute,
     private spinnerService: NgxSpinnerService,
-    private interactionsService:InteractionsService,
+    private interactionsService: InteractionsService,
     public dialog: MatDialog,
     public _initiativesService:InitiativesService,
     public _interactions: InteractionsService,
@@ -84,11 +86,11 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.conceptSvc.getConcept(initvStgId).toPromise(),
       this.conceptSvc.getUsersByRoles().toPromise(),
     ]).then(res => {
-      
+
       //
       this.actionAreas = res[0];
-      for (let index = 0; index <  this.actionAreas.length; index++) {
-        this.actionAreas[index].index_name =`Action area ${index+1} - ${ this.actionAreas[index].name}`; 
+      for (let index = 0; index < this.actionAreas.length; index++) {
+        this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
 
       //
@@ -102,8 +104,8 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.leads.co_lead_id = gnrlInfo.conceptCoLeadId;
 
       this.usersByRoles = res[2].data;
-      for (const user of  this.usersByRoles) {
-        user.firstN_lastN = user.first_name+' '+user.last_name;
+      for (const user of this.usersByRoles) {
+        user.firstN_lastN = user.first_name + ' ' + user.last_name;
       }
 
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
@@ -115,7 +117,11 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
       this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
       this.spinnerService.hide('general-information');
-      this.showForm=true;
+      this.showForm = true;
+    }, err => {
+      console.log(err instanceof HttpErrorResponse);
+      this.errorService.handleError(err);
+      this.spinnerService.hide('general-information');
     });
     this.generalInformationForm.valueChanges.subscribe(
       result => {
@@ -145,7 +151,7 @@ export class GeneralInformationConceptComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(ManageAccessComponent, {
       width: '100%',
-      height:'90%',
+      height: '90%',
       panelClass: 'custom-dialog-container'
     });
 
@@ -159,17 +165,17 @@ export class GeneralInformationConceptComponent implements OnInit {
     });
   }
 
-  setExpandWithUserId(type){
+  setExpandWithUserId(type) {
     switch (type) {
       case 'Co-Lead':
-        this._interactions.expandWithUserId =  this.leads.co_lead_id;
-        
+        this._interactions.expandWithUserId = this.leads.co_lead_id;
+
         break;
 
       case 'Lead':
-        this._interactions.expandWithUserId =  this.leads.lead_id;
+        this._interactions.expandWithUserId = this.leads.lead_id;
         break;
-    
+
       default:
         break;
     }
