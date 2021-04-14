@@ -1,4 +1,4 @@
-<h1 mat-dialog-title >Manage Access
+<h1 mat-dialog-title > {{tabNumber==0?'Manage access to the this initiative':'Manage access general'}}
     <mat-icon aria-hidden="false" aria-label="Example home icon" class="botton_close" mat-dialog-close>cancel</mat-icon>
 </h1>
 <div class="dialog_cont">
@@ -38,7 +38,7 @@
                         <div class="col-sm-12" *ngIf="showForm">
                             <custom-multiple-choice [options]="{
                                 required:false,
-                                inputTitle:'Select users',
+                                inputTitle:'Please select the users who yo should access to this initiative',
                                 showChips:false,
                                 selectList:this.allUsers,
                                 selectedList:this.selectedUsers,
@@ -48,7 +48,7 @@
                                }"></custom-multiple-choice>
                         </div>
                         <div class="col-sm-12">
-                            <h2 class="color-primary">Users</h2>
+                            <h2 class="color-primary">Users with editing access to this initiative.</h2>
                             <div class="scroll_container">
 
                                 <mat-accordion class="example-headers-align" >
