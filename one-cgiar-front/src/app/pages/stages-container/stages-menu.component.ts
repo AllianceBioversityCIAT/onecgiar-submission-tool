@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@shared/services/initiatives.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,7 +19,8 @@ export class StagesMenuComponent implements OnInit {
     public initiativesSvc: InitiativesService,
     public stageMenu: StagesMenuService,
     public _interactionsService: InteractionsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router:Router
   ) { }
 
   openDialog(): void {
@@ -31,7 +32,11 @@ export class StagesMenuComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      location.reload();
+      // location.reload();
+      let currentUrl = this.router.url;
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+          this.router.navigate([currentUrl]);
+      });
     });
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -51,7 +51,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     private interactionsService:InteractionsService,
     public dialog: MatDialog,
     public _initiativesService:InitiativesService,
-    public _interactions: InteractionsService
+    public _interactions: InteractionsService,
+    private router:Router
     ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
@@ -150,7 +151,11 @@ export class GeneralInformationConceptComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      location.reload();
+      // location.reload();
+      let currentUrl = this.router.url;
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+          this.router.navigate([currentUrl]);
+      });
     });
   }
 
