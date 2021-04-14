@@ -19,6 +19,7 @@ export class EditRolUserComponent implements OnInit {
   activeExpand=-1;
   activeExpansion=false;
   CurrentRolChipName;
+  isOpeneded=false;
   
   public userRolForm: FormGroup;
   constructor(
@@ -73,6 +74,7 @@ export class EditRolUserComponent implements OnInit {
     }else{
       this.user.active = false;
       this.reload.emit();
+      this._interactions.expandWithUserId=-1;
     }
 
   }
@@ -129,6 +131,11 @@ export class EditRolUserComponent implements OnInit {
 
     }
 
+  }
+
+  cancelAction(){
+    this.reload.emit();
+    this._interactions.disableAllExpandBool = false;
   }
 
 }

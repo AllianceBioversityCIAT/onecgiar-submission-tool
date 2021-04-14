@@ -1,4 +1,4 @@
-<mat-expansion-panel  hideToggle style="background-color: #fafafafa;" (opened)="_interactions.disableOthersExpand(user.userId)" (closed)="_interactions.enableAllExpand()" 
+<mat-expansion-panel  hideToggle style="background-color: #fafafafa;" (opened)="_interactions.disableOthersExpand(user.userId);isOpeneded = true" (closed)="_interactions.enableAllExpand();isOpeneded = false" 
 [disabled]="activeExpansion || validateExpand()" 
 (click)="activeExpansion=false" [expanded]="user.userId == activeExpand">
     <mat-expansion-panel-header (click)="printSome()">
@@ -13,7 +13,7 @@
             </mat-chip-list>
        
         <button mat-icon-button aria-label="" class="edit_icon">
-            <mat-icon >edit</mat-icon>
+            <mat-icon>{{isOpeneded?'expand_less':'edit'}}</mat-icon>
         </button>
         <button mat-icon-button aria-label="" (click)="openDialog();this.activeExpansion = true;">
             <mat-icon color="warn">delete</mat-icon>
@@ -36,7 +36,7 @@
             ></custom-select>
         </div>
         <div class="col-sm-12" align="end">
-            <button (click)="reload.emit();this._interactions.disableAllExpandBool = false;"  mat-raised-button   [class]="_interactions.animateButtonSave?'animate__animated animate__repeat-2 animate__bounce':''" style="margin-right: 20px;">cancel<mat-icon class="tab-icon">close</mat-icon></button>
+            <button (click)="cancelAction()"  mat-raised-button   [class]="_interactions.animateButtonSave?'animate__animated animate__repeat-2 animate__bounce':''" style="margin-right: 20px;">cancel<mat-icon class="tab-icon">close</mat-icon></button>
 
             <button (click)="assignUserToInitiative()"  mat-raised-button color="primary"  [class]="_interactions.animateButtonSave?'animate__animated animate__repeat-2 animate__bounce':''" >Update role<mat-icon class="tab-icon">save</mat-icon></button>
 
