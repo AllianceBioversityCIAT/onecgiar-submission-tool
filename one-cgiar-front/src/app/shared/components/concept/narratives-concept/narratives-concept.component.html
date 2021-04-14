@@ -3,7 +3,7 @@
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form" *ngIf="showForm">
 
         <custom-textarea  
-        [options]="{ form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement',
+        [options]="{ form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement',editText:true,
          description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed'}">
         </custom-textarea>
 

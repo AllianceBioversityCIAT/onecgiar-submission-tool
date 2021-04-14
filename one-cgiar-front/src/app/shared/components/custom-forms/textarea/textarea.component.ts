@@ -47,10 +47,8 @@ export class TextareaComponent implements OnInit {
 
   editor: Editor;
   toolbar: Toolbar = [
-    ['bold', 'italic'],
-    ['ordered_list', 'bullet_list'],
+    ['bold', 'italic','underline'],
     ['link'],
-    ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
   ngOnDestroy(): void {
     this.editor.destroy();

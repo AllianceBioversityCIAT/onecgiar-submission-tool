@@ -20,3 +20,11 @@
 .color_disabled{
   color: rgb(161, 161, 161);
 }
+
+.edit_icon{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  margin-right: 100px;
+}

@@ -12,7 +12,7 @@
               <mat-chip [color]="colorChip" [selected]="!validateExpand()" *ngIf="CurrentRolChipName">{{CurrentRolChipName}}</mat-chip>
             </mat-chip-list>
        
-        <button mat-icon-button aria-label="">
+        <button mat-icon-button aria-label="" class="edit_icon">
             <mat-icon >edit</mat-icon>
         </button>
         <button mat-icon-button aria-label="" (click)="openDialog();this.activeExpansion = true;">
