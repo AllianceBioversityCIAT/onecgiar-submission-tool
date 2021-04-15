@@ -48,6 +48,7 @@ export const startAccsCtrl = async () => {
     let grantsObject = await getPermissions();
 
     accessCtrl.setGrants(grantsObject);
+    accessCtrl.grant('CO').extend(['PI']);
     accessCtrl.grant('ADM').extend(['SGD', 'PI']);
     // console.log(JSON.stringify(accessCtrl.getGrants()));
     return accessCtrl;

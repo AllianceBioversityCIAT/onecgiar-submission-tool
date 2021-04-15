@@ -6,7 +6,8 @@ import { checkRole } from '../middlewares/role';
 const router = Router();
 
 // get initiatives
-router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
+// router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
+router.get("/", [checkJwt], getInitiatives);
 
 // get initiatives by user
 router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativesByUser);
