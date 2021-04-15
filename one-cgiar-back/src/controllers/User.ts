@@ -7,6 +7,7 @@ import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { InitiativesByUsers } from '../entity/InititativesByUsers';
 
 // get all users
 export const getUsers = async (req: Request, res: Response): Promise<Response> => {
@@ -61,9 +62,10 @@ export const getUser = async (req: Request, res: Response) => {
 
 // create new user
 export const createUsers = async (req: Request, res: Response) => {
-    const { first_name, last_name, password, roles, email, is_cgiar } = req.body;
+    const { first_name, last_name, password, roles, email, is_cgiar, initiativeId } = req.body;
     const userRepository = getRepository(Users);
     const rolesRepository = getRepository(Roles);
+    const usrInitvRepository = getRepository(InitiativesByUsers);
 
     const user = new Users();
     user.first_name = first_name;
@@ -74,6 +76,7 @@ export const createUsers = async (req: Request, res: Response) => {
     user.is_active = true;
     try {
 
+        
         // validate
         const errors = await validate(user);
         if (errors.length > 0) {
@@ -106,6 +109,19 @@ export const createUsers = async (req: Request, res: Response) => {
             user.hashPassword();
         }
         let userCreated = await userRepository.save(user);
+
+        if(initiativeId){
+            const userByInitiative = new InitiativesByUsers();
+            userByInitiative.initiative = initiativeId;
+            userByInitiative.user = userCreated;
+            userByInitiative.role = rolesDB[0];
+            userByInitiative.active = true;
+
+            let usrIntv = await usrInitvRepository.save(userByInitiative);
+
+            console.log(usrIntv);
+        }
+
         res.json(new ResponseHandler('User logged.', { user: userCreated }));
 
     } catch (error) {
