@@ -29,140 +29,6 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
 
 
-/**
- * 
- * @param req params:{ initvStgId }
- * @param res 
- */
-
-export const getConceptNarratives = async (req: Request, res: Response) => {
-    const { initvStgId } = req.params;
-    const queryRunner = getConnection().createQueryBuilder();
-
-    try {
-        let conceptInfo,
-            conceptQuery = ` 
-            SELECT
-                initvStgs.id AS initvStgId,
-                stage.description AS stageDesc,
-                stage.active AS stageIsActive,
-                concept.id AS conceptId,
-                concept.challenge AS conceptChallenge,
-                concept.objectives AS conceptObjectives,
-                concept.results AS conceptResults,
-                concept.highlights AS conceptHiglights
-            FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-
-            WHERE initvStgs.id =:initvStgId;
-        `;
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            conceptQuery,
-            { initvStgId },
-            {}
-        );
-        conceptInfo = await queryRunner.connection.query(query, parameters);
-
-        if (conceptInfo.length == 0) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'Concept Information not found.'
-            );
-        }
-        else
-            res.json(new ResponseHandler('Concept: Narratives.', { narratives: conceptInfo[0] }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
-
-
-
-
-}
-
-/**
- * 
- * @param req params: { conceptId, initvStgId, challenge, results, highlights, objectives }
- * @param res 
- */
-export const upsertConceptNarratives = async (req: Request, res: Response) => {
-
-    const { conceptId, initvStgId, challenge, results, highlights, objectives } = req.body;
-    const concptInfoRepo = getRepository(ConceptInfo);
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const queryRunner = getConnection().createQueryBuilder();
-
-    let conceptInf: ConceptInfo;
-
-    try {
-        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
-        if (initvStg == null) {
-            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
-        }
-
-        if (conceptId == null) {
-            conceptInf = new ConceptInfo();
-            conceptInf.name = '';
-            conceptInf.action_area_description = '';
-            conceptInf.action_area_id = null;
-            conceptInf.initvStg = initvStg;
-            conceptInf.objectives = objectives;
-            conceptInf.challenge = challenge;
-            conceptInf.results = results;
-            conceptInf.highlights = highlights;
-        } else {
-            conceptInf = await concptInfoRepo.findOne(conceptId);
-            conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
-            conceptInf.results = (results) ? results : conceptInf.results;
-            conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
-            conceptInf.results = (results) ? results : conceptInf.results;
-            conceptInf.highlights = (highlights) ? highlights : conceptInf.highlights;
-        }
-
-        let upsertedInfo = await concptInfoRepo.save(conceptInf);
-
-
-        let conceptQuery = ` 
-        SELECT
-            initvStgs.id AS initvStgId,
-            stage.description AS stageDesc,
-            stage.active AS stageIsActive,
-            concept.id AS conceptId,
-            concept.challenge AS conceptChallenge,
-            concept.objectives AS conceptObjectives,
-            concept.results AS conceptResults,
-            concept.highlights AS conceptHiglights
-        FROM
-            initiatives_by_stages initvStgs
-        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-
-		WHERE concept.id =:conceptId;
-    `;
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            conceptQuery,
-            { conceptId: conceptInf.id },
-            {}
-        );
-        let narratives = await queryRunner.connection.query(query, parameters);
-
-        // console.log(narratives)
-
-        res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
-
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
-
-}
-
-
-
-
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 
 /**
@@ -347,6 +213,138 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
 }
 
 
+
+
+/**
+ * 
+ * @param req params:{ initvStgId }
+ * @param res 
+ */
+
+ export const getConceptNarratives = async (req: Request, res: Response) => {
+    const { initvStgId } = req.params;
+    const queryRunner = getConnection().createQueryBuilder();
+
+    try {
+        let conceptInfo,
+            conceptQuery = ` 
+            SELECT
+                initvStgs.id AS initvStgId,
+                stage.description AS stageDesc,
+                stage.active AS stageIsActive,
+                concept.id AS conceptId,
+                concept.challenge AS conceptChallenge,
+                concept.objectives AS conceptObjectives,
+                concept.results AS conceptResults,
+                concept.highlights AS conceptHiglights
+            FROM
+                initiatives_by_stages initvStgs
+            LEFT JOIN stages stage ON stage.id = initvStgs.stageId
+            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+
+            WHERE initvStgs.id =:initvStgId;
+        `;
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            conceptQuery,
+            { initvStgId },
+            {}
+        );
+        conceptInfo = await queryRunner.connection.query(query, parameters);
+
+        if (conceptInfo.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Concept Information not found.'
+            );
+        }
+        else
+            res.json(new ResponseHandler('Concept: Narratives.', { narratives: conceptInfo[0] }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+
+
+
+}
+
+/**
+ * 
+ * @param req params: { conceptId, initvStgId, challenge, results, highlights, objectives }
+ * @param res 
+ */
+export const upsertConceptNarratives = async (req: Request, res: Response) => {
+
+    const { conceptId, initvStgId, challenge, results, highlights, objectives } = req.body;
+    const concptInfoRepo = getRepository(ConceptInfo);
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const queryRunner = getConnection().createQueryBuilder();
+
+    let conceptInf: ConceptInfo;
+
+    try {
+        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
+        if (initvStg == null) {
+            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
+        }
+
+        if (conceptId == null) {
+            conceptInf = new ConceptInfo();
+            conceptInf.name = '';
+            conceptInf.action_area_description = '';
+            conceptInf.action_area_id = null;
+            conceptInf.initvStg = initvStg;
+            conceptInf.objectives = objectives;
+            conceptInf.challenge = challenge;
+            conceptInf.results = results;
+            conceptInf.highlights = highlights;
+        } else {
+            conceptInf = await concptInfoRepo.findOne(conceptId);
+            conceptInf.challenge = (challenge) ? challenge : conceptInf.challenge;
+            conceptInf.results = (results) ? results : conceptInf.results;
+            conceptInf.objectives = (objectives) ? objectives : conceptInf.objectives;
+            conceptInf.results = (results) ? results : conceptInf.results;
+            conceptInf.highlights = (highlights) ? highlights : conceptInf.highlights;
+        }
+
+        let upsertedInfo = await concptInfoRepo.save(conceptInf);
+
+
+        let conceptQuery = ` 
+        SELECT
+            initvStgs.id AS initvStgId,
+            stage.description AS stageDesc,
+            stage.active AS stageIsActive,
+            concept.id AS conceptId,
+            concept.challenge AS conceptChallenge,
+            concept.objectives AS conceptObjectives,
+            concept.results AS conceptResults,
+            concept.highlights AS conceptHiglights
+        FROM
+            initiatives_by_stages initvStgs
+        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
+        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+
+		WHERE concept.id =:conceptId;
+    `;
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            conceptQuery,
+            { conceptId: conceptInf.id },
+            {}
+        );
+        let narratives = await queryRunner.connection.query(query, parameters);
+
+        // console.log(narratives)
+
+        res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
+
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+}
 
 /**
  * 
