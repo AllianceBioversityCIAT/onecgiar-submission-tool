@@ -38,29 +38,13 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
  */
 
 export const getConceptGeneralInfo = async (req: Request, res: Response) => {
-    const { userId } = res.locals.jwtPayload;
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
-    const initvUserRepo = getRepository(InitiativesByUsers);
+    
 
     try {
 
-        /**
-         * Validate user in initiative
-         * 
-         */
-
-        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
-
-        if (userInitiative == null) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'User not found in initiative.'
-            );
-        }
-
+        
         let conceptInfo,
             conceptQuery = ` 
             SELECT
@@ -126,16 +110,36 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
 export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
     // export const updateConcept = async (req: Request, res: Response) => {
     const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
+    const { userId } = res.locals.jwtPayload;
+
     const concptInfoRepo = getRepository(ConceptInfo);
     const initvStgRepo = getRepository(InitiativesByStages);
+    const initvUserRepo = getRepository(InitiativesByUsers);
 
+    // const userRepo = getRepository(Users);
     const initiativeRepo = getRepository(Initiatives);
-    const userRepo = getRepository(Users);
     const queryRunner = getConnection().createQueryBuilder();
 
     let conceptInf: ConceptInfo;
 
     try {
+
+        /**
+         * Validate user in initiative
+         * 
+         */
+
+         const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
+
+         if (userInitiative == null) {
+             throw new APIError(
+                 'NOT FOUND',
+                 HttpStatusCode.NOT_FOUND,
+                 true,
+                 'User not found in initiative.'
+             );
+         }
+ 
 
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
@@ -149,7 +153,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             conceptInf = new ConceptInfo();
             conceptInf.name = name;
 
-            conceptInf.action_area_description = action_area_description || selectedActionArea.description;
+            conceptInf.action_area_description = action_area_description || selectedActionArea.name;
             conceptInf.action_area_id = action_area_id;
 
             conceptInf.initvStg = initvStg;
@@ -180,8 +184,6 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
             initvStgs.id AS initvStgId,
             stage.description AS stageDesc,
             stage.active AS stageIsActive,
-           --  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
-           --  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
             concept.id AS conceptId,
             concept.name AS conceptName,
             concept.action_area_description AS conceptActAreaDes,
