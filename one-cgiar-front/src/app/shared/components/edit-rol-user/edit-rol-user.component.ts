@@ -92,6 +92,7 @@ export class EditRolUserComponent implements OnInit {
       this.reload.emit();
       this._interactions.disableAllExpandBool = false;
       this._interactions.animateButtonSave = false;
+      this._interactions.successMessage('The user role was updated');
     });
   }
 

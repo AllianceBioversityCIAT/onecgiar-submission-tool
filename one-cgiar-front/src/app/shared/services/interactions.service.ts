@@ -20,7 +20,7 @@ export class InteractionsService {
       icon: 'success',
       title: title,
       showConfirmButton: false,
-      timer: 2000
+      timer: 3000
     })
   }
 
@@ -29,7 +29,7 @@ export class InteractionsService {
       icon: 'error',
       title: title,
       showConfirmButton: false,
-      timer: 2000
+      timer: 3000
     })
   }
   
