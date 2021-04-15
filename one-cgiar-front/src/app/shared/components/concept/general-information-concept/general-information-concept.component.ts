@@ -23,7 +23,6 @@ export class GeneralInformationConceptComponent implements OnInit {
   public initvStgId: any;
   public actionAreas: any[];
   // public usersByInitiative: [];
-  public usersByRoles: any[];
 
   fName = "";
   wordCount: any;
@@ -59,8 +58,6 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
       name: new FormControl(null, Validators.required),
-      lead_name: new FormControl(null),
-      lead_id: new FormControl(null),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       initvStgId: new FormControl(this.initvStgId, Validators.required),
@@ -81,20 +78,21 @@ export class GeneralInformationConceptComponent implements OnInit {
   getConceptGeneralInfo(initvStgId) {
     this.initvStgId = this.conceptSvc.initvStgId;
     this.spinnerService.show('general-information');
-    Promise.all([
-      this.conceptSvc.getActionAreas().toPromise(),
-      this.conceptSvc.getConcept(initvStgId).toPromise(),
-      this.conceptSvc.getUsersByRoles().toPromise(),
-    ]).then(res => {
 
-      //
-      this.actionAreas = res[0];
+    
+    this.conceptSvc.getActionAreas().subscribe(resp=>{
+      this.actionAreas = resp;
+      console.log('%cActions areas','background: #222; color: #ffff00');
+      console.log(this.actionAreas);
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
+    })
 
-      //
-      let gnrlInfo = res[1];
+
+      this.conceptSvc.getConcept(initvStgId).subscribe(resp=>{
+        console.log("hola");
+      let gnrlInfo = resp;
       // console.log(gnrlInfo);
       this.leads.lead_name = gnrlInfo.conceptLead;
       this.leads.lead_email = gnrlInfo.conceptEmail;
@@ -103,32 +101,26 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.leads.co_lead_email = gnrlInfo.conceptCoLeadEmail;
       this.leads.co_lead_id = gnrlInfo.conceptCoLeadId;
 
-      this.usersByRoles = res[2].data;
-      for (const user of this.usersByRoles) {
-        user.firstN_lastN = user.first_name + ' ' + user.last_name;
-      }
-
       this.generalInformationForm.controls['name'].setValue(gnrlInfo.conceptName);
       this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
       this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
       this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
 
-      this.generalInformationForm.controls['lead_id'].setValue(gnrlInfo.conceptLeadId);
-      this.generalInformationForm.controls['lead_name'].setValue(gnrlInfo.conceptLead);
       this.spinnerService.hide('general-information');
       this.showForm = true;
     }, err => {
       console.log(err instanceof HttpErrorResponse);
       this.errorService.handleError(err);
       this.spinnerService.hide('general-information');
+      this.showForm = true;
     });
     this.generalInformationForm.valueChanges.subscribe(
       result => {
         this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status, initvStgId)
         // this.stgMenuSvc.conceptFormStatus('concept', 'general_information', this.generalInformationForm.status)
-      }
-    );
+      })
+ 
 
   }
 

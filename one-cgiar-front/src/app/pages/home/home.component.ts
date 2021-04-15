@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
         this.user = user;
         let roles = this.user.roles.find(role => role.acronym);
         this.role = roles.acronym;
-        this.getInitiatives(user);
+        this.getInitiatives();
 
       }
     })
@@ -34,19 +34,13 @@ export class HomeComponent implements OnInit {
 
 
 
-  getInitiatives(user) {
+  getInitiatives() {
     this.spinnerService.show();
-    if (user.roles?.find(role => role.acronym == 'ADM')) {
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
         this.data = data;
         this.spinnerService.hide();
       });
-    } else {
-      this.initiativesSvc.getInitiativesByUser().subscribe(data => {
-        this.data = data;
-        this.spinnerService.hide();
-      });
-    }
+
   }
 
 
