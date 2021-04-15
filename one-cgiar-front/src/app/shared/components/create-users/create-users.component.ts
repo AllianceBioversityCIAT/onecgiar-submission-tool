@@ -39,6 +39,7 @@ export class CreateUsersComponent implements OnInit {
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
     body.roles=[5];
+    body.initiativeId = this._initiativesSvc.initvStgId;
     this._initiativesSvc.createUser(body).subscribe(resp=>{
       console.log('%cusers','background: #222; color: #84c3fd');
       console.log(resp);
