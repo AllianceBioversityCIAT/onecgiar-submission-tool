@@ -34,7 +34,6 @@ export class EditRolUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.user);
     if (this.user.roleId) {
       this.userRolForm.controls.roleId.setValue(this.user.roleId);
       this.getLocalRolById(this.user.roleId);

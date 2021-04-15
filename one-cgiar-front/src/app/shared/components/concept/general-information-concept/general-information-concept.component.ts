@@ -27,8 +27,8 @@ export class GeneralInformationConceptComponent implements OnInit {
   fName = "";
   wordCount: any;
   leads = {
-    lead_name: '',
-    lead_email: '',
+    lead_name: null,
+    lead_email: null,
     lead_id: -1,
     co_lead_name: '',
     co_lead_email: '',
@@ -73,6 +73,19 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.generalInformationForm.get('initvStgId').setValue(resp['id'])
       this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
     });
+    this.generalInformationForm.valueChanges.subscribe(resp=>{
+      this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.validateFormAndLeads(), this._initiativesService.initvStgId)
+      console.log(this.generalInformationForm.status);
+    })
+  }
+
+  validateFormAndLeads(){
+    ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+    if (this.generalInformationForm.status == 'VALID' &&  ((this.leads.lead_name && this.leads.co_lead_name)?true:false)==true) {
+      return  'VALID';
+    } else{
+      return  'INVALID'
+    }
   }
 
   getConceptGeneralInfo(initvStgId) {
@@ -82,8 +95,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       this.actionAreas = resp;
-      console.log('%cActions areas','background: #222; color: #ffff00');
-      console.log(this.actionAreas);
+      console.log('%cActions areas End','background: #222; color: #ffff00');
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
@@ -91,9 +103,7 @@ export class GeneralInformationConceptComponent implements OnInit {
 
 
       this.conceptSvc.getConcept(initvStgId).subscribe(resp=>{
-        console.log("hola");
       let gnrlInfo = resp;
-      // console.log(gnrlInfo);
       this.leads.lead_name = gnrlInfo.conceptLead;
       this.leads.lead_email = gnrlInfo.conceptEmail;
       this.leads.lead_id = gnrlInfo.conceptLeadId;
@@ -117,13 +127,11 @@ export class GeneralInformationConceptComponent implements OnInit {
     });
     this.generalInformationForm.valueChanges.subscribe(
       result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status, initvStgId)
-        // this.stgMenuSvc.conceptFormStatus('concept', 'general_information', this.generalInformationForm.status)
+        this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status && (this.leads.lead_name && this.leads.co_lead_name), initvStgId)
       })
  
 
   }
-
 
   upsertGeneralInfo() {
     this.spinnerService.show('general-information');
