@@ -99,6 +99,10 @@ export class GeneralInformationConceptComponent implements OnInit {
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
+      this.spinnerService.hide('general-information');
+    },
+    err=>{
+      this.spinnerService.hide('general-information');
     })
 
 
@@ -117,18 +121,18 @@ export class GeneralInformationConceptComponent implements OnInit {
       this.generalInformationForm.controls['action_area_id'].setValue(gnrlInfo.conceptActAreaId);
       this.generalInformationForm.controls['action_area_description'].setValue(gnrlInfo.conceptActAreaDes);
 
-      this.spinnerService.hide('general-information');
+      // this.spinnerService.hide('general-information');
       this.showForm = true;
     }, err => {
       console.log(err instanceof HttpErrorResponse);
       this.errorService.handleError(err);
-      this.spinnerService.hide('general-information');
+      // this.spinnerService.hide('general-information');
       this.showForm = true;
     });
-    this.generalInformationForm.valueChanges.subscribe(
-      result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status && (this.leads.lead_name && this.leads.co_lead_name), initvStgId)
-      })
+    // this.generalInformationForm.valueChanges.subscribe(
+    //   result => {
+    //     this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status && (this.leads.lead_name && this.leads.co_lead_name), initvStgId)
+    //   })
  
 
   }
