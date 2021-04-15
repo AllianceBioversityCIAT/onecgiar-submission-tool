@@ -14,11 +14,11 @@ const router = Router();
  */
 
 
-// update initiatives concept general information
-router.patch("/concept/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
-
 // get initiatives concept general information
 router.get("/concept/:initvStgId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptGeneralInfo);
+
+// update initiatives concept general information
+router.patch("/concept/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
 
 // get initiatives concept narratives
 router.get("/concept/:initvStgId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);

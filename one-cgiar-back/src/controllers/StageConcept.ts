@@ -29,13 +29,201 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
 
 
+//              ----------------------------                TO UPDATE             -------------------------------------            //
+
 /**
  * 
  * @param req params:{ initvStgId }
  * @param res 
  */
 
-export const getConceptNarratives = async (req: Request, res: Response) => {
+export const getConceptGeneralInfo = async (req: Request, res: Response) => {
+    const { initvStgId } = req.params;
+    const queryRunner = getConnection().createQueryBuilder();
+    
+
+    try {
+
+        
+        let conceptInfo,
+            conceptQuery = ` 
+            SELECT
+                initvStgs.id AS initvStgId,
+                stage.description AS stageDesc,
+                stage.active AS stageIsActive,
+
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1)  ) AS conceptLeadId,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptLead,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptEmail,
+
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1)  ) AS conceptCoLeadId,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLead,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLeadEmail,
+
+
+                concept.id AS conceptId,
+                IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS conceptName,
+                concept.action_area_description AS conceptActAreaDes,
+                concept.action_area_id AS conceptActAreaId
+                ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
+                ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
+            FROM
+                initiatives_by_stages initvStgs
+            LEFT JOIN stages stage ON stage.id = initvStgs.stageId
+            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+
+            WHERE initvStgs.id =:initvStgId;
+        `;
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            conceptQuery,
+            { initvStgId },
+            {}
+        );
+        conceptInfo = await queryRunner.connection.query(query, parameters);
+
+        if (conceptInfo.length == 0) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Concept Information not found.'
+            );
+        }
+        else
+            res.json(new ResponseHandler('Concept: General information.', { generaInformation: conceptInfo[0] }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+
+
+
+}
+
+
+/**
+ * 
+ * @param req params: { conceptId, initvStgId, name, action_area_id, action_area_description }
+ * @param res 
+ */
+
+export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
+    // export const updateConcept = async (req: Request, res: Response) => {
+    const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
+    const { userId } = res.locals.jwtPayload;
+
+    const concptInfoRepo = getRepository(ConceptInfo);
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const initvUserRepo = getRepository(InitiativesByUsers);
+
+    // const userRepo = getRepository(Users);
+    const initiativeRepo = getRepository(Initiatives);
+    const queryRunner = getConnection().createQueryBuilder();
+
+    let conceptInf: ConceptInfo;
+
+    try {
+
+        /**
+         * Validate user in initiative
+         * 
+         */
+
+         const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
+
+         if (userInitiative == null) {
+             throw new APIError(
+                 'NOT FOUND',
+                 HttpStatusCode.NOT_FOUND,
+                 true,
+                 'User not found in initiative.'
+             );
+         }
+ 
+
+        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
+        if (initvStg == null) {
+            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
+        }
+
+        const actionAreas = await getClaActionAreas();
+        const selectedActionArea = actionAreas.find(area => area.id == action_area_id);
+
+        if (conceptId == null) {
+            conceptInf = new ConceptInfo();
+            conceptInf.name = name;
+
+            conceptInf.action_area_description = action_area_description || selectedActionArea.name;
+            conceptInf.action_area_id = action_area_id;
+
+            conceptInf.initvStg = initvStg;
+            conceptInf.objectives = '';
+            conceptInf.challenge = '';
+            conceptInf.results = '';
+            conceptInf.highlights = '';
+        } else {
+            conceptInf = await concptInfoRepo.findOne(conceptId);
+            conceptInf.name = (name) ? name : conceptInf.name;
+            conceptInf.action_area_description =  selectedActionArea.name;
+            conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
+
+        }
+        let upsertedInfo = await concptInfoRepo.save(conceptInf);
+
+        /**
+         * update initiative name
+         */
+
+        const initiative = await initiativeRepo.findOne(initvStg.initiative.id);
+        initiative.name = upsertedInfo.name;
+        let updatedInitiative = await initiativeRepo.save(initiative);
+
+
+        let conceptQuery = ` 
+        SELECT
+            initvStgs.id AS initvStgId,
+            stage.description AS stageDesc,
+            stage.active AS stageIsActive,
+            concept.id AS conceptId,
+            concept.name AS conceptName,
+            concept.action_area_description AS conceptActAreaDes,
+            concept.action_area_id AS conceptActAreaId
+            ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
+            ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
+        FROM
+            initiatives_by_stages initvStgs
+        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
+        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+        
+        WHERE initvStgs.id =:initvStgId;
+    `;
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            conceptQuery,
+            { initvStgId },
+            {}
+        );
+        let conceptInfo = await queryRunner.connection.query(query, parameters);
+
+
+
+        res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo[0] }));
+
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+
+
+/**
+ * 
+ * @param req params:{ initvStgId }
+ * @param res 
+ */
+
+ export const getConceptNarratives = async (req: Request, res: Response) => {
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
 
@@ -159,194 +347,6 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
     }
 
 }
-
-
-
-
-//              ----------------------------                TO UPDATE             -------------------------------------            //
-
-/**
- * 
- * @param req params:{ initvStgId }
- * @param res 
- */
-
-export const getConceptGeneralInfo = async (req: Request, res: Response) => {
-    const { userId } = res.locals.jwtPayload;
-    const { initvStgId } = req.params;
-    const queryRunner = getConnection().createQueryBuilder();
-    const initvUserRepo = getRepository(InitiativesByUsers);
-
-    try {
-
-        /**
-         * Validate user in initiative
-         * 
-         */
-
-        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
-
-        if (userInitiative == null) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'User not found in initiative.'
-            );
-        }
-
-        let conceptInfo,
-            conceptQuery = ` 
-            SELECT
-                initvStgs.id AS initvStgId,
-                stage.description AS stageDesc,
-                stage.active AS stageIsActive,
-
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1)  ) AS conceptLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptEmail,
-
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1)  ) AS conceptCoLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLeadEmail,
-
-
-                concept.id AS conceptId,
-                IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS conceptName,
-                concept.action_area_description AS conceptActAreaDes,
-                concept.action_area_id AS conceptActAreaId
-                ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
-                ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
-            FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-
-            WHERE initvStgs.id =:initvStgId;
-        `;
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            conceptQuery,
-            { initvStgId },
-            {}
-        );
-        conceptInfo = await queryRunner.connection.query(query, parameters);
-
-        if (conceptInfo.length == 0) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'Concept Information not found.'
-            );
-        }
-        else
-            res.json(new ResponseHandler('Concept: General information.', { generaInformation: conceptInfo[0] }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
-
-
-
-
-}
-
-
-/**
- * 
- * @param req params: { conceptId, initvStgId, name, action_area_id, action_area_description }
- * @param res 
- */
-
-export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
-    // export const updateConcept = async (req: Request, res: Response) => {
-    const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
-    const concptInfoRepo = getRepository(ConceptInfo);
-    const initvStgRepo = getRepository(InitiativesByStages);
-
-    const initiativeRepo = getRepository(Initiatives);
-    const userRepo = getRepository(Users);
-    const queryRunner = getConnection().createQueryBuilder();
-
-    let conceptInf: ConceptInfo;
-
-    try {
-
-        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
-        if (initvStg == null) {
-            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
-        }
-
-        const actionAreas = await getClaActionAreas();
-        const selectedActionArea = actionAreas.find(area => area.id == action_area_id);
-
-        if (conceptId == null) {
-            conceptInf = new ConceptInfo();
-            conceptInf.name = name;
-
-            conceptInf.action_area_description = action_area_description || selectedActionArea.description;
-            conceptInf.action_area_id = action_area_id;
-
-            conceptInf.initvStg = initvStg;
-            conceptInf.objectives = '';
-            conceptInf.challenge = '';
-            conceptInf.results = '';
-            conceptInf.highlights = '';
-        } else {
-            conceptInf = await concptInfoRepo.findOne(conceptId);
-            conceptInf.name = (name) ? name : conceptInf.name;
-            conceptInf.action_area_description =  selectedActionArea.name;
-            conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
-
-        }
-        let upsertedInfo = await concptInfoRepo.save(conceptInf);
-
-        /**
-         * update initiative name
-         */
-
-        const initiative = await initiativeRepo.findOne(initvStg.initiative.id);
-        initiative.name = upsertedInfo.name;
-        let updatedInitiative = await initiativeRepo.save(initiative);
-
-
-        let conceptQuery = ` 
-        SELECT
-            initvStgs.id AS initvStgId,
-            stage.description AS stageDesc,
-            stage.active AS stageIsActive,
-           --  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1)  ) AS conceptLeadId,
-           --  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE is_lead = true AND initiativeId = concept.initvStgId LIMIT 1) ) AS conceptLead,
-            concept.id AS conceptId,
-            concept.name AS conceptName,
-            concept.action_area_description AS conceptActAreaDes,
-            concept.action_area_id AS conceptActAreaId
-            ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
-            ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
-        FROM
-            initiatives_by_stages initvStgs
-        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-        
-        WHERE initvStgs.id =:initvStgId;
-    `;
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            conceptQuery,
-            { initvStgId },
-            {}
-        );
-        let conceptInfo = await queryRunner.connection.query(query, parameters);
-
-
-
-        res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo[0] }));
-
-    } catch (error) {
-        return res.status(error.httpCode).json(error);
-    }
-
-}
-
-
 
 /**
  * 

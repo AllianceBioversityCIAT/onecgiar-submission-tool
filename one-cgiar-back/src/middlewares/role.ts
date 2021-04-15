@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { getRepository } from 'typeorm'
+import { InitiativesByUsers } from '../entity/InititativesByUsers'
 import { Users } from '../entity/Users'
 import { accessCtrl } from './access-control'
 
@@ -7,15 +8,21 @@ export const checkRole = (entityName: string, permissionActions: string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const { userId } = res.locals.jwtPayload;
         const userRepository = getRepository(Users);
+        const initvUserRepo = getRepository(InitiativesByUsers);
 
         try {
-            let user = await userRepository.findOne(userId, { relations: ['roles'] });
-            let rolesAcronyms = user.roles.map(role => role.acronym);
-            // console.log(rolesAcronyms, permissionActions, entityName)
+
+            let usrRoleInitv = await initvUserRepo.find({ where: { user: userId }, relations: ['role'] })
+
+            let rolesAcronyms = usrRoleInitv.map(usrRole => usrRole.role.acronym);
+
+            // let user = await userRepository.findOne(userId, { relations: ['roles'] });
+            // let rolesAcronyms = user.roles.map(role => role.acronym);
+            // console.log(rolesAcronyms)
             const permission = accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
             if (permission.granted) {
                 next();
-            }else{
+            } else {
                 res.status(401).json({ msg: 'No authorized' });
             }
 
