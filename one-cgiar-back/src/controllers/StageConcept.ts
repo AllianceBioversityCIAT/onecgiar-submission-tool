@@ -19,6 +19,7 @@ import { WorkPackages } from '../entity/WorkPackages';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
+import { getClaActionAreas } from './Clarisa';
 
 
 // import path from 'path';
@@ -183,9 +184,9 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
          * 
          */
 
-        const userInitiative = await initvUserRepo.findOne(userId);
+        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
 
-        if(userInitiative == null){
+        if (userInitiative == null) {
             throw new APIError(
                 'NOT FOUND',
                 HttpStatusCode.NOT_FOUND,
@@ -261,7 +262,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
     const concptInfoRepo = getRepository(ConceptInfo);
     const initvStgRepo = getRepository(InitiativesByStages);
-    
+
     const initiativeRepo = getRepository(Initiatives);
     const userRepo = getRepository(Users);
     const queryRunner = getConnection().createQueryBuilder();
@@ -269,18 +270,22 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     let conceptInf: ConceptInfo;
 
     try {
-        
+
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
             throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
         }
 
+        const actionAreas = await getClaActionAreas();
+        const selectedActionArea = actionAreas.find(area => area.id == action_area_id);
 
         if (conceptId == null) {
             conceptInf = new ConceptInfo();
             conceptInf.name = name;
-            conceptInf.action_area_description = action_area_description || '';
+
+            conceptInf.action_area_description = action_area_description || selectedActionArea.description;
             conceptInf.action_area_id = action_area_id;
+
             conceptInf.initvStg = initvStg;
             conceptInf.objectives = '';
             conceptInf.challenge = '';
@@ -289,7 +294,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         } else {
             conceptInf = await concptInfoRepo.findOne(conceptId);
             conceptInf.name = (name) ? name : conceptInf.name;
-            conceptInf.action_area_description = (action_area_description) ? action_area_description : conceptInf.action_area_description;
+            conceptInf.action_area_description =  selectedActionArea.name;
             conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
 
         }
