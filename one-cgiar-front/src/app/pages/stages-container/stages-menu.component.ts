@@ -35,7 +35,7 @@ export class StagesMenuComponent implements OnInit {
       console.log('The dialog was closed');
       // location.reload();
       let currentUrl = this.router.url;
-      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
           this.router.navigate([currentUrl]);
       });
     });
