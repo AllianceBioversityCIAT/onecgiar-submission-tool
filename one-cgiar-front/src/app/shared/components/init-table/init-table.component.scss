@@ -14,3 +14,13 @@ th {
     background-color: #0779A4;
     color: #fff;
 }
+
+.mat_row{
+    transition: all .3s ease;
+    &:hover{
+        background-color: #f5f5f5;
+        transition: all .3s ease;
+
+    }
+}
+
