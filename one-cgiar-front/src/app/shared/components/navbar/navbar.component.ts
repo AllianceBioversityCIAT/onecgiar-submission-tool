@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { AuthService } from '@shared/services/auth.service';
 import { LoggerService } from "@shared/services/logger.service";
@@ -18,7 +17,6 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     public authSvc: AuthService,
-    private activeRoute: ActivatedRoute,
     public _interactionsService:InteractionsService
     ) { }
 

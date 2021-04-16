@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { InitiativesService } from '@shared/services/initiatives.service';
 import { ConceptService } from '@shared/services/concept.service';
@@ -24,7 +23,6 @@ export class NarrativesConceptComponent implements OnInit {
     public stgMenuSvc: StagesMenuService, 
     public initiativesSvc: InitiativesService, 
     public conceptSvc: ConceptService, 
-    public activatedRoute: ActivatedRoute,
     private spinnerService: NgxSpinnerService,
     private interactionsService:InteractionsService
     ) {
@@ -39,12 +37,11 @@ export class NarrativesConceptComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(resp => {
-      this.initiativesSvc.initvStgId = resp['id'];
-      this.conceptSvc.initvStgId = resp['id'];
-      this.narrativesForm.get('initvStgId').setValue(resp['id'])
+
+      this.conceptSvc.initvStgId =  this.initiativesSvc.initvStgId ;
+      this.narrativesForm.get('initvStgId').setValue(this.initiativesSvc.initvStgId)
       this.getNarrative(this.conceptSvc.initvStgId);
-    });
+
   }
 
   updateNarratives() {

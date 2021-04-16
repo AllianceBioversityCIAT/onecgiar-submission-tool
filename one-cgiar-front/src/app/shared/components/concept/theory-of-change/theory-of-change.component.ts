@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -16,7 +15,6 @@ export class TheoryOfChangeComponent implements OnInit {
   @ViewChild('attachments') attachment: any;
 
   public theoryOfChangeForm: FormGroup;
-  public initvStgId: any;
   public filesToUpload: any[] = [];
 
   public listOfFiles: any[] = [];
@@ -28,7 +26,6 @@ export class TheoryOfChangeComponent implements OnInit {
     public _requests: RequestsService, 
     private conceptSvc: ConceptService, 
     private spinnerService: NgxSpinnerService, 
-    public activatedRoute: ActivatedRoute,
     public _initiativesService:InitiativesService
     ) {
     this.theoryOfChangeForm = new FormGroup({
@@ -46,17 +43,14 @@ export class TheoryOfChangeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(resp => {
-      this._initiativesService.initvStgId = resp['id'];
-      this.initvStgId = resp['id'];
       this.getTOCandFiles();
-    })
+
   }
 
 
   getTOCandFiles() {
     this.filesToUpload = [];
-    this.conceptSvc.getTheoryOfChange(this.initvStgId).subscribe(resp => {
+    this.conceptSvc.getTheoryOfChange(parseInt(this._initiativesService.initvStgId)).subscribe(resp => {
       // console.log('TOC', resp);
       if (resp != null) {
         this.tocData = resp;
@@ -91,7 +85,7 @@ export class TheoryOfChangeComponent implements OnInit {
   upload(idx, file) {
     // this.progressInfos[idx] = { value: 0, fileName: file.name };
     this.spinnerService.show('tocs')
-    this.conceptSvc.upsertTheoryOfChange(file, { initvStgId: this.initvStgId, narrative: this.theoryOfChangeForm.get('narrative').value }).subscribe(
+    this.conceptSvc.upsertTheoryOfChange(file, { initvStgId: this._initiativesService.initvStgId, narrative: this.theoryOfChangeForm.get('narrative').value }).subscribe(
       event => {
         this.getTOCandFiles();
         this.spinnerService.hide('tocs')

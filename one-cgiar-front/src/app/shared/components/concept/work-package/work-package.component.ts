@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
-import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
@@ -36,7 +35,6 @@ export class WorkPackageComponent implements OnInit {
 
   constructor(
     public _requests: RequestsService,
-    public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
     public initiativesSvc: InitiativesService,
     private interactionsService:InteractionsService

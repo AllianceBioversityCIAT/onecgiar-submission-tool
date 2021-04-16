@@ -3,7 +3,6 @@ import { RequestsService } from '@app/shared/services/requests.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPartnersModalComponent } from '../add-partners-modal/add-partners-modal.component';
 import { InitiativesService } from '../../../services/initiatives.service';
-import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -48,7 +47,6 @@ export class KeyPartnersConceptComponent implements OnInit {
     public _requests: RequestsService, 
     public dialog: MatDialog,
     public _initiativesSvc: InitiativesService,
-    public activatedRoute: ActivatedRoute,
     public stgMenuSvc: StagesMenuService,
     private interactionsService:InteractionsService
     ) {
@@ -62,13 +60,13 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   getPartnershipByInitiativeId(){
-    let initvStgId;
-    this.activatedRoute.params.subscribe(resp => {
-      this._initiativesSvc.initvStgId = resp['id'];
 
-      initvStgId = resp.id;
-      this.partnership.initvStgId = Number(resp.id);
-      this._initiativesSvc.getPartnershipByInitiativeId(resp.id).subscribe((resp:any)=>{
+   
+    
+
+  
+      this.partnership.initvStgId = Number(this._initiativesSvc.initvStgId);
+      this._initiativesSvc.getPartnershipByInitiativeId(this._initiativesSvc.initvStgId).subscribe((resp:any)=>{
 
         if (resp.response.partnership?.comparative_advantage) {
           this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
@@ -86,11 +84,11 @@ export class KeyPartnersConceptComponent implements OnInit {
         this.showFrom = true;
       }, 1000);
       
-     });
+    
 
      this.partnershipForm.valueChanges.subscribe(
       result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, initvStgId)
+        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, this._initiativesSvc.initvStgId)
         // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
       }
     );

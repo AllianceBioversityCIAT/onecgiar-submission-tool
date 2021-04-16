@@ -6,11 +6,18 @@ import { TheoryOfChangeComponent } from '../../../../shared/components/concept/t
 import { WorkPackagesComponent } from '../../../../shared/components/concept/work-packages/work-packages.component';
 import { KeyPartnersComponent } from '../../../../shared/components/preconcept/key-partners/key-partners.component';
 import { KeyPartnersConceptComponent } from '../../../../shared/components/concept/key-partners-concept/key-partners-concept.component';
+import { ConceptComponent } from './concept.component';
 
 const routes: Routes = [
   {
-    path: '',  
+    path: '', 
+    component:ConceptComponent, 
     children: [
+      {
+        path:'',
+        redirectTo:'general-information',
+        pathMatch: 'full'
+      },
       {
         path: 'general-information',
         component: GeneralInformationConceptComponent,

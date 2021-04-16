@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 
 export interface DialogData {
@@ -25,7 +24,6 @@ export class ManageAccessComponent implements OnInit {
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
-    public activatedRoute: ActivatedRoute,
 
   ) { }
 

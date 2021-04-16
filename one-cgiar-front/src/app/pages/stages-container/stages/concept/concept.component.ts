@@ -10,7 +10,7 @@ export class ConceptComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log('%cTest','background: #222; color: #ffff00');
+    
   }
 
 }

@@ -20,10 +20,11 @@ export class StagesMenuComponent implements OnInit {
     public stageMenu: StagesMenuService,
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
-    private router:Router
+    private router:Router,
   ) { }
 
   openDialog(): void {
+
     const dialogRef = this.dialog.open(ManageAccessComponent, {
       width: '100%',
       height:'90%',
@@ -44,6 +45,7 @@ export class StagesMenuComponent implements OnInit {
   ngOnInit(): void {
     this._interactionsService.collapseHeader=true;
     this.activatedRoute.params.subscribe(resp => {
+      this.initiativesSvc.initvStgId = resp['id'];
       this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
     });
   }

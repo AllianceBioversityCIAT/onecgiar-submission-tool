@@ -83,12 +83,12 @@ export class InitiativesService {
   }
 
   // Query to get all the WorkPackages
-  getAllIWorkPackages(id: number): Observable<any> {
+  getAllIWorkPackages(id: number|string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 
   // Query to get Partnership By Initiative Id
-  getPartnershipByInitiativeId(id: number): Observable<any> {
+  getPartnershipByInitiativeId(id: number | string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 

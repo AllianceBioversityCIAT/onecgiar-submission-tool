@@ -6,7 +6,7 @@
     <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
     <br>
     <div class="button-container" [style.display]="'flex'" [style.justifyContent]="noWp?'center':'initial'">
-        <button mat-raised-button (click)="addWorkPackage()" *ngIf="initvStgId != null" ><mat-icon>add</mat-icon>Add Work Package</button>
+        <button mat-raised-button (click)="addWorkPackage()" *ngIf="this.initiativesSvc.initvStgId != null" ><mat-icon>add</mat-icon>Add Work Package</button>
 
     </div>
     <ngx-spinner [fullScreen]="false" name='work-packages'></ngx-spinner>

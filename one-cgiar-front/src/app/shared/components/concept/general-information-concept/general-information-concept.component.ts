@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -47,7 +47,6 @@ export class GeneralInformationConceptComponent implements OnInit {
     private errorService: AppErrorHandler,
     public stgMenuSvc: StagesMenuService,
     public conceptSvc: ConceptService,
-    public activatedRoute: ActivatedRoute,
     private spinnerService: NgxSpinnerService,
     private interactionsService: InteractionsService,
     public dialog: MatDialog,
@@ -67,15 +66,11 @@ export class GeneralInformationConceptComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(resp => {
-      this._initiativesService.initvStgId = resp['id'];
-      this.conceptSvc.initvStgId = resp['id'];
-      this.generalInformationForm.get('initvStgId').setValue(resp['id'])
-      this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
-    });
+    this.conceptSvc.initvStgId = this._initiativesService.initvStgId;
+    this.generalInformationForm.get('initvStgId').setValue(this._initiativesService.initvStgId)
+    this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
     this.generalInformationForm.valueChanges.subscribe(resp=>{
       this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.validateFormAndLeads(), this._initiativesService.initvStgId)
-      console.log(this.generalInformationForm.status);
     })
   }
 
@@ -95,7 +90,6 @@ export class GeneralInformationConceptComponent implements OnInit {
     
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       this.actionAreas = resp;
-      console.log('%cActions areas End','background: #222; color: #ffff00');
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }

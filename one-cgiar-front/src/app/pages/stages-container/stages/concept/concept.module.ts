@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 
 import { ConceptRoutingModule } from './concept-routing.module';
 import { ConceptComponent } from './concept.component';
+import { MaterialModule } from '@app/material.module';
 
 
 @NgModule({
-  declarations: [
-  ConceptComponent],
+  declarations: [ConceptComponent],
   imports: [
     CommonModule,
-    ConceptRoutingModule
+    ConceptRoutingModule,
+    MaterialModule,
   ]
 })
 export class ConceptModule { }

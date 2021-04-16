@@ -1,9 +1,9 @@
-<div class="navbar-content">
+<div class="navbar-content" *ngIf="_interactionsService.showHeader">
     <div class="navbar-title" routerLink="/home" routerLinkActive="isActive" (click)="_interactionsService.collapseHeader = false">My Initiatives</div>
     <div class="navbar-opt">
         <div class="user-information">
             <p class="navbar-name">{{name}}</p>
-            <p class="navbar-role">{{role.toUpperCase()}}</p>
+            <p class="navbar-role">{{role?.toUpperCase()}}</p>
         </div>
         <button mat-raised-button class="navbar-logout" (click)="onExit()">
             Logout
