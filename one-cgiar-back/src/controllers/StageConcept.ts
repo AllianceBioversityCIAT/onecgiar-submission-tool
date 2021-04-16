@@ -40,11 +40,9 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 export const getConceptGeneralInfo = async (req: Request, res: Response) => {
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
-    
+
 
     try {
-
-        
         let conceptInfo,
             conceptQuery = ` 
             SELECT
@@ -52,13 +50,13 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
                 stage.description AS stageDesc,
                 stage.active AS stageIsActive,
 
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1)  ) AS conceptLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE LIMIT 1) ) AS conceptEmail,
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS conceptLeadId,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptLead,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptEmail,
 
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1)  ) AS conceptCoLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE LIMIT 1) ) AS conceptCoLeadEmail,
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS conceptCoLeadId,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptCoLead,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptCoLeadEmail,
 
 
                 concept.id AS conceptId,
@@ -129,17 +127,17 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
          * 
          */
 
-         const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
+        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
 
-         if (userInitiative == null) {
-             throw new APIError(
-                 'NOT FOUND',
-                 HttpStatusCode.NOT_FOUND,
-                 true,
-                 'User not found in initiative.'
-             );
-         }
- 
+        if (userInitiative == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'User not found in initiative.'
+            );
+        }
+
 
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
         if (initvStg == null) {
@@ -164,7 +162,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         } else {
             conceptInf = await concptInfoRepo.findOne(conceptId);
             conceptInf.name = (name) ? name : conceptInf.name;
-            conceptInf.action_area_description =  selectedActionArea.name;
+            conceptInf.action_area_description = selectedActionArea.name;
             conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
 
         }
@@ -223,7 +221,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
  * @param res 
  */
 
- export const getConceptNarratives = async (req: Request, res: Response) => {
+export const getConceptNarratives = async (req: Request, res: Response) => {
     const { initvStgId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
 

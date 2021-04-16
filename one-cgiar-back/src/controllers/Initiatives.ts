@@ -171,6 +171,46 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
  * @param req 
  * @param res 
  */
+export const getUserRoleByInitiative = async (req: Request, res: Response) => {
+    const { initiativeId } = req.params;
+    const { userId } = res.locals.jwtPayload;
+    const queryRunner = getConnection().createQueryBuilder();
+    const querySql = `
+        SELECT
+            initvUsr.initiativeId, 
+            initvUsr.active,
+            role.id AS roleId,
+            role.acronym,
+            role.name
+        FROM
+            initiatives_by_users initvUsr
+        LEFT JOIN users users ON users.id = initvUsr.userId
+        LEFT JOIN roles role ON role.id = initvUsr.roleId
+        WHERE initvUsr.initiativeId = :initiativeId
+        AND initvUsr.active = TRUE
+        AND initvUsr.userId = :userId
+    `;
+
+    let roles;
+
+    try {
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            querySql,
+            { initiativeId, userId },
+            {}
+        );
+        roles = await queryRunner.connection.query(query, parameters);
+        res.json(new ResponseHandler('User roles by Initiative.', { roles }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ */
 export const getUsersByInitiative = async (req: Request, res: Response) => {
     const { initiativeId } = req.params;
     const queryRunner = getConnection().createQueryBuilder();
@@ -200,7 +240,6 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 }
-
 
 /**
  * 

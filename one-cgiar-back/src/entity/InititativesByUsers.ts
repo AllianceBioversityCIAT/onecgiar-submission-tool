@@ -20,12 +20,4 @@ export class InitiativesByUsers extends UpdatedCreatedAt {
     
     @ManyToOne(() => Roles, role => role.id)
     public role!: Roles;
-    // @Column('tinyint')
-    // is_lead: boolean
-
-    // @Column('tinyint')
-    // is_owner: boolean
-
-    // @Column('tinyint')
-    // is_coordinator: boolean
 }
