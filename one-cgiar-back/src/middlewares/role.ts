@@ -12,12 +12,12 @@ export const checkRole = (entityName: string, permissionActions: string) => {
 
         try {
 
-            let usrRoleInitv = await initvUserRepo.find({ where: { user: userId }, relations: ['role'] })
+            //let usrRoleInitv = await initvUserRepo.find({ where: { user: userId }, relations: ['role'] })
 
-            let rolesAcronyms = usrRoleInitv.map(usrRole => usrRole.role.acronym);
+            // let rolesAcronyms = usrRoleInitv.map(usrRole => usrRole.role.acronym);
 
-            // let user = await userRepository.findOne(userId, { relations: ['roles'] });
-            // let rolesAcronyms = user.roles.map(role => role.acronym);
+            let user = await userRepository.findOne(userId, { relations: ['roles'] });
+            let rolesAcronyms = user.roles.map(role => role.acronym);
             // console.log(rolesAcronyms)
             const permission = accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
             if (permission.granted) {
