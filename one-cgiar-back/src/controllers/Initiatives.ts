@@ -45,7 +45,8 @@ export const getInitiatives = async (req: Request, res: Response) => {
             (SELECT id FROM stages WHERE active = true) AS activeStageId,
             (SELECT description FROM stages WHERE active = true) AS activeStageName,
 
-            (SELECT userId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE  LIMIT 1) AS userInitiative
+            (SELECT userId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiative,
+            (SELECT roleId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiativeRole
 
         FROM
             initiatives initiative
