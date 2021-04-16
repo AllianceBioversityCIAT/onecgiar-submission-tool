@@ -49,7 +49,7 @@ export class InteractionsService {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
-      duration:2000,
+      duration:6000,
       horizontalPosition:'center',
       verticalPosition:'top',
       panelClass: ['marginSnackTop']
