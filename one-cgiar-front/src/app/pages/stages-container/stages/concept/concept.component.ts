@@ -19,12 +19,15 @@ export class ConceptComponent implements OnInit {
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
-      this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
-      console.log(resp.response.roles[0].roleId);
-      // accessToWrite
-      const rol = this._initiativesService.initiative.roleId
-      this._initiativesService.initiative.accessToWrite = ( rol== 1||rol== 2||rol== 3||rol== 5)?true:false;
-      console.log(this._initiativesService.initiative.roleId == 5 ?true:false);
+      if ( resp.response.roles[0]?.roleId) {
+        this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
+        console.log(resp.response.roles[0].roleId);
+        // accessToWrite
+        const rol = this._initiativesService.initiative.roleId
+        this._initiativesService.initiative.accessToWrite = ( rol== 1||rol== 2||rol== 3||rol== 55)?true:false;
+        console.log(this._initiativesService.initiative.roleId == 5 ?true:false);
+      }
+
     });
   }
 
