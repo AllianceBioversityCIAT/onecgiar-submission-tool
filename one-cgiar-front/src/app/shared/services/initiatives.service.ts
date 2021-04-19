@@ -15,7 +15,7 @@ export class InitiativesService {
   initvRoleId: number;
   initiative={
     roleId:4,
-    accessToWrite: null
+    readonly: true
   }
 
   actionAreas: [];

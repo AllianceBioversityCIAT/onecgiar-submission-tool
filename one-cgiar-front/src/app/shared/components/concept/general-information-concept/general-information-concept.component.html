@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <custom-textarea
-                    [options]="{readonly: !_initiativesService.initiative.accessToWrite, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
+                    [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
                 </custom-textarea>
             </div>
 
@@ -19,7 +19,7 @@
                         <div class="col-sm-4">
                             <custom-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></custom-text>
                         </div>
-                        <button (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                        <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
                         </button>
                         
@@ -37,7 +37,7 @@
                         <div class="col-sm-4">
                             <custom-text [options]="{inputTitle:'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
                         </div>
-                        <button (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
+                        <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
                         </button>
                     </div>
@@ -50,7 +50,6 @@
                 <custom-select [options]="
             {
              required:true,
-             readonly:!_initiativesService.initiative.accessToWrite,
              inputTitle:'Primary CGIAR Action Area',
              form:generalInformationForm,
              formControlId:'action_area_id',
@@ -64,10 +63,10 @@
             </div>
         </div>
 
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-
-        <div class="general-information-save">
-            <button mat-raised-button class="save-button" type="submit" color="primary"
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+            <button mat-raised-button class="save-button" type="submit" color="primary" 
                 [disabled]="generalInformationForm.invalid" mat-raised-buttonclass="save-button">
                 Save
             </button>

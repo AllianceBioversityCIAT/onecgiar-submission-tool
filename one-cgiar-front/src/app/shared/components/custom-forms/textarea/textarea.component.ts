@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { textareaOptions } from '../../../models/forms-options/textarea-options.interface';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import { Editor,Toolbar } from 'ngx-editor';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'custom-textarea',
@@ -15,9 +16,12 @@ export class TextareaComponent implements OnInit {
   wordCount: any;
   // @ViewChild("text") text: ElementRef;
   words: any;
-  constructor() { }
+  constructor(
+    private _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
+    this.options.readonly=this._initiativesService.initiative.readonly;
     let options={
       plugins:[]
     };

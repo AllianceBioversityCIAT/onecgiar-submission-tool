@@ -3,22 +3,22 @@
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form" *ngIf="showForm">
 
         <custom-textarea  
-        [options]="{readonly: !initiativesSvc.initiative.accessToWrite, form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement',editText:true,
+        [options]="{form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement',editText:true,
          description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed'}">
         </custom-textarea>
 
         <custom-textarea  
-        [options]="{readonly: !initiativesSvc.initiative.accessToWrite, form:narrativesForm,formControlName:'objectives',inputTitle:'Measurable objectives', 
+        [options]="{form:narrativesForm,formControlName:'objectives',inputTitle:'Measurable objectives', 
          description:'Concise, preferably quantitative, objective statement'}">
         </custom-textarea>
         
         <custom-textarea  
-        [options]="{readonly: !initiativesSvc.initiative.accessToWrite, form:narrativesForm,formControlName:'results',inputTitle:'Results', 
+        [options]="{form:narrativesForm,formControlName:'results',inputTitle:'Results', 
          description:'Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas'}">
         </custom-textarea>
 
         <custom-textarea  
-        [options]="{readonly: !initiativesSvc.initiative.accessToWrite, form:narrativesForm,formControlName:'highlights',inputTitle:'Highlights', 
+        [options]="{form:narrativesForm,formControlName:'highlights',inputTitle:'Highlights', 
          description:'Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities'}">
         </custom-textarea>
 
