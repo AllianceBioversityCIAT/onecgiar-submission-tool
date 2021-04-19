@@ -34,6 +34,10 @@ export class EditRolUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.user.new) {
+     console.log(this.user.first_name+' is new');
+     this.assignUserGuestToInitiative();
+    }
     if (this.user.roleId) {
       this.userRolForm.controls.roleId.setValue(this.user.roleId);
       this.getLocalRolById(this.user.roleId);
@@ -77,6 +81,25 @@ export class EditRolUserComponent implements OnInit {
     }
 
   }
+
+  assignUserGuestToInitiative(){
+    this._interactions.animateButtonSave = false;
+    let body =  this.userRolForm.value;
+    body.active = true;
+    body.userId = this.user.userId;
+    body.roleId = 4;
+    this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
+      console.log(resp);
+      this._interactions.expandWithUserId=-1;
+      this.reload.emit();
+      this._interactions.disableAllExpandBool = false;
+      this._interactions.animateButtonSave = false;
+      this._interactions.successMessage('The user was added');
+    });
+  }
+
+
+
 
   assignUserToInitiative(){
     this._interactions.animateButtonSave = false;
