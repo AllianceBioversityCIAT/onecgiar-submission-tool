@@ -4,7 +4,7 @@
 
     <div *ngSwitchCase="true">
 
-        <p class="readonly_text_title"><strong class="color-primary">{{options.inputTitle}}: </strong></p>
+        <p class="readonly_text_title"><strong class="color-primary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
         <p class="readonly_text">{{options.form.value[options.formControlName]||'Not available'}}</p>
         <br>
     </div>

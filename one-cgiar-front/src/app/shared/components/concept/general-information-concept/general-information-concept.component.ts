@@ -38,6 +38,7 @@ export class GeneralInformationConceptComponent implements OnInit {
   @ViewChild("text") text: ElementRef;
   words: any;
   showForm = false;
+  showFormActionArea = false;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
@@ -94,9 +95,11 @@ export class GeneralInformationConceptComponent implements OnInit {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
       this.spinnerService.hide('general-information');
+      this.showFormActionArea = true;
     },
     err=>{
       this.spinnerService.hide('general-information');
+      this.showFormActionArea = true;
     })
 
 

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <custom-textarea
-                    [options]="{readonly: true, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
+                    [options]="{readonly: !_initiativesService.initiative.accessToWrite, inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
                 </custom-textarea>
             </div>
 
@@ -45,12 +45,12 @@
                 <br>
             </div>
 
-            <div class="col-sm-12">
+            <div class="col-sm-12" *ngIf="showFormActionArea">
 
                 <custom-select [options]="
             {
              required:true,
-             readonly:false,
+             readonly:!_initiativesService.initiative.accessToWrite,
              inputTitle:'Primary CGIAR Action Area',
              form:generalInformationForm,
              formControlId:'action_area_id',
