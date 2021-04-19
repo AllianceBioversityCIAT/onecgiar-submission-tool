@@ -12,6 +12,15 @@ const sectionPath = 'initiatives'
 export class InitiativesService {
 
   initvStgId: string;
+  initvRoleId: number;
+  initiative={
+    roleId:4
+  }
+  accessToWrite(){
+    return this.initiative.roleId == (1||2||3||5)?true:false;
+  } 
+
+
   actionAreas: [];
   stages: [];
   stagesMeta: [];
@@ -21,6 +30,7 @@ export class InitiativesService {
   ownInitiatives: [];
 
   usersByInitiative: [];
+
 
   constructor(
     public http: HttpClient,
@@ -206,6 +216,7 @@ export class InitiativesService {
   getRolefromInitiativeById(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/roles`);
   }
+
 
   
 

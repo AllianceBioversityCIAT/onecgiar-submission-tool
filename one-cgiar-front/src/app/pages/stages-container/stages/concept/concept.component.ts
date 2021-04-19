@@ -19,6 +19,8 @@ export class ConceptComponent implements OnInit {
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
+      this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
+      console.log(resp.response.roles[0].roleId);
     });
   }
 
