@@ -66,10 +66,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <button mat-raised-button class="save-button" type="submit" color="primary" 
-                [disabled]="generalInformationForm.invalid" mat-raised-buttonclass="save-button">
-                Save
-            </button>
+            <save-button [disabled]="generalInformationForm.invalid"></save-button>
         </div>
     </form>
     <ngx-spinner [fullScreen]="false" name='general-information'></ngx-spinner>
