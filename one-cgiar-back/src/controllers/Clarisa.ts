@@ -1,5 +1,6 @@
 import { APIError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
+import axios from 'axios';
 
 const got = require('got');
 require('dotenv').config();
@@ -16,8 +17,8 @@ const PAGE_SIZE = 20;
 
 export const getClaActionAreas = async () => {
     try {
-        const actionAreas = await got(clarisaHost + 'action-areas', { headers: clarisaHeader });
-        return JSON.parse(actionAreas.body);
+        const actionAreas = await axios.get(clarisaHost + 'action-areas', { headers: clarisaHeader });
+        return actionAreas.data;
     } catch (error) {
         console.log(error)
         throw new APIError(
