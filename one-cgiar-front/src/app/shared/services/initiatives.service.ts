@@ -14,12 +14,9 @@ export class InitiativesService {
   initvStgId: string;
   initvRoleId: number;
   initiative={
-    roleId:4
+    roleId:4,
+    accessToWrite: null
   }
-  accessToWrite(){
-    return this.initiative.roleId == (1||2||3||5)?true:false;
-  } 
-
 
   actionAreas: [];
   stages: [];
