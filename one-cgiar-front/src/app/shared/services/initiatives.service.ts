@@ -201,7 +201,10 @@ export class InitiativesService {
       this.actionAreas = res.response.actionAreas;
       return res.response.actionAreas.find(area => area.id == id)
     }));
+  }
 
+  getRolefromInitiativeById(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/roles`);
   }
 
   
