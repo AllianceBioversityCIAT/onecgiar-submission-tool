@@ -18,14 +18,18 @@ export class ConceptComponent implements OnInit {
 
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
+      console.log('%cGet access','background: #222; color: #ffff00');
       console.log(resp);
       if ( resp.response.roles[0]?.roleId) {
         this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
         console.log(resp.response.roles[0].roleId);
         // accessToWrite
         const rol = this._initiativesService.initiative.roleId
-        this._initiativesService.initiative.accessToWrite = ( rol== 1||rol== 2||rol== 3||rol== 5)?true:false;
+        this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5)?false:true;
         console.log(this._initiativesService.initiative.roleId == 5 ?true:false);
+      }else{
+        console.log( resp.response.roles[0]?.roleId);
+        this._initiativesService.initiative.readonly = true;
       }
 
     });
