@@ -3,11 +3,10 @@
 <mat-expansion-panel style="margin-top: 5px;" [expanded]="!workPackageData.name" >
     <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive" >
         <!-- <button mat-raised-button color="" class="WP_id">Id: {{workPackageData.id}}</button> -->
-        <div class="figure" 
+        <div class="figure background-color-primary" 
         [style.width.px]="animationSizeActive ? 500: 2000" 
         [style.height.px]="animationSizeActive ? 500: 2000"
         [style.borderRadius]="animationSizeActive ? '45%': '0px'"
-        [style.backgroundColor]="'#0779A4'"
         >
         </div>
         <!-- [style.backgroundColor]="workPackageData.name ? '#0779A4': '#ec4b4b'" -->
