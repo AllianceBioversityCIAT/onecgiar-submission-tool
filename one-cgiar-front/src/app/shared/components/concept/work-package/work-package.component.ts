@@ -15,6 +15,7 @@ export class WorkPackageComponent implements OnInit {
   showForm=false;
   animationSize=500;
   animationSizeActive=true;
+  showform = false;
   regionsSelectedList = [{
     name: "Central Asia",
     parentRegion: null,
@@ -55,6 +56,7 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showform = true;
     // this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
     //   console.log('%cCLARISA regions','background: #222; color: #ffff00');
     //   console.log(resp);

@@ -22,23 +22,25 @@
         <mat-tab label="Information">
     
             <form [formGroup]="createWorkPackageForm" (ngSubmit)="onUpdate()" class="narratives-form">
-                <mat-form-field class="narratives-full-width">
-                    <p><strong>Name: </strong><span class="asterisk">* </span></p>
-                    <textarea type="text" formControlName="name" matInput required></textarea>
-                </mat-form-field>
-                <mat-form-field class="narratives-full-width">
-                    <p><strong>Ensure both science/research and innovation/impact pathway content: </strong><span
-                            class="asterisk">* </span></p>
-                    <textarea type="text" formControlName="pathwayContent" matInput required></textarea>
-                </mat-form-field>
-                <mat-form-field class="narratives-full-width">
-                    <p><strong>Results: </strong><span class="asterisk">* </span></p>
-                    <textarea type="text" formControlName="results" matInput required></textarea>
-                </mat-form-field>
+                <div class="form" *ngIf="showform">
+                    <custom-textarea  
+                    [options]="{form:createWorkPackageForm,formControlName:'name',inputTitle:'Name'}">
+                    </custom-textarea>
+    
+                    <custom-textarea  
+                    [options]="{form:createWorkPackageForm,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
+                    </custom-textarea>
+    
+                    <custom-textarea  
+                    [options]="{form:createWorkPackageForm,formControlName:'results',inputTitle:'Results'}">
+                    </custom-textarea>    
+                </div>
+
+
+
+
                 <div class="narratives-save">
-                    <button type="submit" mat-raised-button class="save-button" [disabled]="createWorkPackageForm.invalid">
-                        Save
-                    </button>
+                    <save-button [disabled]="createWorkPackageForm.invalid"></save-button>
                 </div>
             </form>
     
