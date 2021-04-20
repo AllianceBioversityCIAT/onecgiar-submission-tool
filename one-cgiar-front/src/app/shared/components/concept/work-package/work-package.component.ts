@@ -21,11 +21,7 @@ export class WorkPackageComponent implements OnInit {
     parentRegion: null,
     um49Code: 143
   }]
-  countriesSelectedList = [{
-    name: "Central Asia",
-    parentRegion: null,
-    um49Code: 143
-  }]
+  countriesSelectedList = []
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
