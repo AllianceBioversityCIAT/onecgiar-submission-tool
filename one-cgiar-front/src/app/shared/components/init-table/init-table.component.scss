@@ -11,7 +11,7 @@ td, th {
 }
 
 th {
-    background-color: #0779A4;
+    background-color: #465a64;
     color: #fff;
 }
 
@@ -24,3 +24,6 @@ th {
     }
 }
 
+::ng-deep .mat-sort-header-arrow {
+    color: #fff;
+}
