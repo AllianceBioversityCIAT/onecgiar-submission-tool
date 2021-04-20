@@ -13,6 +13,7 @@ export class WorkPackagesComponent implements OnInit {
   workPackagesList=[];
   noWp = false;
   regionsList=[];
+  countriesList=[];
   constructor(
     public initiativesSvc: InitiativesService,
     private spinnerService: NgxSpinnerService,
@@ -21,16 +22,30 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let cont=0;
+
+      this.getCLARISARegionsByPage();
+      this.getAllIWorkPackages();
+      this.getCLARISACountriesByPage();
+
+  }
+
+  getCLARISARegionsByPage(){
     this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
       console.log('%cCLARISA regions','background: #222; color: #ffff00');
       console.log(resp);
       this.regionsList = resp.response.regions;
     })
- 
-      this.getAllIWorkPackages();
-
   }
+
+  getCLARISACountriesByPage(){
+    this.initiativesSvc.getCLARISACountriesByPage(1).subscribe(resp=>{
+      console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
+      console.log(resp);
+      this.countriesList = resp.response.countries;
+    })
+  }
+
+
 
   getAllIWorkPackages(){
     this.spinnerService.show('work-packages');

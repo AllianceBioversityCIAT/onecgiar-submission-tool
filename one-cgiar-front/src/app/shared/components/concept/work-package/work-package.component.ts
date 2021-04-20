@@ -15,7 +15,12 @@ export class WorkPackageComponent implements OnInit {
   showForm=false;
   animationSize=500;
   animationSizeActive=true;
-  selectedList = [{
+  regionsSelectedList = [{
+    name: "Central Asia",
+    parentRegion: null,
+    um49Code: 143
+  }]
+  countriesSelectedList = [{
     name: "Central Asia",
     parentRegion: null,
     um49Code: 143
@@ -24,6 +29,7 @@ export class WorkPackageComponent implements OnInit {
   @Input() workPackagesList: any;
   @Input() index: any;
   @Input() regionsList: [];
+  @Input() countriesList: [];
   @Output() validateAllWP = new EventEmitter();
   workPackageId: number | string;
   initiativeId: any;

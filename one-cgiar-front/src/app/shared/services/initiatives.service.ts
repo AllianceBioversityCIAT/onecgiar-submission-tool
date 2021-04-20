@@ -99,10 +99,15 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
-    // Query to get Partnership By Initiative Id
+  // Query to get CLARISA Regions By Page
   getCLARISARegionsByPage(page: number): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?page=${page}`);
   }
+
+    // Query to get CLARISA Regions By Page
+    getCLARISACountriesByPage(page: number): Observable<any> {
+      return this.http.get<any>(`${environment.apiUrl}/initiatives/countries?page=${page}`);
+    }
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
