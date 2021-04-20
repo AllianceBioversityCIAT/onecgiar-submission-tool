@@ -3,7 +3,7 @@
 <div *ngSwitchCase="true">
     <br>
     <p class="readonly_text_title"><strong class="color-primary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
-    <p class="readonly_text">{{getSelectResult()}}</p>
+    <p class="readonly_text">{{getSelectResult()||'Not available'}}</p>
 </div>
 
 <div *ngSwitchDefault>
