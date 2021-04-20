@@ -56,4 +56,13 @@ export class InteractionsService {
     });
   }
 
+  openSnackBarPosition(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration:4000,
+      horizontalPosition:'left',
+      verticalPosition:'bottom',
+      panelClass: ['marginSnackTop']
+    });
+  }
+
 }

@@ -8,13 +8,13 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options row" *ngFor="let meta of stage.grouped ">
-                <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary" routerLink="{{parseStageUrl(stage, meta.title)}}">
-                    <span>{{meta.title}}</span>
+                <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary" (click)="navigateTo(stage, meta.title)">
+                    <span [ngClass]="{'diasbled_text': meta.title == 'Key partners'}">{{meta.title}}</span>
                     <button mat-icon-button class="mat-icon-no-color"
                         [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                         aria-label="Verified icon">
-                        <mat-icon>verified</mat-icon>
-                        <!-- <img src="/assets/images/under-construction.png" height="90%" alt="" srcset=""> -->
+                        <mat-icon *ngIf="meta.title != 'Key partners'">verified</mat-icon>
+                        <img *ngIf="meta.title == 'Key partners'" src="/assets/images/under-construction.png" height="80%" alt="" srcset="">
                     </button>
                 </mat-list-item>
             </mat-list>

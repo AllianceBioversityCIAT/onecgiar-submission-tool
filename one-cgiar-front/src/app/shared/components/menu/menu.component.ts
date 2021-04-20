@@ -4,6 +4,7 @@ import { UtilsHandler } from '@shared/utils/utils';
 import { InitiativesService } from '@shared/services/initiatives.service';
 import { RequestsService } from '@shared/services/requests.service';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
+import { InteractionsService } from '../../services/interactions.service';
 
 
 @Component({
@@ -17,7 +18,13 @@ export class MenuComponent implements OnInit {
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   // stageUrl;
-  constructor(public _requests: RequestsService, public router: Router, public initiativesSvc: InitiativesService, public stgMenuSvc: StagesMenuService) { }
+  constructor(
+    public _requests: RequestsService, 
+    public router: Router, 
+    public initiativesSvc: InitiativesService, 
+    public stgMenuSvc: StagesMenuService,
+    public _interactionsService:InteractionsService
+    ) { }
 
   ngOnInit(): void {
     this.getStages();
@@ -54,6 +61,15 @@ export class MenuComponent implements OnInit {
     const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
     const stage = meta.description.toLowerCase().split(' ').join('-');
     return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
+  }
+
+  navigateTo(meta: any, section: string){
+    if(section != 'Key partners'){
+      this.router.navigate([this.parseStageUrl(meta,section)]);
+    }else{
+      this._interactionsService.openSnackBarPosition('Section under construction','Ok')
+    }
+   
   }
 
   validateSubMenuForm(stageName: any, subMenu: string) {
