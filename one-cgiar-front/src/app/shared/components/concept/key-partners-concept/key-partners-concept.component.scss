@@ -19,9 +19,6 @@
     width: 100%;
 }
 
-p {
-    color: #0779A4;
-}
 
 .asterisk {
     color: #ff0000;
@@ -33,7 +30,7 @@ p {
 }
 
 table, th, td {
-    border: 1px solid #0779A4;
+    border: .3px solid #bababa;
     border-collapse: collapse;
 }
 
@@ -71,7 +68,6 @@ table {
 }
 
 .set-data-button {
-    background-color: #0779A4;
     outline: none;
     color: #fff;
 }
@@ -82,7 +78,6 @@ table {
 }
   
 .save-button {
-    background-color: #0779A4;
     text-decoration: none;
     color: #fff;
     width: 100px;

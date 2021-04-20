@@ -9,7 +9,7 @@
         [style.borderRadius]="animationSizeActive ? '45%': '0px'"
         >
         </div>
-        <!-- [style.backgroundColor]="workPackageData.name ? '#0779A4': '#ec4b4b'" -->
+        <!-- [style.backgroundColor]="workPackageData.name ? '#': '#ec4b4b'" -->
         <mat-panel-title style="z-index: 1; color: white;">
             {{workPackageData.name || "untitled"}}
         </mat-panel-title>
@@ -127,7 +127,7 @@
                             </table>
     
                             <div class="set-data-container">
-                                <button type="submit" mat-raised-button class="set-data-button" (click)="openDialog()">
+                                <button type="submit" mat-raised-button color="primary" (click)="openDialog()">
                                     set ranges and years
                                 </button>
                             </div>
@@ -140,7 +140,7 @@
                         </div>
     
                         <div class="set-data-container">
-                            <button type="submit" mat-raised-button class="set-data-button"
+                            <button type="submit" mat-raised-button color="primary"
                                 (click)="_requests.addContribution()">
                                 add new contribution
                             </button>
