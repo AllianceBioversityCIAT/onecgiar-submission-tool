@@ -64,11 +64,11 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(meta: any, section: string){
-    if(section != 'Key partners'){
+    // if(section != 'Key partners'){
       this.router.navigate([this.parseStageUrl(meta,section)]);
-    }else{
-      this._interactionsService.openSnackBarPosition('Section under construction','Ok')
-    }
+    // }else{
+    //   this._interactionsService.openSnackBarPosition('Section under construction','Ok')
+    // }
    
   }
 
@@ -77,6 +77,19 @@ export class MenuComponent implements OnInit {
     subMenu = subMenu.toLowerCase().split(' ').join('_');
     // console.log(stageName, subMenu, this.subMenusFormValidation)
     return this.subMenusFormValidation[stageName][subMenu];
+  }
+
+  validate_under_construction(section){
+     switch (section) {
+      case 'Initial theory of change':
+        return true
+      case 'Work packages':
+        return true
+       case 'Key partners':
+         return true
+       default:
+         return false
+     }
   }
 
 

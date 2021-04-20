@@ -88,6 +88,20 @@ mat-list-item:focus {
       color: rgb(196, 196, 196)
   }
 
+
+  .mat-icon-no-color{
+      position: relative;
+  }
+
+  .icon_under_construction{
+     position: absolute;
+     right: 0;
+     margin-right: 50px;
+     height: 70%;
+     top: 50%;
+     transform: translateY(-50%);
+     
+  }
 // mat-expansion-panel{
 //     background: rgb(73,82,81);
 //     background: linear-gradient(139deg, rgba(73,82,81,1) 0%, rgba(58,63,69,1) 35%, rgba(49,52,57,1) 100%);

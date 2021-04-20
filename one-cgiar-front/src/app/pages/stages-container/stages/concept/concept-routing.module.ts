@@ -34,14 +34,14 @@ const routes: Routes = [
       {
         path: 'work-packages',
         component: WorkPackagesComponent,
-        canActivate: [UnderConstructionGuard], 
-        data: {section: 'work-packages'} 
+        // canActivate: [UnderConstructionGuard], 
+        // data: {section: 'work-packages'} 
       },
       {
         path: 'key-partners',
         component: KeyPartnersConceptComponent,
-        canActivate: [UnderConstructionGuard], 
-        data: {section: 'key-partners'} 
+        // canActivate: [UnderConstructionGuard], 
+        // data: {section: 'key-partners'} 
       },
     ]
        
