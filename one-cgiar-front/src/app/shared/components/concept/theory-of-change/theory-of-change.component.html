@@ -1,14 +1,26 @@
 <div class="theory-of-change-container animate__animated animate__fadeIn">
     <strong class="theory-of-change-title">Initial theory of change</strong>
     <form [formGroup]="theoryOfChangeForm" (ngSubmit)="uploadFiles()" class="theory-of-change-form">
-        <mat-form-field class="theory-of-change-full-width">
+
+
+        <!-- <mat-form-field class="theory-of-change-full-width">
             <p><strong>Provide a narrative which explains further the TOC Diagram attached </strong><span
                     class="asterisk">* </span></p>
             <textarea matInput type="text" formControlName="narrative" required (keydown)="wordCounter()" #text
                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="30"></textarea>
             <mat-hint align="start"><strong>Max 500 words</strong> </mat-hint>
             <mat-hint align="end"><strong>{{words}} / 500</strong></mat-hint>
-        </mat-form-field>
+        </mat-form-field> -->
+
+
+        <div class="col-sm-12" *ngIf="showForm">
+            <custom-textarea
+                [options]="{inputTitle:'Provide a narrative which explains further the TOC Diagram attached',maxWords:500, form:theoryOfChangeForm, formControlName:'narrative'}">
+            </custom-textarea>
+        </div>
+
+
+
         <a class="download-container" href="/assets/example.pdf" target="_blank">
             <button type="button" mat-raised-button class="download-button">
                 Download guide
@@ -42,9 +54,7 @@
             </div>
         </div>
         <div class="theory-of-change-save">
-            <button type="submit" mat-raised-button class="save-button">
-                Save
-            </button>
+            <save-button [disabled]="theoryOfChangeForm.invalid"></save-button>
         </div>
     </form>
     <ngx-spinner [fullScreen]="false" name='tocs'></ngx-spinner>

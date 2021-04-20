@@ -4,7 +4,7 @@
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
         *ngIf="showForm">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12" >
                 <custom-textarea
                     [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
                 </custom-textarea>

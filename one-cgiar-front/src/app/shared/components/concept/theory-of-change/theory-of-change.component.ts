@@ -21,6 +21,7 @@ export class TheoryOfChangeComponent implements OnInit {
   public tocData: any;
   public createTOC: any = false;
   progressInfos: any[];
+  showForm=false;
 
   constructor(
     public _requests: RequestsService, 
@@ -29,7 +30,7 @@ export class TheoryOfChangeComponent implements OnInit {
     public _initiativesService:InitiativesService
     ) {
     this.theoryOfChangeForm = new FormGroup({
-      narrative: new FormControl('', Validators.required)
+      narrative: new FormControl(null, Validators.required)
     });
   }
 
@@ -57,8 +58,10 @@ export class TheoryOfChangeComponent implements OnInit {
         this.theoryOfChangeForm.controls['narrative'].setValue(resp.narrative);
         this.listOfFiles = resp.files || [];
       }
+      this.showForm = true;
     }, error => {
       console.log('mostrar el error que no hay archivos', error)
+      this.showForm = true;
     })
   }
   /**
