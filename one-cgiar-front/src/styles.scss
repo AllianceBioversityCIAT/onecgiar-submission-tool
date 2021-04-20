@@ -154,8 +154,18 @@ ngx-editor {
 }
 
 .background-color-primary{
+  // #37474F
   background-color: mat-color( $variable-page-primary) !important;
 }
+
+.background-color-primary-2{
+  background-color: #465a64;
+}
+
+.background-color-primary-3{
+  background-color: #536a76;
+}
+
 
 .color-accent{
   color: mat-color( $variable-page-accent) !important;

@@ -22,10 +22,6 @@
     background: #066D94; 
 }
 
-.navbar-title:hover {
-    background: #066D94;
-}
-
 .navbar-opt {
     display: flex;
     align-items: center;
@@ -33,7 +29,6 @@
 }
 
 .user-information {
-    background: #4DABCC;
     display: block;
     text-align: center;
     padding: 0.7rem 3.5rem;
@@ -45,7 +40,6 @@
 }
 
 .navbar-role {
-    background: #0779A4;
     border-radius: 20px;
     margin: 0;
     font-size: 0.80em;
