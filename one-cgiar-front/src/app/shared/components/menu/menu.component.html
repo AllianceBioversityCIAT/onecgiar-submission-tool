@@ -8,7 +8,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options row" *ngFor="let meta of stage.grouped ">
-                <mat-list-item routerLinkActive="isActive" routerLink="{{parseStageUrl(stage, meta.title)}}">
+                <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary" routerLink="{{parseStageUrl(stage, meta.title)}}">
                     <span>{{meta.title}}</span>
                     <button mat-icon-button class="mat-icon-no-color"
                         [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
