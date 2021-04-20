@@ -7,6 +7,7 @@ import { WorkPackagesComponent } from '../../../../shared/components/concept/wor
 import { KeyPartnersComponent } from '../../../../shared/components/preconcept/key-partners/key-partners.component';
 import { KeyPartnersConceptComponent } from '../../../../shared/components/concept/key-partners-concept/key-partners-concept.component';
 import { ConceptComponent } from './concept.component';
+import { UnderConstructionGuard } from '../../../../shared/guards/under-construction.guard';
 
 const routes: Routes = [
   {
@@ -33,10 +34,14 @@ const routes: Routes = [
       {
         path: 'work-packages',
         component: WorkPackagesComponent,
+        canActivate: [UnderConstructionGuard], 
+        data: {section: 'work-packages'} 
       },
       {
         path: 'key-partners',
         component: KeyPartnersConceptComponent,
+        canActivate: [UnderConstructionGuard], 
+        data: {section: 'key-partners'} 
       },
     ]
        
