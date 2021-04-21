@@ -2,13 +2,13 @@
 <span [ngSwitch]="options.readonly">
 <div *ngSwitchCase="true">
     <br>
-    <p class="readonly_text_title"><strong class="color-primary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+    <p class="readonly_text_title"><strong class="color-secondary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
     <p class="readonly_text">{{getSelectResult()||'Not available'}}</p>
 </div>
 
 <div *ngSwitchDefault>
     <mat-form-field appearance="standard" class="general-information-full-width">
-        <p><strong class="color-primary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+        <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
         <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
         </p>
         <mat-select [formControl]="selectInput" (selectionChange)="setValue($event)" >

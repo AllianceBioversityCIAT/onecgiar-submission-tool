@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
                 <mat-form-field>
-                    <p><strong class="color-primary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                    <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                     <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText">
                     <mat-autocomplete #auto="matAutocomplete">
@@ -14,7 +14,7 @@
                 </mat-form-field>
 
                 <mat-chip-list class="example-chip" *ngIf="!(options.showChips === false)">
-                    <mat-chip class="example-box" selected *ngFor="let item of this.options.selectedList;let i = index">
+                    <mat-chip class="example-box" color="accent" selected *ngFor="let item of this.options.selectedList;let i = index">
                         {{options.chipName?item[options.chipName]:item[options.selectItemName]}}
                         <mat-icon matChipRemove (click)="removeItem(i)">cancel</mat-icon>
                     </mat-chip>

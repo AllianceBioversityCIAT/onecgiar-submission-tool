@@ -13,7 +13,7 @@
    
             <mat-form-field class="general-information-full-width">
 
-                <p><strong>{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+                <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                 <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                 <input  type="text" [formControl]="textareaInput" matInput required (ngModelChange)="setValue()" >
                 <mat-hint align="start" *ngIf="options.maxWords"><strong>Max {{options.maxWords}} words</strong> </mat-hint>

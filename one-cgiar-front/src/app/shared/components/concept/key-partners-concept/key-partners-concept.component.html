@@ -1,5 +1,5 @@
 <div class="partners-container animate__animated animate__fadeIn">
-    <strong class="partners-title">Key partners</strong>
+    <strong class="partners-title color-secondary">Key partners</strong>
     <form [formGroup]="partnershipForm" class="partners-form" (submit)="savePartnership()" *ngIf="showFrom">
         <custom-textarea 
         [options]="{ form:partnershipForm,formControlName:'comparativeAdvantage',maxWords:250,inputTitle:'Comparative advantage',
