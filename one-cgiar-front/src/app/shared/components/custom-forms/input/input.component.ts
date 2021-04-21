@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { Editor,Toolbar } from 'ngx-editor';
 import { inputOptions } from '../../../models/forms-options/input-options.interface';
 
@@ -15,7 +16,9 @@ export class InputComponent implements OnInit {
   wordCount: any;
   // @ViewChild("text") text: ElementRef;
   words: any;
-  constructor() { }
+  constructor(
+    public _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
     let options={

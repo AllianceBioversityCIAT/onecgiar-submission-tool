@@ -14,7 +14,7 @@ export class SelectComponent implements OnInit {
   @Input() options:selectOptions;
   selectInput:FormControl;
   constructor(
-    private _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService
   ) { }
 
   ngOnInit(): void {

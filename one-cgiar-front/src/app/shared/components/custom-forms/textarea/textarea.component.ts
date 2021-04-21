@@ -17,7 +17,7 @@ export class TextareaComponent implements OnInit {
   // @ViewChild("text") text: ElementRef;
   words: any;
   constructor(
-    private _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService
   ) { }
 
   ngOnInit(): void {
