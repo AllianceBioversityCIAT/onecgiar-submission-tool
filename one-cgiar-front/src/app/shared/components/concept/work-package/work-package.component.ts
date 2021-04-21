@@ -16,12 +16,8 @@ export class WorkPackageComponent implements OnInit {
   animationSize=500;
   animationSizeActive=true;
   showform = false;
-  regionsSelectedList = [{
-    name: "Central Asia",
-    parentRegion: null,
-    um49Code: 143
-  }]
-  countriesSelectedList = []
+  regionsSelectedList = [];
+  countriesSelectedList = [];
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
@@ -52,6 +48,8 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getRegionsAndCountries();
+
     this.showform = true;
     // this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
     //   console.log('%cCLARISA regions','background: #222; color: #ffff00');
@@ -75,6 +73,14 @@ export class WorkPackageComponent implements OnInit {
         this.validateAllWP.emit();
       }
     );
+  }
+
+  getRegionsAndCountries(){
+    this.initiativesSvc.getRegionsAndCountries(1).subscribe(resp=>{
+      console.log(resp);
+      this.regionsSelectedList = resp.response.regions;
+      this.countriesSelectedList = resp.response.countries;
+    })
   }
 
   onUpdate(): void {
