@@ -3,7 +3,7 @@
 <br>       
           <div class="container">
             <mat-card style="padding: 10px 50px;">
-                <h2 class="color-primary">Register user</h2>
+                <h2 class="color-secondary">Register user</h2>
                 <form [formGroup]="createUserForm">
                     <div class="row">
                         <div class="col-sm-4">
@@ -69,7 +69,7 @@
                             <br>
                         </div>
                         <div class="col-sm-12" align="end">
-                            <button (click)="createUser()"  mat-raised-button color="primary" [disabled]="createUserForm.invalid || (!checkedCgiar)">Register user<mat-icon class="tab-icon">add_circle_outline</mat-icon></button>
+                            <button (click)="createUser()"  mat-raised-button color="accent" [disabled]="createUserForm.invalid || (!checkedCgiar)">Register user<mat-icon class="tab-icon">add_circle_outline</mat-icon></button>
                         </div>
                     </div>
                 </form>
