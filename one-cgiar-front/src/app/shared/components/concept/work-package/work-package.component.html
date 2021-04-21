@@ -24,15 +24,15 @@
             <form [formGroup]="createWorkPackageForm" (ngSubmit)="onUpdate()" class="narratives-form">
                 <div class="form" *ngIf="showform">
                     <custom-textarea  
-                    [options]="{form:createWorkPackageForm,formControlName:'name',inputTitle:'Name'}">
+                    [options]="{form:createWorkPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
                     </custom-textarea>
     
                     <custom-textarea  
-                    [options]="{form:createWorkPackageForm,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
+                    [options]="{form:createWorkPackageForm,maxWords:500,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
                     </custom-textarea>
     
                     <custom-textarea  
-                    [options]="{form:createWorkPackageForm,formControlName:'results',inputTitle:'Results'}">
+                    [options]="{form:createWorkPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results'}">
                     </custom-textarea>    
                 </div>
 
