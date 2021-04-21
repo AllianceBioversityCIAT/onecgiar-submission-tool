@@ -31,14 +31,20 @@ export class CreateInitiativeModalComponent implements OnInit {
 
   onSubmit() {
     this.initiativesSvc.createInitiative(this.createInitiativeForm.value).subscribe(resp => {
-      console.log('initiative id', resp.data.createdInitiative.id);
       const initvStgId = resp.data.createdInitiative.id;
-      this.router.navigate([`/initiatives/${initvStgId}/stages/concept/general-information`]);
-      Swal.fire({
-        icon: 'success',
-        title: 'Initiative has been saved',
-        showConfirmButton: false,
-        timer: 2000
+      let body={
+        userId:this.user.id,
+        active:true,
+        roleId:5
+      }
+      this.initiativesSvc.assignUserToInitiative(body,initvStgId).subscribe(resp=>{
+        this.router.navigate([`/initiatives/${initvStgId}/stages/concept/general-information`]);
+        Swal.fire({
+          icon: 'success',
+          title: 'Initiative has been saved',
+          showConfirmButton: false,
+          timer: 2000
+        })
       })
     });
   }
