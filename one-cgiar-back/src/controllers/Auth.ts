@@ -100,7 +100,7 @@ export const changePassword = async (req: Request, res: Response) => {
                 'Old and new passwords are required.'
             );
         }
-        user = await userRepository.findOneOrFail(userId);
+        user = await userRepository.findOne(userId);
         if (!user.checkPassword(oldPassword)) {
             throw new APIError(
                 'UNAUTHORIZED',

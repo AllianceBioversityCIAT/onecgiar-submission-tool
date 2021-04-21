@@ -52,7 +52,7 @@ export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const userRepository = getRepository(Users);
     try {
-        const user = await userRepository.findOneOrFail(id);
+        const user = await userRepository.findOne(id);
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
@@ -141,7 +141,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
     const userRepository = getRepository(Users);
     try {
-        user = await userRepository.findOneOrFail(id);
+        user = await userRepository.findOne(id);
         user.firstname = firstname;
         user.lastname = lastname;
         user.email = email;
