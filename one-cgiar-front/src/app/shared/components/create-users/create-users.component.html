@@ -22,13 +22,13 @@
                             <button mat-raised-button color="primary" (click)="validateEmail()" [ngClass]="{'animate__animated animate__infinite animate__pulse': checkedCgiar == false}">Check email</button>
                         </div>
                         <div class="col-sm-6" *ngIf="showInitial">
-                            <h3 class="color-primary" style="display: inline-block;" *ngIf="isCgiar">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" class="center-icon">email</mat-icon>
+                            <h3 class="color-accent" style="display: inline-block;" *ngIf="isCgiar">
+                                <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon" class="center-icon">email</mat-icon>
                                 This e-mail belongs to the <strong>CGIAR</strong> Active Directory.
                             </h3> 
                             
-                            <h3 class="color-primary" style="display: inline-block;" *ngIf="!isCgiar">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" class="center-icon">email</mat-icon>
+                            <h3 class="color-accent" style="display: inline-block;" *ngIf="!isCgiar">
+                                <mat-icon aria-hidden="false" color="primary"  aria-label="Example home icon" class="center-icon">email</mat-icon>
                                 This e-mail does not belong to the <strong>CGIAR</strong> Active Directory.
                             </h3> 
                             <!-- <mat-radio-group aria-label="Select an option" formControlName="is_cgiar">
