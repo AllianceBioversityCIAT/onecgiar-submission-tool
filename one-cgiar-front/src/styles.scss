@@ -134,37 +134,87 @@ mat-sidenav-content {
   color: #4caf50;
 }
 
+.mat-form-field-aux{
+  .mat-form-field-wrapper{
+      .mat-form-field-flex,.mat-form-field-underline{
+          position: absolute !important;
+      }
+  }
+
+}
+
+
 ngx-editor {
   .NgxEditor {
     border-radius: 0px !important;
     border: none!important;
     border-bottom: 1px solid #a7a7a7 !important;
+    background-color: transparent !important;
     p{
       margin: 0px;
+      background-color: transparent !important;
     }
+
     .NgxEditor__Content{
       padding: 0px !important;
+      p{
+        background-color: transparent !important;
+
+      }
+        background-color: transparent !important;
+      
     }
   }
 }
 
+ngx-editor-menu{
+  .NgxEditor__MenuBar{
+    background-color: transparent !important;
+  }
+}
 
+//primary
 .color-primary{
   color: mat-color( $variable-page-primary) !important;
 }
 
 .background-color-primary{
   // #37474F
-  background-color: mat-color( $variable-page-primary) !important;
+  background-color: #013243 !important;
 }
 
 .background-color-primary-2{
-  background-color: #465a64;
+  background-color: #023e52 !important;
 }
 
 .background-color-primary-3{
-  background-color: #536a76;
+  background-color: #014d66 !important;
 }
+//secondary
+.color-secondary{
+  color: #0791e6 !important;
+}
+
+.background-color-secondary{
+  background-color: #0791e6 !important;
+}
+//tertiary
+.color-tertiary{
+  color: #2d4b00 !important;
+}
+
+.background-color-tertiary{
+  background-color: #85af45 !important;
+}
+
+.background-color-main-1{
+
+}
+
+.background-color-main-2{
+  background-color: #f6f6f4 !important;
+}
+
 
 
 .color-accent{
