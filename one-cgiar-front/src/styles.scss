@@ -35,14 +35,19 @@ $variable-page-theme: mat-light-theme(
 // that you are using.
 @include angular-material-theme($variable-page-theme);
 /* You can add global styles to this file, and also import other style files */
-
+html *:not(mat-icon) {
+  font-family: "Poppins", sans-serif !important;
+}
 html,
 body {
   height: 100%;
+  font-size: 14px !important;
+}
+.mat-list-base .mat-list-item, .mat-expansion-panel, .mat-expansion-panel-content, .mat-expansion-panel-header {
+  font-size: 1em !important;
 }
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
 }
 
 .custom-dialog-container .mat-dialog-container {
@@ -172,6 +177,7 @@ ngx-editor-menu{
     background-color: transparent !important;
   }
 }
+
 
 //primary
 .color-primary{
