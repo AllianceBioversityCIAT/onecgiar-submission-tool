@@ -390,7 +390,7 @@ export const createWorkPackage = async (req: Request, res: Response) => {
         workPackage.pathway_content = pathwayContent || null;
         workPackage.is_global = isGlobal || null;
 
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
+        let initiativeStg = await initvStgRepo.findOne(initvStgId);
         workPackage.initvStg = initiativeStg;
 
         const errors = await validate(workPackage);
@@ -424,7 +424,7 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
 
     try {
         let workPackage = new WorkPackages();
-        workPackage = await wpRepo.findOneOrFail(id);
+        workPackage = await wpRepo.findOne(id);
         workPackage.results = (results) ? results : workPackage.results;
         workPackage.name = (name) ? name : workPackage.name;
         workPackage.pathway_content = (pathwayContent) ? pathwayContent : workPackage.pathway_content;
@@ -467,7 +467,7 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
 
     try {
-        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        const workPackage = await wpRepo.findOne(wrkPkgId);
         const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
         const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
@@ -492,7 +492,7 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
     let wrkRegion: RegionsByWorkPackages;
 
     try {
-        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        const workPackage = await wpRepo.findOne(wrkPkgId);
 
         wrkRegion = await regionRepo.findOne({ where: { region_id: regionId, wrkPkg: workPackage } });
         if (wrkRegion) {
@@ -539,7 +539,7 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
 
     try {
         let cntryRegion: CountriesByWorkPackages;
-        const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+        const workPackage = await wpRepo.findOne(wrkPkgId);
 
         cntryRegion = await regionRepo.findOne({ where: { region_id: countryId, wrkPkg: workPackage } });
         if (cntryRegion) {
@@ -625,7 +625,7 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
             prjtedBfnt.impact_area_indicator_name = (impactAreaIndicatorName) ? impactAreaIndicatorName : prjtedBfnt.impact_area_indicator_name;
         } else {
             prjtedBfnt = new ProjectionBenefits();
-            const workPackage = await wpRepo.findOneOrFail(wrkPkgId);
+            const workPackage = await wpRepo.findOne(wrkPkgId);
             prjtedBfnt.notes = notes;
             prjtedBfnt.impact_area_id = impactAreaId;
             prjtedBfnt.impact_area_indicator_id = impactAreaIndicatorId;
@@ -826,7 +826,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
 //     const tocsRepo = getRepository(TOCs);
 
 //     try {
-//         const toc = await tocsRepo.findOneOrFail(id);
+//         const toc = await tocsRepo.findOne(id);
 //         toc.narrative = narrative;
 
 //         let _toc = await tocsRepo.save(toc);

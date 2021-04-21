@@ -69,7 +69,7 @@ export const editRole = async (req: Request, res: Response) => {
     const rolesRepository = getRepository(Roles);
 
     try {
-        role = await rolesRepository.findOneOrFail(id);
+        role = await rolesRepository.findOne(id);
 
         const validationOpt = { validationError: { target: false, value: false } };
         const errors = await validate(role, validationOpt);
@@ -95,7 +95,7 @@ export const deleteRole = async (req: Request, res: Response) => {
     const rolesRepository = getRepository(Roles);
     let role: Roles;
     try {
-        role = await rolesRepository.findOneOrFail(id);
+        role = await rolesRepository.findOne(id);
         rolesRepository.delete(id);
         //After all send a 204 (no content, but accepted) response
         res.status(200).json({ msg: "Role deleted" });
