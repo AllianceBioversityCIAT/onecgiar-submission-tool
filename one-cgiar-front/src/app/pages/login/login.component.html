@@ -10,11 +10,14 @@
   </header>
   <div class="center_flex absolute_floating"  style="height: 100%; width: 100%;">
     <div class="card card-signin" >
-      <!-- <div class="card_custom_header">
-        test
-      </div> -->
-      <div class="card-body">
+      <div class="card_custom_header background-color-secondary center_flex">
         <h5 class="card-title text-center">Sign In</h5>
+      </div>
+      <br>
+      <br>
+      <br>
+      <div class="card-body">
+        <!-- <h5 class="card-title text-center">Sign In</h5> -->
         <form class="form-signin" [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
           <mat-form-field class="full-width-input">
             <input text="text" formControlName="email" matInput placeholder="Email" required />
@@ -32,7 +35,8 @@
               {{ loginForm.errorMessage }}
             </mat-error>
           </mat-form-field>
-          <button mat-raised-button type="submit" color="accent">Sign in</button>
+          <button mat-raised-button type="submit" color="primary">Sign in</button>
+          <br><br>
           <!-- <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button> -->
           <hr class="my-4">
           <div class="note">
