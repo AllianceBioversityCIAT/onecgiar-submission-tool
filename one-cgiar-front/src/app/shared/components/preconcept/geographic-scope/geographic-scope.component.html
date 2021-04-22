@@ -2,8 +2,8 @@
     <div class="geographic-scope-form">
         <p><strong>¿Does the initiative have a global dimension?</strong></p>
         <div>
-            <button type="button" mat-raised-button [ngClass]="{'yes-button': globalDimension}"  (click)="globalDimension = true;updateWorkPackage(true)">Yes</button>
-            <button type="button" mat-raised-button [ngClass]="{'no-button': !globalDimension}" (click)="globalDimension = false;updateWorkPackage(false)">No</button>
+            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="globalDimension?'accent':''"  (click)="globalDimension = true;updateWorkPackage(true)">Yes</button>
+            <button type="button" mat-raised-button [color]="!globalDimension?'warn':''" (click)="globalDimension = false;updateWorkPackage(false)">No</button>
         </div>
         <br>
         <!-- <app-region-control></app-region-control>
