@@ -66,6 +66,12 @@ body {
   overflow-y: none !important;
 }
 
+.center_flex{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .pointer {
   cursor: pointer;
 }
