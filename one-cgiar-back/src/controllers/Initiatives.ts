@@ -335,11 +335,11 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ name, user, is_coordinator, is_lead, is_owner, current_stage }
+ * @param req params:{ name, user, current_stage }
  * @param res 
  */
 export const createInitiative = async (req: Request, res: Response) => {
-    const { name, user, is_coordinator, is_lead, is_owner, current_stage } = req.body;
+    const { name, user, current_stage } = req.body;
     const userRepository = getRepository(Users);
     const initiativesRepository = getRepository(Initiatives);
     const initiativesByUsersRepository = getRepository(InitiativesByUsers);
@@ -458,9 +458,9 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
 
     try {
 
-        let stage = await stageRepo.findOne(stageId);
+        let stage = await stageRepo.findOneOrFail(stageId);
         let tableName = `${stage.description.split(' ').join('_').toLocaleLowerCase()}_info`;
-        let initiativeStage = await stageByInitiRepo.findOne(stageInitiativeId);
+        let initiativeStage = await stageByInitiRepo.findOneOrFail(stageInitiativeId);
         let newData = getRepoConstStage(`${stage.description.split(' ').join('_').toLocaleLowerCase()}`);
         newData.initvStg = initiativeStage;
 
@@ -527,7 +527,7 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
     actionArea.action_area_id = action_area_id;
     try {
 
-        let initiativeStg = await initvStgRepo.findOne(initvStgId);
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         actionArea.initvStg = initiativeStg;
 
         const errors = await validate(actionArea);
@@ -557,7 +557,7 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
 //     try {
 
-//         // let initiativeStg = await initvStgRepo.findOne(initvStgId);
+//         // let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
 //         // keyPartner.initvStg = initiativeStg;
 
 //         const errors = await validate(keyPartner);
@@ -584,7 +584,7 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
     tocFile.narrative = narrative;
     try {
 
-        let initiativeStg = await initvStgRepo.findOne(initvStgId);
+        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
         tocFile.initvStg = initiativeStg;
 
         const errors = await validate(tocFile);

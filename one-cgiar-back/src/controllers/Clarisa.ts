@@ -34,7 +34,8 @@ export const getClaActionAreas = async () => {
 export const getClaCountries = async (page) => {
     try {
         const countries = await got(clarisaHost + 'countries', { headers: clarisaHeader });
-        return sortAndPaginate(page, countries.body, 'name');
+        return countries.body;
+        // return sortAndPaginate(page, countries.body, 'name');
     } catch (error) {
         console.log(error)
         throw new APIError(
@@ -49,7 +50,8 @@ export const getClaCountries = async (page) => {
 export const getClaRegions = async (page) => {
     try {
         const regions = await got(clarisaHost + 'un-regions', { headers: clarisaHeader });
-        return sortAndPaginate(page, regions.body, 'name');
+        return regions.body;
+        // return sortAndPaginate(page, regions.body, 'name');
     } catch (error) {
         console.log(error)
         throw new APIError(
