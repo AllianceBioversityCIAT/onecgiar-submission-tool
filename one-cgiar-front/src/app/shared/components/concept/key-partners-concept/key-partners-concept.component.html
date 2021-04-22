@@ -6,7 +6,7 @@
          description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service providers'}">
         </custom-textarea>
 
-        <table>
+        <table class="key_partners_table">
             <tr class="center">
                 <th>Key Partner</th>
                 <th>Description</th>
@@ -17,7 +17,7 @@
                 <td [style.color]="item.active == true?'black':'red'">{{item.key_partner_name}}</td>
                 <td [style.color]="item.active == true?'black':'red'">{{item.description}}</td>
                 <td class="center"><mat-icon class="edit" (click)="openDialog(false,item,i)">edit</mat-icon></td>
-                <td class="center"><mat-icon class="delete" (click)="removeKeyPartner(i)">delete</mat-icon></td>
+                <td class="center"><mat-icon class="pointer" color="warn" (click)="removeKeyPartner(i)">delete</mat-icon></td>
             </tr>
         </table>
         <div class="set-data-container">

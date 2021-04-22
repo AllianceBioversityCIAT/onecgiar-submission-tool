@@ -30,13 +30,17 @@
 }
 
 table, th, td {
-    border: .3px solid #bababa;
+    border: .2px solid #014d663d;
     border-collapse: collapse;
 }
 
 table {
+    
     margin: 2rem 0 1rem 0;
     width: 100%;
+    td{
+       padding: 3px 10px;
+    }
 }
 
 .center {
@@ -50,11 +54,6 @@ table {
 
 .edit:hover {
     color: #7c7c7c;
-}
-
-.delete {
-    color: #d30000;
-    cursor: pointer;
 }
 
 .delete:hover {
