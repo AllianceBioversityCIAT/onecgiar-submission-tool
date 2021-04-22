@@ -60,22 +60,17 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   getPartnershipByInitiativeId(){
-
-   
-    
-
   
       this.partnership.initvStgId = Number(this._initiativesSvc.initvStgId);
       this._initiativesSvc.getPartnershipByInitiativeId(this._initiativesSvc.initvStgId).subscribe((resp:any)=>{
-
+        console.log(resp);
         if (resp.response.partnership?.comparative_advantage) {
           this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
         }
-       
 
         this.partnership.key_partners = resp.response.keyPartners;
        
-        if(resp.response.partnership){
+        if(resp.response?.partnership){
           this.partnership.id = resp.response.partnership.id
         }
   
@@ -107,18 +102,33 @@ export class KeyPartnersConceptComponent implements OnInit {
     })
   }
 
-  openDialog(i,data) {
+  openDialog(add,data?,i?) {
     data.toDisableList = this.convertToDisableList();
+    if(add){
+      
+      data.key_partner_id = -1;
+      data.key_partner_name = '';
+      data.description = '';
+      data.active = true;
+    }
     const dialogRef = this.dialog.open(AddPartnersModalComponent, 
       { panelClass: 'dialog-no-padding-no-scroll',
         data
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result && !add) {
         console.log('%cresult','background: #222; color: #ffff00');
         console.log(result);
         this.editKeyPartner(i,result);
+      }else if (result && add){
+        let object:keyPartner={
+          key_partner_id: result.key_partner_id,
+          key_partner_name: result.key_partner_name,
+          description: result.description,
+          active: true
+        }
+          this.partnership.key_partners.push(object)
       }
 
     });
