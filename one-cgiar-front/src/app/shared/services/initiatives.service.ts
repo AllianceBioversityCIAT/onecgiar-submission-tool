@@ -100,14 +100,14 @@ export class InitiativesService {
   }
 
   // Query to get CLARISA Regions By Page
-  getCLARISARegionsByPage(page: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?page=${page}`);
+  getCLARISARegionsByPage(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions`);
   }
 
-    // Query to get CLARISA Countries By Page
-    getCLARISACountriesByPage(page: number): Observable<any> {
-      return this.http.get<any>(`${environment.apiUrl}/initiatives/countries?page=${page}`);
-    }
+  // Query to get CLARISA Countries By Page
+  getCLARISACountriesByPage(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
+  }
 
   getRegionsAndCountries(InitiativeId): Observable<any>{
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/geo-scope/${InitiativeId}`);

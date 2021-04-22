@@ -55,13 +55,12 @@
                     <div class="box_container">
                         <custom-multiple-choice [options]="{
                             required:true,
-                            readonly:false,
                             inputTitle:'Select regions',
-                            form:null,
                             selectList:this.regionsList,
                             selectedList:this.regionsSelectedList,
                             selectItemName:'name',
-                            selectItemId:'um49Code'
+                            selectItemId:'um49Code',
+                            selectedItemId:'um49Code'
                            }"></custom-multiple-choice>
                     </div>
 
@@ -70,13 +69,12 @@
                     <div class="box_container">
                     <custom-multiple-choice [options]="{
                         required:true,
-                        readonly:false,
                         inputTitle:'Select countries',
-                        form:null,
                         selectList:this.countriesList,
                         selectedList:this.countriesSelectedList,
                         selectItemName:'name',
-                        selectItemId:'um49Code'
+                        selectItemId:'code',
+                        selectedItemId:'code'
                        }"></custom-multiple-choice>
                     </div>
                 </div>

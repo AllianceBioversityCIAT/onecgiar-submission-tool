@@ -77,7 +77,7 @@ export class WorkPackageComponent implements OnInit {
 
   getRegionsAndCountries(){
     this.initiativesSvc.getRegionsAndCountries(1).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.regionsSelectedList = resp.response.regions;
       this.countriesSelectedList = resp.response.countries;
     })

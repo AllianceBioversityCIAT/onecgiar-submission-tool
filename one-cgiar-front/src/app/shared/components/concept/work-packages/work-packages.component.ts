@@ -30,7 +30,7 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   getCLARISARegionsByPage(){
-    this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
+    this.initiativesSvc.getCLARISARegionsByPage().subscribe(resp=>{
       console.log('%cCLARISA regions','background: #222; color: #ffff00');
       console.log(resp);
       this.regionsList = resp.response.regions;
@@ -38,7 +38,7 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   getCLARISACountriesByPage(){
-    this.initiativesSvc.getCLARISACountriesByPage(1).subscribe(resp=>{
+    this.initiativesSvc.getCLARISACountriesByPage().subscribe(resp=>{
       console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
       console.log(resp);
       this.countriesList = resp.response.countries;
