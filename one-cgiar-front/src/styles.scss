@@ -126,6 +126,7 @@ mat-sidenav-content {
 textarea[cdktextareaautosize].mat-input-element {
   overflow: hidden;
 }
+.mat-tab-body-content { overflow: hidden!important}
 
 .custom-container {
   width: 100%;
