@@ -123,6 +123,9 @@ mat-sidenav-content {
     max-width: 540px;
   }
 }
+textarea[cdktextareaautosize].mat-input-element {
+  overflow: hidden;
+}
 
 .custom-container {
   width: 100%;
