@@ -34,7 +34,7 @@ export const getClaActionAreas = async () => {
 export const getClaCountries = async (page) => {
     try {
         const countries = await got(clarisaHost + 'countries', { headers: clarisaHeader });
-        return countries.body;
+        return JSON.parse(countries.body);
         // return sortAndPaginate(page, countries.body, 'name');
     } catch (error) {
         console.log(error)
@@ -50,7 +50,7 @@ export const getClaCountries = async (page) => {
 export const getClaRegions = async (page) => {
     try {
         const regions = await got(clarisaHost + 'un-regions', { headers: clarisaHeader });
-        return regions.body;
+        return JSON.parse(regions.body);
         // return sortAndPaginate(page, regions.body, 'name');
     } catch (error) {
         console.log(error)
