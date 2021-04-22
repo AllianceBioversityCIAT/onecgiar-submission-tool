@@ -21,8 +21,8 @@ export class WorkPackageComponent implements OnInit {
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
-  @Input() regionsList: [];
-  @Input() countriesList: [];
+  @Input() regionsList: any [];
+  @Input() countriesList: any [];
   @Output() validateAllWP = new EventEmitter();
   workPackageId: number | string;
   initiativeId: any;
@@ -48,7 +48,9 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRegionsAndCountries();
+      this.getRegionsAndCountries();
+
+    
 
     this.showform = true;
     // this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
@@ -76,9 +78,16 @@ export class WorkPackageComponent implements OnInit {
   }
 
   getRegionsAndCountries(){
-    this.initiativesSvc.getRegionsAndCountries(1).subscribe(resp=>{
-      // console.log(resp);
+    this.initiativesSvc.getRegionsAndCountries(this.workPackageData?.id).subscribe(resp=>{
+      console.log(resp.response.regions);
       this.regionsSelectedList = resp.response.regions;
+      for (const regionSelected of this.regionsSelectedList) {
+        regionSelected.um49Code = regionSelected.id;
+        for (const regionFull of this.regionsList) {
+        regionSelected.name = regionFull.name;
+        }
+      }
+      console.log(resp.response.countries);
       this.countriesSelectedList = resp.response.countries;
     })
   }

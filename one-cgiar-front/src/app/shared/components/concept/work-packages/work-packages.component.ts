@@ -14,6 +14,7 @@ export class WorkPackagesComponent implements OnInit {
   noWp = false;
   regionsList=[];
   countriesList=[];
+  showWP = false;
   constructor(
     public initiativesSvc: InitiativesService,
     private spinnerService: NgxSpinnerService,
@@ -42,6 +43,7 @@ export class WorkPackagesComponent implements OnInit {
       console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
       console.log(resp);
       this.countriesList = resp.response.countries;
+      this.showWP = true;
     })
   }
 
