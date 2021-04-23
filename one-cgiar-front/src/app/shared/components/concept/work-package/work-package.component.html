@@ -1,21 +1,21 @@
 
 
-<mat-expansion-panel style="margin-top: 5px;" [expanded]="!workPackageData.name" >
-    <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive" >
+<mat-expansion-panel style="margin-top: 5px;" [expanded]="!workPackageData.name" [disabled]="activeExpansion" >
+    <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive">
         <!-- <button mat-raised-button color="" class="WP_id">Id: {{workPackageData.id}}</button> -->
-        <div class="figure background-color-primary" 
-        [style.width.px]="animationSizeActive ? 500: 2000" 
-        [style.height.px]="animationSizeActive ? 500: 2000"
-        [style.borderRadius]="animationSizeActive ? '45%': '0px'"
-        >
+        <div class="figure background-color-primary" [style.width.px]="animationSizeActive ? 500: 2000"
+            [style.height.px]="animationSizeActive ? 500: 2000" [style.borderRadius]="animationSizeActive ? '45%': '0px'">
         </div>
         <!-- [style.backgroundColor]="workPackageData.name ? '#': '#ec4b4b'" -->
         <mat-panel-title style="z-index: 1; color: white;">
             {{workPackageData.name || "untitled"}}
         </mat-panel-title>
-        <button mat-icon-button class="icon_verify"  aria-label="Verified icon">
-        <mat-icon [ngClass]="{'icon_verify_valid': !createWorkPackageForm.invalid}">verified</mat-icon>
-       </button>
+        <button mat-icon-button class="icon_center icon_verify" aria-label="Verified icon">
+            <mat-icon [ngClass]="{'icon_verify_valid': !createWorkPackageForm.invalid}">verified</mat-icon>
+        </button>
+        <button mat-icon-button class="icon_center" style="margin-right: 100px;" aria-label="" (click)="DialogConfirm();this.activeExpansion = true;">
+            <mat-icon color="warn">delete</mat-icon>
+        </button>
     </mat-expansion-panel-header>
 
     <mat-tab-group mat-align-tabs="center">

@@ -5,6 +5,7 @@ import { ProjectionIndicatorsModalComponent } from '@app/shared/components/conce
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '../../../services/interactions.service';
+import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-work-package',
@@ -18,6 +19,7 @@ export class WorkPackageComponent implements OnInit {
   showform = false;
   regionsSelectedList: any = [];
   countriesSelectedList:any = [];
+  activeExpansion=false;
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
@@ -48,21 +50,8 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.getRegionsAndCountries();
-
-    
-
+    this.getRegionsAndCountries();
     this.showform = true;
-    // this.initiativesSvc.getCLARISARegionsByPage(1).subscribe(resp=>{
-    //   console.log('%cCLARISA regions','background: #222; color: #ffff00');
-    //   console.log(resp);
-    //   this.regionsList = resp.response.regions;
-    //   this.showForm=true;
-    //   setInterval(()=>{
-    //      console.log("Hello"); 
-    //     this.regionsList.push({name:'test'})
-    //     }, 3000);
-    // })
     this.setFormData();
     if (!this.workPackageData.name) {
       this.animationSizeActive=false;
@@ -79,7 +68,6 @@ export class WorkPackageComponent implements OnInit {
 
   getRegionsAndCountries(){
     this.initiativesSvc.getRegionsAndCountries(this.workPackageData?.id).subscribe(resp=>{
-      console.log(resp.response.regions);
       this.regionsSelectedList = resp.response.regions;
       for (const regionSelected of this.regionsSelectedList) {
         regionSelected.um49Code = regionSelected.region_id;
@@ -90,17 +78,26 @@ export class WorkPackageComponent implements OnInit {
         
         }
       }
-      console.log(resp.response.countries);
       this.countriesSelectedList = resp.response.countries;
+      console.log('%casdasd','background: #222; color: #84c3fd');
+      
+      for (const countrySelected of this.countriesSelectedList) {
+        countrySelected.code = countrySelected.country_id;
+        for (const countrieFull of this.countriesList) {
+          if(countrySelected.country_id == countrieFull.code){
+            console.log('%cEcnontrado','background: #222; color: #ffff00');
+            countrySelected.name = countrieFull.name;
+          }
+        
+        }
+      }
+      console.log( this.countriesSelectedList);
     })
   }
 
   SaveGeneralInformation(): void {
-    console.log('%cReady to update','background: #222; color: #ffff00');
-    console.log(  this.createWorkPackageForm);
     this.initiativesSvc.updateWorkPackage(this.createWorkPackageForm.value).subscribe(resp=>{
       this.interactionsService.successMessage('Work package ' +this.createWorkPackageForm.value.name+ ' information has been saved')
-      console.log(resp);
     });
   }
 
@@ -111,6 +108,18 @@ export class WorkPackageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  DialogConfirm(): void {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // this.removeUserToInitiative();
+      }
+      console.log('The dialog was closed');
     });
   }
 
@@ -135,28 +144,32 @@ export class WorkPackageComponent implements OnInit {
 
   saveGeographicScope(){
     console.log(this.regionsSelectedList);
+    console.log(this.countriesSelectedList);
     this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:this.createWorkPackageForm.value.isGlobal}).subscribe(resp=>{
-      console.log(resp);
       this.saveEachRegionAndCountries();
     });
   }
 
   saveEachRegionAndCountries(){
-
-    console.log('%cGuardando','background: #222; color: #ffff00');
     for (const region of this.regionsSelectedList) {
-      console.log(region);
       let body;
       body = region;
       body.wrkPkgId =this.workPackageData.id
       body.regionId = body.um49Code;
       if (region.new){
-       console.log("Se guarda "+region.name);
        this.initiativesSvc.createRegion(body).subscribe(resp=>{
-       console.log(resp);
-      })
-      }else{
-        console.log("No se guarda "+region.name);
+       })
+      }
+    }
+
+    for (const countrie of this.countriesSelectedList) {
+      let body;
+      body = countrie;
+      body.wrkPkgId =this.workPackageData.id
+      body.countryId = body.code;
+      if (countrie.new){
+       this.initiativesSvc.createCountrie(body).subscribe(resp=>{
+       })
       }
     }
   

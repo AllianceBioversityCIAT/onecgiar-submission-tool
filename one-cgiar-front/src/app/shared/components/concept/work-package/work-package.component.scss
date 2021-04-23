@@ -1,17 +1,4 @@
 @import '~@angular/material/theming';
-// .icon_verify{
-//   position: absolute;
-//   right: 0;
-//   top: 50%;
-//   transform: translateY(-50%);
-//   margin-right: 35px;
-//   color: #c5c5c5;
-// }
-
-// .icon_verify_valid{
-//     color: #4caf50;
-// }
-
 .example-action-buttons {
     padding-bottom: 20px;
   }
@@ -164,4 +151,13 @@ table, th, td {
  }
 .horizontal_padding{
     padding: 0px 20px;
+}
+
+.icon_center{
+    position: absolute;
+    right: 0;
+    margin-right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
 }
