@@ -493,6 +493,14 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
 
     try {
         const workPackage = await wpRepo.findOne(wrkPkgId);
+        if (workPackage == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Work package not found'
+            );
+        }
 
         wrkRegion = await regionRepo.findOne({ where: { region_id: regionId, wrkPkg: workPackage } });
         if (wrkRegion) {
@@ -534,24 +542,32 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
 export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
     const { wrkPkgId, countryId, active } = req.body;
     const wpRepo = getRepository(WorkPackages);
-    const regionRepo = getRepository(CountriesByWorkPackages);
+    const countryRepo = getRepository(CountriesByWorkPackages);
 
 
     try {
-        let cntryRegion: CountriesByWorkPackages;
+        let cntryWP: CountriesByWorkPackages;
         const workPackage = await wpRepo.findOne(wrkPkgId);
-
-        cntryRegion = await regionRepo.findOne({ where: { region_id: countryId, wrkPkg: workPackage } });
-        if (cntryRegion) {
-            cntryRegion.active = active;
-        } else {
-            cntryRegion = new CountriesByWorkPackages();
-            cntryRegion.active = active;
-            cntryRegion.wrkPkg = workPackage;
-            cntryRegion.country_id = countryId;
+        if (workPackage == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Work package not found'
+            );
         }
 
-        const errors = await validate(cntryRegion);
+        cntryWP = await countryRepo.findOne({ where: { country_id: countryId, wrkPkg: workPackage } });
+        if (cntryWP) {
+            cntryWP.active = active;
+        } else {
+            cntryWP = new CountriesByWorkPackages();
+            cntryWP.active = active;
+            cntryWP.wrkPkg = workPackage;
+            cntryWP.country_id = countryId;
+        }
+
+        const errors = await validate(cntryWP);
         if (errors.length > 0) {
             const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
             throw new APIError(
@@ -561,11 +577,12 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
                 message
             );
         } else {
-            let country = await regionRepo.save(cntryRegion);
+            let country = await countryRepo.save(cntryWP);
             res.json(new ResponseHandler('Work package country updated.', { country }));
         }
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 }
