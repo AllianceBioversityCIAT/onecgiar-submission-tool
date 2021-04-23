@@ -16,8 +16,8 @@ export class WorkPackageComponent implements OnInit {
   animationSize=500;
   animationSizeActive=true;
   showform = false;
-  regionsSelectedList = [];
-  countriesSelectedList = [];
+  regionsSelectedList: any = [];
+  countriesSelectedList:any = [];
   @Input() workPackageData: any;
   @Input() workPackagesList: any;
   @Input() index: any;
@@ -82,9 +82,12 @@ export class WorkPackageComponent implements OnInit {
       console.log(resp.response.regions);
       this.regionsSelectedList = resp.response.regions;
       for (const regionSelected of this.regionsSelectedList) {
-        regionSelected.um49Code = regionSelected.id;
+        regionSelected.um49Code = regionSelected.region_id;
         for (const regionFull of this.regionsList) {
-        regionSelected.name = regionFull.name;
+          if(regionSelected.um49Code == regionFull.um49Code){
+            regionSelected.name = regionFull.name;
+          }
+        
         }
       }
       console.log(resp.response.countries);
@@ -131,9 +134,33 @@ export class WorkPackageComponent implements OnInit {
   }
 
   saveGeographicScope(){
+    console.log(this.regionsSelectedList);
     this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:this.createWorkPackageForm.value.isGlobal}).subscribe(resp=>{
       console.log(resp);
+      this.saveEachRegionAndCountries();
     });
+  }
+
+  saveEachRegionAndCountries(){
+
+    console.log('%cGuardando','background: #222; color: #ffff00');
+    for (const region of this.regionsSelectedList) {
+      console.log(region);
+      let body;
+      body = region;
+      body.wrkPkgId =this.workPackageData.id
+      body.regionId = body.um49Code;
+      if (region.new){
+       console.log("Se guarda "+region.name);
+       this.initiativesSvc.createRegion(body).subscribe(resp=>{
+       console.log(resp);
+      })
+      }else{
+        console.log("No se guarda "+region.name);
+      }
+    }
+  
+
   }
 
   setIsGlobal(value){

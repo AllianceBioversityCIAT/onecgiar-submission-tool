@@ -133,6 +133,17 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/partnership`, body);
   }
 
+  // Query to create a region in work package
+  createRegion(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/regions`, body);
+  }
+
+    
+  // Query to create a countries in work package
+  createCountrie(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
+  }
+
   // Query to create a user
   createUser(body: any): Observable<any> {
     console.log('%c'+`${environment.apiUrl}/users`,'background: #222; color: #ffff00');
