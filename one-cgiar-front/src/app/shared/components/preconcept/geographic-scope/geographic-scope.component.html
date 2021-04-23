@@ -2,15 +2,11 @@
     <div class="geographic-scope-form">
         <p><strong>¿Does the initiative have a global dimension?</strong></p>
         <div>
-            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="globalDimension?'accent':''"  (click)="globalDimension = true;updateWorkPackage(true)">Yes</button>
-            <button type="button" mat-raised-button [color]="!globalDimension?'warn':''" (click)="globalDimension = false;updateWorkPackage(false)">No</button>
+            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="globalDimension?'accent':''"
+                (click)="globalDimension = true;updateWorkPackage(true)">Yes</button>
+            <button type="button" mat-raised-button [color]="!globalDimension?'warn':''"
+                (click)="globalDimension = false;updateWorkPackage(false)">No</button>
         </div>
         <br>
-        <!-- <app-region-control></app-region-control>
-        <app-country-control></app-country-control> -->
-        <!-- <div class="geographic-scope-save">
-            <button type="submit" mat-raised-button class="save-button">
-                Save
-            </button>
-        </div> -->
     </div>
+</div>

@@ -125,8 +125,16 @@ export class WorkPackageComponent implements OnInit {
     this.createWorkPackageForm.controls['name'].setValue(name);
     this.createWorkPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.createWorkPackageForm.controls['results'].setValue(results);
+    this.globalDimension = is_global;
     // this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
     this.createWorkPackageForm.controls['id'].setValue(id);
+  }
+
+  globalDimension;
+  updateWorkPackage(resp): void {
+    this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:resp}).subscribe(resp=>{
+      console.log(resp);
+    });
   }
 
 }
