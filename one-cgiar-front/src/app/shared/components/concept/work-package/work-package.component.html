@@ -21,7 +21,7 @@
     <mat-tab-group mat-align-tabs="center">
         <mat-tab label="General information">
     
-            <form [formGroup]="createWorkPackageForm" (ngSubmit)="onUpdate()" class="narratives-form">
+            <form [formGroup]="createWorkPackageForm" (ngSubmit)="SaveGeneralInformation()" class="narratives-form">
                 <div class="form" *ngIf="showform">
                     <custom-textarea  
                     [options]="{form:createWorkPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
@@ -46,7 +46,7 @@
     
         </mat-tab>
         <mat-tab label="Geographic scope">
-        <form action="" *ngIf="true">
+        <form (ngSubmit)="saveGeographicScope()">
             <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
             <br>
             <br>
@@ -56,10 +56,10 @@
                         <div class="geographic-scope-form">
                             <p><strong>¿Does the initiative have a global dimension?</strong></p>
                             <div>
-                                <button style="margin-right: 10px;" type="button" mat-raised-button [color]="globalDimension?'accent':''"
-                                    (click)="globalDimension = true;updateWorkPackage(true)">Yes</button>
-                                <button type="button" mat-raised-button [color]="!globalDimension?'warn':''"
-                                    (click)="globalDimension = false;updateWorkPackage(false)">No</button>
+                                <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.createWorkPackageForm.value.isGlobal?'accent':''"
+                                    (click)="setIsGlobal(true);">Yes</button>
+                                <button type="button" mat-raised-button [color]="!this.createWorkPackageForm.value.isGlobal?'warn':''"
+                                    (click)="setIsGlobal(false);">No</button>
                             </div>
                             <br>
                         </div>

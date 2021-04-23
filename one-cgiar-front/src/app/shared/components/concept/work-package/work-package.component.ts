@@ -42,7 +42,7 @@ export class WorkPackageComponent implements OnInit {
       name: new FormControl('', Validators.required),
       pathwayContent: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
-      // isGlobal: new FormControl(true, Validators.required),
+      isGlobal: new FormControl(null, Validators.required),
       id: new FormControl('', Validators.required),
     });
   }
@@ -92,7 +92,7 @@ export class WorkPackageComponent implements OnInit {
     })
   }
 
-  onUpdate(): void {
+  SaveGeneralInformation(): void {
     console.log('%cReady to update','background: #222; color: #ffff00');
     console.log(  this.createWorkPackageForm);
     this.initiativesSvc.updateWorkPackage(this.createWorkPackageForm.value).subscribe(resp=>{
@@ -125,16 +125,20 @@ export class WorkPackageComponent implements OnInit {
     this.createWorkPackageForm.controls['name'].setValue(name);
     this.createWorkPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.createWorkPackageForm.controls['results'].setValue(results);
-    this.globalDimension = is_global;
-    // this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
+    // this.globalDimension = is_global;
+    this.createWorkPackageForm.controls['isGlobal'].setValue(is_global);
     this.createWorkPackageForm.controls['id'].setValue(id);
   }
 
-  globalDimension;
-  updateWorkPackage(resp): void {
-    this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:resp}).subscribe(resp=>{
+  saveGeographicScope(){
+    this.initiativesSvc.updateWorkPackage({id:this.workPackageData.id,isGlobal:this.createWorkPackageForm.value.isGlobal}).subscribe(resp=>{
       console.log(resp);
     });
   }
+
+  setIsGlobal(value){
+    this.createWorkPackageForm.controls['isGlobal'].setValue(value);
+  }
+
 
 }
