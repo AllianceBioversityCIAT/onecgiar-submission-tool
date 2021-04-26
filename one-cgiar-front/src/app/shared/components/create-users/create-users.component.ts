@@ -38,7 +38,7 @@ export class CreateUsersComponent implements OnInit {
     this.createUserForm.controls.is_cgiar.setValue(this.isCgiar);
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
-    body.roles=[5];
+    body.roles=[4];
     body.initiativeId = this._initiativesSvc.initvStgId;
     this._initiativesSvc.createUser(body).subscribe(resp=>{
       console.log('%cusers','background: #222; color: #84c3fd');
