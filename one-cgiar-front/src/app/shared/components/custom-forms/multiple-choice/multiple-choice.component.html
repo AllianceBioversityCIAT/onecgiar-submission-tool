@@ -5,7 +5,7 @@
                 <mat-form-field>
                     <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
-                    <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText">
+                    <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" [disabled]="removeFocus">
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options.selectList" [value]="option.name" (click)="addItem(option,disableOption(option))" [disabled]="disableOption(option)">
                         <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}

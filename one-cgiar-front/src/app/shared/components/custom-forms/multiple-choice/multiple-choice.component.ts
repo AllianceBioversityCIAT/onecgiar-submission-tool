@@ -10,13 +10,18 @@ import { multipleChoiceOptions } from '../../../models/forms-options/multiple-ch
 export class MultipleChoiceComponent implements OnInit {
   @Input() options:multipleChoiceOptions;
   searchText:string;
-
+  removeFocus=false;
   constructor() { 
   }
   ngOnInit(){ 
   }
 
   addItem(item,disabled){
+    this.removeFocus = true;
+    setTimeout(() => {
+      this.removeFocus = false
+    }, 1);
+    
     if (!disabled) {
       this.searchText = "";
       item.new = true;
