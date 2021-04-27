@@ -1,21 +1,27 @@
 <h2 class="background-color-primary" mat-dialog-title>Add new key partner</h2>
 <div mat-dialog-content class="dialog-content">
     <div class="modal-container">
-        <custom-select 
-        [options]="
-        {
-         required:true,
-         readonly:false,
-         inputTitle:'Select key partner',
-         form:keyPartnersForm,
-         formControlId:'key_partner_id',
-         formControlName:'key_partner_name',
-         selectList:this.keyPartnersListExample,
-         selectItemName:'name',
-         selectItemId:'id',
-         toDisableList: this.toDisableList
-        }">
-        ></custom-select>
+        <span style="position: relative;">
+            <custom-select *ngIf="this._dataControlService.institutions"
+            [options]="
+            {
+             required:true,
+             readonly:false,
+             inputTitle:'Select key partner',
+             form:keyPartnersForm,
+             formControlId:'key_partner_id',
+             formControlName:'key_partner_name',
+             selectList:this._dataControlService.institutions,
+             selectItemName:'name',
+             selectItemId:'code',
+             toDisableList: this.toDisableList
+            }">
+            ></custom-select>
+            <p class="color-secondary" *ngIf="!this._dataControlService.institutions"><strong>Loading instituions...</strong></p>
+            <mat-progress-bar style="margin-bottom: 10px;" *ngIf="!this._dataControlService.institutions" mode="indeterminate"></mat-progress-bar>
+
+        </span>
+
 
         <p class="add-partner-text">If you do not find the key partner as part of the drop-down list, please request to
             add it by clicking here.</p>

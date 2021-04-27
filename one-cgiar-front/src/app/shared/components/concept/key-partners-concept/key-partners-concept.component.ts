@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DataControlService } from '../../../services/data-control.service';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -51,6 +52,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     public stgMenuSvc: StagesMenuService,
     private interactionsService:InteractionsService,
     private spinnerService: NgxSpinnerService,
+    private _dataControlService:DataControlService,
 
     ) {
       this.partnershipForm = new FormGroup({
@@ -66,6 +68,9 @@ export class KeyPartnersConceptComponent implements OnInit {
   getCLARISAInstitutions(){
     this._initiativesSvc.getCLARISAInstitutions().subscribe(resp=>{
       console.log(resp);
+      this._dataControlService.institutions =  resp.response.institutions;
+    },
+    err=>{
     })
   }
 

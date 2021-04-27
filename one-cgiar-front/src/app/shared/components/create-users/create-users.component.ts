@@ -41,16 +41,12 @@ export class CreateUsersComponent implements OnInit {
     body.roles=[4];
     body.initiativeId = this._initiativesSvc.initvStgId;
     this._initiativesSvc.createUser(body).subscribe(resp=>{
-      console.log('%cusers','background: #222; color: #84c3fd');
-      console.log(resp);
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
       this.firstTab.emit();
       this.showInitial = false;
       this.createUserForm.reset();
     },
     err=>{
-      console.log(err);
-      console.log(err.error.description);
       this.interactionsService.errorMessage(err.error.description);
     });
   }
@@ -74,7 +70,6 @@ export class CreateUsersComponent implements OnInit {
   }
 
   cleanCheckedCgiar(){
-    console.log("on change");
     this.checkedCgiar = false;
   }
 

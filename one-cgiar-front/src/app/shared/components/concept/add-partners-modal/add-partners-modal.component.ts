@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core'
 import { RequestsService } from '@app/shared/services/requests.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DataControlService } from '../../../services/data-control.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-add-partners-modal',
   templateUrl: './add-partners-modal.component.html',
@@ -10,34 +12,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 export class AddPartnersModalComponent implements OnInit {
-
+  
   wordCount: any;
   keyPartnersForm: FormGroup;
   toDisableList=[];
-  keyPartnersListExample=[
-    {
-      name:"IRRI",
-      id: 1
-    },
-    {
-      name:"IITA",
-      id: 2
-    },
-    {
-      name:"CIAT",
-      id: 3
-    },
-    {
-      name:"CIMMYT",
-      id: 4 
-    },
-    {
-      name:"ICRAF",
-      id: 5
-    }
-  ]
-
   constructor(
+    public _dataControlService:DataControlService,
+    private spinnerService: NgxSpinnerService,
     public dialogRef: MatDialogRef<AddPartnersModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
@@ -49,6 +30,12 @@ export class AddPartnersModalComponent implements OnInit {
      }
 
   ngOnInit(): void {
+    this.spinnerService.show("institutions_spinner");
+    console.log("in the modal");
+    console.log(this._dataControlService.institutions);
+    setTimeout(() => {
+      console.log(this._dataControlService.institutions);
+    }, 10000);
     this.toDisableList = this.data.toDisableList;
     console.log(this.toDisableList);
     for (let index = 0; index < this.toDisableList.length; index++) {
