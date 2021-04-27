@@ -15,7 +15,7 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
     let users;
 
     try {
-        users = await userRepository.find({select:['first_name', 'last_login', 'last_name', 'email', 'is_active', 'id']});
+        users = await userRepository.find({ select: ['first_name', 'last_login', 'last_name', 'email', 'is_active', 'id'] });
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
@@ -53,6 +53,7 @@ export const getUser = async (req: Request, res: Response) => {
     const userRepository = getRepository(Users);
     try {
         const user = await userRepository.findOne(id);
+        delete user.password;
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
@@ -163,6 +164,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 
         user = await userRepository.save(user);
+        delete user.password;
         res.json(new ResponseHandler('User updated.', { user }));
     } catch (error) {
         console.log(error);
@@ -192,9 +194,4 @@ export const deleteUser = async (req: Request, res: Response) => {
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
-
-    // remove user
-    // userRepository.delete(id);
-    // res.status(201).json({ msg: 'User deleted' });
-
 };
