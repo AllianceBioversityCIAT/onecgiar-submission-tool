@@ -50,8 +50,8 @@ export class CreateUsersComponent implements OnInit {
     },
     err=>{
       console.log(err);
-      console.log(err.error.msg);
-      this.interactionsService.errorMessage(err.error.msg);
+      console.log(err.error.description);
+      this.interactionsService.errorMessage(err.error.description);
     });
   }
 
