@@ -18,7 +18,7 @@
 $variable-page-primary: mat-palette($mat-blue-gray, 800);
 $variable-page-accent: mat-palette($mat-green, 600);
 // The warn palette is optional (defaults to red).
-$variable-page-warn: mat-palette($mat-red, 500);
+$variable-page-warn: mat-palette($mat-red, 700);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $variable-page-theme: mat-light-theme(

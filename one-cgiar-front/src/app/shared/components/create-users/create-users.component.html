@@ -56,7 +56,7 @@
                                 <mat-hint>min. 8 characters</mat-hint>
 
                                 <mat-error *ngIf="createUserForm.get('password').errors?.minlength">
-                                    password less than <strong>8</strong> 
+                                    The password must be longer than <strong>8</strong> characters 
                                   </mat-error>
                                   <mat-error *ngIf="createUserForm.get('password').hasError('required')">
                                     password is <strong>required</strong>

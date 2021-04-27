@@ -5,6 +5,8 @@ import { BaseFormUser } from '@shared/utils/base-form-user';
 import { AuthService } from '@shared/services/auth.service';
 import { Subscription } from 'rxjs';
 import { InteractionsService } from '../../shared/services/interactions.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,20 +15,24 @@ import { InteractionsService } from '../../shared/services/interactions.service'
 export class LoginComponent implements OnInit, OnDestroy {
   hide = true;
   private subscription: Subscription = new Subscription();
-
+  loginForm: FormGroup;
   constructor(
     private authSvc: AuthService,
     private router: Router,
-    public loginForm: BaseFormUser,
-    public _interactionsService:InteractionsService
+    // public loginForm: BaseFormUser,
+    public _interactionsService:InteractionsService,
+    private spinnerService: NgxSpinnerService,
   ) { 
     this._interactionsService.showHeader = false;
   }
 
   ngOnInit(): void {
-    this.loginForm.baseForm.get('role').setValidators(null);
-    this.loginForm.baseForm.get('role').updateValueAndValidity();
-   
+    // this.loginForm.baseForm.get('role').setValidators(null);
+    // this.loginForm.baseForm.get('role').updateValueAndValidity();
+    this.loginForm = new FormGroup({
+      email: new FormControl(null,[Validators.required,Validators.email]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+    });
   }
 
   ngOnDestroy(): void {
@@ -34,23 +40,31 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLogin(): void {
-    if (this.loginForm.baseForm.invalid) {
-      return;
-    }
+    console.log("spinner");
+    this.spinnerService.show("login_spinner");
+    // if (this.loginForm.invalid) {
+    //   return;
+    // }
 
-    const formValue = this.loginForm.baseForm.value;
+    // const formValue = this.loginForm.baseForm.value;
     this.subscription.add(
-      this.authSvc.login(formValue).subscribe((res) => {
+      this.authSvc.login(this.loginForm.value).subscribe((res) => {
+        console.log("quitar spinner");
+        this.spinnerService.hide("login_spinner");
         if (res) {
           this.router.navigate(['/home']);
           this._interactionsService.showHeader = true;
           // console.log('login', res);
         }
+      },
+      (err)=>{
+        console.log("error");
+        this.spinnerService.hide("login_spinner");
       })
     );
   }
 
-  checkField(field: string): boolean {
-    return this.loginForm.isValidField(field);
-  }
+  // checkField(field: string): boolean {
+  //   return this.loginForm.isValidField(field);
+  // }
 }

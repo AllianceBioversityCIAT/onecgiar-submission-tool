@@ -18,24 +18,33 @@
       <br>
       <div class="card-body">
         <!-- <h5 class="card-title text-center">Sign In</h5> -->
-        <form class="form-signin" [formGroup]="loginForm.baseForm" (ngSubmit)="onLogin()">
+        <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
           <mat-form-field class="full-width-input">
             <input text="text" formControlName="email" matInput placeholder="Email" required />
-            <mat-error *ngIf="checkField('email')">
-              {{ loginForm.errorMessage }}
+            <mat-error *ngIf="loginForm.get('email').hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email').hasError('required')" >
+              Email is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-
+          <div style="margin-top: 5px;"></div>
           <mat-form-field class="full-width-input separator">
             <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
+            <mat-error *ngIf="loginForm.get('password').errors?.minlength">
+              The password must be longer than <strong>8</strong> characters 
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('password').hasError('required')">
+              password is <strong>required</strong>
+            </mat-error>
             <div mat-icon-button matSuffix>
               <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
             </div>
-            <mat-error *ngIf="checkField('password')">
-              {{ loginForm.errorMessage }}
+            <mat-error >
+              <!-- {{ loginForm.errorMessage }} -->
             </mat-error>
           </mat-form-field>
-          <button mat-raised-button type="submit" color="primary">Sign in</button>
+          <button [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Sign in</button>
           <br><br>
           <!-- <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button> -->
           <hr class="my-4">
@@ -53,4 +62,6 @@
   <div class="footer">
     <p><small>This background photography belongs to <a rel="license" href="https://www.cgiar.org/" target="_blank">CGIAR System Organization</a></small></p>
   </div>
+  <ngx-spinner bdColor="#00151da1" size="medium" color="#fff" type="timer" name="login_spinner"> <p style="font-size: 20px; color: white">Please wait...</p>
+</ngx-spinner>
 </body>
