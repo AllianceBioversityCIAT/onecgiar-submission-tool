@@ -38,8 +38,8 @@ export class SelectComponent implements OnInit {
 
   disableOption(option){
     if ( this.options.toDisableList) {
-      for (const id of this.options.toDisableList) {
-        if (option.id==id) {
+      for (const code of this.options.toDisableList) {
+        if (option.code==code) {
           return true;
         }
       }
