@@ -15,7 +15,7 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
     let users;
 
     try {
-        users = await userRepository.find();
+        users = await userRepository.find({select:['first_name', 'last_login', 'last_name', 'email', 'is_active', 'id']});
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
@@ -76,7 +76,7 @@ export const createUsers = async (req: Request, res: Response) => {
     user.is_active = true;
     try {
 
-        
+
         // validate
         const errors = await validate(user);
         if (errors.length > 0) {
@@ -110,7 +110,7 @@ export const createUsers = async (req: Request, res: Response) => {
         }
         let userCreated = await userRepository.save(user);
 
-        if(initiativeId){
+        if (initiativeId) {
             const userByInitiative = new InitiativesByUsers();
             userByInitiative.initiative = initiativeId;
             userByInitiative.user = userCreated;
@@ -121,6 +121,7 @@ export const createUsers = async (req: Request, res: Response) => {
 
             console.log(usrIntv);
         }
+        delete userCreated.password;
 
         res.json(new ResponseHandler('User logged.', { user: userCreated }));
 
