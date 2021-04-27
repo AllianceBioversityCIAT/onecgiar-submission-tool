@@ -6,6 +6,7 @@ import { InitiativesService } from '../../../services/initiatives.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -48,7 +49,9 @@ export class KeyPartnersConceptComponent implements OnInit {
     public dialog: MatDialog,
     public _initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
-    private interactionsService:InteractionsService
+    private interactionsService:InteractionsService,
+    private spinnerService: NgxSpinnerService,
+
     ) {
       this.partnershipForm = new FormGroup({
         comparativeAdvantage: new FormControl(null, Validators.required),
@@ -60,9 +63,11 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   getPartnershipByInitiativeId(){
-  
+      this.spinnerService.show("spinnerService");
       this.partnership.initvStgId = Number(this._initiativesSvc.initvStgId);
       this._initiativesSvc.getPartnershipByInitiativeId(this._initiativesSvc.initvStgId).subscribe((resp:any)=>{
+        this.spinnerService.hide("spinnerService");
+
         console.log(resp);
         if (resp.response.partnership?.comparative_advantage) {
           this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
@@ -73,11 +78,15 @@ export class KeyPartnersConceptComponent implements OnInit {
         if(resp.response?.partnership){
           this.partnership.id = resp.response.partnership.id
         }
-  
-      })
-      setTimeout(() => {
         this.showFrom = true;
-      }, 1000);
+      },
+      err=>{
+        this.spinnerService.hide("spinnerService");
+        this.showFrom = true;
+      })
+      // setTimeout(() => {
+      //   this.showFrom = true;
+      // }, 1000);
       
     
 

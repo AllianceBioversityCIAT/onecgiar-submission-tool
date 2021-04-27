@@ -39,28 +39,33 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   getCLARISACountriesByPage(){
+    this.spinnerService.show('work-packages');
     this.initiativesSvc.getCLARISACountriesByPage().subscribe(resp=>{
+      this.spinnerService.hide('work-packages');
       console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
       console.log(resp);
       this.countriesList = resp.response.countries;
       this.showWP = true;
+    },
+    err=>{
+      this.spinnerService.hide('work-packages');
     })
   }
 
 
 
   getAllIWorkPackages(){
-    this.spinnerService.show('work-packages');
+    // this.spinnerService.show('work-packages');
     let suscrip = this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
       this.workPackagesList = resp.response.workPackages;
     },
     err=>{
       this.noWp  = true;     
-      this.spinnerService.hide('work-packages');
+      // this.spinnerService.hide('work-packages');
       suscrip.unsubscribe();
     },
     ()=>{
-      this.spinnerService.hide('work-packages');
+      // this.spinnerService.hide('work-packages');
       suscrip.unsubscribe();
     })
       this.validateWorkPackages();
