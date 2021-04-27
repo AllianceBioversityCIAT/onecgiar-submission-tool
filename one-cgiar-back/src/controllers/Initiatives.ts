@@ -37,7 +37,8 @@ export const getInitiatives = async (req: Request, res: Response) => {
         initvSQL = ` 
         SELECT
             initvStg.id AS initvStgId,
-            CONCAT("Stage ", stage.id,': ',stage.description)AS currentStage,
+            stage.description AS currentStage,
+            CONCAT("Stage ", stage.id,': ',stage.description) AS currentStageName,
             stage.id AS currentStageId,
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,

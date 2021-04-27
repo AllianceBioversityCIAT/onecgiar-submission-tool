@@ -3,7 +3,7 @@ import { getRepository, In, QueryFailedError } from 'typeorm'
 import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
-import { APIError } from '../handlers/BaseError';
+import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -127,10 +127,17 @@ export const createUsers = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User logged.', { user: userCreated }));
 
     } catch (error) {
+        console.log(error)
+        let e;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            error['httpCode'] = HttpStatusCode.INTERNAL_SERVER
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
         }
-        return res.status(error.httpCode).json(error);
+        return res.status(e.httpCode).json(e);
         // return res.status(409).json({ msg: 'User can not be created', data: error });
     }
 };
