@@ -5,13 +5,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class RegionsFilterPipe implements PipeTransform {
 
-  transform(value:any,arg:any): any {
+  transform(list:any,word:string,attributeName:string): any {
     const array = [];
-    for (const region of value) {
-      if (arg == '') {
+    for (const region of list) {
+      if (word == '') {
         return [];
       }
-      if (region.name.toUpperCase().indexOf(arg?.toUpperCase())>-1) {
+      if (region[attributeName].toUpperCase().indexOf(word?.toUpperCase())>-1) {
         array.push(region);
       }
       

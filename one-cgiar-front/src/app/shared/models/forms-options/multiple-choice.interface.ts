@@ -13,4 +13,5 @@ export interface multipleChoiceOptions{
     selectedItemId:string|number;
     toDisableList:[];
     showChips:boolean;
+    attributeNameToSearch:string
 }
