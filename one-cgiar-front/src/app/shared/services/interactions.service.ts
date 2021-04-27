@@ -15,21 +15,21 @@ export class InteractionsService {
     private _snackBar: MatSnackBar
   ) { }
 
-  successMessage(title:string){
+  successMessage(title:string,seconds?:number){
     Swal.fire({
       icon: 'success',
       title: title,
       showConfirmButton: false,
-      timer: 3000
+      timer: seconds?seconds:3000
     })
   }
 
-  errorMessage(title:string){
+  errorMessage(title:string,seconds?:number){
     Swal.fire({
       icon: 'error',
       title: title,
       showConfirmButton: false,
-      timer: 3000
+      timer: seconds?seconds:3000
     })
   }
   
