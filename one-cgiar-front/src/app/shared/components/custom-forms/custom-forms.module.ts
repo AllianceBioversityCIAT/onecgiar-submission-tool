@@ -9,11 +9,12 @@ import { NgxEditorModule } from 'ngx-editor';
 import { MultipleChoiceComponent } from './multiple-choice/multiple-choice.component';
 import { TextComponent } from './text/text.component';
 import { SaveButtonComponent } from './save-button/save-button.component';
+import { RegionsFilterPipe } from '../../pipes/regions-filter.pipe';
 
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent],
+  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe],
   imports: [
     CommonModule,
     MaterialModule,
