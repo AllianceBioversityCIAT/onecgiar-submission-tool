@@ -2,10 +2,11 @@
 
     <div class="row">
         <div class="col-sm-12">
-                <mat-form-field>
+                <mat-form-field floatLabel="false">
                     <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
-                    <input type="text" aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" [disabled]="removeFocus">
+                    <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" [disabled]="removeFocus">
+                    <mat-label [hidden]="true"></mat-label>
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of options.selectList|regionsFilter:searchText:options.attributeNameToSearch" [value]="option.name" (click)="addItem(option,disableOption(option))" [disabled]="disableOption(option)">
                         <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
