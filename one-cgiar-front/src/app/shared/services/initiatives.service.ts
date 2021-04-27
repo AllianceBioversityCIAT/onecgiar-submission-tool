@@ -109,6 +109,12 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
   }
 
+  // Query to get CLARISA Countries By Page
+  getCLARISAInstitutions(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions`);
+  }
+  
+
   getRegionsAndCountries(InitiativeId): Observable<any>{
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/geo-scope/${InitiativeId}`);
   }

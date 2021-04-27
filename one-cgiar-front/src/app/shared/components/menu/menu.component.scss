@@ -82,8 +82,12 @@ mat-list-item:focus {
     background-color: #7bc45d;
 }
 
+.menu_items{
+    transition: all .3s ease-in-out;
+  }
+
 .menu_items:hover{
-    background-color: rgb(224, 224, 224);
+    background-color: #e0e0e0;
   }
 
   .diasbled_text{

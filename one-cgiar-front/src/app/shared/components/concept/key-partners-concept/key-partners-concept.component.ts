@@ -60,6 +60,13 @@ export class KeyPartnersConceptComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPartnershipByInitiativeId();
+    this.getCLARISAInstitutions();
+  }
+
+  getCLARISAInstitutions(){
+    this._initiativesSvc.getCLARISAInstitutions().subscribe(resp=>{
+      console.log(resp);
+    })
   }
 
   getPartnershipByInitiativeId(){
