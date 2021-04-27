@@ -27,16 +27,3 @@ export const checkRole = (entityName: string, permissionActions: string) => {
         }
     }
 }
-
-// const validateMultipleAction = (rolesAcronyms: string[], permissionActions: string, entityName: string) => {
-//     const actions = permissionActions.split(',');
-//     if (actions.length === 1) {
-//         return accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
-//     } else {
-
-//         actions.forEach(action => {
-//             console.log(accessCtrl.can(rolesAcronyms)[action](entityName).granted)
-//         });
-
-//     }
-// }

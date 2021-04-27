@@ -3,7 +3,7 @@ import { getRepository, In, QueryFailedError } from 'typeorm'
 import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
-import { APIError } from '../handlers/BaseError';
+import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -15,7 +15,7 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
     let users;
 
     try {
-        users = await userRepository.find();
+        users = await userRepository.find({ select: ['first_name', 'last_login', 'last_name', 'email', 'is_active', 'id'] });
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
@@ -53,6 +53,7 @@ export const getUser = async (req: Request, res: Response) => {
     const userRepository = getRepository(Users);
     try {
         const user = await userRepository.findOne(id);
+        delete user.password;
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
@@ -76,7 +77,7 @@ export const createUsers = async (req: Request, res: Response) => {
     user.is_active = true;
     try {
 
-        
+
         // validate
         const errors = await validate(user);
         if (errors.length > 0) {
@@ -110,7 +111,7 @@ export const createUsers = async (req: Request, res: Response) => {
         }
         let userCreated = await userRepository.save(user);
 
-        if(initiativeId){
+        if (initiativeId) {
             const userByInitiative = new InitiativesByUsers();
             userByInitiative.initiative = initiativeId;
             userByInitiative.user = userCreated;
@@ -121,14 +122,22 @@ export const createUsers = async (req: Request, res: Response) => {
 
             console.log(usrIntv);
         }
+        delete userCreated.password;
 
         res.json(new ResponseHandler('User logged.', { user: userCreated }));
 
     } catch (error) {
+        console.log(error)
+        let e;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            error['httpCode'] = HttpStatusCode.INTERNAL_SERVER
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
         }
-        return res.status(error.httpCode).json(error);
+        return res.status(e.httpCode).json(e);
         // return res.status(409).json({ msg: 'User can not be created', data: error });
     }
 };
@@ -162,6 +171,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 
         user = await userRepository.save(user);
+        delete user.password;
         res.json(new ResponseHandler('User updated.', { user }));
     } catch (error) {
         console.log(error);
@@ -191,9 +201,4 @@ export const deleteUser = async (req: Request, res: Response) => {
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
-
-    // remove user
-    // userRepository.delete(id);
-    // res.status(201).json({ msg: 'User deleted' });
-
 };

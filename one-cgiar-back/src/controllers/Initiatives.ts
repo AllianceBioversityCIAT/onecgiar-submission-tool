@@ -38,15 +38,16 @@ export const getInitiatives = async (req: Request, res: Response) => {
         SELECT
             initvStg.id AS initvStgId,
             stage.description AS currentStage,
+            CONCAT("Stage ", stage.id,': ',stage.description) AS currentStageName,
             stage.id AS currentStageId,
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
-            initvStg.status AS initvStageStatus,
+            IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS initvStageStatus,
             (SELECT id FROM stages WHERE active = true) AS activeStageId,
             (SELECT description FROM stages WHERE active = true) AS activeStageName,
 
-            (SELECT userId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiative,
-            (SELECT roleId FROM initiatives_by_users WHERE userId = ${userId} AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiativeRole
+            (SELECT userId FROM initiatives_by_users WHERE userId = :userId AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiative,
+            (SELECT roleId FROM initiatives_by_users WHERE userId = :userId AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiativeRole
 
         FROM
             initiatives initiative
@@ -58,7 +59,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             initvSQL,
-            {},
+            { userId },
             {}
         );
         initiatives = await queryRunner.connection.query(query, parameters);
