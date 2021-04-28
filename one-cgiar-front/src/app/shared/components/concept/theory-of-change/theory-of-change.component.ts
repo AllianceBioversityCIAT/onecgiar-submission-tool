@@ -4,6 +4,7 @@ import { ConceptService } from '@app/shared/services/concept.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../../services/initiatives.service';
+import { InteractionsService } from '../../../services/interactions.service';
 
 @Component({
   selector: 'app-theory-of-change',
@@ -27,7 +28,8 @@ export class TheoryOfChangeComponent implements OnInit {
     public _requests: RequestsService, 
     private conceptSvc: ConceptService, 
     private spinnerService: NgxSpinnerService, 
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    public interactionsService:InteractionsService
     ) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl(null, Validators.required)
@@ -92,10 +94,14 @@ export class TheoryOfChangeComponent implements OnInit {
       event => {
         this.getTOCandFiles();
         this.spinnerService.hide('tocs')
+        this.interactionsService.successMessage('Initial theory of change has been saved')
       },
       err => {
         this.progressInfos[idx].value = 0;
         this.spinnerService.hide('tocs')
+        console.log(err);
+        this.interactionsService.errorMessage('Initial theory of change has not been saved')
+
       });
   }
 
