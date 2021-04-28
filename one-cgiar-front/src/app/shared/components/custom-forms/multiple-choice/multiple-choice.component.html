@@ -12,7 +12,7 @@
                         <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
                       </mat-option>
                       <mat-option *ngIf="(options.selectList|regionsFilter:searchText:options.attributeNameToSearch).length == 0" [value]=""  [disabled]="false">
-                      <span *ngIf="searchText">No matches found...</span> <span *ngIf="!searchText ">Write something to filter</span>
+                      <span class="color_message" *ngIf="searchText">No matches found...</span> <span class="color_message" *ngIf="!searchText ">Write something to filter</span> <mat-icon style="margin-left: 10px; position: relative; top: -2px;" class="color_message">{{searchText?'search_off':'keyboard'}}</mat-icon> 
                       </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
