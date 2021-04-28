@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
+import { DataControlService } from '../../../services/data-control.service';
 @Component({
   selector: 'app-general-information-concept',
   templateUrl: './general-information-concept.component.html',
@@ -53,7 +54,8 @@ export class GeneralInformationConceptComponent implements OnInit {
     public dialog: MatDialog,
     public _initiativesService:InitiativesService,
     public _interactions: InteractionsService,
-    private router:Router
+    private router:Router, 
+    private _dataControlService:DataControlService
     ) {
     this.generalInformationForm = new FormGroup({
       conceptId: new FormControl(''),
@@ -67,9 +69,13 @@ export class GeneralInformationConceptComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this._dataControlService.generalInfoChange$.subscribe(resp=>{
+      this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
+    })
     this.conceptSvc.initvStgId = this._initiativesService.initvStgId;
     this.generalInformationForm.get('initvStgId').setValue(this._initiativesService.initvStgId)
-    this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
+    // this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
+    this._dataControlService.generalInfoChange$.emit();
     this.generalInformationForm.valueChanges.subscribe(resp=>{
       this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.validateFormAndLeads(), this._initiativesService.initvStgId)
     })
@@ -157,10 +163,11 @@ export class GeneralInformationConceptComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      let currentUrl = this.router.url;
-      this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
-          this.router.navigate([currentUrl]);
-      });
+      this._dataControlService.generalInfoChange$.emit();
+      // let currentUrl = this.router.url;
+      // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
+      //     this.router.navigate([currentUrl]);
+      // });
     });
   }
 

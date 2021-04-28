@@ -5,6 +5,7 @@ import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageAccessComponent } from '../../shared/components/manage-access/manage-access.component';
+import { DataControlService } from '../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -21,6 +22,7 @@ export class StagesMenuComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
     private router:Router,
+    private dataControlService:DataControlService
   ) { }
 
   openDialog(): void {
@@ -34,10 +36,11 @@ export class StagesMenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       // location.reload();
-      let currentUrl = this.router.url;
-      this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
-          this.router.navigate([currentUrl]);
-      });
+      // let currentUrl = this.router.url;
+      // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
+      //     this.router.navigate([currentUrl]);
+      // });
+      this.dataControlService.generalInfoChange$.emit();
     });
   }
 
