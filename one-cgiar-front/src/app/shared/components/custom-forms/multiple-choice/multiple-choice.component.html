@@ -11,6 +11,9 @@
                       <mat-option *ngFor="let option of options.selectList|regionsFilter:searchText:options.attributeNameToSearch" [value]="option.name" (click)="addItem(option,disableOption(option))" [disabled]="disableOption(option)">
                         <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
                       </mat-option>
+                      <mat-option *ngIf="(options.selectList|regionsFilter:searchText:options.attributeNameToSearch).length == 0" [value]=""  [disabled]="false">
+                        No matches found...
+                      </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
 
