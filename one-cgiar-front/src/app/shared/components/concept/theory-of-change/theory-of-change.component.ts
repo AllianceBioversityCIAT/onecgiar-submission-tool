@@ -5,6 +5,7 @@ import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { InteractionsService } from '../../../services/interactions.service';
+import { StagesMenuService } from '../../../services/stages-menu.service';
 
 @Component({
   selector: 'app-theory-of-change',
@@ -29,7 +30,9 @@ export class TheoryOfChangeComponent implements OnInit {
     private conceptSvc: ConceptService, 
     private spinnerService: NgxSpinnerService, 
     public _initiativesService:InitiativesService,
-    public interactionsService:InteractionsService
+    public interactionsService:InteractionsService,
+    public stgMenuSvc: StagesMenuService,
+
     ) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl(null, Validators.required)
@@ -47,7 +50,20 @@ export class TheoryOfChangeComponent implements OnInit {
 
   ngOnInit(): void {
       this.getTOCandFiles();
+      this.theoryOfChangeForm.valueChanges.subscribe(resp=>{
+        this.stgMenuSvc.setFormStageStatus('concept', 'initial_theory_of_change', this.validateFormAndLeads(), this._initiativesService.initvStgId)
+      })
 
+  }
+
+  validateFormAndLeads(){
+    // ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+    console.log(this.filesToUpload.length);
+    if (this.theoryOfChangeForm.status == 'VALID' &&  (this.listOfFiles.length>0 ||this.filesToUpload.length>0)) {
+      return  'VALID';
+    } else{
+      return  'INVALID'
+    }
   }
 
 
@@ -55,6 +71,7 @@ export class TheoryOfChangeComponent implements OnInit {
     this.filesToUpload = [];
     this.conceptSvc.getTheoryOfChange(parseInt(this._initiativesService.initvStgId)).subscribe(resp => {
       // console.log('TOC', resp);
+      console.log(resp);
       if (resp != null) {
         this.tocData = resp;
         this.theoryOfChangeForm.controls['narrative'].setValue(resp.narrative);
@@ -71,6 +88,7 @@ export class TheoryOfChangeComponent implements OnInit {
    * file upload process
    */
   onSelectFiles(event) {
+
     this.progressInfos = [];
     if (this.filesToUpload.length > 0) {
       let array = Array.from(event.target.files);
@@ -82,6 +100,7 @@ export class TheoryOfChangeComponent implements OnInit {
       this.filesToUpload = Array.from(event.target.files);
     }
     this.attachment.nativeElement.value = '';
+    this.stgMenuSvc.setFormStageStatus('concept', 'initial_theory_of_change', this.validateFormAndLeads(), this._initiativesService.initvStgId)
   }
 
   uploadFiles() {
