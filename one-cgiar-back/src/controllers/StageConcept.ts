@@ -375,6 +375,33 @@ export const getWorkPackages = async (req: Request, res: Response) => {
 
 /**
  * 
+ * @param req params: { wrkPkgId }
+ * @param res 
+ */
+export const getWorkPackage = async (req: Request, res: Response) => {
+    const { wrkPkgId } = req.params;
+    const wpRepo = getRepository(WorkPackages);
+
+    try {
+
+        const workPackage = await wpRepo.findOne({ where: { id: wrkPkgId, active: 1 } });
+        if (workPackage == null) {
+            throw new APIError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                true,
+                'Workpackage not found.'
+            );
+        } else {
+            res.json(new ResponseHandler('Work package.', { workPackage }));
+        }
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * 
  * @param req params: { name, results, pathway_content, is_global, initvStgId }
  * @param res 
  */
