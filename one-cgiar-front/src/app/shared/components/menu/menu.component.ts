@@ -31,9 +31,11 @@ export class MenuComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.getAllIWorkPackages();
+   
     this._dataControlService.menuChange$.subscribe(()=>{
+      this.getAllIWorkPackages();
       this.getStages();
+      console.log('%cREloadn stages','background: #222; color: #ffff00');
     })
     this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
