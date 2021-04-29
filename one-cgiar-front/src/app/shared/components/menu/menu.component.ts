@@ -35,7 +35,6 @@ export class MenuComponent implements OnInit {
     this._dataControlService.menuChange$.subscribe(()=>{
       this.getAllIWorkPackages();
       this.getStages();
-      console.log('%cREloadn stages','background: #222; color: #ffff00');
     })
     this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
@@ -49,7 +48,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getStages()
       .subscribe(
         res => {
-          console.log(res);
+          // console.log(res);
           res.stages.map(stage => {
             stage.groups = [];
             res.stagesMeta.forEach(meta => {
@@ -111,9 +110,9 @@ export class MenuComponent implements OnInit {
   getAllIWorkPackages(){
     // this.spinnerService.show('work-packages');
    this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
-     console.log("getAllIWorkPackages");
+    //  console.log("getAllIWorkPackages");
       this.workPackagesList = resp.response.workPackages;
-      console.log( this.workPackagesList);
+      // console.log( this.workPackagesList);
     },
     err=>{ 
       // this.spinnerService.hide('work-packages');

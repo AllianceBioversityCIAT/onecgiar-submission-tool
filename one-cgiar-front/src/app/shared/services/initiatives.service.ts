@@ -82,12 +82,10 @@ export class InitiativesService {
 
   // Query to geta work package by ID
   getWorkPackageById(id: number): Observable<any> {
-    return this.getQuery(`${environment.apiUrl}/stages-control/concept/packages/${id}`)
-      .pipe(map((data: any) => {
-        console.log('getWorkPackageById', data);
-        return data.data.find(resp => resp.initvStgId == id);
-      }));
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/package/${id}`);
+
   }
+  
 
     /**
    * 

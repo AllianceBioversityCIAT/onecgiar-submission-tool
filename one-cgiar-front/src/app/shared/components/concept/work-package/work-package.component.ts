@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '../../../services/interactions.service';
 import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 import { ThemePalette } from '@angular/material/core';
+import { ActivatedRoute } from '@angular/router';
+import { DataControlService } from '../../../services/data-control.service';
 
 @Component({
   selector: 'app-work-package',
@@ -50,13 +52,18 @@ export class WorkPackageComponent implements OnInit {
     public _requests: RequestsService,
     public dialog: MatDialog,
     public initiativesSvc: InitiativesService,
-    private interactionsService:InteractionsService
+    private interactionsService:InteractionsService,
+    private activatedRoute:ActivatedRoute,
+    public  _dataControlService:DataControlService
   ) {
 
   }
 
   ngOnInit(): void {
-
+    this.activatedRoute.params.subscribe(resp => {
+      this._dataControlService.WorkPackageID = resp.id;
+      console.log(resp);
+    });
   }
 
   openDialog() {

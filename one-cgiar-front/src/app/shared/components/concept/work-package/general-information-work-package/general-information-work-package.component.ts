@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { InteractionsService } from '../../../../services/interactions.service';
+import { DataControlService } from '../../../../services/data-control.service';
 
 @Component({
   selector: 'app-general-information-work-package',
@@ -10,22 +11,29 @@ import { InteractionsService } from '../../../../services/interactions.service';
 })
 export class GeneralInformationWorkPackageComponent implements OnInit {
   workPackageForm: FormGroup;
-  showform = true;
+  showform = false;
   workPackageData;
   constructor(
     private _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { 
     this.workPackageForm = new FormGroup({
       name: new FormControl('', Validators.required),
       pathwayContent: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
-      id: new FormControl('', Validators.required),
+      id: new FormControl(''),
     });
   }
 
   ngOnInit(): void {
-    console.log("Hello general");
+    this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
+      console.log(resp);
+      this.workPackageData = resp.response.workPackage;
+      console.log(this.workPackageData);
+      this.setFormData();
+      this.showform = true;
+    })
   }
   
   setFormData() {
