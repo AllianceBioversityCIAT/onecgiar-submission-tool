@@ -1,111 +1,13 @@
+<div class="work_package_info">
+    wpid: {{1}}
+</div>
+<div class="container">
 
-
-<mat-expansion-panel style="margin-top: 5px;" [expanded]="!workPackageData.name" [disabled]="activeExpansion" >
-    <mat-expansion-panel-header style="overflow: hidden;" (click)="animationSizeActive =  !animationSizeActive">
-        <!-- <button mat-raised-button color="" class="WP_id">Id: {{workPackageData.id}}</button> -->
-        <div class="figure background-color-primary" [style.width.px]="animationSizeActive ? 500: 2000"
-            [style.height.px]="animationSizeActive ? 500: 2000" [style.borderRadius]="animationSizeActive ? '45%': '0px'">
-        </div>
-        <!-- [style.backgroundColor]="workPackageData.name ? '#': '#ec4b4b'" -->
-        <mat-panel-title style="z-index: 1; color: white;">
-            {{workPackageData.name || "untitled"}}
-        </mat-panel-title>
-        <button mat-icon-button class="icon_center icon_verify" aria-label="Verified icon">
-            <mat-icon [ngClass]="{'icon_verify_valid': !createWorkPackageForm.invalid}">verified</mat-icon>
-        </button>
-        <button mat-icon-button class="icon_center" style="margin-right: 100px;" aria-label="" (click)="DialogConfirm();this.activeExpansion = true;">
-            <mat-icon color="warn">delete</mat-icon>
-        </button>
-    </mat-expansion-panel-header>
-
-    <mat-tab-group mat-align-tabs="center">
-        <mat-tab label="General information">
     
-            <form [formGroup]="createWorkPackageForm" (ngSubmit)="SaveGeneralInformation()" class="narratives-form">
-                <div class="form" *ngIf="showform">
-                    <custom-textarea  
-                    [options]="{form:createWorkPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
-                    </custom-textarea>
-    
-                    <custom-textarea  
-                    [options]="{form:createWorkPackageForm,maxWords:500,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
-                    </custom-textarea>
-    
-                    <custom-textarea  
-                    [options]="{form:createWorkPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results'}">
-                    </custom-textarea>    
-                </div>
-
-
-
-
-                <div class="narratives-save">
-                    <save-button [disabled]="createWorkPackageForm.invalid"></save-button>
-                </div>
-            </form>
-    
-        </mat-tab>
-        <mat-tab label="Geographic scope">
-        <form (ngSubmit)="saveGeographicScope()">
-            <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
-            <br>
-            <br>
-            <div class="row">
-                <div class="col-sm-12 horizontal_padding">
-                    <div class="geographic-scope-container">
-                        <div class="geographic-scope-form">
-                            <p><strong>¿Does the initiative have a global dimension?</strong></p>
-                            <div>
-                                <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.createWorkPackageForm.value.isGlobal?'accent':''"
-                                    (click)="setIsGlobal(true);">Yes</button>
-                                <button type="button" mat-raised-button [color]="!this.createWorkPackageForm.value.isGlobal?'warn':''"
-                                    (click)="setIsGlobal(false);">No</button>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                    <br>
-                </div>
-                <div class="col-sm horizontal_padding">
-                    <div class="box_container">
-                        <custom-multiple-choice [options]="{
-                            required:true,
-                            inputTitle:'Select regions',
-                            selectList:this.regionsList,
-                            selectedList:this.regionsSelectedList,
-                            selectItemName:'name',
-                            selectItemId:'um49Code',
-                            selectedItemId:'um49Code',
-                            attributeNameToSearch:'name'
-                           }"></custom-multiple-choice>
-                    </div>
-
-                </div>
-                <div class="col-sm horizontal_padding">
-                    <div class="box_container">
-                    <custom-multiple-choice [options]="{
-                        required:true,
-                        inputTitle:'Select countries',
-                        selectList:this.countriesList,
-                        selectedList:this.countriesSelectedList,
-                        selectItemName:'name',
-                        selectItemId:'code',
-                        selectedItemId:'code',
-                        attributeNameToSearch:'name'
-                       }"></custom-multiple-choice>
-                    </div>
-                </div>
-            </div>
-
-            <br>
-            <div class="narratives-save">
-                <save-button></save-button>
-            </div>
-        </form>
-        </mat-tab>
+    <!-- <mat-tab-group mat-align-tabs="center">
         <mat-tab label="Projection of benefits">
     
-            <div class="projection-benefits-container">
+            <div class="projection-benefits-container" *ngIf="false">
                 <mat-accordion>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
                         *ngFor="let impactArea of _requests.impactAreas">
@@ -168,6 +70,23 @@
             </div>
     
         </mat-tab>
+
+        
     </mat-tab-group>
+ -->
+
+
+
+
+
+
+
+
+    <!-- <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link" [active]="activeLink == link"> {{link}} </a><a mat-tab-link disabled>Disabled Link</a> -->
+    <!-- backgroundColor="primary" -->
+    <nav mat-tab-nav-bar >
+        <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.name" [active]="activeLink == tab.name"> {{tab.name}}</a>
+    </nav>
+    <router-outlet></router-outlet>
     
-</mat-expansion-panel>
+</div>

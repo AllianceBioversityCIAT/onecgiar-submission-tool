@@ -108,6 +108,14 @@ mat-list-item:focus {
      transform: translateY(-50%);
      
   }
+
+  .section_container{
+   background-color: #f5f5f5;
+   border-radius: 10px;
+   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+   margin: 0px 20px;
+//    height: 100px;
+  }
 // mat-expansion-panel{
 //     background: rgb(73,82,81);
 //     background: linear-gradient(139deg, rgba(73,82,81,1) 0%, rgba(58,63,69,1) 35%, rgba(49,52,57,1) 100%);

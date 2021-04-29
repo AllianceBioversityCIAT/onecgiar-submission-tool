@@ -13,6 +13,8 @@ export class DataControlService {
   //    }
   //  } 
   // }
+  // events to reload info in sections
   generalInfoChange$= new EventEmitter<any>();
+  menuChange$= new EventEmitter<any>();
   constructor() { }
 }

@@ -89,6 +89,12 @@ export class InitiativesService {
       }));
   }
 
+    /**
+   * 
+   * @param id //initiative id
+   * @returns general-informatio
+   */
+
   // Query to get all the WorkPackages
   getAllIWorkPackages(id: number|string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);

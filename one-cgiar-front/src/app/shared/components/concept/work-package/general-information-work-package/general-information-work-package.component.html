@@ -1,0 +1,18 @@
+<form [formGroup]="workPackageForm" (ngSubmit)="SaveGeneralInformation()" class="narratives-form" *ngIf="showform">
+    <div class="form" *ngIf="showform">
+        <custom-textarea  
+        [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
+        </custom-textarea>
+
+        <custom-textarea  
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
+        </custom-textarea>
+
+        <custom-textarea  
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results'}">
+        </custom-textarea>    
+    </div>
+    <div class="narratives-save">
+        <save-button [disabled]="workPackageForm.invalid"></save-button>
+    </div>
+</form>

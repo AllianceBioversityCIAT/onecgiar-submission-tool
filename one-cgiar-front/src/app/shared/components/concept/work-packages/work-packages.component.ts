@@ -10,6 +10,7 @@ import { InteractionsService } from '../../../services/interactions.service';
 })
 export class WorkPackagesComponent implements OnInit {
 
+  displayedColumns: string[] = ['id', 'name','validateGeneralInformation','validateGeographicScope','validateProjectionBenefits'];
   workPackagesList=[];
   noWp = false;
   regionsList=[];

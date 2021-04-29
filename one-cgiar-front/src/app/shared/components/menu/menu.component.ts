@@ -5,6 +5,8 @@ import { InitiativesService } from '@shared/services/initiatives.service';
 import { RequestsService } from '@shared/services/requests.service';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
+import { group } from '@angular/animations';
+import { DataControlService } from '../../services/data-control.service';
 
 
 @Component({
@@ -17,17 +19,23 @@ export class MenuComponent implements OnInit {
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
+  workPackagesList:any=[];
   // stageUrl;
   constructor(
     public _requests: RequestsService, 
     public router: Router, 
     public initiativesSvc: InitiativesService, 
     public stgMenuSvc: StagesMenuService,
-    public _interactionsService:InteractionsService
+    public _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService
     ) { }
 
   ngOnInit(): void {
-    this.getStages();
+    this.getAllIWorkPackages();
+    this._dataControlService.menuChange$.subscribe(()=>{
+      this.getStages();
+    })
+    this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
       menu => {
         this.subMenusFormValidation = menu;
@@ -39,7 +47,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getStages()
       .subscribe(
         res => {
-
+          console.log(res);
           res.stages.map(stage => {
             stage.groups = [];
             res.stagesMeta.forEach(meta => {
@@ -48,6 +56,14 @@ export class MenuComponent implements OnInit {
             });
             // stage.grouped = this.utilsHandler.groupData(stage.groups)
             stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by');
+            if (stage.grouped) {
+              stage.grouped.forEach(group => {
+                if (group.title == "Work packages") {
+                  group.list = this.workPackagesList;
+                }
+              });
+            }
+
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
@@ -90,6 +106,22 @@ export class MenuComponent implements OnInit {
        default:
          return false
      }
+  }
+
+  getAllIWorkPackages(){
+    // this.spinnerService.show('work-packages');
+   this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
+     console.log("getAllIWorkPackages");
+      this.workPackagesList = resp.response.workPackages;
+      console.log( this.workPackagesList);
+    },
+    err=>{ 
+      // this.spinnerService.hide('work-packages');
+    },
+    ()=>{
+      // this.spinnerService.hide('work-packages');
+    })
+      // this.validateWorkPackages();
   }
 
 

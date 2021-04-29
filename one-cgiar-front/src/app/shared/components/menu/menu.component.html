@@ -8,15 +8,28 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options row" *ngFor="let meta of stage.grouped ">
-                <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3"[routerLink]="this.parseStageUrl(stage,meta.title)" >
-                    <span  class="stage__section_title">{{meta.title}}</span>
-                    <button mat-icon-button class="mat-icon-no-color"
-                        [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
-                        aria-label="Verified icon">
-                        <mat-icon>verified</mat-icon>
-                        <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
-                    </button>
-                </mat-list-item>
+                <div [ngClass]="{'section_container': meta.list?.length >0}">
+                    <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3"[routerLink]="this.parseStageUrl(stage,meta.title)" >
+                        <span  class="stage__section_title">{{meta.title}}</span>
+                        <button mat-icon-button class="mat-icon-no-color"
+                            [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                            aria-label="Verified icon">
+                            <mat-icon>verified</mat-icon>
+                            <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                        </button>
+                    </mat-list-item>
+                    <div *ngIf="meta.list?.length >0">
+                        <mat-list-item *ngFor="let item of  meta.list; let i = index" class="menu_items" routerLinkActive="isActive background-color-primary-3" routerLink="/initiatives/1/stages/concept/work-package/{{i+1}}" >
+                            <span  class="stage__section_title">{{'Work package '+(i+1)}}</span>
+                            <button mat-icon-button class="mat-icon-no-color"
+                                [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                                aria-label="Verified icon">
+                                <mat-icon>verified</mat-icon>
+                                <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                            </button>
+                        </mat-list-item>
+                    </div>
+                </div>
             </mat-list>
         </mat-expansion-panel>
     </mat-accordion>

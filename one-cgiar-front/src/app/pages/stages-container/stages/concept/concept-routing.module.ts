@@ -9,6 +9,7 @@ import { KeyPartnersConceptComponent } from '../../../../shared/components/conce
 import { ConceptComponent } from './concept.component';
 import { UnderConstructionGuard } from '../../../../shared/guards/under-construction.guard';
 
+
 const routes: Routes = [
   {
     path: '', 
@@ -36,6 +37,12 @@ const routes: Routes = [
         component: WorkPackagesComponent,
         // canActivate: [UnderConstructionGuard], 
         // data: {section: 'work-packages'} 
+      },
+      {
+        path: 'work-package',
+        loadChildren: () => import('../../../../shared/components/concept/work-package/work-package.module').then((m) => m.WorkPackageModule),
+        // canActivate: [UnderConstructionGuard], 
+        // data: {section: 'work-packages'}    import { WorkPackageComponent } from '../../../../shared/components/concept/work-package/work-package.component';
       },
       {
         path: 'key-partners',

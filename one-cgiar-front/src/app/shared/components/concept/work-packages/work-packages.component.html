@@ -1,13 +1,63 @@
 
-<div class="container" style="margin: 20px 0px">
-    <mat-accordion class="example-headers-align" multi *ngIf="showWP">
-        <app-work-package  [validateAllWP]="validateWorkPackages()"  [regionsList]="regionsList" [countriesList]="countriesList"  [workPackageData]="item" [workPackagesList]="workPackagesList" [index]="i"   *ngFor="let item of workPackagesList; let i = index"></app-work-package>
-    </mat-accordion>
+<div class="custom_container_table" >
+
+
+    <table mat-table [dataSource]="workPackagesList" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID. </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Work package name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="validateGeneralInformation">
+          <th mat-header-cell *matHeaderCellDef class="center_text"> General information status </th>
+          <td mat-cell *matCellDef="let element"> 
+            <div class="center_flex full_size">
+            <button mat-icon-button [color]="element.validateGeneralInformation =='complete' ?'accent':'' " aria-label="Verified icon"> <mat-icon >verified</mat-icon></button>
+        </div>
+        </ng-container>
+      
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="validateGeographicScope">
+          <th mat-header-cell *matHeaderCellDef class="center_text"> Geographic scope status </th>
+          <td mat-cell *matCellDef="let element">
+              <div class="center_flex">
+                <button mat-icon-button [color]="element.validateGeographicScope =='complete' ?'accent':'' " aria-label="Verified icon"> <mat-icon >verified</mat-icon></button>
+              </div>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="validateProjectionBenefits">
+          <th mat-header-cell *matHeaderCellDef class="center_text"> Projection of benefits status </th>
+          <td mat-cell class="center_icon" *matCellDef="let element"> 
+            <div class="center_flex full_size">
+            <button mat-icon-button [color]="element.validateProjectionBenefits =='complete' ?'accent':'' " aria-label="Verified icon"> <mat-icon >verified</mat-icon></button>
+        </div>
+        </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat_row pointer outline_none" routerLink="/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{row.id}}"></tr>
+      </table>
+
+
+
     <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
     <br>
     <div class="button-container" [style.display]="'flex'" [style.justifyContent]="noWp?'center':'initial'">
         <button mat-raised-button (click)="addWorkPackage()" *ngIf="this.initiativesSvc.initvStgId != null" ><mat-icon>add</mat-icon>Add Work Package</button>
-
     </div>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='work-packages'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
     <div class="spacer" style="height: 500px;" *ngIf="!showWP"></div>

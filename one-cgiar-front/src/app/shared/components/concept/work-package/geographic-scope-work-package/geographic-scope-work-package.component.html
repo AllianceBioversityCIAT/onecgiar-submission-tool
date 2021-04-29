@@ -1,0 +1,57 @@
+<form [formGroup]="workPackageForm" (ngSubmit)="saveGeographicScope()" *ngIf="true">
+    <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-sm-12 horizontal_padding">
+            <div class="geographic-scope-container">
+                <div class="geographic-scope-form">
+                    <p><strong>¿Does the initiative have a global dimension?</strong></p>
+                    <div>
+                        <button mat-button color="primary">text</button>
+                        <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
+                            (click)="setIsGlobal(true);">Yes</button>
+                        <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
+                            (click)="setIsGlobal(false);">No</button>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-sm horizontal_padding">
+            <div class="box_container">
+                <custom-multiple-choice [options]="{
+                    required:true,
+                    inputTitle:'Select regions',
+                    selectList:this.regionsList,
+                    selectedList:this.regionsSelectedList,
+                    selectItemName:'name',
+                    selectItemId:'um49Code',
+                    selectedItemId:'um49Code',
+                    attributeNameToSearch:'name'
+                   }"></custom-multiple-choice>
+            </div>
+
+        </div>
+        <div class="col-sm horizontal_padding">
+            <div class="box_container">
+            <custom-multiple-choice [options]="{
+                required:true,
+                inputTitle:'Select countries',
+                selectList:this.countriesList,
+                selectedList:this.countriesSelectedList,
+                selectItemName:'name',
+                selectItemId:'code',
+                selectedItemId:'code',
+                attributeNameToSearch:'name'
+               }"></custom-multiple-choice>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="narratives-save">
+        <save-button></save-button>
+    </div>
+</form>

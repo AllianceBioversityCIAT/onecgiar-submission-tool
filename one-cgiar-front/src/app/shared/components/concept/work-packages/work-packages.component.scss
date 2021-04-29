@@ -1,4 +1,6 @@
-
+table {
+  width: 100%;
+}
 h1{
     font-family: "Poppins", sans-serif;
   }
@@ -8,4 +10,16 @@ h1{
     margin: 80px;
     font-weight: 500;
     color: #3f3f3f;
+}
+
+.custom_container_table{
+  margin: 50px;
+}
+.mat_row{
+  transition: all .3s ease;
+  &:hover{
+      background-color: #f5f5f5;
+      transition: all .3s ease;
+
+  }
 }

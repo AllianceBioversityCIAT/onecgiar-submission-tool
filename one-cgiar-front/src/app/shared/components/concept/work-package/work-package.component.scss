@@ -3,20 +3,6 @@
     padding-bottom: 20px;
   }
   
-   .mat-expansion-panel-header-title,
-   .mat-expansion-panel-header-description {
-    flex-basis: 0;
-  }
-  
-   .mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-//    .mat-form-field + .mat-form-field {
-//     margin-left: 8px;
-//   }
-  
 
   .delete-container {
     display: flex;
@@ -24,15 +10,7 @@
     padding: 1rem 1rem 0 1rem;
 }
 
-// mat-icon {
-//     color: #d30000;
-//     cursor: pointer;
-//     font-size: 1.8rem;
-// }
 
-// mat-icon:hover {
-//     color: #ff0000;
-// }
 button{
   outline: none;
 }
@@ -49,14 +27,6 @@ mat-panel-title{
     margin-left: 10px;
 }
 
-.figure{
-    position: absolute;
-    border-radius: 45%;
-    z-index: 0;
-    left: -100px;
-    top: -330px;
-    transition: all .5s ease-in-out;
-}
 .work-packages-container {
     display: flex;
     align-items: center;
@@ -152,12 +122,17 @@ table, th, td {
 .horizontal_padding{
     padding: 0px 20px;
 }
+.a_route{
+    &:hover{
+        color: unset;
+        text-decoration: none;
+    }
+}
 
-.icon_center{
-    position: absolute;
-    right: 0;
-    margin-right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
+.work_package_info{
+    width: 100%;
+    // height: 100px;
+    background-color: rgb(8, 2, 26);
+    color: white;
+    padding: 5px 10px ;
 }
