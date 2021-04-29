@@ -32,7 +32,7 @@ router.patch("/concept/narratives", [checkJwt, checkRole('initiatives', 'updateO
 router.get("/concept/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 
 // read work package by id
-router.get("/concept/packages/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackage);
+router.get("/concept/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackage);
 
 // create work package
 router.post("/concept/packages", [checkJwt, checkRole('packages', 'createOwn')], createWorkPackage);
