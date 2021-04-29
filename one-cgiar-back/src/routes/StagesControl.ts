@@ -28,10 +28,10 @@ router.patch("/concept/narratives", [checkJwt, checkRole('initiatives', 'updateO
 
 
 
-// read work packages
+// read work packages list
 router.get("/concept/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 
-// read work package
+// read work package by id
 router.get("/concept/packages/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackage);
 
 // create work package
