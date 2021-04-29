@@ -354,10 +354,44 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 export const getWorkPackages = async (req: Request, res: Response) => {
     const { initvStgId } = req.params;
     const wpRepo = getRepository(WorkPackages);
+    const queryRunner = getConnection().createQueryBuilder();
 
     try {
+        const sqlQuery = `
+        SELECT id,
+            IF (
+                name IS NULL
+                OR name = ''
+                OR results IS NULL
+                OR results = ''
+                OR pathway_content IS NULL
+                OR pathway_content = '',
+                'incomplete',
+                'complete'
+            ) AS validateGeneralInformation,
+            IF (
+                ( SELECT COUNT(id) FROM countries_by_work_packages WHERE wrkPkgId = wp.id ) = 0
+                AND 
+                (  SELECT COUNT(id) FROM regions_by_work_packages  WHERE wrkPkgId = wp.id  ) = 0,
+                'incomplete',
+                'complete'
+            ) AS validateGeographicScope,
+            IF(
+                ( SELECT COUNT(id) FROM projection_benefits WHERE wrkPkgId = wp.id ) = 0,
+                'incomplete',
+                'complete'
+            ) AS validateProjectionBenefits
+        FROM work_packages wp 
+        WHERE wp.initvStgId =:initvStgId`
 
-        const workPackages = await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
+
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            sqlQuery,
+            { initvStgId },
+            {}
+        );
+        const workPackages = await queryRunner.connection.query(query, parameters);
+        // await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
         if (workPackages.length == 0) {
             throw new APIError(
                 'NOT FOUND',
@@ -383,7 +417,6 @@ export const getWorkPackage = async (req: Request, res: Response) => {
     const wpRepo = getRepository(WorkPackages);
 
     try {
-
         const workPackage = await wpRepo.findOne({ where: { id: wrkPkgId, active: 1 } });
         if (workPackage == null) {
             throw new APIError(
@@ -860,26 +893,6 @@ export const addTOCConcept = async (req: Request, res: Response) => {
     }
 }
 
-/**
- * 
- * @param req params:{ tocId, narrative }
- * @param res 
- */
-// export const updateTOCConcept = async (req: Request, res: Response) => {
-//     const { id, narrative } = req.body;
-//     const tocsRepo = getRepository(TOCs);
-
-//     try {
-//         const toc = await tocsRepo.findOne(id);
-//         toc.narrative = narrative;
-
-//         let _toc = await tocsRepo.save(toc);
-//         res.json(new ResponseHandler('TOC narrative updated in concept.', { TOC: _toc }));
-//     } catch (error) {
-//         return res.status(error.httpCode).json(error);
-//     }
-
-// }
 
 
 /**
