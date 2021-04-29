@@ -358,7 +358,7 @@ export const getWorkPackages = async (req: Request, res: Response) => {
 
     try {
         const sqlQuery = `
-        SELECT id, name
+        SELECT id, name,
             IF (
                 name IS NULL
                 OR name = ''
