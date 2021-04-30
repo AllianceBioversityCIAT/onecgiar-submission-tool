@@ -23,5 +23,6 @@ export class DataControlService {
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
   WorkPackageReloaded$= new EventEmitter<any>();
+  countriesAndRegionsloaded$ = new EventEmitter<any>();
   constructor() { }
 }

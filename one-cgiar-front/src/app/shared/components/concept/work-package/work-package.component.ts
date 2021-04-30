@@ -58,6 +58,7 @@ export class WorkPackageComponent implements OnInit {
     this.getCLARISARegions();
     this.getCLARISACountries();
     this.activatedRoute.params.subscribe(resp => {
+      this.activeLink = this.tabs[0].name;
       this._dataControlService.WorkPackageID = resp.id;
       console.log(resp);
       console.log("emito carga de general");
@@ -102,9 +103,10 @@ export class WorkPackageComponent implements OnInit {
       console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
       console.log(resp);
       this._dataControlService.countriesList = resp.response.countries;
+      this._dataControlService.countriesAndRegionsloaded$.emit();
     },
     err=>{
-
+      this._dataControlService.countriesAndRegionsloaded$.emit();
     })
   }
 

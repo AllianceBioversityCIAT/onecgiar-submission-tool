@@ -43,10 +43,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
         
       })
     })
-    setTimeout(() => {
     this._dataControlService.WorkPackageReloaded$.emit();
-      
-    }, 5000);
   }
   
   setFormData() {
