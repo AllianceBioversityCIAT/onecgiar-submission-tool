@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
+import { InteractionsService } from '../../../../services/interactions.service';
 
 @Component({
   selector: 'app-geographic-scope-work-package',
@@ -15,7 +16,8 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
   showForm=false;
   constructor(
     private _initiativesService:InitiativesService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    private _interactionsService:InteractionsService
   ) { 
     this.workPackageForm = new FormGroup({
       isGlobal: new FormControl('', Validators.required),
@@ -74,7 +76,7 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
       }
     }
   
-
+    this._interactionsService.successMessage('Geographic scope information has been saved')
 
   }
 
