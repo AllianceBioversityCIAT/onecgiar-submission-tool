@@ -31,10 +31,9 @@ export class MenuComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-   
+    this.getStages();
     this._dataControlService.menuChange$.subscribe(()=>{
       this.getAllIWorkPackages();
-      this.getStages();
     })
     this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
@@ -57,14 +56,6 @@ export class MenuComponent implements OnInit {
             });
             // stage.grouped = this.utilsHandler.groupData(stage.groups)
             stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by');
-            if (stage.grouped) {
-              stage.grouped.forEach(group => {
-                if (group.title == "Work packages") {
-                  group.list = this.workPackagesList;
-                }
-              });
-            }
-
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;

@@ -18,11 +18,11 @@
                         </button>
                     </mat-list-item>
 
-                <div [ngClass]="{'section_container': meta.list?.length >0}">
+                <div [ngClass]="{'section_container':  meta.title == 'Work packages'}">
 
 
-                    <div *ngIf="meta.list?.length >0">
-                        <mat-list-item *ngFor="let item of  meta.list; let i = index" class="menu_items" routerLinkActive="isActive background-color-primary-3" routerLink="/initiatives/1/stages/concept/work-package/{{i+1}}" >
+                    <div *ngIf="meta.title == 'Work packages'&& this.workPackagesList.length >0">
+                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" routerLinkActive="isActive background-color-primary-3" routerLink="/initiatives/1/stages/concept/work-package/{{i+1}}" >
                             <span  class="stage__section_title">{{'Work package '+(i+1)}}</span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
