@@ -87,12 +87,10 @@ export class InitiativesService {
   }
   
 
-    /**
-   * 
-   * @param id //initiative id
+   /**
+   * @param id initiative id
    * @returns general-informatio
    */
-
   // Query to get all the WorkPackages
   getAllIWorkPackages(id: number|string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
@@ -128,7 +126,10 @@ export class InitiativesService {
     return this.postQuery('/initiatives', body);
   }
 
-  // Query to update a work package
+  /**
+   * @params name,results,pathwayContent, id
+   * @description Query to update a work package
+  **/
   updateWorkPackage(body: any): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages`, body);
   }

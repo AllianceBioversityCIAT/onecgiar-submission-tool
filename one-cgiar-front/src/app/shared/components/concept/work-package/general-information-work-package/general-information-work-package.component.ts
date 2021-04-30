@@ -27,13 +27,26 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
-      console.log(resp);
-      this.workPackageData = resp.response.workPackage;
-      console.log(this.workPackageData);
-      this.setFormData();
-      this.showform = true;
+    console.log("general on");
+    this._dataControlService.WorkPackageReloaded$.subscribe(()=>{
+      console.log("recibida la emicion");
+      console.log("WorkPackageID = "+this._dataControlService.WorkPackageID);
+      this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
+        this.workPackageData = resp.response.workPackage;
+        console.log("NAME: "+this.workPackageData.name);
+        this.setFormData();
+        
+        this.showform = false;
+        setTimeout(() => {
+          this.showform = true;
+        }, 1);
+        
+      })
     })
+    setTimeout(() => {
+    this._dataControlService.WorkPackageReloaded$.emit();
+      
+    }, 5000);
   }
   
   setFormData() {
@@ -45,6 +58,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
     this.workPackageForm.controls['name'].setValue(name);
     this.workPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.workPackageForm.controls['results'].setValue(results);
+    this.workPackageForm.controls['id'].setValue(this._dataControlService.WorkPackageID);
   }
 
   SaveGeneralInformation(): void {

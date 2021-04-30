@@ -16,12 +16,7 @@ import { DataControlService } from '../../../services/data-control.service';
   styleUrls: ['./work-package.component.scss'],
 })
 export class WorkPackageComponent implements OnInit {
-
-
-  
-  
-  
-
+  showOutlet=false;
   tabs=[
     {
       name: 'General information',
@@ -63,6 +58,9 @@ export class WorkPackageComponent implements OnInit {
     this.activatedRoute.params.subscribe(resp => {
       this._dataControlService.WorkPackageID = resp.id;
       console.log(resp);
+      console.log("emito carga de general");
+      this.showOutlet = true;
+      this._dataControlService.WorkPackageReloaded$.emit();
     });
   }
 
