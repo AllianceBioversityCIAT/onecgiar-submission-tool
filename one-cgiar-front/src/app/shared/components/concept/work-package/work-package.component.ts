@@ -46,7 +46,7 @@ export class WorkPackageComponent implements OnInit {
   constructor(
     public _requests: RequestsService,
     public dialog: MatDialog,
-    public initiativesSvc: InitiativesService,
+    public _initiativesService: InitiativesService,
     private interactionsService:InteractionsService,
     private activatedRoute:ActivatedRoute,
     public  _dataControlService:DataControlService
@@ -55,6 +55,8 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getCLARISARegions();
+    this.getCLARISACountries();
     this.activatedRoute.params.subscribe(resp => {
       this._dataControlService.WorkPackageID = resp.id;
       console.log(resp);
@@ -87,7 +89,24 @@ export class WorkPackageComponent implements OnInit {
   }
 
 
+  getCLARISARegions(){
+    this._initiativesService.getCLARISARegions().subscribe(resp=>{
+      console.log('%cCLARISA regions','background: #222; color: #ffff00');
+      console.log(resp);
+      this._dataControlService.regionsList = resp.response.regions;
+    })
+  }
 
+  getCLARISACountries(){
+    this._initiativesService.getCLARISACountries().subscribe(resp=>{
+      console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
+      console.log(resp);
+      this._dataControlService.countriesList = resp.response.countries;
+    },
+    err=>{
+
+    })
+  }
 
 
 

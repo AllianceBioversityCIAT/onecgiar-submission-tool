@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
+import { DataControlService } from '../../../../services/data-control.service';
 
 @Component({
   selector: 'app-geographic-scope-work-package',
@@ -12,10 +13,10 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
   countriesSelectedList=[];
   workPackageForm: FormGroup;
   workPackageData;
-  regionsList=[];
-  countriesList=[];
+  showForm=false;
   constructor(
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    public _dataControlService:DataControlService
   ) { 
     this.workPackageForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -27,6 +28,7 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("helloo geographic-scope");
+    this.getRegionsAndCountries();
   }
 
   saveGeographicScope(){
@@ -71,32 +73,39 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
 
   
   getRegionsAndCountries(){
-    this._initiativesService.getRegionsAndCountries(this.workPackageData?.id).subscribe(resp=>{
+
+    this._initiativesService.getRegionsAndCountries(this._dataControlService.WorkPackageID).subscribe(resp=>{
+      this.showForm = true;
       this.regionsSelectedList = resp.response.regions;
+      if (this._dataControlService.regionsList) {
       for (const regionSelected of this.regionsSelectedList) {
         regionSelected.um49Code = regionSelected.region_id;
-        for (const regionFull of this.regionsList) {
+        for (const regionFull of this._dataControlService.regionsList) {
           if(regionSelected.um49Code == regionFull.um49Code){
             regionSelected.name = regionFull.name;
           }
         
         }
       }
+    }
       this.countriesSelectedList = resp.response.countries;
       console.log('%casdasd','background: #222; color: #84c3fd');
-      
-      for (const countrySelected of this.countriesSelectedList) {
-        countrySelected.code = countrySelected.country_id;
-        for (const countrieFull of this.countriesList) {
-          if(countrySelected.country_id == countrieFull.code){
-            console.log('%cEcnontrado','background: #222; color: #ffff00');
-            countrySelected.name = countrieFull.name;
+      if (this._dataControlService.countriesList) {
+        for (const countrySelected of this.countriesSelectedList) {
+          countrySelected.code = countrySelected.country_id;
+          for (const countrieFull of this._dataControlService.countriesList) {
+            if(countrySelected.country_id == countrieFull.code){
+              console.log('%cEcnontrado','background: #222; color: #ffff00');
+              countrySelected.name = countrieFull.name;
+            }
+          
           }
-        
         }
       }
+
       console.log( this.countriesSelectedList);
     })
+    
   }
 
 

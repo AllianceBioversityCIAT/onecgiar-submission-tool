@@ -14,8 +14,6 @@ export class WorkPackagesComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name','validateGeneralInformation','validateGeographicScope','validateProjectionBenefits'];
   workPackagesList=[];
   noWp = true;
-  regionsList=[];
-  countriesList=[];
   constructor(
     public _initiativesService: InitiativesService,
     private spinnerService: NgxSpinnerService,
@@ -26,33 +24,8 @@ export class WorkPackagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-      this.getCLARISARegionsByPage();
       this.getAllIWorkPackages();
-      this.getCLARISACountriesByPage();
-
   }
-
-  getCLARISARegionsByPage(){
-    this._initiativesService.getCLARISARegionsByPage().subscribe(resp=>{
-      console.log('%cCLARISA regions','background: #222; color: #ffff00');
-      console.log(resp);
-      this.regionsList = resp.response.regions;
-    })
-  }
-
-  getCLARISACountriesByPage(){
-    this._initiativesService.getCLARISACountriesByPage().subscribe(resp=>{
-      console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
-      console.log(resp);
-      this.countriesList = resp.response.countries;
-    },
-    err=>{
-
-    })
-  }
-
-
 
   getAllIWorkPackages(){
     let suscrip = this._initiativesService.getAllIWorkPackages(this._initiativesService.initvStgId).subscribe(resp => {

@@ -1,4 +1,4 @@
-<form [formGroup]="workPackageForm" (ngSubmit)="saveGeographicScope()" *ngIf="true">
+<form [formGroup]="workPackageForm" (ngSubmit)="saveGeographicScope()" *ngIf="showForm">
     <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
     <br>
     <br>
@@ -8,7 +8,6 @@
                 <div class="geographic-scope-form">
                     <p><strong>¿Does the initiative have a global dimension?</strong></p>
                     <div>
-                        <button mat-button color="primary">text</button>
                         <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
                             (click)="setIsGlobal(true);">Yes</button>
                         <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
@@ -24,7 +23,7 @@
                 <custom-multiple-choice [options]="{
                     required:true,
                     inputTitle:'Select regions',
-                    selectList:this.regionsList,
+                    selectList:this._dataControlService.regionsList,
                     selectedList:this.regionsSelectedList,
                     selectItemName:'name',
                     selectItemId:'um49Code',
@@ -39,7 +38,7 @@
             <custom-multiple-choice [options]="{
                 required:true,
                 inputTitle:'Select countries',
-                selectList:this.countriesList,
+                selectList:this._dataControlService.countriesList,
                 selectedList:this.countriesSelectedList,
                 selectItemName:'name',
                 selectItemId:'code',

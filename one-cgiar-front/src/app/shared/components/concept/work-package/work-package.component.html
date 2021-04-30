@@ -1,5 +1,5 @@
 <div class="work_package_info">
-    wpid: {{WorkPackageID}}
+    wpid: {{_dataControlService.WorkPackageID}}
 </div>
 <div class="container" >
     <!-- <mat-tab-group mat-align-tabs="center">
@@ -77,6 +77,6 @@
     <nav mat-tab-nav-bar >
         <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.name" [active]="activeLink == tab.name"> {{tab.name}}</a>
     </nav>
-    <router-outlet *ngIf="showOutlet" [WorkPackageID]="WorkPackageID"></router-outlet>
+    <router-outlet></router-outlet>
     
 </div>

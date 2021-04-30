@@ -101,13 +101,13 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
-  // Query to get CLARISA Regions By Page
-  getCLARISARegionsByPage(): Observable<any> {
+  // Query to get CLARISA Regions 
+  getCLARISARegions(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/regions`);
   }
 
-  // Query to get CLARISA Countries By Page
-  getCLARISACountriesByPage(): Observable<any> {
+  // Query to get CLARISA Countries
+  getCLARISACountries(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
   }
 

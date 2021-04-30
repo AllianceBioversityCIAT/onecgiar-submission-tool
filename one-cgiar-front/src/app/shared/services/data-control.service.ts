@@ -5,7 +5,9 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class DataControlService {
   //lists of services
-  institutions:[]
+  institutions:[];
+  regionsList:any[];
+  countriesList:any[];
   // data={
   //  concept:{
   //    key_partners:{
