@@ -110,35 +110,11 @@ mat-list-item:focus {
   }
 
   .section_container{
-   background-color: #f5f5f5;
+   $y: 0px;
+   $x: 0px;
+   $blur: 7px;
+   background-color: #fdfdfd;
    border-radius: 10px;
-   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-   margin: 0px 20px;
-//    height: 100px;
+   box-shadow: inset $x $y $blur #dddddd, inset $x $y $blur #dddddd;
+   margin: 0px 10px;
   }
-// mat-expansion-panel{
-//     background: rgb(73,82,81);
-//     background: linear-gradient(139deg, rgba(73,82,81,1) 0%, rgba(58,63,69,1) 35%, rgba(49,52,57,1) 100%);
-//     mat-panel-title{
-//         color: rgb(241, 241, 241);
-//     }
-//     mat-list {
-//         mat-list-item{
-//             color: rgb(207, 207, 207);
-
-//         }
-//     }
-
-// }
-// .mat-expansion-panel:hover  .mat-expansion-indicator::after,
-// .mat-expansion-panel:focus  .mat-expansion-indicator::after{
-//   color: yellow;
-// }
-
-// .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
-//     color: white !important;
-// }
-
-// ::ng-deep .specific-class > .mat-expansion-indicator:after {
-//     color: white;
-//   }
