@@ -16,7 +16,11 @@
     margin-left: 8px;
 }
 .stage_title{
-    font-size: 1em !important;
+    font-size: 1.1em !important;
+}
+.stage__section_title{
+    font-weight: 500;
+    color: #727272;
 }
 mat-panel-title {
     font-weight: bold;
@@ -38,7 +42,10 @@ mat-panel-title {
 }
 
 .isActive {
-    color: #fff;
+    color: #fff !important;
+    .stage__section_title{
+        color: #fff !important;  
+    }
 }
 
 p:hover {

@@ -4,7 +4,7 @@
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title >
-                    <span class="stage_title">{{stage.description}}</span>
+                    <span class="stage_title color-primary">{{stage.description}}</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list class="menu-options row" *ngFor="let meta of stage.grouped ">
@@ -22,7 +22,7 @@
 
                     <div *ngIf="meta.title == 'Work packages'&& this.workPackagesList.length >0">
                         <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
-                            <span  class="stage__section_title">{{'Work package '+(i+1)}}</span>
+                            <span  class="stage__section_title"> <strong>{{'Work package '+(i+1)}}</strong> : {{(item.name?acronym(item.name):'unamed')|uppercase}}</span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                                 aria-label="Verified icon">

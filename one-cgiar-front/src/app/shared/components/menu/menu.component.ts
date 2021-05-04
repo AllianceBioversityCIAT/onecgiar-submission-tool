@@ -125,4 +125,14 @@ export class MenuComponent implements OnInit {
 
 
 
+  acronym(text) {
+    return text
+      .split(/\s/)
+      .reduce(function(accumulator, word) {
+        return accumulator + word.charAt(0);
+      }, '');
+  }
+
+
+
 }
