@@ -11,30 +11,24 @@ export class ConceptInfo extends UpdatedCreatedAt {
     id: number
 
     @Column({ length: '1000' })
-    @IsNotEmpty()
     name: string
 
     @Column({ type: "text" })
-    @IsNotEmpty()
     challenge: string
 
     @Column({ type: "text" })
-    @IsNotEmpty()
     objectives: string
 
     @Column({ type: "text" })
-    @IsNotEmpty()
     results: string
 
     @Column({ type: "text" })
-    @IsNotEmpty()
     highlights: string
 
     @Column({ type: 'int' })
     action_area_id: number;
 
     @Column({ length: '500' })
-    @IsNotEmpty()
     action_area_description: string;
 
     @OneToOne(() => InitiativesByStages)
