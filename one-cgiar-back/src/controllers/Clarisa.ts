@@ -37,19 +37,36 @@ export const getClaActionAreas = async () => {
 
 }
 
-export const getClaCountries = async (page) => {
+export const getClaCountries = async (req: Request, res: Response) => {
+    const queryRunner = getConnection().createQueryBuilder();
+    const { filter } = req.query;
+    const sqlQuery = `
+    SELECT
+        countries.created_at AS created_at,
+        countries.updated_at AS updated_at,
+        countries.id AS id,
+        countries.code AS code,
+        countries.name AS name,
+        countries.isoAlpha2 AS isoAlpha2,
+        countries.data AS data
+    FROM
+        clarisa_countries countries
+    WHERE countries.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+    OR countries.isoAlpha2 COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+    ORDER BY countries.code
+    LIMIT 10
+    `;
     try {
-        const countries = await got(clarisaHost + 'countries', { headers: clarisaHeader });
-        return JSON.parse(countries.body);
-        // return sortAndPaginate(page, countries.body, 'name');
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            sqlQuery,
+            {},
+            {}
+        );
+        const filteredData = await queryRunner.connection.query(query, parameters);;
+        res.json(new ResponseHandler('Countries.', { countries: filteredData }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.httpCode).json(error);
     }
 
 }

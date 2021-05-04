@@ -621,13 +621,4 @@ export const getActionAreas = async (req: Request, res: Response) => {
     }
 }
 
-export const getCountries = async (req: Request, res: Response) => {
-    try {
-        const { page } = req.query;
-        const countries = await getClaCountries(page);
-        res.json(new ResponseHandler('Action areas.', { countries }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);;
-    }
-}
 
