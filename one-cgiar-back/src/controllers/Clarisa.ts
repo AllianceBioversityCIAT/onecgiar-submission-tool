@@ -1,6 +1,10 @@
 import { APIError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
 import axios from 'axios';
+import { getConnection, getRepository, Like } from "typeorm";
+import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
+import { ResponseHandler } from "../handlers/Response";
+import { Request, Response } from 'express'
 
 const got = require('got');
 require('dotenv').config();
@@ -13,6 +17,7 @@ const clarisaHeader = {
 }
 
 const PAGE_SIZE = 20;
+
 
 
 export const getClaActionAreas = async () => {
@@ -64,20 +69,43 @@ export const getClaRegions = async (page) => {
 
 }
 
-export const getClaInstitutions = async (page) => {
+export const getClaInstitutions = async (req: Request, res: Response) => {
+    // const clarisaRepo = getRepository(ClarisaInstitutions);
+    const queryRunner = getConnection().createQueryBuilder();
+    const { filter } = req.query;
+    const sqlQuery = `
+    SELECT
+        institutions.created_at AS created_at,
+        institutions.updated_at AS updated_at,
+        institutions.id AS id,
+        institutions.code AS code,
+        institutions.name AS name,
+        institutions.acronym AS acronym,
+        institutions.country_name AS country_name,
+        institutions.data AS data
+    FROM
+        clarisa_institutions institutions
+    WHERE institutions.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+    OR institutions.acronym COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+    OR institutions.country_name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+    ORDER BY institutions.code
+    LIMIT 10
+    `;
+
     try {
-        const regions = await got(clarisaHost + 'institutions', { headers: clarisaHeader });
-        return sortAndPaginate(page, regions.body, 'name');
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            sqlQuery,
+            {},
+            {}
+        );
+        const filteredData = await queryRunner.connection.query(query, parameters);
+
+
+        res.json(new ResponseHandler('Institutions.', { institutions: filteredData }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.httpCode).json(error);
     }
-
 }
 
 const sortAndPaginate = async (page = 1, stringResponse, property?) => {
