@@ -107,12 +107,3 @@ export const getClaInstitutions = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 }
-
-const sortAndPaginate = async (page = 1, stringResponse, property?) => {
-    const startIndex = (page - 1) * PAGE_SIZE;
-    const endIndex = page * PAGE_SIZE
-    const parsedResponse = JSON.parse(stringResponse);
-
-    let sorted = parsedResponse.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
-    return sorted.slice(startIndex, endIndex);
-}

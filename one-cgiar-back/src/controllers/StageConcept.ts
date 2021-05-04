@@ -145,7 +145,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         }
 
         const actionAreas = await getClaActionAreas();
-        const selectedActionArea = actionAreas.find(area => area.id == action_area_id);
+        const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
 
         if (conceptId == null) {
             conceptInf = new ConceptInfo();
@@ -207,6 +207,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo[0] }));
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 
@@ -911,7 +912,7 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
         const files = req['files'];
         if (existingTOC == null) {
             existingTOC = new TOCs();
-            existingTOC.narrative = narrative;
+            existingTOC.narrative = (narrative == 'null' || narrative == null) ? null : narrative;
             existingTOC.initvStg = initvStgId;
         } else {
             existingTOC.narrative = (narrative) ? narrative : existingTOC.narrative;
