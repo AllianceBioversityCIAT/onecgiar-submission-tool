@@ -1,4 +1,5 @@
 import { FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
 
 export interface selectOptions{
     required?:boolean;
@@ -13,4 +14,6 @@ export interface selectOptions{
     selectItemName:string;
     selectItemId:string|number;
     toDisableList:[];
+    attributeNameToSearch:string;
+    service:Observable<any>
 }

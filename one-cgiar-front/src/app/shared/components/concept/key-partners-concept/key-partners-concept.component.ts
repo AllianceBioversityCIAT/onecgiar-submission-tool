@@ -8,6 +8,7 @@ import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../services/data-control.service';
+import { map } from 'rxjs/operators';
 
 export interface keyPartner {
   key_partner_id: number,
@@ -66,9 +67,13 @@ export class KeyPartnersConceptComponent implements OnInit {
   }
 
   getCLARISAInstitutions(){
-    this._initiativesSvc.getCLARISAInstitutions().subscribe(resp=>{
-      console.log(resp);
+    this._initiativesSvc.getCLARISAInstitutions('').subscribe(resp=>{
+      console.log(resp.response.institutions);
+      resp.response.institutions.map(institution=>{
+        institution.acronym_name = `${institution.acronym} - ${institution.name}`;
+      })
       this._dataControlService.institutions =  resp.response.institutions;
+      console.log(resp.response.institutions);
     },
     err=>{
     })

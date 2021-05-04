@@ -12,7 +12,7 @@
              formControlId:'key_partner_id',
              formControlName:'key_partner_name',
              selectList:this._dataControlService.institutions,
-             selectItemName:'name',
+             selectItemName:'acronym_name',
              selectItemId:'code',
              toDisableList: this.toDisableList
             }">
@@ -31,6 +31,9 @@
 
 
     </div>
+    <br>
+    <br>
+    <br>
 </div>
 <div mat-dialog-actions align="end" class="dialog-actions">
     <button mat-raised-button color="primary" (click)="OnClickNo()" >close</button>

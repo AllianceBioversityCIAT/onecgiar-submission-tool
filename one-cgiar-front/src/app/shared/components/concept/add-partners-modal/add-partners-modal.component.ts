@@ -4,6 +4,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataControlService } from '../../../services/data-control.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { InitiativesService } from '../../../services/initiatives.service';
 @Component({
   selector: 'app-add-partners-modal',
   templateUrl: './add-partners-modal.component.html',
@@ -20,6 +21,7 @@ export class AddPartnersModalComponent implements OnInit {
     public _dataControlService:DataControlService,
     private spinnerService: NgxSpinnerService,
     public dialogRef: MatDialogRef<AddPartnersModalComponent>,
+    public _initiativesService:InitiativesService,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
       this.keyPartnersForm = new FormGroup({
@@ -31,11 +33,6 @@ export class AddPartnersModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinnerService.show("institutions_spinner");
-    console.log("in the modal");
-    console.log(this._dataControlService.institutions);
-    setTimeout(() => {
-      console.log(this._dataControlService.institutions);
-    }, 10000);
     this.toDisableList = this.data.toDisableList;
     console.log(this.toDisableList);
     for (let index = 0; index < this.toDisableList.length; index++) {
