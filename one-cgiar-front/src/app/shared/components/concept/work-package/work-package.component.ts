@@ -30,7 +30,7 @@ export class WorkPackageComponent implements OnInit {
     },
     {
       name: 'Projection of benefits',
-      route: 'geographic-scope',
+      route: 'projection-of-benefits',
       active: false,
     }
   ]; 
@@ -40,11 +40,9 @@ export class WorkPackageComponent implements OnInit {
   countriesSelectedList:any = [];
   
   panelOpenState = false;
-  projectionRanges = this._requests.projectionBenefitsRangeCs.controls.range
-    .value;
+  
 
   constructor(
-    public _requests: RequestsService,
     public dialog: MatDialog,
     public _initiativesService: InitiativesService,
     private interactionsService:InteractionsService,
@@ -72,15 +70,7 @@ export class WorkPackageComponent implements OnInit {
     console.log("OnDestroy WP");
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, {
-      panelClass: 'custom-dialog-container',
-    });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
 
   DialogConfirm(): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {

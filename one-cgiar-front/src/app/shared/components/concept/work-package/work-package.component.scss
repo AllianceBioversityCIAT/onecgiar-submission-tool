@@ -46,10 +46,6 @@ mat-panel-title{
 .narratives-full-width {
     width: 100%;
 }
-
-.asterisk {
-    color: #ff0000;
-}
   
 .narratives-save {
     display: flex;
@@ -66,40 +62,7 @@ mat-panel-title{
     background-color: #0c96c9;
 }
 
-.projection-benefits-container {
-    width: 90%;
-    margin: 1rem auto;
-}
 
-mat-panel-title {
-    justify-content: center;
-}
-
-.contribution-container {
-    display: flex;
-    background-color: #FAFAFA;
-    flex-direction: column;
-    border: 2px dotted #b1b0b0;
-    padding: 0 1.5rem;
-    margin: 1rem 0;
-}
-
-table, th, td {
-  border: .3px solid #bbbbbb;
-  border-collapse: collapse;
-}
-
-.set-data-container {
-    display: flex;
-    justify-content: flex-end;
-    margin: 1rem 0;
-}
-
-.remove-contribution-container {
-    display: flex;
-    justify-content: flex-end;
-    margin: 0.5rem 0 0 0;
-}
 
 .set-data-button {
     outline: none;

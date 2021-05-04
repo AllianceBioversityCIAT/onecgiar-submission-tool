@@ -7,10 +7,11 @@ import { GeographicScopeWorkPackageComponent } from './geographic-scope-work-pac
 import { CustomFormsModule } from '../../custom-forms/custom-forms.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../material.module';
+import { ProjectionOfBenefitsWorkPackageComponent } from './projection-of-benefits-work-package/projection-of-benefits-work-package.component';
 
 
 @NgModule({
-  declarations: [GeneralInformationWorkPackageComponent, GeographicScopeWorkPackageComponent],
+  declarations: [GeneralInformationWorkPackageComponent, GeographicScopeWorkPackageComponent, ProjectionOfBenefitsWorkPackageComponent],
   imports: [
     CommonModule,
     WorkPackageRoutingModule,

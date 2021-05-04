@@ -1,0 +1,72 @@
+
+
+        <div class="projection-benefits-container" >
+            <mat-accordion>
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                    *ngFor="let impactArea of _requests.impactAreas">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{impactArea.name}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="contribution-container" *ngFor="let contribution of _requests.contributions">
+                        <div class="remove-contribution-container">
+                            <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
+                        </div>
+                        <mat-form-field appearance="standard">
+                            <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span
+                                    class="asterisk">* </span></p>
+                            <mat-select>
+                                <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <table>
+                            <tr>
+                                <th></th>
+                                <th *ngFor="let item of projectionRanges">{{item.year}}</th>
+                            </tr>
+                            <tr>
+                                <td>Low scenario</td>
+                                <td *ngFor="let item of projectionRanges">{{item.low}}</td>
+                            </tr>
+                            <tr>
+                                <td>High scenario</td>
+                                <td *ngFor="let item of projectionRanges">{{item.high}}</td>
+                            </tr>
+                        </table>
+
+                        <div class="set-data-container">
+                            <button type="submit" mat-raised-button color="primary" (click)="openDialog()">
+                                set ranges and years
+                            </button>
+                        </div>
+
+                        <mat-form-field>
+                            <p><strong>Add any notes on methodology and sources here: </strong></p>
+                            <input type="text" matInput required />
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="set-data-container">
+                        <button type="submit" mat-raised-button color="primary"
+                            (click)="_requests.addContribution()">
+                            Add new contribution
+                        </button>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+ 
+
+    
+

@@ -1,0 +1,43 @@
+.projection-benefits-container {
+    width: 100%;
+    margin: 50px 0px;
+    height: 100%;
+}
+
+.contribution-container {
+    display: flex;
+    background-color: #FAFAFA;
+    flex-direction: column;
+    border: 2px dotted #b1b0b0;
+    padding: 0 1.5rem;
+    margin: 1rem 0;
+}
+
+.remove-contribution-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5rem 0 0 0;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.set-data-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+}
+
+mat-panel-title {
+    justify-content: center;
+}
+
+table, th, td {
+  border: .3px solid #bbbbbb;
+  border-collapse: collapse;
+}
+
+mat-accordion{
+    width: 100%;
+}
