@@ -5,6 +5,7 @@ import { getConnection, getRepository, Like } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
 import { ResponseHandler } from "../handlers/Response";
 import { Request, Response } from 'express'
+import { notifyByEmail } from "../middlewares/mailer";
 
 const got = require('got');
 require('dotenv').config();

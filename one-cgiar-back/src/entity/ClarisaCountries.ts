@@ -2,8 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "ty
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt"
 
 
-@Entity('clarisa_institutions')
-export class ClarisaInstitutions extends UpdatedCreatedAt {
+@Entity('clarisa_countries')
+export class ClarisaCountries extends UpdatedCreatedAt {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -15,10 +15,7 @@ export class ClarisaInstitutions extends UpdatedCreatedAt {
     name: string
 
     @Column({ type: 'text' })
-    acronym: string
-
-    @Column({ type: 'text' })
-    country_name: string
+    isoAlpha2: string
 
     @Column({ type: 'json' })
     data: JSON
