@@ -621,33 +621,4 @@ export const getActionAreas = async (req: Request, res: Response) => {
     }
 }
 
-export const getCountries = async (req: Request, res: Response) => {
-    try {
-        const { page } = req.query;
-        const countries = await getClaCountries(page);
-        res.json(new ResponseHandler('Action areas.', { countries }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);;
-    }
-}
-
-export const getRegions = async (req: Request, res: Response) => {
-    try {
-        const { page } = req.query;
-        const regions = await getClaRegions(page);
-        res.json(new ResponseHandler('Action areas.', { regions }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);;
-    }
-}
-
-export const getInstitutions = async (req: Request, res: Response) => {
-    try {
-        const { page } = req.query;
-        // const institutions = await getClaInstitutions(page);
-        res.json(new ResponseHandler('Institutions.', { da: null }));
-    } catch (error) {
-        return res.status(error.httpCode).json(error);;
-    }
-}
 
