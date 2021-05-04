@@ -111,9 +111,9 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
   }
 
-  // Query to get CLARISA Countries By Page
-  getCLARISAInstitutions(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions`);
+  // Query to get CLARISA Countries By filter
+  getCLARISAInstitutions(filterText:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`);
   }
   
 
