@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
@@ -34,7 +34,7 @@ export class WorkPackageComponent implements OnInit {
       active: false,
     }
   ]; 
-  activeLink = this.tabs[0].name;
+  activeLink = null;
   animationSize=500;
   regionsSelectedList: any = [];
   countriesSelectedList:any = [];
@@ -49,22 +49,27 @@ export class WorkPackageComponent implements OnInit {
     public _initiativesService: InitiativesService,
     private interactionsService:InteractionsService,
     private activatedRoute:ActivatedRoute,
-    public  _dataControlService:DataControlService
+    public  _dataControlService:DataControlService,
+    
   ) {
-
   }
 
   ngOnInit(): void {
+    console.log("WP init");
     this.getCLARISARegions();
     this.getCLARISACountries();
-    this.activatedRoute.params.subscribe(resp => {
-      this.activeLink = this.tabs[0].name;
+    this.activatedRoute.params.subscribe((resp:any) => {
+      let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
+      this.activeLink = UrlSegments[UrlSegments.length-1].path;
       this._dataControlService.WorkPackageID = resp.id;
-      console.log(resp);
-      console.log("emito carga de general");
+      // console.log(resp);
+      // console.log("emito carga de general");
       this.showOutlet = true;
-      this._dataControlService.WorkPackageReloaded$.emit();
     });
+  }
+
+  OnDestroy(){
+    console.log("OnDestroy WP");
   }
 
   openDialog() {
@@ -93,7 +98,7 @@ export class WorkPackageComponent implements OnInit {
   getCLARISARegions(){
     this._initiativesService.getCLARISARegions().subscribe(resp=>{
       console.log('%cCLARISA regions','background: #222; color: #ffff00');
-      console.log(resp);
+      // console.log(resp);
       this._dataControlService.regionsList = resp.response.regions;
     })
   }
@@ -101,7 +106,7 @@ export class WorkPackageComponent implements OnInit {
   getCLARISACountries(){
     this._initiativesService.getCLARISACountries().subscribe(resp=>{
       console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
-      console.log(resp);
+      // console.log(resp);
       this._dataControlService.countriesList = resp.response.countries;
       this._dataControlService.countriesAndRegionsloaded$.emit();
     },

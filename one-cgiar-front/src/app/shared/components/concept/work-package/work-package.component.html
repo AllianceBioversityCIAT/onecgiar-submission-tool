@@ -74,8 +74,8 @@
  -->
     <!-- <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link" [active]="activeLink == link"> {{link}} </a><a mat-tab-link disabled>Disabled Link</a> -->
     <!-- backgroundColor="primary" -->
-    <nav mat-tab-nav-bar >
-        <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.name" [active]="activeLink == tab.name"> {{tab.name}}</a>
+    <nav mat-tab-nav-bar *ngIf="activeLink">
+        <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.route" [active]="activeLink == tab.route"> {{tab.name}}</a>
     </nav>
     <router-outlet></router-outlet>
     

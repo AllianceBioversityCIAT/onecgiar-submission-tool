@@ -27,13 +27,12 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("general on");
-    this._dataControlService.WorkPackageReloaded$.subscribe(()=>{
-      console.log("recibida la emicion");
-      console.log("WorkPackageID = "+this._dataControlService.WorkPackageID);
+    // console.log("general on");
+      // console.log("recibida la emicion");
+      // console.log("WorkPackageID = "+this._dataControlService.WorkPackageID);
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
         this.workPackageData = resp.response.workPackage;
-        console.log("NAME: "+this.workPackageData.name);
+        // console.log("NAME: "+this.workPackageData.name);
         this.setFormData();
         
         this.showform = false;
@@ -42,8 +41,8 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
         }, 1);
         
       })
-    })
-    this._dataControlService.WorkPackageReloaded$.emit();
+  
+  
   }
   
   setFormData() {

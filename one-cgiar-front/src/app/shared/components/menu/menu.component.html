@@ -17,12 +17,11 @@
                             <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
                         </button>
                     </mat-list-item>
-
                 <div [ngClass]="{'section_container':  meta.title == 'Work packages'}">
 
 
                     <div *ngIf="meta.title == 'Work packages'&& this.workPackagesList.length >0">
-                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" routerLinkActive="isActive background-color-primary-3" routerLink="/initiatives/1/stages/concept/work-package/{{i+1}}" >
+                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
                             <span  class="stage__section_title">{{'Work package '+(i+1)}}</span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"

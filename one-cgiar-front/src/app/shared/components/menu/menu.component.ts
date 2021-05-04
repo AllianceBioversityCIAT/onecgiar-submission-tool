@@ -19,20 +19,20 @@ export class MenuComponent implements OnInit {
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
-  workPackagesList:any=[];
+  workPackagesList: any = [];
   // stageUrl;
   constructor(
-    public _requests: RequestsService, 
-    public router: Router, 
-    public initiativesSvc: InitiativesService, 
+    public _requests: RequestsService,
+    public router: Router,
+    public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
-    public _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
-    ) { }
+    public _interactionsService: InteractionsService,
+    public _dataControlService: DataControlService
+  ) { }
 
   ngOnInit(): void {
     this.getStages();
-    this._dataControlService.menuChange$.subscribe(()=>{
+    this._dataControlService.menuChange$.subscribe(() => {
       this.getAllIWorkPackages();
     })
     this._dataControlService.menuChange$.emit();
@@ -42,6 +42,15 @@ export class MenuComponent implements OnInit {
       }
     )
   }
+
+  goToWp(id) {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package`, { skipLocationChange: true }).then(() => {
+      this.router.navigate([`/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package/` + id]);
+    });
+  }
+
+
 
   getStages() {
     this.initiativesSvc.getStages()
@@ -71,13 +80,13 @@ export class MenuComponent implements OnInit {
     return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
   }
 
-  navigateTo(meta: any, section: string){
+  navigateTo(meta: any, section: string) {
     // if(section != 'Key partners'){
-      this.router.navigate([this.parseStageUrl(meta,section)]);
+    this.router.navigate([this.parseStageUrl(meta, section)]);
     // }else{
     //   this._interactionsService.openSnackBarPosition('Section under construction','Ok')
     // }
-   
+
   }
 
   validateSubMenuForm(stageName: any, subMenu: string) {
@@ -87,31 +96,31 @@ export class MenuComponent implements OnInit {
     return this.subMenusFormValidation[stageName][subMenu];
   }
 
-  validate_under_construction(section){
-     switch (section) {
+  validate_under_construction(section) {
+    switch (section) {
       case 'Work packages':
         return true
-       case 'Key partners':
-         return true
-       default:
-         return false
-     }
+      case 'Key partners':
+        return true
+      default:
+        return false
+    }
   }
 
-  getAllIWorkPackages(){
+  getAllIWorkPackages() {
     // this.spinnerService.show('work-packages');
-   this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
-    //  console.log("getAllIWorkPackages");
+    this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
+      //  console.log("getAllIWorkPackages");
       this.workPackagesList = resp.response.workPackages;
-      // console.log( this.workPackagesList);
+      console.log( this.workPackagesList);
     },
-    err=>{ 
-      // this.spinnerService.hide('work-packages');
-    },
-    ()=>{
-      // this.spinnerService.hide('work-packages');
-    })
-      // this.validateWorkPackages();
+      err => {
+        // this.spinnerService.hide('work-packages');
+      },
+      () => {
+        // this.spinnerService.hide('work-packages');
+      })
+    // this.validateWorkPackages();
   }
 
 

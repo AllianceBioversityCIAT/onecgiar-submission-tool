@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
@@ -26,21 +26,16 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRegionsAndCountries();
-    this._dataControlService.WorkPackageReloaded$.subscribe(()=>{
+
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
-        console.log("is_global");
-        console.log(resp.response.workPackage.is_global); 
-       
         this.setIsGlobal(resp.response.workPackage.is_global);
-        
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;
         }, 1);
         
       })
-    })
-    this._dataControlService.WorkPackageReloaded$.emit();
+
     this._dataControlService.countriesAndRegionsloaded$.subscribe(()=>{
       this.mapNamesOfRegionsAndCountries();
     })
@@ -76,7 +71,7 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
       }
     }
   
-    this._interactionsService.successMessage('Geographic scope information has been saved')
+    this._interactionsService.successMessage('Geographic scope information has been saved',1000)
 
   }
 

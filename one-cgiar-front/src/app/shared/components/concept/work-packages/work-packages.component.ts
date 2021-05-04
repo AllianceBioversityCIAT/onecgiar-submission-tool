@@ -45,7 +45,7 @@ export class WorkPackagesComponent implements OnInit {
   addWorkPackage(){
     this.spinnerService.show('work-packages');
     this._initiativesService.createWorkPackage({"initvStgId": this._initiativesService.initvStgId}).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.noWp  = false;
       this.getAllIWorkPackages();
       this._interactionsService.successMessage("Work package successfully added");
