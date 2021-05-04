@@ -1,6 +1,5 @@
 import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
 import axios from 'axios';
-import {  } from "../entity/ClarisaIntitutions";
 import { ClarisaCountries } from "../entity/ClarisaCountries";
 require('dotenv').config();
 
@@ -16,12 +15,12 @@ export class InsertClarisaCountriesSBT1620162772212 implements MigrationInterfac
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const clarisaRepo = getRepository(ClarisaCountries);
-        const regions = await axios.get(clarisaHost + 'countries', { headers: clarisaHeader });
+        const countries = await axios.get(clarisaHost + 'un-regions', { headers: clarisaHeader });
 
         let countriesArray: ClarisaCountries[] = [];
 
-        for (let index = 0; index < regions.data.length; index++) {
-            const element = regions.data[index];
+        for (let index = 0; index < countries.data.length; index++) {
+            const element = countries.data[index];
             let cla = clarisaRepo.create({
                 isoAlpha2: element.isoAlpha2,
                 code: element.code,
@@ -33,6 +32,7 @@ export class InsertClarisaCountriesSBT1620162772212 implements MigrationInterfac
         }
 
         const r = await clarisaRepo.save(countriesArray);
+
 
     }
 
