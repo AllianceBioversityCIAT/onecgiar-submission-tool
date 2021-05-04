@@ -1,5 +1,5 @@
 import { validate } from 'class-validator';
-import e, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { getConnection, getManager, getRepository, In, QueryRunner } from 'typeorm'
 import { ActionAreasByInitiativeStage } from '../entity/ActionAreasByInitiativeStage';
 import { ConceptInfo } from '../entity/ConceptInfo';
@@ -644,8 +644,8 @@ export const getRegions = async (req: Request, res: Response) => {
 export const getInstitutions = async (req: Request, res: Response) => {
     try {
         const { page } = req.query;
-        const institutions = await getClaInstitutions(page);
-        res.json(new ResponseHandler('Institutions.', { institutions }));
+        // const institutions = await getClaInstitutions(page);
+        res.json(new ResponseHandler('Institutions.', { da: null }));
     } catch (error) {
         return res.status(error.httpCode).json(error);;
     }
