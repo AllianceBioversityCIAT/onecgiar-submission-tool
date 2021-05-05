@@ -57,9 +57,12 @@ export class WorkPackageComponent implements OnInit {
     this.getCLARISARegions();
     this.getCLARISACountries();
     this.activatedRoute.params.subscribe((resp:any) => {
+      
       let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
       this.activeLink = UrlSegments[UrlSegments.length-1].path;
       this._dataControlService.WorkPackageID = resp.id;
+      this._dataControlService.breadcrumbItemTwo = 'Work Package ID: ' + resp.id;
+
       // console.log(resp);
       // console.log("emito carga de general");
       this.showOutlet = true;
