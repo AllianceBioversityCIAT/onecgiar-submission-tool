@@ -7,7 +7,7 @@
     <nav mat-tab-nav-bar *ngIf="activeLink">
         <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.route" [active]="activeLink == tab.route"> {{tab.name}}</a>
     </nav>
-    <button class="delete_icon" (click)="DialogConfirm()" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+    <button *ngIf="!this._initiativesService.initiative.readonly" class="delete_icon" (click)="DialogConfirm()" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
         <mat-icon color="warn">delete</mat-icon>
     </button>
     <router-outlet></router-outlet>
