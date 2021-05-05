@@ -29,6 +29,7 @@ export interface partnership {
   styleUrls: ['./key-partners-concept.component.scss']
 })
 export class KeyPartnersConceptComponent implements OnInit {
+  readonlyAux=false;
   partnership:partnership=
     {
       comparative_advantage: "This is a test for a compartive comparative_advantage, UPDATED",
