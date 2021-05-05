@@ -85,7 +85,7 @@ export class SelectComponent implements OnInit {
         console.log(res.response.institutions);
         this.selectList = res.response.institutions;
         res.response.institutions.map(institution=>{
-          institution.acronym_name = `${institution.acronym} - ${institution.name}`;
+          institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
         })
       });
     }
