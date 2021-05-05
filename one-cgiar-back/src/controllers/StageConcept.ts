@@ -480,7 +480,7 @@ export const createWorkPackage = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateWorkPackage = async (req: Request, res: Response) => {
-    const { id, name, results, pathwayContent, isGlobal } = req.body;
+    const { id, name, results, pathwayContent, isGlobal, active } = req.body;
     const wpRepo = getRepository(WorkPackages);
 
     try {
@@ -490,7 +490,7 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         workPackage.name = (name) ? name : workPackage.name;
         workPackage.pathway_content = (pathwayContent) ? pathwayContent : workPackage.pathway_content;
         workPackage.is_global = isGlobal;
-        // workPackage.is_global = (isGlobal != null) ? isGlobal : workPackage.is_global;
+        workPackage.active = (active != null) ? active : workPackage.active;
 
         const errors = await validate(workPackage);
         if (errors.length > 0) {
@@ -902,7 +902,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
  * @param res 
  */
 export const upsertTOCandFile = async (req: Request, res: Response) => {
-    const { initvStgId, narrative } = req.body;
+    const { initvStgId, narrative, path} = req.body;
     const tocsRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
@@ -924,11 +924,11 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
-                console.log(`${host}/public/${new Date().getFullYear()}/initiatives/${initvStgId}/${element.originalname}`)
+                const urlDB = `${host}/${path}/${element.originalname}`
                 filesArr.push(
                     {
                         active: true,
-                        url: `${host}/public/${new Date().getFullYear()}/${initvStgId}/${element.originalname}`,
+                        url: urlDB,
                         name: element.originalname
                     }
                 )

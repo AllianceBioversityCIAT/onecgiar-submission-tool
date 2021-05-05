@@ -15,7 +15,7 @@ import { Users } from '../entity/Users';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
-import { getClaActionAreas, getClaCountries, getClaInstitutions, getClaRegions } from './Clarisa';
+import { getClaActionAreas } from './Clarisa';
 
 
 require('dotenv').config();

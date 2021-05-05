@@ -62,7 +62,8 @@ export const getClaCountries = async (req: Request, res: Response) => {
             {},
             {}
         );
-        const filteredData = await queryRunner.connection.query(query, parameters);;
+        const filteredData = await queryRunner.connection.query(query, parameters);
+        notifyByEmail(null)
         res.json(new ResponseHandler('Countries.', { countries: filteredData }));
     } catch (error) {
         console.log(error)
