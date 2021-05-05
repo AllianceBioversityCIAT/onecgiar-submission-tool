@@ -27,32 +27,70 @@
             </button>
         </a>
 
-        <div *ngIf="listOfFiles.length > 0" class="uploaded-files">
+        <div class="file_custom_container">
+            <mat-card>
+                <mat-list>
+                    <div mat-subheader><strong>Saved files</strong></div>
+                    <mat-list-item *ngIf="listOfFiles.length == 0"> 
+                        <mat-icon mat-list-icon color="accent">find_in_page</mat-icon>
+                        <div mat-line><strong>No files saved</strong></div>
+                    </mat-list-item>
+                    <mat-list-item *ngFor="let selected of listOfFiles; let index = index " [hidden]="listOfFiles.length == 0">
+                      <mat-icon mat-list-icon color="accent">folder</mat-icon>
+                      <div mat-line><strong>{{selected.name ? selected.name : selected}}</strong></div>
+                      <div mat-line>{{selected.updated_at|date}}</div>
+                      <button *ngIf="!this._initiativesService.initiative.readonly" type="button" class="delete_icon" (click)="dialogConfirmDeleteSaved(index)" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                        <mat-icon color="warn">delete</mat-icon>
+                    </button>
+                    </mat-list-item>
+                    <mat-divider></mat-divider>
+                    <div mat-subheader><strong>Files to upload</strong></div>
+                    <mat-list-item *ngIf="filesToUpload.length == 0"> 
+                        <mat-icon mat-list-icon>find_in_page</mat-icon>
+                        <div mat-line><strong>No files to upload</strong></div>
+                    </mat-list-item>
+                    <mat-list-item  *ngFor="let selected of filesToUpload; let index = index " [hidden]="filesToUpload.length == 0">
+                        <mat-icon mat-list-icon>folder</mat-icon>
+                        <div mat-line><strong>{{selected.name ? selected.name : selected}}</strong></div>
+                        <div mat-line>{{selected.updated_at|date}}</div>
+                        <button *ngIf="!this._initiativesService.initiative.readonly" type="button" class="delete_icon" (click)="dialogConfirmDeleteTosave(index, filesToUpload)" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                          <mat-icon color="warn">delete</mat-icon>
+                      </button>
+                      </mat-list-item>
+                      <mat-divider></mat-divider>
+                    <div mat-subheader>Note: Read the <a class="color-accent" href="/assets/example.pdf" target="_blank" style="margin: 0px 3px;"> guide </a>  for more information on how to create the diagram.</div>
+                  </mat-list>
+            </mat-card>
+        </div>
+
+        <!-- <div *ngIf="filesToUpload && filesToUpload.length > 0" class="mb-2" class="uploaded-files">
+            <h2>Files to upload</h2>
+            <div class="files" *ngFor="let selected of filesToUpload; let index = index ">
+                <strong>{{selected.name ? selected.name : selected}}</strong>
+                <mat-icon class="delete-icon" (click)="removeFile(index, filesToUpload)">delete</mat-icon>
+            </div>
+        </div> -->
+
+<!-- 
+        <mat-card *ngIf="listOfFiles.length > 0" class="uploaded-files">
             <div class="files" *ngFor="let selected of listOfFiles; let index = index ">
-                <!-- {{selected.active }} -->
                 <ng-container *ngIf="selected.active">
                     <strong>{{selected.name ? selected.name : selected}}</strong>
                     <mat-icon class="delete-icon" (click)="removeSelectedFile(index)">delete</mat-icon>
                 </ng-container>
+               
             </div>
-        </div>
+        </mat-card> -->
 
         <div class="upload-container">
-            <mat-icon>cloud_upload</mat-icon>
+            <mat-icon color="accent">cloud_upload</mat-icon>
             Click here to choose a file or drag it here
             <input class="nonstylefile" #attachments type="file" required (change)="onSelectFiles($event)" #fileInput
                 multiple="true">
             <!-- <input class="nonstylefile" #attachments type="file" required (change)="onFileChanged($event.target.files)"
                 #fileInput multiple="true"> -->
         </div>
-        <div *ngIf="filesToUpload && filesToUpload.length > 0" class="mb-2" class="uploaded-files">
-            <h2>Files to upload</h2>
-            <div class="files" *ngFor="let selected of filesToUpload; let index = index ">
-                <strong>{{selected.name ? selected.name : selected}}</strong>
-                <mat-icon class="delete-icon" (click)="removeFile(index, filesToUpload)">delete</mat-icon>
-                <!-- </ng-container> -->
-            </div>
-        </div>
+
         <div class="theory-of-change-save">
             <save-button></save-button>
         </div>

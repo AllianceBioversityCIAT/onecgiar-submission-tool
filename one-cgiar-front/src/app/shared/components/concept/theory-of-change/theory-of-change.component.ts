@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ConceptService } from '@app/shared/services/concept.service';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { InteractionsService } from '../../../services/interactions.service';
 import { StagesMenuService } from '../../../services/stages-menu.service';
+import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-theory-of-change',
@@ -32,7 +34,7 @@ export class TheoryOfChangeComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public interactionsService:InteractionsService,
     public stgMenuSvc: StagesMenuService,
-
+    public dialog: MatDialog,
     ) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl(null, Validators.required)
@@ -71,6 +73,7 @@ export class TheoryOfChangeComponent implements OnInit {
     this.filesToUpload = [];
     this.conceptSvc.getTheoryOfChange(parseInt(this._initiativesService.initvStgId)).subscribe(resp => {
       // console.log('TOC', resp);
+      console.log('%cTOCS','background: #222; color: #ffff00');
       console.log(resp);
       if (resp != null) {
         this.tocData = resp;
@@ -151,5 +154,36 @@ export class TheoryOfChangeComponent implements OnInit {
   removeFile(index, array) {
     array.splice(index, 1);
   }
+
+  dialogConfirmDeleteSaved(index): void {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.remove === true) {
+        console.log('%cRemove','background: #222; color: #fd8484');
+        this.removeSelectedFile(index);
+      }else{
+        console.log("%cDon't remove",'background: #222; color: #37ff73');
+      }
+    });
+  }
+
+
+  dialogConfirmDeleteTosave(index, array): void {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.remove === true) {
+        console.log('%cRemove','background: #222; color: #fd8484');
+        this.removeFile(index, array)
+      }else{
+        console.log("%cDon't remove",'background: #222; color: #37ff73');
+      }
+    });
+  }
+
+
 
 }
