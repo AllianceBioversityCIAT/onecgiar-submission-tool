@@ -26,6 +26,7 @@ export class TheoryOfChangeComponent implements OnInit {
   public createTOC: any = false;
   progressInfos: any[];
   showForm=false;
+  tocID = null;
 
   constructor(
     public _requests: RequestsService, 
@@ -60,7 +61,7 @@ export class TheoryOfChangeComponent implements OnInit {
 
   validateFormAndLeads(){
     // ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
-    console.log(this.filesToUpload.length);
+    // console.log(this.filesToUpload.length);
     if (this.theoryOfChangeForm.status == 'VALID' &&  (this.listOfFiles.length>0 ||this.filesToUpload.length>0)) {
       return  'VALID';
     } else{
@@ -73,8 +74,7 @@ export class TheoryOfChangeComponent implements OnInit {
     this.filesToUpload = [];
     this.conceptSvc.getTheoryOfChange(parseInt(this._initiativesService.initvStgId)).subscribe(resp => {
       // console.log('TOC', resp);
-      console.log('%cTOCS','background: #222; color: #ffff00');
-      console.log(resp);
+      this.tocID = resp?.id;
       if (resp != null) {
         this.tocData = resp;
         this.theoryOfChangeForm.controls['narrative'].setValue(resp.narrative);
@@ -112,7 +112,15 @@ export class TheoryOfChangeComponent implements OnInit {
   upload(idx, file) {
     // this.progressInfos[idx] = { value: 0, fileName: file.name };
     this.spinnerService.show('tocs')
-    this.conceptSvc.upsertTheoryOfChange(file, { initvStgId: this._initiativesService.initvStgId, narrative: this.theoryOfChangeForm.get('narrative').value }).subscribe(
+    this.conceptSvc.upsertTheoryOfChange(
+      file, 
+      { 
+        initvStgId: this._initiativesService.initvStgId, 
+        narrative: this.theoryOfChangeForm.get('narrative').value,
+        section:"tocs",
+        id:this.tocID 
+      
+      }).subscribe(
       event => {
         this.getTOCandFiles();
         this.spinnerService.hide('tocs')
@@ -121,7 +129,7 @@ export class TheoryOfChangeComponent implements OnInit {
       err => {
         this.progressInfos[idx].value = 0;
         this.spinnerService.hide('tocs')
-        console.log(err);
+        // console.log(err);
         this.interactionsService.errorMessage('Initial theory of change has not been saved')
 
       });
@@ -134,12 +142,12 @@ export class TheoryOfChangeComponent implements OnInit {
      * Add delete confirmation modal.
      * 
      */
-    console.log(updateFile)
+    // console.log(updateFile)
     updateFile.active = false;
     this.spinnerService.show('tocs');
     this.conceptSvc.updateTheoryOfChangeFile(updateFile).subscribe(
       res => {
-        console.log(res)
+        // console.log(res)
         this.getTOCandFiles();
         this.spinnerService.hide('tocs')
       },
