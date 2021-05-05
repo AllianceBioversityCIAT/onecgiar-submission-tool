@@ -50,8 +50,12 @@
 }
 
 .uploaded-files {
-    border: 2px solid #b1b0b0;
+    // border: 2px solid #b1b0b0;
     margin: 2rem 10rem;
+}
+
+.file_custom_container{
+    margin: 2rem 10em;
 }
 
 .files {
@@ -59,6 +63,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 4rem;
+}
+
+.delete_icon{
+    position: absolute;
+    z-index: 1000;
+    right: 0;
 }
 
 .delete-icon {
