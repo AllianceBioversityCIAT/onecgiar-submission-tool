@@ -77,10 +77,11 @@ export class WorkPackageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // this.removeUserToInitiative();
+      if (result?.remove === true) {
+        console.log('%cRemove','background: #222; color: #fd8484');
+      }else{
+        console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
-      console.log('The dialog was closed');
     });
   }
 

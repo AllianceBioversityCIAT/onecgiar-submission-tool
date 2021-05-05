@@ -1,11 +1,14 @@
 <div class="work_package_info">
     wpid: {{_dataControlService.WorkPackageID}}
 </div>
-<div class="container" >
+<div class="container pos_relative">
     <!-- <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link" [active]="activeLink == link"> {{link}} </a><a mat-tab-link disabled>Disabled Link</a> -->
     <!-- backgroundColor="primary" -->
     <nav mat-tab-nav-bar *ngIf="activeLink">
         <a class="a_route" mat-tab-link *ngFor="let tab of tabs" [routerLink]="tab.route" (click)="activeLink = tab.route" [active]="activeLink == tab.route"> {{tab.name}}</a>
     </nav>
+    <button class="delete_icon" (click)="DialogConfirm()" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+        <mat-icon color="warn">delete</mat-icon>
+    </button>
     <router-outlet></router-outlet>
 </div>
