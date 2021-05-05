@@ -79,6 +79,9 @@ export class WorkPackageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result?.remove === true) {
         console.log('%cRemove','background: #222; color: #fd8484');
+        this._initiativesService.updateWorkPackage({active:0,id:this._dataControlService.WorkPackageID}).subscribe(resp=>{
+          console.log(resp);
+        })
       }else{
         console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
