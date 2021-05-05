@@ -2,7 +2,7 @@
 <div mat-dialog-content class="dialog-content">
     <div class="modal-container">
         <span style="position: relative;">
-            <custom-select *ngIf="this._dataControlService.institutions"
+            <custom-select 
             [options]="
             {
              required:true,
@@ -11,14 +11,14 @@
              form:keyPartnersForm,
              formControlId:'key_partner_id',
              formControlName:'key_partner_name',
-             selectList:this._dataControlService.institutions,
+
              selectItemName:'acronym_name',
              selectItemId:'code',
-             toDisableList: this.toDisableList
+             toDisableList: this.toDisableList,
+             service:this._initiativesService,
+             serviceFunction:'getCLARISAInstitutions'
             }">
             ></custom-select>
-            <p class="color-secondary" *ngIf="!this._dataControlService.institutions"><strong>Loading instituions...</strong></p>
-            <mat-progress-bar style="margin-bottom: 10px;" *ngIf="!this._dataControlService.institutions" mode="indeterminate"></mat-progress-bar>
 
         </span>
 
