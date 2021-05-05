@@ -87,7 +87,7 @@ router.put("/concept/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], u
 router.patch("/concept/partnership/", [checkJwt, checkRole('partnerships', 'updateOwn')], upsertPartnerships);
 
 // get partnerships
-router.get("/concept/:initvStgId([0-9]+)/partnership/", [checkJwt, checkRole('partnerships', 'updateOwn')], getPartnerships);
+router.get("/concept/:initvStgId([0-9]+)/partnership/", [checkJwt, checkRole('partnerships', 'readOwn')], getPartnerships);
 
 
 
