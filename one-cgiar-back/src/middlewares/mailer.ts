@@ -23,7 +23,7 @@ export async function notifyByEmail(data: any) {
     const email = {
         from: 'Soporte Neox',
         to: 'f.elvira@cgiar.org',
-        subject: '👀 Hola ' + data.name,
+        subject: '👀 Hola ',
         text: 'BlaBlaBla',
         // context: { data. }
     };
