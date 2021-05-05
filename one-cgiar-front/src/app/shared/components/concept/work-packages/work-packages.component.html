@@ -56,7 +56,7 @@
 
     <h1 *ngIf="noWp" class="noWp">There are not work packages...</h1>
     <br>
-    <div class="button-container" [style.display]="'flex'" [style.justifyContent]="noWp?'center':'initial'">
+    <div class="button-container" [style.display]="'flex'" [style.justifyContent]="noWp?'center':'initial'" *ngIf="!this._initiativesService.initiative.readonly">
         <button mat-raised-button (click)="addWorkPackage()" *ngIf="this._initiativesService.initvStgId != null" ><mat-icon>add</mat-icon>Add Work Package</button>
     </div>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='work-packages'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
