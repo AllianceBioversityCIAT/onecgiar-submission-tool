@@ -22,7 +22,7 @@ export class StagesMenuComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
     private router:Router,
-    private dataControlService:DataControlService
+    public _dataControlService:DataControlService
   ) { }
 
   openDialog(): void {
@@ -35,7 +35,7 @@ export class StagesMenuComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.dataControlService.generalInfoChange$.emit();
+      this._dataControlService.generalInfoChange$.emit();
     });
   }
 

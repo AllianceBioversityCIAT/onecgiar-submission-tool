@@ -15,7 +15,7 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
   workPackageForm: FormGroup;
   showForm=false;
   constructor(
-    private _initiativesService:InitiativesService,
+    public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
     private _interactionsService:InteractionsService
   ) { 
@@ -26,7 +26,6 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRegionsAndCountries();
-
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
         this.setIsGlobal(resp.response.workPackage.is_global);
         this.showForm = false;

@@ -29,6 +29,7 @@ export interface partnership {
   styleUrls: ['./key-partners-concept.component.scss']
 })
 export class KeyPartnersConceptComponent implements OnInit {
+  readonlyAux=false;
   partnership:partnership=
     {
       comparative_advantage: "This is a test for a compartive comparative_advantage, UPDATED",
@@ -63,21 +64,8 @@ export class KeyPartnersConceptComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPartnershipByInitiativeId();
-    this.getCLARISAInstitutions();
   }
 
-  getCLARISAInstitutions(){
-    this._initiativesSvc.getCLARISAInstitutions('').subscribe(resp=>{
-      console.log(resp.response.institutions);
-      resp.response.institutions.map(institution=>{
-        institution.acronym_name = `${institution.acronym} - ${institution.name}`;
-      })
-      this._dataControlService.institutions =  resp.response.institutions;
-      console.log(resp.response.institutions);
-    },
-    err=>{
-    })
-  }
 
   getPartnershipByInitiativeId(){
       this.spinnerService.show("spinnerService");
@@ -154,6 +142,8 @@ export class KeyPartnersConceptComponent implements OnInit {
           description: result.description,
           active: true
         }
+        console.log('%cResult close modal','background: #222; color: #ffff00');
+        console.log(object);
           this.partnership.key_partners.push(object)
       }
 

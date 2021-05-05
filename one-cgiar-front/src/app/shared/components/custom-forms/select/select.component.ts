@@ -10,9 +10,10 @@ import { selectOptions} from '../../../models/forms-options/select-options.inter
   styleUrls: ['./select.component.scss']
 })
 export class SelectComponent implements OnInit {
-
+  searchText = '';
   @Input() options:selectOptions;
   selectInput:FormControl;
+  selectList=[];
   constructor(
     public _initiativesService:InitiativesService
   ) { }
@@ -58,6 +59,37 @@ export class SelectComponent implements OnInit {
   }
 
 
+  removeFocus =false;
+  removeFocusSelect(){
+    this.removeFocus = true;
+    setTimeout(() => {
+      this.removeFocus = false
+    }, 1);
+  }
+
+  addOption(data){
+    console.log('%cOption','background: #222; color: #37ff73');
+    console.log(data);
+    this.options.form.controls[this.options.formControlName].setValue(data.acronym_name);
+    this.options.form.controls[this.options.formControlId].setValue(data.code);
+    this.selectInput.setValue(data[this.options.formControlName]);
+    console.log('%cForm','background: #222; color: #fd8484');
+    console.log(this.options.form.value);
+  }
+
+
+  consumeService() {
+    if (this.options.service && !this.options.selectList) {
+      this.options.service[this.options.serviceFunction](this.searchText).subscribe((res) => {
+        console.log("Que locura !!!");
+        console.log(res.response.institutions);
+        this.selectList = res.response.institutions;
+        res.response.institutions.map(institution=>{
+          institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
+        })
+      });
+    }
+  }
 
 
 }

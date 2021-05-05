@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { multipleChoiceOptions } from '../../../models/forms-options/multiple-choice.interface';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'custom-multiple-choice',
@@ -11,7 +12,9 @@ export class MultipleChoiceComponent implements OnInit {
   @Input() options:multipleChoiceOptions;
   searchText:string;
   removeFocus=false;
-  constructor() { 
+  constructor(
+    public _initiativesService:InitiativesService
+  ) { 
   }
   ngOnInit(){ 
   }

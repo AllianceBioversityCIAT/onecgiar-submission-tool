@@ -6,12 +6,17 @@
         <div class="col-sm-12 horizontal_padding">
             <div class="geographic-scope-container">
                 <div class="geographic-scope-form">
-                    <p><strong>¿Does the initiative have a global dimension?</strong></p>
-                    <div>
-                        <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
-                            (click)="setIsGlobal(true);">Yes</button>
-                        <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
-                            (click)="setIsGlobal(false);">No</button>
+                    <p class="readonly_text_title"><strong class="color-secondary">¿Does the initiative have a global dimension?</strong><span class="asterisk">* </span></p>
+                    <div class="edit" *ngIf="!this._initiativesService.initiative.readonly">
+                        <div>
+                            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
+                                (click)="setIsGlobal(true);">Yes</button>
+                            <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
+                                (click)="setIsGlobal(false);">No</button>
+                        </div>
+                    </div>
+                    <div class="only_read" *ngIf="this._initiativesService.initiative.readonly">
+                        <p>{{this.workPackageForm.get('isGlobal').value?'Yes':'No'}}</p>
                     </div>
                     <br>
                 </div>

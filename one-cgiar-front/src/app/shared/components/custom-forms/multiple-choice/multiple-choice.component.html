@@ -1,7 +1,9 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-sm-12">
+
+
+        <div class="col-sm-12" *ngIf="!this._initiativesService.initiative.readonly">
                 <mat-form-field floatLabel="false">
                     <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
@@ -24,6 +26,18 @@
                     </mat-chip>
                 </mat-chip-list>
         </div>
+
+        <div class="col-sm-12" *ngIf="this._initiativesService.initiative.readonly">
+
+            <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
+            <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
+            <mat-chip-list class="example-chip" *ngIf="!(options.showChips === false)">
+                <mat-chip class="example-box" color="accent" selected *ngFor="let item of this.options.selectedList;let i = index">
+                    {{options.chipName?item[options.chipName]:item[options.selectItemName]}}
+                </mat-chip>
+            </mat-chip-list>
+    </div>
+
     </div>
     <br>
 </div>

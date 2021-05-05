@@ -57,9 +57,12 @@ export class WorkPackageComponent implements OnInit {
     this.getCLARISARegions();
     this.getCLARISACountries();
     this.activatedRoute.params.subscribe((resp:any) => {
+      
       let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
       this.activeLink = UrlSegments[UrlSegments.length-1].path;
       this._dataControlService.WorkPackageID = resp.id;
+      this._dataControlService.breadcrumbItemTwo = 'Work Package ID: ' + resp.id;
+
       // console.log(resp);
       // console.log("emito carga de general");
       this.showOutlet = true;
@@ -77,10 +80,14 @@ export class WorkPackageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // this.removeUserToInitiative();
+      if (result?.remove === true) {
+        console.log('%cRemove','background: #222; color: #fd8484');
+        this._initiativesService.updateWorkPackage({active:0,id:this._dataControlService.WorkPackageID}).subscribe(resp=>{
+          console.log(resp);
+        })
+      }else{
+        console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
-      console.log('The dialog was closed');
     });
   }
 

@@ -8,6 +8,7 @@ export class DataControlService {
   institutions:[];
   regionsList:any[];
   countriesList:any[];
+  breadcrumbItemTwo = '';
   // data={
   //  concept:{
   //    key_partners:{

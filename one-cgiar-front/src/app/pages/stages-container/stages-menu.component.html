@@ -13,7 +13,11 @@
         <div class="col-sm-9">
             <mat-card class="card-container background-color-main-2">
                 <div class="initiative-identification background-color-primary-3" style="position: relative; z-index: 10;">
-                    <span class="initiative-id">ID: {{this.initiativesSvc.initvStgId}}</span>
+                    <div>
+                        <span class="initiative-id">Initiative ID: {{this.initiativesSvc.initvStgId}}</span>
+                        <span style="margin:0px 5px;" *ngIf="this._dataControlService.breadcrumbItemTwo"> / </span>
+                        <span class="initiative-id" *ngIf="this._dataControlService.breadcrumbItemTwo">{{this._dataControlService.breadcrumbItemTwo}}</span>
+                    </div>
                     <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="!initiativesSvc.initiative.readonly">
                         Manage access
                         <mat-icon>settings</mat-icon>
