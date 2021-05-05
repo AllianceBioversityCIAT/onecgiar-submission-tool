@@ -51,9 +51,9 @@ createConnection()
         ));
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
 
-        
+        console.log(path.resolve('./uploads'))
         // public files
-        app.use('/public', express.static(path.join(parentDir, 'uploads')));
+        app.use('/public', express.static(path.resolve('./uploads')) );
 
         // routes
         app.use("/api", Routes);
@@ -65,7 +65,6 @@ createConnection()
 
         app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
-            console.log(parentDir + '/uploads')
             res.status(200).sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html");
         });
 

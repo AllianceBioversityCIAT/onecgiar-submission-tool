@@ -7,7 +7,7 @@ const mkdirp = require('mkdirp')
 
 
 const pth = require('path').resolve(process.cwd(), '../');
-const parentD = `${pth}/uploads/${new Date().getFullYear()}`;
+const parentD = `${pth}/uploads/`;
 
 
 
@@ -36,8 +36,9 @@ export const startMulter = async (parentpath?: string) => {
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
-        let _path = await validateSubFolder(JSON.parse(JSON.stringify(req.body)));
-        cb(null, `${_path}`);
+        let { finalPath, _path } = await validateSubFolder(JSON.parse(JSON.stringify(req.body)));
+        req.body.path = _path;
+        cb(null, `${finalPath}`);
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);
@@ -47,17 +48,18 @@ export let uploadFile = multer({ storage: storage });
 
 const validateSubFolder = async (body: object) => {
     const initvStgRepo = getRepository(InitiativesByStages);
-    let finalPath;
+    let finalPath, _path;
     try {
         if (body.hasOwnProperty('initvStgId')) {
-            const initvStg = await initvStgRepo.findOne(body['initvStgId'], { relations: ['initiative'] });
-            finalPath = `${parentD}/initiatives/${initvStg.initiative.id}`;
-            console.log(finalPath)
+            const initvStg = await initvStgRepo.findOne(body['initvStgId'], { relations: ['initiative', 'stage'] });
+            _path = `${new Date().getFullYear()}/initiatives/${initvStg.initiative.id}/${initvStg.stage.description.split(' ').join('-').toLowerCase()}/${body['section']}/${body['id']}`;
         } else {
-            finalPath = `${parentD}/default`;
+            _path = `default`;
         }
+        finalPath = `${parentD}/${_path}`
+        body['path'] = _path
         await createFolder(finalPath);
-        return finalPath;
+        return { finalPath, _path };
     } catch (error) {
         console.log(error)
         return error;
