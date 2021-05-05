@@ -31,7 +31,10 @@
             <mat-card>
                 <mat-list>
                     <div mat-subheader><strong>Saved files</strong></div>
-                    <mat-list-item *ngIf="listOfFiles.length == 0"> <div mat-line><strong>No files saved</strong></div></mat-list-item>
+                    <mat-list-item *ngIf="listOfFiles.length == 0"> 
+                        <mat-icon mat-list-icon color="accent">find_in_page</mat-icon>
+                        <div mat-line><strong>No files saved</strong></div>
+                    </mat-list-item>
                     <mat-list-item *ngFor="let selected of listOfFiles; let index = index " [hidden]="listOfFiles.length == 0">
                       <mat-icon mat-list-icon color="accent">folder</mat-icon>
                       <div mat-line><strong>{{selected.name ? selected.name : selected}}</strong></div>
@@ -42,7 +45,11 @@
                     </mat-list-item>
                     <mat-divider></mat-divider>
                     <div mat-subheader><strong>Files to upload</strong></div>
-                    <mat-list-item  *ngFor="let selected of filesToUpload; let index = index " [hidden]="listOfFiles.length == 0">
+                    <mat-list-item *ngIf="filesToUpload.length == 0"> 
+                        <mat-icon mat-list-icon>find_in_page</mat-icon>
+                        <div mat-line><strong>No files to upload</strong></div>
+                    </mat-list-item>
+                    <mat-list-item  *ngFor="let selected of filesToUpload; let index = index " [hidden]="filesToUpload.length == 0">
                         <mat-icon mat-list-icon>folder</mat-icon>
                         <div mat-line><strong>{{selected.name ? selected.name : selected}}</strong></div>
                         <div mat-line>{{selected.updated_at|date}}</div>
@@ -76,7 +83,7 @@
         </mat-card> -->
 
         <div class="upload-container">
-            <mat-icon>cloud_upload</mat-icon>
+            <mat-icon color="accent">cloud_upload</mat-icon>
             Click here to choose a file or drag it here
             <input class="nonstylefile" #attachments type="file" required (change)="onSelectFiles($event)" #fileInput
                 multiple="true">
