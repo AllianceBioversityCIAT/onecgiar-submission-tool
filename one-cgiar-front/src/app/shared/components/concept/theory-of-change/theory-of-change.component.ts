@@ -7,7 +7,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { InteractionsService } from '../../../services/interactions.service';
 import { StagesMenuService } from '../../../services/stages-menu.service';
-import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-theory-of-change',
@@ -164,12 +163,25 @@ export class TheoryOfChangeComponent implements OnInit {
     array.splice(index, 1);
   }
 
-  dialogConfirmDeleteSaved(index): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-    });
+  // dialogConfirmDeleteSaved(index): void {
+  //   const dialogRef = this.dialog.open(DialogConfirmComponent, {
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.remove === true) {
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result?.remove === true) {
+  //       console.log('%cRemove','background: #222; color: #fd8484');
+  //       this.removeSelectedFile(index);
+  //     }else{
+  //       console.log("%cDon't remove",'background: #222; color: #37ff73');
+  //     }
+  //   });
+  // }
+
+
+
+  dialogConfirmDeleteSaved(index){
+    this.interactionsService.confirmationModal((decision)=>{
+    if (decision) {
         console.log('%cRemove','background: #222; color: #fd8484');
         this.removeSelectedFile(index);
       }else{
@@ -179,12 +191,9 @@ export class TheoryOfChangeComponent implements OnInit {
   }
 
 
-  dialogConfirmDeleteTosave(index, array): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.remove === true) {
+  dialogConfirmDeleteTosave(index, array){
+    this.interactionsService.confirmationModal((decision)=>{
+    if (decision) {
         console.log('%cRemove','background: #222; color: #fd8484');
         this.removeFile(index, array)
       }else{
@@ -192,6 +201,22 @@ export class TheoryOfChangeComponent implements OnInit {
       }
     });
   }
+
+
+
+  // dialogConfirmDeleteTosave(index, array): void {
+  //   const dialogRef = this.dialog.open(DialogConfirmComponent, {
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result?.remove === true) {
+  //       console.log('%cRemove','background: #222; color: #fd8484');
+  //       this.removeFile(index, array)
+  //     }else{
+  //       console.log("%cDon't remove",'background: #222; color: #37ff73');
+  //     }
+  //   });
+  // }
 
 
 

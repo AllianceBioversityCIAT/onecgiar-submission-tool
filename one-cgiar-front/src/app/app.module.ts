@@ -54,7 +54,6 @@ import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.compo
 import { ManageAccessComponent } from './shared/components/manage-access/manage-access.component';
 import { CreateUsersComponent } from './shared/components/create-users/create-users.component';
 import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol-user.component';
-import { DialogConfirmComponent } from './shared/components/dialog-confirm/dialog-confirm.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +92,6 @@ import { DialogConfirmComponent } from './shared/components/dialog-confirm/dialo
     ManageAccessComponent,
     CreateUsersComponent,
     EditRolUserComponent,
-    DialogConfirmComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

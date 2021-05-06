@@ -5,7 +5,6 @@ import { ProjectionIndicatorsModalComponent } from '@app/shared/components/conce
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '../../../services/interactions.service';
-import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataControlService } from '../../../services/data-control.service';
@@ -76,7 +75,7 @@ export class WorkPackageComponent implements OnInit {
 
 
 
-  DialogConfirm(): void {
+  DialogConfirm(){
     this.interactionsService.confirmationModal((decision)=>{
     if (decision) {
         console.log('%cRemove','background: #222; color: #fd8484');
@@ -91,25 +90,6 @@ export class WorkPackageComponent implements OnInit {
         console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
     });
-
-    
-    // const dialogRef = this.dialog.open(DialogConfirmComponent, {
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result?.remove === true) {
-    //     console.log('%cRemove','background: #222; color: #fd8484');
-    //     this._initiativesService.updateWorkPackage({active:0,id:this._dataControlService.WorkPackageID}).subscribe(resp=>{
-    //       console.log(resp);
-    //     })
-    //   }else{
-    //     console.log("%cDon't remove",'background: #222; color: #37ff73');
-    //   }
-    // });
-
-
-
-
   }
 
 

@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { DialogConfirmComponent } from '../dialog-confirm/dialog-confirm.component';
 import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
@@ -127,17 +126,31 @@ export class EditRolUserComponent implements OnInit {
     }
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-    });
+  // openDialog(): void {
+  //   const dialogRef = this.dialog.open(DialogConfirmComponent, {
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       this.removeUserToInitiative();
+  //     }
+  //     console.log('The dialog was closed');
+  //   });
+  // }
+
+  dialogConfirm(){
+    this._interactions.confirmationModal((decision)=>{
+    if (decision) {
+        console.log('%cRemove','background: #222; color: #fd8484');
         this.removeUserToInitiative();
+      }else{
+        console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
-      console.log('The dialog was closed');
     });
   }
+
+
+
 
   validateExpand(){
     return this._interactions.disableAllExpandBool?(this._interactions.currentUserIdOnlyExpand!=this.user.userId):false;

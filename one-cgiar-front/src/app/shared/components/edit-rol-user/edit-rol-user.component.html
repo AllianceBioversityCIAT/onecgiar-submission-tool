@@ -15,7 +15,7 @@
         <button mat-icon-button aria-label="" class="edit_icon">
             <mat-icon>{{isOpeneded?'expand_less':'edit'}}</mat-icon>
         </button>
-        <button mat-icon-button aria-label="" (click)="openDialog();this.activeExpansion = true;">
+        <button mat-icon-button aria-label="" (click)="dialogConfirm();this.activeExpansion = true;">
             <mat-icon color="warn">delete</mat-icon>
         </button>
       </mat-panel-description>
