@@ -49,9 +49,11 @@ export class InteractionsService {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: '#eb4444',
+      cancelButtonColor: '#37474F',
+      confirmButtonText: 'Yes, delete it!',
+      reverseButtons: true,
+      backdrop: '#020d11a1'
     }).then((result) => {
       callback(result.isConfirmed);
     })

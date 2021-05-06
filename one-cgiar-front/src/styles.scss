@@ -279,6 +279,11 @@ ngx-editor-menu{
   position: relative;
 }
 
+.swal2-cancel,.swal2-confirm{
+  &:focus{
+    box-shadow: none !important;
+  }
+}
 // .mat-dialog-container {
 //   padding: 0px !important;
 // }
