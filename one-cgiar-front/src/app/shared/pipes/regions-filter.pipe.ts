@@ -7,12 +7,11 @@ export class RegionsFilterPipe implements PipeTransform {
 
   transform(list:any,word:string,attributeName:string): any {
     const array = [];
-
+    if (word == '') {
+      return list;
+    }
     if (list) {
       for (const region of list) {
-        if (word == '') {
-          return [];
-        }
         if (region[attributeName].toUpperCase().indexOf(word?.toUpperCase())>-1) {
           array.push(region);
         }

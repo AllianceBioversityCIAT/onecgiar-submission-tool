@@ -10,7 +10,7 @@ import { InitiativesService } from '../../../services/initiatives.service';
 })
 export class MultipleChoiceComponent implements OnInit {
   @Input() options:multipleChoiceOptions;
-  searchText:string;
+  searchText:string='';
   removeFocus=false;
   constructor(
     public _initiativesService:InitiativesService

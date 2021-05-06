@@ -19,6 +19,7 @@ export class SelectComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.consumeService();
     this.options.readonly=this._initiativesService.initiative.readonly;
     this.selectInput = new FormControl(this.options.form.value[this.options.formControlId], [
       Validators.required,

@@ -18,7 +18,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field floatLabel="false" *ngIf="options.service">
+    <mat-form-field floatLabel="false" *ngIf="options.service" cdkFocusInitial>
         <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
         <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
         <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" (ngModelChange)="consumeService($event)" [disabled]="removeFocus">
