@@ -10,18 +10,18 @@
             <tr class="center">
                 <th>Key Partner</th>
                 <th>Description</th>
-                <th *ngIf="!this.readonlyAux">Edit</th>
-                <th *ngIf="!this.readonlyAux">Delete</th>
+                <th *ngIf="!this._initiativesService.initiative.readonly">Edit</th>
+                <th *ngIf="!this._initiativesService.initiative.readonly">Delete</th>
             </tr>
             <tr *ngFor="let item of partnership.key_partners ; let i = index" [style.display]="item.active?'':'none'">
                 <td [style.color]="item.active == true?'black':'red'">{{item.key_partner_name}}</td>
                 <td [style.color]="item.active == true?'black':'red'">{{item.description}}</td>
-                <td class="center" *ngIf="!this.readonlyAux"><mat-icon class="edit" (click)="openDialog(false,item,i)">edit</mat-icon></td>
-                <td class="center" *ngIf="!this.readonlyAux"><mat-icon class="pointer" color="warn" (click)="removeKeyPartner(i)">delete</mat-icon></td>
+                <td class="center" *ngIf="!this._initiativesService.initiative.readonly"><mat-icon class="edit" (click)="openDialog(false,item,i)">edit</mat-icon></td>
+                <td class="center" *ngIf="!this._initiativesService.initiative.readonly"><mat-icon class="pointer" color="warn" (click)="removeKeyPartner(i)">delete</mat-icon></td>
             </tr>
         </table>
         <div class="set-data-container">
-            <button *ngIf="!this.readonlyAux" type="button" color="primary" mat-raised-button (click)="openDialog(true,{})">
+            <button *ngIf="!this._initiativesService.initiative.readonly" type="button" color="primary" mat-raised-button (click)="openDialog(true,{})">
                 Add new key partner
             </button>
         </div>

@@ -29,7 +29,6 @@ export interface partnership {
   styleUrls: ['./key-partners-concept.component.scss']
 })
 export class KeyPartnersConceptComponent implements OnInit {
-  readonlyAux=false;
   partnership:partnership=
     {
       comparative_advantage: "This is a test for a compartive comparative_advantage, UPDATED",
@@ -50,12 +49,11 @@ export class KeyPartnersConceptComponent implements OnInit {
   constructor(
     public _requests: RequestsService, 
     public dialog: MatDialog,
-    public _initiativesSvc: InitiativesService,
+    public _initiativesService: InitiativesService,
     public stgMenuSvc: StagesMenuService,
     private interactionsService:InteractionsService,
     private spinnerService: NgxSpinnerService,
     private _dataControlService:DataControlService,
-
     ) {
       this.partnershipForm = new FormGroup({
         comparativeAdvantage: new FormControl(null, Validators.required),
@@ -69,8 +67,8 @@ export class KeyPartnersConceptComponent implements OnInit {
 
   getPartnershipByInitiativeId(){
       this.spinnerService.show("spinnerService");
-      this.partnership.initvStgId = Number(this._initiativesSvc.initvStgId);
-      this._initiativesSvc.getPartnershipByInitiativeId(this._initiativesSvc.initvStgId).subscribe((resp:any)=>{
+      this.partnership.initvStgId = Number(this._initiativesService.initvStgId);
+      this._initiativesService.getPartnershipByInitiativeId(this._initiativesService.initvStgId).subscribe((resp:any)=>{
         this.spinnerService.hide("spinnerService");
 
         console.log(resp);
@@ -97,7 +95,7 @@ export class KeyPartnersConceptComponent implements OnInit {
 
      this.partnershipForm.valueChanges.subscribe(
       result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, this._initiativesSvc.initvStgId)
+        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, this._initiativesService.initvStgId)
         // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
       }
     );
@@ -109,7 +107,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     // console.log('%csavePartnership','background: #222; color: #ffff00');
     this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
     // console.log(this.partnership);
-    this._initiativesSvc.createPartnership(this.partnership).subscribe(resp=>{
+    this._initiativesService.createPartnership(this.partnership).subscribe(resp=>{
       // console.log(resp);
       this.interactionsService.successMessage('Key partners information has been saved')
       this.getPartnershipByInitiativeId();
