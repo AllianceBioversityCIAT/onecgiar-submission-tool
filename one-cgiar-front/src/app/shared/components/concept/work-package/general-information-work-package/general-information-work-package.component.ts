@@ -60,6 +60,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
   SaveGeneralInformation(): void {
     this._initiativesService.updateWorkPackage(this.workPackageForm.value).subscribe(resp=>{
       this._interactionsService.successMessage('Work package ' +this.workPackageForm.value.name+ ' information has been saved')
+      this._dataControlService.menuChange$.emit();
     });
   }
 
