@@ -146,7 +146,10 @@ export class GeneralInformationConceptComponent implements OnInit {
       subscribe(
         gnrlInfo => {
           this.spinnerService.hide('general-information');
-          this.interactionsService.successMessage('General information has been saved')
+        
+
+          this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)?  this.interactionsService.successMessage('General information has been saved'):
+                      this.interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
         },
         error => {
           // console.log(error, this.errorService.getServerMessage(error))

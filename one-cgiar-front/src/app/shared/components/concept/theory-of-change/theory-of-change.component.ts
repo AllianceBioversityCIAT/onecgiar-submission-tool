@@ -122,9 +122,10 @@ export class TheoryOfChangeComponent implements OnInit {
       
       }).subscribe(
       event => {
+        this.theoryOfChangeForm.valid && (this.listOfFiles.length || this.filesToUpload.length)?   this.interactionsService.successMessage('Initial theory of change has been saved'):
+        this.interactionsService.warningMessage('Initial theory of change has been saved, but there are incomplete fields')
         this.getTOCandFiles();
-        this.spinnerService.hide('tocs')
-        this.interactionsService.successMessage('Initial theory of change has been saved')
+          this.spinnerService.hide('tocs')
       },
       err => {
         this.progressInfos[idx].value = 0;

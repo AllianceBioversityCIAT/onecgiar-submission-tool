@@ -55,7 +55,10 @@ export class NarrativesConceptComponent implements OnInit {
           this.narrativesForm.controls['highlights'].setValue(narratives.conceptHiglights);
           this.narrativesForm.controls['conceptId'].setValue(narratives.conceptId);
           this.spinnerService.hide('narratives');
-          this.interactionsService.successMessage('Narratives information has been saved')
+          this.narrativesForm.valid?
+            this.interactionsService.successMessage('Narratives information has been saved'):
+            this.interactionsService.warningMessage('Narratives information has been saved, but there are incomplete fields')
+         
 
         },
         error => {
