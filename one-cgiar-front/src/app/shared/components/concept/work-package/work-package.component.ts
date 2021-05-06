@@ -7,7 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '../../../services/interactions.service';
 import { DialogConfirmComponent } from '../../dialog-confirm/dialog-confirm.component';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataControlService } from '../../../services/data-control.service';
 
 @Component({
@@ -48,6 +48,7 @@ export class WorkPackageComponent implements OnInit {
     private interactionsService:InteractionsService,
     private activatedRoute:ActivatedRoute,
     public  _dataControlService:DataControlService,
+    private router:Router
     
   ) {
   }
@@ -76,19 +77,39 @@ export class WorkPackageComponent implements OnInit {
 
 
   DialogConfirm(): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.remove === true) {
+    this.interactionsService.confirmationModal((decision)=>{
+    if (decision) {
         console.log('%cRemove','background: #222; color: #fd8484');
         this._initiativesService.updateWorkPackage({active:0,id:this._dataControlService.WorkPackageID}).subscribe(resp=>{
           console.log(resp);
+          this._dataControlService.menuChange$.emit();
+          this.router.navigate([`/initiatives/${this._initiativesService.initvStgId}/stages/concept/work-packages`]);
+          this.interactionsService.successMessage('Work package has been deleted',1000)
+          
         })
       }else{
         console.log("%cDon't remove",'background: #222; color: #37ff73');
       }
     });
+
+    
+    // const dialogRef = this.dialog.open(DialogConfirmComponent, {
+    // });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result?.remove === true) {
+    //     console.log('%cRemove','background: #222; color: #fd8484');
+    //     this._initiativesService.updateWorkPackage({active:0,id:this._dataControlService.WorkPackageID}).subscribe(resp=>{
+    //       console.log(resp);
+    //     })
+    //   }else{
+    //     console.log("%cDon't remove",'background: #222; color: #37ff73');
+    //   }
+    // });
+
+
+
+
   }
 
 
