@@ -24,6 +24,16 @@ export class InteractionsService {
     })
   }
 
+  warningMessage(title:string,seconds?:number){
+    Swal.fire({
+      icon: 'warning',
+      title: title,
+      showConfirmButton: false,
+      timer: seconds?seconds:3000
+    })
+  }
+
+
   errorMessage(title:string,seconds?:number){
     Swal.fire({
       icon: 'error',
