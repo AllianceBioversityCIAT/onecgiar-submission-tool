@@ -54,8 +54,7 @@ export const getClaCountries = async (req: Request, res: Response) => {
     WHERE countries.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     OR countries.isoAlpha2 COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     ORDER BY countries.code
-    LIMIT 10
-    `;
+     `;
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             sqlQuery,
@@ -88,8 +87,7 @@ export const getClaRegions = async (req: Request, res: Response) => {
     WHERE regions.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     OR regions.parentRegionName COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     ORDER BY regions.code
-    LIMIT 10
-    `;
+     `;
 
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
@@ -126,8 +124,7 @@ export const getClaInstitutions = async (req: Request, res: Response) => {
     OR institutions.acronym COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     OR institutions.country_name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
     ORDER BY institutions.code
-    LIMIT 10
-    `;
+     `;
 
     try {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(

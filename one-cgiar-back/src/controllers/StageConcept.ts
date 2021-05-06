@@ -359,7 +359,7 @@ export const getWorkPackages = async (req: Request, res: Response) => {
 
     try {
         const sqlQuery = `
-        SELECT id, name,
+        SELECT id, name, active,
             IF (
                 name IS NULL
                 OR name = ''
@@ -383,7 +383,8 @@ export const getWorkPackages = async (req: Request, res: Response) => {
                 'complete'
             ) AS validateProjectionBenefits
         FROM work_packages wp 
-        WHERE wp.initvStgId =:initvStgId`
+        WHERE wp.initvStgId =:initvStgId
+        AND wp.active = 1`
 
 
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
@@ -902,7 +903,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
  * @param res 
  */
 export const upsertTOCandFile = async (req: Request, res: Response) => {
-    const { initvStgId, narrative, path} = req.body;
+    const { initvStgId, narrative, path } = req.body;
     const tocsRepo = getRepository(TOCs);
     const filesRepo = getRepository(Files);
 
@@ -1094,7 +1095,7 @@ export const getPartnerships = async (req: Request, res: Response) => {
             );
         }
         partnership = await partRepo.findOne({ where: { initvStg: initvStgId } });
-        keyPartners = await keyPartnersRepo.find({ where: { partnerships: partnership } });
+        keyPartners = await keyPartnersRepo.find({ where: { partnerships: partnership, active: true } });
 
         res.json(new ResponseHandler('Key Partners list.', { partnership, keyPartners }));
 
