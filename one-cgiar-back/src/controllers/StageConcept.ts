@@ -359,7 +359,7 @@ export const getWorkPackages = async (req: Request, res: Response) => {
 
     try {
         const sqlQuery = `
-        SELECT id, name, active,
+        SELECT id, name, active, acronym,
             IF (
                 name IS NULL
                 OR name = ''
@@ -441,13 +441,14 @@ export const getWorkPackage = async (req: Request, res: Response) => {
  * @param res 
  */
 export const createWorkPackage = async (req: Request, res: Response) => {
-    const { name, results, pathwayContent, isGlobal, initvStgId } = req.body;
+    const { name, results, pathwayContent, isGlobal, acronym, initvStgId } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const wpRepo = getRepository(WorkPackages);
 
     try {
         let workPackage = new WorkPackages();
         workPackage.name = name || null;
+        workPackage.acronym = acronym || null;
         workPackage.results = results || null;
         workPackage.pathway_content = pathwayContent || null;
         workPackage.is_global = isGlobal || null;
@@ -526,12 +527,26 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
     const wpRepo = getRepository(WorkPackages);
     const regionRepo = getRepository(RegionsByWorkPackages);
     const countryRepo = getRepository(CountriesByWorkPackages);
+    const queryRunner = getConnection().createQueryBuilder();
 
 
     try {
         const workPackage = await wpRepo.findOne(wrkPkgId);
-        const regions = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
-        const countries = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
+        let regionsSBT = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
+        let countriesSBT = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
+
+        const [queryR, parametersR] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            `SELECT id, code, name FROM clarisa_regions WHERE code IN(${regionsSBT.map(r => r.region_id)}) `,
+            {},
+            {}
+        );
+        const regions = await queryRunner.connection.query(queryR, parametersR);
+        const [queryC, parametersC] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            `SELECT id, code, isoAlpha2 name FROM clarisa_countries WHERE code IN(${countriesSBT.map(c => c.country_id)}) `,
+            {},
+            {}
+        );
+        const countries = await queryRunner.connection.query(queryC, parametersC);
 
         res.json(new ResponseHandler('Regions / countries by work package.', { regions, countries }));
 
