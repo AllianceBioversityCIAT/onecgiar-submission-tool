@@ -126,13 +126,11 @@ export class MenuComponent implements OnInit {
 
 
   acronym(text) {
-    return text
-      .split(/\s/)
+    let acronym = text.split(/\s/)
       .reduce(function(accumulator, word) {
         return accumulator + word.charAt(0);
       }, '');
-  }
-
-
-
+      let limit = 10;
+      return acronym.length <= limit?acronym:acronym.slice(0, (acronym.length - limit)* -1);
+    }
 }
