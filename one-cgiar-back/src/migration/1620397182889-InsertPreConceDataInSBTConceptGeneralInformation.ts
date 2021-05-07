@@ -60,7 +60,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
             /**
              * Iterate over initiatives to create: initiative by stage and concept info data
              */
-            console.log(initiatives.length)
+            // console.log(initiatives.length)
             for (let index = 0; index < initiatives.length; index++) {
                 /** initiaitives item */
                 const initiative: Initiatives = initiatives[index];
@@ -103,6 +103,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                     let excelLead = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF002_InitLeadName').value;
                     let excelLeadEmail = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF003_InitLeadEmail').value;
                     await this.parseUser(excelLead.toString(), excelLeadEmail.toString())
+                    // console.log(excelLead.toString(), excelLeadEmail.toString(), excelLeadEmail)
                     // console.log()
                 }
 
@@ -132,6 +133,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
     private async parseUser(user: string, email: string) {
 
+        email = email.toLowerCase();
         console.log(email)
 
         /**
@@ -157,10 +159,9 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
         /**
          * validate if is CGIAR
          */
-        let rex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[cgiar]+(?:\.[a-zA-Z0-9-]+)/
-        console.log(rex.test(email), email)
-        newUser.is_cgiar = (rex.test(email)) ? true : false;
-        newUser.password = (rex.test(email)) ? null : this.generatePassword();
+        const isCGIAR = email.indexOf('@cgiar.org') !== -1 ? true : false;
+        newUser.is_cgiar = (isCGIAR) ? true : false;
+        newUser.password = (isCGIAR) ? null : this.generatePassword();
 
         this.writeUserAndPasswords(newUser);
 
@@ -193,9 +194,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
          `;
         fs.appendFile(`${parentD}/users.txt`, txt, function (err) {
             if (err) {
-                // append failed
-            } else {
-                // done
+                console.log(err)
             }
         })
     }

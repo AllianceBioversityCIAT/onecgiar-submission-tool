@@ -535,19 +535,25 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         let regionsSBT = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
         let countriesSBT = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
+        console.log(regionsSBT, countriesSBT)
+
+        const inRegions = regionsSBT.length > 0 ? `IN (${regionsSBT.map(r => r.region_id)})` : `IN ('')`;
+        const inCountries = countriesSBT.length > 0 ? `IN (${countriesSBT.map(r => r.country_id)})` : `IN ('')`;
+        console.log(`SELECT id, code, name FROM clarisa_regions WHERE code ${inRegions}`)
+        console.log(`SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code ${inCountries}`)
+
         const [queryR, parametersR] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `SELECT id, code, name FROM clarisa_regions WHERE code IN('${regionsSBT.map(r => r.region_id)} ') `,
+            `SELECT id, code, name FROM clarisa_regions WHERE code ${inRegions}`,
             {},
             {}
         );
         const regions = await queryRunner.connection.query(queryR, parametersR);
         const [queryC, parametersC] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code IN('${countriesSBT.map(c => c.country_id)}') `,
+            `SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code ${inCountries}`,
             {},
             {}
         );
         const countries = await queryRunner.connection.query(queryC, parametersC);
-
         res.json(new ResponseHandler('Regions / countries by work package.', { regions, countries }));
 
     } catch (error) {
@@ -880,12 +886,12 @@ export const addTOCConcept = async (req: Request, res: Response) => {
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
-                // console.log(`${__dirname}/`)
-                console.log(`${host}/${element.path}`)
+                // console.log(`${ __dirname } / `)
+                console.log(`${host} / ${element.path}`)
                 filesArr.push(
                     {
                         active: true,
-                        url: `${host}/${element.path}`,
+                        url: `${host} / ${element.path}`,
                         name: element.originalname
                     }
                 )
@@ -941,7 +947,7 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
             let filesArr = [];
             for (let index = 0; index < files.length; index++) {
                 const element = files[index];
-                const urlDB = `${host}/${path}/${element.originalname}`
+                const urlDB = `${host} / ${path} / ${element.originalname}`
                 filesArr.push(
                     {
                         active: true,
