@@ -542,7 +542,7 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         );
         const regions = await queryRunner.connection.query(queryR, parametersR);
         const [queryC, parametersC] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `SELECT id, code, isoAlpha2 name FROM clarisa_countries WHERE code IN(${countriesSBT.map(c => c.country_id)}) `,
+            `SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code IN(${countriesSBT.map(c => c.country_id)}) `,
             {},
             {}
         );
