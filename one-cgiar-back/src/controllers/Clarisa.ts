@@ -1,14 +1,13 @@
 import { APIError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
-import axios from 'axios';
 import { getConnection, getRepository, Like } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
 import { ResponseHandler } from "../handlers/Response";
 import { Request, Response } from 'express'
-import { notifyByEmail } from "../middlewares/mailer";
+import axios from 'axios';
+import { config } from 'dotenv';
 
-const got = require('got');
-require('dotenv').config();
+config();
 
 
 const clarisaHost = process.env.clarisa || 'http://clarisatest.ciat.cgiar.org/';
@@ -95,7 +94,8 @@ export const getClaRegions = async (req: Request, res: Response) => {
             {},
             {}
         );
-        const filteredData = await queryRunner.connection.query(query, parameters);;
+        const filteredData = await queryRunner.connection.query(query, parameters);
+
         res.json(new ResponseHandler('Regions.', { regions: filteredData }));
     } catch (error) {
         console.log(error)

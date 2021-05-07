@@ -15,6 +15,9 @@ export class WorkPackages extends UpdatedCreatedAt {
     @Column({length: '500'})
     name: string
     
+    @Column({length: '500'})
+    acronym: string
+
     @Column({length: '1000'})
     results: string
     
