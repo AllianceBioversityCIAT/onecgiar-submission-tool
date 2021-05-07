@@ -40,12 +40,16 @@
                                 required:false,
                                 inputTitle:'Please select the users who yo should access to this initiative',
                                 showChips:false,
-                                selectList:this.allUsers,
                                 selectedList:this.selectedUsers,
                                 selectItemName:'firstN_lastN_email',
                                 selectItemId:'id',
                                 selectedItemId:'userId',
-                                attributeNameToSearch:'firstN_lastN_email'
+                                attributeNameToSearch:'firstN_lastN_email',
+                                service:{
+                                    serviceTS:this.initiativesSvc,
+                                    functionName:'getAllUsers',
+                                    objectName:'users'
+                                }
                                }"></custom-multiple-choice>
                         </div>
                         <div class="col-sm-12">

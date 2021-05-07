@@ -54,8 +54,6 @@ export class WorkPackageComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("WP init");
-    this.getCLARISARegions();
-    this.getCLARISACountries();
     this.activatedRoute.params.subscribe((resp:any) => {
       
       let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
@@ -93,25 +91,25 @@ export class WorkPackageComponent implements OnInit {
   }
 
 
-  getCLARISARegions(){
-    this._initiativesService.getCLARISARegions().subscribe(resp=>{
-      console.log('%cCLARISA regions','background: #222; color: #ffff00');
-      // console.log(resp);
-      this._dataControlService.regionsList = resp.response.regions;
-    })
-  }
+  // getCLARISARegions(){
+  //   this._initiativesService.getCLARISARegions().subscribe(resp=>{
+  //     console.log('%cCLARISA regions','background: #222; color: #ffff00');
+  //     // console.log(resp);
+  //     this._dataControlService.regionsList = resp.response.regions;
+  //   })
+  // }
 
-  getCLARISACountries(){
-    this._initiativesService.getCLARISACountries().subscribe(resp=>{
-      console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
-      // console.log(resp);
-      this._dataControlService.countriesList = resp.response.countries;
-      this._dataControlService.countriesAndRegionsloaded$.emit();
-    },
-    err=>{
-      this._dataControlService.countriesAndRegionsloaded$.emit();
-    })
-  }
+  // getCLARISACountries(){
+  //   this._initiativesService.getCLARISACountries().subscribe(resp=>{
+  //     console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
+  //     // console.log(resp);
+  //     this._dataControlService.countriesList = resp.response.countries;
+  //     this._dataControlService.countriesAndRegionsloaded$.emit();
+  //   },
+  //   err=>{
+  //     this._dataControlService.countriesAndRegionsloaded$.emit();
+  //   })
+  // }
 
 
 

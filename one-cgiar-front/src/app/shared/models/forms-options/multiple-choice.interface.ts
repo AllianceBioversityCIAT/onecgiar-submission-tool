@@ -13,5 +13,12 @@ export interface multipleChoiceOptions{
     selectedItemId:string|number;
     toDisableList:[];
     showChips:boolean;
-    attributeNameToSearch:string
+    attributeNameToSearch:string;
+    service:{
+        serviceTS:any;
+        functionName:string;
+        objectName:string;
+    }
+    
+    
 }

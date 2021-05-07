@@ -38,21 +38,16 @@ export class ManageAccessComponent implements OnInit {
   }
 
   getAllUsers(){
-    this.initiativesSvc.getAllUsers().subscribe(users=>{
-      this.allUsers = users.data;
-      // console.log(this.allUsers);
-      for (const user of  this.allUsers) {
-        user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
-        user.userId = user.id;
-        user.active = user.is_active;
-      }
+    this.initiativesSvc.getAllUsers('').subscribe(users=>{
+      console.log('%clocal get userrs','background: #222; color: #fd8484');
+      console.log(users);
     })
   }
 
   getAllRoles(){
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
       this.allRoles = roles.data;
-      console.log(roles.data);
+      // console.log(roles.data);
       for (let index = 0; index < this.allRoles.length; index++) {
         if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
           this.allRoles.splice(index,1)
@@ -77,7 +72,7 @@ export class ManageAccessComponent implements OnInit {
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
-      console.log(resp.response.users);
+      // console.log(resp.response.users);
       this.removeInactiveUsers();
     })
   }

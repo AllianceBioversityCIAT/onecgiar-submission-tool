@@ -28,12 +28,17 @@
                 <custom-multiple-choice [options]="{
                     required:true,
                     inputTitle:'Select regions',
-                    selectList:this._dataControlService.regionsList,
+
                     selectedList:this.regionsSelectedList,
                     selectItemName:'name',
-                    selectItemId:'um49Code',
-                    selectedItemId:'um49Code',
-                    attributeNameToSearch:'name'
+                    selectItemId:'code',
+                    selectedItemId:'code',
+                    attributeNameToSearch:'name',
+                    service:{
+                        serviceTS:this._initiativesService,
+                        functionName:'getCLARISARegions',
+                        objectName:'regions'
+                    }
                    }"></custom-multiple-choice>
             </div>
 
@@ -43,12 +48,17 @@
             <custom-multiple-choice [options]="{
                 required:true,
                 inputTitle:'Select countries',
-                selectList:this._dataControlService.countriesList,
+
                 selectedList:this.countriesSelectedList,
                 selectItemName:'name',
                 selectItemId:'code',
                 selectedItemId:'code',
-                attributeNameToSearch:'name'
+                attributeNameToSearch:'name',
+                service:{
+                    serviceTS:this._initiativesService,
+                    functionName:'getCLARISACountries',
+                    objectName:'countries'
+                }
                }"></custom-multiple-choice>
             </div>
         </div>

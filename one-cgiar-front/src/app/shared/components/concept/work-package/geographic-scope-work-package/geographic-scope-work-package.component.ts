@@ -27,16 +27,10 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
   ngOnInit(): void {
     this.getRegionsAndCountries();
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
-        this.setIsGlobal(resp.response.workPackage.is_global);
-        this.showForm = false;
-        setTimeout(() => {
-          this.showForm = true;
-        }, 1);
-        
+        this.setIsGlobal(resp.response.workPackage.is_global);        
       })
 
     this._dataControlService.countriesAndRegionsloaded$.subscribe(()=>{
-      this.mapNamesOfRegionsAndCountries();
     })
   }
 
@@ -48,27 +42,32 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
 
   
   saveEachRegionAndCountries(){
+    console.log("guardando: regions an countries");
+    console.log(this.regionsSelectedList);
+    console.log(this.countriesSelectedList);
     for (const region of this.regionsSelectedList) {
-      let body;
-      body = region;
-      body.wrkPkgId = this._dataControlService.WorkPackageID
-      body.regionId = body.um49Code;
       if (region.new){
+        let body;
+        body = region;
+        body.wrkPkgId = this._dataControlService.WorkPackageID;
+        body.regionId = body.code;
        this._initiativesService.createRegion(body).subscribe(resp=>{
+         console.log('%ccreateRegion','background: #222; color: #37ff73');
+         console.log(resp);
        })
       }
     }
 
-    for (const countrie of this.countriesSelectedList) {
-      let body;
-      body = countrie;
-      body.wrkPkgId = this._dataControlService.WorkPackageID
-      body.countryId = body.code;
-      if (countrie.new){
-       this._initiativesService.createCountrie(body).subscribe(resp=>{
-       })
-      }
-    }
+    // for (const countrie of this.countriesSelectedList) {
+    //   let body;
+    //   body = countrie;
+    //   body.wrkPkgId = this._dataControlService.WorkPackageID
+    //   body.countryId = body.code;
+    //   if (countrie.new){
+    //    this._initiativesService.createCountrie(body).subscribe(resp=>{
+    //    })
+    //   }
+    // }
   
     this._interactionsService.successMessage('Geographic scope information has been saved',1000)
 
@@ -78,35 +77,18 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
     this.workPackageForm.controls['isGlobal'].setValue(value);
   }
 
-  mapNamesOfRegionsAndCountries(){
-
-    for (const countrySelected of this.countriesSelectedList) {
-      countrySelected.code = countrySelected.country_id;
-      for (const countrieFull of this._dataControlService.countriesList) {
-        if(countrySelected.country_id == countrieFull.code){
-          countrySelected.name = countrieFull.name;
-        }
-      }
-    }
-
-    for (const regionSelected of this.regionsSelectedList) {
-      regionSelected.um49Code = regionSelected.region_id;
-      for (const regionFull of this._dataControlService.regionsList) {
-        if(regionSelected.um49Code == regionFull.um49Code){
-          regionSelected.name = regionFull.name;
-        }
-      }
-    }
-
-  }
-
-  
   getRegionsAndCountries(){
 
     this._initiativesService.getRegionsAndCountries(this._dataControlService.WorkPackageID).subscribe(resp=>{
       this.showForm = true;
       this.regionsSelectedList = resp.response.regions;
       this.countriesSelectedList = resp.response.countries;
+      console.log('%cgetRegionsAndCountries','background: #222; color: #37ff73');
+      console.log(this.regionsSelectedList);
+
+      // this.regionsSelectedList.map(region=>{region.regionId = region.code});
+      // this.countriesSelectedList.map(county=>county.countryId = county.code);
+
     })
     
   }

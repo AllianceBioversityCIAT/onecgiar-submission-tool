@@ -102,13 +102,13 @@ export class InitiativesService {
   }
 
   // Query to get CLARISA Regions 
-  getCLARISARegions(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions`);
+  getCLARISARegions(filterText:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?filter=${filterText}`);
   }
 
   // Query to get CLARISA Countries
-  getCLARISACountries(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
+  getCLARISACountries(filterText:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries?filter=${filterText}`);
   }
 
   // Query to get CLARISA Countries By filter
@@ -229,8 +229,17 @@ export class InitiativesService {
   }
 
   // Query to get all the users 
-  getAllUsers(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/users`);
+  getAllUsers(filterText:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/users`).pipe(map(resp=> {
+      console.log('%cgetAllUsers direct','background: #222; color: #ffff00');
+      console.log(resp);
+      resp.data.map(user=>{
+        user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+      })
+      // resp.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+      let res:any={response:{users: resp.data}};
+      return res;
+    }));
   }
 
   // Query to get action areas by ID

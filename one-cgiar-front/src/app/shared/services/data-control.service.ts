@@ -6,8 +6,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 export class DataControlService {
   //lists of services
   institutions:[];
-  regionsList:any[];
-  countriesList:any[];
+  // regionsList:any[];
+  // countriesList:any[];
   breadcrumbItemTwo = '';
   // data={
   //  concept:{

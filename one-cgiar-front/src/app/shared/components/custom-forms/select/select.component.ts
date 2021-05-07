@@ -82,8 +82,6 @@ export class SelectComponent implements OnInit {
   consumeService() {
     if (this.options.service && !this.options.selectList) {
       this.options.service[this.options.serviceFunction](this.searchText).subscribe((res) => {
-        console.log("Que locura !!!");
-        console.log(res.response.institutions);
         this.selectList = res.response.institutions;
         res.response.institutions.map(institution=>{
           institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;

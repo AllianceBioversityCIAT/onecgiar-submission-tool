@@ -12,11 +12,13 @@ export class MultipleChoiceComponent implements OnInit {
   @Input() options:multipleChoiceOptions;
   searchText:string='';
   removeFocus=false;
+  selectList=[];
   constructor(
     public _initiativesService:InitiativesService
   ) { 
   }
   ngOnInit(){ 
+    this.consumeService();
   }
 
   addItem(item,disabled){
@@ -24,12 +26,14 @@ export class MultipleChoiceComponent implements OnInit {
     setTimeout(() => {
       this.removeFocus = false
     }, 1);
-    
+    // console.log(item);
+    // console.log(disabled);
     if (!disabled) {
       this.searchText = "";
       item.new = true;
       this.options.selectedList.push(item);
       console.log(item);
+      this.consumeService();
     }
   }
 
@@ -38,15 +42,47 @@ export class MultipleChoiceComponent implements OnInit {
     this.options.selectedList.splice(index, 1); 
   }
 
-  disableOption(option){
-    if ( this.options.selectedList) {
-      for (const item of this.options.selectedList) {
-        if (option[this.options.selectItemId]==item[this.options.selectedItemId]) {
-          return true;
+  // disableOption(option){
+  //   if ( this.options.selectedList) {
+  //     for (const item of this.options.selectedList) {
+  //       if (option[this.options.selectItemId]==item[this.options.selectedItemId]) {
+  //         return true;
+  //       }
+  //     }
+  //   }else{
+  //     return false;
+  //   }
+  // }
+
+  consumeService() {
+    if (this.options.service && !this.options.selectList) {
+      this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
+        // console.log('%cselected','background: #222; color: #ffff00');
+        // console.log(this.options.selectedList);
+        // console.log('%call'+this.options.service.objectName,'background: #222; color: #84c3fd');
+        // console.log(res.response[this.options.service.objectName]);
+        this.selectList = res.response[this.options.service.objectName];
+        
+      this.selectList.map(itemOfSelectList=>{
+        
+        if (this.options.selectedList) {
+          for (const item of this.options.selectedList) {
+            if (itemOfSelectList[this.options.selectItemId] == item[this.options.selectedItemId]) {
+              itemOfSelectList.selected = true;
+              return;
+            }else{
+              itemOfSelectList.selected = false;
+            }
+          }
         }
-      }
-    }else{
-      return false;
+
+      });
+        // this.selectList = res.response.institutions;
+        // res.response.institutions.map(institution=>{
+        //   institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
+        // })
+        console.log("=========================");
+      });
     }
   }
   

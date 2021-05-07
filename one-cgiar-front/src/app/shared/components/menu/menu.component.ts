@@ -112,7 +112,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
       //  console.log("getAllIWorkPackages");
       this.workPackagesList = resp.response.workPackages;
-      console.log( this.workPackagesList);
+      // console.log( this.workPackagesList);
     },
       err => {
         // this.spinnerService.hide('work-packages');

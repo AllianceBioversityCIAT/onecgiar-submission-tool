@@ -15,6 +15,6 @@ export interface selectOptions{
     selectItemId:string|number;
     toDisableList:[];
     attributeNameToSearch:string;
-    service:any,
-    serviceFunction:string,
+    service:any;
+    serviceFunction:string;
 }
