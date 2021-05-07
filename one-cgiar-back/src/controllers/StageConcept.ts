@@ -536,13 +536,13 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         let countriesSBT = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
         const [queryR, parametersR] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `SELECT id, code, name FROM clarisa_regions WHERE code IN(${regionsSBT.map(r => r.region_id)}) `,
+            `SELECT id, code, name FROM clarisa_regions WHERE code IN('${regionsSBT.map(r => r.region_id)} ') `,
             {},
             {}
         );
         const regions = await queryRunner.connection.query(queryR, parametersR);
         const [queryC, parametersC] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            `SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code IN(${countriesSBT.map(c => c.country_id)}) `,
+            `SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code IN('${countriesSBT.map(c => c.country_id)}') `,
             {},
             {}
         );
@@ -551,6 +551,7 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Regions / countries by work package.', { regions, countries }));
 
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 
