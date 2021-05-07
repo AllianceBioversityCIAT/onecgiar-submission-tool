@@ -15,7 +15,7 @@ export class InsertClarisaCountriesSBT1620162772212 implements MigrationInterfac
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const clarisaRepo = getRepository(ClarisaCountries);
-        const countries = await axios.get(clarisaHost + 'un-regions', { headers: clarisaHeader });
+        const countries = await axios.get(clarisaHost + 'countries', { headers: clarisaHeader });
 
         let countriesArray: ClarisaCountries[] = [];
 

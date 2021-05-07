@@ -6,6 +6,8 @@ import { Stages } from "../entity/Stages";
 import { Users } from "../entity/Users";
 import { ExcelUtil } from "../utils/excel-util";
 
+import * as fs from 'fs';
+
 
 const pth = require('path').resolve(process.cwd(), '../');
 const parentD = `${pth}/uploads/`;
@@ -99,8 +101,9 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                  */
                 if (index > 0) {
                     let excelLead = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF002_InitLeadName').value;
-                    let excelLeadEmail = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF002_InitLeadName').value;
-
+                    let excelLeadEmail = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF003_InitLeadEmail').value;
+                    await this.parseUser(excelLead.toString(), excelLeadEmail.toString())
+                    // console.log()
                 }
 
 
@@ -128,6 +131,20 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
 
     private async parseUser(user: string, email: string) {
+
+        console.log(email)
+
+        /**
+         * check if user already exists
+         */
+        const userRepo = getRepository(Users);
+        const BDuser = await userRepo.findOne({ email });
+
+        if (BDuser != null) {
+            return BDuser;
+        }
+
+
         /**
          * create new user
          */
@@ -135,11 +152,56 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
         const [firstName, ...others] = user.split(' ');
         newUser.first_name = firstName;
         newUser.last_name = others.join(' ');
+        newUser.email = email;
 
         /**
          * validate if is CGIAR
          */
+        let rex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[cgiar]+(?:\.[a-zA-Z0-9-]+)/
+        console.log(rex.test(email), email)
+        newUser.is_cgiar = (rex.test(email)) ? true : false;
+        newUser.password = (rex.test(email)) ? null : this.generatePassword();
 
+        this.writeUserAndPasswords(newUser);
+
+        /**
+         * hash password
+         */
+        if (!newUser.is_cgiar) {
+            newUser.hashPassword();
+        }
+        /**
+         * save new user
+         */
+        // newUser = await userRepo.save(newUser);
+        return newUser
     }
+
+    private generatePassword() {
+        return Math.random().toString(36).slice(-8);
+    }
+
+    private writeUserAndPasswords(user: Users) {
+        let txt = `
+        ------------------------------
+        first name: ${user.first_name},
+        last name: ${user.last_name},
+        email: ${user.email},
+        is_cgiar: ${user.is_cgiar},
+        password: ${user.password},
+        ------------------------------
+         `;
+        fs.appendFile(`${parentD}/users.txt`, txt, function (err) {
+            if (err) {
+                // append failed
+            } else {
+                // done
+            }
+        })
+    }
+
+
+
+
 
 }
