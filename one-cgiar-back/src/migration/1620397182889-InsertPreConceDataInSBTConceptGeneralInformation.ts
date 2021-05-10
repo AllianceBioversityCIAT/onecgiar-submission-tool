@@ -20,7 +20,8 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const fileName = '20210430_initiatives_transformed_v1.1.xlsx'
-        const initvRepo = getRepository(Initiatives);
+        // const initvRepo = getRepository(Initiatives);
+        const conceptRepo = getRepository(ConceptInfo);
         const stageRepo = getRepository(Stages);
         const initvStageRepo = getRepository(InitiativesByStages);
         try {
@@ -75,7 +76,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                 /**
                  * save initiative by stage
                  */
-                // initvStg = await initvStageRepo.save(initvStg);
+                initvStg = await initvStageRepo.save(initvStg);
 
                 /**
                  * create concept info
@@ -83,6 +84,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                 let newConceptInfo = new ConceptInfo();
                 newConceptInfo.name = initiative.name;
                 newConceptInfo.id = initiative.id;
+                newConceptInfo.initvStg = initvStg;
 
 
                 /**
@@ -96,33 +98,33 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
                 }
 
-                /**
-                 * Create user if not exist
-                 */
-                if (index > 0) {
-                    let excelLead = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF002_InitLeadName').value;
-                    let excelLeadEmail = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF003_InitLeadEmail').value;
-                    await this.parseUser(excelLead.toString(), excelLeadEmail.toString())
-                    // console.log(excelLead.toString(), excelLeadEmail.toString(), excelLeadEmail)
-                    // console.log()
-                }
+                // /**
+                //  * Create user if not exist
+                //  */
+                // if (index > 0) {
+                //     let excelLead = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF002_InitLeadName').value;
+                //     let excelLeadEmail = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'PCF003_InitLeadEmail').value;
+                //     await this.parseUser(excelLead.toString(), excelLeadEmail.toString())
+                //     // console.log(excelLead.toString(), excelLeadEmail.toString(), excelLeadEmail)
+                //     // console.log()
+                // }
 
 
+                newConceptInfos.push(newConceptInfo)
 
-
-                // console.log(newConceptInfo)
-
-
-
+                
+                
+                
             }
 
+            let r = await conceptRepo.save(newConceptInfos);
+            console.log(r)
 
 
         } catch (error) {
             console.log(error);
         }
 
-        throw new Error;
 
     }
 
