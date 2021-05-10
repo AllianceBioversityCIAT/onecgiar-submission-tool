@@ -83,8 +83,8 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
       this.showForm = true;
       this.regionsSelectedList = resp.response.regions;
       this.countriesSelectedList = resp.response.countries;
-      console.log('%cgetRegionsAndCountries','background: #222; color: #37ff73');
-      console.log(this.regionsSelectedList);
+      // console.log('%cgetRegionsAndCountries','background: #222; color: #37ff73');
+      // console.log(this.regionsSelectedList);
 
       // this.regionsSelectedList.map(region=>{region.regionId = region.code});
       // this.countriesSelectedList.map(county=>county.countryId = county.code);

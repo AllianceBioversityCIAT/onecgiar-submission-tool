@@ -20,7 +20,7 @@
                 </mat-form-field>
 
                 <mat-chip-list class="example-chip" *ngIf="!(options.showChips === false)">
-                    <mat-chip class="example-box" color="accent" selected *ngFor="let item of this.options.selectedList;let i = index">
+                    <mat-chip class="example-box" color="accent" selected *ngFor="let item of this.options.selectedList;let i = index" [hidden]="item.active == false">
                         {{options.chipName?item[options.chipName]:item[options.selectItemName]}}
                         <mat-icon matChipRemove (click)="removeItem(i)">cancel</mat-icon>
                     </mat-chip>

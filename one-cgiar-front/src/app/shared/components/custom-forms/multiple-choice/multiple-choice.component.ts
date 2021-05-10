@@ -31,6 +31,7 @@ export class MultipleChoiceComponent implements OnInit {
     if (!disabled) {
       this.searchText = "";
       item.new = true;
+      item.active = true;
       this.options.selectedList.push(item);
       console.log(item);
       this.consumeService();
@@ -38,8 +39,12 @@ export class MultipleChoiceComponent implements OnInit {
   }
 
   removeItem(index){
-    console.log("Remove item");
-    this.options.selectedList.splice(index, 1); 
+    console.log("Remove item:" + index);
+    this.options.selectedList[index].active = false;
+    this.options.selectedList[index].new = true; 
+    console.log(this.options.selectedList[index]);
+    this.consumeService();
+    // this.options.selectedList.splice(index, 1); 
   }
 
   // disableOption(option){
@@ -55,22 +60,23 @@ export class MultipleChoiceComponent implements OnInit {
   // }
 
   consumeService() {
-    console.log('%cconsumeService: '+this.options.service.functionName,'background: #222; color: #84c3fd');
+    // console.log('%cconsumeService: '+this.options.service.functionName,'background: #222; color: #84c3fd');
     if (this.options.service && !this.options.selectList) {
       this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
-        console.log('%ccconsumeService: '+this.options.service.functionName+' info: ','background: #222; color: #37ff73');
-        console.log(res);
+        // console.log('%ccconsumeService: '+this.options.service.functionName+' info: ','background: #222; color: #37ff73');
+        // console.log(res);
         // console.log('%cselected','background: #222; color: #ffff00');
         // console.log(this.options.selectedList);
         // console.log('%call'+this.options.service.objectName,'background: #222; color: #84c3fd');
         // console.log(res.response[this.options.service.objectName]);
         this.selectList = res.response[this.options.service.objectName];
-        
+        console.log(this.options.selectedList);
+        console.log(this.selectList);
       this.selectList.map(itemOfSelectList=>{
         
         if (this.options.selectedList) {
           for (const item of this.options.selectedList) {
-            if (itemOfSelectList[this.options.selectItemId] == item[this.options.selectedItemId]) {
+            if (itemOfSelectList[this.options.selectItemId] == item[this.options.selectedItemId] && item?.active !== false) {
               itemOfSelectList.selected = true;
               return;
             }else{
