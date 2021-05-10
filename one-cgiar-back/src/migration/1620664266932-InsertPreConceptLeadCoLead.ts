@@ -1,9 +1,7 @@
 import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
 import { Users } from "../entity/Users";
 import * as fs from 'fs';
-import { ConceptInfo } from "../entity/ConceptInfo";
 import { InitiativesByStages } from "../entity/InititativesByStages";
-import { Stages } from "../entity/Stages";
 import { InitiativesByUsers } from "../entity/InititativesByUsers";
 import { ExcelUtil } from "../utils/excel-util";
 import { Roles } from "../entity/Roles";
