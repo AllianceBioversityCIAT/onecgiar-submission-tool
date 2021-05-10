@@ -394,16 +394,16 @@ export const getWorkPackages = async (req: Request, res: Response) => {
         );
         const workPackages = await queryRunner.connection.query(query, parameters);
         // await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
-        if (workPackages.length == 0) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'Workpackages not found for initiative.'
-            );
-        } else {
-            res.json(new ResponseHandler('Work packages.', { workPackages }));
-        }
+        // if (workPackages.length == 0) {
+        //     throw new APIError(
+        //         'NOT FOUND',
+        //         HttpStatusCode.NOT_FOUND,
+        //         true,
+        //         'Workpackages not found for initiative.'
+        //     );
+        // } else {
+        // }
+        res.json(new ResponseHandler('Work packages.', { workPackages }));
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
