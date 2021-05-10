@@ -54,3 +54,4 @@ API/node_modules/*
 
 
 /one-cgiar-front/src/environments/*.ts
+/uploads/*
