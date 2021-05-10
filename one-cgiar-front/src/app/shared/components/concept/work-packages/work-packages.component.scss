@@ -23,3 +23,17 @@ h1{
 
   }
 }
+
+td, th {
+  width: auto;
+  font-size: 1em;
+}
+
+.overflow_ellipsis{
+  white-space: nowrap; 
+  // width: 50px !important; 
+  max-width: 20vw !important;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  // border: 1px solid #000000;
+}
