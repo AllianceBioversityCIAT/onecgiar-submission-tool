@@ -90,7 +90,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                 /**
                  * Assign action area
                  */
-                let excelAA = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'AA_Code').value;
+                let excelAA = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'AA_Code') ? wb.getCellInRowByColumnHeader(wSheet, index + 1, 'AA_Code').value : null;
                 const clarisaAA = actionAreas.find(AA => excelAA.toString().includes(AA.acronym));
                 if (clarisaAA) {
                     newConceptInfo.action_area_description = clarisaAA.name;
@@ -112,9 +112,9 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
                 newConceptInfos.push(newConceptInfo)
 
-                
-                
-                
+
+
+
             }
 
             let r = await conceptRepo.save(newConceptInfos);
