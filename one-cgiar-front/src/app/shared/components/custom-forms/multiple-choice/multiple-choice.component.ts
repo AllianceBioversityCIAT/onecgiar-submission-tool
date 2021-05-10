@@ -55,8 +55,11 @@ export class MultipleChoiceComponent implements OnInit {
   // }
 
   consumeService() {
+    console.log('%cconsumeService: '+this.options.service.functionName,'background: #222; color: #84c3fd');
     if (this.options.service && !this.options.selectList) {
       this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
+        console.log('%ccconsumeService: '+this.options.service.functionName+' info: ','background: #222; color: #37ff73');
+        console.log(res);
         // console.log('%cselected','background: #222; color: #ffff00');
         // console.log(this.options.selectedList);
         // console.log('%call'+this.options.service.objectName,'background: #222; color: #84c3fd');
@@ -81,7 +84,6 @@ export class MultipleChoiceComponent implements OnInit {
         // res.response.institutions.map(institution=>{
         //   institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
         // })
-        console.log("=========================");
       });
     }
   }

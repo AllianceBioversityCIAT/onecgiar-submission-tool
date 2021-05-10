@@ -53,7 +53,6 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("WP init");
     this.activatedRoute.params.subscribe((resp:any) => {
       
       let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
