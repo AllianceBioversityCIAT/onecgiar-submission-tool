@@ -58,16 +58,16 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
       }
     }
 
-    // for (const countrie of this.countriesSelectedList) {
-    //   let body;
-    //   body = countrie;
-    //   body.wrkPkgId = this._dataControlService.WorkPackageID
-    //   body.countryId = body.code;
-    //   if (countrie.new){
-    //    this._initiativesService.createCountrie(body).subscribe(resp=>{
-    //    })
-    //   }
-    // }
+    for (const countrie of this.countriesSelectedList) {
+      let body;
+      body = countrie;
+      body.wrkPkgId = this._dataControlService.WorkPackageID
+      body.countryId = body.code;
+      if (countrie.new){
+       this._initiativesService.createCountrie(body).subscribe(resp=>{
+       })
+      }
+    }
   
     this._interactionsService.successMessage('Geographic scope information has been saved',1000)
 
