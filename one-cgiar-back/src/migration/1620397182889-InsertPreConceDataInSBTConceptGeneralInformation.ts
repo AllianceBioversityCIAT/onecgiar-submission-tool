@@ -91,10 +91,10 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                  * Assign action area
                  */
                 let excelAA = wb.getCellInRowByColumnHeader(wSheet, index + 1, 'AA_Code') ? wb.getCellInRowByColumnHeader(wSheet, index + 1, 'AA_Code').value : null;
-                const clarisaAA = actionAreas.find(AA => excelAA.toString().includes(AA.acronym));
-                if (clarisaAA) {
-                    newConceptInfo.action_area_description = clarisaAA.name;
-                    newConceptInfo.action_area_id = clarisaAA.code;
+                if (excelAA) {
+                    const clarisaAA = actionAreas.find(AA => excelAA.toString().includes(AA.acronym));
+                    newConceptInfo.action_area_description = clarisaAA ? clarisaAA.name : null;
+                    newConceptInfo.action_area_id = clarisaAA ? clarisaAA.code : null;
 
                 }
 
