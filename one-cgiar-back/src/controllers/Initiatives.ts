@@ -1,6 +1,7 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express'
-import { getConnection, getManager, getRepository, In, QueryRunner } from 'typeorm'
+import { getConnection, getManager, getRepository, In, QueryFailedError, QueryRunner } from 'typeorm'
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { ActionAreasByInitiativeStage } from '../entity/ActionAreasByInitiativeStage';
 import { ConceptInfo } from '../entity/ConceptInfo';
 import { Initiatives, InterfInfoStage } from '../entity/Initiatives'
@@ -91,7 +92,16 @@ export const getInitiatives = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -162,7 +172,16 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -203,6 +222,16 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
         roles = await queryRunner.connection.query(query, parameters);
         res.json(new ResponseHandler('User roles by Initiative.', { roles }));
     } catch (error) {
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -238,6 +267,16 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
         users = await queryRunner.connection.query(query, parameters);
         res.json(new ResponseHandler('Users by Initiative.', { users }));
     } catch (error) {
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -327,7 +366,16 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Assigned user to intiative', { assignedUser: newUsrByInitv }));
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -386,7 +434,16 @@ export const createInitiative = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not create initiatives." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -406,7 +463,16 @@ export const getStage = async (req: Request, res: Response) => {
 
         res.json(new ResponseHandler('Stages.', { stages, stagesMeta }));
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -435,7 +501,16 @@ export const createStage = async (req: Request, res: Response) => {
         res.json({ msg: 'Stage created', data: createdStage });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not create initiatives." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 }
 
@@ -488,7 +563,16 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         }
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not assign stage to initiative.", data: error });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -541,7 +625,16 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not assign action area to initiative stage." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -598,7 +691,16 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not assign TOC file to initiative stage." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 
@@ -617,7 +719,17 @@ export const getActionAreas = async (req: Request, res: Response) => {
         const actionAreas = await getClaActionAreas();
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
-        return res.status(error.httpCode).json(error);;
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 }
 

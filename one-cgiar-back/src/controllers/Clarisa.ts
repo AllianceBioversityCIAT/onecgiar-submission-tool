@@ -1,11 +1,12 @@
 import { APIError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
-import { getConnection, getRepository, Like } from "typeorm";
+import { getConnection, getRepository, Like, QueryFailedError } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
 import { ResponseHandler } from "../handlers/Response";
 import { Request, Response } from 'express'
 import axios from 'axios';
 import { config } from 'dotenv';
+import { EntityNotFoundError } from "typeorm/error/EntityNotFoundError";
 
 config();
 
@@ -63,7 +64,16 @@ export const getClaCountries = async (req: Request, res: Response) => {
         const filteredData = await queryRunner.connection.query(query, parameters);
         res.json(new ResponseHandler('Countries.', { countries: filteredData }));
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -98,7 +108,16 @@ export const getClaRegions = async (req: Request, res: Response) => {
 
         res.json(new ResponseHandler('Regions.', { regions: filteredData }));
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -137,7 +156,16 @@ export const getClaInstitutions = async (req: Request, res: Response) => {
 
         res.json(new ResponseHandler('Institutions.', { institutions: filteredData }));
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
