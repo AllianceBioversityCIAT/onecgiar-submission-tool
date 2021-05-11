@@ -80,7 +80,7 @@ export class AuthService {
   }
   
   changePassword(body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/change-password`, body);
+    return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, body);
   }
 
   // saveGeneralInformation(): void {
