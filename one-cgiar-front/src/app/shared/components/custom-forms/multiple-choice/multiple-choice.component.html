@@ -9,13 +9,17 @@
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                     <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText"  (ngModelChange)="consumeService($event)" [disabled]="removeFocus">
                     <mat-label [hidden]="true"></mat-label>
-                    <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let option of selectList" [value]="option.name" (click)="addItem(option,option.selected)" [disabled]="option.selected">
-                        <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{option.selected?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
-                      </mat-option>
-                      <!-- <mat-option *ngIf="(options.selectList|regionsFilter:searchText:options.attributeNameToSearch).length == 0" [value]=""  [disabled]="false">
-                      <span class="color_message" *ngIf="searchText">No matches found...</span> <span class="color_message" *ngIf="!searchText ">Write something to filter</span> <mat-icon style="margin-left: 10px; position: relative; top: -2px;" class="color_message">{{searchText?'search_off':'keyboard'}}</mat-icon> 
-                      </mat-option> -->
+                    <mat-autocomplete #auto="matAutocomplete" >
+
+                        <cdk-virtual-scroll-viewport class="autocomplete-test-viewport"  itemSize="25" [ngStyle]="{'height': height}">
+                            <mat-option class="autocomplete-item" *cdkVirtualFor="let option of selectList" [value]="option.name" (click)="addItem(option,option.selected)" [disabled]="option.selected">
+                                <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{option.selected?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
+                            </mat-option>
+                            <!-- <mat-option *ngIf="(options.selectList|regionsFilter:searchText:options.attributeNameToSearch).length == 0" [value]=""  [disabled]="false">
+                            <span class="color_message" *ngIf="searchText">No matches found...</span> <span class="color_message" *ngIf="!searchText ">Write something to filter</span> <mat-icon style="margin-left: 10px; position: relative; top: -2px;" class="color_message">{{searchText?'search_off':'keyboard'}}</mat-icon> 
+                            </mat-option> -->
+                         </cdk-virtual-scroll-viewport>
+
                     </mat-autocomplete>
                 </mat-form-field>
 

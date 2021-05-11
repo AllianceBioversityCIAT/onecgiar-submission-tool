@@ -9,19 +9,39 @@
 // //    height: 400px;
 // }
 
-mat-form-field{
-    width: 100%;
+mat-form-field {
+  width: 100%;
 }
 
 .description-field {
-    color: #666666;
-    font-size: 0.8rem;
+  color: #666666;
+  font-size: 0.8rem;
 }
 
 .asterisk {
-    color: #ff0000;
+  color: #ff0000;
 }
 
-.color_message{
-    color: rgb(155, 155, 155);
+.color_message {
+  color: rgb(155, 155, 155);
 }
+
+// .select-test-viewport {
+//   height: 200px;
+// //   width: 200px;
+//   border: 1px solid black;
+// }
+
+// .autocomplete-test-viewport {
+//   height: 200px;
+//   border: 1px solid rgb(255, 0, 0);
+// }
+// .autocomplete-item {
+// //   height: 50px;
+// }
+
+
+.autocomplete-item {
+    height: 50px;
+}
+  

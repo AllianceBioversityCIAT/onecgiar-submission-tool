@@ -9,6 +9,7 @@ import { InitiativesService } from '../../../services/initiatives.service';
   styleUrls: ['./multiple-choice.component.scss']
 })
 export class MultipleChoiceComponent implements OnInit {
+  height:string;
   @Input() options:multipleChoiceOptions;
   searchText:string='';
   removeFocus=false;
@@ -72,6 +73,13 @@ export class MultipleChoiceComponent implements OnInit {
         this.selectList = res.response[this.options.service.objectName];
         console.log(this.options.selectedList);
         console.log(this.selectList);
+
+        if (this.selectList.length < 4) {
+          this.height = (this.selectList.length * 50) + 'px';
+        } else {
+          this.height = '200px'
+        }
+
       this.selectList.map(itemOfSelectList=>{
         
         if (this.options.selectedList) {
