@@ -84,8 +84,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const changePassword = async (req: Request, res: Response) => {
-    const { userId } = res.locals.jwtPayload;
-    const { oldPassword, newPassword } = req.body;
+    // const { userId } = res.locals.jwtPayload;
+    const { email, oldPassword, newPassword } = req.body;
 
 
     const userRepository = getRepository(Users);
@@ -100,7 +100,7 @@ export const changePassword = async (req: Request, res: Response) => {
                 'Old and new passwords are required.'
             );
         }
-        user = await userRepository.findOne(userId);
+        user = await userRepository.findOne(email);
         if (!user.checkPassword(oldPassword)) {
             throw new APIError(
                 'UNAUTHORIZED',
@@ -121,7 +121,7 @@ export const changePassword = async (req: Request, res: Response) => {
         user.hashPassword();
         userRepository.save(user);
 
-        res.json(new ResponseHandler('Validate user.', { user }));
+        res.json(new ResponseHandler('User updated.', { user }));
         // res.json({ msg: 'Password updated' });
     } catch (error) {
         return res.status(error.httpCode).json(error);
