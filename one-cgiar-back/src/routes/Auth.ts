@@ -8,7 +8,7 @@ const router = Router();
 router.post('/login', login);
 
 // change password
-router.post('/change-password', [checkJwt], changePassword);
+router.post('/change-password', changePassword);
 
 
 // change password

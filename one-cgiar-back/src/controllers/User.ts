@@ -61,6 +61,20 @@ export const getUser = async (req: Request, res: Response) => {
     }
 };
 
+// get user by key words
+export const searchUser = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const userRepository = getRepository(Users);
+    try {
+        const user = await userRepository.findOne(id);
+        delete user.password;
+        res.json({ data: user, msg: 'User data' });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ msg: 'Something went wrong', data: error });
+    }
+};
+
 // create new user
 export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar, initiativeId } = req.body;

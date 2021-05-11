@@ -100,7 +100,7 @@ export const changePassword = async (req: Request, res: Response) => {
                 'Old and new passwords are required.'
             );
         }
-        user = await userRepository.findOne(email);
+        user = await userRepository.findOne({ where: { email } });
         if (!user.checkPassword(oldPassword)) {
             throw new APIError(
                 'UNAUTHORIZED',
@@ -124,6 +124,7 @@ export const changePassword = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User updated.', { user }));
         // res.json({ msg: 'Password updated' });
     } catch (error) {
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 
@@ -134,7 +135,7 @@ export const validateCGUser = async (req: Request, res: Response) => {
     const { email } = req.query;
 
     try {
-        let validUser = await searchByEmail(email+'');
+        let validUser = await searchByEmail(email + '');
         // console.log(validUser);
         res.json(new ResponseHandler('Validate user.', { user: validUser }));
     } catch (error) {
