@@ -127,8 +127,27 @@ p {
   margin: 12px 0;
 }
 
-.absolute_floating{
+.absolute_floating_login{
   position: absolute;
   top: 0;
+  transition: all .3s ease-in-out;
+  // left: -50vw;
+}
+.absolute_floating_CP{
+  position: absolute;
+  top: 0;
+  transition: all .3s ease-out;
+  // left: 50vw;
 }
 
+.change-password-text{
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  font-size: .95em;
+  font-weight: 300;
+  &:hover{
+    transition: all .3s ease;
+    filter: opacity(.55);
+  }
+}

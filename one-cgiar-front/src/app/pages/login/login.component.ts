@@ -14,6 +14,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   hide = true;
+  x_position = 0;
   private subscription: Subscription = new Subscription();
   loginForm: FormGroup;
   constructor(
