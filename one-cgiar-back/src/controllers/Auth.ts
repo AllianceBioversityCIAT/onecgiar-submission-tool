@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, QueryFailedError } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { validate } from 'class-validator';
 import { Users } from '../entity/Users';
@@ -7,6 +7,7 @@ import config from '../config/config';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 
 
 require('dotenv').config();
@@ -78,6 +79,16 @@ export const login = async (req: Request, res: Response) => {
 
         res.json(new ResponseHandler('User logged.', { token, name, email: user.email, id, roles }));
     } catch (error) {
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -124,7 +135,16 @@ export const changePassword = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User updated.', { user }));
         // res.json({ msg: 'Password updated' });
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -139,6 +159,16 @@ export const validateCGUser = async (req: Request, res: Response) => {
         // console.log(validUser);
         res.json(new ResponseHandler('Validate user.', { user: validUser }));
     } catch (error) {
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }

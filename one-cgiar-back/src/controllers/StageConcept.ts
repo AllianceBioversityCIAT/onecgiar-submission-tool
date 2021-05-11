@@ -1,7 +1,8 @@
 import { validate, ValidationError } from 'class-validator';
 import { countReset } from 'console';
 import { Request, Response } from 'express'
-import { getConnection, getRepository, In } from 'typeorm'
+import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { ConceptInfo } from '../entity/ConceptInfo';
 import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
 import { Files } from '../entity/Files';
@@ -90,6 +91,15 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
         else
             res.json(new ResponseHandler('Concept: General information.', { generaInformation: conceptInfo[0] }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -207,7 +217,16 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
         res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo[0] }));
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -263,6 +282,15 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
         else
             res.json(new ResponseHandler('Concept: Narratives.', { narratives: conceptInfo[0] }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -342,6 +370,15 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -405,6 +442,15 @@ export const getWorkPackages = async (req: Request, res: Response) => {
         // }
         res.json(new ResponseHandler('Work packages.', { workPackages }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -431,6 +477,15 @@ export const getWorkPackage = async (req: Request, res: Response) => {
             res.json(new ResponseHandler('Work package.', { workPackage }));
         }
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -472,6 +527,15 @@ export const createWorkPackage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Work package created.', { workPackage }));
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -510,6 +574,15 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Work package updated.', { workPackage }));
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -558,6 +631,15 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -613,6 +695,15 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -666,7 +757,16 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -700,6 +800,15 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
         }
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -752,6 +861,15 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
         res.json(new ResponseHandler('Projected benefit added to work package.', { projectedBenefit }));
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -782,6 +900,15 @@ export const getTimeFramesProjectedBenefit = async (req: Request, res: Response)
             res.json(new ResponseHandler('Time frames from projected benefit.', { timeFrames }));
         }
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -845,6 +972,15 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
         // res.json({ msg: 'Impact time frame added to projected benefit', data: { impactTimeFrame } });
         res.json(new ResponseHandler('Impact time frame added to projected benefit.', { impactTimeFrame }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -913,6 +1049,15 @@ export const addTOCConcept = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -973,6 +1118,15 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
 
 
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -1005,6 +1159,15 @@ export const getTOCFiles = async (req: Request, res: Response) => {
 
         }
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -1035,6 +1198,15 @@ export const updateTOCFile = async (req: Request, res: Response) => {
         let Files = await filesRepo.save(file);
         res.json(new ResponseHandler('Files.', { Files }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 
@@ -1091,6 +1263,15 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -1123,6 +1304,15 @@ export const getPartnerships = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 }

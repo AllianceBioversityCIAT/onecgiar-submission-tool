@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getRepository, In, QueryFailedError } from 'typeorm'
+import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
 import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
@@ -19,6 +19,15 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(404).json({ msg: 'Something went wrong', data: error });
     }
 
@@ -41,6 +50,15 @@ export const getUsersByRoles = async (req: Request, res: Response): Promise<Resp
         return res.json({ data: users, msg: 'Users by roles list' });
     } catch (error) {
         console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(404).json({ msg: 'Something went wrong', data: error });
     }
 
@@ -57,21 +75,62 @@ export const getUser = async (req: Request, res: Response) => {
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         res.status(404).json({ msg: 'Something went wrong', data: error });
     }
 };
 
 // get user by key words
 export const searchUser = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const queryRunner = getConnection().createQueryBuilder();
+    const { filter } = req.query;
     const userRepository = getRepository(Users);
+    const sqlQuery = `
+                    SELECT
+                        id,
+                        email,
+                        first_name,
+                        last_name,
+                        last_login,
+                        is_cgiar,
+                        active_since
+                    FROM
+                        users
+                    WHERE is_active = true
+                    AND first_name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+                    OR last_name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+                    OR email COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
+                    ORDER BY first_name
+     `;
     try {
-        const user = await userRepository.findOne(id);
-        delete user.password;
-        res.json({ data: user, msg: 'User data' });
+
+        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+            sqlQuery,
+            {},
+            {}
+        );
+        const filteredData = await queryRunner.connection.query(query, parameters);
+        res.json(new ResponseHandler('User found.', { users: filteredData }));
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: 'Something went wrong', data: error });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 };
 
@@ -189,6 +248,15 @@ export const updateUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User updated.', { user }));
     } catch (error) {
         console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 };
@@ -213,6 +281,15 @@ export const deleteUser = async (req: Request, res: Response) => {
         user = await userRepository.save(user);
         res.json(new ResponseHandler('User inactivated.', { user }));
     } catch (error) {
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
         return res.status(error.httpCode).json(error);
     }
 };

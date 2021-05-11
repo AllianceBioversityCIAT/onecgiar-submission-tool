@@ -1,10 +1,13 @@
 import { Request, Response } from 'express'
-import { getRepository, In } from 'typeorm'
+import { getRepository, In, QueryFailedError } from 'typeorm'
 import { validate } from 'class-validator'
 import { Roles } from '../entity/Roles'
 import { Permissions } from '../entity/Permissions'
 import { Users } from '../entity/Users'
 import { accessCtrl } from '../middlewares/access-control'
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError'
+import { APIError } from '../handlers/BaseError'
+import { HttpStatusCode } from '../handlers/Constants'
 
 export const getAllRoles = async (req: Request, res: Response) => {
     const rolesRepository = getRepository(Roles);
@@ -16,7 +19,16 @@ export const getAllRoles = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not access to roles." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -56,7 +68,16 @@ export const createRole = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(409).json({ msg: 'Role creation error', data: error });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -84,7 +105,16 @@ export const editRole = async (req: Request, res: Response) => {
         res.status(201).json({ msg: 'Role update', data: updatedRole });
     } catch (error) {
         console.log(error);
-        return res.status(404).json({ msg: 'Role not found' });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 };
@@ -100,7 +130,17 @@ export const deleteRole = async (req: Request, res: Response) => {
         //After all send a 204 (no content, but accepted) response
         res.status(200).json({ msg: "Role deleted" });
     } catch (error) {
-        res.status(400).json({ msg: 'Role not found.' });
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 };
 
@@ -148,7 +188,16 @@ export const createPermission = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(409).json({ msg: 'Role creation error', data: error });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
@@ -163,7 +212,16 @@ export const getAllPermissions = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({ msg: "Could not access to roles." });
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
     }
 
 }
