@@ -8,18 +8,35 @@ h2 {
 
 .dialog-content {
     padding: 1rem 5rem;
+    overflow: hidden;
 }
 
 .dialog-actions {
     padding: 1rem 2rem;
 }
 
-.modal-container {
+.modal-container-1 {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    width: 50rem;
+    width: calc( 30vw - 5rem);
     margin: 0.5rem 0;
+    position: relative;
+    // left: -30vw;
+    z-index: 1000;
+    transition: all .3s ease;
+}
+
+.modal-container-2 {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: calc( 30vw - 5rem);
+    margin: 0.5rem 0;
+    position: relative;
+    // left: 0vw;
+    z-index: 990;
+    transition: all .3s ease;
 }
 
 
@@ -32,6 +49,7 @@ h2 {
     font-style: italic;
     font-size: 0.8rem;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .close {

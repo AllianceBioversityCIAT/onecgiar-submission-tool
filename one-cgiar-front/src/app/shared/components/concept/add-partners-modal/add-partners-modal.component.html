@@ -1,6 +1,6 @@
 <h2 class="background-color-primary" mat-dialog-title>Add new key partner</h2>
 <div mat-dialog-content class="dialog-content">
-    <div class="modal-container">
+    <div class="modal-container-1" [style.left.vw]="x_position">
         <span style="position: relative;">
             <custom-select 
             [options]="
@@ -23,7 +23,7 @@
         </span>
 
 
-        <p class="add-partner-text">If you do not find the key partner as part of the drop-down list, please request to
+        <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
             add it by clicking here.</p>
 
         <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
@@ -31,12 +31,16 @@
 
 
     </div>
+    <div class="modal-container-2" [style.left.vw]="x_position + 30">
+        <h1>Request partner section</h1>
+        <button mat-button (click)=" this.x_position = 0;">Back</button>
+    </div>
     <br>
     <br>
     <br>
 </div>
-<div mat-dialog-actions align="end" class="dialog-actions">
-    <button mat-raised-button color="primary" (click)="OnClickNo()" >close</button>
-    <button mat-raised-button color="accent" [mat-dialog-close]="keyPartnersForm.value" [disabled]="keyPartnersForm.invalid">save</button>
+<div mat-dialog-actions align="end" class="dialog-actions" *ngIf="x_position == 0">
+    <button mat-raised-button color="primary" class="animate__animated animate__fadeIn" (click)="OnClickNo()" >close</button>
+    <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn" [mat-dialog-close]="keyPartnersForm.value" [disabled]="keyPartnersForm.invalid">save</button>
 </div>
 

@@ -13,7 +13,7 @@ import { InitiativesService } from '../../../services/initiatives.service';
 
 
 export class AddPartnersModalComponent implements OnInit {
-  
+  x_position = 0;
   wordCount: any;
   keyPartnersForm: FormGroup;
   toDisableList=[];
@@ -46,6 +46,11 @@ export class AddPartnersModalComponent implements OnInit {
 
   OnClickNo(){
     this.dialogRef.close();
+  }
+
+  requestPartner(){
+    this.x_position = -30;
+    console.log("hrlloo");
   }
 
 }
