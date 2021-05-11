@@ -78,11 +78,20 @@ export class SelectComponent implements OnInit {
     console.log(this.options.form.value);
   }
 
-
+  height:string;
   consumeService() {
     if (this.options.service && !this.options.selectList) {
       this.options.service[this.options.serviceFunction](this.searchText).subscribe((res) => {
+
         this.selectList = res.response.institutions;
+        if (this.selectList.length < 4) {
+          this.height = (this.selectList.length * 50) + 'px';
+        } else {
+          this.height = '200px'
+        }
+
+
+       
         res.response.institutions.map(institution=>{
           institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
         })
