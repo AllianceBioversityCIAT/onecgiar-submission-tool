@@ -31,8 +31,8 @@ export class InsertPreConceptLeadCoLead1620664266932 implements MigrationInterfa
             const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
             const coleadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
 
-            console.log(leadRole)
-            console.log(coleadRole)
+            // console.log(leadRole)
+            // console.log(coleadRole)
 
             /**
              * read excel file
