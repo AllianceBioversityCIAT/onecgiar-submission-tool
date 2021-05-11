@@ -49,7 +49,7 @@ export class AddPartnersModalComponent implements OnInit {
   }
 
   requestPartner(){
-    this.x_position = -30;
+    this.x_position = -70;
     console.log("hrlloo");
   }
 
