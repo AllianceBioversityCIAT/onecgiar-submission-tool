@@ -79,6 +79,10 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(response.response));
   }
   
+  changePassword(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/change-password`, body);
+  }
+
   // saveGeneralInformation(): void {
   //   console.log('formulario guardado', this.generalInformationForm);
   // }
