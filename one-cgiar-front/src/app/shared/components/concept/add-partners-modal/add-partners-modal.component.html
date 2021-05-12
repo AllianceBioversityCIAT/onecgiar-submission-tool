@@ -1,46 +1,47 @@
 <h2 class="background-color-primary" mat-dialog-title>Add new key partner</h2>
-<div mat-dialog-content class="dialog-content">
-    <div class="modal-container-1" [style.left.vw]="x_position">
-        <span style="position: relative;">
-            <custom-select 
-            [options]="
-            {
-             required:true,
-             readonly:false,
-             inputTitle:'Select key partner',
-             form:keyPartnersForm,
-             formControlId:'key_partner_id',
-             formControlName:'key_partner_name',
+<div class="dialog-content">
 
-             selectItemName:'acronym_name',
-             selectItemId:'code',
-             toDisableList: this.toDisableList,
-             service:this._initiativesService,
-             serviceFunction:'getCLARISAInstitutions'
-            }">
-            ></custom-select>
+         <div class="modal-container-1 animate__animated animate__fadeIn" *ngIf="modalOpacity" style.opacity="{{modalOpacity?'1':'0'}}">
+            <span style="position: relative;">
+                <custom-select 
+                [options]="
+                {
+                 required:true,
+                 readonly:false,
+                 inputTitle:'Select key partner',
+                 form:keyPartnersForm,
+                 formControlId:'key_partner_id',
+                 formControlName:'key_partner_name',
+    
+                 selectItemName:'acronym_name',
+                 selectItemId:'code',
+                 toDisableList: this.toDisableList,
+                 service:this._initiativesService,
+                 serviceFunction:'getCLARISAInstitutions'
+                }">
+                ></custom-select>
+    
+            </span>
+    
+    
+            <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
+                add it by clicking here.</p>
+    
+            <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
+            inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></custom-textarea>
+    
+                <br><br><br><br>
+        </div>
+        <div class="modal-container-2 animate__animated animate__fadeIn" *ngIf="!modalOpacity" style.opacity="{{modalOpacity?'0':'1'}}">
+            <app-partners-request (back)="backAddNewKeyPartner()"></app-partners-request>
+        </div> 
 
-        </span>
 
-
-        <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
-            add it by clicking here.</p>
-
-        <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
-        inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></custom-textarea>
-
-
-    </div>
-    <div class="modal-container-2" [style.left.vw]="x_position + 70">
-        <h1>Request partner section</h1>
-        <button mat-button (click)=" this.x_position = 0;">Back</button>
-    </div>
+    <!-- <br>
     <br>
-    <br>
-    <br>
+    <br> -->
 </div>
-<div mat-dialog-actions align="end" class="dialog-actions" *ngIf="x_position == 0">
+<div mat-dialog-actions align="end" class="dialog-actions" *ngIf="modalOpacity">
     <button mat-raised-button color="primary" class="animate__animated animate__fadeIn" (click)="OnClickNo()" >close</button>
     <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn" [mat-dialog-close]="keyPartnersForm.value" [disabled]="keyPartnersForm.invalid">save</button>
 </div>
-

@@ -124,7 +124,10 @@ export class KeyPartnersConceptComponent implements OnInit {
       data.active = true;
     }
     const dialogRef = this.dialog.open(AddPartnersModalComponent, 
-      { panelClass: 'dialog-no-padding-no-scroll',
+      { 
+        width: '100%',
+        // height:'90%',
+        panelClass: 'dialog-no-padding-no-scroll',
         data
       });
 

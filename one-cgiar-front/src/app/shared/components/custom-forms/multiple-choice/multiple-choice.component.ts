@@ -61,6 +61,7 @@ export class MultipleChoiceComponent implements OnInit {
   // }
 
   consumeService() {
+    console.log(this.searchText);
     // console.log('%cconsumeService: '+this.options.service.functionName,'background: #222; color: #84c3fd');
     if (this.options.service && !this.options.selectList) {
       this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
@@ -71,7 +72,7 @@ export class MultipleChoiceComponent implements OnInit {
         // console.log('%call'+this.options.service.objectName,'background: #222; color: #84c3fd');
         // console.log(res.response[this.options.service.objectName]);
         this.selectList = res.response[this.options.service.objectName];
-        console.log(this.options.selectedList);
+        // console.log(this.options.selectedList);
         console.log(this.selectList);
 
         if (this.selectList.length < 4) {

@@ -55,6 +55,7 @@ import { ManageAccessComponent } from './shared/components/manage-access/manage-
 import { CreateUsersComponent } from './shared/components/create-users/create-users.component';
 import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol-user.component';
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
+import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { ChangePasswordComponent } from './shared/components/login/change-passwo
     CreateUsersComponent,
     EditRolUserComponent,
     ChangePasswordComponent,
+    PartnersRequestComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

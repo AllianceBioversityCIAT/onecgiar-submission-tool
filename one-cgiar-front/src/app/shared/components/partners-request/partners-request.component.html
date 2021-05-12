@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-4">
+        <custom-textarea  
+        [options]="{form:partnersRequestForm,formControlName:'acronym',inputTitle:'Acronym'}">
+        </custom-textarea>
+    </div>
+    <div class="col-8">
+        <custom-textarea  
+        [options]="{form:partnersRequestForm,formControlName:'name',inputTitle:'Name'}">
+        </custom-textarea>
+    </div>
+    <div class="col-12">
+        <custom-textarea  
+        [options]="{form:partnersRequestForm,formControlName:'acronym_cgiar_entity',inputTitle:'Acronym of cgiar entity'}">
+        </custom-textarea>
+    </div>
+    <div class="col-6">
+        
+        <custom-select [options]="
+        {
+         required:true,
+         inputTitle:'Category',
+         form:partnersRequestForm,
+         formControlId:'category',
+         selectList:this.categoryList,
+         selectItemName:'name',
+         selectItemId:'id'
+        }">
+        ></custom-select>
+    </div>
+    <div class="col-6">
+      <custom-select [options]="
+      {
+       required:true,
+       inputTitle:'Sub category',
+       form:partnersRequestForm,
+       formControlId:'sub_category',
+       selectList:this.subCategoryList,
+       selectItemName:'name',
+       selectItemId:'id'
+      }">
+      ></custom-select>
+    </div>
+    <div class="col-12">
+        <custom-textarea  
+        [options]="{form:partnersRequestForm,formControlName:'headquarter_country',inputTitle:'Headquarter country'}">
+        </custom-textarea>
+    </div>
+    <div class="col-12">
+        <custom-textarea  
+        [options]="{form:partnersRequestForm,formControlName:'Website',inputTitle:'Website'}">
+        </custom-textarea>
+    </div>
+    <div class="col-12">
+        <br>
+        <br>
+        <br>
+    <div mat-dialog-actions align="end" class="dialog-actions" >
+        <button mat-raised-button color="primary" class="animate__animated animate__fadeIn" (click)="backAddNewKeyPartner()">back</button>
+        <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn"  [disabled]="partnersRequestForm.invalid">save</button>
+    </div>   
+    <br>     
+    </div>
+</div>
+
