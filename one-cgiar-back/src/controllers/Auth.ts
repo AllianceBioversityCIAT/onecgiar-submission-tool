@@ -117,7 +117,7 @@ export const changePassword = async (req: Request, res: Response) => {
                 'UNAUTHORIZED',
                 HttpStatusCode.UNAUTHORIZED,
                 true,
-                'Check your old password.'
+                'Old password is incorrect.'
             );
         }
 
