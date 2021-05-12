@@ -114,8 +114,8 @@ export const changePassword = async (req: Request, res: Response) => {
         user = await userRepository.findOne({ where: { email } });
         if (!user.checkPassword(oldPassword)) {
             throw new APIError(
-                'UNAUTHORIZED',
-                HttpStatusCode.UNAUTHORIZED,
+                'BAD_REQUEST',
+                HttpStatusCode.BAD_REQUEST,
                 true,
                 'Old password is incorrect.'
             );
