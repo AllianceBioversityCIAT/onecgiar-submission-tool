@@ -21,11 +21,16 @@ export class ChangePasswordComponent implements OnInit {
       oldPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       newPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-    });
+    },this.pwdMatchValidator);
    }
 
   ngOnInit(): void {
 
+  }
+
+  pwdMatchValidator(frm: FormGroup) {
+    frm.get('newPassword').value == frm.get('confirmPassword').value?frm.controls['confirmPassword'].setErrors(null):frm.controls['confirmPassword'].setErrors({'incorrect': true});
+    return frm.get('newPassword').value === frm.get('confirmPassword').value ? null : { 'mismatch': true };
   }
 
   onChangePassword(){

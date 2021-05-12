@@ -70,13 +70,13 @@ export class SelectComponent implements OnInit {
   }
 
   addOption(data){
-    console.log('%cOption','background: #222; color: #37ff73');
-    console.log(data);
+    // console.log('%cOption','background: #222; color: #37ff73');
+    // console.log(data);
     this.options.form.controls[this.options.formControlName].setValue(data.acronym_name);
     this.options.form.controls[this.options.formControlId].setValue(data.code);
     this.selectInput.setValue(data[this.options.formControlName]);
-    console.log('%cForm','background: #222; color: #fd8484');
-    console.log(this.options.form.value);
+    // console.log('%cForm','background: #222; color: #fd8484');
+    // console.log(this.options.form.value);
   }
 
   height:string;
