@@ -17,4 +17,5 @@ export interface selectOptions{
     attributeNameToSearch:string;
     service:any;
     serviceFunction:string;
+    initialSearchText:string;
 }

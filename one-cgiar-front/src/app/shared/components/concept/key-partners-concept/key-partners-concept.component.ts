@@ -71,7 +71,7 @@ export class KeyPartnersConceptComponent implements OnInit {
       this._initiativesService.getPartnershipByInitiativeId(this._initiativesService.initvStgId).subscribe((resp:any)=>{
         this.spinnerService.hide("spinnerService");
 
-        console.log(resp);
+        // console.log(resp);
         if (resp.response.partnership?.comparative_advantage) {
           this.partnershipForm.controls['comparativeAdvantage'].setValue(resp.response.partnership.comparative_advantage);
         }
@@ -146,6 +146,7 @@ export class KeyPartnersConceptComponent implements OnInit {
         console.log('%cResult close modal','background: #222; color: #ffff00');
         console.log(object);
           this.partnership.key_partners.push(object)
+          console.log(this.partnership.key_partners);
       }
 
     });
@@ -157,7 +158,7 @@ export class KeyPartnersConceptComponent implements OnInit {
       if (iterator.active) {
         resultList.push(iterator.key_partner_id)
       }
-      console.log(iterator);
+      // console.log(iterator);
     }
     return resultList;
   }
