@@ -79,7 +79,7 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(response.response));
   }
   
-  changePassword(body: any): Observable<any> {
+  changePassword(body: any): Observable<ServerResponse> {
     return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, body);
   }
 

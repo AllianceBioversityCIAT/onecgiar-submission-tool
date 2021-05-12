@@ -36,14 +36,15 @@ export class ChangePasswordComponent implements OnInit {
   onChangePassword(){
     console.log(this.changePasswordForm.value);
     let {email,oldPassword,newPassword}=this.changePasswordForm.value;
-    this._authService.changePassword({email,oldPassword,newPassword}).subscribe(resp=>{
-      console.log(resp);
-      this._interactionsService.successMessage('the password was changed successfully',2000);
-      this.action.emit();
-    },
-    err=>{
-      console.log(err);
-    }
+    this._authService.changePassword({email,oldPassword,newPassword}).subscribe(
+      resp=>{
+        console.log(resp);
+        this._interactionsService.successMessage('the password was changed successfully',2000);
+        this.action.emit();
+      },
+      err=>{
+        this._interactionsService.errorMessage(err.error?.description,2000);
+      }
     )
   }
   changeCard(){
