@@ -1,6 +1,6 @@
 <div class="partners-container animate__animated animate__fadeIn">
     <strong class="partners-title color-primary-3">Key partners</strong>
-    <form [formGroup]="partnershipForm" class="partners-form" (submit)="savePartnership()" *ngIf="showFrom">
+    <form [formGroup]="partnershipForm" class="partners-form" (submit)="savePartnership()" *ngIf="showForm">
         <custom-textarea 
         [options]="{ form:partnershipForm,formControlName:'comparativeAdvantage',maxWords:250,inputTitle:'Comparative advantage',
          description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service providers'}">
@@ -20,6 +20,7 @@
                 <td class="center" *ngIf="!this._initiativesService.initiative.readonly"><mat-icon class="pointer" color="warn" (click)="removeKeyPartner(i)">delete</mat-icon></td>
             </tr>
         </table>
+        <p style="width: 100%; text-align: center; font-weight: 500; font-size: 1.5em; margin: 50px 0px;" *ngIf="!showTable">There are not key partners...</p>
         <div class="set-data-container">
             <button *ngIf="!this._initiativesService.initiative.readonly" type="button" color="primary" mat-raised-button (click)="openDialog(true,{})">
                 Add new key partner

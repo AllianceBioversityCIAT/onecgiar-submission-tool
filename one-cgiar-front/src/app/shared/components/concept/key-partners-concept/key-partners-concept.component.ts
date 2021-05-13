@@ -37,7 +37,8 @@ export class KeyPartnersConceptComponent implements OnInit {
   partnershipForm: FormGroup;
   // keyPartners:keyPartner[] = []
   wordCount: any;
-  showFrom=false;
+  showForm  = false;
+  showTable = false; 
 
   @ViewChild("text") text: ElementRef;
   words: any;
@@ -77,18 +78,19 @@ export class KeyPartnersConceptComponent implements OnInit {
         }
 
         this.partnership.key_partners = resp.response.keyPartners;
-       
+        this.showTable = this.partnership.key_partners.length ? true : false;
+        console.log(this.partnership.key_partners.length);
         if(resp.response?.partnership){
           this.partnership.id = resp.response.partnership.id
         }
-        this.showFrom = true;
+        this.showForm = true;
       },
       err=>{
         this.spinnerService.hide("spinnerService");
-        this.showFrom = true;
+        this.showForm = true;
       })
       // setTimeout(() => {
-      //   this.showFrom = true;
+      //   this.showForm = true;
       // }, 1000);
       
     
@@ -107,6 +109,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     // console.log('%csavePartnership','background: #222; color: #ffff00');
     this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
     // console.log(this.partnership);
+    console.log(   this.partnership);
     this._initiativesService.createPartnership(this.partnership).subscribe(resp=>{
       // console.log(resp);
       this.interactionsService.successMessage('Key partners information has been saved')
@@ -148,7 +151,7 @@ export class KeyPartnersConceptComponent implements OnInit {
           this.partnership.key_partners.push(object)
           console.log(this.partnership.key_partners);
       }
-
+      this.showTable = this.partnership.key_partners.length ? true : false;
     });
   }
 
@@ -175,7 +178,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     description: "New",
     active: true
   }
-    this.partnership.key_partners.push(object)
+    this.partnership.key_partners.push(object);
   }
   editKeyPartner(index,data){
     this.partnership.key_partners[index].key_partner_id = data.key_partner_id;
