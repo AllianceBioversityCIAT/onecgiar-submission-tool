@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@shared/services/initiatives.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router,Event as NavigationEvent } from '@angular/router';
 import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,6 +41,13 @@ export class StagesMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.router.events.subscribe((event: NavigationEvent)=>{
+      if(event instanceof NavigationStart) {
+        console.log(event.url);
+        console.log(event?.url.indexOf('work-package'));
+        this._dataControlService.breadcrumbItemTwo= event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
+      }
+    })
     this._interactionsService.collapseHeader=true;
     this.activatedRoute.params.subscribe(resp => {
       this.initiativesSvc.initvStgId = resp['id'];
