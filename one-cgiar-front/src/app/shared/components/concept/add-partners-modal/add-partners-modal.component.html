@@ -1,4 +1,6 @@
-<h2 class="background-color-primary" mat-dialog-title>Add new key partner</h2>
+<h2 class="background-color-primary animate__animated animate__faster animate__fadeInDown" *ngIf="modalOpacity"  mat-dialog-title>Add new key partner</h2>
+<h2 class="background-color-primary animate__animated animate__faster animate__fadeInDown" *ngIf="!modalOpacity"  mat-dialog-title>Partners request</h2>
+
 <div class="dialog-content">
 
          <div class="modal-container-1 animate__animated animate__fadeIn" *ngIf="modalOpacity" style.opacity="{{modalOpacity?'1':'0'}}">
