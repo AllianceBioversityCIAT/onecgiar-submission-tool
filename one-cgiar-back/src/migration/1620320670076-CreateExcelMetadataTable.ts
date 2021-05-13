@@ -16,6 +16,23 @@ export class CreateExcelMetadataTable1620320670076 implements MigrationInterface
                 PRIMARY KEY (id)               
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
+
+        await queryRunner.query(`
+            INSERT INTO excel_metadata(created_at, updated_at, id, excel_col, sbt_col, sbt_table) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'PCF001_InitName', 'name', 'initiatives')
+        `);
+        await queryRunner.query(`
+            INSERT INTO excel_metadata(created_at, updated_at, id, excel_col, sbt_col, sbt_table) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'PCF001_InitName', 'name', 'concept_info')
+        `);
+        await queryRunner.query(`
+            INSERT INTO excel_metadata(created_at, updated_at, id, excel_col, sbt_col, sbt_table) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'initiative_id', 'id', 'initiatives')
+        `);
+        await queryRunner.query(`
+            INSERT INTO excel_metadata(created_at, updated_at, id, excel_col, sbt_col, sbt_table) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'AA_Code', 'action_area_description', 'concept_info')
+        `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
