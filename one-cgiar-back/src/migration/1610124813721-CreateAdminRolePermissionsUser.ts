@@ -159,11 +159,11 @@ export class CreateAdminRolePermissionsUser1610124813721 implements MigrationInt
                 roles: [role]
             },
         ]);
-        console.log(newPermissions);
-        console.log(newPermissions[0]);
+        // console.log(newPermissions);
+        // console.log(newPermissions[0]);
 
         let createdPrmssions = await permissionRepository.save(newPermissions);
-        console.log(createdPrmssions);
+        // console.log(createdPrmssions);
 
         /***
          * 
@@ -172,36 +172,64 @@ export class CreateAdminRolePermissionsUser1610124813721 implements MigrationInt
          */
         const userRepository = getRepository(Users);
 
-        let user = new Users();
-        user.first_name = "Felipe";
-        user.last_name = "Elvira";
-        user.password = null;
-        user.email = "f.elvira@cgiar.org";
-        user.is_cgiar = true;
-        user.roles = [createdRole];
+        // let user = new Users();
+        // user.first_name = "Felipe";
+        // user.last_name = "Elvira";
+        // user.password = null;
+        // user.email = "f.elvira@cgiar.org";
+        // user.is_cgiar = true;
+        // user.roles = [createdRole];
         // user.hashPassword();
 
-        let user2 = new Users();
-        user2.first_name = "Jaime";
-        user2.last_name = "Duque";
-        user2.password = null;
-        user2.email = "j.duque@cgiar.org";
-        user2.is_cgiar = true;
-        user2.roles = [createdRole];
-        // user2.hashPassword();
+        // let user2 = new Users();
+        // user2.first_name = "Yeckzin";
+        // user2.last_name = "Zuñiga";
+        // user2.password = null;
+        // user2.email = "y.zuniga@cgiar.org";
+        // user2.is_cgiar = true;
+        // user2.roles = [createdRole];
+        // // user2.hashPassword();
 
-        let user3 = new Users();
-        user3.first_name = "Hector";
-        user3.last_name = "Tobón";
-        user3.password = null;
-        user3.email = "h.f.tobon@cgiar.org";
-        user3.is_cgiar = true;
-        user3.roles = [createdRole];
-        // user3.hashPassword();
+        // let user3 = new Users();
+        // user3.first_name = "Hector";
+        // user3.last_name = "Tobón";
+        // user3.password = null;
+        // user3.email = "h.f.tobon@cgiar.org";
+        // user3.is_cgiar = true;
+        // user3.roles = [createdRole];
+        // // user3.hashPassword();
 
 
+        let f = await queryRunner.query(`
+            INSERT INTO users(created_at, updated_at, id, first_name, last_name, email, password, is_cgiar) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'Felipe', 'Elvira', 'f.elvira@cgiar.org', NULL, 1)
+        `);
+        // console.log(f)
+        await queryRunner.query(`
+            INSERT INTO roles_by_users(user_id, role_id) 
+            VALUES (${f.insertId}, ${createdRole.id})
+        `);
 
-        await userRepository.save([user, user2, user3]);
+
+        let y = await queryRunner.query(`
+            INSERT INTO users(created_at, updated_at, id, first_name, last_name, email, password, is_cgiar) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'Yeckzin', 'Zuñiga', 'y.zuniga@cgiar.org', NULL, 1)
+        `);
+        await queryRunner.query(`
+            INSERT INTO roles_by_users(user_id, role_id) 
+            VALUES (${y.insertId}, ${createdRole.id})
+        `);
+
+
+        let h = await queryRunner.query(`
+            INSERT INTO users(created_at, updated_at, id, first_name, last_name, email, password, is_cgiar) 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, 'Hector', 'Tobon', 'h.f.tobo@cgiar.org', NULL, 1)
+        `);
+        await queryRunner.query(`
+            INSERT INTO roles_by_users(user_id, role_id) 
+            VALUES (${h.insertId}, ${createdRole.id})
+        `);
+        // await userRepository.save([user, user2, user3]);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
