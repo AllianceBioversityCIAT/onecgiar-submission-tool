@@ -29,8 +29,8 @@ export class WorkPackagesComponent implements OnInit {
 
   getAllIWorkPackages(){
     let suscrip = this._initiativesService.getAllIWorkPackages(this._initiativesService.initvStgId).subscribe(resp => {
-      this.noWp  = false;  
       this.workPackagesList = resp.response.workPackages;
+      this.noWp  = this.workPackagesList.length ? false : true;  
     },
     err=>{
       this.noWp  = true;     
