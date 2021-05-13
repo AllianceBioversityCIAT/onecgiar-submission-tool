@@ -546,7 +546,7 @@ export const createWorkPackage = async (req: Request, res: Response) => {
  * @param res 
  */
 export const updateWorkPackage = async (req: Request, res: Response) => {
-    const { id, name, results, pathwayContent, isGlobal, active } = req.body;
+    const { id, name, results, pathwayContent, isGlobal, active, acronym } = req.body;
     const wpRepo = getRepository(WorkPackages);
 
     try {
@@ -557,6 +557,7 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         workPackage.pathway_content = (pathwayContent) ? pathwayContent : workPackage.pathway_content;
         workPackage.is_global = isGlobal;
         workPackage.active = (active != null) ? active : workPackage.active;
+        workPackage.acronym = acronym || null;
 
         const errors = await validate(workPackage);
         if (errors.length > 0) {
