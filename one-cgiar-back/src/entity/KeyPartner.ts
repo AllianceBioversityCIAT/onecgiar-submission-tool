@@ -21,7 +21,6 @@ export class KeyPartners extends UpdatedCreatedAt {
     key_partner_name: string
 
     @Column({ type: "text" })
-    @IsNotEmpty()
     description: string
 
     @ManyToOne(() => Partnerships, partnerships => partnerships.id)

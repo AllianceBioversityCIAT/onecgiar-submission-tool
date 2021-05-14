@@ -1252,6 +1252,7 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
         }
 
         partnership = await partRepo.save(partnership);
+        console.log(key_partners)
 
         key_partners.forEach(kp => {
             kp['partnerships'] = partnership

@@ -10,7 +10,6 @@ export class Partnerships extends UpdatedCreatedAt {
     id: number
 
     @Column({ type: 'text' })
-    @IsNotEmpty()
     comparative_advantage: string
 
     @ManyToOne(() => InitiativesByStages, initvStg => initvStg.id)
