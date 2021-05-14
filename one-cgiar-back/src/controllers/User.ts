@@ -95,7 +95,7 @@ export const searchUser = async (req: Request, res: Response) => {
     const userRepository = getRepository(Users);
     const sqlQuery = `
                     SELECT
-                        userId,
+                        id as userId,
                         email,
                         first_name,
                         last_name,
