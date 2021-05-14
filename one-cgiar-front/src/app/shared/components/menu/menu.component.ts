@@ -112,7 +112,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
       //  console.log("getAllIWorkPackages");
       this.workPackagesList = resp.response.workPackages;
-      // console.log( this.workPackagesList);
+      console.log( this.workPackagesList);
     },
       err => {
         // this.spinnerService.hide('work-packages');
@@ -122,15 +122,4 @@ export class MenuComponent implements OnInit {
       })
     // this.validateWorkPackages();
   }
-
-
-
-  acronym(text) {
-    let acronym = text.split(/\s/)
-      .reduce(function(accumulator, word) {
-        return accumulator + word.charAt(0);
-      }, '');
-      let limit = 10;
-      return acronym.length <= limit?acronym:acronym.slice(0, (acronym.length - limit)* -1);
-    }
 }
