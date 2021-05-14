@@ -22,6 +22,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
       name: new FormControl('', Validators.required),
       pathwayContent: new FormControl('', Validators.required),
       results: new FormControl('', Validators.required),
+      acronym: new FormControl('', Validators.required),
       id: new FormControl(''),
     });
   }
@@ -32,6 +33,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
       // console.log("WorkPackageID = "+this._dataControlService.WorkPackageID);
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
         this.workPackageData = resp.response.workPackage;
+        console.log(this.workPackageData);
         // console.log("NAME: "+this.workPackageData.name);
         this.setFormData();
         
@@ -50,11 +52,13 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
       name,
       pathway_content,
       results,
+      acronym
     } = this.workPackageData;
     this.workPackageForm.controls['name'].setValue(name);
     this.workPackageForm.controls['pathwayContent'].setValue(pathway_content);
     this.workPackageForm.controls['results'].setValue(results);
     this.workPackageForm.controls['id'].setValue(this._dataControlService.WorkPackageID);
+    this.workPackageForm.controls['acronym'].setValue(acronym);
   }
 
   SaveGeneralInformation(): void {

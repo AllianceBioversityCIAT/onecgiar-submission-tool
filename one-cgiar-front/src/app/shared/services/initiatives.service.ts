@@ -230,15 +230,12 @@ export class InitiativesService {
 
   // Query to get all the users 
   getAllUsers(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/users`).pipe(map(resp=> {
-      console.log('%cgetAllUsers direct','background: #222; color: #ffff00');
-      console.log(resp);
-      resp.data.map(user=>{
+    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=${filterText}`).pipe(map(resp=> {
+      resp.response.users.map(user=>{
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+        user.is_active = true;
       })
-      // resp.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
-      let res:any={response:{users: resp.data}};
-      return res;
+      return resp;
     }));
   }
 

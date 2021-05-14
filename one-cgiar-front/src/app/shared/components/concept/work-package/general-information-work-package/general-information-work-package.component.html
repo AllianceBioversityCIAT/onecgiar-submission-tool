@@ -1,6 +1,11 @@
 <form [formGroup]="workPackageForm" (ngSubmit)="SaveGeneralInformation()" class="narratives-form" *ngIf="showform">
     <br>
     <div class="animate__animated form animate__fadeIn form_animation" *ngIf="showform">
+        
+        <custom-textarea  
+        [options]="{form:workPackageForm,formControlName:'acronym',inputTitle:'Acronym'}">
+        </custom-textarea>
+
         <custom-textarea  
         [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
         </custom-textarea>
