@@ -28,20 +28,12 @@ export class ManageAccessComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   this.getAllUsers();
    this.getAllRoles();
    this.getUsersByInitiative();
   }
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  getAllUsers(){
-    this.initiativesSvc.getAllUsers('').subscribe(users=>{
-      console.log('%clocal get userrs','background: #222; color: #fd8484');
-      console.log(users);
-    })
   }
 
   getAllRoles(){
@@ -72,13 +64,11 @@ export class ManageAccessComponent implements OnInit {
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
-      // console.log(resp.response.users);
       this.removeInactiveUsers();
     })
   }
 
   firstTab(){
-    this.getAllUsers();
     this.tabNumber=0; 
   }
 }
