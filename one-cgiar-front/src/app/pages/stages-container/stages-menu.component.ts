@@ -41,10 +41,10 @@ export class StagesMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
+    let testi = 1;
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
-        console.log(event.url);
-        console.log(event?.url.indexOf('work-package'));
+        console.log("NavigationStart "+testi++);
         this._dataControlService.breadcrumbItemTwo= event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })
