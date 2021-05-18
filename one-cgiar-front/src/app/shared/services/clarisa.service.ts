@@ -32,4 +32,17 @@ export class ClarisaService {
       return res;
     }));
   }
+
+  // Query to get Impact areas
+  getImpactAreas(): Observable<any> {
+    return this.http.get<any>(`${environment.apiClarisa}/impact-areas`);
+  }
+
+  // Query to get Institutions
+  getImpactAreasIndicators(): Observable<any> {
+    return this.http.get<any>(`${environment.apiClarisa}/impact-areas-indicators`);
+  }
+
+
+
 }
