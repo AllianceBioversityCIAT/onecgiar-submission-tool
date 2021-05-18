@@ -15,6 +15,7 @@ export interface multipleChoiceOptions{
     showChips:boolean;
     attributeNameToSearch:string;
     service:{
+        frontendSearchAttribute:string
         serviceTS:any;
         functionName:string;
         objectName:string;
