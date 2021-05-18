@@ -35,7 +35,7 @@ export class MultipleChoiceComponent implements OnInit {
       item.active = true;
       this.options.selectedList.push(item);
       console.log(item);
-      this.consumeService();
+      this.options.service.frontendSearchAttribute ? this.mapSelected() : this.consumeService();
     }
   }
 
@@ -45,32 +45,33 @@ export class MultipleChoiceComponent implements OnInit {
     this.options.selectedList[index].new = true; 
     console.log(this.options.selectedList[index]);
     this.consumeService();
-    // this.options.selectedList.splice(index, 1); 
   }
 
-  // disableOption(option){
-  //   if ( this.options.selectedList) {
-  //     for (const item of this.options.selectedList) {
-  //       if (option[this.options.selectItemId]==item[this.options.selectedItemId]) {
-  //         return true;
-  //       }
-  //     }
-  //   }else{
-  //     return false;
-  //   }
-  // }
+  writtenInSearchField(){
+    console.log("writtenInSearchField");
+    this.mapSelected();
+  }
+
+  mapSelected(){
+    this.selectList.map(itemOfSelectList=>{
+        
+      if (this.options.selectedList) {
+        for (const item of this.options.selectedList) {
+          if (itemOfSelectList[this.options.selectItemId] == item[this.options.selectedItemId] && item?.active !== false) {
+            itemOfSelectList.selected = true;
+            return;
+          }else{
+            itemOfSelectList.selected = false;
+          }
+        }
+      }
+
+    });
+  }
 
   consumeService() {
-    // console.log(this.searchText);
-    // console.log('%cconsumeService: '+this.options.service.functionName,'background: #222; color: #84c3fd');
     if (this.options.service && !this.options.selectList) {
       this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
-        // console.log('%ccconsumeService: '+this.options.service.functionName+' info: ','background: #222; color: #37ff73');
-        // console.log(res);
-        // console.log('%cselected','background: #222; color: #ffff00');
-        // console.log(this.options.selectedList);
-        // console.log('%call'+this.options.service.objectName,'background: #222; color: #84c3fd');
-        // console.log(res.response[this.options.service.objectName]);
         this.selectList = res.response[this.options.service.objectName];
         console.log('%c'+this.options.service.functionName,'background: #222; color: #ffff00');
         console.log(this.selectList);
@@ -81,24 +82,7 @@ export class MultipleChoiceComponent implements OnInit {
           this.height = '200px'
         }
 
-      this.selectList.map(itemOfSelectList=>{
-        
-        if (this.options.selectedList) {
-          for (const item of this.options.selectedList) {
-            if (itemOfSelectList[this.options.selectItemId] == item[this.options.selectedItemId] && item?.active !== false) {
-              itemOfSelectList.selected = true;
-              return;
-            }else{
-              itemOfSelectList.selected = false;
-            }
-          }
-        }
-
-      });
-        // this.selectList = res.response.institutions;
-        // res.response.institutions.map(institution=>{
-        //   institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
-        // })
+        this.mapSelected();
       });
     }
   }

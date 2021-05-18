@@ -23,7 +23,7 @@
             </div>
             <br>
         </div>
-        <div class="col-sm horizontal_padding">
+        <div class="col-6 horizontal_padding">
             <div class="box_container">
                 <custom-multiple-choice [options]="{
                     required:true,
@@ -34,15 +34,16 @@
                     selectItemId:'code',
                     selectedItemId:'code',
                     service:{
-                        serviceTS:this._initiativesService,
-                        functionName:'getCLARISARegions',
-                        objectName:'regions'
+                        serviceTS:this._clarisaService,
+                        functionName:'getRegions',
+                        objectName:'regions',
+                        frontendSearchAttribute:'name'
                     }
                    }"></custom-multiple-choice>
             </div>
 
         </div>
-        <div class="col-sm horizontal_padding">
+        <div class="col-6  horizontal_padding">
             <div class="box_container">
             <custom-multiple-choice [options]="{
                 required:true,

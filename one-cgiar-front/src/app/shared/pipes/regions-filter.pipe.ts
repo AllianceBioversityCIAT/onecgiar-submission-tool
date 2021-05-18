@@ -11,7 +11,6 @@ export class RegionsFilterPipe implements PipeTransform {
     if (word == '' || !attributeName ) {
       return list;
     }
-    console.log('%cPipe','background: #222; color: #84c3fd');
     if (list) {
       for (const region of list) {
         if (region[attributeName].toUpperCase().indexOf(word?.toUpperCase())>-1) {

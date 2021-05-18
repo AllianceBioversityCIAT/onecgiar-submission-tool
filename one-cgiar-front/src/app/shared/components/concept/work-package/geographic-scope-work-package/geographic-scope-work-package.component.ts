@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
 import { InteractionsService } from '../../../../services/interactions.service';
+import { ClarisaService } from '../../../../services/clarisa.service';
 
 @Component({
   selector: 'app-geographic-scope-work-package',
@@ -17,7 +18,8 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _clarisaService:ClarisaService
   ) { 
     this.workPackageForm = new FormGroup({
       isGlobal: new FormControl('', Validators.required),

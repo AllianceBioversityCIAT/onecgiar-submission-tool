@@ -7,7 +7,7 @@
                 <mat-form-field floatLabel="false">
                     <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                     <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
-                    <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText"  (ngModelChange)="options.service.frontendSearchAttribute ? null : consumeService($event)" [disabled]="removeFocus">
+                    <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText"  (ngModelChange)="options.service.frontendSearchAttribute ? writtenInSearchField() : consumeService($event)" [disabled]="removeFocus">
                     <mat-label [hidden]="true"></mat-label>
                     <mat-autocomplete #auto="matAutocomplete" >
 
