@@ -73,9 +73,8 @@ export class MultipleChoiceComponent implements OnInit {
     if (this.options.service && !this.options.selectList) {
       this.options.service.serviceTS[this.options.service.functionName](this.searchText).subscribe((res) => {
         this.selectList = res.response[this.options.service.objectName];
-        console.log('%c'+this.options.service.functionName,'background: #222; color: #ffff00');
-        console.log(this.selectList);
-
+        // console.log('%c'+this.options.service.functionName,'background: #222; color: #ffff00');
+        // console.log(this.selectList);
         if (this.selectList.length < 4) {
           this.height = (this.selectList.length * 50) + 'px';
         } else {

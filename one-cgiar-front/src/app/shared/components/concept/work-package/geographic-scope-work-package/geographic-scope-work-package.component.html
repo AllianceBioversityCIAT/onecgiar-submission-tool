@@ -43,6 +43,7 @@
             </div>
 
         </div>
+
         <div class="col-6  horizontal_padding">
             <div class="box_container">
             <custom-multiple-choice [options]="{
@@ -53,11 +54,11 @@
                 selectItemName:'name',
                 selectItemId:'code',
                 selectedItemId:'code',
-                attributeNameToSearch:'name',
                 service:{
-                    serviceTS:this._initiativesService,
-                    functionName:'getCLARISACountries',
-                    objectName:'countries'
+                    serviceTS:this._clarisaService,
+                    functionName:'getCountries',
+                    objectName:'countries',
+                    frontendSearchAttribute:'name'
                 }
                }"></custom-multiple-choice>
             </div>
