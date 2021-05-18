@@ -21,7 +21,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
-
+    console.log(request.url);
     if (request.url.indexOf('/api/') != -1) return next.handle(this.setHeadersSubmission(request));
     if (request.url.indexOf('/apiClarisa/') != -1) return next.handle(this.setHeadersClarisa(request));
   }
