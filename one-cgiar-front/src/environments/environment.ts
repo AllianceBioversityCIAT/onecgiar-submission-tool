@@ -9,7 +9,12 @@
 
 export const environment = {
   production: false,
-  apiUrl: `/api`
+  apiUrl: `/api`,
+  apiClarisa: '/apiClarisa',
+  userData: {
+    user: 'marlosadmin',
+    password: '6723646'
+  }
 };
 
 /*
