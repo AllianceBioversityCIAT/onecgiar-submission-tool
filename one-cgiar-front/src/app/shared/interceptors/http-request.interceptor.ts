@@ -21,12 +21,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
-    if (request.url.indexOf('apiSubmissionTool') != -1) return next.handle(this.setHeadersSubmission(request));
-    if (request.url.indexOf('apiClarisa') != -1) return next.handle(this.setHeadersClarisa(request));
+    console.log(request.url);
+    if (request.url.indexOf('/api/') != -1) return next.handle(this.setHeadersSubmission(request));
+    if (request.url.indexOf('/apiClarisa/') != -1) return next.handle(this.setHeadersClarisa(request));
   }
 
 
   setHeadersSubmission(request:HttpRequest<any>){
+    console.log('/api/');
     let currentUser = this.authSvc.userValue;
     if (currentUser && currentUser.token) {
       request = request.clone({
@@ -42,6 +44,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   }
 
   setHeadersClarisa(request:HttpRequest<any>){
+    console.log('/apiClarisa/');
     const headers = new HttpHeaders({
       "Content-Type": "application/json",
       Authorization:
