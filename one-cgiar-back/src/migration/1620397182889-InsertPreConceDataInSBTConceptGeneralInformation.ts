@@ -94,12 +94,12 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                     const clarisaAA = actionAreas.find(AA => excelAA.toString().includes(AA.acronym));
                     newConceptInfo.action_area_description = clarisaAA ? clarisaAA.name : null;
                     newConceptInfo.action_area_id = clarisaAA ? clarisaAA.code : null;
-
+                    
+                    newConceptInfos.push(newConceptInfo)
                 }
             }
-
             let r = await conceptRepo.save(newConceptInfos);
-            
+
         } catch (error) {
             console.log(error);
         }

@@ -609,12 +609,9 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
         let regionsSBT = await regionRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
         let countriesSBT = await countryRepo.find({ where: { wrkPkg: workPackage, active: 1 } });
 
-        console.log(regionsSBT, countriesSBT)
 
         const inRegions = regionsSBT.length > 0 ? `IN (${regionsSBT.map(r => r.region_id)})` : `IN ('')`;
         const inCountries = countriesSBT.length > 0 ? `IN (${countriesSBT.map(r => r.country_id)})` : `IN ('')`;
-        console.log(`SELECT id, code, name FROM clarisa_regions WHERE code ${inRegions}`)
-        console.log(`SELECT id, code, isoAlpha2, name FROM clarisa_countries WHERE code ${inCountries}`)
 
         const [queryR, parametersR] = await queryRunner.connection.driver.escapeQueryWithParameters(
             `SELECT id, code, name FROM clarisa_regions WHERE code ${inRegions}`,
