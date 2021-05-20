@@ -3,7 +3,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '@shared/services/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
 import { LoggerService } from '@shared/services/logger.service';
-import { ClarisaService } from '../../shared/services/clarisa.service';
 
 @Component({
   selector: 'app-home',
@@ -17,18 +16,9 @@ export class HomeComponent implements OnInit {
   public data: any = [];
   public role: string = null;
 
-  constructor(
-    public authSvc: AuthService, 
-    public initiativesSvc: InitiativesService, 
-    private spinnerService: NgxSpinnerService,
-    private _clarisaService: ClarisaService
-    ) { }
+  constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
-    this._clarisaService.getInstitutions().subscribe(resp=>{
-      console.log("_clarisaService.getInstitutions");
-      console.log(resp);
-    })
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;

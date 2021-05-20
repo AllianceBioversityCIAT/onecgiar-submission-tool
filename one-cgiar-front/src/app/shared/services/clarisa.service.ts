@@ -12,7 +12,6 @@ export class ClarisaService {
 
   // Query to get Institutions
   getInstitutions(): Observable<any> {
-    console.log("_clarisaService getInstitutions before get");
     return this.http.get<any>(`${environment.apiClarisa}/institutions`);
   }
 
