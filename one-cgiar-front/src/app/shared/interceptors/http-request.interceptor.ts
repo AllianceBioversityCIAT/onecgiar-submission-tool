@@ -31,8 +31,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
 
   setHeadersSubmission(request:HttpRequest<any>){
-    console.log(request.url);
-    console.log('/api/');
+    // console.log(request.url);
+    // console.log('/api/');
     let currentUser = this.authSvc.userValue;
     if (currentUser && currentUser.token) {
       request = request.clone({
@@ -48,8 +48,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   }
 
   setHeadersClarisa(request:HttpRequest<any>){
-    console.log(request.url);
-    console.log('/apiClarisa/');
+    // console.log(request.url);
+    // console.log('/apiClarisa/');
     const headers = new HttpHeaders({
       "Content-Type": "application/json",
       Authorization:
