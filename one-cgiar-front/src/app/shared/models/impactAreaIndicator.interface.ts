@@ -3,5 +3,8 @@ export interface impactAreaIndicator{
     impactAreaName: string
     indicatorId: number
     indicatorStatement: string
+    targetUnit: string
+    targetYear: number
+    value: string
 }
 
