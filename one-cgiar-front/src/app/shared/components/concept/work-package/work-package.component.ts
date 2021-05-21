@@ -58,8 +58,10 @@ export class WorkPackageComponent implements OnInit {
       let UrlSegments = this.activatedRoute.parent.snapshot['_urlSegment'].segments;
       this.activeLink = UrlSegments[UrlSegments.length-1].path;
       this._dataControlService.WorkPackageID = resp.id;
-      this._dataControlService.breadcrumbItemTwo = 'Work Package ID: ' + resp.id;
-
+      this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
+        
+        this._dataControlService.breadcrumbItemTwo = 'Work Package: ' + (resp.response.workPackage.acronym?resp.response.workPackage.acronym:'UNAMED');
+      })
       // console.log(resp);
       // console.log("emito carga de general");
       this.showOutlet = true;

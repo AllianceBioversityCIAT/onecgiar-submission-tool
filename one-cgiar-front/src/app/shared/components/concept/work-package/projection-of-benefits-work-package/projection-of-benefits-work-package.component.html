@@ -2,8 +2,7 @@
 
         <div class="projection-benefits-container" >
             <mat-accordion>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                    *ngFor="let impactArea of _requests.impactAreas">
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let impactArea of impactAreas">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{impactArea.name}}
@@ -18,7 +17,7 @@
                             <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span
                                     class="asterisk">* </span></p>
                             <mat-select>
-                                <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.name}}
+                                <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.indicatorStatement}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
