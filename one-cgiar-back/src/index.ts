@@ -51,7 +51,7 @@ createConnection()
 
         app.use(function (req, res, next) {
             res.setHeader(
-                "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/api/initiatives/areas http://localhost:4200/api/initiatives/areas"
+                "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
             );
             next();
         });
