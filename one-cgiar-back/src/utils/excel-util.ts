@@ -36,6 +36,7 @@ export class ExcelUtil {
         return result;
     }
 
+    // get cell in row by header
     public getCellInRowByColumnHeader(worksheet: Excel.Worksheet, rowNumber: number, header: string) {
         let row = worksheet.getRow(rowNumber);
         let result: Excel.Cell | undefined;
