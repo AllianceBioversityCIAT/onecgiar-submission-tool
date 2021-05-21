@@ -27,7 +27,7 @@ export class ClarisaService {
 
   // Query to get countries
   getCountries(): Observable<any> {
-    return this.http.get<any>(`http://clarisatest.ciat.cgiar.org/api/countries`,{ responseType: 'json' }).pipe(map(resp=>{
+    return this.http.get<any>(`https://clarisa.cgiar.org/api/countries`,{ responseType: 'json' }).pipe(map(resp=>{
       let res={response:{countries:resp}}
       return res;
     }));
