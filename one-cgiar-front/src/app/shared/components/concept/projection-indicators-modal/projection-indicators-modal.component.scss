@@ -21,18 +21,13 @@ mat-dialog-actions {
     justify-content: center;
 }
 
-.range {
-    display: flex;
-    justify-content: space-between;
-}
-
 .projection-container {
     display: flex;
     flex-direction: column;
     background: #FAFAFA;
     border: 2px dotted #b1b0b0;
     padding: 1rem;
-    width: 50rem;
+    width: 100%;
     margin: 0.5rem 0;
 }
 
@@ -63,12 +58,6 @@ mat-icon:hover {
 .save {
     background: #6AA84F;
     color: #fff;
-}
-
-.remove-range {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
 }
 
 .add-range-button {

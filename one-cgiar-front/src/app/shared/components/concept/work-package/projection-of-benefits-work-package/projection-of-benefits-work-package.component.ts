@@ -49,9 +49,21 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     console.log(this.impactAreas);
   }
 
-  openDialog() {
+  openDialog(impactAreaIndicators) {
+    console.log(impactAreaIndicators);
+    // console.log(this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value);
+    // impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.id === '1').foo;
+    let impactAreaIndicatorId = this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value;
+    let targetUnit = impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.indicatorId == impactAreaIndicatorId)?.targetUnit;
+    console.log(targetUnit);
+    console.log(impactAreaIndicatorId);
+    let data={
+      targetUnit
+    };
     const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, {
       panelClass: 'custom-dialog-container',
+      width:'60%',
+      data
     });
 
     dialogRef.afterClosed().subscribe((result) => {

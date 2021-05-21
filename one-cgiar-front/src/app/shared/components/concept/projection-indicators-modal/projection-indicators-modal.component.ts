@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RequestsService } from '@app/shared/services/requests.service';
 
 @Component({
@@ -8,9 +9,13 @@ import { RequestsService } from '@app/shared/services/requests.service';
 })
 export class ProjectionIndicatorsModalComponent implements OnInit {
 
-  constructor(public _requests: RequestsService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public _requests: RequestsService
+    ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
   }
 
 }
