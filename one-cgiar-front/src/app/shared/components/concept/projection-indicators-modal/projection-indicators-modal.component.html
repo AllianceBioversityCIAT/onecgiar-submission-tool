@@ -4,8 +4,8 @@
     <form [formGroup]="_requests.projectionBenefitsRangeCs">
         <div formArrayName="range">
             <div class="projection-container" *ngFor="let r of _requests.range.controls; index as i">
-                <div class="range" [formGroupName]="i">
-                    <mat-form-field>
+                <div class="row" [formGroupName]="i">
+                    <mat-form-field class="col-3">
                         <p><strong>Select year: </strong><span class="asterisk">* </span></p>
                         <mat-select formControlName="year">
                             <mat-option value="2021">2021</mat-option>
@@ -14,15 +14,15 @@
                             <mat-option value="2024">2024</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field>
-                        <p><strong>Low scenario (number): </strong><span class="asterisk">* </span></p>
+                    <mat-form-field class="col-4">
+                        <p><strong>Low scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
                         <input type="number" matInput required formControlName="low" />
                     </mat-form-field>
-                    <mat-form-field>
-                        <p><strong> High scenario (number): </strong><span class="asterisk">* </span></p>
+                    <mat-form-field class="col-4">
+                        <p><strong> High scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
                         <input type="number" matInput required formControlName="high" />
                     </mat-form-field>
-                    <div class="remove-range">
+                    <div class="col-1 center_flex">
                         <mat-icon (click)="_requests.removeRangeProjection(i)">delete</mat-icon>
                     </div>
                 </div>

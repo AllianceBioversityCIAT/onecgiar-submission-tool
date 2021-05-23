@@ -5,6 +5,7 @@ import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-
 import { ClarisaService } from '../../../../services/clarisa.service';
 import { impactArea } from '../../../../models/impactArea.interface';
 import { impactAreaIndicator } from '../../../../models/impactAreaIndicator.interface';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-projection-of-benefits-work-package',
@@ -15,11 +16,17 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
   projectionRanges = this._requests.projectionBenefitsRangeCs.controls.range.value;
   impactAreas:impactArea[];
   impactAreasIndicators:impactAreaIndicator[];
+  workPackageGeneralInfoForm: FormGroup;
   constructor(
     public _requests: RequestsService,
     public dialog: MatDialog,
     private _clarisaService:ClarisaService,
-  ) { }
+  ) {
+    this.workPackageGeneralInfoForm = new FormGroup({
+       impactAreaIndicatorId: new FormControl('', Validators.required),
+       notes: new FormControl('', Validators.required),
+    });
+   }
 
   ngOnInit( ): void {
     Promise.all([ this._clarisaService.getImpactAreas().toPromise(),this._clarisaService.getImpactAreasIndicators().toPromise()]).then(resp => {
@@ -42,9 +49,21 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     console.log(this.impactAreas);
   }
 
-  openDialog() {
+  openDialog(impactAreaIndicators) {
+    console.log(impactAreaIndicators);
+    // console.log(this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value);
+    // impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.id === '1').foo;
+    let impactAreaIndicatorId = this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value;
+    let targetUnit = impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.indicatorId == impactAreaIndicatorId)?.targetUnit;
+    console.log(targetUnit);
+    console.log(impactAreaIndicatorId);
+    let data={
+      targetUnit
+    };
     const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, {
       panelClass: 'custom-dialog-container',
+      width:'60%',
+      data
     });
 
     dialogRef.afterClosed().subscribe((result) => {

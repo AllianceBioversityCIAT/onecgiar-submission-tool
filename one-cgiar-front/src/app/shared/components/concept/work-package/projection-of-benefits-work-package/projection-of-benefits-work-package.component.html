@@ -13,14 +13,27 @@
                         <div class="remove-contribution-container">
                             <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
                         </div>
-                        <mat-form-field appearance="standard">
+
+                        <!-- <mat-form-field appearance="standard">
                             <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span
                                     class="asterisk">* </span></p>
                             <mat-select>
                                 <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.indicatorStatement}}
                                 </mat-option>
                             </mat-select>
-                        </mat-form-field>
+                        </mat-form-field> -->
+
+                        <custom-select [options]="
+                        {
+                         required:true,
+                         inputTitle:'Indicate a common impact indicators attributable to CGIAR',
+                         form:this.workPackageGeneralInfoForm,
+                         formControlId:'impactAreaIndicatorId',
+                         selectList:impactArea.indicators,
+                         selectItemName:'indicatorStatement',
+                         selectItemId:'indicatorId'
+                        }">
+                        ></custom-select>
 
                         <table>
                             <tr>
@@ -38,15 +51,22 @@
                         </table>
 
                         <div class="set-data-container">
-                            <button type="submit" mat-raised-button color="primary" (click)="openDialog()">
+                            <button type="submit" mat-raised-button color="primary" (click)="openDialog(impactArea.indicators)">
                                 set ranges and years
                             </button>
                         </div>
 
+                        <custom-textarea  
+                        [options]="{form:this.workPackageGeneralInfoForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
+                        </custom-textarea>
+
+                        <br>
+
+<!-- 
                         <mat-form-field>
                             <p><strong>Add any notes on methodology and sources here: </strong></p>
                             <input type="text" matInput required />
-                        </mat-form-field>
+                        </mat-form-field> -->
 
                     </div>
 
