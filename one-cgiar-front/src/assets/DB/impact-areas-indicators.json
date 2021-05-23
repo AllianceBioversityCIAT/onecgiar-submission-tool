@@ -1,0 +1,173 @@
+[
+    {
+    "indicatorId": 1,
+    "indicatorStatement": "#people benefiting from relevant CGIAR innovations",
+    "impactAreaId": 1,
+    "impactAreaName": "Nutrition, health and food security",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "3000"
+    },
+    {
+    "indicatorId": 2,
+    "indicatorStatement": "#people meeting minimum dietary energy requirements",
+    "impactAreaId": 1,
+    "impactAreaName": "Nutrition, health and food security",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "3000"
+    },
+    {
+    "indicatorId": 3,
+    "indicatorStatement": "#people meeting minimum micronutrient requirements",
+    "impactAreaId": 1,
+    "impactAreaName": "Nutrition, health and food security",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "3000"
+    },
+    {
+    "indicatorId": 4,
+    "indicatorStatement": "#cases communicable and noncommunicable diseases",
+    "impactAreaId": 1,
+    "impactAreaName": "Nutrition, health and food security",
+    "targetYear": 2030,
+    "targetUnit": "Million of cases",
+    "value": "600"
+    },
+    {
+    "indicatorId": 5,
+    "indicatorStatement": "#people benefiting from relevant CGIAR innovations",
+    "impactAreaId": 2,
+    "impactAreaName": "Poverty reduction, livelihoods and jobs",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 6,
+    "indicatorStatement": "#people assisted to exit poverty",
+    "impactAreaId": 2,
+    "impactAreaName": "Poverty reduction, livelihoods and jobs",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 7,
+    "indicatorStatement": "#women’s empowerment and inclusion in the agricultural sector",
+    "impactAreaId": 3,
+    "impactAreaName": "Gender equality, youth and social inclusion",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 8,
+    "indicatorStatement": "#women benefiting from relevant CGIAR innovations",
+    "impactAreaId": 3,
+    "impactAreaName": "Gender equality, youth and social inclusion",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 9,
+    "indicatorStatement": "#youth benefiting fromrelevant CGIAR innovations",
+    "impactAreaId": 3,
+    "impactAreaName": "Gender equality, youth and social inclusion",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "267"
+    },
+    {
+    "indicatorId": 10,
+    "indicatorStatement": "#women assisted to exit poverty",
+    "impactAreaId": 3,
+    "impactAreaName": "Gender equality, youth and social inclusion",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 11,
+    "indicatorStatement": "#tonnes CO2 equivalent emissions",
+    "impactAreaId": 4,
+    "impactAreaName": "Climate adaptation and mitigation",
+    "targetYear": 2030,
+    "targetUnit": "Gt of CO2",
+    "value": "5"
+    },
+    {
+    "indicatorId": 12,
+    "indicatorStatement": "#plans with evidence of implementation",
+    "impactAreaId": 4,
+    "impactAreaName": "Climate adaptation and mitigation",
+    "targetYear": 2030,
+    "targetUnit": "Number of plans",
+    "value": "1"
+    },
+    {
+    "indicatorId": 13,
+    "indicatorStatement": "#$ climate adaptation investments",
+    "impactAreaId": 4,
+    "impactAreaName": "Climate adaptation and mitigation",
+    "targetYear": 2030,
+    "targetUnit": "Number of investments",
+    "value": "1"
+    },
+    {
+    "indicatorId": 14,
+    "indicatorStatement": "#people benefiting from climate-adapted innovations",
+    "impactAreaId": 4,
+    "impactAreaName": "Climate adaptation and mitigation",
+    "targetYear": 2030,
+    "targetUnit": "Million of people",
+    "value": "500"
+    },
+    {
+    "indicatorId": 15,
+    "indicatorStatement": "#ha under improved management",
+    "impactAreaId": 5,
+    "impactAreaName": "Environmental health and biodiversity",
+    "targetYear": 2030,
+    "targetUnit": "Hectares",
+    "value": "1000"
+    },
+    {
+    "indicatorId": 16,
+    "indicatorStatement": "#km3 consumptive water use",
+    "impactAreaId": 5,
+    "impactAreaName": "Environmental health and biodiversity",
+    "targetYear": 2030,
+    "targetUnit": "Km3",
+    "value": "2500"
+    },
+    {
+    "indicatorId": 17,
+    "indicatorStatement": "#ha deforestation",
+    "impactAreaId": 5,
+    "impactAreaName": "Environmental health and biodiversity",
+    "targetYear": 2030,
+    "targetUnit": "Hectares",
+    "value": "1000"
+    },
+    {
+    "indicatorId": 18,
+    "indicatorStatement": "#Tg nitrogen application",
+    "impactAreaId": 5,
+    "impactAreaName": "Environmental health and biodiversity",
+    "targetYear": 2030,
+    "targetUnit": "Tg of nitrogen",
+    "value": "90"
+    },
+    {
+    "indicatorId": 19,
+    "indicatorStatement": "#plant genetic accessions available and safely duplicated",
+    "impactAreaId": 5,
+    "impactAreaName": "Environmental health and biodiversity",
+    "targetYear": 2030,
+    "targetUnit": "Number of accessions",
+    "value": "1"
+    }
+    ]

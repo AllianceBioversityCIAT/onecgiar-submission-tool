@@ -27,7 +27,7 @@ export class ClarisaService {
 
   // Query to get countries
   getCountries(): Observable<any> {
-    return this.http.get<any>(`https://clarisa.cgiar.org/api/countries`,{ responseType: 'json' }).pipe(map(resp=>{
+    return this.http.get<any>(`${environment.apiClarisa}/countries`,{ responseType: 'json' }).pipe(map(resp=>{
       let res={response:{countries:resp}}
       return res;
     }));
@@ -35,18 +35,14 @@ export class ClarisaService {
 
   // Query to get Impact areas
   getImpactAreas(): Observable<any> {
-    return this.http.get<any>(`${environment.apiClarisa}/impact-areas`);
+    return this.http.get<any>(`/assets/DB/impact-areas.json`);
+    // return this.http.get<any>(`${environment.apiClarisa}/impact-areas`);
   }
 
   // Query to get Institutions
   getImpactAreasIndicators(): Observable<any> {
-    return this.http.get<any>(`${environment.apiClarisa}/impact-areas-indicators`);
+    return this.http.get<any>(`/assets/DB/impact-areas-indicators.json`);
+    // return this.http.get<any>(`${environment.apiClarisa}/impact-areas-indicators`);
   }
-
-  test(){
-    return this.http.get<any>('https://jsonplaceholder.typicode.com/posts');
-  }
-
-
 
 }
