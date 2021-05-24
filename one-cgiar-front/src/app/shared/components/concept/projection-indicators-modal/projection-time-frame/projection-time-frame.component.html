@@ -1,0 +1,28 @@
+<form [formGroup]="this.projectionTimeFrameForm">
+    <div>
+        <div class="projection-container">
+            <div class="row">
+                <mat-form-field class="col-3">
+                    <p><strong>Select year: </strong><span class="asterisk">* </span></p>
+                    <mat-select formControlName="year">
+                        <mat-option value="2021">2021</mat-option>
+                        <mat-option value="2022">2022</mat-option>
+                        <mat-option value="2023">2023</mat-option>
+                        <mat-option value="2024">2024</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-4">
+                    <p><strong>Low scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
+                    <input type="number" matInput required formControlName="low_scenario" />
+                </mat-form-field>
+                <mat-form-field class="col-4">
+                    <p><strong> High scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
+                    <input type="number" matInput required formControlName="high_scenario" />
+                </mat-form-field>
+                <div class="col-1 center_flex">
+                    <mat-icon >delete</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

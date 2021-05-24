@@ -9,6 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
 import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
+import { InteractionsService } from '../../../../services/interactions.service';
 
 @Component({
   selector: 'app-projection-of-benefits-work-package',
@@ -24,7 +25,8 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     public _requests: RequestsService,
     private _clarisaService:ClarisaService,
     private _initiativesService:InitiativesService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _interactionsService:InteractionsService,
   ) {
     // this.workPackageGeneralInfoForm = new FormGroup({
     //    impactAreaIndicatorId: new FormControl('', Validators.required),

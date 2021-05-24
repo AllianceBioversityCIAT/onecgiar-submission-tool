@@ -1,41 +1,14 @@
-<h2 mat-dialog-title>Year mapping</h2>
+<h2 mat-dialog-title class="background-color-primary">Year mapping</h2>
 <mat-dialog-content>
     <p class="description-field"><i>Please indicate a range of the target values for this indicator</i></p>
-    <form [formGroup]="_requests.projectionBenefitsRangeCs">
-        <div formArrayName="range">
-            <div class="projection-container" *ngFor="let r of _requests.range.controls; index as i">
-                <div class="row" [formGroupName]="i">
-                    <mat-form-field class="col-3">
-                        <p><strong>Select year: </strong><span class="asterisk">* </span></p>
-                        <mat-select formControlName="year">
-                            <mat-option value="2021">2021</mat-option>
-                            <mat-option value="2022">2022</mat-option>
-                            <mat-option value="2023">2023</mat-option>
-                            <mat-option value="2024">2024</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field class="col-4">
-                        <p><strong>Low scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
-                        <input type="number" matInput required formControlName="low" />
-                    </mat-form-field>
-                    <mat-form-field class="col-4">
-                        <p><strong> High scenario ({{this.data?.targetUnit || 'Not available'}}): </strong><span class="asterisk">* </span></p>
-                        <input type="number" matInput required formControlName="high" />
-                    </mat-form-field>
-                    <div class="col-1 center_flex">
-                        <mat-icon (click)="_requests.removeRangeProjection(i)">delete</mat-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+    <app-projection-time-frame [data]="item" *ngFor="let item of timeFrames"></app-projection-time-frame>
     <div class="add-range">
-        <button type="submit" mat-raised-button color="primary" (click)="_requests.addRange()">
+        <button type="submit" mat-raised-button color="primary" >
             add ranges and years
         </button>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button class="close" mat-button mat-dialog-close>close</button>
-    <button class="save" mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="_requests.saveIndicators()">save</button>
+    <button class="save" mat-button [mat-dialog-close]="true" cdkFocusInitial >save</button>
 </mat-dialog-actions>

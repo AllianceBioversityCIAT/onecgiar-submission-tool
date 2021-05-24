@@ -57,6 +57,7 @@ import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
 import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
+import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { PobContributionComponent } from './shared/components/concept/work-packa
     EditRolUserComponent,
     ChangePasswordComponent,
     PartnersRequestComponent,
+    ProjectionTimeFrameComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

@@ -1,0 +1,66 @@
+h2 {
+    color: #fff;
+    display: flex;
+    font-size: 1.5rem;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+mat-dialog-content {
+    padding: 1rem 5rem;
+}
+
+mat-dialog-actions {
+    padding: 1rem 2rem;
+}
+
+.description-field {
+    color: #666666;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+}
+
+.projection-container {
+    display: flex;
+    flex-direction: column;
+    background: #FAFAFA;
+    border: 2px dotted #b1b0b0;
+    padding: 1rem;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+
+.asterisk {
+    color: #ff0000;
+}
+
+.add-range {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+}
+
+mat-icon {
+    color: #d30000;
+    cursor: pointer;
+}
+
+mat-icon:hover {
+    color: #ff0000;
+}
+
+.close {
+    color: #fff;
+}
+
+.save {
+    background: #6AA84F;
+    color: #fff;
+}
+
+.add-range-button {
+    outline: none;
+    color: #fff;
+}
