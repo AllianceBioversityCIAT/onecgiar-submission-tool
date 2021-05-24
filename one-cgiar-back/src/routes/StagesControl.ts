@@ -63,7 +63,7 @@ router.patch("/concept/packages/benefits", [checkJwt, checkRole('benefits', 'cre
 router.patch("/concept/packages/benefits/timeframes", [checkJwt, checkRole('benefits', 'createOwn')], upsertTimeFrameProjectedBenefit);
 
 // get regions to work packages
-router.get("/concept/packages/benefits/timeframes/:wrkPkgId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getTimeFramesProjectedBenefit);
+router.get("/concept/packages/benefits/timeframes/:prjctBnftId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getTimeFramesProjectedBenefit);
 
 
 
