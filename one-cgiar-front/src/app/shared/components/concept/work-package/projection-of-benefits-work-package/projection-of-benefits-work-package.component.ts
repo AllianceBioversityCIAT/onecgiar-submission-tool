@@ -6,6 +6,9 @@ import { ClarisaService } from '../../../../services/clarisa.service';
 import { impactArea } from '../../../../models/impactArea.interface';
 import { impactAreaIndicator } from '../../../../models/impactAreaIndicator.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { InitiativesService } from '../../../../services/initiatives.service';
+import { DataControlService } from '../../../../services/data-control.service';
+import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
 
 @Component({
   selector: 'app-projection-of-benefits-work-package',
@@ -21,6 +24,8 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     public _requests: RequestsService,
     public dialog: MatDialog,
     private _clarisaService:ClarisaService,
+    private _initiativesService:InitiativesService,
+    private _dataControlService:DataControlService
   ) {
     this.workPackageGeneralInfoForm = new FormGroup({
        impactAreaIndicatorId: new FormControl('', Validators.required),
@@ -29,11 +34,54 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
    }
 
   ngOnInit( ): void {
-    Promise.all([ this._clarisaService.getImpactAreas().toPromise(),this._clarisaService.getImpactAreasIndicators().toPromise()]).then(resp => {
+    let observableList=[
+      this._clarisaService.getImpactAreas().toPromise(),
+      this._clarisaService.getImpactAreasIndicators().toPromise()
+    ]
+    Promise.all(observableList).then(resp => {
       this.impactAreas = resp[0];
       this.impactAreasIndicators = resp[1];
+      console.log(resp);
       this.mapImpactAreasWithIndicators();
+      this.getPOBenefits();
+    }).catch(err=>{
+      console.log(err);
     });
+  }
+
+  getPOBenefits(){
+    this._initiativesService.getPOBenefits(this._dataControlService.WorkPackageID).subscribe(resp=>{
+      console.log('%c_______________','background: #222; color: #84c3fd');
+      let projectionOfBenefits = resp.response?.projectedBenefits;
+      console.log(projectionOfBenefits);
+      console.log(this.impactAreas);
+      console.log('%c........................................','background: #222; color: #ffff00');
+      this.impactAreas.map((impactArea)=>{
+        impactArea.projectedBenefits = [];
+        projectionOfBenefits.forEach(  projectionOfBenefit => {
+          if (  projectionOfBenefit.impact_area_id == impactArea.id) {
+            projectionOfBenefit.new = false;
+            impactArea.projectedBenefits.push(  projectionOfBenefit)
+          }
+          // console.log(  projectionOfBenefit.impact_area_id+' '+impactArea.id);
+        });
+      })
+    },
+    err=>{
+      console.log('%c'+err.error.description,'background: #222; color: #fd8484');
+    })
+  }
+
+  addNewLocalContribution(impactArea:impactArea){
+    // data.impactArea.projectedBenefits.push({hola:"hello"})
+    // let body = {
+
+    // }
+    // impactArea.projectedBenefits.push(body)
+    // console.log("helloo");
+    // console.log(impactArea);
+    // console.log(this.impactAreas);
+
   }
 
   mapImpactAreasWithIndicators(){

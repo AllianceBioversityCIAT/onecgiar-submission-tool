@@ -252,6 +252,28 @@ export class InitiativesService {
   }
 
 
+
+  //Request projection of benefits
+  // 
+  getPOBenefits(WorkPackageID) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/${WorkPackageID}`);
+  }
+  // 
+  getPOBenefitsTimetimeframes(initiativeId) {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/roles`);
+  }
+
+  // 
+  pushPOBenefits(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
+  }
+
+  // 
+  PushPOBenefitsTimetimeframes(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
+  }
+
+
   
 
  

@@ -9,19 +9,10 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <div class="contribution-container" *ngFor="let contribution of _requests.contributions">
+                    <div class="contribution-container" *ngFor="let contribution of impactArea.projectedBenefits">
                         <div class="remove-contribution-container">
                             <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
                         </div>
-
-                        <!-- <mat-form-field appearance="standard">
-                            <p><strong>Indicate a common impact indicators attributable to CGIAR: </strong><span
-                                    class="asterisk">* </span></p>
-                            <mat-select>
-                                <mat-option value="" *ngFor="let indicator of impactArea.indicators">{{indicator.indicatorStatement}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field> -->
 
                         <custom-select [options]="
                         {
@@ -49,30 +40,33 @@
                                 <td *ngFor="let item of projectionRanges">{{item.high}}</td>
                             </tr>
                         </table>
-
+                        <br>
                         <div class="set-data-container">
-                            <button type="submit" mat-raised-button color="primary" (click)="openDialog(impactArea.indicators)">
-                                set ranges and years
-                            </button>
+                            <div>
+                                <button type="button" mat-raised-button color="primary" (click)="openDialog(impactArea.indicators)">
+                                    set ranges and years
+                                </button>
+                            </div>
+
                         </div>
 
                         <custom-textarea  
                         [options]="{form:this.workPackageGeneralInfoForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
                         </custom-textarea>
 
-                        <br>
+                        <div class="set-data-container">
+                            <div>
+                                <save-button></save-button>
+                            </div>
 
-<!-- 
-                        <mat-form-field>
-                            <p><strong>Add any notes on methodology and sources here: </strong></p>
-                            <input type="text" matInput required />
-                        </mat-form-field> -->
+                        </div>
+                        <br>
 
                     </div>
 
                     <div class="set-data-container">
                         <button type="submit" mat-raised-button color="primary"
-                            (click)="_requests.addContribution()">
+                            (click)="addNewLocalContribution(impactArea)">
                             Add new contribution
                         </button>
                     </div>

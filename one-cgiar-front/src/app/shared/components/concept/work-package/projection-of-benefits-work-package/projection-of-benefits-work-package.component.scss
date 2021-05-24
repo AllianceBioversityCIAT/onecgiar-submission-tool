@@ -26,7 +26,10 @@
 .set-data-container {
     display: flex;
     justify-content: flex-end;
-    margin: 1rem 0;
+    // margin: 1rem 0;
+    button{
+        margin-right: 10px;
+    }
 }
 
 mat-panel-title {
