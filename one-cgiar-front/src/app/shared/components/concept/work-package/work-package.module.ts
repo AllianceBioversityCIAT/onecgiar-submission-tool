@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { WorkPackageRoutingModule } from './work-package-routing.module';
@@ -8,15 +8,25 @@ import { CustomFormsModule } from '../../custom-forms/custom-forms.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../material.module';
 import { ProjectionOfBenefitsWorkPackageComponent } from './projection-of-benefits-work-package/projection-of-benefits-work-package.component';
+import { PobContributionComponent } from './pob-contribution/pob-contribution.component';
 
 
 @NgModule({
-  declarations: [GeneralInformationWorkPackageComponent, GeographicScopeWorkPackageComponent, ProjectionOfBenefitsWorkPackageComponent],
+  declarations: [
+    GeneralInformationWorkPackageComponent, 
+    GeographicScopeWorkPackageComponent, 
+    ProjectionOfBenefitsWorkPackageComponent,
+    PobContributionComponent,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
+    MaterialModule,
     WorkPackageRoutingModule,
     CustomFormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
+  ],
+  exports:[
     MaterialModule
   ]
 })

@@ -56,6 +56,7 @@ import { CreateUsersComponent } from './shared/components/create-users/create-us
 import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol-user.component';
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
 import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
+import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 
 @NgModule({
   declarations: [

@@ -1,0 +1,21 @@
+.remove-contribution-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5rem 0 0 0;
+}
+.set-data-container {
+    display: flex;
+    justify-content: flex-end;
+    // margin: 1rem 0;
+    button{
+        margin-right: 10px;
+    }
+}
+table, th, td {
+    border: .3px solid #bbbbbb;
+    border-collapse: collapse;
+  }
+
+  table{
+      width: 100%;
+  }

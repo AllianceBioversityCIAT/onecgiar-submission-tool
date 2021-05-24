@@ -19,18 +19,17 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
   projectionRanges = this._requests.projectionBenefitsRangeCs.controls.range.value;
   impactAreas:impactArea[];
   impactAreasIndicators:impactAreaIndicator[];
-  workPackageGeneralInfoForm: FormGroup;
+  // workPackageGeneralInfoForm: FormGroup;
   constructor(
     public _requests: RequestsService,
-    public dialog: MatDialog,
     private _clarisaService:ClarisaService,
     private _initiativesService:InitiativesService,
     private _dataControlService:DataControlService
   ) {
-    this.workPackageGeneralInfoForm = new FormGroup({
-       impactAreaIndicatorId: new FormControl('', Validators.required),
-       notes: new FormControl('', Validators.required),
-    });
+    // this.workPackageGeneralInfoForm = new FormGroup({
+    //    impactAreaIndicatorId: new FormControl('', Validators.required),
+    //    notes: new FormControl('', Validators.required),
+    // });
    }
 
   ngOnInit( ): void {
@@ -74,10 +73,16 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
 
   addNewLocalContribution(impactArea:impactArea){
     // data.impactArea.projectedBenefits.push({hola:"hello"})
-    // let body = {
-
-    // }
-    // impactArea.projectedBenefits.push(body)
+    let body:ProjectionOfBenefits = {
+      wrkPkgId:1, 
+      impact_area_indicator_id:1, 
+      impact_area_indicator_name:"Iname", 
+      notes:"note test", 
+      impact_area_id: 2, 
+      impact_area_name: "ianme",
+      active:true
+    }
+    impactArea.projectedBenefits.push(body)
     // console.log("helloo");
     // console.log(impactArea);
     // console.log(this.impactAreas);
@@ -97,26 +102,6 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     console.log(this.impactAreas);
   }
 
-  openDialog(impactAreaIndicators) {
-    console.log(impactAreaIndicators);
-    // console.log(this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value);
-    // impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.id === '1').foo;
-    let impactAreaIndicatorId = this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value;
-    let targetUnit = impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.indicatorId == impactAreaIndicatorId)?.targetUnit;
-    console.log(targetUnit);
-    console.log(impactAreaIndicatorId);
-    let data={
-      targetUnit
-    };
-    const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, {
-      panelClass: 'custom-dialog-container',
-      width:'60%',
-      data
-    });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
 
 }

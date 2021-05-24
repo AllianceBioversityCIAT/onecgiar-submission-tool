@@ -1,0 +1,53 @@
+<form [formGroup]="pobenefitsForm" (ngSubmit)="saveContribution()">
+<div class="remove-contribution-container">
+    <mat-icon (click)="removeContribution()">delete</mat-icon>
+</div>
+
+<custom-select [options]="
+{
+ required:true,
+ inputTitle:'Indicate a common impact indicators attributable to CGIAR',
+ form:this.pobenefitsForm,
+ formControlId:'impactAreaIndicatorId',
+ selectList:indicators,
+ selectItemName:'indicatorStatement',
+ selectItemId:'indicatorId'
+}">
+></custom-select>
+
+<table>
+    <tr>
+        <th></th>
+        <th *ngFor="let item of projectionRanges">{{item.year}}</th>
+    </tr>
+    <tr>
+        <td>Low scenario</td>
+        <td *ngFor="let item of projectionRanges">{{item.low}}</td>
+    </tr>
+    <tr>
+        <td>High scenario</td>
+        <td *ngFor="let item of projectionRanges">{{item.high}}</td>
+    </tr>
+</table>
+<br>
+<div class="set-data-container">
+    <div>
+        <button type="button" mat-raised-button color="primary" (click)="openDialog(indicators)">
+            set ranges and years
+        </button>
+    </div>
+
+</div>
+
+<custom-textarea  
+[options]="{form:this.pobenefitsForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
+</custom-textarea>
+
+<div class="set-data-container">
+    <div>
+        <save-button></save-button>
+    </div>
+
+</div>
+<br>
+</form>

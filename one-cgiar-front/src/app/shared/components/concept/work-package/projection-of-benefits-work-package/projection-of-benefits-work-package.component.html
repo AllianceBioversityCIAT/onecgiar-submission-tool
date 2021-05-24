@@ -10,10 +10,11 @@
                     </mat-expansion-panel-header>
 
                     <div class="contribution-container" *ngFor="let contribution of impactArea.projectedBenefits">
-                        <div class="remove-contribution-container">
+                        <app-pob-contribution [indicators]="impactArea.indicators" ></app-pob-contribution>
+                        <!-- <div class="remove-contribution-container">
                             <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
                         </div>
-
+                        
                         <custom-select [options]="
                         {
                          required:true,
@@ -60,7 +61,7 @@
                             </div>
 
                         </div>
-                        <br>
+                        <br> -->
 
                     </div>
 
