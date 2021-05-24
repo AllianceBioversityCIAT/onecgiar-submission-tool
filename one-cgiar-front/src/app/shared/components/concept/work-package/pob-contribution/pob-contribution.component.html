@@ -1,4 +1,4 @@
-<form [formGroup]="pobenefitsForm" (ngSubmit)="saveContribution()">
+<form [formGroup]="poBenefitsForm" (ngSubmit)="saveContribution()">
 <div class="remove-contribution-container">
     <mat-icon (click)="removeContribution()">delete</mat-icon>
 </div>
@@ -7,8 +7,8 @@
 {
  required:true,
  inputTitle:'Indicate a common impact indicators attributable to CGIAR',
- form:this.pobenefitsForm,
- formControlId:'impactAreaIndicatorId',
+ form:this.poBenefitsForm,
+ formControlId:'impact_area_indicator_id',
  selectList:indicators,
  selectItemName:'indicatorStatement',
  selectItemId:'indicatorId'
@@ -40,7 +40,7 @@
 </div>
 
 <custom-textarea  
-[options]="{form:this.pobenefitsForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
+[options]="{form:this.poBenefitsForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
 </custom-textarea>
 
 <div class="set-data-container">

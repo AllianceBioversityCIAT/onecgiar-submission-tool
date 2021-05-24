@@ -264,8 +264,8 @@ export class InitiativesService {
   }
 
   // 
-  pushPOBenefits(body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
+  patchPOBenefits(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits`, body);
   }
 
   // 

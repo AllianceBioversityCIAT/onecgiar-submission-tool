@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestsService } from '@app/shared/services/requests.service';
 import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-modal/projection-indicators-modal.component';
+import { InitiativesService } from '../../../../services/initiatives.service';
+import { DataControlService } from '../../../../services/data-control.service';
 
 @Component({
   selector: 'app-pob-contribution',
@@ -10,16 +12,22 @@ import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-
   styleUrls: ['./pob-contribution.component.scss']
 })
 export class PobContributionComponent implements OnInit {
-  pobenefitsForm: FormGroup;
+  poBenefitsForm: FormGroup;
   projectionRanges = this._requests.projectionBenefitsRangeCs.controls.range.value;
   @Input() indicators;
   constructor(
     public _requests: RequestsService,
     public dialog: MatDialog,
+    private _initiativesService:InitiativesService,
+    private _dataControlService:DataControlService
   ) {
-    this.pobenefitsForm = new FormGroup({
-      impactAreaIndicatorId: new FormControl('', Validators.required),
+    this.poBenefitsForm = new FormGroup({
+      wrkPkgId: new FormControl(this._dataControlService.WorkPackageID, Validators.required),
+      impact_area_indicator_id: new FormControl('', Validators.required),
+      impact_area_indicator_name: new FormControl('test', Validators.required),
       notes: new FormControl('', Validators.required),
+      impact_area_id: new FormControl(1, Validators.required),
+      impact_area_name: new FormControl('test', Validators.required),
     });
   }
 
@@ -32,13 +40,16 @@ export class PobContributionComponent implements OnInit {
 
   saveContribution(){
     console.log("On save");
+    this._initiativesService.patchPOBenefits(this.poBenefitsForm.value).subscribe(resp=>{
+      console.log(resp);
+    });
   }
 
   openDialog(impactAreaIndicators) {
     console.log(impactAreaIndicators);
     // console.log(this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value);
     // impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.id === '1').foo;
-    let impactAreaIndicatorId = this.pobenefitsForm.get('impactAreaIndicatorId').value;
+    let impactAreaIndicatorId = this.poBenefitsForm.get('impactAreaIndicatorId').value;
     let targetUnit = impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.indicatorId == impactAreaIndicatorId)?.targetUnit;
     console.log(targetUnit);
     console.log(impactAreaIndicatorId);
