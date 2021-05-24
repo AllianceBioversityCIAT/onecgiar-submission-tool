@@ -6,6 +6,7 @@ import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
 import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
+import { InteractionsService } from '../../../../services/interactions.service';
 
 @Component({
   selector: 'app-pob-contribution',
@@ -21,7 +22,8 @@ export class PobContributionComponent implements OnInit {
     public _requests: RequestsService,
     public dialog: MatDialog,
     private _initiativesService:InitiativesService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _interactionsService:InteractionsService
   ) {
     this.poBenefitsForm = new FormGroup({
       wrkPkgId: new FormControl(null, Validators.required),
@@ -59,6 +61,7 @@ export class PobContributionComponent implements OnInit {
     console.log("On save");
     this._initiativesService.patchPOBenefits(this.poBenefitsForm.value).subscribe(resp=>{
       console.log(resp);
+      this._interactionsService.successMessage('Contribution has been saved',1000)
     });
   }
 
