@@ -1,3 +1,4 @@
+import { Timeframe } from './timeframes.interface';
 
 export interface ProjectionOfBenefits{
     wrkPkgId?: number|string
@@ -9,6 +10,7 @@ export interface ProjectionOfBenefits{
     impact_area_indicator_name?: string
     impact_area_name: string
     notes: string
-    updated_at?: string
+    updated_at?: string,
+    timeFrames?:Timeframe[]
 }
 

@@ -66,12 +66,13 @@ export class PobContributionComponent implements OnInit {
     console.log(impactAreaIndicators);
     // console.log(this.workPackageGeneralInfoForm.get('impactAreaIndicatorId').value);
     // impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.id === '1').foo;
-    let impactAreaIndicatorId = this.poBenefitsForm.get('impactAreaIndicatorId').value;
+    let impactAreaIndicatorId = this.poBenefitsForm.get('impact_area_indicator_id').value;
     let targetUnit = impactAreaIndicators.find(impactAreaIndicator => impactAreaIndicator.indicatorId == impactAreaIndicatorId)?.targetUnit;
     console.log(targetUnit);
     console.log(impactAreaIndicatorId);
     let data={
-      targetUnit
+      targetUnit,
+      // timeframes:
     };
     const dialogRef = this.dialog.open(ProjectionIndicatorsModalComponent, {
       panelClass: 'custom-dialog-container',

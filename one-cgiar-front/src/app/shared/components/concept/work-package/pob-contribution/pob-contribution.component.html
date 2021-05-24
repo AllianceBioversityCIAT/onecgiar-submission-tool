@@ -19,15 +19,15 @@
 <table>
     <tr>
         <th></th>
-        <th *ngFor="let item of projectionRanges">{{item.year}}</th>
+        <th *ngFor="let item of contribution.timeFrames">{{item.year}}</th>
     </tr>
     <tr>
         <td>Low scenario</td>
-        <td *ngFor="let item of projectionRanges">{{item.low}}</td>
+        <td *ngFor="let item of contribution.timeFrames">{{item.low_scenario}}</td>
     </tr>
     <tr>
         <td>High scenario</td>
-        <td *ngFor="let item of projectionRanges">{{item.high}}</td>
+        <td *ngFor="let item of contribution.timeFrames">{{item.high_scenario}}</td>
     </tr>
 </table>
 <br>

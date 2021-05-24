@@ -259,8 +259,8 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/${WorkPackageID}`);
   }
   // 
-  getPOBenefitsTimetimeframes(initiativeId) {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/roles`);
+  getPOBenefitsTimetimeframes(benefitId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes/${benefitId}`);
   }
 
   // 
@@ -269,8 +269,8 @@ export class InitiativesService {
   }
 
   // 
-  PushPOBenefitsTimetimeframes(body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
+  patchPOBenefitsTimetimeframes(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes`, body);
   }
 
 

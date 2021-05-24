@@ -40,7 +40,7 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     Promise.all(observableList).then(resp => {
       this.impactAreas = resp[0];
       this.impactAreasIndicators = resp[1];
-      console.log(resp);
+      // console.log(resp);
       this.mapImpactAreasWithIndicators();
       this.getPOBenefits();
     }).catch(err=>{
@@ -50,11 +50,11 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
 
   getPOBenefits(){
     this._initiativesService.getPOBenefits(this._dataControlService.WorkPackageID).subscribe(resp=>{
-      console.log('%c_______________','background: #222; color: #84c3fd');
+      // console.log('%c_______________','background: #222; color: #84c3fd');
       let projectionOfBenefits = resp.response?.projectedBenefits;
-      console.log(projectionOfBenefits);
-      console.log(this.impactAreas);
-      console.log('%c........................................','background: #222; color: #ffff00');
+      // console.log(projectionOfBenefits);
+      // console.log(this.impactAreas);
+      // console.log('%c........................................','background: #222; color: #ffff00');
       this.impactAreas.map((impactArea)=>{
         impactArea.projectedBenefits = [];
         projectionOfBenefits.forEach(  projectionOfBenefit => {
@@ -65,6 +65,7 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
           // console.log(  projectionOfBenefit.impact_area_id+' '+impactArea.id);
         });
       })
+      this.getTimeframes();
     },
     err=>{
       console.log('%c'+err.error.description,'background: #222; color: #fd8484');
@@ -72,6 +73,29 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
         impactArea.projectedBenefits = [];
       })
     })
+  }
+
+  getTimeframes(){
+    this.impactAreas.map(impactArea=>{
+      impactArea.projectedBenefits.map(contribution=>{
+        contribution.timeFrames = [];
+          this._initiativesService.getPOBenefitsTimetimeframes(contribution.id).subscribe(resp=>{
+            let timeFramesAux = resp.response.timeFrames;
+            timeFramesAux.forEach(timeFrame => {
+              contribution.timeFrames.push(timeFrame)
+            });
+          },
+          err=>{
+            console.log(err);
+          })
+
+      })
+    })
+    console.log(this.impactAreas);
+    // this._initiativesService.getPOBenefitsTimetimeframes(1).subscribe(resp=>{
+    //   console.log('%cTimeframes','background: #222; color: #84c3fd');
+    //   console.log(resp.response?.timeFrames);
+    // })
   }
 
   addNewLocalContribution(impactArea:impactArea){
@@ -102,7 +126,7 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
         
       });
     })
-    console.log(this.impactAreas);
+    // console.log(this.impactAreas);
   }
 
 
