@@ -814,11 +814,11 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
 
 /**
  * 
- * @param req params: { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName }
+ * @param req params: { id, wrkPkgId, impact_area_indicator_id, impact_area_indicator_name, notes, impact_area_id, impact_area_name }
  * @param res 
  */
 export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
-    const { id, wrkPkgId, impactAreaIndicatorId, impactAreaIndicatorName, notes, impactAreaId, impactAreaName, active } = req.body;
+    const { id, wrkPkgId, impact_area_indicator_id, impact_area_indicator_name, notes, impact_area_id, impact_area_name, active } = req.body;
     try {
         const prjBfnRepo = getRepository(ProjectionBenefits);
         const wpRepo = getRepository(WorkPackages);
@@ -829,16 +829,16 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
             prjtedBfnt.notes = (notes) ? notes : prjtedBfnt.notes;
             prjtedBfnt.active = active;
             // prjtedBfnt.active = (active) ? active : prjtedBfnt.active;
-            prjtedBfnt.impact_area_indicator_id = (impactAreaIndicatorId) ? impactAreaIndicatorId : prjtedBfnt.impact_area_indicator_id;
-            prjtedBfnt.impact_area_indicator_name = (impactAreaIndicatorName) ? impactAreaIndicatorName : prjtedBfnt.impact_area_indicator_name;
+            prjtedBfnt.impact_area_indicator_id = (impact_area_indicator_id) ? impact_area_indicator_id : prjtedBfnt.impact_area_indicator_id;
+            prjtedBfnt.impact_area_indicator_name = (impact_area_indicator_name) ? impact_area_indicator_name : prjtedBfnt.impact_area_indicator_name;
         } else {
             prjtedBfnt = new ProjectionBenefits();
             const workPackage = await wpRepo.findOne(wrkPkgId);
             prjtedBfnt.notes = notes;
-            prjtedBfnt.impact_area_id = impactAreaId;
-            prjtedBfnt.impact_area_indicator_id = impactAreaIndicatorId;
-            prjtedBfnt.impact_area_indicator_name = impactAreaIndicatorName;
-            prjtedBfnt.impact_area_name = impactAreaName;
+            prjtedBfnt.impact_area_id = impact_area_id;
+            prjtedBfnt.impact_area_indicator_id = impact_area_indicator_id;
+            prjtedBfnt.impact_area_indicator_name = impact_area_indicator_name;
+            prjtedBfnt.impact_area_name = impact_area_name;
             prjtedBfnt.wrkPkg = workPackage;
             prjtedBfnt.active = active;
         }
