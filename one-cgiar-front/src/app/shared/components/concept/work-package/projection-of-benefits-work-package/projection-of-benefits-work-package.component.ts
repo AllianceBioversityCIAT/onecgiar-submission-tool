@@ -73,12 +73,12 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
 
   addNewLocalContribution(impactArea:impactArea){
     // data.impactArea.projectedBenefits.push({hola:"hello"})
+    console.log(impactArea);
     let body:ProjectionOfBenefits = {
-      wrkPkgId:1, 
-      impact_area_indicator_id:1, 
-      impact_area_indicator_name:"Iname", 
+      // impact_area_indicator_id:1, 
+      // impact_area_indicator_name:"Iname", 
       notes:"note test", 
-      impact_area_id: 2, 
+      impact_area_id: impactArea.id, 
       impact_area_name: "ianme",
       active:true
     }
