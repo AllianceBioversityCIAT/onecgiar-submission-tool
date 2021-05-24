@@ -8,6 +8,7 @@ import { impactAreaIndicator } from '../../../../models/impactAreaIndicator.inte
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
+import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
 
 @Component({
   selector: 'app-projection-of-benefits-work-package',
@@ -59,15 +60,28 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
         impactArea.projectedBenefits = [];
         projectionOfBenefits.forEach(  projectionOfBenefit => {
           if (  projectionOfBenefit.impact_area_id == impactArea.id) {
+            projectionOfBenefit.new = false;
             impactArea.projectedBenefits.push(  projectionOfBenefit)
           }
-          console.log(  projectionOfBenefit.impact_area_id+' '+impactArea.id);
+          // console.log(  projectionOfBenefit.impact_area_id+' '+impactArea.id);
         });
       })
     },
     err=>{
       console.log('%c'+err.error.description,'background: #222; color: #fd8484');
     })
+  }
+
+  addNewLocalContribution(impactArea:impactArea){
+    // data.impactArea.projectedBenefits.push({hola:"hello"})
+    // let body = {
+
+    // }
+    // impactArea.projectedBenefits.push(body)
+    // console.log("helloo");
+    // console.log(impactArea);
+    // console.log(this.impactAreas);
+
   }
 
   mapImpactAreasWithIndicators(){
