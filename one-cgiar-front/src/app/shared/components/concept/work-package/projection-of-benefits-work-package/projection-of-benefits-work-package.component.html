@@ -8,7 +8,7 @@
                             {{impactArea.name}}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-
+                    <h1 *ngIf="!impactArea.projectedBenefits?.length" class="noPOB">There are not contributions...</h1>
                     <div class="contribution-container" *ngFor="let contribution of impactArea.projectedBenefits">
                         <app-pob-contribution [indicators]="impactArea.indicators" [contribution]="contribution" ></app-pob-contribution>
                         <!-- <div class="remove-contribution-container">
