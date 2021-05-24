@@ -44,8 +44,6 @@ export class PobContributionComponent implements OnInit {
   }
 
   setFormValue(){
-    console.log('%casdasdas','background: #222; color: #37ff73');
-    console.log(this.contribution);
     this.poBenefitsForm.get("wrkPkgId").setValue( this._dataControlService.WorkPackageID);
     this.poBenefitsForm.get("impact_area_indicator_id").setValue(this.contribution.impact_area_indicator_id);
     this.poBenefitsForm.get("impact_area_indicator_name").setValue(this.contribution.impact_area_indicator_name);

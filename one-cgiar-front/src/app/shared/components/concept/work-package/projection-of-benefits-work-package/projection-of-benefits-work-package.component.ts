@@ -68,6 +68,9 @@ export class ProjectionOfBenefitsWorkPackageComponent implements OnInit {
     },
     err=>{
       console.log('%c'+err.error.description,'background: #222; color: #fd8484');
+      this.impactAreas.map((impactArea)=>{
+        impactArea.projectedBenefits = [];
+      })
     })
   }
 
