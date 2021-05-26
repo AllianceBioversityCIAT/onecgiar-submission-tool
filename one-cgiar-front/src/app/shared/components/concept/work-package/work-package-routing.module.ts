@@ -23,10 +23,10 @@ const routes: Routes = [
         path: 'geographic-scope',
         component: GeographicScopeWorkPackageComponent,
       },
-      {
-        path: 'projection-of-benefits',
-        component: ProjectionOfBenefitsWorkPackageComponent,
-      },
+      // {
+      //   path: 'projection-of-benefits',
+      //   component: ProjectionOfBenefitsWorkPackageComponent,
+      // },
       // {
       //   path: 'projection_of_benefits',
       //   component: NarrativesConceptComponent,

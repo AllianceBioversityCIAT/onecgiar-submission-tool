@@ -27,11 +27,11 @@ export class WorkPackageComponent implements OnInit {
       route: 'geographic-scope',
       active: false,
     },
-    {
-      name: 'Projection of benefits',
-      route: 'projection-of-benefits',
-      active: false,
-    }
+    // {
+    //   name: 'Projection of benefits',
+    //   route: 'projection-of-benefits',
+    //   active: false,
+    // }
   ]; 
   activeLink = null;
   animationSize=500;
