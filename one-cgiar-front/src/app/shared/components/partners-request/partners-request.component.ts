@@ -28,8 +28,9 @@ export class PartnersRequestComponent implements OnInit {
       acronym: new FormControl(null, Validators.required),
       name: new FormControl(null, Validators.required),
       acronym_cgiar_entity: new FormControl(null, Validators.required),
-      category: new FormControl(null, Validators.required),
-      sub_category: new FormControl(null, Validators.required),
+      // category: new FormControl(null, Validators.required),
+      // sub_category: new FormControl(null, Validators.required),
+      type: new FormControl(null, Validators.required),
       headquarter_country: new FormControl(null, Validators.required),
       Website: new FormControl(null, Validators.required),
     });
