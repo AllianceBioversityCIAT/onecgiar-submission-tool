@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getClaCountries, getClaInstitutions, getClaRegions } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -28,6 +28,9 @@ router.patch("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives
 
 // get stages
 router.get("/stages", [checkJwt], getStage);
+
+// get stages meta
+router.get("/stages-meta/:initiativeId([0-9]+)", [checkJwt], getStageMeta);
 
 // create stages
 router.post("/stages", [checkJwt, checkRole('stages', 'createAny')], createStage);
