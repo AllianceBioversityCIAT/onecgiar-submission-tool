@@ -1,0 +1,21 @@
+
+<span [ngSwitch]="this._initiativesService.initiative.readonly">
+    <div *ngSwitchCase="true">
+        <br>
+        <p class="readonly_text_title"><strong class="color-secondary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+        <p class="readonly_text">here is the file only read</p>
+    </div>
+    
+    <div *ngSwitchDefault>
+    
+            <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
+            <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i>
+            </p>
+            here is de view file
+            <br>
+            <br>
+     
+        
+    </div>
+    </span>
+    

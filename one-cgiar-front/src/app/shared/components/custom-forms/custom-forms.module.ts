@@ -10,11 +10,12 @@ import { MultipleChoiceComponent } from './multiple-choice/multiple-choice.compo
 import { TextComponent } from './text/text.component';
 import { SaveButtonComponent } from './save-button/save-button.component';
 import { RegionsFilterPipe } from '../../pipes/regions-filter.pipe';
+import { UploadFilesComponent } from './upload-files/upload-files.component';
 
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe],
+  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe, UploadFilesComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -26,6 +27,6 @@ import { RegionsFilterPipe } from '../../pipes/regions-filter.pipe';
       },
     })
   ],
-  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent]
+  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent,UploadFilesComponent]
 })
 export class CustomFormsModule { }
