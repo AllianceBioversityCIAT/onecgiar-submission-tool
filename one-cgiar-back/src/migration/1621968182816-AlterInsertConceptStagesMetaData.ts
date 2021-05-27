@@ -280,8 +280,6 @@ export class AlterInsertConceptStagesMetaData1621968182816 implements MigrationI
         ]);
 
         let s = await stageMetaRepo.save(conceptEntitiesMeta);
-        console.log(s)
-        // throw new Error()
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
