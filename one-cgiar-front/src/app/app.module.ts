@@ -58,6 +58,7 @@ import { ChangePasswordComponent } from './shared/components/login/change-passwo
 import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
+import { ExampleComponent } from './shared/components/full-proposal/example/example.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { ProjectionTimeFrameComponent } from './shared/components/concept/projec
     ChangePasswordComponent,
     PartnersRequestComponent,
     ProjectionTimeFrameComponent,
+    ExampleComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
