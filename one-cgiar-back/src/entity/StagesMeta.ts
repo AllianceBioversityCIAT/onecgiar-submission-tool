@@ -10,19 +10,18 @@ export class StagesMeta extends UpdatedCreatedAt {
     id: number
 
     @Column({ length: '500' })
-    @IsNotEmpty()
     stage_name: string
 
     @Column({ length: '250' })
-    @IsNotEmpty()
     col_name: string
+    
+    @Column({ length: '250' })
+    table_name: string
 
     @Column({ length: '250' })
-    @IsNotEmpty()
     display_name: string
     
     @Column({ length: '250' })
-    @IsNotEmpty()
     group_by: string
 
     @Column('tinyint')

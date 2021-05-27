@@ -384,7 +384,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ name, user, current_stage }
+ * @param req body:{ name, user, current_stage }
  * @param res 
  */
 export const createInitiative = async (req: Request, res: Response) => {
@@ -449,8 +449,8 @@ export const createInitiative = async (req: Request, res: Response) => {
 
 /**
  * 
- * @param req params:{ description, active, start_date, end_date }
- * @param res 
+ * @param req
+ * @param res stages , stagesMeta
  */
 export const getStage = async (req: Request, res: Response) => {
 
@@ -462,6 +462,39 @@ export const getStage = async (req: Request, res: Response) => {
         let stagesMeta = await stageMetaRepo.find({ where: { stage: In(stages.map(stage => stage.id)) }, order: { order: 'ASC' } });
 
         res.json(new ResponseHandler('Stages.', { stages, stagesMeta }));
+    } catch (error) {
+        console.log(error);
+        let e;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req stageId
+ * @param res stageMeta
+ */
+export const getStageMeta = async (req: Request, res: Response) => {
+
+    // get stage id from params
+    const { initiativeId } = req.params
+    const stageMetaRepo = getRepository(StagesMeta);
+    const initvStgRepo = getRepository(InitiativesByStages);
+
+    try {
+        const initvStg = await initvStgRepo.find({ where: { initiative: initiativeId } });
+        let stagesMeta = await stageMetaRepo.find({ where: { stage: initiativeId }, order: { order: 'ASC' } });
+
+        res.json(new ResponseHandler('Stages meta.', {  stagesMeta }));
     } catch (error) {
         console.log(error);
         let e;
