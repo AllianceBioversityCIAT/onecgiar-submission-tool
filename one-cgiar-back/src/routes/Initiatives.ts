@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getClaCountries, getClaInstitutions, getClaRegions } from '../controllers/Clarisa';
+import { getClaCountries, getClaInstitutions, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
 import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
@@ -59,5 +59,7 @@ router.get("/countries", [checkJwt], getClaCountries);
 router.get("/regions", [checkJwt], getClaRegions);
 //get institutions
 router.get("/institutions", [checkJwt], getClaInstitutions);
+//request institutions
+router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
 
 export default router;
