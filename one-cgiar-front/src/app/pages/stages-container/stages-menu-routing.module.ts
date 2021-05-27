@@ -12,6 +12,10 @@ const routes: Routes = [
           path: 'concept',
           loadChildren: () => import('./stages/concept/concept.module').then(mod => mod.ConceptModule),
         },
+        {
+          path: 'full-proposal',
+          loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
+        },
       ],
     // path: 'concept',
     // canActivate: [StagesGuard],
