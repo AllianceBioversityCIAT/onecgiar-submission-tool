@@ -162,7 +162,7 @@ export const requestClaInstitution = async (req: Request, res: Response) => {
         const params = {
             name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments
         }
-        const cgiarEntity = 'fish';
+        const cgiarEntity = 'ONECGIAR';
 
         const requestedInst = await axios.post(clarisaHost + `${cgiarEntity}/institutions/institution-requests`, {
             auth: {
