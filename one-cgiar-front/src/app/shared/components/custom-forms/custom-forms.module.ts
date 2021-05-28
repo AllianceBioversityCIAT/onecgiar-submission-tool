@@ -21,11 +21,7 @@ import { UploadFilesComponent } from './upload-files/upload-files.component';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule.forRoot({
-      locals: {
-        bold: 'Boldata',
-      },
-    })
+    NgxEditorModule
   ],
   exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent,UploadFilesComponent]
 })

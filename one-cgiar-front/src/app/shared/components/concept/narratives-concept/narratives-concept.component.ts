@@ -19,6 +19,7 @@ export class NarrativesConceptComponent implements OnInit {
   public narrativesForm: FormGroup;
   public initvStgId: any;
   showForm=false;
+  localEditText=true;
   constructor(
     public stgMenuSvc: StagesMenuService, 
     public initiativesSvc: InitiativesService, 

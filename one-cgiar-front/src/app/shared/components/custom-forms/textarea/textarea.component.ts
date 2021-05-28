@@ -4,7 +4,7 @@ import { textareaOptions } from '../../../models/forms-options/textarea-options.
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import { Editor,Toolbar } from 'ngx-editor';
 import { InitiativesService } from '../../../services/initiatives.service';
-
+import { toHTML } from 'ngx-editor';
 @Component({
   selector: 'custom-textarea',
   templateUrl: './textarea.component.html',
@@ -26,7 +26,7 @@ export class TextareaComponent implements OnInit {
       plugins:[]
     };
     this.editor = new Editor(options);
-    this.textareaInput = new FormControl(this.options.form.value[this.options.formControlName], [
+    this.textareaInput = new FormControl(this.options.form.value[this.options.formControlName]?this.options.form.value[this.options.formControlName]:'', [
       Validators.required,
       this.options.maxWords ? this.maxWordsValidator(): Validators.required
     ]);
