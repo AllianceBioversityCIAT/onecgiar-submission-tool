@@ -98,9 +98,9 @@ export class MenuComponent implements OnInit {
 
   validate_under_construction(section) {
     switch (section) {
-      case 'Work packages':
-        return true
-      case 'Key partners':
+      // case 'Work Packages':
+      //   return true
+      case 'Key Partners':
         return true
       default:
         return false

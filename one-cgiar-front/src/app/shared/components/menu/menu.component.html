@@ -17,10 +17,10 @@
                             <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
                         </button>
                     </mat-list-item>
-                <div [ngClass]="{'section_container':  meta.title == 'Work packages'}">
+                <div [ngClass]="{'section_container':  meta.title == 'Work Packages'}">
 
 
-                    <div *ngIf="meta.title == 'Work packages'&& this.workPackagesList.length >0">
+                    <div *ngIf="meta.title == 'Work Packages'&& this.workPackagesList.length >0">
                         <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
                             <span  class="stage__section_title"> <strong>{{(item.acronym||'unamed')|uppercase}}</strong></span>
                             <button mat-icon-button class="mat-icon-no-color"
