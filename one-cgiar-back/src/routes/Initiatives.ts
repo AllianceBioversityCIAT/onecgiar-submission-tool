@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getClaActionAreas, getClaCountries, getClaInstitutions, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
+import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
 import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
@@ -61,5 +61,9 @@ router.get("/regions", [checkJwt], getClaRegions);
 router.get("/institutions", [checkJwt], getClaInstitutions);
 //request institutions
 router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
+// get institutions types
+router.post("/institutions/types", [checkJwt], getClaInstitutionsTypes);
+// get crps
+router.get("/cgiar-entities", [checkJwt], getClaCRPs);
 
 export default router;
