@@ -274,6 +274,11 @@ export class InitiativesService {
   }
 
 
+  getGreenCheckStatus(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
+  }
+
+
   
 
  
