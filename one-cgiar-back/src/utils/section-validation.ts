@@ -43,7 +43,7 @@ export const validateConceptSection = async (initvStgId) => {
 
     // validate key partners
     const kp_keyPartners = await queryRunner.query(`SELECT key_partner_id, key_partner_name, description FROM key_partners WHERE partnershipsId =(SELECT id FROM partnerships WHERE initvStgId = ${initvStgId})`);
-    validatedSection.key_partners = (kp_keyPartners.length && kp_keyPartners.every(item => item.key_partner_name) && kp_keyPartners.every(item => item.key_partner_id) && kp_keyPartners.every(item => item.description))
+    validatedSection.key_partners = kp_keyPartners.length && (kp_keyPartners.every(item => item.key_partner_name) && kp_keyPartners.every(item => item.key_partner_id) && kp_keyPartners.every(item => item.description));
 
     return validatedSection;
 
