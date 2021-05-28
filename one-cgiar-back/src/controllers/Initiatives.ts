@@ -16,6 +16,7 @@ import { Users } from '../entity/Users';
 import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
+import { validateConceptSection } from '../utils/section-validation';
 import { getClaActionAreas } from './Clarisa';
 
 
@@ -491,10 +492,12 @@ export const getStageMeta = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
 
     try {
-        const initvStg = await initvStgRepo.find({ where: { initiative: initiativeId } });
+        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId } });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initiativeId }, order: { order: 'ASC' } });
 
-        res.json(new ResponseHandler('Stages meta.', {  stagesMeta }));
+        const validatedSections = await validateConceptSection(initvStg.id)
+
+        res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
         let e;
