@@ -12,12 +12,13 @@ config();
 
 
 const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
-const oa = `${process.env['clarisa_user']}:${process.env['clarisa_password']}`
-const clarisaHeader = {
-    Authorization: `Basic ${Buffer.from(oa).toString('base64')}`
-}
+// const oa = `${process.env['clarisa_user']}:${process.env['clarisa_password']}`
+// console.log(oa)
+// const clarisaHeader = {
+//     Authorization: `Basic ${Buffer.from(oa).toString('base64')}`
+// }
 
-const PAGE_SIZE = 20;
+// const PAGE_SIZE = 20;
 
 
 /**
@@ -26,7 +27,13 @@ const PAGE_SIZE = 20;
  */
 export const getClaActionAreas = async () => {
     try {
-        const actionAreas = await axios.get(clarisaHost + 'action-areas', { headers: clarisaHeader });
+        const actionAreas = await axios.get(clarisaHost + 'action-areas', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        // res.json(new ResponseHandler('CLARISA action areas.', { actionAreas: actionAreas.data }));
         return actionAreas.data;
     } catch (error) {
         console.log(error)
@@ -47,16 +54,16 @@ export const getClaActionAreas = async () => {
  */
 export const getClaCountries = async (req: Request, res: Response) => {
     try {
-        const countries = await axios.get(clarisaHost + 'countries', { headers: clarisaHeader });
-        return countries.data;
+        const countries = await axios.get(clarisaHost + 'countries', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        res.json(new ResponseHandler('CLARISA countries.', { countries: countries.data }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 
@@ -68,16 +75,17 @@ export const getClaCountries = async (req: Request, res: Response) => {
  */
 export const getClaRegions = async (req: Request, res: Response) => {
     try {
-        const regions = await axios.get(clarisaHost + 'un-regions', { headers: clarisaHeader });
-        return regions.data;
+        console.log(req.body)
+        const regions = await axios.get(clarisaHost + 'un-regions', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        res.json(new ResponseHandler('CLARISA regions.', { regions: regions.data }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 
@@ -89,16 +97,16 @@ export const getClaRegions = async (req: Request, res: Response) => {
  */
 export const getClaInstitutions = async (req: Request, res: Response) => {
     try {
-        const institutions = await axios.get(clarisaHost + 'institutions', { headers: clarisaHeader });
-        return institutions.data;
+        const institutions = await axios.get(clarisaHost + 'institutions', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        res.json(new ResponseHandler('CLARISA institutions.', { institutions: institutions.data }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 
@@ -110,16 +118,16 @@ export const getClaInstitutions = async (req: Request, res: Response) => {
  */
 export const getClaInstitutionsTypes = async (req: Request, res: Response) => {
     try {
-        const institutionsTypes = await axios.get(clarisaHost + 'institutions-types', { headers: clarisaHeader });
-        return institutionsTypes.data;
+        const institutionsTypes = await axios.get(clarisaHost + 'institutions-types', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        res.json(new ResponseHandler('CLARISA institutionsTypes.', { institutionsTypes: institutionsTypes.data }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 
@@ -131,16 +139,16 @@ export const getClaInstitutionsTypes = async (req: Request, res: Response) => {
  */
 export const getClaCRPs = async (req: Request, res: Response) => {
     try {
-        const crps = await axios.get(clarisaHost + 'cgiar-entities', { headers: clarisaHeader });
-        return crps.data;
+        const crps = await axios.get(clarisaHost + 'cgiar-entities', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        res.json(new ResponseHandler('CLARISA crps.', { crps: crps.data }));
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 
@@ -150,17 +158,23 @@ export const getClaCRPs = async (req: Request, res: Response) => {
  */
 export const requestClaInstitution = async (req: Request, res: Response) => {
     try {
-        const { params } = req.body;
-        const requestedInst = await axios.post(clarisaHost + 'institutions/institution-requests', { headers: clarisaHeader }, params);
-        return requestedInst.data;
+        const { name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments } = req.body;
+        const params = {
+            name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments
+        }
+        const cgiarEntity = 'fish';
+
+        const requestedInst = await axios.post(clarisaHost + `${cgiarEntity}/institutions/institution-requests`, {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }, params
+        });
+        res.json(new ResponseHandler('CLARISA requested institutions.', { requestedInstitutions: requestedInst.data }));
+        // return requestedInst.data;
     } catch (error) {
-        console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        console.log(error.toJSON())
+        return res.status(error.response.status).json(error.toJSON().message);
     }
 }
 

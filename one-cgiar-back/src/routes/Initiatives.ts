@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getClaCountries, getClaInstitutions, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getActionAreas, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta } from '../controllers/Initiatives';
+import { getClaActionAreas, getClaCountries, getClaInstitutions, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -52,7 +52,7 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
 
 
 //get Action areas
-router.get("/areas", [checkJwt], getActionAreas);
+router.get("/areas", [checkJwt], getClaActionAreas);
 //get countries
 router.get("/countries", [checkJwt], getClaCountries);
 //get regions
