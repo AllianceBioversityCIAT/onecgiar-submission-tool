@@ -8,6 +8,7 @@ import { APIError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { utilLogin } from '../utils/auth-login';
 
 
 require('dotenv').config();
@@ -19,65 +20,10 @@ const ad = new ActiveDirectory(config.active_directory);
 const jwtSecret = process.env.jwtSecret;
 
 export const login = async (req: Request, res: Response) => {
-    let { email, password } = req.body;
-
-    const userRepository = getRepository(Users);
-    let user: Users;
-
+    const { email, password } = req.body;
     try {
-        if (!(email && password)) {
-            throw new APIError(
-                'INVALID',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                'Missing required fields: email or password.'
-            );
-        }
-        email = email.trim().toLowerCase();
-        let cgiar_user = await userRepository.findOne({
-            where:
-                { email, is_cgiar: 1, is_active: true },
-            relations: ['roles']
-        });
-        if (cgiar_user) {
-            let is_cgiar = await validateAD(cgiar_user, password);
-            if (is_cgiar) {
-                user = cgiar_user;
-            }
-
-        } else {
-            user = await userRepository.findOne({
-                where: { email, is_active: true },
-                relations: ['roles']
-            });
-            if (!user) {
-                throw new APIError(
-                    'NOT_FOUND',
-                    HttpStatusCode.NOT_FOUND,
-                    true,
-                    'User not found.'
-                );
-            }
-        }
-
-        // check password
-        if (!cgiar_user && !user.checkPassword(password)) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'User password incorrect.'
-            );
-        }
-        user.last_login = new Date();
-        user = await userRepository.save(user)
-
-        const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
-        const name = user.first_name + ' ' + user.last_name;
-        const roles = user.roles;
-        const id = user.id;
-
-        res.json(new ResponseHandler('User logged.', { token, name, email: user.email, id, roles }));
+        const { token, name, roles, id } = await utilLogin(email, password);
+        res.json(new ResponseHandler('User logged.', { token, email, name, roles, id }));
     } catch (error) {
         console.log(error);
         let e;
@@ -180,43 +126,43 @@ export const validateCGUser = async (req: Request, res: Response) => {
  * 
  */
 
-const validateAD = (one_user, password) => {
-    // ad = new ActiveDirectory(config.active_directory);
-    let ad_user = one_user.email;
-    return new Promise((resolve, reject) => {
-        ad.authenticate(ad_user, password, (err, auth) => {
-            if (err) {
-                let notFound = {
-                    'name': 'SERVER_NOT_FOUND',
-                    'description': `There was an internal server error: ${err.lde_message}`,
-                    'httpCode': 500
-                };
-                if (err.errno == "ENOTFOUND") {
-                    notFound.name = 'SERVER_NOT_FOUND';
-                    notFound.description = 'Domain Controller Server not found'
-                }
-                // console.log(notFound)
-                return reject(new APIError(notFound));
-            }
+// const validateAD = (one_user, password) => {
+//     // ad = new ActiveDirectory(config.active_directory);
+//     let ad_user = one_user.email;
+//     return new Promise((resolve, reject) => {
+//         ad.authenticate(ad_user, password, (err, auth) => {
+//             if (err) {
+//                 let notFound = {
+//                     'name': 'SERVER_NOT_FOUND',
+//                     'description': `There was an internal server error: ${err.lde_message}`,
+//                     'httpCode': 500
+//                 };
+//                 if (err.errno == "ENOTFOUND") {
+//                     notFound.name = 'SERVER_NOT_FOUND';
+//                     notFound.description = 'Domain Controller Server not found'
+//                 }
+//                 // console.log(notFound)
+//                 return reject(new APIError(notFound));
+//             }
 
-            if (auth) {
-                console.log('Authenticated AD!');
-                return resolve(auth);
-            }
+//             if (auth) {
+//                 console.log('Authenticated AD!');
+//                 return resolve(auth);
+//             }
 
-            else {
-                console.log('Authentication failed!');
-                let err = {
-                    'name': 'INVALID_CREDENTIALS',
-                    'description': 'The supplied credential is invalid',
-                    'httpCode': 503
-                };
-                return reject(new APIError(err));
-            }
+//             else {
+//                 console.log('Authentication failed!');
+//                 let err = {
+//                     'name': 'INVALID_CREDENTIALS',
+//                     'description': 'The supplied credential is invalid',
+//                     'httpCode': 503
+//                 };
+//                 return reject(new APIError(err));
+//             }
 
-        })
-    });
-}
+//         })
+//     });
+// }
 
 const searchByEmail = (email) => {
     // let ad = new ActiveDirectory(config.active_directory);

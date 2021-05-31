@@ -62,7 +62,7 @@ router.get("/institutions", [checkJwt], getClaInstitutions);
 //request institutions
 router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
 // get institutions types
-router.post("/institutions/types", [checkJwt], getClaInstitutionsTypes);
+router.get("/institutions/types", [checkJwt], getClaInstitutionsTypes);
 // get crps
 router.get("/cgiar-entities", [checkJwt], getClaCRPs);
 
