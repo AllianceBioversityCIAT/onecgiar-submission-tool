@@ -278,8 +278,9 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
   }
 
-
-  
-
+    // Query to create a work package
+  createPartner(body: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/institutions/institution-requests`, body);
+  }
  
 }

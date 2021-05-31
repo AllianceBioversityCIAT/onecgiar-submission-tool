@@ -21,7 +21,6 @@ export class TextareaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.options.readonly=this._initiativesService.initiative.readonly;
     let options={
       plugins:[]
     };

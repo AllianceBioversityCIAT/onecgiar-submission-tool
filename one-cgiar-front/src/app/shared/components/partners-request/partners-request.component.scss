@@ -1,0 +1,21 @@
+@import '~@angular/material/theming';
+
+.user_cont{
+    @include mat-elevation(2);
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 10px;
+    .user_data_title{
+        color: white;
+        padding: 10px 20px;
+        margin: 0px;
+    }
+    .user_shadow{
+
+        width: auto;
+        // padding: 5px 20px;
+        margin: 10px 40px 20px 40px;
+        border-radius: 10px 10px 0px 0px;
+    }
+    
+}

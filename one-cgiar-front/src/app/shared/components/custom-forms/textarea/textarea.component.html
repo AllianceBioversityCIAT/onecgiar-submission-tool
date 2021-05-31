@@ -1,9 +1,9 @@
-<div [ngSwitch]="this._initiativesService.initiative.readonly">
+<div [ngSwitch]="this._initiativesService.initiative.readonly || options.readonly">
     <!-- <div *ngSwitchCase="false || null">
     </div> -->
 
     <div *ngSwitchCase="true">
-
+        <br>
         <p class="readonly_text_title"><strong class="color-secondary">{{options.inputTitle}}: </strong><span class="asterisk">* </span></p>
         <p class="readonly_text">{{options.form.value[options.formControlName]||'Not available'}}</p>
         <br>
@@ -15,7 +15,6 @@
 
         <div *ngSwitchCase="true">
             <div class="editText">
-            
                 <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                 <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
@@ -31,7 +30,7 @@
 
         <div *ngSwitchDefault>
             <mat-form-field class="general-information-full-width">
-
+                <br>
                 <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
                 <p *ngIf="options.description" class="description-field "><i>{{options.description}}</i></p>
                 <textarea  type="text" [formControl]="textareaInput" matInput required (ngModelChange)="setValue()" cdkTextareaAutosize></textarea>
