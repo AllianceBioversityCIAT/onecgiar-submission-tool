@@ -13,7 +13,7 @@ const jwtSecret = process.env.jwtSecret;
 export const utilLogin = async (email: string, password: string) => {
     const userRepository = getRepository(Users);
     let user: Users;
-    console.log(email,password)
+    // console.log(email,password)
 
     if (!(email && password)) {
         throw new APIError(
