@@ -158,19 +158,24 @@ export const getClaCRPs = async (req: Request, res: Response) => {
  */
 export const requestClaInstitution = async (req: Request, res: Response) => {
     try {
+        // institution request body
         const { name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments } = req.body;
+        // global unit assigned to SBT **should come from DB config table
+        const cgiarEntity = 'ONECGIAR';
+        // axios request body params
         const params = {
             name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments
         }
-        const cgiarEntity = 'ONECGIAR';
 
-        const requestedInst = await axios.post(clarisaHost + `${cgiarEntity}/institutions/institution-requests`, {
-            auth: {
-                username: process.env['clarisa_user'],
-                password: process.env['clarisa_password']
-            }, params
-        });
-        res.json(new ResponseHandler('CLARISA requested institutions.', { requestedInstitutions: requestedInst.data }));
+        // axios header
+        const oa = `${process.env['clarisa_user']}:${process.env['clarisa_password']}`
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${Buffer.from(oa).toString('base64')}`
+        }
+
+        const requestedInst = await axios.post(clarisaHost + `${cgiarEntity}/institutions/institution-requests`, params, { headers });
+        res.json(new ResponseHandler('CLARISA requested institutions.', { requestedInstitution: requestedInst.data }));
         // return requestedInst.data;
     } catch (error) {
         console.log(error.toJSON())
