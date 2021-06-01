@@ -52,7 +52,7 @@ export class AddPartnersModalComponent implements OnInit {
 
   requestPartner(){
     this.modalOpacity = false;
-    console.log("hrlloo");
+    // console.log("hrlloo");
   }
 
   backAddNewKeyPartner(){

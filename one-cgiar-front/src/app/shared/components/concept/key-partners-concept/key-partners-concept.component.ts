@@ -79,7 +79,7 @@ export class KeyPartnersConceptComponent implements OnInit {
 
         this.partnership.key_partners = resp.response.keyPartners;
         this.showTable = this.partnership.key_partners.length ? true : false;
-        console.log(this.partnership.key_partners.length);
+        // console.log(this.partnership.key_partners.length);
         if(resp.response?.partnership){
           this.partnership.id = resp.response.partnership.id
         }
@@ -109,7 +109,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     // console.log('%csavePartnership','background: #222; color: #ffff00');
     this.partnership.comparative_advantage = this.partnershipForm.value.comparativeAdvantage;
     // console.log(this.partnership);
-    console.log(   this.partnership);
+    // console.log(   this.partnership);
     this._initiativesService.createPartnership(this.partnership).subscribe(resp=>{
       // console.log(resp);
       this.interactionsService.successMessage('Key partners information has been saved')
@@ -136,8 +136,8 @@ export class KeyPartnersConceptComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && !add) {
-        console.log('%cresult','background: #222; color: #ffff00');
-        console.log(result);
+        // console.log('%cresult','background: #222; color: #ffff00');
+        // console.log(result);
         this.editKeyPartner(i,result);
       }else if (result && add){
         let object:keyPartner={
@@ -146,10 +146,10 @@ export class KeyPartnersConceptComponent implements OnInit {
           description: result.description,
           active: true
         }
-        console.log('%cResult close modal','background: #222; color: #ffff00');
-        console.log(object);
+        // console.log('%cResult close modal','background: #222; color: #ffff00');
+        // console.log(object);
           this.partnership.key_partners.push(object)
-          console.log(this.partnership.key_partners);
+          // console.log(this.partnership.key_partners);
       }
       this.showTable = this.partnership.key_partners.length ? true : false;
     });
@@ -168,7 +168,7 @@ export class KeyPartnersConceptComponent implements OnInit {
 
   removeKeyPartner(index){
     this.partnership.key_partners[index].active=false;
-    console.log(this.partnership);
+    // console.log(this.partnership);
     // this.partnership.key_partners.splice(index,1);
   }
   addNewKeyPartner(){

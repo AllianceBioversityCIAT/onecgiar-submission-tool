@@ -34,7 +34,7 @@ export class StagesMenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      // console.log('The dialog was closed');
       this._dataControlService.generalInfoChange$.emit();
     });
   }
@@ -53,15 +53,15 @@ export class StagesMenuComponent implements OnInit {
       this.initiativesSvc.initvStgId = resp['id'];
       this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
       this.initiativesSvc.getGreenCheckStatus(resp['id']).subscribe(greenCheckStatus=>{
-        console.log('%cgetGreenCheckStatus','background: #222; color: #ffff00');
-        console.log(greenCheckStatus.response.validatedSections);
-        console.log('%cinitvStgId: '+ resp['id'],'background: #222; color: #37ff73');
+        // console.log('%cgetGreenCheckStatus','background: #222; color: #ffff00');
+        // console.log(greenCheckStatus.response.validatedSections);
+        // console.log('%cinitvStgId: '+ resp['id'],'background: #222; color: #37ff73');
       })
     });
   }
 
   onSave(generalInformationForm): void {
-    console.log("GUARDANDO", generalInformationForm.value);
+    // console.log("GUARDANDO", generalInformationForm.value);
   }
 
 

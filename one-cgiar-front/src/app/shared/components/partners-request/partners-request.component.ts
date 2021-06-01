@@ -70,7 +70,7 @@ export class PartnersRequestComponent implements OnInit {
   
   setFormValue(){
     let userData:any= JSON.parse(localStorage.getItem('user')) ;
-    console.log("setFormValue");
+    // console.log("setFormValue");
     this.showForm = true;
     this.partnersRequestForm.get("name").setValue('');
     this.partnersRequestForm.get("acronym").setValue('');
@@ -83,8 +83,8 @@ export class PartnersRequestComponent implements OnInit {
   }
 
   onCreatePartner(){
-    console.log('%conCreatePartner','background: #222; color: #ffff00');
-    console.log(this.partnersRequestForm.value);
+    // console.log('%conCreatePartner','background: #222; color: #ffff00');
+    // console.log(this.partnersRequestForm.value);
     this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
       console.log(resp);
     },err=>{
