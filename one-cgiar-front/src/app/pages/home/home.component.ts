@@ -19,11 +19,7 @@ export class HomeComponent implements OnInit {
 
   constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
 
-  ngOnInit(): void {
-    this._clarisaService.test().subscribe(resp=>{
-      console.log(resp);
-    })
-    
+  ngOnInit(): void {    
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;

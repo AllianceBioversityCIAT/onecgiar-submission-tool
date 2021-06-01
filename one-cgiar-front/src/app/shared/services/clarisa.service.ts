@@ -44,9 +44,4 @@ export class ClarisaService {
     return this.http.get<any>(`/assets/DB/impact-areas-indicators.json`);
     // return this.http.get<any>(`${environment.apiClarisa}/impact-areas-indicators`);
   }
-
-  test(){
-    return this.http.get<any>('https://jsonplaceholder.typicode.com/posts');
-  }
-
 }
