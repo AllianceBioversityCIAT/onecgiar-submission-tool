@@ -19,13 +19,15 @@
          selectItemName:'acronym_name',
          selectItemId:'code',
          toDisableList: this.toDisableList,
-         service:this._initiativesService,
-         serviceFunction:'getCLARISAInstitutions'
+         service:{
+            serviceTS:this._initiativesService,
+            functionName:'getCLARISAInstitutions',
+            objectName:'institutions',
+            frontendSearchAttribute:'acronym_name'
+        }
         }">
         ></custom-select>
-
     </span>
-
 
     <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
         add it by clicking here.</p>

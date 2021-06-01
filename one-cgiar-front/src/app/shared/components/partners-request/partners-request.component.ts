@@ -9,6 +9,8 @@ import { InitiativesService } from '../../services/initiatives.service';
 })
 export class PartnersRequestComponent implements OnInit {
   partnersRequestForm: FormGroup;
+  institutionTypes=[];
+  countriesList=[];
   @Output() back = new EventEmitter();
   showForm = false;
   categoryList = [
@@ -26,7 +28,7 @@ export class PartnersRequestComponent implements OnInit {
   ]
 
   constructor(
-    private _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService
   ) { 
     this.partnersRequestForm = new FormGroup({
 
@@ -43,20 +45,41 @@ export class PartnersRequestComponent implements OnInit {
 
   ngOnInit(): void {
       this.setFormValue();
+      this.getInstitutionsTypes()
+      // this.getCLARISAInstitutions()
   }
+
+
+  getInstitutionsTypes(){
+    this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
+      console.log('%cgetInstitutionsTypes','background: #222; color: #ffff00');
+      console.log(resp.response?.institutionsTypes);
+      this.institutionTypes = resp.response?.institutionsTypes;
+    })
+  }
+
+  // getCLARISAInstitutions(){
+  //   this._initiativesService.getCLARISAInstitutions('').subscribe(resp=>{
+  //     console.log('%cgetCLARISAInstitutions','background: #222; color: #ffff00');
+  //     console.log(resp);
+  //     this.countriesList = resp.response?.institutions;
+  //   })
+  // }
+
 
   
   setFormValue(){
+    let userData:any= JSON.parse(localStorage.getItem('user')) ;
     console.log("setFormValue");
     this.showForm = true;
-    this.partnersRequestForm.get("name").setValue('Submission Tool Test');
-    this.partnersRequestForm.get("acronym").setValue('SBTT');
-    this.partnersRequestForm.get("websiteLink").setValue('SubmissionTool.com');
-    this.partnersRequestForm.get("institutionTypeCode").setValue("36");
-    this.partnersRequestForm.get("hqCountryIso").setValue("AE");
-    this.partnersRequestForm.get("externalUserMail").setValue("SubmissionTool@gmail.com");
-    this.partnersRequestForm.get("externalUserName").setValue("test");
-    this.partnersRequestForm.get("externalUserComments").setValue("test");
+    this.partnersRequestForm.get("name").setValue('');
+    this.partnersRequestForm.get("acronym").setValue('');
+    this.partnersRequestForm.get("websiteLink").setValue('');
+    this.partnersRequestForm.get("institutionTypeCode").setValue("");
+    this.partnersRequestForm.get("hqCountryIso").setValue("");
+    this.partnersRequestForm.get("externalUserMail").setValue(userData.email);
+    this.partnersRequestForm.get("externalUserName").setValue(userData.name);
+    this.partnersRequestForm.get("externalUserComments").setValue("");
   }
 
   onCreatePartner(){

@@ -23,16 +23,51 @@
              inputTitle:'Type',
              form:partnersRequestForm,
              formControlId:'institutionTypeCode',
-             selectList:this.categoryList,
+             selectList:this.institutionTypes,
              selectItemName:'name',
-             selectItemId:'id'
+             selectItemId:'code'
             }">
             ></custom-select>
         </div>
-        <div class="col-6">
-            <custom-textarea  
+        <div class="col-12">
+                        
+            <custom-select [options]="
+            {
+             required:true,
+             inputTitle:'Headquarter country',
+             form:partnersRequestForm,
+             formControlId:'hqCountryIso',
+             selectItemName:'name',
+             selectItemId:'isoAlpha2',
+             attributeNameToSearch:'name',
+             service:{
+                 serviceTS:this._initiativesService,
+                 functionName:'getCLARISACountries',
+                 objectName:'countries',
+                 frontendSearchAttribute:'name'
+             }
+            }">
+            ></custom-select>
+
+            <!-- <custom-multiple-choice [options]="{
+                required:true,
+                inputTitle:'Headquarter country',
+                selectedList:this.countriesSelectedList,
+                selectItemName:'name',
+                selectItemId:'code',
+                selectedItemId:'code',
+                service:{
+                    serviceTS:this._initiativesService,
+                    functionName:'getCLARISACountries',
+                    objectName:'countries',
+                    frontendSearchAttribute:'name'
+                }
+               }"></custom-multiple-choice> -->
+
+
+            <!-- <custom-textarea  
             [options]="{form:partnersRequestForm,formControlName:'hqCountryIso',inputTitle:'Headquarter country'}">
-            </custom-textarea>
+            </custom-textarea> -->
         </div>
         <div class="col-12">
             <custom-textarea  

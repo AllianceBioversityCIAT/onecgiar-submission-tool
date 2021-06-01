@@ -72,33 +72,53 @@ export class SelectComponent implements OnInit {
   addOption(data){
     // console.log('%cOption','background: #222; color: #37ff73');
     // console.log(data);
-    this.options.form.controls[this.options.formControlName].setValue(data.acronym_name);
-    this.options.form.controls[this.options.formControlId].setValue(data.code);
+    // console.log(data[this.options.selectItemName]);
+    if (this.options?.formControlName)this.options.form.controls[this.options.formControlName].setValue(data[this.options.selectItemName]);
+    this.options.form.controls[this.options.formControlId].setValue(data[this.options.selectItemId]);
     this.selectInput.setValue(data[this.options.formControlName]);
     // console.log('%cForm','background: #222; color: #fd8484');
     // console.log(this.options.form.value);
   }
 
   height:string;
+  // consumeService() {
+  //   if (this.options.service && !this.options.selectList) {
+  //     this.options.service[this.options.serviceFunction](this.searchText).subscribe((res) => {
+
+  //       this.selectList = res.response.institutions;
+  //       if (this.selectList.length < 4) {
+  //         this.height = (this.selectList.length * 50) + 'px';
+  //       } else {
+  //         this.height = '200px'
+  //       }
+
+
+       
+  //       res.response.institutions.map(institution=>{
+  //         institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
+  //       })
+  //     });
+  //   }
+  // }
   consumeService() {
     if (this.options.service && !this.options.selectList) {
-      this.options.service[this.options.serviceFunction](this.searchText).subscribe((res) => {
-
-        this.selectList = res.response.institutions;
+      this.options.service.serviceTS[this.options.service.functionName]('todo').subscribe((res) => {
+        console.log('%cBuscando: '+this.searchText,'background: #222; color: #84c3fd');
+        this.selectList = res.response[this.options.service.objectName];
+        console.log('%c'+this.options.service.functionName,'background: #222; color: #ffff00');
+        console.log(this.selectList);
         if (this.selectList.length < 4) {
           this.height = (this.selectList.length * 50) + 'px';
         } else {
           this.height = '200px'
         }
-
-
-       
-        res.response.institutions.map(institution=>{
-          institution.acronym_name = `${institution.acronym?institution.acronym+' - ':''} ${institution.name}`;
-        })
       });
     }
   }
 
+  writtenInSearchField(){
+    console.log("writtenInSearchField");
+    // this.mapSelected();
+  }
 
 }

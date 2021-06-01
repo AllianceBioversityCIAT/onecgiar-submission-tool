@@ -21,12 +21,12 @@
     <mat-form-field floatLabel="false" *ngIf="options.service" cdkFocusInitial>
         <p><strong class="color-secondary">{{options.inputTitle}}: </strong><span [hidden]="options.required === false" class="asterisk">* </span></p>
         <p *ngIf="options.description" class="description-field"><i>{{options.description}}</i></p>
-        <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" (ngModelChange)="consumeService($event)" [disabled]="removeFocus">
+        <input type="text" aria-label="Number" placeholder="Write to search" matInput [matAutocomplete]="auto" [(ngModel)]="searchText" (ngModelChange)="options.service.frontendSearchAttribute ? writtenInSearchField() : consumeService($event)" [disabled]="removeFocus">
         <mat-label [hidden]="true"></mat-label>
         <mat-autocomplete #auto="matAutocomplete">
             <cdk-virtual-scroll-viewport class="autocomplete-test-viewport"  itemSize="25" [ngStyle]="{'height': height}">
             
-          <mat-option class="autocomplete-item"  *cdkVirtualFor="let option of selectList" [value]="option.name" (click)="removeFocusSelect();addOption(option)" [disabled]="disableOption(option)">
+          <mat-option class="autocomplete-item"  *cdkVirtualFor="let option of options.service.frontendSearchAttribute?(selectList | regionsFilter:searchText:options.service.frontendSearchAttribute):selectList" [value]="option.name" (click)="removeFocusSelect();addOption(option)" [disabled]="disableOption(option)">
             <mat-icon aria-hidden="false" color="primary" aria-label="Example home icon">{{disableOption(option)?'radio_button_checked':'radio_button_unchecked'}}</mat-icon> {{option[options.selectItemName]}}
           </mat-option>
           <mat-option *ngIf="selectList.length == 0" [value]=""  [disabled]="false">

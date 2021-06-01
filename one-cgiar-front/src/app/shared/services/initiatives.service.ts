@@ -112,8 +112,13 @@ export class InitiativesService {
   }
 
   // Query to get CLARISA Countries By filter
-  getCLARISAInstitutions(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`);
+  getCLARISAInstitutions(filterText: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
+      resp.response.institutions.map(institution => {
+        institution.acronym_name = `${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
+      })
+      return resp;
+    }));;
   }
   
 
@@ -282,5 +287,10 @@ export class InitiativesService {
   createPartner(body: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/institutions/institution-requests`, body);
   }
- 
+
+  getInstitutionsTypes(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions/types`);
+  }
+
+
 }
