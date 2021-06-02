@@ -33,6 +33,13 @@ export class StagesMenuService extends LocalStorageService {
     this.set(initvStgId, this.menuObj);
   }
 
+  validateAllSectionsStatus(stage,greenCheckStatus,initvStgId){
+    let greenCheckStatusArray = Object.entries(greenCheckStatus);
+    greenCheckStatusArray.forEach(greencheck=>{
+      this.setFormStageStatus(stage, greencheck[0], greencheck[1]?'VALID':'INVALID', initvStgId )
+    })
+  }
+
   getFormStageStatus(initvStgId: string) {
     this.menuObj = this.get(initvStgId) || this.menuObj;
     this.menu.next(this.menuObj);
