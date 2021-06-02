@@ -35,6 +35,7 @@ export class TheoryOfChangeComponent implements OnInit {
     public interactionsService:InteractionsService,
     public stgMenuSvc: StagesMenuService,
     public dialog: MatDialog,
+    public _StagesMenuService:StagesMenuService
     ) {
     this.theoryOfChangeForm = new FormGroup({
       narrative: new FormControl(null, Validators.required)
@@ -116,12 +117,14 @@ export class TheoryOfChangeComponent implements OnInit {
         section:"tocs",
         id:this.tocID 
       
-      }).subscribe(
-      event => {
+      }).subscribe(event => {
         this.theoryOfChangeForm.valid && (this.listOfFiles.length || this.filesToUpload.length)?   this.interactionsService.successMessage('Initial theory of change has been saved'):
         this.interactionsService.warningMessage('Initial theory of change has been saved, but there are incomplete fields')
         this.getTOCandFiles();
           this.spinnerService.hide('tocs')
+          this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+            this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+          })
       },
       err => {
         this.progressInfos[idx].value = 0;

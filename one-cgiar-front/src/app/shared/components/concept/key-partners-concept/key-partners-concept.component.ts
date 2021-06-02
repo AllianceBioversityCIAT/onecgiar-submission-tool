@@ -55,6 +55,7 @@ export class KeyPartnersConceptComponent implements OnInit {
     private interactionsService:InteractionsService,
     private spinnerService: NgxSpinnerService,
     private _dataControlService:DataControlService,
+    private _StagesMenuService:StagesMenuService
     ) {
       this.partnershipForm = new FormGroup({
         comparativeAdvantage: new FormControl(null, Validators.required),
@@ -102,6 +103,9 @@ export class KeyPartnersConceptComponent implements OnInit {
       // console.log(resp);
       this.interactionsService.successMessage('Key partners information has been saved')
       this.getPartnershipByInitiativeId();
+      this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+        this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+      })
     })
   }
 
