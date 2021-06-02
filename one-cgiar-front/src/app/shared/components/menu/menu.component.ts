@@ -100,8 +100,8 @@ export class MenuComponent implements OnInit {
     switch (section) {
       // case 'Work Packages':
       //   return true
-      case 'Key Partners':
-        return true
+      // case 'Key Partners':
+      //   return true
       default:
         return false
     }
