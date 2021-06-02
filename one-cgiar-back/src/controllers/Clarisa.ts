@@ -223,7 +223,7 @@ export const requestClaInstitution = async (req: Request, res: Response) => {
 //         res.json(new ResponseHandler('Countries.', { countries: filteredData }));
 //     } catch (error) {
 //         console.log(error);
-//         let e;
+//         let e = error;
 //         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
 //             e = new APIError(
 //                 'Bad Request',
@@ -267,7 +267,7 @@ export const requestClaInstitution = async (req: Request, res: Response) => {
 //         res.json(new ResponseHandler('Regions.', { regions: filteredData }));
 //     } catch (error) {
 //         console.log(error);
-//         let e;
+//         let e = error;
 //         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
 //             e = new APIError(
 //                 'Bad Request',
@@ -315,7 +315,7 @@ export const requestClaInstitution = async (req: Request, res: Response) => {
 //         res.json(new ResponseHandler('Institutions.', { institutions: filteredData }));
 //     } catch (error) {
 //         console.log(error);
-//         let e;
+//         let e = error;
 //         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
 //             e = new APIError(
 //                 'Bad Request',

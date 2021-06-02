@@ -19,7 +19,7 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -50,7 +50,7 @@ export const getUsersByRoles = async (req: Request, res: Response): Promise<Resp
         return res.json({ data: users, msg: 'Users by roles list' });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -75,7 +75,7 @@ export const getUser = async (req: Request, res: Response) => {
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -121,7 +121,7 @@ export const searchUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User found.', { users: filteredData }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -141,15 +141,23 @@ export const createUsers = async (req: Request, res: Response) => {
     const rolesRepository = getRepository(Roles);
     const usrInitvRepository = getRepository(InitiativesByUsers);
 
-    const user = new Users();
-    user.first_name = first_name;
-    user.last_name = last_name;
-    user.password = password;
-    user.email = email;
-    user.is_cgiar = is_cgiar;
-    user.is_active = true;
     try {
 
+        if (!(email && password)) {
+            throw new APIError(
+                'INVALID',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                'Missing required fields: email or password.'
+            );
+        }
+        const user = new Users();
+        user.first_name = first_name;
+        user.last_name = last_name;
+        user.password = password;
+        user.email = email;
+        user.is_cgiar = is_cgiar;
+        user.is_active = true;
 
         // validate
         const errors = await validate(user);
@@ -201,7 +209,7 @@ export const createUsers = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -248,7 +256,7 @@ export const updateUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User updated.', { user }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -257,7 +265,7 @@ export const updateUser = async (req: Request, res: Response) => {
                 error.message
             );
         }
-        return res.status(error.httpCode).json(error);
+        return res.status(e.httpCode).json(e);
     }
 };
 
@@ -281,7 +289,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         user = await userRepository.save(user);
         res.json(new ResponseHandler('User inactivated.', { user }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -290,6 +298,6 @@ export const deleteUser = async (req: Request, res: Response) => {
                 error.message
             );
         }
-        return res.status(error.httpCode).json(error);
+        return res.status(e.httpCode).json(e);
     }
 };

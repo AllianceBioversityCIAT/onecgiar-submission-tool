@@ -19,7 +19,7 @@ export const getAllRoles = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -68,7 +68,7 @@ export const createRole = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -105,7 +105,7 @@ export const editRole = async (req: Request, res: Response) => {
         res.status(201).json({ msg: 'Role update', data: updatedRole });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -131,7 +131,7 @@ export const deleteRole = async (req: Request, res: Response) => {
         res.status(200).json({ msg: "Role deleted" });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -188,7 +188,7 @@ export const createPermission = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -212,7 +212,7 @@ export const getAllPermissions = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',

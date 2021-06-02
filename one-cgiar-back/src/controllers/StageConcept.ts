@@ -91,7 +91,7 @@ export const getConceptGeneralInfo = async (req: Request, res: Response) => {
         else
             res.json(new ResponseHandler('Concept: General information.', { generaInformation: conceptInfo[0] }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -218,7 +218,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -282,7 +282,7 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
         else
             res.json(new ResponseHandler('Concept: Narratives.', { narratives: conceptInfo[0] }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -370,7 +370,7 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Concept narratives upserted.', { narratives: narratives[0] }));
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -442,7 +442,7 @@ export const getWorkPackages = async (req: Request, res: Response) => {
         // }
         res.json(new ResponseHandler('Work packages.', { workPackages }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -477,7 +477,7 @@ export const getWorkPackage = async (req: Request, res: Response) => {
             res.json(new ResponseHandler('Work package.', { workPackage }));
         }
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -527,7 +527,7 @@ export const createWorkPackage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Work package created.', { workPackage }));
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -575,7 +575,7 @@ export const updateWorkPackage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Work package updated.', { workPackage }));
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -629,7 +629,7 @@ export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -693,7 +693,7 @@ export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -756,7 +756,7 @@ export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -798,7 +798,7 @@ export const getProjectedBenefitWorkPackage = async (req: Request, res: Response
         }
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -859,7 +859,7 @@ export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Respo
         res.json(new ResponseHandler('Projected benefit added to work package.', { projectedBenefit }));
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -898,7 +898,7 @@ export const getTimeFramesProjectedBenefit = async (req: Request, res: Response)
             res.json(new ResponseHandler('Time frames from projected benefit.', { timeFrames }));
         }
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -970,7 +970,7 @@ export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Respons
         // res.json({ msg: 'Impact time frame added to projected benefit', data: { impactTimeFrame } });
         res.json(new ResponseHandler('Impact time frame added to projected benefit.', { impactTimeFrame }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1047,7 +1047,7 @@ export const addTOCConcept = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1116,7 +1116,7 @@ export const upsertTOCandFile = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1157,7 +1157,7 @@ export const getTOCFiles = async (req: Request, res: Response) => {
 
         }
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1196,7 +1196,7 @@ export const updateTOCFile = async (req: Request, res: Response) => {
         let Files = await filesRepo.save(file);
         res.json(new ResponseHandler('Files.', { Files }));
     } catch (error) {
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1262,7 +1262,7 @@ export const upsertPartnerships = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -1303,7 +1303,7 @@ export const getPartnerships = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
