@@ -94,7 +94,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -174,7 +174,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -224,7 +224,7 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User roles by Initiative.', { roles }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -269,7 +269,7 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Users by Initiative.', { users }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -368,7 +368,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -435,7 +435,7 @@ export const createInitiative = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -465,7 +465,7 @@ export const getStage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages.', { stages, stagesMeta }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -500,7 +500,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -537,7 +537,7 @@ export const createStage = async (req: Request, res: Response) => {
         res.json({ msg: 'Stage created', data: createdStage });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -599,7 +599,7 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         }
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -661,7 +661,7 @@ export const assignActArsByInitvStg = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -727,7 +727,7 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -756,7 +756,7 @@ export const getActionAreas = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',

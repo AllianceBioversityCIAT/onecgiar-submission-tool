@@ -26,7 +26,7 @@ export const login = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User logged.', { token, email, name, roles, id }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -82,7 +82,7 @@ export const changePassword = async (req: Request, res: Response) => {
         // res.json({ msg: 'Password updated' });
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
@@ -106,7 +106,7 @@ export const validateCGUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Validate user.', { user: validUser }));
     } catch (error) {
         console.log(error);
-        let e;
+        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
             e = new APIError(
                 'Bad Request',
