@@ -76,9 +76,6 @@ export class GeneralInformationConceptComponent implements OnInit {
     this.generalInformationForm.get('initvStgId').setValue(this._initiativesService.initvStgId)
     // this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
     this._dataControlService.generalInfoChange$.emit();
-    this.generalInformationForm.valueChanges.subscribe(resp=>{
-      this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.validateFormAndLeads(), this._initiativesService.initvStgId)
-    })
   }
 
   validateFormAndLeads(){
@@ -132,12 +129,6 @@ export class GeneralInformationConceptComponent implements OnInit {
       // this.spinnerService.hide('general-information');
       this.showForm = true;
     });
-    // this.generalInformationForm.valueChanges.subscribe(
-    //   result => {
-    //     this.stgMenuSvc.setFormStageStatus('concept', 'general_information', this.generalInformationForm.status && (this.leads.lead_name && this.leads.co_lead_name), initvStgId)
-    //   })
- 
-
   }
 
   upsertGeneralInfo() {

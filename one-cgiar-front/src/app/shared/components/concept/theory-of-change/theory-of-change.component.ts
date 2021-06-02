@@ -52,9 +52,7 @@ export class TheoryOfChangeComponent implements OnInit {
 
   ngOnInit(): void {
       this.getTOCandFiles();
-      this.theoryOfChangeForm.valueChanges.subscribe(resp=>{
-        this.stgMenuSvc.setFormStageStatus('concept', 'initial_theory_of_change', this.validateFormAndLeads(), this._initiativesService.initvStgId)
-      })
+
 
   }
 
@@ -102,7 +100,6 @@ export class TheoryOfChangeComponent implements OnInit {
       this.filesToUpload = Array.from(event.target.files);
     }
     this.attachment.nativeElement.value = '';
-    this.stgMenuSvc.setFormStageStatus('concept', 'initial_theory_of_change', this.validateFormAndLeads(), this._initiativesService.initvStgId)
   }
 
   uploadFiles() {

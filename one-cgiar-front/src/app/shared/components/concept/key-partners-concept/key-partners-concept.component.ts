@@ -89,20 +89,8 @@ export class KeyPartnersConceptComponent implements OnInit {
         this.spinnerService.hide("spinnerService");
         this.showForm = true;
       })
-      // setTimeout(() => {
-      //   this.showForm = true;
-      // }, 1000);
-      
+
     
-
-     this.partnershipForm.valueChanges.subscribe(
-      result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'key_partners', this.partnershipForm.status, this._initiativesService.initvStgId)
-        // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
-      }
-    );
-
-
   }
 
   savePartnership(){

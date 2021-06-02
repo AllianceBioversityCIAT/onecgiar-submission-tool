@@ -84,12 +84,7 @@ export class NarrativesConceptComponent implements OnInit {
     });
     // this.stgMenuSvc.menuObj.concept.narratives = this.narrativesForm.status
     // console.log(this.narrativesForm, this.stgMenuSvc.menuObj.concept)
-    this.narrativesForm.valueChanges.subscribe(
-      result => {
-        this.stgMenuSvc.setFormStageStatus('concept', 'narratives', this.narrativesForm.status, initvStgId)
-        // this.stgMenuSvc.conceptFormStatus('concept', 'narratives', this.narrativesForm.status)
-      }
-    );
+
   }
 
 }

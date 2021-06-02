@@ -67,7 +67,6 @@ export class WorkPackagesComponent implements OnInit {
         formValid = false;
       }
     }
-    this.stgMenuSvc.setFormStageStatus('concept', 'work_packages', formValid?'VALID':'INVALID', this._initiativesService.initvStgId);
   }
 
 }
