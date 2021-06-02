@@ -17,6 +17,11 @@ const routes: Routes = [
         path: 'example',
         component: ExampleComponent,
       },
+      {
+        path: 'context',
+        loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
+
+      },
     ]
   }
 ];
