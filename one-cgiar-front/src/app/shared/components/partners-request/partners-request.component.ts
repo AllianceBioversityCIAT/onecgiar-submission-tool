@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../services/initiatives.service';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-partners-request',
@@ -28,7 +30,9 @@ export class PartnersRequestComponent implements OnInit {
   ]
 
   constructor(
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    private spinnerService: NgxSpinnerService,
+    private _interactionsService:InteractionsService
   ) { 
     this.partnersRequestForm = new FormGroup({
 
@@ -37,9 +41,9 @@ export class PartnersRequestComponent implements OnInit {
       websiteLink: new FormControl(null, Validators.required),
       institutionTypeCode: new FormControl(null, Validators.required),
       hqCountryIso: new FormControl(null, Validators.required),
-      externalUserMail: new FormControl(null, Validators.required),
-      externalUserName: new FormControl(null, Validators.required),
-      externalUserComments: new FormControl(null, Validators.required),
+      externalUserMail: new FormControl(null),
+      externalUserName: new FormControl(null),
+      externalUserComments: new FormControl(null),
     });
   }
 
@@ -79,17 +83,23 @@ export class PartnersRequestComponent implements OnInit {
     this.partnersRequestForm.get("hqCountryIso").setValue("");
     this.partnersRequestForm.get("externalUserMail").setValue(userData.email);
     this.partnersRequestForm.get("externalUserName").setValue(userData.name);
-    this.partnersRequestForm.get("externalUserComments").setValue("");
+    this.partnersRequestForm.get("externalUserComments").setValue("test");
   }
 
   onCreatePartner(){
     // console.log('%conCreatePartner','background: #222; color: #ffff00');
     // console.log(this.partnersRequestForm.value);
+    this.spinnerService.show('partners-request');
+
     this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
       console.log(resp);
+    this._interactionsService.successMessage('Partner has been requested');
+    this.spinnerService.hide('partners-request');
     },err=>{
       console.log(err);
+      this.spinnerService.hide('partners-request');
     })
+
   }
 
   backAddNewKeyPartner(){
