@@ -37,8 +37,13 @@ export const validateConceptSection = async (initvStgId) => {
     const wp_regions = await queryRunner.query(`SELECT region_id FROM regions_by_work_packages WHERE wrkPkgId = (SELECT id FROM work_packages WHERE initvStgId = ${initvStgId} LIMIT 1)`);
     const wp_countries = await queryRunner.query(`SELECT country_id FROM countries_by_work_packages WHERE wrkPkgId = (SELECT id FROM work_packages WHERE initvStgId = ${initvStgId} LIMIT 1)`);
 
-    validatedSection.work_packages = (wp_workPackages.length && wp_workPackages.every(item => item.name) && wp_workPackages.every(item => item.results) && wp_workPackages.every(item => item.pathway_content) && wp_workPackages.every(item => item.acronym)) &&
-        (wp_regions && wp_regions.every(item => item.region_id)) && (wp_countries && wp_countries.every(item => item.country_id));
+    validatedSection.work_packages = wp_workPackages.length
+        && wp_workPackages.every(item => item.name)
+        && wp_workPackages.every(item => item.results)
+        && wp_workPackages.every(item => item.pathway_content)
+        && wp_workPackages.every(item => item.acronym)
+        && (wp_regions && wp_regions.every(item => item.region_id)) 
+        && (wp_countries && wp_countries.every(item => item.country_id));
 
 
     // validate key partners
