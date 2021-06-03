@@ -52,7 +52,8 @@ export class GeographicScopeWorkPackageComponent implements OnInit {
         let body;
         body = region;
         body.wrkPkgId = this._dataControlService.WorkPackageID;
-        body.regionId = body.code;
+        body.regionId = body.um49Code;
+        console.log(body);
        this._initiativesService.createRegion(body).subscribe(resp=>{
          console.log('%ccreateRegion','background: #222; color: #37ff73');
          console.log(resp);
