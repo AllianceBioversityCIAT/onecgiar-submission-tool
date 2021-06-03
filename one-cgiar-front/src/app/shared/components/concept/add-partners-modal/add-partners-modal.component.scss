@@ -59,3 +59,13 @@ h2 {
     background: #6AA84F;
     color: #fff;
 }
+
+.botton_close{
+    position: absolute;
+    right: 0;
+    top: 46%;
+    transform: translateY(-50%);
+    margin-right: 10px;
+    cursor: pointer;
+    // font-size: 30px;
+  }
