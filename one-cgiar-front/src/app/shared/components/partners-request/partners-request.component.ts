@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../services/initiatives.service';
 import { InteractionsService } from '../../services/interactions.service';
+import { ConceptService } from '../../services/concept.service';
 
 @Component({
   selector: 'app-partners-request',
@@ -13,6 +14,7 @@ export class PartnersRequestComponent implements OnInit {
   partnersRequestForm: FormGroup;
   institutionTypes=[];
   countriesList=[];
+  conceptInfo:any;
   @Output() back = new EventEmitter();
   showForm = false;
   categoryList = [
@@ -32,7 +34,8 @@ export class PartnersRequestComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     private spinnerService: NgxSpinnerService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _conceptService:ConceptService
   ) { 
     this.partnersRequestForm = new FormGroup({
 
@@ -49,7 +52,8 @@ export class PartnersRequestComponent implements OnInit {
 
   ngOnInit(): void {
       this.setFormValue();
-      this.getInstitutionsTypes()
+      this.getInstitutionsTypes();
+      this.getInitiativeName();
       // this.getCLARISAInstitutions()
   }
 
@@ -70,7 +74,13 @@ export class PartnersRequestComponent implements OnInit {
   //   })
   // }
 
-
+  getInitiativeName(){
+    this._conceptService.getConcept(this._initiativesService.initvStgId).subscribe(resp=>{
+      console.log(resp);
+      this.conceptInfo = resp;
+      this.partnersRequestForm.get("externalUserComments").setValue(this.setComment());
+    })
+  }
   
   setFormValue(){
     let userData:any= JSON.parse(localStorage.getItem('user')) ;
@@ -83,22 +93,38 @@ export class PartnersRequestComponent implements OnInit {
     this.partnersRequestForm.get("hqCountryIso").setValue("");
     this.partnersRequestForm.get("externalUserMail").setValue(userData.email);
     this.partnersRequestForm.get("externalUserName").setValue(userData.name);
-    this.partnersRequestForm.get("externalUserComments").setValue("test");
+  
+  }
+
+  setComment(){
+    let userData:any= JSON.parse(localStorage.getItem('user')) ;
+    let commentArray = [
+      'From: Submission Tool',
+      `InitiativeID: ${this._initiativesService?.initvStgId}`,
+      `InitiativeName: ${this.conceptInfo?.conceptName}`,
+      `Stage: ${this.conceptInfo?.stageDesc}`,
+      `Section: Key Partners`
+    ]
+    let result='';
+    commentArray.forEach(text => {
+      result += text + ' ; ';
+    });
+    return result
   }
 
   onCreatePartner(){
     // console.log('%conCreatePartner','background: #222; color: #ffff00');
-    // console.log(this.partnersRequestForm.value);
-    this.spinnerService.show('partners-request');
+    console.log(this.partnersRequestForm.value);
+    // this.spinnerService.show('partners-request');
 
-    this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
-      console.log(resp);
-    this._interactionsService.successMessage('Partner has been requested');
-    this.spinnerService.hide('partners-request');
-    },err=>{
-      console.log(err);
-      this.spinnerService.hide('partners-request');
-    })
+    // this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
+    //   console.log(resp);
+    // this._interactionsService.successMessage('Partner has been requested');
+    // this.spinnerService.hide('partners-request');
+    // },err=>{
+    //   console.log(err);
+    //   this.spinnerService.hide('partners-request');
+    // })
 
   }
 
