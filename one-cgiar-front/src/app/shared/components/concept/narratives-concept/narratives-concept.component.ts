@@ -25,7 +25,8 @@ export class NarrativesConceptComponent implements OnInit {
     public initiativesSvc: InitiativesService, 
     public conceptSvc: ConceptService, 
     private spinnerService: NgxSpinnerService,
-    private interactionsService:InteractionsService
+    private interactionsService:InteractionsService,
+    private _StagesMenuService:StagesMenuService
     ) {
     this.narrativesForm = new FormGroup({
       challenge: new FormControl(null, Validators.required),
@@ -47,9 +48,8 @@ export class NarrativesConceptComponent implements OnInit {
 
   updateNarratives() {
     this.spinnerService.show('narratives');
-    this.conceptSvc.upsertNarratives(this.narrativesForm.value).
-      subscribe(
-        narratives => {
+    this.conceptSvc.upsertNarratives(this.narrativesForm.value).subscribe(narratives => {
+
           this.narrativesForm.controls['challenge'].setValue(narratives.conceptChallenge);
           this.narrativesForm.controls['objectives'].setValue(narratives.conceptObjectives);
           this.narrativesForm.controls['results'].setValue(narratives.conceptResults);
@@ -59,7 +59,9 @@ export class NarrativesConceptComponent implements OnInit {
           this.narrativesForm.valid?
             this.interactionsService.successMessage('Narratives information has been saved'):
             this.interactionsService.warningMessage('Narratives information has been saved, but there are incomplete fields')
-         
+            this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
+              this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
+            })
 
         },
         error => {

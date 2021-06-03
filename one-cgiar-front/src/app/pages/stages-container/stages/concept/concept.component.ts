@@ -10,15 +10,12 @@ import { StagesMenuService } from '../../../../shared/services/stages-menu.servi
 export class ConceptComponent implements OnInit {
   private user = JSON.parse(localStorage.getItem('user')) || null;
   constructor(
-    private _initiativesService:InitiativesService,
-    private _StagesMenuService:StagesMenuService
+    private _initiativesService:InitiativesService
   ) { }
 
   ngOnInit(): void {
     this.getRolefromInitiativeById();
-    this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-      this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-    })
+
   }
 
   getRolefromInitiativeById(){
