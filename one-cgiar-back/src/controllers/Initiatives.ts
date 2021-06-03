@@ -492,11 +492,10 @@ export const getStageMeta = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
 
     try {
-        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId } });
-        let stagesMeta = await stageMetaRepo.find({ where: { stage: initiativeId }, order: { order: 'ASC' } });
-
-        const validatedSections = await validateConceptSection(initvStg.id)
-
+        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId } , relations:['stage']});
+        let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
+        
+        const validatedSections = await validateConceptSection(initvStg.id);
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
