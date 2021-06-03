@@ -158,10 +158,16 @@ export const getClaCRPs = async (req: Request, res: Response) => {
  */
 export const requestClaInstitution = async (req: Request, res: Response) => {
     try {
+        const queryRunner = getConnection().createQueryBuilder();
         // institution request body
         const { name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments } = req.body;
+        // get global unit from config table
+        const config = await queryRunner.connection.query(`
+        SELECT value FROM sbt_config WHERE name = 'global_unit' AND type = 'clarisa' AND active = 1;
+        `);
+        console.log(config[0].value)
         // global unit assigned to SBT **should come from DB config table
-        const cgiarEntity = 'ONECGIAR';
+        const cgiarEntity = config.value;
         // axios request body params
         const params = {
             name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments
