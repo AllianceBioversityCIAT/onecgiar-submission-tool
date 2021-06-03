@@ -33,7 +33,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
       // console.log("WorkPackageID = "+this._dataControlService.WorkPackageID);
       this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
         this.workPackageData = resp.response.workPackage;
-        // console.log(this.workPackageData);
+        console.log(this.workPackageData);
         // console.log("NAME: "+this.workPackageData.name);
         this.setFormData();
         
