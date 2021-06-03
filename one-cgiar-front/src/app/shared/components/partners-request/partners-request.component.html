@@ -74,7 +74,7 @@
             [options]="{form:partnersRequestForm,formControlName:'websiteLink',inputTitle:'Website',required:false}">
             </custom-textarea>
         </div>
-        <div class="user_cont">
+        <!-- <div class="user_cont">
             <h3 class="user_data_title background-color-primary">User information</h3>
             <div class="user_shadow row">
                 <div class="col-6">
@@ -94,17 +94,17 @@
                 </div>
                 <br><br>
             </div>
-        </div>
+        </div> -->
         <div class="col-12">
             <br>
             <br>
             <br>
         <div mat-dialog-actions align="end" class="dialog-actions" >
             <button mat-raised-button color="primary" class="animate__animated animate__fadeIn" (click)="backAddNewKeyPartner()">back</button>
-            <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn" (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Create</button>
+            <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn" (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Request</button>
         </div>   
         <br>     
         </div>
     </div>
-    
 </div>
+<ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='partners-request'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

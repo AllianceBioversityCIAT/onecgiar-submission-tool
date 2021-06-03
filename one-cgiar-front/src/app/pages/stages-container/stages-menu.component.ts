@@ -52,6 +52,10 @@ export class StagesMenuComponent implements OnInit {
     this.activatedRoute.params.subscribe(resp => {
       this.initiativesSvc.initvStgId = resp['id'];
       this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
+      this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
+        console.log(resp);
+        this.stageMenu.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
+      })
     });
   }
 
