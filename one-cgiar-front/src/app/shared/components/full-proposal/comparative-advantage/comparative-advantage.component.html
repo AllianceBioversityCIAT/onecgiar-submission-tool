@@ -1,1 +1,21 @@
-<p>comparative-advantage works!</p>
+<div class="general-information-container animate__animated animate__fadeIn">
+
+    <strong class="general-information-title color-primary-3">Comparative advantage</strong>
+    <form [formGroup]="challengeStatementForm" (ngSubmit)="upserInfo()" class="general-information-form">
+
+        <div class="row">
+            <div class="col-sm-12" >
+                <custom-textarea
+                    [options]="{inputTitle:'Comparative-advantage', form:challengeStatementForm, formControlName:'challengeStatement',
+                    description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service provider:'}">
+                </custom-textarea>
+            </div>
+        </div>
+
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+            <save-button></save-button>
+        </div>
+    </form>
+</div>

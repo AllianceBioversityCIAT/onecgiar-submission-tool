@@ -23,7 +23,7 @@ const routes: Routes = [
       },
       {
         path: 'general-information',
-        loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
+        component: ExampleComponent,
       },
     ]
   }

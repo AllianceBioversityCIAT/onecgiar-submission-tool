@@ -1,1 +1,21 @@
-<p>challenge-statement works!</p>
+<div class="general-information-container animate__animated animate__fadeIn">
+
+    <strong class="general-information-title color-primary-3">Challenge statement</strong>
+    <form [formGroup]="challengeStatementForm" (ngSubmit)="upserInfo()" class="general-information-form">
+
+        <div class="row">
+            <div class="col-sm-12" >
+                <custom-textarea
+                    [options]="{inputTitle:'Challenge statement', form:challengeStatementForm, formControlName:'challengeStatement',
+                    description:'Please provide a detailed problem statement, expanding on the text on challenge provided in the pre-concept:'}">
+                </custom-textarea>
+            </div>
+        </div>
+
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+            <save-button></save-button>
+        </div>
+    </form>
+</div>
