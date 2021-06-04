@@ -125,3 +125,19 @@ mat-list-item:focus {
    box-shadow: inset $x $y $blur #dddddd, inset $x $y $blur #dddddd;
    margin: 0px 10px;
   }
+
+
+  .subSections_color{
+      color: rgb(100, 100, 100) !important;
+      font-weight: 400;
+  }
+
+  .disabledActions{
+    pointer-events: none;
+    cursor: default;
+ }
+
+ .to_Hover_color:hover{
+     transition: all .2s ease-in-out;
+    background-color: rgb(216, 228, 250) !important;
+ }

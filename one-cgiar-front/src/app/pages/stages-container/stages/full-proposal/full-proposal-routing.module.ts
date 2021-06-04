@@ -20,7 +20,10 @@ const routes: Routes = [
       {
         path: 'context',
         loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
-
+      },
+      {
+        path: 'general-information',
+        loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
       },
     ]
   }

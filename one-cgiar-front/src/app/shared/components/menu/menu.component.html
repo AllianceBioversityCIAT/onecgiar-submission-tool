@@ -7,8 +7,13 @@
                     <span class="stage_title">{{stage.description}}</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-list class="menu-options row" *ngFor="let meta of stage.grouped ">
-                    <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3"[routerLink]="this.parseStageUrl(stage,meta.title)" >
+
+
+
+
+            <span *ngIf="currentStageName == 'concept'">
+                <mat-list class="menu-options row" *ngFor="let meta of stage.grouped">
+                    <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3" [routerLink]="this.parseStageUrl(stage,meta.title)" >
                         <span  class="stage__section_title">{{meta.title}}</span>
                         <button mat-icon-button class="mat-icon-no-color"
                             [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
@@ -18,10 +23,10 @@
                         </button>
                     </mat-list-item>
                 <div [ngClass]="{'section_container':  meta.title == 'Work Packages'}">
-
-
+    
+    
                     <div *ngIf="meta.title == 'Work Packages'&& this.workPackagesList.length >0">
-                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
+                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)"  routerLinkActive="isActive background-color-primary-3" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
                             <span  class="stage__section_title"> <strong>{{(item.acronym||'unamed')|uppercase}}</strong></span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
@@ -30,9 +35,50 @@
                             </button>
                         </mat-list-item>
                     </div>
-
+    
                 </div>
-
+    
             </mat-list>
+            </span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <mat-accordion  *ngIf="currentStageName != 'concept'">
+                <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
+                    <mat-expansion-panel-header class="to_Hover_color" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
+                      <mat-panel-title  class="subSections_color" >
+                        {{meta.title}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
+                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title" [routerLink]="'/initiatives/3/stages/full-proposal/context/'+subSection.route">
+                          {{subSection.title}}
+                        </mat-list-option>
+                      </mat-selection-list>
+                  </mat-expansion-panel>
+            </mat-accordion>
+            
+
+
+
+
+
+
+
+
+
+
         </mat-expansion-panel>
     </mat-accordion>

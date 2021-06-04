@@ -59,17 +59,21 @@ export class MenuComponent implements OnInit {
     let body=[
       {
         title:'General Information',
-        subsections:[
-          {
-            title:'Challenge statement'
-          },
-          {
-            title:'Comparative Advantage'
-          }
-        ]
+        route:'general-information'
       },
       {
-        title: "Context"
+        title: "Context",
+        route:'context',
+        subSections:[
+          {
+            title:'Challenge statement',
+            route:'challenge-statement'
+          },
+          {
+            title:'Comparative Advantage',
+            route:'comparative-advantage'
+          }
+        ]
       },
       {
         title: "Governance, Strategies and Plans "
@@ -81,7 +85,7 @@ export class MenuComponent implements OnInit {
         title: "Innovation Module"
       },
       {
-        title: ""
+        title: "Theory of change"
       },
       {
         title: "MELIAs"
