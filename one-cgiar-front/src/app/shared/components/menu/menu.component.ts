@@ -58,7 +58,7 @@ export class MenuComponent implements OnInit {
     console.log('%cto push','background: #222; color: #84c3fd');
     let body=[
       {
-        title:'General Information',
+        title:'General Information (example)',
         route:'general-information'
       },
       {
