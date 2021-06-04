@@ -105,6 +105,11 @@ mat-list-item:focus {
   .mat-icon-no-color{
       position: relative;
   }
+  .mat-icon-no-color_new{
+      position: absolute;
+      right: 0;
+      top: 0;
+  }
 
   .icon_under_construction{
      position: absolute;
@@ -142,7 +147,9 @@ mat-list-item:focus {
     transition: all .2s ease-in-out;
 
 }
-
+mat-expansion-panel-header{
+    position: relative;
+}
  mat-expansion-panel-header.isActive{
     .subSections_color{
         color: white !important;

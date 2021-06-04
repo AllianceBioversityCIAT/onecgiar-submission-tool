@@ -62,17 +62,42 @@
                       <mat-panel-title  class="subSections_color" >
                         {{meta.title}}
                       </mat-panel-title>
+
+                      <button mat-icon-button style="margin-right: 40px;" class="mat-icon-no-color_new"
+                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                      aria-label="Verified icon">
+                      <mat-icon>verified</mat-icon>
+                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                      </button>
+                      
                     </mat-expansion-panel-header>
                     <!-- have subsections -->
                     <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
                       <mat-panel-title  class="subSections_color" >
                         {{meta.title}}
                       </mat-panel-title>
+
+                      <button mat-icon-button class="mat-icon-no-color_new"
+                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                      aria-label="Verified icon">
+                      <mat-icon>verified</mat-icon>
+                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                      </button>
+
+
                     </mat-expansion-panel-header>
 
                     <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
                         <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/context/'+subSection.route">
                           {{subSection.title}}
+                          
+                      <button mat-icon-button class="mat-icon-no-color_new"
+                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                      aria-label="Verified icon">
+                      <mat-icon>verified</mat-icon>
+                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                      </button>
+
                         </mat-list-option>
                       </mat-selection-list>
                   </mat-expansion-panel>

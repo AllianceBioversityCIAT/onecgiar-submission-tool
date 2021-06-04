@@ -76,22 +76,22 @@ export class MenuComponent implements OnInit {
         ]
       },
       {
-        title: "Governance, Strategies and Plans (inactive)"
+        title: "Governance, Strategies and Plans"
       },
       {
-        title: "Work Packages (inactive)"
+        title: "Work Packages"
       },
       {
-        title: "Innovation Module (inactive)"
+        title: "Innovation Module"
       },
       {
-        title: "Theory of change (inactive)"
+        title: "Theory of change"
       },
       {
-        title: "MELIAs (inactive)"
+        title: "MELIAs"
       },
       {
-        title: "Human and Financial Resources (inactive)"
+        title: "Human and Financial Resources"
       }
     ]
     this.stages[2].grouped=body;
@@ -158,7 +158,38 @@ export class MenuComponent implements OnInit {
   }
 
   validate_under_construction(section) {
+    console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
+      case 'General Information (example)':
+        return true
+        case "Context":
+          return true
+          case  'Challenge statement':
+            return true
+            case 'Comparative Advantage':
+              return true
+              case "Governance, Strategies and Plans":
+                return true
+                case "Work Packages":
+                  return true
+                  case "Innovation Module":
+                    return true
+                    case "Theory of change":
+                      return true
+                      case "MELIAs":
+                        return true
+                        case "Human and Financial Resources":
+                          return true
+    //    
+    //   
+    //    
+    //        
+    //         
+    // 
+    // 
+    // 
+    // 
+    // 
       // case 'Work Packages':
       //   return true
       // case 'Key Partners':
