@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataControlService } from '../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-full-proposal',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FullProposalComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _dataControlService:DataControlService
+  ) { }
 
   ngOnInit(): void {
+    this._dataControlService.loadMenu$.emit('full-proposal');
   }
 
 }
