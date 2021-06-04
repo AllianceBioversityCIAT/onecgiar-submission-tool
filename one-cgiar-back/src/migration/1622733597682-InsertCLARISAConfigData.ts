@@ -6,7 +6,7 @@ export class InsertCLARISAConfigData1622733597682 implements MigrationInterface 
         console.log('Insert in sbt_config')
         await queryRunner.query(`
         INSERT INTO sbt_config (name, type, value, is_json )
-        VALUES ('global_unit', 'clarisa', 'ONECGIAR', false);
+        VALUES ('global_unit', 'clarisa', 'SUBMISSIONTOOL', false);
        
     `);
     }
