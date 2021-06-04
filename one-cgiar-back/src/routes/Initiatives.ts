@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -43,13 +43,22 @@ router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], 
 router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assignTOCsByInitvStg);
 
 
+/**
+ * 
+ * Submit and replication
+ */
+
+// replicate to next stage
+router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], replicationProcess);
+
+
+
 
 /**
  * 
  * CLARISA
  * 
  */
-
 
 //get Action areas
 router.get("/areas", [checkJwt], getActionAreas);
@@ -65,5 +74,6 @@ router.post("/institutions/institution-requests", [checkJwt], requestClaInstitut
 router.get("/institutions/types", [checkJwt], getClaInstitutionsTypes);
 // get crps
 router.get("/cgiar-entities", [checkJwt], getClaCRPs);
+
 
 export default router;

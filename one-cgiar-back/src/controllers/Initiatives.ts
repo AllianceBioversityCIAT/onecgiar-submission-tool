@@ -1,22 +1,21 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express'
-import { getConnection, getManager, getRepository, In, QueryFailedError, QueryRunner } from 'typeorm'
+import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { ActionAreasByInitiativeStage } from '../entity/ActionAreasByInitiativeStage';
 import { ConceptInfo } from '../entity/ConceptInfo';
-import { Initiatives, InterfInfoStage } from '../entity/Initiatives'
+import { Initiatives } from '../entity/Initiatives'
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
-import { KeyPartners } from '../entity/KeyPartner';
 import { Roles } from '../entity/Roles';
 import { Stages } from '../entity/Stages';
 import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { APIError } from '../handlers/BaseError';
+import { ConceptHandler } from '../handlers/ConceptController';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
-import { validateConceptSection } from '../utils/section-validation';
+import { forwardStage, validatedSection } from '../utils/section-validation';
 import { getClaActionAreas } from './Clarisa';
 
 
@@ -492,10 +491,11 @@ export const getStageMeta = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
 
     try {
-        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId } , relations:['stage']});
+        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId }, relations: ['stage'] });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
-        
-        const validatedSections = await validateConceptSection(initvStg.id);
+
+        const stgDesc = initvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
+        const validatedSections = await validatedSection(initvStg.id, stgDesc);
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
@@ -612,97 +612,6 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
 
 }
 
-function getRepoConstStage(tableName: string) {
-    switch (tableName) {
-        case 'pre_concept':
-            return null;
-            break;
-        case 'concept':
-            return new ConceptInfo();
-            break;
-        case 'full_proposal':
-            return null;
-            break;
-
-        default:
-            break;
-    }
-}
-
-
-
-/***
- *
- *
- *
- ***/
-
-export const assignActArsByInitvStg = async (req: Request, res: Response) => {
-
-    const { action_area_id, initvStgId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const actArsRepo = getRepository(ActionAreasByInitiativeStage);
-
-    const actionArea = new ActionAreasByInitiativeStage();
-    actionArea.action_area_id = action_area_id;
-    try {
-
-        let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-        actionArea.initvStg = initiativeStg;
-
-        const errors = await validate(actionArea);
-        if (errors.length > 0) {
-            return res.status(400).json(errors);
-        }
-
-        let createdActionArea = await actArsRepo.save(actionArea);
-        res.json({ msg: 'Action area assigned to initiative by stage', data: createdActionArea });
-
-    } catch (error) {
-        console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
-        return res.status(error.httpCode).json(error);
-    }
-
-}
-
-// export const assignKeyPartnerByInitvStg = async (req: Request, res: Response) => {
-//     const { key_partner_id, initvStgId, description, comparative_advantage } = req.body;
-//     const initvStgRepo = getRepository(InitiativesByStages);
-//     const keyPartnesRepo = getRepository(KeyPartners);
-
-//     const keyPartner = new KeyPartners();
-//     keyPartner.key_partner_id = key_partner_id;
-//     keyPartner.description = description;
-//     keyPartner.comparative_advantage = comparative_advantage;
-
-//     try {
-
-//         // let initiativeStg = await initvStgRepo.findOneOrFail(initvStgId);
-//         // keyPartner.initvStg = initiativeStg;
-
-//         const errors = await validate(keyPartner);
-//         if (errors.length > 0) {
-//             return res.status(400).json(errors);
-//         }
-
-//         let createdkeyPartner = await keyPartnesRepo.save(keyPartner);
-//         res.json({ msg: 'Key partner assigned to initiative by stage', data: createdkeyPartner });
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(404).json({ msg: "Could not assign key partner to initiative stage." });
-//     }
-// }
-
 export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
     const { url, initvStgId, narrative } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -743,6 +652,45 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
 
 
+
+/**
+ * 
+ * @param req paramas: { currentInitiativeId }
+ * @param res 
+ * @returns 
+ */
+export const replicationProcess = async (req: Request, res: Response) => {
+    const { currentInitiativeId } = req.params;
+    const { replicationStageId } = req.body;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        // get replicate to stage
+        const stage = await stageRepo.findOne(replicationStageId);
+        // get replicate to stage description
+        const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
+        // data pushed to next stage
+        const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
+        res.json(new ResponseHandler('Replication data', { fordwarded }));
+    } catch (error) {
+        console.log(error);
+        let e = error;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+
 /**
  * 
  * CLARISA getters
@@ -768,4 +716,21 @@ export const getActionAreas = async (req: Request, res: Response) => {
     }
 }
 
+
+function getRepoConstStage(tableName: string) {
+    switch (tableName) {
+        case 'pre_concept':
+            return null;
+            break;
+        case 'concept':
+            return new ConceptInfo();
+            break;
+        case 'full_proposal':
+            return null;
+            break;
+
+        default:
+            break;
+    }
+}
 
