@@ -57,13 +57,21 @@
 
             <mat-accordion  *ngIf="currentStageName != 'concept'">
                 <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
-                    <mat-expansion-panel-header class="to_Hover_color" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
+                    <!-- no subesection -->
+                    <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color" >
                       <mat-panel-title  class="subSections_color" >
                         {{meta.title}}
                       </mat-panel-title>
                     </mat-expansion-panel-header>
+                    <!-- have subsections -->
+                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
+                      <mat-panel-title  class="subSections_color" >
+                        {{meta.title}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+
                     <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
-                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title" [routerLink]="'/initiatives/3/stages/full-proposal/context/'+subSection.route">
+                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/context/'+subSection.route">
                           {{subSection.title}}
                         </mat-list-option>
                       </mat-selection-list>

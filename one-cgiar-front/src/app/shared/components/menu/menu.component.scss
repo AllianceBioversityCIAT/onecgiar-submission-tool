@@ -126,12 +126,6 @@ mat-list-item:focus {
    margin: 0px 10px;
   }
 
-
-  .subSections_color{
-      color: rgb(100, 100, 100) !important;
-      font-weight: 400;
-  }
-
   .disabledActions{
     pointer-events: none;
     cursor: default;
@@ -139,5 +133,20 @@ mat-list-item:focus {
 
  .to_Hover_color:hover{
      transition: all .2s ease-in-out;
-    background-color: rgb(216, 228, 250) !important;
+    // background-color: rgb(216, 228, 250) !important;
+ }
+
+ .subSections_color{
+    color: rgb(100, 100, 100) !important;
+    font-weight: 400;
+    transition: all .2s ease-in-out;
+
+}
+
+ mat-expansion-panel-header.isActive{
+    .subSections_color{
+        color: white !important;
+        transition: all .2s ease-in-out;
+    }
+   
  }

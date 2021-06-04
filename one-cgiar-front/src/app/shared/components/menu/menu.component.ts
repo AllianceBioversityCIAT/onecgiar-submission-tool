@@ -76,22 +76,22 @@ export class MenuComponent implements OnInit {
         ]
       },
       {
-        title: "Governance, Strategies and Plans "
+        title: "Governance, Strategies and Plans (inactive)"
       },
       {
-        title: "Work Packages"
+        title: "Work Packages (inactive)"
       },
       {
-        title: "Innovation Module"
+        title: "Innovation Module (inactive)"
       },
       {
-        title: "Theory of change"
+        title: "Theory of change (inactive)"
       },
       {
-        title: "MELIAs"
+        title: "MELIAs (inactive)"
       },
       {
-        title: "Human and Financial Resources"
+        title: "Human and Financial Resources (inactive)"
       }
     ]
     this.stages[2].grouped=body;
