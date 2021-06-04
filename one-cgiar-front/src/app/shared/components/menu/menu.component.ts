@@ -15,11 +15,12 @@ import { DataControlService } from '../../services/data-control.service';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-  stages: [];
+  stages: any[];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   workPackagesList: any = [];
+  currentStageName='';
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -31,16 +32,70 @@ export class MenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getStages();
+   let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
+     console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
+      console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
+      // stageName == 'concept' ? this.getStages() : this.simulateFullProposal();
+      this.currentStageName = stageName;
+      this.getStages();
+      loadMenu$.unsubscribe();
+    })
+
     this._dataControlService.menuChange$.subscribe(() => {
       this.getAllIWorkPackages();
+      // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     })
+
     this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
       menu => {
         this.subMenusFormValidation = menu;
       }
     )
+  }
+
+  simulateFullProposal(){
+    console.log('%cto push','background: #222; color: #84c3fd');
+    let body=[
+      {
+        title:'General Information',
+        subsections:[
+          {
+            title:'Challenge statement'
+          },
+          {
+            title:'Comparative Advantage'
+          }
+        ]
+      },
+      {
+        title: "Context"
+      },
+      {
+        title: "Governance, Strategies and Plans "
+      },
+      {
+        title: "Work Packages"
+      },
+      {
+        title: "Innovation Module"
+      },
+      {
+        title: ""
+      },
+      {
+        title: "MELIAs"
+      },
+      {
+        title: "Human and Financial Resources"
+      }
+    ]
+    this.stages[2].grouped=body;
+    console.log(this.stages[2]);
+    if (this.currentStageName != 'concept') {
+      this.stages[1].active = false;
+      this.stages[2].active = true;
+    }
   }
 
   goToWp(id) {
@@ -68,9 +123,11 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          // console.log(this.stages)
+          console.log(this.stages)
+          this.simulateFullProposal();
         }
       )
+
   }
 
   parseStageUrl(meta: any, section: string) {
