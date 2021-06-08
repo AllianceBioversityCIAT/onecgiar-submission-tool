@@ -58,7 +58,7 @@ export class MenuComponent implements OnInit {
     console.log('%cto push','background: #222; color: #84c3fd');
     let body=[
       {
-        title:'General Information (example)',
+        title:'General Information',
         route:'general-information'
       },
       {
@@ -160,40 +160,26 @@ export class MenuComponent implements OnInit {
   validate_under_construction(section) {
     console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
-      case 'General Information (example)':
+      case 'General Information':
         return true
-        case "Context":
-          return true
-          case  'Challenge statement':
-            return true
-            case 'Comparative Advantage':
-              return true
-              case "Governance, Strategies and Plans":
-                return true
-                case "Work Packages":
-                  return true
-                  case "Innovation Module":
-                    return true
-                    case "Theory of change":
-                      return true
-                      case "MELIAs":
-                        return true
-                        case "Human and Financial Resources":
-                          return true
-    //    
-    //   
-    //    
-    //        
-    //         
-    // 
-    // 
-    // 
-    // 
-    // 
-      // case 'Work Packages':
-      //   return true
-      // case 'Key Partners':
-      //   return true
+      case "Context":
+        return true
+      case 'Challenge statement':
+        return true
+      case 'Comparative Advantage':
+        return true
+      case "Governance, Strategies and Plans":
+        return true
+      case "Work Packages":
+        return true
+      case "Innovation Module":
+        return true
+      case "Theory of change":
+        return true
+      case "MELIAs":
+        return true
+      case "Human and Financial Resources":
+        return true
       default:
         return false
     }
