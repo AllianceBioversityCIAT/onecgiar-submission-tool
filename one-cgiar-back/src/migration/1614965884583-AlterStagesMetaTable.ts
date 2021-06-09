@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class AlterStagesMetaTable1617110457511 implements MigrationInterface {
+export class AlterStagesMetaTable1614965884583 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         console.log('Alter table stages_meta')
