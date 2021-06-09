@@ -83,10 +83,12 @@ export class ConceptHandler {
             const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
 
             // create initiative by stage entity
-            const replicatedIntvStg = new InitiativesByStages();
+            let replicatedIntvStg = new InitiativesByStages();
             replicatedIntvStg.active = true;
             replicatedIntvStg.initiative = curruentInitvByStg[0].initiativeId;
             replicatedIntvStg.stage = pplStage[0].id;
+            // save intiative by stage
+            // replicatedIntvStg = await initvStgRepo.save(replicatedIntvStg);
 
 
 
