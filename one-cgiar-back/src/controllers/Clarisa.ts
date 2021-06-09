@@ -97,7 +97,7 @@ export const getClaRegions = async (req: Request, res: Response) => {
  */
 export const getClaInstitutions = async (req: Request, res: Response) => {
     try {
-        const institutions = await axios.get(clarisaHost + 'institutions', {
+        const institutions = await axios.get(clarisaHost + 'institutionsSimple', {
             auth: {
                 username: process.env['clarisa_user'],
                 password: process.env['clarisa_password']
