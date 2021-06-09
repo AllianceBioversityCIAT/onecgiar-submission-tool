@@ -42,7 +42,7 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
             break;
 
         default:
-            throw new BaseError('validatedSection',404, 'Stage not given', false);
+            throw new BaseError('validatedSection',404, 'Stage not available', false);
             break;
     }
 
@@ -57,12 +57,12 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
         case 'full_proposal':
             // concept handler object 
             const conceptObj = new ConceptHandler(currentInitiativeId);
-            // conceptObj.
+            const isComplete = await conceptObj.validateCompletness()
             // if missing data, throw error 
-            if (await conceptObj.validateCompletness()) {
-                // throw new BaseError('forwardStage',404, 'Incomplete concept', false);
+            if (isComplete) {
+                const replicatedData = await conceptObj.forwardStage();
             } else {
-                // get c
+                throw new BaseError('Replication Process', 404, 'Incomplete concept', false);
 
             }
             break;
