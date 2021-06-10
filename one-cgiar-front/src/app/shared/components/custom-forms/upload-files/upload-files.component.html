@@ -30,12 +30,14 @@
                             <button *ngIf="!this._initiativesService.initiative.readonly" type="button" class="delete_icon" (click)="dialogConfirmDeleteTosave(index, filesToUpload)" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
                               <mat-icon color="warn">delete</mat-icon>
                           </button>
+                          <mat-divider></mat-divider>
                           </mat-list-item>
                         </mat-list>
                     </div>
                 </div>
             </div>
         </div>
+        <br>
     </div>
 
     <div *ngSwitchDefault>
