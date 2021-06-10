@@ -16,7 +16,7 @@ import { ConceptHandler } from '../handlers/ConceptController';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
-import { getClaActionAreas } from './Clarisa';
+import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
 
 
 require('dotenv').config();
@@ -697,6 +697,13 @@ export const replicationProcess = async (req: Request, res: Response) => {
  * 
  */
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
         const actionAreas = await getClaActionAreas();
@@ -715,6 +722,140 @@ export const getActionAreas = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 }
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getCountries = async (req: Request, res: Response) => {
+    try {
+        const countries = await getClaCountries();
+        res.json(new ResponseHandler('Countries.', { countries }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getRegions = async (req: Request, res: Response) => {
+    try {
+        const regions = await getClaRegions();
+        res.json(new ResponseHandler('Regions.', { regions }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getInstitutions = async (req: Request, res: Response) => {
+    try {
+        const institutions = await getClaInstitutions();
+        res.json(new ResponseHandler('Institutions.', { regions: institutions }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getInstitutionsTypes = async (req: Request, res: Response) => {
+    try {
+        const institutionsTypes = await getClaInstitutionsTypes();
+        res.json(new ResponseHandler('Institutions types.', { regions: institutionsTypes }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getCRP = async (req: Request, res: Response) => {
+    try {
+        const crps = await getClaCRPs();
+        res.json(new ResponseHandler('CGIAR entities.', { crps }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const requestInstitution = async (req: Request, res: Response) => {
+    try {
+        const institutionRequested = await requestClaInstitution(req.body);
+        res.json(new ResponseHandler('Requested institution.', { institutionRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function getRepoConstStage(tableName: string) {

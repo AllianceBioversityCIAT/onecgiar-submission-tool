@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, getInstitutionsTypes } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -63,17 +63,17 @@ router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], replicationProc
 //get Action areas
 router.get("/areas", [checkJwt], getActionAreas);
 //get countries
-router.get("/countries", [checkJwt], getClaCountries);
+router.get("/countries", [checkJwt], getCountries);
 //get regions
-router.get("/regions", [checkJwt], getClaRegions);
+router.get("/regions", [checkJwt], getRegions);
 //get institutions
-router.get("/institutions", [checkJwt], getClaInstitutions);
-//request institutions
-router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
+router.get("/institutions", [checkJwt], getInstitutions);
 // get institutions types
-router.get("/institutions/types", [checkJwt], getClaInstitutionsTypes);
+router.get("/institutions/types", [checkJwt], getInstitutionsTypes);
 // get crps
 router.get("/cgiar-entities", [checkJwt], getClaCRPs);
+//request institutions
+router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
 
 
 export default router;

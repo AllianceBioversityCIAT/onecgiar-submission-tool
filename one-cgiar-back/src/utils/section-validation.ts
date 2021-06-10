@@ -60,7 +60,8 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
             const isComplete = await conceptObj.validateCompletness()
             // if missing data, throw error 
             if (isComplete) {
-                const replicatedData = await conceptObj.forwardStage();
+                console.log(await conceptObj.getConceptData(currentInitiativeId))
+                // const replicatedData = await conceptObj.forwardStage();
             } else {
                 throw new BaseError('Replication Process', 404, 'Incomplete concept', false);
 
