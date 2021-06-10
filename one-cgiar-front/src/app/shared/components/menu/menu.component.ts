@@ -58,7 +58,7 @@ export class MenuComponent implements OnInit {
     console.log('%cto push','background: #222; color: #84c3fd');
     let body=[
       {
-        title:'General Information',
+        title:'General Information ',
         route:'general-information'
       },
       {
@@ -79,7 +79,7 @@ export class MenuComponent implements OnInit {
         title: "Governance, Strategies and Plans"
       },
       {
-        title: "Work Packages"
+        title: "Work Packages "
       },
       {
         title: "Innovation Module"
@@ -160,7 +160,7 @@ export class MenuComponent implements OnInit {
   validate_under_construction(section) {
     console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
-      case 'General Information':
+      case 'General Information ':
         return true
       case "Context":
         return true
@@ -170,7 +170,7 @@ export class MenuComponent implements OnInit {
         return true
       case "Governance, Strategies and Plans":
         return true
-      case "Work Packages":
+      case "Work Packages ":
         return true
       case "Innovation Module":
         return true
