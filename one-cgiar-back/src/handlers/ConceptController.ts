@@ -39,7 +39,7 @@ export class ConceptHandler {
      * @param initvStgId 
      * @returns { sections }
      */
-    async getConceptData(initvStgId: number) {
+    async getConceptData(initvStgId: string) {
         try {
             // add general information data 
             this.sections.general_information = await this.getGeneralInformation(initvStgId);
@@ -109,7 +109,7 @@ export class ConceptHandler {
      * @param initvStgId 
      * @returns { generalInfo, generalInfoMeta }
      */
-    async getGeneralInformation(initvStgId: number) {
+    async getGeneralInformation(initvStgId: string) {
 
         try {
             const GIquery = ` 
@@ -138,11 +138,11 @@ export class ConceptHandler {
             LEFT JOIN stages stage ON stage.id = initvStgs.stageId
             LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
 
-            WHERE initvStgs.id =:initvStgId;
+            WHERE initvStgs.id = ${initvStgId};
         `;
             const GIMetaquery = `SELECT * FROM stages_meta WHERE group_by LIKE 'General Information'`;
-            const generalInfo = this.queryRunner.query(GIquery);
-            const generalInfoMeta = this.queryRunner.query(GIMetaquery);
+            const generalInfo = await this.queryRunner.query(GIquery);
+            const generalInfoMeta = await this.queryRunner.query(GIMetaquery);
 
             return { generalInfo: generalInfo[0], generalInfoMeta: generalInfoMeta[0] };
         } catch (error) {
