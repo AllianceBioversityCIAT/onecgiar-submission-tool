@@ -80,14 +80,14 @@ const validateAD = (one_user, password) => {
                 let notFound = {
                     'name': 'SERVER_NOT_FOUND',
                     'description': `There was an internal server error: ${err.lde_message}`,
-                    'httpCode': 500
+                    'httpCode': 404
                 };
                 if (err.errno == "ENOTFOUND") {
                     notFound.name = 'SERVER_NOT_FOUND';
                     notFound.description = 'Domain Controller Server not found'
                 }
-                // console.log(notFound)
-                return reject(new APIError(notFound));
+                console.log(err)
+                return reject(notFound);
             }
 
             if (auth) {
@@ -102,7 +102,7 @@ const validateAD = (one_user, password) => {
                     'description': 'The supplied credential is invalid',
                     'httpCode': 503
                 };
-                return reject(new APIError(err));
+                return reject(err);
             }
 
         })
