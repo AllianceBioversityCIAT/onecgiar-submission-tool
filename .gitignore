@@ -5,6 +5,7 @@
 /todo.txt
 /one-cgiar-front/src/proxy.conf.json
 /submission-data.txt
+/submission-request-test.txt
 /one-cgiar-back/.env
 /one-cgiar-back/src/config/config.ts
 /one-cgiar-back/ormconfig.json
