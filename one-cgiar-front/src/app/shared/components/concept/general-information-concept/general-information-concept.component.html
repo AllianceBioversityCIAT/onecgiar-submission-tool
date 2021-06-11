@@ -32,10 +32,10 @@
                 <mat-card>
                     <div class="row">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:'Co-Lead name', value:leads.co_lead_name||'Not available'}"></custom-text>
+                            <custom-text [options]="{inputTitle:_dataControlService.general_information.secondLeadName, value:leads.co_lead_name||'Not available'}"></custom-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
+                            <custom-text [options]="{inputTitle:_dataControlService.general_information.secondLeadEmail, value:leads.co_lead_email||'Not available'}"></custom-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>

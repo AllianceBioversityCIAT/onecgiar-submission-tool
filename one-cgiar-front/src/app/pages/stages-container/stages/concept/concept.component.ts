@@ -18,6 +18,8 @@ export class ConceptComponent implements OnInit {
   ngOnInit(): void {
     this.getRolefromInitiativeById();
     this._dataControlService.loadMenu$.emit('concept');
+    this._dataControlService.general_information.secondLeadEmail = 'Co-Lead email';
+    this._dataControlService.general_information.secondLeadName = 'Co-Lead name';
   }
 
   getRolefromInitiativeById(){
