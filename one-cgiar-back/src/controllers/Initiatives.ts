@@ -672,7 +672,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
         const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
         // data pushed to next stage
         const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-        res.json(new ResponseHandler('Replication data', { fordwarded }));
+        res.json(new ResponseHandler('Replication data', fordwarded ));
     } catch (error) {
         console.log(error);
         let e = error;

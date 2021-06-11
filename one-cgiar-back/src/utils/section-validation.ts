@@ -42,7 +42,7 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
             break;
 
         default:
-            throw new BaseError('validatedSection',404, 'Stage not available', false);
+            throw new BaseError('validatedSection', 404, 'Stage not available', false);
             break;
     }
 
@@ -52,24 +52,28 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
 }
 
 export const forwardStage = async (replicationStagDsc: string, currentInitiativeId: string) => {
-    console.log(replicationStagDsc)
-    switch (replicationStagDsc) {
-        case 'full_proposal':
-            // concept handler object 
-            const conceptObj = new ConceptHandler(currentInitiativeId);
-            const isComplete = await conceptObj.validateCompletness()
-            // if missing data, throw error 
-            if (isComplete) {
-                console.log(await conceptObj.getConceptData(currentInitiativeId))
-                // const replicatedData = await conceptObj.forwardStage();
-            } else {
-                throw new BaseError('Replication Process', 404, 'Incomplete concept', false);
 
-            }
-            break;
+    try {
 
-        default:
-            break;
+        switch (replicationStagDsc) {
+            case 'full_proposal':
+                // concept handler object 
+                const conceptObj = new ConceptHandler(currentInitiativeId);
+                const isComplete = await conceptObj.validateCompletness()
+                // if missing concept data, throw error 
+                if (isComplete) {
+                    // get full proposal data
+                    const fullProposal = await conceptObj.forwardStage();
+                    return fullProposal
+                } else
+                    throw new BaseError('Replication Process', 404, 'Incomplete concept', false);
+                break;
+
+            default:
+                break;
+        }
+    } catch (error) {
+        throw new BaseError('Replication Process', 404, error.message, false)
     }
 }
 
