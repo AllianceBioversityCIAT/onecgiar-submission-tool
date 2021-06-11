@@ -33,8 +33,8 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
    let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
-     console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
-      console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
+      // console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
+      // console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
       // stageName == 'concept' ? this.getStages() : this.simulateFullProposal();
       this.currentStageName = stageName;
       this.getStages();
@@ -55,7 +55,7 @@ export class MenuComponent implements OnInit {
   }
 
   simulateFullProposal(){
-    console.log('%cto push','background: #222; color: #84c3fd');
+    // console.log('%cto push','background: #222; color: #84c3fd');
     let body=[
       {
         title:'General Information ',
@@ -95,7 +95,7 @@ export class MenuComponent implements OnInit {
       }
     ]
     this.stages[2].grouped=body;
-    console.log(this.stages[2]);
+    // console.log(this.stages[2]);
     if (this.currentStageName != 'concept') {
       this.stages[1].active = false;
       this.stages[2].active = true;
@@ -127,7 +127,7 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          console.log(this.stages)
+          // console.log(this.stages)
           this.simulateFullProposal();
         }
       )
@@ -158,7 +158,7 @@ export class MenuComponent implements OnInit {
   }
 
   validate_under_construction(section) {
-    console.log('%c'+section,'background: #222; color: #84c3fd');
+    // console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
       case 'General Information ':
         return true
