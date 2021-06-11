@@ -9,6 +9,7 @@ import { StagesMenuService } from '../../../services/stages-menu.service';
 })
 export class SaveButtonComponent implements OnInit {
   @Input() disabled;
+  @Input() underConstruction = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _StagesMenuService: StagesMenuService
