@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { InitiativesService } from '../../../services/initiatives.service';
+import { InitiativesService } from '../../../../services/initiatives.service';
 
 @Component({
   selector: 'app-challenge-statement',
