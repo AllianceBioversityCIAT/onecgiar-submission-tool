@@ -72,6 +72,26 @@ export class MenuComponent implements OnInit {
           {
             title:'Comparative Advantage',
             route:'comparative-advantage'
+          },
+          {
+            title:'learning-fpe-and-ia',
+            route:'learning-fpe-and-ia'
+          },
+          {
+            title:'measurable-objectives',
+            route:'measurable-objectives'
+          },
+          {
+            title:'participatory-design-process',
+            route:'participatory-design-process'
+          },
+          {
+            title:'priority-setting',
+            route:'priority-setting'
+          },
+          {
+            title:'risk-assessment',
+            route:'risk-assessment'
           }
         ]
       },
