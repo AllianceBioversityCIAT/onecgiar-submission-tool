@@ -27,6 +27,10 @@ const routes: Routes = [
         loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
       },
       {
+        path: 'management-plans-and-policy-compliance',
+        loadChildren: () => import('./management-p-and-policy-c/management-p-and-policy-c.module').then(mod => mod.ManagementPAndPolicyCModule),
+      },
+      {
         path: 'general-information',
         component: ExampleComponent,
       },

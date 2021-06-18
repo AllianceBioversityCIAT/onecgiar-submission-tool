@@ -100,15 +100,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Management plan',
-            route:'under-construction-page'
+            route:'management-plans-and-policy-compliance/management-plan'
           },
           {
             title:'Ethics',
-            route:'under-construction-page'
+            route:'management-plans-and-policy-compliance/ethics'
           },
           {
             title:'Open and FAIR data assets',
-            route:'under-construction-page'
+            route:'management-plans-and-policy-compliance/open-and-fair-data-assets'
           }
         ]
       },
