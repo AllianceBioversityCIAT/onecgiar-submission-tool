@@ -7,6 +7,7 @@ import { CustomFormsModule } from '../../../custom-forms/custom-forms.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MaterialModule } from '../../../../../material.module';
+import { UtilsModule } from '../../../utils/utils.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MaterialModule } from '../../../../../material.module';
     MaterialModule,
     CustomFormsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    UtilsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
