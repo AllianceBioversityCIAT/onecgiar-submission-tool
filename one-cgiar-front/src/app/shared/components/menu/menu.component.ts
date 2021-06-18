@@ -96,23 +96,92 @@ export class MenuComponent implements OnInit {
         ]
       },
       {
-        title: "Governance, Strategies and Plans"
+        title: "Management Plans and policy compliance",
+        subSections:[
+          {
+            title:'Management plan',
+            route:'none'
+          },
+          {
+            title:'Ethics',
+            route:'none'
+          },
+          {
+            title:'Open and FAIR data assets',
+            route:'none'
+          }
+        ]
       },
       {
-        title: "Work Packages "
+        title: "Work Packages",
+        subSections:[
+          {
+            title:'General information',
+            route:'none'
+          },
+        ]
       },
       {
-        title: "Innovation Module"
+        title: "Innovation packages and Projection of Benefits",
+        subSections:[
+          {
+            title:'Innovation Packages and Scaling Readiness Strategy',
+            route:'none'
+          },
+          {
+            title:'Projection of benefits',
+            route:'none'
+          },
+        ]
       },
       {
-        title: "Theory of change"
+        title: "Theories of Change",
+        subSections:[
+          {
+            title:'Full Initiative TOC',
+            route:'none'
+          },
+          {
+            title:'Work Package TOCs',
+            route:'none'
+          },
+          {
+            title:'Impact strategies',
+            route:'none'
+          },
+        ]
       },
       {
-        title: "MELIAs"
+        title: "MELIA",
+        subSections:[]
       },
       {
-        title: "Human and Financial Resources"
-      }
+        title: "People and Culture",
+        subSections:[
+          {
+            title:'Initiative Team',
+            route:'none'
+          },
+          {
+            title:'Gender, Diversity and Inclusion',
+            route:'none'
+          },
+          {
+            title:'Capacity development',
+            route:'none'
+          },
+        ]
+      },
+      {
+        title: "Financial Resources",
+        subSections:[
+          {
+            title:'Budget',
+            route:'none'
+          },
+        ]
+      },
+
     ]
     this.stages[2].grouped=body;
     // console.log(this.stages[2]);
