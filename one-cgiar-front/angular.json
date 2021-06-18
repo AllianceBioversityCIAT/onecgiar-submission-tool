@@ -30,6 +30,9 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles/media-queries.scss",
+              "src/styles/align.scss",
+              "src/styles/details.scss",
               "src/styles.scss"
             ],
             "scripts": [
@@ -100,6 +103,9 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "src/styles/media-queries.scss",
+              "src/styles/align.scss",
+              "src/styles/details.scss",
               "src/styles.scss"
             ],
             "scripts": []

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../shared/services/initiatives.service';
 import { StagesMenuService } from '../../../../shared/services/stages-menu.service';
+import { DataControlService } from '../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-concept',
@@ -10,12 +11,15 @@ import { StagesMenuService } from '../../../../shared/services/stages-menu.servi
 export class ConceptComponent implements OnInit {
   private user = JSON.parse(localStorage.getItem('user')) || null;
   constructor(
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    private _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
     this.getRolefromInitiativeById();
-
+    this._dataControlService.loadMenu$.emit('concept');
+    this._dataControlService.general_information.secondLeadEmail = 'Co-Lead email';
+    this._dataControlService.general_information.secondLeadName = 'Co-Lead name';
   }
 
   getRolefromInitiativeById(){

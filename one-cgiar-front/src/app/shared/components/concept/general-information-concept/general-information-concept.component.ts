@@ -55,7 +55,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _interactions: InteractionsService,
     private router:Router, 
-    private _dataControlService:DataControlService,
+    public _dataControlService:DataControlService,
     private _StagesMenuService:StagesMenuService
     ) {
     this.generalInformationForm = new FormGroup({

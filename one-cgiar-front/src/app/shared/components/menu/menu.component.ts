@@ -15,11 +15,12 @@ import { DataControlService } from '../../services/data-control.service';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-  stages: [];
+  stages: any[];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   workPackagesList: any = [];
+  currentStageName='';
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -31,16 +32,94 @@ export class MenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getStages();
+   let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
+      // console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
+      // console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
+      // stageName == 'concept' ? this.getStages() : this.simulateFullProposal();
+      this.currentStageName = stageName;
+      this.getStages();
+      loadMenu$.unsubscribe();
+    })
+
     this._dataControlService.menuChange$.subscribe(() => {
       this.getAllIWorkPackages();
+      // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     })
+
     this._dataControlService.menuChange$.emit();
     this.stgMenuSvc.menu.subscribe(
       menu => {
         this.subMenusFormValidation = menu;
       }
     )
+  }
+
+  simulateFullProposal(){
+    // console.log('%cto push','background: #222; color: #84c3fd');
+    let body=[
+      {
+        title:'General Information ',
+        route:'general-information'
+      },
+      {
+        title: "Context",
+        route:'context',
+        subSections:[
+          {
+            title:'Challenge statement',
+            route:'challenge-statement'
+          },
+          {
+            title:'Comparative Advantage',
+            route:'comparative-advantage'
+          },
+          {
+            title:'Measurable objectives',
+            route:'measurable-objectives'
+          },
+          {
+            title:'Learning from prior evaluation and IA',
+            route:'learning-fpe-and-ia'
+          },
+          {
+            title:'Priority setting',
+            route:'priority-setting'
+          },
+          {
+            title:'Risk assessment',
+            route:'risk-assessment'
+          },
+          {
+            title:'Participatory design process',
+            route:'participatory-design-process'
+          },
+        ]
+      },
+      {
+        title: "Governance, Strategies and Plans"
+      },
+      {
+        title: "Work Packages "
+      },
+      {
+        title: "Innovation Module"
+      },
+      {
+        title: "Theory of change"
+      },
+      {
+        title: "MELIAs"
+      },
+      {
+        title: "Human and Financial Resources"
+      }
+    ]
+    this.stages[2].grouped=body;
+    // console.log(this.stages[2]);
+    if (this.currentStageName != 'concept') {
+      this.stages[1].active = false;
+      this.stages[2].active = true;
+    }
   }
 
   goToWp(id) {
@@ -69,8 +148,10 @@ export class MenuComponent implements OnInit {
           })
           this.stages = res.stages;
           // console.log(this.stages)
+          this.simulateFullProposal();
         }
       )
+
   }
 
   parseStageUrl(meta: any, section: string) {
@@ -97,11 +178,28 @@ export class MenuComponent implements OnInit {
   }
 
   validate_under_construction(section) {
+    // console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
-      // case 'Work Packages':
-      //   return true
-      // case 'Key Partners':
-      //   return true
+      case 'General Information ':
+        return true
+      case "Context":
+        return true
+      case 'Challenge statement':
+        return true
+      case 'Comparative Advantage':
+        return true
+      case "Governance, Strategies and Plans":
+        return true
+      case "Work Packages ":
+        return true
+      case "Innovation Module":
+        return true
+      case "Theory of change":
+        return true
+      case "MELIAs":
+        return true
+      case "Human and Financial Resources":
+        return true
       default:
         return false
     }

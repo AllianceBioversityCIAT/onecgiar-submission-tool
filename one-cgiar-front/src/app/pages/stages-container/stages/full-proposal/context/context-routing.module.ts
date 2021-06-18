@@ -5,7 +5,37 @@ import { ContextComponent } from './context.component';
 const routes: Routes = [
   {
     path:'',
-    component: ContextComponent
+    component: ContextComponent,
+    children: [
+      {
+        path: 'challenge-statement',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/challenge-statement/challenge-statement.module').then(mod => mod.ChallengeStatementModule),
+      },
+      {
+        path: 'comparative-advantage',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/comparative-advantage/comparative-advantage.module').then(mod => mod.ComparativeAdvantageModule),
+      },
+      {
+        path: 'learning-fpe-and-ia',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/learning-fpe-and-ia/learning-fpe-and-ia.module').then(mod => mod.LearningFpeAndIaModule),
+      },
+      {
+        path: 'measurable-objectives',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/measurable-objectives/measurable-objectives.module').then(mod => mod.MeasurableObjectivesModule),
+      },
+      {
+        path: 'participatory-design-process',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/participatory-design-process/participatory-design-process.module').then(mod => mod.ParticipatoryDesignProcessModule),
+      },
+      {
+        path: 'priority-setting',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/priority-setting/priority-setting.module').then(mod => mod.PrioritySettingModule),
+      },
+      {
+        path: 'risk-assessment',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/risk-assessment/risk-assessment.module').then(mod => mod.RiskAssessmentModule),
+      },
+    ],
   }
 ];
 

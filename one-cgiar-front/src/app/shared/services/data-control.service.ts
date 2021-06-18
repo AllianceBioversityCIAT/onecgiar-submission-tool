@@ -24,5 +24,10 @@ export class DataControlService {
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
   countriesAndRegionsloaded$ = new EventEmitter<any>();
+  loadMenu$= new EventEmitter<any>();
+  general_information = {
+    secondLeadName:'',
+    secondLeadEmail:''
+  }
   constructor() { }
 }

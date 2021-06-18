@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataControlService } from '../../../../shared/services/data-control.service';
+import { InitiativesService } from '../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-full-proposal',
@@ -6,10 +8,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./full-proposal.component.scss']
 })
 export class FullProposalComponent implements OnInit {
-
-  constructor() { }
+  private user = JSON.parse(localStorage.getItem('user')) || null;
+  constructor(
+    private _dataControlService:DataControlService,
+    private _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
+    this._dataControlService.loadMenu$.emit('full-proposal');
+    this.getRolefromInitiativeById();
+    this._dataControlService.general_information.secondLeadEmail = 'Deputy email';
+    this._dataControlService.general_information.secondLeadName = 'Deputy name';
+  }
+
+  getRolefromInitiativeById(){
+    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
+      if ( resp.response.roles[0]?.roleId) {
+        this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
+        const rol = this._initiativesService.initiative.roleId
+        this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
+      }else{
+        this._initiativesService.initiative.readonly = true;
+        this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
+      }
+
+    });
   }
 
 }
