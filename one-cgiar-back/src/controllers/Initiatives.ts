@@ -11,7 +11,7 @@ import { Stages } from '../entity/Stages';
 import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
-import { APIError } from '../handlers/BaseError';
+import { APIError, BaseError } from '../handlers/BaseError';
 import { ConceptHandler } from '../handlers/ConceptController';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
@@ -491,6 +491,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
 
     try {
+        console.log(initiativeId)
         const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId }, relations: ['stage'] });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
 
@@ -499,15 +500,16 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
+        error = new BaseError('Validate sections', error.status || 406, error.message, false);;
+        // let e = error;
+        // if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+        //     e = new APIError(
+        //         'Bad Request',
+        //         HttpStatusCode.BAD_REQUEST,
+        //         true,
+        //         error.message
+        //     );
+        // }
         return res.status(error.httpCode).json(error);
     }
 }
@@ -672,7 +674,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
         const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
         // data pushed to next stage
         const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-        res.json(new ResponseHandler('Replication data', fordwarded ));
+        res.json(new ResponseHandler('Replication data', fordwarded));
     } catch (error) {
         console.log(error);
         let e = error;

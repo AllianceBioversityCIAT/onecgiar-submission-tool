@@ -2,8 +2,9 @@ import { getConnection, getRepository } from "typeorm";
 import { Initiatives } from "../entity/Initiatives";
 import { InitiativesByStages } from "../entity/InititativesByStages";
 import { BaseError } from "./BaseError";
+import { BaseValidation } from "./validation/BaseValidation";
 
-export class InitiativeStageHandler {
+export class InitiativeStageHandler extends BaseValidation {
     public initvStgId_;
     private intvStage_;
     private stageId_;
@@ -14,6 +15,7 @@ export class InitiativeStageHandler {
     public initiativeRepo = getRepository(Initiatives);
 
     constructor(initvStgId?: string, stageId?: string, initiativeId?: string) {
+        super();
         this.initvStgId_ = initvStgId;
         this.stageId_ = stageId;
         this.initiativeId_ = initiativeId;
@@ -30,7 +32,7 @@ export class InitiativeStageHandler {
             this.stageId_ = this.queryRunner.query(sql);
             return this.stageId_;
         } catch (error) {
-            throw new BaseError('Get Stage id', 401, error.message, false)
+            throw new BaseError('Get Stage id', 406, error.message, false)
         }
     }
     public get initvStage() {
@@ -44,7 +46,7 @@ export class InitiativeStageHandler {
             this.intvStage_ = this.queryRunner.query(sql);
             return this.intvStage_;
         } catch (error) {
-            throw new BaseError('Get intitative by stage object', 401, error.message, false)
+            throw new BaseError('Get intitative by stage object', 406, error.message, false)
         }
     }
     
@@ -63,7 +65,7 @@ export class InitiativeStageHandler {
             
         } catch (error) {
             console.log(error)
-            throw new BaseError('Set intitative by stage object', 401, error.message, false)
+            throw new BaseError('Set intitative by stage object', 406, error.message, false)
             
         }
     }

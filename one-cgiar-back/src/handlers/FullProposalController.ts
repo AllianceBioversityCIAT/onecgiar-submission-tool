@@ -7,7 +7,10 @@ import { InitiativeStageHandler } from "./InitiativeStageController";
 
 
 export class ProposalHandler extends InitiativeStageHandler {
-    public sections: ProposalSections = <ProposalSections>{};
+    public sections: ProposalSections = <ProposalSections>{
+        general_information: null,
+        context: null
+    };
 
 
     private metaData_;
@@ -21,7 +24,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})`);
             return this.metaData_;
         } catch (error) {
-            throw new BaseError('Get Metadata', 401, error.message, false)
+            throw new BaseError('Get Metadata', 406, error.message, false)
         }
 
     }
@@ -64,7 +67,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             return generalInfo[0];
         } catch (error) {
-            throw new BaseError('Get general information', 401, error.message, false)
+            throw new BaseError('Get general information', 406, error.message, false)
         }
 
     }
@@ -84,13 +87,13 @@ export class ProposalHandler extends InitiativeStageHandler {
             const actionAreas = await getClaActionAreas();
             // get select action areas for initiative
             const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
-            
+
             // if null, create concept info object
             if (concept_info_id == null) {
-                
+
                 conceptInf = new ConceptInfo();
                 conceptInf.name = name;
-                
+
                 conceptInf.action_area_description = action_area_description || selectedActionArea.name;
                 conceptInf.action_area_id = action_area_id;
                 // assign initiative by stage
@@ -100,11 +103,11 @@ export class ProposalHandler extends InitiativeStageHandler {
                 conceptInf.name = (name) ? name : conceptInf.name;
                 conceptInf.action_area_description = selectedActionArea.name;
                 conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
-                
+
             }
             // upserted data 
             let upsertedInfo = await concptInfoRepo.save(conceptInf);
-            
+
             //    update initiative name
             let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
             initiative.name = upsertedInfo.name;
@@ -141,7 +144,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return generalInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert general information - full proposal', 401, error.message, false)
+            throw new BaseError('Upsert general information - full proposal', 406, error.message, false)
         }
     }
 }
