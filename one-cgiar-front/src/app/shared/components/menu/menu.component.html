@@ -60,7 +60,7 @@
                     <!-- no subesection -->
                     <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color" >
                       <mat-panel-title  class="subSections_color" >
-                        {{meta.title}}
+                          <span [style.width]="'85%'">{{meta.title}}</span>
                       </mat-panel-title>
 
                       <button mat-icon-button style="margin-right: 40px;" class="mat-icon-no-color_new"
@@ -74,7 +74,7 @@
                     <!-- have subsections -->
                     <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
                       <mat-panel-title  class="subSections_color" >
-                        {{meta.title}}
+                        <span [style.width]="'85%'">{{meta.title}}</span>
                       </mat-panel-title>
 
                       <button mat-icon-button class="mat-icon-no-color_new"
@@ -89,7 +89,7 @@
 
                     <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
                         <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/context/'+subSection.route">
-                          {{subSection.title}}
+                          <span style="width: 80%;">{{subSection.title}}</span>
                           
                       <button mat-icon-button class="mat-icon-no-color_new"
                       [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
