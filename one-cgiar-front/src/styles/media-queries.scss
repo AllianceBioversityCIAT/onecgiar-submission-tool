@@ -1,0 +1,39 @@
+@media screen and (min-width: 1400px) {
+    .custom-container {
+      max-width: calc(100% - 200px);
+      // background-color: greenyellow !important;
+    }
+  }
+  
+  @media screen and (max-width: 1400px) {
+    .custom-container {
+      max-width: 1140px;
+      // background-color: orange !important;
+    }
+  }
+  
+  @media screen and (max-width: 1200px) {
+    .custom-container {
+      max-width: 1140px;
+      // background-color: orange !important;
+    }
+  }
+  
+  @media screen and (max-width: 992px) {
+    .custom-container {
+      max-width: 960px;
+      // background-color: red !important;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .custom-container {
+      max-width: 720px;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .custom-container {
+      max-width: 540px;
+    }
+  }

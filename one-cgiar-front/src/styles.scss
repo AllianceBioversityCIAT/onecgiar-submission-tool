@@ -66,24 +66,6 @@ body {
   overflow-y: none !important;
 }
 
-.center_flex{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.center_text{
-  text-align: center !important;
-}
-
-.full_size{
-  width: 100%;
-  height: 100%;
-}
-
-.pointer {
-  cursor: pointer;
-}
 span,
 button {
   outline: none !important;
@@ -93,57 +75,7 @@ mat-sidenav-content {
   background-color: #fafafa !important;
 }
 
-@media screen and (min-width: 1400px) {
-  .custom-container {
-    max-width: calc(100% - 200px);
-    // background-color: greenyellow !important;
-  }
-}
-
-@media screen and (max-width: 1400px) {
-  .custom-container {
-    max-width: 1140px;
-    // background-color: orange !important;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .custom-container {
-    max-width: 1140px;
-    // background-color: orange !important;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .custom-container {
-    max-width: 960px;
-    // background-color: red !important;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .custom-container {
-    max-width: 720px;
-  }
-}
-
-@media screen and (max-width: 576px) {
-  .custom-container {
-    max-width: 540px;
-  }
-}
-textarea[cdktextareaautosize].mat-input-element {
-  overflow: hidden;
-}
 .mat-tab-body-content { overflow: hidden!important}
-
-.custom-container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
 
 .icon_verify {
   position: absolute !important;
@@ -157,46 +89,6 @@ textarea[cdktextareaautosize].mat-input-element {
 .icon_verify_valid {
   color: #4caf50;
 }
-
-.mat-form-field-aux{
-  .mat-form-field-wrapper{
-      .mat-form-field-flex,.mat-form-field-underline{
-          position: absolute !important;
-      }
-  }
-
-}
-
-
-ngx-editor {
-  .NgxEditor {
-    border-radius: 0px !important;
-    border: none!important;
-    border-bottom: 1px solid #a7a7a7 !important;
-    background-color: transparent !important;
-    p{
-      margin: 0px;
-      background-color: transparent !important;
-    }
-
-    .NgxEditor__Content{
-      padding: 0px !important;
-      p{
-        background-color: transparent !important;
-
-      }
-        background-color: transparent !important;
-      
-    }
-  }
-}
-
-ngx-editor-menu{
-  .NgxEditor__MenuBar{
-    background-color: transparent !important;
-  }
-}
-
 
 //primary
 .color-primary{
@@ -248,8 +140,6 @@ ngx-editor-menu{
   background-color: #f6f6f4 !important;
 }
 
-
-
 .color-accent{
   color: mat-color( $variable-page-accent) !important;
 }
@@ -266,40 +156,4 @@ ngx-editor-menu{
   background-color: mat-color( $variable-page-warn) !important;
 }
 
-.marginSnackTop{
-  margin-top: 200px !important;
-}
 
-.outline_none{
-  outline: none !important;
-}
-
-.pos_relative{
-  margin-top: 5px;
-  position: relative;
-}
-
-.swal2-cancel,.swal2-confirm{
-  &:focus{
-    box-shadow: none !important;
-  }
-}
-
-.tooltip_font{
-  font-size: 1em;
-}
-
-
-.mat-tooltip {
-  /* your own custom styles here */ 
-  /* e.g. */
-  margin-right: 60px !important;
-}
-// .mat-dialog-container {
-//   padding: 0px !important;
-// }
-
-.section-container {
-  width: 100%;
-  padding: 50px 50px;
-}
