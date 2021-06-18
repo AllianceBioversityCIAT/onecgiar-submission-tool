@@ -59,6 +59,7 @@ import { PartnersRequestComponent } from './shared/components/partners-request/p
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { ExampleComponent } from './shared/components/full-proposal/example/example.component';
+import { UnderConstructionPageComponent } from './shared/components/under-construction-page/under-construction-page.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { ExampleComponent } from './shared/components/full-proposal/example/exam
     PartnersRequestComponent,
     ProjectionTimeFrameComponent,
     ExampleComponent,
+    UnderConstructionPageComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

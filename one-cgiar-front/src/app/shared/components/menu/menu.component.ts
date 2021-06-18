@@ -67,31 +67,31 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Challenge statement',
-            route:'challenge-statement'
+            route:'context/challenge-statement'
           },
           {
             title:'Comparative Advantage',
-            route:'comparative-advantage'
+            route:'context/comparative-advantage'
           },
           {
             title:'Measurable objectives',
-            route:'measurable-objectives'
+            route:'context/measurable-objectives'
           },
           {
             title:'Learning from prior evaluation and IA',
-            route:'learning-fpe-and-ia'
+            route:'context/learning-fpe-and-ia'
           },
           {
             title:'Priority setting',
-            route:'priority-setting'
+            route:'context/priority-setting'
           },
           {
             title:'Risk assessment',
-            route:'risk-assessment'
+            route:'context/risk-assessment'
           },
           {
             title:'Participatory design process',
-            route:'participatory-design-process'
+            route:'context/participatory-design-process'
           },
         ]
       },
@@ -100,15 +100,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Management plan',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Ethics',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Open and FAIR data assets',
-            route:'none'
+            route:'under-construction-page'
           }
         ]
       },
@@ -117,7 +117,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'General information',
-            route:'none'
+            route:'under-construction-page'
           },
         ]
       },
@@ -126,11 +126,11 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Innovation Packages and Scaling Readiness Strategy',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Projection of benefits',
-            route:'none'
+            route:'under-construction-page'
           },
         ]
       },
@@ -139,15 +139,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Full Initiative TOC',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Work Package TOCs',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Impact strategies',
-            route:'none'
+            route:'under-construction-page'
           },
         ]
       },
@@ -160,15 +160,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Initiative Team',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Gender, Diversity and Inclusion',
-            route:'none'
+            route:'under-construction-page'
           },
           {
             title:'Capacity development',
-            route:'none'
+            route:'under-construction-page'
           },
         ]
       },
@@ -177,7 +177,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Budget',
-            route:'none'
+            route:'under-construction-page'
           },
         ]
       },

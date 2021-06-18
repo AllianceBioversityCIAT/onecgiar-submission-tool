@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FullProposalComponent } from './full-proposal.component';
 import { ExampleComponent } from '../../../../shared/components/full-proposal/example/example.component';
+import { UnderConstructionPageComponent } from '../../../../shared/components/under-construction-page/under-construction-page.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
         path: '',
         redirectTo: 'example',
         pathMatch: 'full'
+      },
+      {
+        path: 'under-construction-page',
+        component: UnderConstructionPageComponent,
       },
       {
         path: 'example',
