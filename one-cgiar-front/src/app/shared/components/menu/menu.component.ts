@@ -126,11 +126,11 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Innovation Packages and Scaling Readiness Strategy',
-            route:'under-construction-page'
+            route:'innovation-packages-and-projection-of-benefits/innovation-packages-and-scaling-readiness-strategy'
           },
           {
             title:'Projection of benefits',
-            route:'under-construction-page'
+            route:'innovation-packages-and-projection-of-benefits/projection-of-benefits'
           },
         ]
       },

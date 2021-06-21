@@ -31,6 +31,10 @@ const routes: Routes = [
         loadChildren: () => import('./management-p-and-policy-c/management-p-and-policy-c.module').then(mod => mod.ManagementPAndPolicyCModule),
       },
       {
+        path: 'innovation-packages-and-projection-of-benefits',
+        loadChildren: () => import('./innovation-p-and-projection-of-b/innovation-p-and-projection-of-b.module').then(mod => mod.InnovationPAndProjectionOfBModule),
+      },
+      {
         path: 'work-packages',
         loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
       },
