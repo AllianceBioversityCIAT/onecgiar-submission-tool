@@ -31,6 +31,10 @@ const routes: Routes = [
         loadChildren: () => import('./management-p-and-policy-c/management-p-and-policy-c.module').then(mod => mod.ManagementPAndPolicyCModule),
       },
       {
+        path: 'work-packages',
+        loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
+      },
+      {
         path: 'general-information',
         component: ExampleComponent,
       },

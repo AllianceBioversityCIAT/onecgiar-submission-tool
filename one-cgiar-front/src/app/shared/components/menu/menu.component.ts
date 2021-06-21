@@ -117,7 +117,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'General information',
-            route:'under-construction-page'
+            route:'work-packages/general-information'
           },
         ]
       },
