@@ -139,15 +139,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Full Initiative TOC',
-            route:'under-construction-page'
+            route:'theories-of-change/full-initiative-TOC'
           },
           {
             title:'Work Package TOCs',
-            route:'under-construction-page'
+            route:'theories-of-change/work-package-TOC'
           },
           {
             title:'Impact strategies',
-            route:'under-construction-page'
+            route:'theories-of-change/impact-strategies'
           },
         ]
       },

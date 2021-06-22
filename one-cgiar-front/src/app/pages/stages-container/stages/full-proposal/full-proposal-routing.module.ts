@@ -39,6 +39,10 @@ const routes: Routes = [
         loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
       },
       {
+        path: 'theories-of-change',
+        loadChildren: () => import('./theories-of-change/theories-of-change.module').then(mod => mod.TheoriesOfChangeModule),
+      },
+      {
         path: 'general-information',
         component: ExampleComponent,
       },
