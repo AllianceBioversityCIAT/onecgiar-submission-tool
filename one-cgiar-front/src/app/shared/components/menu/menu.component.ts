@@ -177,7 +177,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Budget',
-            route:'under-construction-page'
+            route:'financial-resources/budget'
           },
         ]
       },

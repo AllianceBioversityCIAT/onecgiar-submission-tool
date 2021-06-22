@@ -47,6 +47,10 @@ const routes: Routes = [
         loadChildren: () => import('./people-and-culture/people-and-culture.module').then(mod => mod.PeopleAndCultureModule),
       },
       {
+        path: 'financial-resources',
+        loadChildren: () => import('./financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+      },
+      {
         path: 'general-information',
         component: ExampleComponent,
       },
