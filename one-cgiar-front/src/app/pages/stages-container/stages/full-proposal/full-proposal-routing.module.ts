@@ -43,6 +43,10 @@ const routes: Routes = [
         loadChildren: () => import('./theories-of-change/theories-of-change.module').then(mod => mod.TheoriesOfChangeModule),
       },
       {
+        path: 'people-and-culture',
+        loadChildren: () => import('./people-and-culture/people-and-culture.module').then(mod => mod.PeopleAndCultureModule),
+      },
+      {
         path: 'general-information',
         component: ExampleComponent,
       },

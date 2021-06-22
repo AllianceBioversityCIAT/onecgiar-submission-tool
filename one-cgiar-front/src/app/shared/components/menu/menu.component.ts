@@ -160,15 +160,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Initiative Team',
-            route:'under-construction-page'
+            route:'people-and-culture/initiative-Team'
           },
           {
             title:'Gender, Diversity and Inclusion',
-            route:'under-construction-page'
+            route:'people-and-culture/gender-diversity-inclusion'
           },
           {
             title:'Capacity development',
-            route:'under-construction-page'
+            route:'people-and-culture/capacity-development'
           },
         ]
       },
