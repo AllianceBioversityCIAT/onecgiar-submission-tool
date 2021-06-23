@@ -7,7 +7,7 @@
 
 
     <div class="card_container">
-        <div class="custom-card" *ngFor="let item of options.savedList">
+        <div class="custom-card animate__animated animate__fadeInRight animate__faster" *ngFor="let item of linkList">
             <div class="blue_flag"></div>
             <div class="inputs_container">
                 <div class="input_container">
@@ -20,7 +20,7 @@
                 <div class="input_container" style="margin-top: 8px;">
                     <p class="readonly_text_title" style="width: 65px;"><strong class="color-secondary">Link:
                         </strong><span class="asterisk">* </span></p>
-                    <input class="custom_input" type="text">
+                    <input class="custom_input" type="text" #myInput>
                 </div>
             </div>
             <div class="delete_button center_flex">
@@ -33,7 +33,16 @@
                     <button class="confirm" mat-button type="button">Yes</button>
                 </div>
             </div>
+            <div class="open_link_button center_flex">
+                <a [href]="myInput.value" target="_blank">
+                    <mat-icon>open_in_new</mat-icon>
+                </a>
+            </div>
         </div>
+    </div>
+    <br>
+    <div class="button_add_container center_flex">
+        <button (click)="addLink()" class="button_add" type="button" mat-raised-button color="accent">Add link<mat-icon style="margin-left: 5px;">add</mat-icon></button>
     </div>
 
     <br>
