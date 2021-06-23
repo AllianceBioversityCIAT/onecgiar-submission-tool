@@ -1,0 +1,40 @@
+<div>
+    <br>
+    <p class="readonly_text_title"><strong class="color-secondary">{{options.inputTitle}}: </strong><span
+            class="asterisk">* </span></p>
+    <p class="readonly_text">Lorem ipsum dolor sit amet.</p>
+    <br>
+
+
+    <div class="card_container">
+        <div class="custom-card" *ngFor="let item of options.savedList">
+            <div class="blue_flag"></div>
+            <div class="inputs_container">
+                <div class="input_container">
+                    <p class="readonly_text_title"><strong class="color-secondary">Citation: </strong><span
+                            class="asterisk">* </span></p>
+
+                    <input class="custom_input" type="text">
+                </div>
+
+                <div class="input_container" style="margin-top: 8px;">
+                    <p class="readonly_text_title" style="width: 65px;"><strong class="color-secondary">Link:
+                        </strong><span class="asterisk">* </span></p>
+                    <input class="custom_input" type="text">
+                </div>
+            </div>
+            <div class="delete_button center_flex">
+                <div class="delete_options">
+                    <div style="display: flex;">
+                        <mat-icon>delete</mat-icon>
+                        <span class="message">Are you sure?</span>
+                    </div>
+
+                    <button class="confirm" mat-button type="button">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+</div>

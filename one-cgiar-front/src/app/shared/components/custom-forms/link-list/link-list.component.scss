@@ -1,0 +1,93 @@
+@import '~@angular/material/theming';
+.readonly_text,.readonly_text_title{
+    margin: 0;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.card_container{
+    width: 100%;
+    .custom-card{
+        position: relative;
+        @include mat-elevation(3);
+        background-color: #ececec;
+        // // height: 40px;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+        margin-bottom: 7px;
+        // padding: 20px 30px;
+        display: flex;
+        
+        .blue_flag{
+            background-color: #014d66 ;
+            width: 13px;
+            height: 90px;
+        }
+        .inputs_container{
+            width: 100%;
+            padding: 15px 30px;
+            .input_container{
+                width: 100%;
+                display: flex;
+                // margin: 10px 0px;
+            }
+        }
+
+    }
+    .delete_button{
+        position: absolute;
+        right: 0;
+        background-color: #ec4f4f;
+        height: 100%;
+        width: 40px;
+        cursor: pointer;
+        border-radius: 5px 0px 0px 5px;
+        transition: all .3s ease-out;
+        .delete_options{
+            mat-icon{
+                color: white !important;
+                font-size: 1.5em !important;
+                margin: 3px 0px 0px 3px;
+                cursor: pointer;
+            }
+            .message,.confirm{
+                display: none;
+            }
+            .message{
+               position: relative;
+               top: 4px;
+            }
+        }
+        &:hover{
+            width: 100%;
+            transition: all .3s ease-out;
+            .delete_options{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .message,.confirm{
+                    display: block;
+                    color: white;
+                }
+            }
+
+        }
+
+
+    }
+
+}
+
+.custom_input{
+    border: none;
+    background-color: transparent;
+    outline: none;
+    border-bottom: 1px solid #aaaaaa;
+    margin-left: 3px;
+    width: 80%;
+}
+
