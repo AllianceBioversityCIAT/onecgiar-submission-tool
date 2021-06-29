@@ -50,7 +50,7 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
                 break;
         }
     } catch (error) {
-        throw new BaseError('Replication Process', 404, error.message, false)
+        throw new BaseError('Replication Process', error.status || 406, error.message, false)
     }
 }
 

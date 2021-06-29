@@ -12,7 +12,6 @@ import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { APIError, BaseError } from '../handlers/BaseError';
-import { ConceptHandler } from '../handlers/ConceptController';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
@@ -492,7 +491,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
 
     try {
         console.log(initiativeId)
-        const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId }, relations: ['stage'] });
+        const initvStg = await initvStgRepo.findOne({ where: { id: initiativeId }, relations: ['stage'] });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
 
         const stgDesc = initvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
@@ -500,16 +499,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        error = new BaseError('Validate sections', error.status || 406, error.message, false);;
-        // let e = error;
-        // if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-        //     e = new APIError(
-        //         'Bad Request',
-        //         HttpStatusCode.BAD_REQUEST,
-        //         true,
-        //         error.message
-        //     );
-        // }
+        error = new BaseError('Get stages meta - sections.', error.status || 406, error.message, false);
         return res.status(error.httpCode).json(error);
     }
 }
