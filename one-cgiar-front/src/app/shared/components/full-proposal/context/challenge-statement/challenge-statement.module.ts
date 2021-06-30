@@ -8,6 +8,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MaterialModule } from '../../../../../material.module';
 import { UtilsModule } from '../../../utils/utils.module';
+import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { UtilsModule } from '../../../utils/utils.module';
     CustomFormsModule,
     ReactiveFormsModule,
     FormsModule,
-    UtilsModule
+    UtilsModule,
+    IbdAngularComponentsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

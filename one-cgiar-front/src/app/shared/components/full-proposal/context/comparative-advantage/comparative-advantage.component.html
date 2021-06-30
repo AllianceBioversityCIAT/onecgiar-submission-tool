@@ -14,7 +14,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [underConstruction] = "true"></ibdc-save-button>
+            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
         </div>
     </form>
 </div>
