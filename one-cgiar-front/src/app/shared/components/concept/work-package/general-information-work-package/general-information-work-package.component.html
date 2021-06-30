@@ -20,6 +20,6 @@
     </div>
     <br>
     <div class="narratives-save">
-        <save-button></save-button>
+        <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
     </div>
 </form>

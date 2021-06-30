@@ -16,7 +16,7 @@
 }">
 ></custom-select>
 
-<table>
+<!-- <table>
     <tr>
         <th></th>
         <th *ngFor="let item of contribution.timeFrames">{{item.year}}</th>
@@ -29,7 +29,7 @@
         <td>High scenario</td>
         <td *ngFor="let item of contribution.timeFrames">{{item.high_scenario}}</td>
     </tr>
-</table>
+</table> -->
 <br>
 <div class="set-data-container">
     <div>
@@ -46,7 +46,7 @@
 
 <div class="set-data-container">
     <div>
-        <save-button></save-button>
+        <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
     </div>
 
 </div>

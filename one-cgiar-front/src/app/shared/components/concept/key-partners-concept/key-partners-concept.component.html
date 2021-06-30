@@ -27,7 +27,7 @@
             </button>
         </div>
         <div class="partners-save">
-            <save-button></save-button>
+            <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='key_partners_spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

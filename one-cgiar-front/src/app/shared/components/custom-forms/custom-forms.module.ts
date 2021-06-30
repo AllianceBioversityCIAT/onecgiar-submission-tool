@@ -8,7 +8,6 @@ import { SelectComponent } from './select/select.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { MultipleChoiceComponent } from './multiple-choice/multiple-choice.component';
 import { TextComponent } from './text/text.component';
-import { SaveButtonComponent } from './save-button/save-button.component';
 import { RegionsFilterPipe } from '../../pipes/regions-filter.pipe';
 import { UploadFilesComponent } from './upload-files/upload-files.component';
 import { LinkListComponent } from './link-list/link-list.component';
@@ -16,7 +15,7 @@ import { LinkListComponent } from './link-list/link-list.component';
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe, UploadFilesComponent, LinkListComponent],
+  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent,RegionsFilterPipe, UploadFilesComponent, LinkListComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -24,6 +23,6 @@ import { LinkListComponent } from './link-list/link-list.component';
     ReactiveFormsModule,
     NgxEditorModule
   ],
-  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent,UploadFilesComponent,LinkListComponent]
+  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent,UploadFilesComponent,LinkListComponent]
 })
 export class CustomFormsModule { }
