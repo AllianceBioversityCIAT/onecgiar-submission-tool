@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TextareaComponent } from './textarea/textarea.component';
 import { MaterialModule } from '@app/material.module';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from './input/input.component';
@@ -15,7 +14,7 @@ import { LinkListComponent } from './link-list/link-list.component';
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent,RegionsFilterPipe, UploadFilesComponent, LinkListComponent],
+  declarations: [InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent,RegionsFilterPipe, UploadFilesComponent, LinkListComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -23,6 +22,6 @@ import { LinkListComponent } from './link-list/link-list.component';
     ReactiveFormsModule,
     NgxEditorModule
   ],
-  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent,UploadFilesComponent,LinkListComponent]
+  exports:      [ InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent,UploadFilesComponent,LinkListComponent]
 })
 export class CustomFormsModule { }

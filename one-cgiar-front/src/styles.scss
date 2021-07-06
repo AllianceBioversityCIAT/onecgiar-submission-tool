@@ -157,3 +157,18 @@ mat-sidenav-content {
 }
 
 
+//ibdc Colors
+
+.ibdc_primary_color{
+  color: mat-color( $variable-page-primary) !important;
+}
+
+.ibdc_secondary_color{
+  color: #087b83 !important;
+}
+
+.ibdc_asterisk{
+  color: #ff0000;
+}
+
+//ibdc colors end
