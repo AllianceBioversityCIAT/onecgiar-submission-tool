@@ -79,7 +79,7 @@ export class KeyPartnersConceptComponent implements OnInit {
         }
 
         this.partnership.key_partners = resp.response.keyPartners;
-        console.log(this.partnership.key_partners);
+        // console.log(this.partnership.key_partners);
         this.showTable = this.partnership.key_partners.length ? true : false;
         // console.log(this.partnership.key_partners.length);
         if(resp.response?.partnership){

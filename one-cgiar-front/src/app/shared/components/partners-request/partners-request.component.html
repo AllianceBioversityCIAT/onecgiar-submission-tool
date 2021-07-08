@@ -31,7 +31,7 @@
         </div>
         <div class="col-12">
                         
-            <custom-select [options]="
+            <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Headquarter country',
@@ -39,15 +39,13 @@
              formControlId:'hqCountryIso',
              selectItemName:'name',
              selectItemId:'isoAlpha2',
-             attributeNameToSearch:'name',
              service:{
                  serviceTS:this._initiativesService,
                  functionName:'getCLARISACountries',
-                 objectName:'countries',
                  frontendSearchAttribute:'name'
              }
             }">
-            ></custom-select>
+            ></ibdc-select>
 
             <!-- <custom-multiple-choice [options]="{
                 required:true,

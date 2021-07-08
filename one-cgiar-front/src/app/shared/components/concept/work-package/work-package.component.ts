@@ -91,30 +91,4 @@ export class WorkPackageComponent implements OnInit {
     });
   }
 
-
-  // getCLARISARegions(){
-  //   this._initiativesService.getCLARISARegions().subscribe(resp=>{
-  //     console.log('%cCLARISA regions','background: #222; color: #ffff00');
-  //     // console.log(resp);
-  //     this._dataControlService.regionsList = resp.response.regions;
-  //   })
-  // }
-
-  // getCLARISACountries(){
-  //   this._initiativesService.getCLARISACountries().subscribe(resp=>{
-  //     console.log('%cCLARISA countriesList','background: #222; color: #ffff00');
-  //     // console.log(resp);
-  //     this._dataControlService.countriesList = resp.response.countries;
-  //     this._dataControlService.countriesAndRegionsloaded$.emit();
-  //   },
-  //   err=>{
-  //     this._dataControlService.countriesAndRegionsloaded$.emit();
-  //   })
-  // }
-
-
-
-
-
-
 }
