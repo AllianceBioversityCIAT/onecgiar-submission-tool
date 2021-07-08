@@ -9,6 +9,14 @@
                     description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service provider:'}">
                 </ibdc-textarea>
             </div>
+            <div class="col-sm-12">
+                <ibdc-link-list [options]="{
+                    inputTitle:'Provide any additional support document(s)',
+                    savedList: []
+                }"></ibdc-link-list>
+            </div>
+
+
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
