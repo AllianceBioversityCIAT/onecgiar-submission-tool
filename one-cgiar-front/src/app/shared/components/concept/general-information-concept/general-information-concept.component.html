@@ -47,7 +47,7 @@
 
             <div class="col-sm-12" *ngIf="showFormActionArea">
 
-                <custom-select [options]="
+                <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Primary CGIAR Action Area',
@@ -58,9 +58,11 @@
              selectItemName:'index_name',
              selectItemId:'id'
             }">
-                    ></custom-select>
+                    ></ibdc-select>
 
             </div>
+
+
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>

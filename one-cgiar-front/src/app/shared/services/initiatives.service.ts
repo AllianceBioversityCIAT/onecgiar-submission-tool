@@ -114,10 +114,10 @@ export class InitiativesService {
   // Query to get CLARISA Countries By filter
   getCLARISAInstitutions(filterText: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
-      resp.response.institutions.map(institution => {
+      resp.response.regions.map(institution => {
         institution.acronym_name = `${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
       })
-      return resp;
+      return  resp.response.regions;
     }));;
   }
   
