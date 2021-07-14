@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { InitiativesService } from '../../../../services/initiatives.service';
 
 @Component({
   selector: 'app-learning-fpe-and-ia',
@@ -6,10 +8,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./learning-fpe-and-ia.component.scss']
 })
 export class LearningFpeAndIaComponent implements OnInit {
-
-  constructor() { }
+  sectionForm: FormGroup;
+  constructor(
+    public _initiativesService:InitiativesService
+  ) {
+    this.sectionForm = new FormGroup({
+      challengeStatement: new FormControl(''),
+    });
+   }
 
   ngOnInit(): void {
+  }
+
+    upserInfo(){
+    
   }
 
 }

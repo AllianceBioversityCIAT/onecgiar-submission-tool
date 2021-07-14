@@ -1,4 +1,22 @@
 <div class="section-container animate__animated animate__fadeIn">
+
     <section-title name="Participatory design process"></section-title>
-    <under-construction-page></under-construction-page>
+    <form [formGroup]="sectionForm" (ngSubmit)="upserInfo()" class="general-information-form">
+
+        <div class="row">
+            <div class="col-sm-12" >
+                <ibdc-textarea
+                    [options]="{inputTitle:'Participatory design process', form:sectionForm, formControlName:'challengeStatement', maxWords:500,
+                    description:'This section and annexes should show partner support statements + links to evidence, e.g. to country or regional development strategies or action plans, details on process Concise narrative and evidence that the research and innovations proposed is demand-driven (specifically that it has emerged from stakeholder discussion and co-design, including therelevant Investment Advisory Group) and consistent with country/region/global stakeholderpriorities.'}">
+                </ibdc-textarea>
+            </div>
+        </div>
+
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+        </div>
+    </form>
 </div>
+

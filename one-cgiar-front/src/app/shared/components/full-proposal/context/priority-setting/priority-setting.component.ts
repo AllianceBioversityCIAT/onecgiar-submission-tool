@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { InitiativesService } from '../../../../services/initiatives.service';
 
 @Component({
   selector: 'app-priority-setting',
@@ -6,10 +8,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./priority-setting.component.scss']
 })
 export class PrioritySettingComponent implements OnInit {
-
-  constructor() { }
+  sectionForm: FormGroup;
+  constructor(
+    public _initiativesService:InitiativesService
+  ) {
+    this.sectionForm = new FormGroup({
+      challengeStatement: new FormControl(''),
+    });
+   }
 
   ngOnInit(): void {
+  }
+  upserInfo(){
+    
   }
 
 }
