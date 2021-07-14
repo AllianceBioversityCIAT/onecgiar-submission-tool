@@ -36,24 +36,19 @@ export const getInitiatives = async (req: Request, res: Response) => {
     let initiatives,
         initvSQL = ` 
         SELECT
-            initvStg.id AS initvStgId,
-            stage.description AS currentStage,
-            CONCAT("Stage ", stage.id,': ',stage.description) AS currentStageName,
-            stage.id AS currentStageId,
-            initiative.name AS initiativeName,
-            initvStg.active AS initvStageIsActive,
-            IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS initvStageStatus,
-            (SELECT id FROM stages WHERE active = true) AS activeStageId,
-            (SELECT description FROM stages WHERE active = true) AS activeStageName,
-
-            (SELECT userId FROM initiatives_by_users WHERE userId = :userId AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiative,
-            (SELECT roleId FROM initiatives_by_users WHERE userId = :userId AND active = TRUE AND initiativeId = initiative.id LIMIT 1) AS userInitiativeRole
-
+                initvStg.id AS initvStgId,
+                initiative.id AS id,
+                initiative.name AS name,
+                IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+                (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+                (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+                initvStg.active AS active,
+                stage.id AS stageId,
+                CONCAT("Stage ", stage.id,': ',stage.description) AS description
         FROM
-            initiatives initiative
+                initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
-        
         `;
 
     try {
@@ -62,6 +57,8 @@ export const getInitiatives = async (req: Request, res: Response) => {
             { userId },
             {}
         );
+        // let initvs:Initiatives = new Initiatives();
+        // initvs = await queryRunner.connection.query(query, parameters);
         initiatives = await queryRunner.connection.query(query, parameters);
         let initiativesIds = initiatives.map(init => init.initvStgId);
         if (initiatives.length == 0)

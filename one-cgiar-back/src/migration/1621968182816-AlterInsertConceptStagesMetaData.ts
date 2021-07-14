@@ -9,7 +9,7 @@ export class AlterInsertConceptStagesMetaData1621968182816 implements MigrationI
         const stageRepo = getRepository(Stages);
         await queryRunner.query(`TRUNCATE stages_meta`);
 
-        const concptStage = await stageRepo.findOne({ where: { active: true } });
+        const concptStage = await stageRepo.findOne({ where: { description: 'Concept' } });
 
         const conceptEntitiesMeta = stageMetaRepo.create([
             {

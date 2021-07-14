@@ -1,4 +1,4 @@
-import { APIError } from "../handlers/BaseError";
+import { APIError, BaseError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
 import { getConnection, getRepository, Like, QueryFailedError } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
@@ -27,22 +27,17 @@ const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
  */
 export const getClaActionAreas = async () => {
     try {
+        console.log(process.env['clarisa_user'], process.env['clarisa_password'], clarisaHost)
         const actionAreas = await axios.get(clarisaHost + 'action-areas', {
             auth: {
                 username: process.env['clarisa_user'],
                 password: process.env['clarisa_password']
             }
         });
-        // res.json(new ResponseHandler('CLARISA action areas.', { actionAreas: actionAreas.data }));
         return actionAreas.data;
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        throw new BaseError('CLARISA:Action Areas', 406, error.message, true);
     }
 
 }

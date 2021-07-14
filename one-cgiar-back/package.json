@@ -6,12 +6,12 @@
     "scripts": {
         "build": "tsc",
         "start": "set debug=* && npx tsnd ./src/index.ts --respawn --transpileOnly",
-        "start-dev": "nodemon",
+        "start:dev": "nodemon",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
-        "migration:create": "npm run typeorm -- migration:create -n"
+        "migrations:create": "npm run typeorm -- migration:create -n"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
@@ -21,6 +21,7 @@
         "axios": "^0.21.1",
         "bcryptjs": "^2.4.3",
         "class-validator": "^0.12.2",
+        "class-validator-jsonschema": "^3.0.1",
         "cors": "^2.8.5",
         "dotenv": "^8.2.0",
         "exceljs": "^4.2.1",
