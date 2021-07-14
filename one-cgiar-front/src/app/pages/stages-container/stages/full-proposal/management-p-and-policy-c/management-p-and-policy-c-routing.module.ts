@@ -20,6 +20,10 @@ const routes: Routes = [
         path: 'open-and-fair-data-assets',
         loadChildren: () => import('../../../../../shared/components/full-proposal/management-p-and-policy-c/open-and-fair-data-assets/open-and-fair-data-assets.module').then(mod => mod.OpenAndFAIRDataAssetsModule),
       },
+      {
+        path: 'risk-assessment',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/management-p-and-policy-c/risk-assessment/risk-assessment.module').then(mod => mod.RiskAssessmentModule),
+      },
     ]
   }
 ];

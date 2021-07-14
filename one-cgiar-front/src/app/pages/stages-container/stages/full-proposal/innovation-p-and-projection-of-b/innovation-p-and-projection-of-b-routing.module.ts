@@ -10,10 +10,6 @@ const routes: Routes = [
       {
         path: 'innovation-packages-and-scaling-readiness-strategy',
         loadChildren: () => import('../../../../../shared/components/full-proposal/innovation-p-and-projection-of-b/innovation-p-and-scaling-rs/innovation-p-and-scaling-rs.module').then(mod => mod.InnovationPAndScalingRsModule),
-      },
-      {
-        path: 'projection-of-benefits',
-        loadChildren: () => import('../../../../../shared/components/full-proposal/innovation-p-and-projection-of-b/projection-of-benefits/projection-of-benefits.module').then(mod => mod.ProjectionOfBenefitsModule),
       }
     ]
   }
