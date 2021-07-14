@@ -8,9 +8,8 @@ import { CustomFormsModule } from '../../../custom-forms/custom-forms.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { UtilsModule } from '../../../utils/utils.module';
-import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
-
-
+// import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 @NgModule({
   declarations: [ComparativeAdvantageComponent],
   imports: [
