@@ -11,11 +11,12 @@ import { TextComponent } from './text/text.component';
 import { SaveButtonComponent } from './save-button/save-button.component';
 import { RegionsFilterPipe } from '../../pipes/regions-filter.pipe';
 import { UploadFilesComponent } from './upload-files/upload-files.component';
+import { LinkListComponent } from './link-list/link-list.component';
 
 
 
 @NgModule({
-  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe, UploadFilesComponent],
+  declarations: [TextareaComponent, InputComponent, SelectComponent, MultipleChoiceComponent, TextComponent, SaveButtonComponent,RegionsFilterPipe, UploadFilesComponent, LinkListComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -23,6 +24,6 @@ import { UploadFilesComponent } from './upload-files/upload-files.component';
     ReactiveFormsModule,
     NgxEditorModule
   ],
-  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent,UploadFilesComponent]
+  exports: [TextareaComponent, InputComponent, SelectComponent,MultipleChoiceComponent, TextComponent, SaveButtonComponent,UploadFilesComponent,LinkListComponent]
 })
 export class CustomFormsModule { }

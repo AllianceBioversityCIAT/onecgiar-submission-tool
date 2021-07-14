@@ -67,31 +67,31 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Challenge statement',
-            route:'challenge-statement'
+            route:'context/challenge-statement'
           },
           {
             title:'Comparative Advantage',
-            route:'comparative-advantage'
+            route:'context/comparative-advantage'
           },
           {
             title:'Measurable objectives',
-            route:'measurable-objectives'
+            route:'context/measurable-objectives'
           },
           {
             title:'Learning from prior evaluation and IA',
-            route:'learning-fpe-and-ia'
+            route:'context/learning-fpe-and-ia'
           },
           {
             title:'Priority setting',
-            route:'priority-setting'
+            route:'context/priority-setting'
           },
           {
             title:'Risk assessment',
-            route:'risk-assessment'
+            route:'context/risk-assessment'
           },
           {
             title:'Participatory design process',
-            route:'participatory-design-process'
+            route:'context/participatory-design-process'
           },
         ]
       },
@@ -100,15 +100,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Management plan',
-            route:'none'
+            route:'management-plans-and-policy-compliance/management-plan'
           },
           {
             title:'Ethics',
-            route:'none'
+            route:'management-plans-and-policy-compliance/ethics'
           },
           {
             title:'Open and FAIR data assets',
-            route:'none'
+            route:'management-plans-and-policy-compliance/open-and-fair-data-assets'
           }
         ]
       },
@@ -117,7 +117,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'General information',
-            route:'none'
+            route:'work-packages/general-information'
           },
         ]
       },
@@ -126,11 +126,11 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Innovation Packages and Scaling Readiness Strategy',
-            route:'none'
+            route:'innovation-packages-and-projection-of-benefits/innovation-packages-and-scaling-readiness-strategy'
           },
           {
             title:'Projection of benefits',
-            route:'none'
+            route:'innovation-packages-and-projection-of-benefits/projection-of-benefits'
           },
         ]
       },
@@ -139,15 +139,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Full Initiative TOC',
-            route:'none'
+            route:'theories-of-change/full-initiative-TOC'
           },
           {
             title:'Work Package TOCs',
-            route:'none'
+            route:'theories-of-change/work-package-TOC'
           },
           {
             title:'Impact strategies',
-            route:'none'
+            route:'theories-of-change/impact-strategies'
           },
         ]
       },
@@ -160,15 +160,15 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Initiative Team',
-            route:'none'
+            route:'people-and-culture/initiative-Team'
           },
           {
             title:'Gender, Diversity and Inclusion',
-            route:'none'
+            route:'people-and-culture/gender-diversity-inclusion'
           },
           {
             title:'Capacity development',
-            route:'none'
+            route:'people-and-culture/capacity-development'
           },
         ]
       },
@@ -177,7 +177,7 @@ export class MenuComponent implements OnInit {
         subSections:[
           {
             title:'Budget',
-            route:'none'
+            route:'financial-resources/budget'
           },
         ]
       },

@@ -60,12 +60,14 @@ mat-list-item {
         position: absolute;
         right: 0;
     }
-    button.valid {
-        color: #4caf50;
-    }
-    button.invalid {
-        color: #c5c5c5;
-    }
+
+}
+
+button.valid {
+    color: #4caf50;
+}
+button.invalid {
+    color: #c5c5c5;
 }
 
 mat-list-item:focus {

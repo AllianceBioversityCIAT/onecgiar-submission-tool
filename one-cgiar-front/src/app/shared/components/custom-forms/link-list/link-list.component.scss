@@ -1,0 +1,148 @@
+@import '~@angular/material/theming';
+.readonly_text,.readonly_text_title{
+    margin: 0;
+}
+
+.asterisk {
+    color: #ff0000;
+}
+
+.card_container{
+    @include mat-elevation(3);
+    padding: 10px;
+    width: 100%;
+    max-height: 500px;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
+    .custom-card{
+        position: relative;
+        @include mat-elevation(3);
+        background-color: #ececec;
+        // // height: 40px;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+        margin-bottom: 7px;
+        // padding: 20px 30px;
+        display: flex;
+        
+        .blue_flag{
+            background-color: #014d66 ;
+            width: 13px;
+            height: 90px;
+        }
+        .inputs_container{
+            width: 100%;
+            padding: 15px 30px;
+            .input_container{
+                width: 100%;
+                display: flex;
+                // margin: 10px 0px;
+            }
+        }
+
+    }
+    .open_link_button{
+        position: absolute;
+        cursor: pointer;
+        right: 45px;
+        background-color: #014d66;   
+        height: 40px;
+        width: 40px;
+        top: 50%;
+        border-radius: 5px;
+        transform: translateY(-50%);
+        mat-icon{
+            color: white !important;
+            font-size: 1.5em !important;
+            margin: 3px 0px 0px 3px;
+            cursor: pointer;
+        }
+    }
+    .delete_button{
+        z-index: 10;
+        position: absolute;
+        right: 0;
+        background-color: #ec4f4f;
+        height: 100%;
+        width: 40px;
+        cursor: pointer;
+        border-radius: 5px 0px 0px 5px;
+        transition: all .3s ease-out;
+        .delete_options{
+            mat-icon{
+                color: white !important;
+                font-size: 1.5em !important;
+                margin: 3px 0px 0px 3px;
+                cursor: pointer;
+            }
+            .message,.confirm{
+                display: none;
+            }
+            .message{
+               position: relative;
+               top: 4px;
+            }
+        }
+        &:hover{
+            width: 50%;
+            transition: all .3s ease-out;
+            .delete_options{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .message,.confirm{
+                    display: block;
+                    color: white;
+                }
+            }
+
+        }
+
+
+    }
+}
+
+.custom_input{
+    border: none;
+    background-color: transparent;
+    outline: none;
+    border-bottom: 1px solid #aaaaaa;
+    margin-left: 3px;
+    width: calc(100% - 160px);
+}
+
+
+.button_add_container{
+    width: 100%;
+    .button_add{
+        width: 70%;
+    }
+}
+
+
+
+  /* width */
+  .card_container::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 30px;
+  }
+  
+  /* Track */
+  .card_container::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 30px;
+  }
+   
+  /* Handle */
+  .card_container::-webkit-scrollbar-thumb {
+    background: #025c7a; 
+    border-radius: 30px;
+  }
+  
+  /* Handle on hover */
+  .card_container::-webkit-scrollbar-thumb:hover {
+    background: #014d66; 
+    border-radius: 30px;
+  }
