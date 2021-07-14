@@ -1,4 +1,29 @@
 <div class="section-container animate__animated animate__fadeIn">
+
     <section-title name="Priority setting" ></section-title>
-    <under-construction-page></under-construction-page>
+    <form [formGroup]="sectionForm" (ngSubmit)="upserInfo()" class="general-information-form">
+
+        <div class="row">
+            <div class="col-sm-12" >
+                <ibdc-textarea
+                    [options]="{inputTitle:'Priority Setting', form:sectionForm, formControlName:'challengeStatement', maxWords:500,
+                    description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-sm-12">
+                <ibdc-link-list [options]="{
+                    inputTitle:'Provide any additional support document(s)',
+                    descriptions:'Add urls',
+                    savedList: []
+                }"></ibdc-link-list>
+            </div>
+        </div>
+
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+        </div>
+    </form>
 </div>
+

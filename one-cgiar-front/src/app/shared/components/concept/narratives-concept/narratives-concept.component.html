@@ -2,28 +2,28 @@
     <strong class="narratives-title color-primary-3">Narratives</strong>
     <form [formGroup]="narrativesForm" (ngSubmit)="updateNarratives()" class="narratives-form" *ngIf="showForm">
 
-        <custom-textarea  
+        <ibdc-textarea  
         [options]="{form:narrativesForm,formControlName:'challenge',maxWords:500,inputTitle:'Challenge statement',editText:localEditText,
          description:'Concise statement on the global and regional challenge the Initiative will tackle, and why science/research is needed'}">
-        </custom-textarea>
+        </ibdc-textarea>
 
-        <custom-textarea  
+        <ibdc-textarea  
         [options]="{form:narrativesForm,formControlName:'objectives',maxWords:500,inputTitle:'Measurable objectives',editText:localEditText,
          description:'Concise, preferably quantitative, objective statement'}">
-        </custom-textarea>
+        </ibdc-textarea>
         
-        <custom-textarea  
+        <ibdc-textarea  
         [options]="{form:narrativesForm,formControlName:'results',maxWords:250,inputTitle:'Results',editText:localEditText,
          description:'Expanding if/where needed on the objective statement, to give intended outcomes relevant to the challenge, plus intended impacts mapped to 5 CGIAR SDG-related Impact Areas'}">
-        </custom-textarea>
+        </ibdc-textarea>
 
-        <custom-textarea  
+        <ibdc-textarea  
         [options]="{form:narrativesForm,formControlName:'highlights',maxWords:250,inputTitle:'Highlights', editText:localEditText,
          description:'Brief note to highlight any significant choices and/or original contribution in terms of challenge, objective, results and/or activities'}">
-        </custom-textarea>
+        </ibdc-textarea>
 
         <div class="narratives-save">
-            <save-button></save-button>
+            <ibdc-save-button [options]="{ readOnlyVariable: this.initiativesSvc.initiative.readonly}" ></ibdc-save-button>
         </div>
         <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='narratives'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
     </form>

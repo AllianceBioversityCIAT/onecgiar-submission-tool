@@ -10,11 +10,10 @@
          <div class="modal-container-1 animate__animated animate__fadeIn" *ngIf="modalOpacity" style.opacity="{{modalOpacity?'1':'0'}}">
 <div class="container">
     <span style="position: relative;">
-        <custom-select 
+        <ibdc-select
         [options]="
         {
          required:true,
-         readonly:false,
          inputTitle:'Select key partner',
          form:keyPartnersForm,
          formControlId:'key_partner_id',
@@ -26,18 +25,17 @@
          service:{
             serviceTS:this._initiativesService,
             functionName:'getCLARISAInstitutions',
-            objectName:'institutions',
             frontendSearchAttribute:'acronym_name'
         }
         }">
-        ></custom-select>
+        ></ibdc-select>
     </span>
 
     <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
         add it by clicking here.</p>
 
-    <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
-    inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></custom-textarea>
+    <ibdc-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
+    inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></ibdc-textarea>
 
         <br><br><br><br>
 </div>

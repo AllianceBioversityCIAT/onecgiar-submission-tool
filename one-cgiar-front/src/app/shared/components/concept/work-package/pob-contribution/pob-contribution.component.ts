@@ -21,7 +21,7 @@ export class PobContributionComponent implements OnInit {
   constructor(
     public _requests: RequestsService,
     public dialog: MatDialog,
-    private _initiativesService:InitiativesService,
+    public _initiativesService:InitiativesService,
     private _dataControlService:DataControlService,
     private _interactionsService:InteractionsService
   ) {

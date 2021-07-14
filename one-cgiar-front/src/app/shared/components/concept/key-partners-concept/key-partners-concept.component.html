@@ -1,10 +1,10 @@
 <div class="partners-container animate__animated animate__fadeIn">
     <strong class="partners-title color-primary-3">Key partners</strong>
     <form [formGroup]="partnershipForm" class="partners-form" (submit)="savePartnership()" *ngIf="showForm">
-        <custom-textarea 
+        <ibdc-textarea 
         [options]="{ form:partnershipForm,formControlName:'comparativeAdvantage',maxWords:250,inputTitle:'Comparative advantage',
          description:'Evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service providers'}">
-        </custom-textarea>
+        </ibdc-textarea>
 
         <table class="key_partners_table">
             <tr class="center">
@@ -27,7 +27,7 @@
             </button>
         </div>
         <div class="partners-save">
-            <save-button></save-button>
+            <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='key_partners_spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

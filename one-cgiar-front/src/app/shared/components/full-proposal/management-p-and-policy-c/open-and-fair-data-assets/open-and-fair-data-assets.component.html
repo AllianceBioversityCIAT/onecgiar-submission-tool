@@ -1,4 +1,29 @@
 <div class="section-container animate__animated animate__fadeIn">
     <section-title name="Open and FAIR data assets" ></section-title>
-    <under-construction-page></under-construction-page>
+    <ibdc-textarea
+    [options]="{inputTitle:'Provide details', description:'Please provide details on how you will implement the Open and FAIR Data Assets Policy and specify any data asset management requirements, e.g. support and tools'
+    , form:openAndFairDataAssetsForm, formControlName:'details',maxWords:250}">
+    </ibdc-textarea>
+
+
+    <ibdc-terms-or-policies
+    [options]="{
+        readOnlyVariable:false,
+        text:'Researchers  involved in the implementation of this Initiative shall adhere to the terms of the Open and FAIR Data Assets Policy.',
+        inputTitle:'Terms'
+    }"
+    ></ibdc-terms-or-policies>
+
+    <ibdc-terms-or-policies
+    [options]="{
+        readOnlyVariable:false,
+        text:'Researchers  involved in the implementation of this Initiative shall adhere to the terms of the Open and FAIR Data Assets Policy. Researchers  involved in the implementation of this Initiative shall adhere to the terms of the Open and FAIR Data Assets Policy. Researchers  involved in the implementation of this Initiative shall adhere to the terms of the Open and FAIR Data Assets Policy. Researchers  involved in the implementation of this Initiative shall adhere to the terms of the Open and FAIR Data Assets Policy.',
+        inputTitle:'Terms'
+    }"
+    ></ibdc-terms-or-policies>
+
+    <div class="general-information-save">
+        <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+    </div>
+
 </div>

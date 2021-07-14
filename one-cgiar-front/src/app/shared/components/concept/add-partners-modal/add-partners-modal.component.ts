@@ -36,14 +36,6 @@ export class AddPartnersModalComponent implements OnInit {
     this.initialSearchText =this.data.key_partner_name;
     this.spinnerService.show("institutions_spinner");
     this.toDisableList = this.data.toDisableList;
-    // console.log(this.toDisableList);
-    for (let index = 0; index < this.toDisableList.length; index++) {
-      if (this.toDisableList[index]==this.keyPartnersForm.value.key_partner_id) {
-        this.toDisableList[index]=-1;
-      }
-      // this.toDisableList[index]=-1;
-    }
-    // console.log(this.toDisableList);
   }
 
   OnClickNo(){

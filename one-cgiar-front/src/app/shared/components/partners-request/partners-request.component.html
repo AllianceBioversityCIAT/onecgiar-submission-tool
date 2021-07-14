@@ -1,19 +1,19 @@
 <div class="container">
     <div class="row" *ngIf="showForm">
         <div class="col-4">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'acronym',inputTitle:'Acronym',required:false}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
         <div class="col-8">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'name',inputTitle:'Name'}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
         <!-- <div class="col-12">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'acronym_cgiar_entity',inputTitle:'Acronym of cgiar entity'}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div> -->
         <div class="col-6">
             
@@ -31,7 +31,7 @@
         </div>
         <div class="col-12">
                         
-            <custom-select [options]="
+            <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Headquarter country',
@@ -39,15 +39,13 @@
              formControlId:'hqCountryIso',
              selectItemName:'name',
              selectItemId:'isoAlpha2',
-             attributeNameToSearch:'name',
              service:{
                  serviceTS:this._initiativesService,
                  functionName:'getCLARISACountries',
-                 objectName:'countries',
                  frontendSearchAttribute:'name'
              }
             }">
-            ></custom-select>
+            ></ibdc-select>
 
             <!-- <custom-multiple-choice [options]="{
                 required:true,
@@ -65,32 +63,32 @@
                }"></custom-multiple-choice> -->
 
 
-            <!-- <custom-textarea  
+            <!-- <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'hqCountryIso',inputTitle:'Headquarter country'}">
-            </custom-textarea> -->
+            </ibdc-textarea> -->
         </div>
         <div class="col-12">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'websiteLink',inputTitle:'Website',required:false}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
         <!-- <div class="user_cont">
             <h3 class="user_data_title background-color-primary">User information</h3>
             <div class="user_shadow row">
                 <div class="col-6">
-                    <custom-textarea  
+                    <ibdc-textarea  
                     [options]="{form:partnersRequestForm,formControlName:'externalUserMail',inputTitle:'User Mail',required:false, readonly:true}">
-                    </custom-textarea>
+                    </ibdc-textarea>
                 </div>
                 <div class="col-6">
-                    <custom-textarea  
+                    <ibdc-textarea  
                     [options]="{form:partnersRequestForm,formControlName:'externalUserName',inputTitle:'User Name',required:false, readonly:true}">
-                    </custom-textarea>
+                    </ibdc-textarea>
                 </div>
                 <div class="col-12">
-                    <custom-textarea  
+                    <ibdc-textarea  
                     [options]="{form:partnersRequestForm,formControlName:'externalUserComments',inputTitle:'User comments',required:false}">
-                    </custom-textarea>
+                    </ibdc-textarea>
                 </div>
                 <br><br>
             </div>

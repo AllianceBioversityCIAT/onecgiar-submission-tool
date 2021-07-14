@@ -5,9 +5,9 @@
         *ngIf="showForm">
         <div class="row">
             <div class="col-sm-12" >
-                <custom-textarea
+                <ibdc-textarea
                     [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
-                </custom-textarea>
+                </ibdc-textarea>
             </div>
 
             <div class="col-sm-6">
@@ -47,7 +47,7 @@
 
             <div class="col-sm-12" *ngIf="showFormActionArea">
 
-                <custom-select [options]="
+                <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Primary CGIAR Action Area',
@@ -58,15 +58,17 @@
              selectItemName:'index_name',
              selectItemId:'id'
             }">
-                    ></custom-select>
+                    ></ibdc-select>
 
             </div>
+
+
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <save-button></save-button>
+            <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
             <!-- [underConstruction] = "_dataControlService.general_information.secondLeadEmail == 'Deputy email' " -->
         </div>
     </form>

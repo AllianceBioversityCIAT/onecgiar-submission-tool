@@ -32,9 +32,9 @@ const routes: Routes = [
         loadChildren: () => import('../../../../../shared/components/full-proposal/context/priority-setting/priority-setting.module').then(mod => mod.PrioritySettingModule),
       },
       {
-        path: 'risk-assessment',
-        loadChildren: () => import('../../../../../shared/components/full-proposal/context/risk-assessment/risk-assessment.module').then(mod => mod.RiskAssessmentModule),
-      },
+        path: 'projection-of-benefits',
+        loadChildren: () => import('../../../../../shared/components/full-proposal/context/projection-of-benefits/projection-of-benefits.module').then(mod => mod.ProjectionOfBenefitsModule),
+      }
     ],
   }
 ];

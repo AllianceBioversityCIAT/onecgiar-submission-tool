@@ -54,7 +54,6 @@ export class PartnersRequestComponent implements OnInit {
       this.setFormValue();
       this.getInstitutionsTypes();
       this.getInitiativeName();
-      // this.getCLARISAInstitutions()
   }
 
 
@@ -65,14 +64,6 @@ export class PartnersRequestComponent implements OnInit {
       this.institutionTypes = resp.response?.institutionsTypes;
     })
   }
-
-  // getCLARISAInstitutions(){
-  //   this._initiativesService.getCLARISAInstitutions('').subscribe(resp=>{
-  //     console.log('%cgetCLARISAInstitutions','background: #222; color: #ffff00');
-  //     console.log(resp);
-  //     this.countriesList = resp.response?.institutions;
-  //   })
-  // }
 
   getInitiativeName(){
     this._conceptService.getConcept(this._initiativesService.initvStgId).subscribe(resp=>{
