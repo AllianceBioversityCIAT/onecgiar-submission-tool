@@ -70,15 +70,11 @@ export class MenuComponent implements OnInit {
             route:'context/challenge-statement'
           },
           {
-            title:'Comparative Advantage',
-            route:'context/comparative-advantage'
-          },
-          {
-            title:'Measurable objectives',
+            title:'Measurable three-year outcomes',
             route:'context/measurable-objectives'
           },
           {
-            title:'Learning from prior evaluation and IA',
+            title:'Learning from prior evaluations and Impact Assessments (IA)',
             route:'context/learning-fpe-and-ia'
           },
           {
@@ -86,12 +82,20 @@ export class MenuComponent implements OnInit {
             route:'context/priority-setting'
           },
           {
-            title:'Risk assessment',
-            route:'context/risk-assessment'
+            title:'Comparative Advantage',
+            route:'context/comparative-advantage'
           },
+          // {
+          //   title:'Risk assessment',
+          //   route:'context/risk-assessment'
+          // },
           {
             title:'Participatory design process',
             route:'context/participatory-design-process'
+          },
+          {
+            title:'Projection of benefits',
+            route:'context/projection-of-benefits'
           },
         ]
       },
@@ -127,11 +131,7 @@ export class MenuComponent implements OnInit {
           {
             title:'Innovation Packages and Scaling Readiness Strategy',
             route:'innovation-packages-and-projection-of-benefits/innovation-packages-and-scaling-readiness-strategy'
-          },
-          {
-            title:'Projection of benefits',
-            route:'innovation-packages-and-projection-of-benefits/projection-of-benefits'
-          },
+          }
         ]
       },
       {
