@@ -22,10 +22,6 @@ import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { getClaActionAreas, getClaCountries, getClaRegions } from './Clarisa';
 
-
-// import path from 'path';
-
-// const parentDir = path.resolve(process.cwd(), '../');
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
 

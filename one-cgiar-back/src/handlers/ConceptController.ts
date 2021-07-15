@@ -1,108 +1,95 @@
-import { getConnection, getRepository } from "typeorm";
 import _ from "lodash";
-import { InitiativesByStages } from "../entity/InititativesByStages";
-import { validatedSection } from "../utils/section-validation";
+import { getRepository } from "typeorm";
+import { getClaActionAreas } from "../controllers/Clarisa";
+import { ConceptInfo } from "../entity/ConceptInfo";
 import { ConceptSections } from "../interfaces/ConceptSectionsInterface";
+import { BaseError } from "./BaseError";
+import { ProposalHandler } from "./FullProposalController";
+import { ConceptValidation } from "./validation/ConceptSectionValidation";
 
 
-export class ConceptHandler {
+export class ConceptHandler extends ConceptValidation {
 
-    public initvStgId_;
-    private intvStage_;
-    private stageId_;
+    public sections: ConceptSections = <ConceptSections>{
+        general_information: null,
+        narratives: null,
+        initial_theory_of_change: null,
+        work_packages: null,
+        key_partners: null
+    };
+
+
     private metaData_;
-    public sections: ConceptSections;
-    private queryRunner = getConnection().createQueryRunner();
-    private initvStgRepo = getRepository(InitiativesByStages);
 
-
-    constructor(initvStgId: string) {
-        this.initvStgId_ = initvStgId;
-    }
-
+    /**
+     * @returns stage section metadata
+     */
     public get metaData() {
-        this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT id FROM stages WHERE description = 'Concept')`);
-        return this.metaData_;
-    }
-    public get stageId() {
-        this.stageId_ = this.queryRunner.query(`SELECT id FROM stages WHERE description = 'Concept'`);
-        return this.stageId_;
-    }
-    public get intvStage() {
-        this.intvStage_ = this.queryRunner.query(`SELECT * FROM initiatives_by_stages WHERE id = ${this.initvStgId_} AND stageId = (SELECT id FROM stages WHERE description = 'Concept')`);
-        return this.intvStage_;
-    }
 
-
-    /**
-     * 
-     * @param initvStgId 
-     * @returns { sections }
-     */
-    async getConceptData(initvStgId: string) {
         try {
-            // add general information data 
-            this.sections.general_information = await this.getGeneralInformation(initvStgId);
-
-            return this.sections;
-
+            this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})`);
+            return this.metaData_;
         } catch (error) {
-            throw new Error(error);
+            throw new BaseError('Get Metadata', 406, error.message, false)
         }
+
     }
 
-    /**
-     * 
-     * @returns isMissing boolean
-     */
-    async validateCompletness() {
-        //  get current intititve by stage
-        const currentInitvStg = await this.initvStgRepo.findOne({ where: { id: this.initvStgId_ }, relations: ['stage', 'initiative'] });
-        // get complited / valid sections of stage data
-        const stageDesc = currentInitvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
-        const validatedSections = await validatedSection(currentInitvStg.id, stageDesc);
-        // validate if any missing section
-        const missingSctn = (element) => element == false || element == 0;
-        const isMissing = Object.values(validatedSections).some(missingSctn);
-        return !isMissing;
-    }
+
+
 
     /***** REPLICATION PROCESS - forward *******/
 
     async forwardStage() {
         try {
 
-            const initvStgRepo = getRepository(InitiativesByStages);
-            // current intiative by stage entity
-            const curruentInitvByStg = await this.intvStage;
+            // // current intiative by stage entity
+            // const curruentInitvByStg = await this.initvStage;
+            // // get full proposal stage id
+            // const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
+            // // get mapping metadata from concept
+            // const mppMtSql = `
+            //     SELECT
+            //         stg_mt.id, stg_mt.stage_name, stg_mt.group_by,
+            //     (SELECT to_meta_id FROM mapping_metadata WHERE from_meta_id = stg_mt.id) as map_to,
+            // (SELECT group_by FROM stages_meta WHERE id = map_to) as map_to_group,
+            //     (SELECT stageId FROM stages_meta WHERE id = map_to) as map_from,
+            //         (SELECT stage_name FROM stages_meta WHERE id = map_to) as map_from_group
+            // FROM
+            // stages_meta stg_mt
+            // WHERE stageId = ${curruentInitvByStg[0].stageId}
+            // GROUP BY group_by
+            //     `;
+            // // mapping metada 
+            // // const mappingSections = await this.queryRunner.query(mppMtSql);
 
-            const mappingMetada = await this.queryRunner.query(`SELECT from_meta_id, to_meta_id FROM mapping_metadata WHERE from_stage_name LIKE 'Concept' AND to_stage_name LIKE 'Full Proposal'`);
-            // get fullproposal meta data 
-            const pplMetadata = await this.queryRunner.query(`SELECT * FROM stages_meta WHERE id IN (${mappingMetada.map(meta => meta.to_meta_id)})`);
-            // get full proposal stage id
-            const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
+            // // create full propsoal object
+            // const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
+            // // validate if initiatitive by stage already exists
+            // const replicatedIntvStg = await proposalObject.setInitvStage();
 
-            // create initiative by stage entity
-            let replicatedIntvStg = new InitiativesByStages();
-            replicatedIntvStg.active = true;
-            replicatedIntvStg.initiative = curruentInitvByStg[0].initiativeId;
-            replicatedIntvStg.stage = pplStage[0].id;
-            // save intiative by stage
-            // replicatedIntvStg = await initvStgRepo.save(replicatedIntvStg);
+            // // get concept general information data 
+            // const conceptGI = await this.getGeneralInformation(curruentInitvByStg[0].id);
 
+            // // get general information if exists from proposalObject
+            // const proposalGI = await proposalObject.getGeneralInformation(replicatedIntvStg.id.toString());
 
+            // // upsert full proposal general infomation
+            // const pplGI = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.concept_info_id : null, conceptGI.name, conceptGI.action_area_id, conceptGI.action_area_description);
 
-            console.log(replicatedIntvStg)
+            // return pplGI
+            return null;
+
         } catch (error) {
-            throw new Error(error);
+            throw new BaseError('Forward Concept stage', 406, error.message, false)
         }
-        // get mapping relations meta data
     }
 
 
 
 
     /***** CONCEPT SECTIONS GETTERS *******/
+    /**
 
     /**
      * 
@@ -112,43 +99,114 @@ export class ConceptHandler {
     async getGeneralInformation(initvStgId: string) {
 
         try {
-            const GIquery = ` 
+            const GIquery = `
             SELECT
-                initvStgs.id AS initvStgId,
-                stage.description AS stageDesc,
-                stage.active AS stageIsActive,
+            initvStgs.id AS initvStgId,
+                concept.id AS concept_info_id,
+                    IF(concept.name IS NULL OR concept.name = '', (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId), concept.name) AS name,
 
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS conceptLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptEmail,
+                        (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
 
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS conceptCoLeadId,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptCoLead,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS conceptCoLeadEmail,
+                                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                                        (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                                            (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
 
+                                                concept.action_area_description AS action_area_description,
+                                                    concept.action_area_id AS action_area_id
 
-                concept.id AS conceptId,
-                IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS conceptName,
-                concept.action_area_description AS conceptActAreaDes,
-                concept.action_area_id AS conceptActAreaId
-                ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
-                ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
             FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+            initiatives_by_stages initvStgs
+            LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.id
 
             WHERE initvStgs.id = ${initvStgId};
-        `;
-            const GIMetaquery = `SELECT * FROM stages_meta WHERE group_by LIKE 'General Information'`;
+            `;
             const generalInfo = await this.queryRunner.query(GIquery);
-            const generalInfoMeta = await this.queryRunner.query(GIMetaquery);
 
-            return { generalInfo: generalInfo[0], generalInfoMeta: generalInfoMeta[0] };
+            return generalInfo[0];
         } catch (error) {
-            throw new Error(error);
+            throw new BaseError('Get general information', 406, error.message, false)
         }
 
     }
+
+
+
+    /*******  CONCEPT SECTIONS SETTERS   *********/
+
+    async upsertGeneralInformation(concept_info_id, name, action_area_id, action_area_description) {
+        const concptInfoRepo = getRepository(ConceptInfo);
+        //  create concept info empty object 
+        let conceptInf: ConceptInfo;
+        try {
+            // get current intiative by stage
+            const initvStg = await this.initvStage;
+            // get clarisa action action areas
+            const actionAreas = await getClaActionAreas();
+            // get select action areas for initiative
+            const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
+
+            // if null, create concept info object
+            if (concept_info_id == null) {
+
+                conceptInf = new ConceptInfo();
+                conceptInf.name = name;
+
+                conceptInf.action_area_description = action_area_description || selectedActionArea.name;
+                conceptInf.action_area_id = action_area_id;
+                // assign initiative by stage
+                conceptInf.initvStg = initvStg[0].id;
+            } else {
+                conceptInf = await concptInfoRepo.findOne(concept_info_id);
+                conceptInf.name = (name) ? name : conceptInf.name;
+                conceptInf.action_area_description = selectedActionArea.name;
+                conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
+
+            }
+            // upserted data 
+            let upsertedInfo = await concptInfoRepo.save(conceptInf);
+
+            //    update initiative name
+            let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+            initiative.name = upsertedInfo.name;
+            initiative = await this.initiativeRepo.save(initiative);
+
+
+
+            // retrieve general information
+            const GIquery = ` 
+                SELECT
+                        initvStgs.id AS initvStgId,
+                        concept.id AS concept_info_id,
+                        IF(concept.name IS NULL OR concept.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.id ), concept.name) AS name,
+                
+                        (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                        (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                        (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+                
+                        (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                        (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                        (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                    
+                        concept.action_area_description AS action_area_description,
+                        concept.action_area_id AS action_area_id
+                
+                FROM
+                        initiatives_by_stages initvStgs
+                LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
+                
+                WHERE initvStgs.id = ${this.initvStgId_};
+            `;
+            const generalInfo = await this.queryRunner.query(GIquery);
+
+            return generalInfo[0];
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Upsert general information - concept', 406, error.message, false)
+        }
+    }
+
+
 
 }

@@ -17,13 +17,13 @@ export const checkRole = (entityName: string, permissionActions: string) => {
             if (permission.granted) {
                 next();
             } else {
-                res.status(401).json({ msg: 'No authorized' });
+                res.status(406).json({ msg: 'No authorized' });
             }
 
         } catch (error) {
             console.log('check role permissions');
             console.log(error);
-            return res.status(401).json({ msg: 'No authorized' });
+            return res.status(406).json({ msg: 'No authorized' });
         }
     }
 }

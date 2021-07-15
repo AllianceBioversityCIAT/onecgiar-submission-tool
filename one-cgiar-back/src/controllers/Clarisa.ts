@@ -1,4 +1,4 @@
-import { APIError } from "../handlers/BaseError";
+import { APIError, BaseError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
 import { getConnection, getRepository, Like, QueryFailedError } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
@@ -33,16 +33,10 @@ export const getClaActionAreas = async () => {
                 password: process.env['clarisa_password']
             }
         });
-        // res.json(new ResponseHandler('CLARISA action areas.', { actionAreas: actionAreas.data }));
         return actionAreas.data;
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        throw new BaseError('CLARISA:Action Areas', 406, error.message, true);
     }
 
 }
