@@ -104,11 +104,11 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
     const initvUserRepo = getRepository(InitiativesByUsers);
     try {
 
-        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
+        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
 
-        if (userInitiative == null) {
-            throw new BaseError('General Information: Error', 406, 'User not found in initiative', false);
-        }
+        // if (userInitiative == null) {
+        //     throw new BaseError('General Information: Error', 406, 'User not found in initiative', false);
+        // }
 
 
         // get stage
@@ -153,11 +153,11 @@ export const upsertContext = async (req: Request, res: Response) => {
     const initvUserRepo = getRepository(InitiativesByUsers);
 
     try {
-        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
+        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
 
-        if (userInitiative == null) {
-            throw new BaseError('Context: Error', 406, 'User not found in initiative', false);
-        }
+        // if (userInitiative == null) {
+        //     throw new BaseError('Context: Error', 406, 'User not found in initiative', false);
+        // }
 
         // get stage
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
