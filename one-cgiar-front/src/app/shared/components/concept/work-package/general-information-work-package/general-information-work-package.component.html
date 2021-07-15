@@ -3,19 +3,23 @@
     <div class="animate__animated form animate__fadeIn form_animation" *ngIf="showform">
         
         <ibdc-textarea  
-        [options]="{form:workPackageForm,formControlName:'acronym',inputTitle:'Short name'}">
+        [options]="{form:workPackageForm,formControlName:'acronym',inputTitle:'Short name',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
         </ibdc-textarea>
 
         <ibdc-textarea  
-        [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
+        [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
         </ibdc-textarea>
 
         <ibdc-textarea  
-        [options]="{form:workPackageForm,maxWords:500,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'pathwayContent',
+        readOnlyVariable: this._initiativesService.initiative.readonly,inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
         </ibdc-textarea>
 
         <ibdc-textarea  
-        [options]="{form:workPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results'}">
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
         </ibdc-textarea>    
     </div>
     <br>

@@ -15,7 +15,10 @@
 
         <div class="col-sm-12" *ngIf="showForm">
             <ibdc-textarea
-                [options]="{inputTitle:'Provide a narrative which explains further the TOC Diagram attached',maxWords:500, form:theoryOfChangeForm, formControlName:'narrative'}">
+                [options]="{inputTitle:'Provide a narrative which explains further the TOC Diagram attached',maxWords:500, 
+                form:theoryOfChangeForm, formControlName:'narrative',
+                readOnlyVariable: this._initiativesService.initiative.readonly
+            }">
             </ibdc-textarea>
         </div>
 

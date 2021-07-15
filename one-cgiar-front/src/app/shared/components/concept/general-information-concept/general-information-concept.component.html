@@ -6,7 +6,8 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea
-                    [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
+                    [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly}">
                 </ibdc-textarea>
             </div>
 
@@ -56,7 +57,8 @@
              description:'Indicate to which CGIAR Action Area this initiative is contributing to',
              selectList:this.actionAreas,
              selectItemName:'index_name',
-             selectItemId:'id'
+             selectItemId:'id',
+             readOnlyVariable: this._initiativesService.initiative.readonly
             }">
                     ></ibdc-select>
 
