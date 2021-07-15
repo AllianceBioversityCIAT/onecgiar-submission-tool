@@ -34,6 +34,7 @@ export class InitTableComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.data);
     this.dataSource = new MatTableDataSource(changes.data.currentValue)
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.matSort;
@@ -42,9 +43,17 @@ export class InitTableComponent implements AfterViewInit {
   ngAfterViewInit() {
   }
 
-  parseStageLink(stageName: string) {
-    if (stageName == null) return '';
-    return stageName.split(' ').join('-').toLowerCase();
+  parseStageLink(description: string) {
+    switch (description) {
+      case 'Stage 2: Concept':
+        return 'concept' ;
+        case 'Stage 3: Full Proposal':
+          return 'full-proposal' ;
+      default:
+        return '';
+    }
+    // if (stageName == null) return '';
+    // return stageName.split(' ').join('-').toLowerCase();
   }
 
   applyFilter(event: Event) {
