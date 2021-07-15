@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { ConceptInfo } from "../entity/ConceptInfo";
+import { Context } from "../entity/Context";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
 import { BaseError } from "./BaseError";
@@ -36,7 +37,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     /**
      * 
      * @param initvStgId 
-     * @returns { generalInfo, generalInfoMeta }
+     * @returns { generalInfo }
      */
     async getGeneralInformation() {
         // get initiative by stage id from intitiative
@@ -75,13 +76,42 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
+    /**
+     * 
+     * @param initvStgId 
+     * @returns { context }
+     */
+    async getContext() {
+        // get initiative by stage id from intitiative
+        const initvStgId: string = this.initvStgId_;
+        try {
+            // contex sql query
+            const contextQuery = `SELECT * FROM context WHERE initvStgId = ${initvStgId}`;
+
+            const context = await this.queryRunner.query(contextQuery);
+
+            return context[0];
+        } catch (error) {
+            throw new BaseError('Get context', 406, error.message, false)
+        }
+    }
+
 
 
     /*******  FULL PROPOSAL SETTERS   *********/
 
+    /**
+     * 
+     * @param generalInformationId? 
+     * @param name 
+     * @param action_area_id 
+     * @param action_area_description 
+     * @returns generalInformation
+     */
+
     async upsertGeneralInformation(generalInformationId?, name?, action_area_id?, action_area_description?) {
         const gnralInfoRepo = getRepository(GeneralInformation);
-        //  create concept info empty object 
+        //  create empty object 
         let generalInformation: GeneralInformation;
         try {
             // get current intiative by stage
@@ -93,7 +123,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
 
 
-            // if null, create concept info object
+            // if null, create object
             if (generalInformationId == null) {
 
                 generalInformation = new GeneralInformation();
@@ -153,5 +183,51 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
     }
 
-    async upsertContext() { }
+    /**
+     * 
+     * @param contextId? 
+     * @param challenge_statement 
+     * @param smart_objectives 
+     * @param key_learnings 
+     * @param priority_setting 
+     * @param comparative_advantage 
+     * @param participatory_design 
+     * @returns context
+     */
+    async upsertContext(contextId?, challenge_statement?, smart_objectives?, key_learnings?, priority_setting?, comparative_advantage?, participatory_design?) {
+        const contextRepo = getRepository(Context);
+        //  create empty object 
+        let context: Context;
+        try {
+            // get current intiative by stage
+            const initvStg = await this.initvStage;
+
+            // if null, create object
+            if (contextId == null) {
+                context = new Context();
+                // assign initiative by stage
+                context.initvStg = initvStg[0].id;
+            } else {
+                context = await contextRepo.findOne(contextId);
+
+            }
+            console.log(contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design);
+
+
+            context.challenge_statement = (challenge_statement) ? challenge_statement : null;
+            context.smart_objectives = (smart_objectives) ? smart_objectives : null;
+            context.key_learnings = (key_learnings) ? key_learnings : null;
+            context.priority_setting = (priority_setting) ? priority_setting : null;
+            context.comparative_advantage = (comparative_advantage) ? comparative_advantage : null;
+            context.participatory_design = (participatory_design) ? participatory_design : null;
+
+            // upserted data 
+            const upsertedContext = await contextRepo.save(context);
+
+            return upsertedContext;
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Upsert context - full proposal', 406, error.message, false)
+        }
+    }
 }

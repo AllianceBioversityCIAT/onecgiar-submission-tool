@@ -27,7 +27,6 @@ const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
  */
 export const getClaActionAreas = async () => {
     try {
-        console.log(process.env['clarisa_user'], process.env['clarisa_password'], clarisaHost)
         const actionAreas = await axios.get(clarisaHost + 'action-areas', {
             auth: {
                 username: process.env['clarisa_user'],
