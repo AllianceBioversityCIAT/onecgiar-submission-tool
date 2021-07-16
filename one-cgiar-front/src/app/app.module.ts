@@ -59,7 +59,8 @@ import { PartnersRequestComponent } from './shared/components/partners-request/p
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { ExampleComponent } from './shared/components/full-proposal/example/example.component';
-import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 
 @NgModule({
   declarations: [
