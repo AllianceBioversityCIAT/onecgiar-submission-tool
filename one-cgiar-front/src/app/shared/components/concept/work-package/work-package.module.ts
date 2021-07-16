@@ -9,7 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../material.module';
 import { ProjectionOfBenefitsWorkPackageComponent } from './projection-of-benefits-work-package/projection-of-benefits-work-package.component';
 import { PobContributionComponent } from './pob-contribution/pob-contribution.component';
-import { IbdAngularComponentsModule } from '../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 
 
 @NgModule({
