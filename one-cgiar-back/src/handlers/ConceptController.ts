@@ -2,6 +2,7 @@ import _ from "lodash";
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { ConceptInfo } from "../entity/ConceptInfo";
+import { InitiativesByStages } from "../entity/InititativesByStages";
 import { ConceptSections } from "../interfaces/ConceptSectionsInterface";
 import { BaseError } from "./BaseError";
 import { ProposalHandler } from "./FullProposalController";
@@ -43,42 +44,42 @@ export class ConceptHandler extends ConceptValidation {
     async forwardStage() {
         try {
 
-            // // current intiative by stage entity
-            // const curruentInitvByStg = await this.initvStage;
-            // // get full proposal stage id
-            // const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
-            // // get mapping metadata from concept
-            // const mppMtSql = `
-            //     SELECT
-            //         stg_mt.id, stg_mt.stage_name, stg_mt.group_by,
-            //     (SELECT to_meta_id FROM mapping_metadata WHERE from_meta_id = stg_mt.id) as map_to,
-            // (SELECT group_by FROM stages_meta WHERE id = map_to) as map_to_group,
-            //     (SELECT stageId FROM stages_meta WHERE id = map_to) as map_from,
-            //         (SELECT stage_name FROM stages_meta WHERE id = map_to) as map_from_group
-            // FROM
-            // stages_meta stg_mt
-            // WHERE stageId = ${curruentInitvByStg[0].stageId}
-            // GROUP BY group_by
-            //     `;
-            // // mapping metada 
-            // // const mappingSections = await this.queryRunner.query(mppMtSql);
+            // current intiative by stage entity
+            const curruentInitvByStg = await this.initvStage;
+            // get full proposal stage id
+            const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
+            // get mapping metadata from concept
+            const mppMtSql = `
+                SELECT
+                    stg_mt.id, stg_mt.stage_name, stg_mt.group_by,
+                (SELECT to_meta_id FROM mapping_metadata WHERE from_meta_id = stg_mt.id) as map_to,
+            (SELECT group_by FROM stages_meta WHERE id = map_to) as map_to_group,
+                (SELECT stageId FROM stages_meta WHERE id = map_to) as map_from,
+                    (SELECT stage_name FROM stages_meta WHERE id = map_to) as map_from_group
+            FROM
+            stages_meta stg_mt
+            WHERE stageId = ${curruentInitvByStg[0].stageId}
+            GROUP BY group_by
+                `;
+            // mapping metada 
+            // const mappingSections = await this.queryRunner.query(mppMtSql);
 
-            // // create full propsoal object
-            // const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
-            // // validate if initiatitive by stage already exists
-            // const replicatedIntvStg = await proposalObject.setInitvStage();
+            // create full propsoal object
+            const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
+            // validate if initiatitive by stage already exists
+            const replicatedIntvStg:InitiativesByStages = await proposalObject.setInitvStage();
 
-            // // get concept general information data 
-            // const conceptGI = await this.getGeneralInformation(curruentInitvByStg[0].id);
+            // get concept general information data 
+            const conceptGI = await this.getGeneralInformation(curruentInitvByStg[0].id);
 
-            // // get general information if exists from proposalObject
-            // const proposalGI = await proposalObject.getGeneralInformation(replicatedIntvStg.id.toString());
+            // get general information if exists from proposalObject
+            const proposalGI = await proposalObject.getGeneralInformation();
 
-            // // upsert full proposal general infomation
-            // const pplGI = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.concept_info_id : null, conceptGI.name, conceptGI.action_area_id, conceptGI.action_area_description);
+            // upsert full proposal general infomation
+            const pplGI = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGI.name, conceptGI.action_area_id, conceptGI.action_area_description);
 
-            // return pplGI
-            return null;
+            return pplGI
+            // return null;F
 
         } catch (error) {
             throw new BaseError('Forward Concept stage', 406, error.message, false)
