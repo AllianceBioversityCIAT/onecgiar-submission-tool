@@ -1,12 +1,12 @@
 <div class="section-container animate__animated animate__fadeIn">
 
     <section-title name="Measurable three-year outcomes" ></section-title>
-    <form [formGroup]="sectionForm" (ngSubmit)="upserInfo()" class="general-information-form">
+    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
             <div class="col-sm-12" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Measurable three-year (End of Initiative) outcomes:', form:sectionForm, formControlName:'challengeStatement', maxWords:250,
+                <ibdc-textarea *ngIf="showform"
+                    [options]="{inputTitle:'Measurable three-year (End of Initiative) outcomes:', form:contextForm, formControlName:'smart_objectives', maxWords:250,
                     description:'Update objective statement submitted in the pre-concept with clear 3-year measurable (SMART) outcomes. Ensure this is consistent with the ToC diagrams and narrative, and MELIA sections.'}">
                 </ibdc-textarea>
             </div>
@@ -15,7 +15,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
 </div>
