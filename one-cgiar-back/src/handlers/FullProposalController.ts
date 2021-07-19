@@ -211,15 +211,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                 context = await contextRepo.findOne(contextId);
 
             }
-            console.log(contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design);
+            // console.log(contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design);
 
 
-            context.challenge_statement = (challenge_statement) ? challenge_statement : null;
-            context.smart_objectives = (smart_objectives) ? smart_objectives : null;
-            context.key_learnings = (key_learnings) ? key_learnings : null;
-            context.priority_setting = (priority_setting) ? priority_setting : null;
-            context.comparative_advantage = (comparative_advantage) ? comparative_advantage : null;
-            context.participatory_design = (participatory_design) ? participatory_design : null;
+            context.challenge_statement = (challenge_statement) ? challenge_statement : context.challenge_statement;
+            context.smart_objectives = (smart_objectives) ? smart_objectives : context.smart_objectives;
+            context.key_learnings = (key_learnings) ? key_learnings : context.key_learnings;
+            context.priority_setting = (priority_setting) ? priority_setting : context.priority_setting;
+            context.comparative_advantage = (comparative_advantage) ? comparative_advantage : context.comparative_advantage;
+            context.participatory_design = (participatory_design) ? participatory_design : context.participatory_design;
 
             // upserted data 
             const upsertedContext = await contextRepo.save(context);
