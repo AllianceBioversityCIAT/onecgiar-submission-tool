@@ -34,8 +34,8 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       console.log(resp);
       this.contextForm.valid?
-      this._interactionsService.successMessage('Comparative advantage has been saved'):
-      this._interactionsService.warningMessage('Comparative advantage has been saved, but there are incomplete fields')
+      this._interactionsService.successMessage('Participatory design process has been saved'):
+      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
     })
   }
 

@@ -33,8 +33,8 @@ export class LearningFpeAndIaComponent implements OnInit {
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       console.log(resp);
       this.contextForm.valid?
-      this._interactionsService.successMessage('Comparative advantage has been saved'):
-      this._interactionsService.warningMessage('Comparative advantage has been saved, but there are incomplete fields')
+      this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
+      this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')
     })
   }
 
