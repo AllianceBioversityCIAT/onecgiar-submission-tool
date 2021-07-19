@@ -1,3 +1,13 @@
+.elements_container{
+    width: 100%;
+    display: flex;
+    .left_menu{
+        // width: 400px;
+    }
+    .right_container{
+        width: calc(100% - 400px);
+    }
+}
 .platform_backgorund{
     background-image: url('/assets/images/platform_background.jpg');
     background-repeat: none;
@@ -71,3 +81,4 @@
     font-size: .9em;
     
 }
+

@@ -1,3 +1,64 @@
+.menu{
+    padding: 50px 70px;
+    width: 400px;
+    height: 100%;
+    max-height: calc(100vh - 120px);
+    overflow-y: scroll;
+    background-color: rgba(128, 128, 128, 0.479);
+    color: white;
+    
+    .section_title{
+        font-weight: 700;
+        position: relative;
+        margin-bottom: 20px;
+        .number{
+            position: absolute;
+            top: -5px;
+            left: -40px;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            border: 2.9px white solid;
+            // display: flex;
+            text-align: center;
+            vertical-align: middle;
+            padding-top: 2px;
+        }
+        .subSection_title{
+            margin-left: 10px;
+            font-weight: 400;
+        }
+    }
+}
+
+
+  /* width */
+  .menu::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 30px;
+  }
+  
+  /* Track */
+  .menu::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 30px;
+  }
+   
+  /* Handle */
+  .menu::-webkit-scrollbar-thumb {
+    background: #025c7a; 
+    border-radius: 30px;
+  }
+  
+  /* Handle on hover */
+  .menu::-webkit-scrollbar-thumb:hover {
+    background: #014d66; 
+    border-radius: 30px;
+  }
+
+
+///////////////////////////
+
 .container {
     padding: 0 3rem;
 }
@@ -158,4 +219,8 @@ mat-expansion-panel-header{
         transition: all .2s ease-in-out;
     }
    
+ }
+
+ mat-accordion{
+     width: 100%;
  }

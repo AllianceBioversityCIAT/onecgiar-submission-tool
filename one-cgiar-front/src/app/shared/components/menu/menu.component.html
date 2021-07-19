@@ -1,6 +1,19 @@
+    <div class="menu">
+        <div class="stages" *ngFor="let stage of stages;">
+            {{stage.description}}
+            <div class="section_title" *ngFor="let meta of stage.grouped; let i = index">
+                <div class="number">
+                    {{i+1}}
+                </div>
+                {{meta.title}}
+                <div class="subSection_title" *ngFor="let subSection of meta.subSections" >
+                    {{subSection.title}}
+                </div>
+            </div>
+        </div>
 
-    <div class="menu-title">Stages</div>
-    <mat-accordion>
+    </div>
+    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;">
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title >
@@ -40,21 +53,6 @@
     
             </mat-list>
             </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <mat-accordion  *ngIf="currentStageName != 'concept'">
                 <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
                     <!-- no subesection -->
@@ -103,6 +101,21 @@
                   </mat-expansion-panel>
             </mat-accordion>
             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
 
 
 
