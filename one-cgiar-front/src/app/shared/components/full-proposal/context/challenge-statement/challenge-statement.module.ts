@@ -10,7 +10,7 @@ import { MaterialModule } from '../../../../../material.module';
 import { UtilsModule } from '../../../utils/utils.module';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [ChallengeStatementComponent],
   imports: [
@@ -21,7 +21,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     ReactiveFormsModule,
     FormsModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    NgxSpinnerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

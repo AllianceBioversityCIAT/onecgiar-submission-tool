@@ -33,9 +33,6 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
    let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
-      // console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
-      // console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
-      // stageName == 'concept' ? this.getStages() : this.simulateFullProposal();
       this.currentStageName = stageName;
       this.getStages();
       loadMenu$.unsubscribe();
