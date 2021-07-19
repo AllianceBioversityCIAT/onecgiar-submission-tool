@@ -1,11 +1,11 @@
 <div class="section-container animate__animated animate__fadeIn">
     <section-title name="Comparative advantage"></section-title>
-    <form [formGroup]="challengeStatementForm" (ngSubmit)="upserInfo()" class="general-information-form">
+    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
             <div class="col-sm-12" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Comparative-advantage', form:challengeStatementForm, formControlName:'challengeStatement',maxWords:250,
+                <ibdc-textarea *ngIf="showfrom"
+                    [options]="{inputTitle:'Comparative advantage', form:contextForm, formControlName:'comparative_advantage',maxWords:250,
                     description:'Provide evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service provider.'}">
                 </ibdc-textarea>
             </div>
@@ -22,7 +22,8 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
+    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
 </div>
