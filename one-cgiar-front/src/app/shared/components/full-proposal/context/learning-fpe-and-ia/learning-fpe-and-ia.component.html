@@ -1,12 +1,12 @@
 <div class="section-container animate__animated animate__fadeIn">
 
     <section-title name="Learning from prior evaluations and Impact Assessments (IA)" ></section-title>
-    <form [formGroup]="sectionForm" (ngSubmit)="upserInfo()" class="general-information-form">
+    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
             <div class="col-sm-12" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Learning from prior evaluations and Impact Assessments (IA)', form:sectionForm, formControlName:'challengeStatement', maxWords:250,
+                <ibdc-textarea *ngIf="showform"
+                    [options]="{inputTitle:'Learning from prior evaluations and Impact Assessments (IA)', form:contextForm, formControlName:'key_learnings', maxWords:250,
                     description:'Describe key learnings that have influenced the design of the Initiative, from relevant evaluations, impact assessments or other reviews whether internally or externally commissioned.'}">
                 </ibdc-textarea>
             </div>
@@ -22,7 +22,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{underConstruction:true}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
 </div>
