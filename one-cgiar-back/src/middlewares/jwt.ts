@@ -31,7 +31,8 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
         console.log(error);
-        return res.status(406).json({ msg: `Not authorized: ${error.message}` });
+        return res.status(error.httpCode).json(error);
+        // return res.status(406).json({ msg: `Not authorized: ${error.message}` });
     }
     const { userId, first_name, last_name } = jwtPayload;
 

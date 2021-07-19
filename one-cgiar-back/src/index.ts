@@ -53,6 +53,7 @@ createConnection()
             res.setHeader(
                 "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
             );
+            res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
             next();
         });
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
@@ -70,13 +71,8 @@ createConnection()
         });
 
         app.all('*', (req: any, res: any) => {
-            console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
+            console.log(`[TRACE] Server 200 request: ${req.originalUrl}`);
             res.status(200).sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html");
-        });
-
-        app.use((err: any, req: any, res: { setHeader: (arg0: string, arg1: string) => void; }, next: any) => {
-            res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
-            console.log(err)
         });
 
         app.listen(PORT, `${HOST}`, () => {

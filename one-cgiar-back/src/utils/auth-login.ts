@@ -1,6 +1,6 @@
 import { getRepository } from "typeorm";
 import { Users } from "../entity/Users";
-import { APIError } from "../handlers/BaseError";
+import { BaseError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
 import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
@@ -16,11 +16,11 @@ export const utilLogin = async (email: string, password: string) => {
     // console.log(email,password)
 
     if (!(email && password)) {
-        throw new APIError(
+        throw new BaseError(
             'INVALID',
             HttpStatusCode.BAD_REQUEST,
-            true,
-            'Missing required fields: email or password.'
+            'Missing required fields: email or password.',
+            true
         );
     }
     email = email.trim().toLowerCase();
@@ -41,22 +41,22 @@ export const utilLogin = async (email: string, password: string) => {
             relations: ['roles']
         });
         if (!user) {
-            throw new APIError(
+            throw new BaseError(
                 'NOT_FOUND',
                 HttpStatusCode.NOT_FOUND,
-                true,
-                'User not found.'
+                'User not found.',
+                true
             );
         }
     }
 
     // check password
     if (!cgiar_user && !user.checkPassword(password)) {
-        throw new APIError(
+        throw new BaseError(
             'NOT FOUND',
             HttpStatusCode.NOT_FOUND,
-            true,
-            'User password incorrect.'
+            'User password incorrect.',
+            true
         );
     }
     user.last_login = new Date();
@@ -76,7 +76,13 @@ const validateAD = (one_user, password) => {
     let ad_user = one_user.email;
     return new Promise((resolve, reject) => {
         ad.authenticate(ad_user, password, (err, auth) => {
+
+            if (auth) {
+                console.log('Authenticated AD!');
+                return resolve(auth);
+            }
             if (err) {
+                // console.log(Object.keys(err))
                 let notFound = {
                     'name': 'SERVER_NOT_FOUND',
                     'description': `There was an internal server error: ${err.lde_message}`,
@@ -84,18 +90,12 @@ const validateAD = (one_user, password) => {
                 };
                 if (err.errno == "ENOTFOUND") {
                     notFound.name = 'SERVER_NOT_FOUND';
-                    notFound.description = 'Domain Controller Server not found'
+                    notFound.description = 'Server not found'
                 }
-                console.log(err)
+                // console.log(err)
+                // console.log(typeof err)
                 return reject(notFound);
-            }
-
-            if (auth) {
-                console.log('Authenticated AD!');
-                return resolve(auth);
-            }
-
-            else {
+            } else {
                 console.log('Authentication failed!');
                 let err = {
                     'name': 'INVALID_CREDENTIALS',
@@ -104,7 +104,6 @@ const validateAD = (one_user, password) => {
                 };
                 return reject(err);
             }
-
         })
     });
 }
