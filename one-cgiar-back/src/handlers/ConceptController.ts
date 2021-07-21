@@ -32,7 +32,7 @@ export class ConceptHandler extends ConceptValidation {
             this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})`);
             return this.metaData_;
         } catch (error) {
-            throw new BaseError('Get Metadata', 406, error.message, false)
+            throw new BaseError('Get Metadata', 400, error.message, false)
         }
 
     }
@@ -83,7 +83,7 @@ export class ConceptHandler extends ConceptValidation {
             // return null;F
 
         } catch (error) {
-            throw new BaseError('Forward Concept stage', 406, error.message, false)
+            throw new BaseError('Forward Concept stage', 400, error.message, false)
         }
     }
 
@@ -130,7 +130,7 @@ export class ConceptHandler extends ConceptValidation {
 
             return generalInfo[0];
         } catch (error) {
-            throw new BaseError('Get general information', 406, error.message, false)
+            throw new BaseError('Get general information', 400, error.message, false)
         }
     }
 
@@ -206,7 +206,7 @@ export class ConceptHandler extends ConceptValidation {
     //         return generalInfo[0];
     //     } catch (error) {
     //         console.log(error)
-    //         throw new BaseError('Upsert general information - concept', 406, error.message, false)
+    //         throw new BaseError('Upsert general information - concept', 400, error.message, false)
     //     }
     // }
 
@@ -289,7 +289,7 @@ export class ConceptHandler extends ConceptValidation {
             return generalInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert general information - concept', 406, error.message, false)
+            throw new BaseError('Upsert general information - concept', 400, error.message, false)
         }
     }
 

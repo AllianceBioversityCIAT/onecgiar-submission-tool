@@ -26,7 +26,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
             return this.metaData_;
         } catch (error) {
-            throw new BaseError('Get Metadata', 406, error.message, false)
+            throw new BaseError('Get Metadata', 400, error.message, false)
         }
 
     }
@@ -71,7 +71,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             return generalInfo[0];
         } catch (error) {
-            throw new BaseError('Get general information', 406, error.message, false)
+            throw new BaseError('Get general information', 400, error.message, false)
         }
 
     }
@@ -92,7 +92,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             return context[0];
         } catch (error) {
-            throw new BaseError('Get context', 406, error.message, false)
+            throw new BaseError('Get context', 400, error.message, false)
         }
     }
 
@@ -179,7 +179,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return generalInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert general information - full proposal', 406, error.message, false)
+            throw new BaseError('Upsert general information - full proposal', 400, error.message, false)
         }
     }
 
@@ -227,7 +227,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return upsertedContext;
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert context - full proposal', 406, error.message, false)
+            throw new BaseError('Upsert context - full proposal', 400, error.message, false)
         }
     }
 }

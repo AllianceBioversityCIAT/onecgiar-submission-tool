@@ -32,7 +32,7 @@ export class InitiativeStageHandler extends BaseValidation {
             this.stageId_ = this.queryRunner.query(sql);
             return this.stageId_;
         } catch (error) {
-            throw new BaseError('Get Stage id', 406, error.message, false)
+            throw new BaseError('Get Stage id', 400, error.message, false)
         }
     }
     public get initvStage() {
@@ -46,7 +46,7 @@ export class InitiativeStageHandler extends BaseValidation {
             this.intvStage_ = this.queryRunner.query(sql);
             return this.intvStage_;
         } catch (error) {
-            throw new BaseError('Get intitative by stage object', 406, error.message, false)
+            throw new BaseError('Get intitative by stage object', 400, error.message, false)
         }
     }
     
@@ -65,7 +65,7 @@ export class InitiativeStageHandler extends BaseValidation {
             
         } catch (error) {
             console.log(error)
-            throw new BaseError('Set intitative by stage object', 406, error.message, false)
+            throw new BaseError('Set intitative by stage object', 400, error.message, false)
             
         }
     }

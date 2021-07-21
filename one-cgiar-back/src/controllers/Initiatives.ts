@@ -36,17 +36,17 @@ export const getInitiatives = async (req: Request, res: Response) => {
     let initiatives,
         initvSQL = ` 
         SELECT
-                initvStg.id AS initvStgId,
-                initiative.id AS id,
-                initiative.name AS name,
-                IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-                (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-                (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-                initvStg.active AS active,
-                stage.id AS stageId,
-                CONCAT("Stage ", stage.id,': ',stage.description) AS description
+            initvStg.id AS initvStgId,
+            initiative.id AS id,
+            initiative.name AS name,
+            IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+            (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+            (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+            initvStg.active AS active,
+            initvStg.stageId AS stageId,
+            CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
         FROM
-                initiatives initiative
+            initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
         `;
@@ -496,7 +496,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        error = new BaseError('Get stages meta - sections.', error.status || 406, error.message, false);
+        error = new BaseError('Get stages meta - sections.', error.status || 400, error.message, false);
         return res.status(error.httpCode).json(error);
     }
 }

@@ -19,7 +19,7 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
             break;
 
         default:
-            throw new BaseError('validatedSection', 406, 'Stage not available', false);
+            throw new BaseError('validatedSection', 400, 'Stage not available', false);
             break;
     }
 
@@ -50,7 +50,7 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
                 break;
         }
     } catch (error) {
-        throw new BaseError('Replication Process', error.status || 406, error.message, false)
+        throw new BaseError('Replication Process', error.status || 400, error.message, false)
     }
 }
 

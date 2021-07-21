@@ -10,10 +10,10 @@ const router = Router();
 
 
 // get initiatives concept general information
-router.get("/:initvStgId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getGeneralInformation);
+router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getGeneralInformation);
 
 // update initiatives concept general information
-router.patch("/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
+router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
 
 // // get initiatives concept narratives
 // router.get("/:initvStgId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);
