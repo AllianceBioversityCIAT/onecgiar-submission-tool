@@ -36,7 +36,7 @@ export const getClaActionAreas = async () => {
         return actionAreas.data;
     } catch (error) {
         console.log(error)
-        throw new BaseError('CLARISA:Action Areas', 406, error.message, true);
+        throw new BaseError('CLARISA:Action Areas', 400, error.message, true);
     }
 
 }

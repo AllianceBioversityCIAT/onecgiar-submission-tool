@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 406) {
+        if (error.status === 400) {
           // refresh token
           this.authSrv.logout();
         } else {

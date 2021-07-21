@@ -30,7 +30,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
          // if not intitiative by stage, throw error
          if (initvStg == null) {
-            throw new BaseError('Read General information: Error', 406, `Initiative not found in stage: ${stage.description}` , false);
+            throw new BaseError('Read General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
 
         // create new full proposal object
@@ -71,7 +71,7 @@ export const getContext = async (req: Request, res: Response) => {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
          // if not intitiative by stage, throw error
          if (initvStg == null) {
-            throw new BaseError('Read Context: Error', 406, `Initiative not found in stage: ${stage.description}` , false);
+            throw new BaseError('Read Context: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
 
         // create new full proposal object
@@ -115,7 +115,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
         // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
 
         // if (userInitiative == null) {
-        //     throw new BaseError('General Information: Error', 406, 'User not found in initiative', false);
+        //     throw new BaseError('General Information: Error', 400, 'User not found in initiative', false);
         // }
 
 
@@ -124,7 +124,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         if (initvStg == null) {
-            throw new BaseError('Upsert General information: Error', 406, `Initiative not found in stage: ${stage.description}` , false);
+            throw new BaseError('Upsert General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -173,7 +173,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Upsert Context: Error', 406, `Initiative not found in stage: ${stage.description}` , false);
+            throw new BaseError('Upsert Context: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());

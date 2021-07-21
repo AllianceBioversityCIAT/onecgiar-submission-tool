@@ -18,7 +18,7 @@ import { Stages } from '../entity/Stages';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { WorkPackages } from '../entity/WorkPackages';
-import { APIError } from '../handlers/BaseError';
+import { APIError, BaseError } from '../handlers/BaseError';
 import { ConceptHandler } from '../handlers/ConceptController';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ProposalHandler } from '../handlers/FullProposalController';
@@ -113,7 +113,7 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
  * @returns  { generalInformation, metadata }
  */
 
- export const getGeneralInformation = async (req: Request, res: Response) => {
+export const getGeneralInformation = async (req: Request, res: Response) => {
     // get initiative by stage id from client
     const { initiativeId } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -124,6 +124,12 @@ const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
         const stage = await stageRepo.findOne({ where: { description: 'Concept' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        console.log(initiativeId)
+        console.log(initvStg)
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Get General Information: Error', 400, `Initiative not found in stage: Concept`, false);
+        }
 
         // create new Concept object
         const concept = new ConceptHandler(initvStg.id.toString());
@@ -167,26 +173,27 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
 
     try {
 
-        /**
-         * Validate user in initiative
-         * 
-         */
+        // /**
+        //  * Validate user in initiative
+        //  * 
+        //  */
 
-        const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
+        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
 
-        if (userInitiative == null) {
-            throw new APIError(
-                'NOT FOUND',
-                HttpStatusCode.NOT_FOUND,
-                true,
-                'User not found in initiative.'
-            );
-        }
+        // if (userInitiative == null) {
+        //     throw new APIError(
+        //         'NOT FOUND',
+        //         HttpStatusCode.NOT_FOUND,
+        //         true,
+        //         'User not found in initiative.'
+        //     );
+        // }
 
 
         const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
+        // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiative not found for current stage.')
+            throw new BaseError('Upsert General Information: Error', 400, `Initiative not found in stage: Concept`, false);
         }
 
         const actionAreas = await getClaActionAreas();

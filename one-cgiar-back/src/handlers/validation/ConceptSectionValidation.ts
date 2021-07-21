@@ -31,7 +31,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(giArray);
 
         } catch (error) {
-            throw new BaseError('Validate general information', error.status || 406, error.message, false);
+            throw new BaseError('Validate general information', error.status || 400, error.message, false);
         }
     }
 
@@ -49,7 +49,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(narrtvArray);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -72,7 +72,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(tocsArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -101,7 +101,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(wpArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -120,7 +120,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(kpArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -148,7 +148,7 @@ export class ConceptValidation extends InitiativeStageHandler {
 
             return validatedSection
         } catch (error) {
-            throw new BaseError('Validate sections', error.status || 406, error.message, false);
+            throw new BaseError('Validate sections', error.status || 400, error.message, false);
         }
 
     }
