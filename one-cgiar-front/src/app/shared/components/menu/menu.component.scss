@@ -26,8 +26,10 @@
     }
 
     .sections{
-        height: 0px;
-        transition: all ease .3s;
+        // height: 0px;
+        max-height:0;
+        transition: max-height cubic-bezier(0.075, 0.82, 0.165, 1) .7s !important;
+        // transition: all ease .3s;
         overflow: hidden;
         .section_title{
             font-weight: 700;
@@ -61,10 +63,10 @@
 
 }
 
-// .expand{
-//     height: 100% !important;
-//     transition: height ease .3s;
-// }
+.expand{
+    max-height:250px !important;
+    // transition: max-height ease 4s !important;
+}
 
 // .collapse{
 //     height: 0px;

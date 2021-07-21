@@ -55,7 +55,8 @@ export class MenuComponent implements OnInit {
   expandOrCollapse(htmlElement:HTMLLIElement){
     // htmlElement.classList.toggle('collapse');
     console.log(htmlElement.className);
-    htmlElement.style.height = "100%";
+    // htmlElement.style.height = "100%";
+    htmlElement.classList.toggle('expand');
   }
 
   simulateFullProposal(){
