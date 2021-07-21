@@ -5,14 +5,14 @@
         <div class="left_menu">
             <app-menu></app-menu>
             <div class="button-container">
-                <button type="submit" 
+                <!-- <button type="submit" 
                     mat-raised-button class="submit-button" [disabled]="true">
                     Submit
-                </button>
+                </button> -->
             </div>
         </div>
         <div class="right_container">
-            <mat-card class="card-container background-color-main-2">
+            <div class="card-container background-color-main-2">
                 <div class="initiative-identification background-color-primary-3" style="position: relative; z-index: 10;">
                     <div>
                         <span class="initiative-id">Initiative ID: {{this.initiativesSvc.initvStgId}}</span>
@@ -25,7 +25,7 @@
                     </button>
                 </div>
                 <router-outlet></router-outlet>
-            </mat-card>
+            </div>
         </div>
   
     

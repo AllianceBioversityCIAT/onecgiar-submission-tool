@@ -5,7 +5,8 @@
         // width: 400px;
     }
     .right_container{
-        width: calc(100% - 400px);
+        width: calc(100% - 440px);
+        padding: 10px 0px 0px 40px;
     }
 }
 .platform_backgorund{
@@ -47,10 +48,12 @@
 }
 
 .card-container {
-    background-color: #fff;
+    background-color: #f7f8f9ff;
     padding: 0;
     margin-top: 3rem;
     width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .initiative-identification {

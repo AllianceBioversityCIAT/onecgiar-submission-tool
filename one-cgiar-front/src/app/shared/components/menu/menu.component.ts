@@ -51,6 +51,13 @@ export class MenuComponent implements OnInit {
     )
   }
 
+
+  expandOrCollapse(htmlElement:HTMLLIElement){
+    // htmlElement.classList.toggle('collapse');
+    console.log(htmlElement.className);
+    htmlElement.style.height = "100%";
+  }
+
   simulateFullProposal(){
     // console.log('%cto push','background: #222; color: #84c3fd');
     let body=[

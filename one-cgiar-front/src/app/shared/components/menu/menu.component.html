@@ -1,13 +1,20 @@
     <div class="menu">
         <div class="stages" *ngFor="let stage of stages;">
-            {{stage.description}}
-            <div class="section_title" *ngFor="let meta of stage.grouped; let i = index">
-                <div class="number">
-                    {{i+1}}
-                </div>
-                {{meta.title}}
-                <div class="subSection_title" *ngFor="let subSection of meta.subSections" >
-                    {{subSection.title}}
+            <div class="stage_item" #hola (click)="expandOrCollapse(sections)">{{stage.description}}</div> 
+            <div class="sections" #sections>
+                <div class="section_title" *ngFor="let meta of stage.grouped; let i = index">
+                    <div class="number">
+                        {{i+1}}
+                    </div>
+                    <div class="section_item">
+                        {{meta.title}}
+                    </div>
+                    
+                    <!-- <div class="subSections">
+                        <div class="subSection_title" *ngFor="let subSection of meta.subSections" >
+                            {{subSection.title}}
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>

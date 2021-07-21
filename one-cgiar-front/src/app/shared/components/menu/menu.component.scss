@@ -6,31 +6,70 @@
     overflow-y: scroll;
     background-color: rgba(128, 128, 128, 0.479);
     color: white;
-    
-    .section_title{
-        font-weight: 700;
-        position: relative;
-        margin-bottom: 20px;
-        .number{
-            position: absolute;
-            top: -5px;
-            left: -40px;
-            width: 30px;
-            height: 30px;
-            border-radius: 30px;
-            border: 2.9px white solid;
-            // display: flex;
-            text-align: center;
-            vertical-align: middle;
-            padding-top: 2px;
-        }
-        .subSection_title{
-            margin-left: 10px;
-            font-weight: 400;
+    .stages{
+        height: auto;
+        border: red 1px solid;
+        .stage_item{
+            cursor: pointer;
+            // padding: 5px 10px;
+            border-radius: 8px;
+            // height: 0px;
+            background-color: red;
+            &:hover{
+                background-color: gray;
+                // height: 100%;
+                .sections{
+                    height: 100px;
+                }
+            }
         }
     }
+
+    .sections{
+        height: 0px;
+        transition: all ease .3s;
+        overflow: hidden;
+        .section_title{
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 20px;
+            .number{
+                position: absolute;
+                top: -5px;
+                left: -40px;
+                width: 30px;
+                height: 30px;
+                border-radius: 30px;
+                border: 2.9px white solid;
+                // display: flex;
+                text-align: center;
+                vertical-align: middle;
+                padding-top: 2px;
+            }
+
+        }
+    }
+
+    // .subSections{
+    //     height: 0px;
+    //     overflow: hidden;
+    //     .subSection_title{
+    //         margin-left: 10px;
+    //         font-weight: 400;
+    //     }
+    // }
+
 }
 
+// .expand{
+//     height: 100% !important;
+//     transition: height ease .3s;
+// }
+
+// .collapse{
+//     height: 0px;
+//     transition: height ease .3s;
+// }
 
   /* width */
   .menu::-webkit-scrollbar {
