@@ -89,12 +89,23 @@ export class InitiativesService {
   }
 
     /**
-   * @param id initiative id
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
    * @returns general-information data
    */
 
   getGeneralInformation(initiativeId,stageName) {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  }
+
+  /**
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
+   * @param body body
+   * @returns general-information data
+   */
+  patchGeneralInformation(initiativeId,stageName,body) {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`,body);
   }
 
    /**

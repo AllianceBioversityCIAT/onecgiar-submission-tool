@@ -23,7 +23,6 @@ export class GeneralInformationComponent implements OnInit {
 
   @Input() stageName = '';
   public generalInformationForm: FormGroup;
-  public initvStgId: any;
   public actionAreas: any[];
   // public usersByInitiative: [];
 
@@ -59,11 +58,10 @@ export class GeneralInformationComponent implements OnInit {
     private _StagesMenuService:StagesMenuService
     ) {
     this.generalInformationForm = new FormGroup({
-      conceptId: new FormControl(''),
       name: new FormControl(null, Validators.required),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
-      initvStgId: new FormControl(this.initvStgId, Validators.required),
+      generalInformationId: new FormControl(null, Validators.required),
     });
   }
 
@@ -71,11 +69,8 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnInit(): void {
     this._dataControlService.generalInfoChange$.subscribe(resp=>{
-      this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
+      this.getConceptGeneralInfo();
     })
-    this.conceptSvc.initvStgId = this._initiativesService.initvStgId;
-    this.generalInformationForm.get('initvStgId').setValue(this._initiativesService.initvStgId)
-    // this.getConceptGeneralInfo(this.conceptSvc.initvStgId);
     this._dataControlService.generalInfoChange$.emit();
   }
 
@@ -88,12 +83,12 @@ export class GeneralInformationComponent implements OnInit {
     }
   }
 
-  getConceptGeneralInfo(initvStgId) {
-    this.initvStgId = this.conceptSvc.initvStgId;
+  getConceptGeneralInfo() {
     this.spinnerService.show('general-information');
 
     
     this.conceptSvc.getActionAreas().subscribe(resp=>{
+      console.log(resp);
       this.actionAreas = resp;
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
@@ -112,6 +107,7 @@ export class GeneralInformationComponent implements OnInit {
 
       let general_information_data = resp.response.generalInformation;
       console.log(general_information_data);
+
       this.leads.lead_name = general_information_data.first_name;
       this.leads.lead_email = general_information_data.email;
       this.leads.lead_id = general_information_data.lead_id;
@@ -120,11 +116,10 @@ export class GeneralInformationComponent implements OnInit {
       this.leads.co_lead_id = general_information_data.co_lead_id;
 
       this.generalInformationForm.controls['name'].setValue(general_information_data.name);
-      // this.generalInformationForm.controls['conceptId'].setValue(gnrlInfo.conceptId);
 
       this.generalInformationForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
       this.generalInformationForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
-
+      this.generalInformationForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId)
       this.showForm = true;
     }, err => {
       console.log(err instanceof HttpErrorResponse);
@@ -135,25 +130,25 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   upsertGeneralInfo() {
+    
     this.spinnerService.show('general-information');
-    this.conceptSvc.upsertGeneralInformation(this.generalInformationForm.value).
-      subscribe(
-        gnrlInfo => {
-          this.spinnerService.hide('general-information');
+    this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
 
+      this.spinnerService.hide('general-information');
+      
+      this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+        this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+      })
 
-          this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-            this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-          })
+      this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      ?this._interactionsService.successMessage('General information has been saved')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
-          this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)?  this._interactionsService.successMessage('General information has been saved'):
-                      this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
-        },
-        error => {
-          // console.log(error, this.errorService.getServerMessage(error))
-          this.spinnerService.hide('general-information');
-        }
-      )
+    },error => {
+    // console.log(error, this.errorService.getServerMessage(error))
+    this.spinnerService.hide('general-information');
+    });
+
   }
 
   openDialog(): void {
