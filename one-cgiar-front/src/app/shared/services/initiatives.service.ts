@@ -87,11 +87,30 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/package/${id}`);
 
   }
-  
+
+    /**
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
+   * @returns general-information data
+   */
+
+  getGeneralInformation(initiativeId,stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  }
+
+  /**
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
+   * @param body body
+   * @returns general-information data
+   */
+  patchGeneralInformation(initiativeId,stageName,body) {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`,body);
+  }
 
    /**
    * @param id initiative id
-   * @returns general-informatio
+   * @returns WP
    */
   // Query to get all the WorkPackages
   getAllIWorkPackages(id: number|string): Observable<any> {

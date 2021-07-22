@@ -11,7 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'contextd',
+        redirectTo: 'general-information',
         pathMatch: 'full'
       },
       {
@@ -19,8 +19,8 @@ const routes: Routes = [
         component: UnderConstructionPageComponent,
       },
       {
-        path: 'example',
-        component: ExampleComponent,
+        path: 'general-information',
+        loadChildren: () => import('./general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
       },
       {
         path: 'context',
@@ -49,11 +49,7 @@ const routes: Routes = [
       {
         path: 'financial-resources',
         loadChildren: () => import('./financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
-      },
-      {
-        path: 'general-information',
-        component: ExampleComponent,
-      },
+      }
     ]
   }
 ];
