@@ -41,7 +41,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { generalInformation, metadata }));
@@ -82,7 +82,7 @@ export const getContext = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'Context');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { context, metadata }));
@@ -130,7 +130,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { generalInformation, metadata }));
@@ -153,16 +153,11 @@ export const upsertContext = async (req: Request, res: Response, next) => {
     const { initiativeId } = req.params;
     // get generalInformationId, name, action_area_id, action_area_description by stage id from client
     const { contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design } = req.body;
-    // get user id
-    const { userId } = res.locals.jwtPayload;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
-    const initvUserRepo = getRepository(InitiativesByUsers);
 
     try {
-        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
-
         
         // get stage
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
@@ -180,7 +175,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'Context');
 
         res.json(new ResponseHandler('Full Proposal: Context.', { context, metadata }));
