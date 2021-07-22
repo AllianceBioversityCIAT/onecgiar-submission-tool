@@ -66,7 +66,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
         const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
         clist => clist.map(pB_ => _.omit(pB_, 'id')));
 
-        console.log(grouped)
+        // console.log(grouped)
 
         // let initiativesIds = initiatives.map(init => init.initvStgId);
         if (initiatives.length == 0)
