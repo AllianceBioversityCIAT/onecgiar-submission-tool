@@ -87,11 +87,19 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/package/${id}`);
 
   }
-  
+
+    /**
+   * @param id initiative id
+   * @returns general-information data
+   */
+
+  getGeneralInformation(initiativeId,stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  }
 
    /**
    * @param id initiative id
-   * @returns general-informatio
+   * @returns WP
    */
   // Query to get all the WorkPackages
   getAllIWorkPackages(id: number|string): Observable<any> {

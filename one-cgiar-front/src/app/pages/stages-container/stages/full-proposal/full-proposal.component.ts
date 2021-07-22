@@ -17,8 +17,6 @@ export class FullProposalComponent implements OnInit {
   ngOnInit(): void {
     this._dataControlService.loadMenu$.emit('full-proposal');
     this.getRolefromInitiativeById();
-    this._dataControlService.general_information.secondLeadEmail = 'Deputy email';
-    this._dataControlService.general_information.secondLeadName = 'Deputy name';
   }
 
   getRolefromInitiativeById(){
