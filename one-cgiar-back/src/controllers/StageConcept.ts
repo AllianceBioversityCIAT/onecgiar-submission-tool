@@ -157,118 +157,36 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
  */
 
 export const upsertConceptGeneralInformation = async (req: Request, res: Response) => {
-    // export const updateConcept = async (req: Request, res: Response) => {
-    const { conceptId, initvStgId, name, action_area_id, action_area_description } = req.body;
-    const { userId } = res.locals.jwtPayload;
+    // get initiative by stage id from client
+    const { initiativeId } = req.params;
+    // get generalInformationId, name, action_area_id, action_area_description by stage id from client
+    const { generalInformationId, name, action_area_id, action_area_description } = req.body;
 
-    const concptInfoRepo = getRepository(ConceptInfo);
+
     const initvStgRepo = getRepository(InitiativesByStages);
-    const initvUserRepo = getRepository(InitiativesByUsers);
-
-    // const userRepo = getRepository(Users);
-    const initiativeRepo = getRepository(Initiatives);
-    const queryRunner = getConnection().createQueryBuilder();
-
-    let conceptInf: ConceptInfo;
-
+    const stageRepo = getRepository(Stages);
     try {
 
-        // /**
-        //  * Validate user in initiative
-        //  * 
-        //  */
-
-        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true } });
-
-        // if (userInitiative == null) {
-        //     throw new APIError(
-        //         'NOT FOUND',
-        //         HttpStatusCode.NOT_FOUND,
-        //         true,
-        //         'User not found in initiative.'
-        //     );
-        // }
-
-
-        const initvStg = await initvStgRepo.findOne(initvStgId, { relations: ['initiative'] });
-        // if not intitiative by stage, throw error
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Concept' } });
+        // get intiative by stage : concept
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         if (initvStg == null) {
-            throw new BaseError('Upsert General Information: Error', 400, `Initiative not found in stage: Concept`, false);
+            throw new BaseError('Upsert General information: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
+        // create new concept object
+        const concept = new ConceptHandler(initvStg.id.toString());
 
-        const actionAreas = await getClaActionAreas();
-        const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
+        const generalInformation = await concept.upsertGeneralInformation(generalInformationId, name, action_area_id, action_area_description)
 
-        if (conceptId == null) {
-            conceptInf = new ConceptInfo();
-            conceptInf.name = name;
+        // get metadata
+        let metadata = await concept.metaData;
+        // and filtered by section
+        metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
-            conceptInf.action_area_description = action_area_description || selectedActionArea.name;
-            conceptInf.action_area_id = action_area_id;
-
-            conceptInf.initvStg = initvStg;
-            conceptInf.objectives = '';
-            conceptInf.challenge = '';
-            conceptInf.results = '';
-            conceptInf.highlights = '';
-        } else {
-            conceptInf = await concptInfoRepo.findOne(conceptId);
-            conceptInf.name = (name) ? name : conceptInf.name;
-            conceptInf.action_area_description = selectedActionArea.name;
-            conceptInf.action_area_id = (action_area_id) ? action_area_id : conceptInf.action_area_id;
-
-        }
-        let upsertedInfo = await concptInfoRepo.save(conceptInf);
-
-        /**
-         * update initiative name
-         */
-
-        const initiative = await initiativeRepo.findOne(initvStg.initiative.id);
-        initiative.name = upsertedInfo.name;
-        let updatedInitiative = await initiativeRepo.save(initiative);
-
-
-        let conceptQuery = ` 
-        SELECT
-            initvStgs.id AS initvStgId,
-            stage.description AS stageDesc,
-            stage.active AS stageIsActive,
-            concept.id AS conceptId,
-            concept.name AS conceptName,
-            concept.action_area_description AS conceptActAreaDes,
-            concept.action_area_id AS conceptActAreaId
-            ,(SELECT GROUP_CONCAT(id SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesIds
-            ,(SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM work_packages WHERE initvStgId = initvStgs.id) as workPackagesNames
-        FROM
-            initiatives_by_stages initvStgs
-        LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-        LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-        
-        WHERE initvStgs.id =:initvStgId;
-    `;
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            conceptQuery,
-            { initvStgId },
-            {}
-        );
-        let conceptInfo = await queryRunner.connection.query(query, parameters);
-
-
-
-        res.json(new ResponseHandler('Concept general information upserted.', { generaInformation: conceptInfo[0] }));
-
+        res.json(new ResponseHandler('Concept: General information.', { generalInformation, metadata }));
     } catch (error) {
-        console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
+        console.log(error)
         return res.status(error.httpCode).json(error);
     }
 
