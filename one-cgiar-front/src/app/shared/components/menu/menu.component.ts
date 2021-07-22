@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
     })
 
     this._dataControlService.menuChange$.subscribe(() => {
-      this.getAllIWorkPackages();
+      // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     })
 
