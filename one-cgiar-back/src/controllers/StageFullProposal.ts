@@ -104,12 +104,9 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
     const { initiativeId } = req.params;
     // get generalInformationId, name, action_area_id, action_area_description by stage id from client
     const { generalInformationId, name, action_area_id, action_area_description } = req.body;
-    // get user id
-    const { userId } = res.locals.jwtPayload;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
-    const initvUserRepo = getRepository(InitiativesByUsers);
     try {
 
         // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
