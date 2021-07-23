@@ -246,25 +246,21 @@ export class MenuComponent implements OnInit {
   validate_under_construction(section) {
     // console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
-      case 'General Information ':
+      case "Management Plans and policy compliance":
         return true
-      case "Context":
-        return true
-      case 'Challenge statement':
+      case 'Work Packages':
         return true
       case 'Comparative Advantage':
         return true
-      case "Governance, Strategies and Plans":
+      case "Innovation packages and Projection of Benefits":
         return true
-      case "Work Packages ":
+      case "Theories of Change":
         return true
-      case "Innovation Module":
+      case "MELIA":
         return true
-      case "Theory of change":
+      case "People and Culture":
         return true
-      case "MELIAs":
-        return true
-      case "Human and Financial Resources":
+      case "Financial Resources":
         return true
       default:
         return false

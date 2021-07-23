@@ -10,7 +10,7 @@ export class InitiativeStageHandler extends BaseValidation {
     private stageId_;
     private initiativeId_;
 
-    public queryRunner = getConnection().createQueryRunner();
+    public queryRunner = getConnection().createQueryRunner().connection;
     public initvStgRepo = getRepository(InitiativesByStages);
     public initiativeRepo = getRepository(Initiatives);
 
