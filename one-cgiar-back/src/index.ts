@@ -11,6 +11,7 @@ import { startMulter } from './middlewares/multer';
 import Routes from './routes';
 import { errorHandler } from './middlewares/error-handler';
 import path from 'path';
+import { BaseError } from './handlers/BaseError';
 
 
 require('dotenv').config();
@@ -21,7 +22,7 @@ if (!process.env.PORT) {
 
 // get the unhandled rejection and throw it to another fallback handler we already have.
 process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
-    throw reason;
+    throw new BaseError(reason.name,503, reason.message, true);
 });
 
 process.on('uncaughtException', (error: Error) => {
@@ -36,7 +37,7 @@ const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 const HOST = process.env.HOST;
 
 createConnection()
-    .then(async () => {
+    .then(async (connection) => {
         const app = express();
         app.use(express.urlencoded({ extended: true }));
         app.use(express.json());
@@ -57,6 +58,17 @@ createConnection()
             next();
         });
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
+
+        // if connection timed out go next()
+        // app.use(function (req, res, next) {
+        //     res.setTimeout(12000, async function () {
+        //         console.log('Request has timed out.');
+        //         // await connection.close();
+        //         next()
+        //     });
+        //     // next();
+
+        // });
 
         console.log(path.resolve('./uploads'))
         // public files
