@@ -9,15 +9,15 @@ import { InitiativesByUsers } from './InititativesByUsers';
 @Unique(['email'])
 export class Users extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
     @IsNotEmpty()
-    first_name: string
+    first_name: string;
 
     @Column()
     @IsNotEmpty()
-    last_name: string
+    last_name: string;
 
     @Column()
     @IsNotEmpty({ message: 'The email is required' })
@@ -25,7 +25,7 @@ export class Users extends UpdatedCreatedAt {
     email: string;
 
     @Column({ nullable: true })
-    password: string
+    password: string;
 
     @Column({ default: false })
     is_cgiar: boolean;
@@ -45,13 +45,13 @@ export class Users extends UpdatedCreatedAt {
     roles: Roles[];
 
     @Column({ type: 'timestamp'})
-    last_login: Date
+    last_login: Date;
     
     @Column({ type: 'tinyint'})
-    is_active: boolean
+    is_active: boolean;
     
     @Column({ type: 'timestamp'})
-    active_since: boolean
+    active_since: boolean;
 
 
     @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.user)

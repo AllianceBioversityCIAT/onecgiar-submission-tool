@@ -5,14 +5,14 @@ import { WorkPackages } from './WorkPackages';
 @Entity('regions_by_work_packages')
 export class RegionsByWorkPackages extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @OneToOne(() => WorkPackages)
     @JoinColumn()
     wrkPkg!: WorkPackages;
 
     @Column('tinyint')
-    active: boolean
+    active: boolean;
 
     @Column({type: 'int'})
     region_id: number;

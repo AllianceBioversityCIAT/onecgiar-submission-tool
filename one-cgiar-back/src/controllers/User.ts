@@ -139,7 +139,7 @@ export const createUsers = async (req: Request, res: Response) => {
     const { first_name, last_name, password, roles, email, is_cgiar, initiativeId } = req.body;
     const userRepository = getRepository(Users);
     const rolesRepository = getRepository(Roles);
-    const usrInitvRepository = getRepository(InitiativesByUsers);
+    const usrInitvRepository = getRepository(InitiativesByUsers);    
 
     try {
 

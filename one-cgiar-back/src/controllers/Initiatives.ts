@@ -58,13 +58,19 @@ export const getInitiatives = async (req: Request, res: Response) => {
         `;
 
     try {
+
+
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             initvSQL,
             { userId },
             {}
         );
+
+
         initiatives = await queryRunner.connection.query(query, parameters);
+        
         let initiativesIds = initiatives.map(init => init.initvStgId);
+        
         if (initiatives.length == 0)
             // res.sendStatus(204)
             res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
@@ -80,9 +86,13 @@ export const getInitiatives = async (req: Request, res: Response) => {
                 select: ["name", "action_area_description", "action_area_id"]
 
             });
+
+  
             initiatives.forEach(initiative => {
                 initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
+                
             });
+            
             /**
              * more stages to be added
              */
@@ -486,7 +496,7 @@ export const getStage = async (req: Request, res: Response) => {
 export const getStageMeta = async (req: Request, res: Response) => {
 
     // get stage id from params
-    const { initiativeId } = req.params
+    const { initiativeId } = req.params;
     const stageMetaRepo = getRepository(StagesMeta);
     const initvStgRepo = getRepository(InitiativesByStages);
 
@@ -494,9 +504,14 @@ export const getStageMeta = async (req: Request, res: Response) => {
         const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId }, relations: ['stage'] });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
 
+        console.log(initvStg.stage.description);
         const stgDesc = initvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
+        console.log(stgDesc);
+        
         const validatedSections = await validatedSection(initvStg.id, stgDesc);
-        res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
+
+        res.json(new ResponseHandler('Stages meta.', { stagesMeta , validatedSections }));
+
     } catch (error) {
         console.log(error);
         let e = error;

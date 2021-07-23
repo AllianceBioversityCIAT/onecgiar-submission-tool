@@ -15,6 +15,9 @@ import { ConceptHandler } from "../handlers/ConceptController";
 export const validatedSection = async (initvStgId: number, stageDescription: string) => {
     let validatedSection: any;
 
+    console.log('Dentro de validation');
+    
+
     switch (stageDescription) {
         case 'concept':
             validatedSection = {
@@ -26,19 +29,20 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
             }
 
             // validate general information
+            console.log('validate general information');
             validatedSection.general_information = await generalInformationValidator(initvStgId);
 
             // validate narratives
-            validatedSection.narratives = await narrativesValidator(initvStgId);
+            // validatedSection.narratives = await narrativesValidator(initvStgId);
 
             // validate initial theory of change
-            validatedSection.initial_theory_of_change = await tocsValidator(initvStgId);
+            // validatedSection.initial_theory_of_change = await tocsValidator(initvStgId);
 
             // validate work packages
-            validatedSection.work_packages = await workPackagesValidator(initvStgId);
+            // validatedSection.work_packages = await workPackagesValidator(initvStgId);
 
             // validate key partners
-            validatedSection.key_partners = await keyPartnersValidator(initvStgId);
+            // validatedSection.key_partners = await keyPartnersValidator(initvStgId);
             break;
 
         default:
@@ -128,17 +132,32 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
 const generalInformationValidator = async (initvStgId): Promise<boolean> => {
     const queryRunner = getConnection().createQueryRunner();
 
+    console.log('Dentro');
+    
+
     // get concept info fields
-    const gi_conceptInfo = await queryRunner.query(`SELECT name, action_area_id FROM concept_info WHERE initvStgId = ${initvStgId}`);
+    // const gi_conceptInfo = await queryRunner.query(`SELECT name, action_area_id FROM concept_info WHERE initvStgId = ${initvStgId}`);
+
+    
+    // console.log('query 1',gi_conceptInfo);
+
     // get lead initiative user
     const gi_lead = await queryRunner.query(`SELECT userId FROM initiatives_by_users WHERE initiativeId = (SELECT initiativeId FROM initiatives_by_stages WHERE id = ${initvStgId}) AND roleId = (SELECT id FROM roles WHERE acronym = 'SGD')`);
+    
+    console.log('query 2',gi_lead);
+    
     // get co-lead initiative user
-    const gi_colead = await queryRunner.query(`SELECT userId FROM initiatives_by_users WHERE initiativeId = (SELECT initiativeId FROM initiatives_by_stages WHERE id = ${initvStgId}) AND roleId = (SELECT id FROM roles WHERE acronym = 'PI')`);
+    // const gi_colead = await queryRunner.query(`SELECT userId FROM initiatives_by_users WHERE initiativeId = (SELECT initiativeId FROM initiatives_by_stages WHERE id = ${initvStgId}) AND roleId = (SELECT id FROM roles WHERE acronym = 'PI')`);
+    
+    // console.log('query 3',gi_colead);
+    
     // validate if any field is empty or null
-    return (gi_conceptInfo.length
-        && gi_conceptInfo.every(item => item.name && item.action_area_id))
-        && (gi_lead.length && gi_lead.every(item => item.userId))
-        && (gi_colead.length && gi_colead.every(item => item.userId));
+    // return (gi_conceptInfo.length
+    //     && gi_conceptInfo.every(item => item.name && item.action_area_id))
+    //     && (gi_lead.length && gi_lead.every(item => item.userId))
+    //     && (gi_colead.length && gi_colead.every(item => item.userId));
+
+    return (gi_lead.length)
 }
 
 // narratives information validator
