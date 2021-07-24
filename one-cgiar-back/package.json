@@ -11,7 +11,9 @@
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
-        "migrations:create": "npm run typeorm -- migration:create -n"
+        "migrations:create": "npm run typeorm -- migration:create -n",
+        "docker:build": "docker build -t onecgiarback .",
+        "docker:run": "docker run -dti --name onecgiarapi -p 3000:3000 --link mysqlciat:mysql onecgiarback"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
