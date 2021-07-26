@@ -1,4 +1,5 @@
 import { getConnection, getRepository } from "typeorm";
+import { Citations } from "../entity/Citatitions";
 import { Initiatives } from "../entity/Initiatives";
 import { InitiativesByStages } from "../entity/InititativesByStages";
 import { BaseError } from "./BaseError";
@@ -49,24 +50,62 @@ export class InitiativeStageHandler extends BaseValidation {
             throw new BaseError('Get intitative by stage object', 400, error.message, false)
         }
     }
-    
+
+    /**
+     * 
+     * @param title 
+     * @param link 
+     * @param table_name 
+     * @param col_name 
+     * @param citationId?
+     * @returns citation
+     */
+    async addLink(title: string, link: string, table_name: string, col_name: string, citationId?: string) {
+        // get citations repo
+        const citationsRepo = await getRepository(Citations);
+        //  create empty object 
+        let citation: Citations;
+        try {
+            // if null, create object
+            if (citationId == null) {
+                citation = new Citations();
+                // assign initiative by stage
+                citation.initvStg = this.initvStgId_;
+            } else {
+                citation = await citationsRepo.findOne(citationId);
+            }
+            citation.title = title;
+            citation.link = link;
+            citation.table_name = table_name;
+            citation.col_name = col_name;
+        
+            // upsert citation 
+            const addedLink = await citationsRepo.save(citation);
+            return citation;
+        } catch (error) {
+            throw new BaseError('Add link: Error', 400, error.message, false)
+        }
+
+
+    }
+
     async setInitvStage() {
         try {
             const existInitvStg = await this.initvStage;
             this.intvStage_ = existInitvStg[0] ? existInitvStg[0] : new InitiativesByStages();
-            
+
             this.intvStage_.active = true;
             this.intvStage_.initiative = this.initiativeId_;
             this.intvStage_.stage = this.stageId_;
             // save intiative by stage
-            this.intvStage_ =  await this.initvStgRepo.save(this.intvStage_);
+            this.intvStage_ = await this.initvStgRepo.save(this.intvStage_);
             this.initvStgId_ = this.intvStage_.id;
             return this.intvStage_;
-            
+
         } catch (error) {
             console.log(error)
             throw new BaseError('Set intitative by stage object', 400, error.message, false)
-            
+
         }
     }
 
