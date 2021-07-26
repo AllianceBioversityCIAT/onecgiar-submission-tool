@@ -69,13 +69,12 @@ export class ConceptHandler extends ConceptValidation {
             const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
             // validate if initiatitive by stage already exists
             const replicatedIntvStg: InitiativesByStages = await proposalObject.setInitvStage();
-
+            
             // get concept general information data 
             const conceptGI = await this.getGeneralInformation();
-
+            
             // get general information if exists from proposalObject
             const proposalGI = await proposalObject.getGeneralInformation();
-
             // upsert full proposal general infomation
             const pplGI = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGI.name, conceptGI.action_area_id, conceptGI.action_area_description);
 
@@ -254,7 +253,7 @@ export class ConceptHandler extends ConceptValidation {
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
 
             //    update initiative name
-            let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+            let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
 

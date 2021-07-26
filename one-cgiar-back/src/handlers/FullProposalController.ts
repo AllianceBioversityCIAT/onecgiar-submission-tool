@@ -135,6 +135,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.initvStg = initvStg[0].id;
             } else {
                 generalInformation = await gnralInfoRepo.findOne(generalInformationId);
+                console.log(generalInformation)
                 generalInformation.name = (name) ? name : generalInformation.name;
                 generalInformation.action_area_description = selectedActionArea.name;
                 generalInformation.action_area_id = (action_area_id) ? action_area_id : generalInformation.action_area_id;
@@ -144,7 +145,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
 
             //    update initiative name
-            let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+            let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
+            console.log(initiative)
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
 
