@@ -135,10 +135,9 @@ export class GeneralInformationComponent implements OnInit {
     this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
 
       this.spinnerService.hide('general-information');
-      
-      this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-        this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-      })
+      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+      // })
 
       this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
