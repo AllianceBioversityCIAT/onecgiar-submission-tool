@@ -230,4 +230,5 @@ export class ProposalHandler extends InitiativeStageHandler {
             throw new BaseError('Upsert context - full proposal', 400, error.message, false)
         }
     }
+
 }

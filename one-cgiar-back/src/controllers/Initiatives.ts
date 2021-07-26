@@ -18,6 +18,7 @@ import { forwardStage, validatedSection } from '../utils/section-validation';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
 
 import _ from "lodash";
+import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
 
 
 require('dotenv').config();
@@ -64,7 +65,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
         initiatives = await queryRunner.connection.query(query, parameters);
 
         const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
-        clist => clist.map(pB_ => _.omit(pB_, 'id')));
+            clist => clist.map(pB_ => _.omit(pB_, 'id')));
 
         // console.log(grouped)
 
@@ -684,6 +685,48 @@ export const replicationProcess = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 }
+
+
+
+
+
+/**
+ * 
+ * @param req params:{ title: string, link: string, table_name: string, col_name: string, citationId?: string }
+ * @param res 
+ */
+export const addLink = async (req: Request, res: Response) => {
+
+    const { title, link, table_name, col_name, citationId } = req.body;
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+         // if not intitiative by stage, throw error
+         if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id+'');
+
+        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId );
+
+        res.json(new ResponseHandler('Initiatives:Add link.', { addedLink }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+
 
 
 
