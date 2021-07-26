@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter  } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StagesMenuService } from '@shared/services/stages-menu.service';
@@ -64,14 +64,18 @@ export class GeneralInformationComponent implements OnInit {
       generalInformationId: new FormControl(null, Validators.required),
     });
   }
-
+  localEmitter: any;
 
 
   ngOnInit(): void {
-    this._dataControlService.generalInfoChange$.subscribe(resp=>{
-      this.getConceptGeneralInfo();
+    this.localEmitter= this._dataControlService.generalInfoChange$.subscribe(resp=>{
+        this.getConceptGeneralInfo();
     })
     this._dataControlService.generalInfoChange$.emit();
+  }
+
+  ngOnDestroy(): void {
+    this.localEmitter.unsubscribe()
   }
 
   validateFormAndLeads(){
@@ -88,7 +92,7 @@ export class GeneralInformationComponent implements OnInit {
 
     
     this.conceptSvc.getActionAreas().subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.actionAreas = resp;
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
@@ -103,10 +107,10 @@ export class GeneralInformationComponent implements OnInit {
 
 
       this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id,this.stageName).subscribe(resp=>{
-
-
+      // console.log('%cinitiative.id: '+this._initiativesService.initiative.id+' - stageName: '+this.stageName,'background: #222; color: #ffff00');
+      
       let general_information_data = resp.response.generalInformation;
-      console.log(general_information_data);
+      // console.log(general_information_data);
 
       this.leads.lead_name = general_information_data.first_name;
       this.leads.lead_email = general_information_data.email;
@@ -158,7 +162,7 @@ export class GeneralInformationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this._dataControlService.generalInfoChange$.emit();
+      this.getConceptGeneralInfo();
       // let currentUrl = this.router.url;
       // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
       //     this.router.navigate([currentUrl]);
