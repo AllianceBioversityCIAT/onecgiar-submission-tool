@@ -24,24 +24,52 @@ export class LearningFpeAndIaComponent implements OnInit {
     });
   }
 
+  citationsList=[
+    {
+      title:'lorem 1',
+      link: 'exmaple1.com',
+      edited:false,
+      citationId: 1,
+      table_name: 'context',
+      col_name:'key_learnings',
+
+    },
+    {
+      title:'lorem 2',
+      link: 'exmaple2.com',
+      edited:true,
+      citationId:2,
+      table_name: 'context',
+      col_name:'key_learnings',
+    },
+    {
+      title:'lorem 3',
+      link: 'exmaple3.com',
+      edited:false,
+      table_name: 'context',
+      col_name:'key_learnings',
+    }
+  ]
+
   ngOnInit(): void {
     this.getContext();
-    console.log(this.contextForm.value);
+    this._initiativesService.addLinks(this.citationsList);
   }
 
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.contextForm.valid?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
       this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')
     })
+    console.log(this.citationsList);
   }
 
   getContext(){
     this.spinnerService.show('spinner');
     this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.contextForm.controls['key_learnings'].setValue(resp?.response?.context?.key_learnings);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;

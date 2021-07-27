@@ -81,8 +81,8 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
 // assign citation / link to initiative/
 router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addLink);
 
-// get citation / link to initiative/
-router.get("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
+// get links to table and column
+router.post("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
 
 /**
  * 

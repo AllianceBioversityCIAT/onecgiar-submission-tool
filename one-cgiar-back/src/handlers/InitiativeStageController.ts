@@ -94,16 +94,14 @@ export class InitiativeStageHandler extends BaseValidation {
 
            // get citations repo
            const citationsRepo = await getRepository(Citations);
-           //  create empty object 
-  
-           console.log(table_name);
+           //  create empty object
 
            try {
     
            const initvStg = this.initvStgId_;
 
             // upsert getlinks 
-           const getlinks = await citationsRepo.find({ where: { initvStg: initvStg }});
+           const getlinks = await citationsRepo.find({ where: { initvStg: initvStg,table_name: table_name,col_name:col_name }});
          
             return getlinks;
 
