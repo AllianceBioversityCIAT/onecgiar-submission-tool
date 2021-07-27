@@ -16,7 +16,7 @@
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "migrations:create": "npm run typeorm -- migration:create -n",
         "docker:build": "docker build -t onecgiarback .",
-        "docker:run": "docker run -dti --name onecgiarapi -p 3000:3000 onecgiarback"
+        "docker:run": "docker run -dti --name onecgiarapi -p 3000:3300 onecgiarback"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
