@@ -316,5 +316,24 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions/types`);
   }
 
+  addLink(body,initiativeID,stageID){
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+  }
+
+  addLinks(citationList){
+    // console.log(citationMetaData);
+    citationList.forEach(citation => {
+     
+      if (!citation?.citationId) {
+        // console.log('%c**To Create: **','background: #222; color: #ffff00');
+        // console.log('title: '+citation.title+' id: '+citation.id);
+      }else if(citation?.edited){
+        // console.log('%c**To update: **','background: #222; color: #ffff00');
+        // console.log('title: '+citation.title+' id: '+citation.id);
+      }
+     
+    });
+  }
+
 
 }
