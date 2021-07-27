@@ -74,11 +74,12 @@ export class InitiativeStageHandler extends BaseValidation {
             } else {
                 citation = await citationsRepo.findOne(citationId);
             }
+
             citation.title = title;
             citation.link = link;
             citation.table_name = table_name;
             citation.col_name = col_name;
-        
+
             // upsert citation 
             const addedLink = await citationsRepo.save(citation);
             return citation;
@@ -87,6 +88,29 @@ export class InitiativeStageHandler extends BaseValidation {
         }
 
 
+    }
+
+    async getLink(table_name: string, col_name: string, citationId?: string) {
+
+           // get citations repo
+           const citationsRepo = await getRepository(Citations);
+           //  create empty object 
+  
+           console.log(table_name);
+
+           try {
+    
+           const initvStg = this.initvStgId_;
+
+            // upsert getlinks 
+           const getlinks = await citationsRepo.find({ where: { initvStg: initvStg }});
+         
+            return getlinks;
+
+        } catch (error) {
+            throw new BaseError('Add link: Error', 400, error.message, false)
+        }
+        
     }
 
     async setInitvStage() {
