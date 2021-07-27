@@ -79,7 +79,7 @@ router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], 
 router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assignTOCsByInitvStg);
 
 // assign citation / link to initiative/
-router.post("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addLink);
+router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addLink);
 
 /**
  * 

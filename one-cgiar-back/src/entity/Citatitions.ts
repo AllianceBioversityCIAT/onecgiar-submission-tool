@@ -6,19 +6,19 @@ import { InitiativesByStages } from "./InititativesByStages";
 export class Citations extends UpdatedCreatedAt {
 
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column({ type: "text" })
-    title: string
+    title: string;
 
     @Column({ type: "text" })
-    link: string
+    link: string;
 
     @Column({ type: "text" })
-    table_name: string
+    table_name: string;
     
     @Column({ type: "text" })
-    col_name: string
+    col_name: string;
 
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()
