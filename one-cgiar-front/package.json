@@ -9,7 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "server": "cd API && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run start\""
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
+    "docker:build": "docker build -t onecgiarfront .",
+    "docker:run": "docker run --name onecgiarclient -d -p 3300:80 onecgiarfront"
   },
   "private": true,
   "dependencies": {
