@@ -72,7 +72,7 @@
                       
                     </mat-expansion-panel-header>
                     <!-- have subsections -->
-                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
+                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal/'+meta.route">
                       <mat-panel-title  class="subSections_color" >
                         <span [style.width]="'85%'">{{meta.title}}</span>
                       </mat-panel-title>
