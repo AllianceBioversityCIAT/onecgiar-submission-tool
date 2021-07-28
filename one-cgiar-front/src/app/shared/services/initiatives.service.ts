@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { observable, Observable } from 'rxjs';
 import { AllInitiatives } from '../models/initiative.interface';
 import { map } from 'rxjs/operators';
 const sectionPath = 'initiatives'
@@ -320,19 +320,24 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
   }
 
-  addLinks(citationList){
-    // console.log(citationMetaData);
+  getLinks(body,initiativeID,stageID){
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+  }
+
+  async addLinks(citationList,initiativeID,stageID){
+    let promiseList=[];
     citationList.forEach(citation => {
-     
-      if (!citation?.citationId) {
-        // console.log('%c**To Create: **','background: #222; color: #ffff00');
-        // console.log('title: '+citation.title+' id: '+citation.id);
-      }else if(citation?.edited){
-        // console.log('%c**To update: **','background: #222; color: #ffff00');
-        // console.log('title: '+citation.title+' id: '+citation.id);
-      }
-     
+      if (!citation?.citationId || citation?.edited)  promiseList.push( this.addLink(citation,initiativeID,stageID).toPromise());
     });
+
+    await Promise.all(promiseList).then(values => {
+      console.log(values);
+    },
+    err=>{
+      console.log(err);
+    });
+
+
   }
 
 
