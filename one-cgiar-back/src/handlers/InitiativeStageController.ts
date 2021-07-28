@@ -60,7 +60,7 @@ export class InitiativeStageHandler extends BaseValidation {
      * @param citationId?
      * @returns citation
      */
-    async addLink(title: string, link: string, table_name: string, col_name: string, citationId?: string) {
+    async addLink(title: string, link: string, table_name: string, col_name: string, citationId?: string, active?: boolean) {
         // get citations repo
         const citationsRepo = await getRepository(Citations);
         //  create empty object 
@@ -79,6 +79,7 @@ export class InitiativeStageHandler extends BaseValidation {
             citation.link = link;
             citation.table_name = table_name;
             citation.col_name = col_name;
+            citation.active = active;
 
             // upsert citation 
             const addedLink = await citationsRepo.save(citation);
@@ -90,25 +91,33 @@ export class InitiativeStageHandler extends BaseValidation {
 
     }
 
-    async getLink(table_name: string, col_name: string, citationId?: string) {
+    /**
+     * 
+     * @param table_name 
+     * @param col_name 
+     * @param active 
+     * @returns 
+     */
 
-           // get citations repo
-           const citationsRepo = await getRepository(Citations);
-           //  create empty object
+    async getLink(table_name: string, col_name: string, active?: boolean) {
 
-           try {
-    
-           const initvStg = this.initvStgId_;
+        // get citations repo
+        const citationsRepo = await getRepository(Citations);
+        //  create empty object
+
+        try {
+
+            const initvStg = this.initvStgId_;
 
             // upsert getlinks 
-           const getlinks = await citationsRepo.find({ where: { initvStg: initvStg,table_name: table_name,col_name:col_name }});
-         
+            const getlinks = await citationsRepo.find({ where: { initvStg: initvStg, table_name: table_name, col_name: col_name, active: active } });
+
             return getlinks;
 
         } catch (error) {
             throw new BaseError('Add link: Error', 400, error.message, false)
         }
-        
+
     }
 
     async setInitvStage() {

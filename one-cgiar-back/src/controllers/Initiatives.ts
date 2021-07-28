@@ -697,7 +697,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
  */
 export const addLink = async (req: Request, res: Response) => {
 
-    const { title, link, table_name, col_name, citationId } = req.body;
+    const { title, link, table_name, col_name, citationId, active } = req.body;
 
     // get initiative by stage id from client
     const { initiativeId, stageId } = req.params;
@@ -709,14 +709,14 @@ export const addLink = async (req: Request, res: Response) => {
         const stage = await stageRepo.findOne(stageId);
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-         // if not intitiative by stage, throw error
-         if (initvStg == null) {
-            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
 
-        const initiative = new InitiativeStageHandler(initvStg.id+'');
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
 
-        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId );
+        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId, active);
 
         res.json(new ResponseHandler('Initiatives:Add link.', { addedLink }));
     } catch (error) {
@@ -725,10 +725,15 @@ export const addLink = async (req: Request, res: Response) => {
     }
 }
 
-
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 export async function getLink(req: Request, res: Response) {
 
-    const { table_name, col_name, citationId } = req.body;
+    const { table_name, col_name, active } = req.body;
 
     // get initiative by stage id from client
     const { initiativeId, stageId } = req.params;
@@ -741,28 +746,24 @@ export async function getLink(req: Request, res: Response) {
         const stage = await stageRepo.findOne(stageId);
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-         // if not intitiative by stage, throw error
-         if (initvStg == null) {
-            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
 
-        const initiative = new InitiativeStageHandler(initvStg.id+'');
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
 
-        const getLinks = await initiative.getLink(table_name, col_name, citationId );
+        const getLinks = await initiative.getLink(table_name, col_name, active);
 
         res.json(new ResponseHandler('Initiatives:Get link.', { getLinks }));
 
-        
+
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);
     }
-    
+
 }
-
-
-
-
 
 /**
  * 

@@ -20,6 +20,9 @@ export class Citations extends UpdatedCreatedAt {
     @Column({ type: "text" })
     col_name: string;
 
+    @Column({ type: "tinyint" })
+    active: boolean;
+
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()
     initvStg!: InitiativesByStages;
