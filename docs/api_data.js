@@ -1,7 +1,7 @@
 define({ "api": [
   {
     "type": "patch",
-    "url": "initiatives/get-link/:initiativeId/:stageId",
+    "url": "initiatives/add-link/:initiativeId/:stageId",
     "title": "Create and update citations",
     "version": "1.0.0",
     "permission": [
@@ -14,13 +14,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/get-link/2/3",
+        "content": "http://localhost:3000/api/initiatives/add-link/2/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/get-link/2/3"
+        "url": "http://localhost:3000/api/initiatives/add-link/2/3"
       }
     ],
     "header": {

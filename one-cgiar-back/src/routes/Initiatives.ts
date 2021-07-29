@@ -45,16 +45,16 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
 
 // assign citation / link to initiative/
 /**
- * @api {patch} initiatives/get-link/:initiativeId/:stageId Create and update citations
+ * @api {patch} initiatives/add-link/:initiativeId/:stageId Create and update citations
  * @apiVersion 1.0.0
  * @apiPermission all
  * @apiName PatchCitations
  * @apiGroup Citations
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/get-link/2/3
+ * http://localhost:3000/api/initiatives/add-link/2/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/get-link/2/3
+ * @apiSampleRequest http://localhost:3000/api/initiatives/add-link/2/3
  * 
  * @apiHeader {String} auth
  * 

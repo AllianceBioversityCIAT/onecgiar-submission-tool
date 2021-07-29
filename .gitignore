@@ -11,3 +11,5 @@
 /one-cgiar-back/ormconfig.json
 /one-cgiar-back/node_modules
 /one-cgiar-back/docs/DB
+/docs/api_data.json
+/docs/api_project.json
