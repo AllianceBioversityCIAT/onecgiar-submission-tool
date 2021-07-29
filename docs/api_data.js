@@ -11,22 +11,27 @@ define({ "api": [
     ],
     "name": "PatchCitations",
     "group": "Citations",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/initiatives/get-link/2/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/initiatives/get-link/2/3"
+      }
+    ],
     "header": {
       "fields": {
         "Header": [
           {
             "group": "Header",
-            "type": "Number",
+            "type": "String",
             "optional": false,
-            "field": "initiativeId",
-            "description": "<p>Id initiative</p>"
-          },
-          {
-            "group": "Header",
-            "type": "Number",
-            "optional": false,
-            "field": "stageId",
-            "description": "<p>Id stage.</p>"
+            "field": "auth",
+            "description": ""
           }
         ]
       }
@@ -34,6 +39,20 @@ define({ "api": [
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "stageId",
+            "description": "<p>Id stage.</p>"
+          },
           {
             "group": "Parameter",
             "type": "String",
@@ -180,7 +199,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "initiatives/get-link/:initiativeId/:stageId",
-    "title": "Show all citations per initiative,stage and status",
+    "title": "Read data of citations.",
     "version": "1.0.2",
     "permission": [
       {
@@ -189,6 +208,7 @@ define({ "api": [
     ],
     "name": "PostCitations",
     "group": "Citations",
+    "description": "<p>Shows all cititations filtered by initiative id, estage id and status</p>",
     "examples": [
       {
         "title": "Example usage:",

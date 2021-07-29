@@ -51,8 +51,15 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
  * @apiName PatchCitations
  * @apiGroup Citations
  * 
- * @apiHeader {Number} initiativeId Id initiative
- * @apiHeader {Number} stageId Id stage.
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/get-link/2/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/get-link/2/3
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
  *
  * @apiParam {String} title citation title
  * @apiParam {String} link citation link 
@@ -109,11 +116,13 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
 
 // get links to table and column
 /**
- * @api {post} initiatives/get-link/:initiativeId/:stageId Show all citations per initiative,stage and status
+ * @api {post} initiatives/get-link/:initiativeId/:stageId Read data of citations.
  * @apiVersion 1.0.2
  * @apiPermission all
  * @apiName PostCitations
  * @apiGroup Citations
+ * 
+ * @apiDescription  Shows all cititations filtered by initiative id, estage id and status
  * 
  * @apiExample Example usage:
  * http://localhost:3000/api/initiatives/get-link/2/3
