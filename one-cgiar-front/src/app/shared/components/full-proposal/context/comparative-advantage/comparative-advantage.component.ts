@@ -12,6 +12,8 @@ import { InteractionsService } from '../../../../services/interactions.service';
 export class ComparativeAdvantageComponent implements OnInit {
   contextForm: FormGroup;
   showfrom = false;
+  citationColAndTable={table_name: "context", col_name: "comparative_advantage", active: true}
+  citationsList=[]
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -26,8 +28,25 @@ export class ComparativeAdvantageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
-    console.log(this.contextForm.value);
+    this.getLinks();
   }
+
+  getLinks(){
+    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id,3).subscribe(resp=>{
+      this.citationsList = resp.response.getLinks;
+      this.citationsList.map(resp=>{
+        resp.citationId = resp.id
+      })
+    })
+  }
+
+  async addCitationColAndTableInList(citationsList,citationColAndTable){
+    await citationsList.map(citation=>{
+      citation.table_name = citationColAndTable.table_name;
+      citation.col_name = citationColAndTable.col_name;
+    })
+  }
+
 
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
@@ -35,6 +54,13 @@ export class ComparativeAdvantageComponent implements OnInit {
       this.contextForm.valid?
       this._interactionsService.successMessage('Comparative advantage has been saved'):
       this._interactionsService.warningMessage('Comparative advantage has been saved, but there are incomplete fields')
+    })
+    //save links
+    this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
+      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id,3).then(resp=>{
+        this.getLinks();
+      })
+      
     })
   }
 

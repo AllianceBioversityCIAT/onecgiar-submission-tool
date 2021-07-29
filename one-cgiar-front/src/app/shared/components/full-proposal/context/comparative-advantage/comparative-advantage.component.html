@@ -12,7 +12,12 @@
             <div class="col-sm-12">
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
-                    savedList: []
+                    descriptions:'Add urls',
+                    savedList:{
+                        list:citationsList,
+                        attributeDescription:'title',
+                        attributeLink:'link'
+                    }
                 }"></ibdc-link-list>
             </div>
 
