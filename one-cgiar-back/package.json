@@ -7,7 +7,7 @@
         "build": "tsc",
         "start": "set debug=* && npx tsnd ./src/index.ts --respawn --transpileOnly",
         "start:dev": "nodemon",
-        "docs": "apidoc -i src -o docs",
+        "docs": "apidoc -i src -o ../docs",
         "lint": "eslint  \"**/*.ts\"",
         "lint:fix": "eslint --fix  \"**/*.ts\"",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
