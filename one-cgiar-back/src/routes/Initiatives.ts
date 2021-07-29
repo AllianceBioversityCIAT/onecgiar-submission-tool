@@ -114,9 +114,16 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  * @apiPermission all
  * @apiName PostCitations
  * @apiGroup Citations
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/get-link/2/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/get-link/2/3
  *
- * @apiHeader {Number} initiativeId Id initiative
- * @apiHeader {Number} stageId Id stage.
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
  * 
  * @apiParam {String} table_name table name - Metadata.
  * @apiParam {String} col_name column name - Metadata.

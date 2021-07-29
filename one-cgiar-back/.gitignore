@@ -1,6 +1,7 @@
 node_modules
 build
 dist
+docs
 ormconfig.json
 src/config/*
 /nodemon.json

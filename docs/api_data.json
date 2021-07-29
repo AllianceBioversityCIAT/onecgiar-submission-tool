@@ -189,22 +189,27 @@
     ],
     "name": "PostCitations",
     "group": "Citations",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/initiatives/get-link/2/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/initiatives/get-link/2/3"
+      }
+    ],
     "header": {
       "fields": {
         "Header": [
           {
             "group": "Header",
-            "type": "Number",
+            "type": "String",
             "optional": false,
-            "field": "initiativeId",
-            "description": "<p>Id initiative</p>"
-          },
-          {
-            "group": "Header",
-            "type": "Number",
-            "optional": false,
-            "field": "stageId",
-            "description": "<p>Id stage.</p>"
+            "field": "auth",
+            "description": ""
           }
         ]
       }
@@ -212,6 +217,20 @@
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "stageId",
+            "description": "<p>Id stage.</p>"
+          },
           {
             "group": "Parameter",
             "type": "String",
