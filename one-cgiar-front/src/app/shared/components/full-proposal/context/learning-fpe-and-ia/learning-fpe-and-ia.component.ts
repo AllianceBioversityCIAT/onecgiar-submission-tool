@@ -12,6 +12,9 @@ import { InteractionsService } from '../../../../services/interactions.service';
 export class LearningFpeAndIaComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
+  citationColAndTable={table_name: "context", col_name: "key_learnings", active: true}
+  citationsList=[]
+  
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -23,14 +26,6 @@ export class LearningFpeAndIaComponent implements OnInit {
       contextId:new FormControl(null),
     });
   }
-
-  citationColAndTable={
-    table_name: "context", 
-    col_name: "key_learnings",
-    active: true
-  }
-
-  citationsList=[]
 
   ngOnInit(): void {
     this.getContext();
