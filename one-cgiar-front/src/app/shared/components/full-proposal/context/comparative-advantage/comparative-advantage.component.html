@@ -12,7 +12,12 @@
             <div class="col-sm-12">
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
-                    savedList: []
+                    descriptions:'Add urls',
+                    savedList:{
+                        list:citationsList,
+                        attributeDescription:'title',
+                        attributeLink:'link'
+                    }
                 }"></ibdc-link-list>
             </div>
 
@@ -21,7 +26,7 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
