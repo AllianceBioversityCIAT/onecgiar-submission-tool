@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative,  assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, getInstitutionsTypes, addLink, getLink } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, getInstitutionsTypes, addLink, getLink } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -9,41 +9,6 @@ const router = Router();
 // get initiatives
 // router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
 
-/**
- * @api {get} /initiatives Show all initiatives
- * @apiPermission all
- * @apiName Getinitiatives
- * @apiGroup Initiatives
- *
- * @apiSuccess {String} id id of the recipe.
- * @apiSuccess {String} description  description of the recipe.
- * @apiSuccess {String} ingredients  ingredients of the recipe.
- * @apiSuccess {String} Preparation  Preparation of the recipe.
- * @apiSuccess {String} img_url  image of recipe.
- * @apiSuccess {String} video_url  video of recipe.
- * @apiSuccess {String} portios portios of recipe.
- * @apiSuccess {String} difficulty difficulty of recipe.
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *   {
-    "id": "2",
-    "description": "Salmon en salsa de mantequilla",
-    "ingredients": "<ul>\n<li> 2 filetes de Salmon\n<li> 1 Limon (ralladura)\n<li> 2 cucharadas soperas de Mantequilla\n<li> 2 cucharadas soperas de Cilantro (fresco)\n<li>     Sal y Pimienta al gusto\n</ul>",
-    "preparation": "<ul>\n<li>\n<span><h4>Adobar los filetes de salmon</h4>\n<p>Adicionamos un poquito de sal y de pemienta por ambas caras del salmon</p>\n<span>\n</li>\n<li>\n<span><h4>Rallar el limon</h4>\n<p>Vamos a rallar la cascara del limon en finos trazos, no debemos rallar mucha cantidad para no excedernos en lo amargo</p>\n<span>\n</li>\n<li>\n<span><h4>Derretir la mantequilla</h4>\n<p>En un sarten ponemos a derretir dos cucharadas soperas de mantequilla y esperamos que se derrita</p>\n<p>Una vez se ha derretido la mantequilla, vamos a mover el sarten un poco y esperamos a que la mantequilla se torne de un color cafe</p>\n<span>\n</li>\n<li>\n<span><h4>Añadir el pescado</h4>\n<p>Cuando notemos que la mantequilla se ha tornado cafe, procedemos a añadir el salmon</p>\n<p>Cocinamos un tiempo aproximado de 4 minutos por ambas caras del filete</p>\n<p>Cuando notemos que el borde del salmon se pone un poco blanco es el indicador preciso para voltearlo</p>\n<span>\n</li>\n<li>\n<span><h4>Añadir adicionales</h4>\n<p>Mientras el salmon esta en coccion añadiremos el jugo de medio limon</p>\n<p>Añadimos la ralladura del limon (1/2 cucharada)</p>\n<p>Añadimos un poco de cilantro fresco</p>\n<p>Con el jugo que se forma vamos bañando el salmon hasta que este bien cocido y listo ya tenemos nuestro plato listo para servir</p>\n<span>\n</li>\n</ul>",
-    "preparation_time": "30 minutos",
-    "image_url": "https://agromarketco.s3.amazonaws.com/recipes/salmonLimon.png",
-    "video_url": null,
-    "portions": "2 porciones",
-    "difficulty": "baja"
-  }
- *
- * @apiError Error getRecipes-
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     { message: "Error getRecipes", error }
- */
 router.get("/", [checkJwt], getInitiatives);
 
 // get initiatives by user
@@ -79,10 +44,143 @@ router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], 
 router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assignTOCsByInitvStg);
 
 // assign citation / link to initiative/
+/**
+ * @api {patch} initiatives/add-link/:initiativeId/:stageId Create and update citations
+ * @apiVersion 1.0.0
+ * @apiPermission all
+ * @apiName PatchCitations
+ * @apiGroup Citations
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/add-link/2/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/add-link/2/3
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
+ *
+ * @apiParam {String} title citation title
+ * @apiParam {String} link citation link 
+ * @apiParam {String} table_name table name - Metadata.
+ * @apiParam {String} col_name column name - Metadata.
+ * @apiParam {Number} citationId This field will be used to update a citation.
+ * @apiParam {Boolean} active status.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *  {
+ * "title": "test4", 
+ * "link": "test4", 
+ * "table_name": "context", 
+ * "col_name": "priority_setting", 
+ * "citationId": null,
+ * "active":true
+ * }
+ * 
+ * @apiSuccess {Date} created_at Creation date.
+ * @apiSuccess {Date} updated_at  Update date.
+ * @apiSuccess {Number} id  citation id.
+ * @apiSuccess {String} title  citation title.
+ * @apiSuccess {String} link  citation link.
+ * @apiSuccess {String} table_name Table to which the citation belongs.
+ * @apiSuccess {String} col_name Colum to which the citation belongs.
+ * @apiSuccess {Number} active status.
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "addedLink": {
+ *             "initvStg": "35",
+ *             "title": "test4",
+ *             "link": "test4",
+ *             "table_name": "context",
+ *             "col_name": "priority_setting",
+ *             "active": true,
+ *             "updated_at": "2021-07-29T14:09:16.000Z",
+ *             "created_at": "2021-07-29T14:09:16.000Z",
+ *             "id": 7
+ *         }
+ *     },
+ *     "title": "Initiatives:Add link."
+ * }
+ *
+ * @apiError Error PatchCitations-Add link
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Initiative not found in stage:", error }
+ */
 router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addLink);
 
 // get links to table and column
-router.post("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
+/**
+ * @api {post} initiatives/get-link/:initiativeId/:stageId Read data of citations.
+ * @apiVersion 1.0.2
+ * @apiPermission all
+ * @apiName PostCitations
+ * @apiGroup Citations
+ * 
+ * @apiDescription  Shows all cititations filtered by initiative id, estage id and status
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/get-link/2/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/get-link/2/3
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
+ * 
+ * @apiParam {String} table_name table name - Metadata.
+ * @apiParam {String} col_name column name - Metadata.
+ * @apiParam {Boolean} active status.
+ * 
+ * @apiParamExample {json} Request-Example:
+ * {
+ * "table_name": "context", 
+ * "col_name": "priority_setting", 
+ * "active":true
+ * }
+ * 
+ * @apiSuccess {Date} created_at Creation date.
+ * @apiSuccess {Date} updated_at  Update date.
+ * @apiSuccess {Number} id  citation id.
+ * @apiSuccess {String} title  citation title.
+ * @apiSuccess {String} link  citation link.
+ * @apiSuccess {String} table_name Table to which the citation belongs.
+ * @apiSuccess {String} col_name Colum to which the citation belongs.
+ * @apiSuccess {Number} active status.
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *   "response": {
+ *       "getLinks": [
+ *           {
+ *               "created_at": "2021-07-28T02:27:29.000Z",
+ *               "updated_at": "2021-07-28T02:27:29.000Z",
+ *               "id": 6,
+ *               "title": "test3",
+ *               "link": "test3",
+ *               "table_name": "context",
+ *               "col_name": "priority_setting",
+ *               "active": 0
+ *           }
+ *       ]
+ *   },
+ *   "title": "Initiatives:Get link."
+ *  }
+ *
+ * @apiError Error PostCitations-Get link.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Initiative not found in stage:", error }
+ */
+router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
 
 /**
  * 
