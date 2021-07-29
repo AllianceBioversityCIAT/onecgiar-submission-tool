@@ -14,7 +14,11 @@
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
                     descriptions:'Add urls',
-                    savedList: []
+                    savedList:{
+                        list:citationsList,
+                        attributeDescription:'title',
+                        attributeLink:'link'
+                    }
                 }"></ibdc-link-list>
             </div>
         </div>
