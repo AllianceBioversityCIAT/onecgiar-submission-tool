@@ -321,7 +321,7 @@ export class InitiativesService {
   }
 
   getLinks(body,initiativeID,stageID){
-    return this.http.post<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${stageID}`, body);
   }
 
   async addLinks(citationList,initiativeID,stageID){
