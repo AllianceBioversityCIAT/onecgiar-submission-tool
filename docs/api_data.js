@@ -20,7 +20,7 @@ define({ "api": [
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/add-link/2/3"
+        "url": "{json}  http://localhost:3000/api/initiatives/add-link/2/3"
       }
     ],
     "header": {

@@ -1,6 +1,8 @@
 docs
 node_modules
 npm-debug.log
-/src
+/one-cgiar-back/src
+/one-cgiar-back/node_modules
+/one-cgiar-back/docs
 # Cache used by TypeScript's incremental build
 *.tsbuildinfo
