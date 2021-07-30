@@ -117,7 +117,7 @@ export class MenuComponent implements OnInit {
         title: "Work Packages",
         subSections:[
           {
-            title:'General information',
+            title:'General information.',
             route:'work-packages/general-information'
           },
         ]
@@ -213,7 +213,7 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          // console.log(this.stages)
+          console.log(this.stages)
           this.simulateFullProposal();
         }
       )
@@ -246,11 +246,37 @@ export class MenuComponent implements OnInit {
   validate_under_construction(section) {
     // console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
+      case "Open and FAIR data assets":
+        return true
+      case "Projection of benefits":
+        return true
       case "Management Plans and policy compliance":
         return true
-      case 'Work Packages':
+      case "Management plan":
         return true
-      case 'Comparative Advantage':
+      case "Work Packages":
+        return true
+      case "Innovation Packages and Scaling Readiness Strategy":
+        return true
+      case "Full Initiative TOC":
+        return true
+      case "General information.":
+          return true
+      case "Impact strategies":
+          return true
+      case "Work Package TOCs":
+        return true
+      case "impact strategies":
+        return true
+      case "Initiative Team":
+        return true
+      case "Gender, Diversity and Inclusion":
+        return true
+      case "Capacity development":
+        return true
+      case "Budget":
+        return true
+      case 'Ethics':
         return true
       case "Innovation packages and Projection of Benefits":
         return true

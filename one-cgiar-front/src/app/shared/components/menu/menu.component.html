@@ -95,7 +95,7 @@
                       [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                       aria-label="Verified icon">
                       <mat-icon>verified</mat-icon>
-                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                      <img class="icon_under_construction" *ngIf="validate_under_construction(subSection.title)" src="/assets/images/under-construction.png" alt="" srcset="">
                       </button>
 
                         </mat-list-option>
