@@ -34,7 +34,7 @@ export class InitTableComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.data);
+    // console.log(this.data);
     this.dataSource = new MatTableDataSource(changes.data.currentValue)
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.matSort;

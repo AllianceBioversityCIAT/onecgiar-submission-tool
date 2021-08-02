@@ -17,6 +17,11 @@
   justify-content: center;
 }
 
+.justify_content_end {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .custom-container {
   width: 100%;
   padding-right: 15px;

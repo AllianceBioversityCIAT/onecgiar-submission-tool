@@ -122,9 +122,9 @@ export class TheoryOfChangeComponent implements OnInit {
         this.interactionsService.warningMessage('Initial theory of change has been saved, but there are incomplete fields')
         this.getTOCandFiles();
           this.spinnerService.hide('tocs')
-          this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-            this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-          })
+          // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+          //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+          // })
       },
       err => {
         this.progressInfos[idx].value = 0;

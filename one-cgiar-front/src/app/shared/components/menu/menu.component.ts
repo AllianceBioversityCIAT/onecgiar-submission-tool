@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
     })
 
     this._dataControlService.menuChange$.subscribe(() => {
-      this.getAllIWorkPackages();
+      // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     })
 
@@ -125,7 +125,7 @@ export class MenuComponent implements OnInit {
         title: "Work Packages",
         subSections:[
           {
-            title:'General information',
+            title:'General information.',
             route:'work-packages/general-information'
           },
         ]
@@ -221,7 +221,7 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          // console.log(this.stages)
+          console.log(this.stages)
           this.simulateFullProposal();
         }
       )
@@ -254,25 +254,47 @@ export class MenuComponent implements OnInit {
   validate_under_construction(section) {
     // console.log('%c'+section,'background: #222; color: #84c3fd');
     switch (section) {
-      case 'General Information ':
+      case "Open and FAIR data assets":
         return true
-      case "Context":
+      case "Projection of benefits":
         return true
-      case 'Challenge statement':
+      case "Management Plans and policy compliance":
         return true
-      case 'Comparative Advantage':
+      case "Management plan":
         return true
-      case "Governance, Strategies and Plans":
+      case "Work Packages":
         return true
-      case "Work Packages ":
+      case "Innovation Packages and Scaling Readiness Strategy":
         return true
-      case "Innovation Module":
+      case "Full Initiative TOC":
         return true
-      case "Theory of change":
+      case "General information.":
+          return true
+      case "Impact strategies":
+          return true
+      case "Work Package TOCs":
         return true
-      case "MELIAs":
+      case "impact strategies":
         return true
-      case "Human and Financial Resources":
+      case "Initiative Team":
+        return true
+      case "Gender, Diversity and Inclusion":
+        return true
+      case "Capacity development":
+        return true
+      case "Budget":
+        return true
+      case 'Ethics':
+        return true
+      case "Innovation packages and Projection of Benefits":
+        return true
+      case "Theories of Change":
+        return true
+      case "MELIA":
+        return true
+      case "People and Culture":
+        return true
+      case "Financial Resources":
         return true
       default:
         return false

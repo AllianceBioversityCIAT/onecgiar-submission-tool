@@ -7,13 +7,13 @@ import { Stages } from './Stages';
 export class InitiativesByStages extends UpdatedCreatedAt {
 
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column('tinyint')
-    active: boolean
+    active: boolean;
 
     @Column('text')
-    status: boolean
+    status: boolean;
     
     @ManyToOne(() => Stages, stage => stage.initiatives)
     public stage!: Stages;

@@ -59,9 +59,9 @@ export class NarrativesConceptComponent implements OnInit {
           this.narrativesForm.valid?
             this.interactionsService.successMessage('Narratives information has been saved'):
             this.interactionsService.warningMessage('Narratives information has been saved, but there are incomplete fields')
-            this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
-              this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
-            })
+            // this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
+            //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
+            // })
 
         },
         error => {

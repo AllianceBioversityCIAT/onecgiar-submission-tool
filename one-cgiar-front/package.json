@@ -9,7 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "server": "cd API && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run start\""
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
+    "docker:build": "docker build -t onecgiarfront .",
+    "docker:run": "docker run --name onecgiarclient -d -p 3300:80 onecgiarfront"
   },
   "private": true,
   "dependencies": {
@@ -28,7 +30,7 @@
     "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
-    "ibd-angular-components": "https://github.com/AllianceBioversityCIAT/ibd-angular-components_library/raw/dev/library/ibd-angular-components-0.0.3.tgz",
+    "ibd-angular-components": "https://github.com/AllianceBioversityCIAT/ibd-angular-components_library/raw/dev/library/ibd-angular-components-0.0.5.tgz",
     "jquery": "^3.5.1",
     "lodash": "^4.17.21",
     "ngx-editor": "^8.1.1",

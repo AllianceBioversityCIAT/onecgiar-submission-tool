@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { observable, Observable } from 'rxjs';
 import { AllInitiatives } from '../models/initiative.interface';
 import { map } from 'rxjs/operators';
 const sectionPath = 'initiatives'
@@ -87,11 +87,30 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/package/${id}`);
 
   }
-  
+
+    /**
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
+   * @returns general-information data
+   */
+
+  getGeneralInformation(initiativeId,stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  }
+
+  /**
+   * @param initiativeId initiative id 
+   * @param stageName stage NAme 
+   * @param body body
+   * @returns general-information data
+   */
+  patchGeneralInformation(initiativeId,stageName,body) {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`,body);
+  }
 
    /**
    * @param id initiative id
-   * @returns general-informatio
+   * @returns WP
    */
   // Query to get all the WorkPackages
   getAllIWorkPackages(id: number|string): Observable<any> {
@@ -295,6 +314,30 @@ export class InitiativesService {
 
   getInstitutionsTypes(){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions/types`);
+  }
+
+  addLink(body,initiativeID,stageID){
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+  }
+
+  getLinks(body,initiativeID,stageID){
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${stageID}`, body);
+  }
+
+  async addLinks(citationList,initiativeID,stageID){
+    let promiseList=[];
+    citationList.forEach(citation => {
+      if (!citation?.citationId || citation?.edited)  promiseList.push( this.addLink(citation,initiativeID,stageID).toPromise());
+    });
+
+    await Promise.all(promiseList).then(values => {
+      console.log(values);
+    },
+    err=>{
+      console.log(err);
+    });
+
+
   }
 
 

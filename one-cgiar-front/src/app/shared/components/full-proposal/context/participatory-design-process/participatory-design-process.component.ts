@@ -13,6 +13,8 @@ import { InteractionsService } from '../../../../services/interactions.service';
 export class ParticipatoryDesignProcessComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
+  citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
+  citationsList=[]
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -27,7 +29,23 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
-    console.log(this.contextForm.value);
+    this.getLinks();
+  }
+
+  getLinks(){
+    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id,3).subscribe(resp=>{
+      this.citationsList = resp.response.getLinks;
+      this.citationsList.map(resp=>{
+        resp.citationId = resp.id
+      })
+    })
+  }
+
+  async addCitationColAndTableInList(citationsList,citationColAndTable){
+    await citationsList.map(citation=>{
+      citation.table_name = citationColAndTable.table_name;
+      citation.col_name = citationColAndTable.col_name;
+    })
   }
 
   upserInfo(){
@@ -36,6 +54,13 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.contextForm.valid?
       this._interactionsService.successMessage('Participatory design process has been saved'):
       this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
+    })
+    //save links
+    this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
+      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id,3).then(resp=>{
+        this.getLinks();
+      })
+      
     })
   }
 

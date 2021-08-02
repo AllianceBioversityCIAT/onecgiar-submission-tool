@@ -12,8 +12,8 @@ router.get('/', [checkJwt], getUsers);
 router.get('/roles', [checkJwt], getUsersByRoles);
 
 // create an user
-// router.post('/', createUsers);
-router.post('/', [checkJwt, checkRole('users', 'createAny')], createUsers);
+router.post('/', createUsers);
+// router.post('/', [checkJwt, checkRole('users', 'createAny')], createUsers);
 
 // get user by id
 router.get('/:id([0-9]+)', [checkJwt, checkRole('users', 'readAny')], getUser);

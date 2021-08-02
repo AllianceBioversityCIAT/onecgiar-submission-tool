@@ -17,6 +17,9 @@ import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
 
+import _ from "lodash";
+import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
+
 
 require('dotenv').config();
 
@@ -36,17 +39,17 @@ export const getInitiatives = async (req: Request, res: Response) => {
     let initiatives,
         initvSQL = ` 
         SELECT
-                initvStg.id AS initvStgId,
-                initiative.id AS id,
-                initiative.name AS name,
-                IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-                (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-                (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-                initvStg.active AS active,
-                stage.id AS stageId,
-                CONCAT("Stage ", stage.id,': ',stage.description) AS description
+            initvStg.id AS initvStgId,
+            initiative.id AS id,
+            initiative.name AS name,
+            IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+            (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+            (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+            initvStg.active AS active,
+            initvStg.stageId AS stageId,
+            CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
         FROM
-                initiatives initiative
+            initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
         `;
@@ -60,7 +63,13 @@ export const getInitiatives = async (req: Request, res: Response) => {
         // let initvs:Initiatives = new Initiatives();
         // initvs = await queryRunner.connection.query(query, parameters);
         initiatives = await queryRunner.connection.query(query, parameters);
-        let initiativesIds = initiatives.map(init => init.initvStgId);
+
+        const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
+            clist => clist.map(pB_ => _.omit(pB_, 'id')));
+
+        // console.log(grouped)
+
+        // let initiativesIds = initiatives.map(init => init.initvStgId);
         if (initiatives.length == 0)
             // res.sendStatus(204)
             res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
@@ -68,17 +77,17 @@ export const getInitiatives = async (req: Request, res: Response) => {
             /**
              * more stages to be added
              */
-            const concepts = await conceptRepo.find({
-                where: {
-                    initvStg: In(initiativesIds)
-                },
-                relations: ['initvStg'],
-                select: ["name", "action_area_description", "action_area_id"]
+            // const concepts = await conceptRepo.find({
+            //     where: {
+            //         initvStg: In(initiativesIds)
+            //     },
+            //     relations: ['initvStg'],
+            //     select: ["name", "action_area_description", "action_area_id"]
 
-            });
-            initiatives.forEach(initiative => {
-                initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
-            });
+            // });
+            // initiatives.forEach(initiative => {
+            //     initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
+            // });
             /**
              * more stages to be added
              */
@@ -496,7 +505,7 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        error = new BaseError('Get stages meta - sections.', error.status || 406, error.message, false);
+        error = new BaseError('Get stages meta - sections.', error.status || 400, error.message, false);
         return res.status(error.httpCode).json(error);
     }
 }
@@ -679,6 +688,82 @@ export const replicationProcess = async (req: Request, res: Response) => {
 
 
 
+
+
+/**
+ * 
+ * @param req params:{ title: string, link: string, table_name: string, col_name: string, citationId?: string }
+ * @param res 
+ */
+export const addLink = async (req: Request, res: Response) => {
+
+    const { title, link, table_name, col_name, citationId, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId, active);
+
+        res.json(new ResponseHandler('Initiatives:Add link.', { addedLink }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getLink(req: Request, res: Response) {
+
+    const { table_name, col_name, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const getLinks = await initiative.getLink(table_name, col_name, active);
+
+        res.json(new ResponseHandler('Initiatives:Get link.', { getLinks }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
 
 /**
  * 

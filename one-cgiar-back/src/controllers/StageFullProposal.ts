@@ -28,6 +28,10 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+         // if not intitiative by stage, throw error
+         if (initvStg == null) {
+            throw new BaseError('Read General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+        }
 
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -37,7 +41,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { generalInformation, metadata }));
@@ -65,6 +69,10 @@ export const getContext = async (req: Request, res: Response) => {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+         // if not intitiative by stage, throw error
+         if (initvStg == null) {
+            throw new BaseError('Read Context: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+        }
 
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -74,7 +82,7 @@ export const getContext = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'Context');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { context, metadata }));
@@ -96,18 +104,15 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
     const { initiativeId } = req.params;
     // get generalInformationId, name, action_area_id, action_area_description by stage id from client
     const { generalInformationId, name, action_area_id, action_area_description } = req.body;
-    // get user id
-    const { userId } = res.locals.jwtPayload;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
-    const initvUserRepo = getRepository(InitiativesByUsers);
     try {
 
         // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
 
         // if (userInitiative == null) {
-        //     throw new BaseError('General Information: Error', 406, 'User not found in initiative', false);
+        //     throw new BaseError('General Information: Error', 400, 'User not found in initiative', false);
         // }
 
 
@@ -116,7 +121,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         if (initvStg == null) {
-            throw new BaseError('Upsert General information: Error', 406, `None initiative found in stage: ${stage.description}` , false);
+            throw new BaseError('Upsert General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -125,7 +130,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
         res.json(new ResponseHandler('Full Proposal: General information.', { generalInformation, metadata }));
@@ -143,21 +148,16 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
  * @returns { context, metadata }
  */
 
-export const upsertContext = async (req: Request, res: Response) => {
+export const upsertContext = async (req: Request, res: Response, next) => {
     // get initiative by stage id from client
     const { initiativeId } = req.params;
     // get generalInformationId, name, action_area_id, action_area_description by stage id from client
     const { contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design } = req.body;
-    // get user id
-    const { userId } = res.locals.jwtPayload;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
-    const initvUserRepo = getRepository(InitiativesByUsers);
 
     try {
-        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
-
         
         // get stage
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
@@ -165,7 +165,7 @@ export const upsertContext = async (req: Request, res: Response) => {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Upsert Context: Error', 406, `None initiative found in stage: ${stage.description}` , false);
+            throw new BaseError('Upsert Context: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -175,10 +175,11 @@ export const upsertContext = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-        // and filtered by section
+        // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'Context');
 
         res.json(new ResponseHandler('Full Proposal: Context.', { context, metadata }));
+        next();
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);

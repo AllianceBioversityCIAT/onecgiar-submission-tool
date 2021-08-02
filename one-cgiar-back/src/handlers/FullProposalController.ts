@@ -26,7 +26,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
             return this.metaData_;
         } catch (error) {
-            throw new BaseError('Get Metadata', 406, error.message, false)
+            throw new BaseError('Get Metadata', 400, error.message, false)
         }
 
     }
@@ -71,7 +71,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             return generalInfo[0];
         } catch (error) {
-            throw new BaseError('Get general information', 406, error.message, false)
+            throw new BaseError('Get general information', 400, error.message, false)
         }
 
     }
@@ -92,7 +92,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             return context[0];
         } catch (error) {
-            throw new BaseError('Get context', 406, error.message, false)
+            throw new BaseError('Get context', 400, error.message, false)
         }
     }
 
@@ -144,7 +144,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
 
             //    update initiative name
-            let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+            let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
 
@@ -179,7 +179,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return generalInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert general information - full proposal', 406, error.message, false)
+            throw new BaseError('Upsert general information - full proposal', 400, error.message, false)
         }
     }
 
@@ -211,15 +211,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                 context = await contextRepo.findOne(contextId);
 
             }
-            console.log(contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design);
+            // console.log(contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design);
 
 
-            context.challenge_statement = (challenge_statement) ? challenge_statement : null;
-            context.smart_objectives = (smart_objectives) ? smart_objectives : null;
-            context.key_learnings = (key_learnings) ? key_learnings : null;
-            context.priority_setting = (priority_setting) ? priority_setting : null;
-            context.comparative_advantage = (comparative_advantage) ? comparative_advantage : null;
-            context.participatory_design = (participatory_design) ? participatory_design : null;
+            context.challenge_statement = (challenge_statement) ? challenge_statement : context.challenge_statement;
+            context.smart_objectives = (smart_objectives) ? smart_objectives : context.smart_objectives;
+            context.key_learnings = (key_learnings) ? key_learnings : context.key_learnings;
+            context.priority_setting = (priority_setting) ? priority_setting : context.priority_setting;
+            context.comparative_advantage = (comparative_advantage) ? comparative_advantage : context.comparative_advantage;
+            context.participatory_design = (participatory_design) ? participatory_design : context.participatory_design;
 
             // upserted data 
             const upsertedContext = await contextRepo.save(context);
@@ -227,7 +227,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             return upsertedContext;
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert context - full proposal', 406, error.message, false)
+            throw new BaseError('Upsert context - full proposal', 400, error.message, false)
         }
     }
+
 }

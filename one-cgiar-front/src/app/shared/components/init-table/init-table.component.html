@@ -29,7 +29,7 @@
             <!-- CGIAR Action Area Column -->
             <ng-container matColumnDef="action_area_description">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> CGIAR Action Area </th>
-                <td mat-cell *matCellDef="let row"> {{row.concept?.action_area_description}} </td>
+                <td mat-cell *matCellDef="let row"> {{row?.action_area_description}} </td>
             </ng-container>
 
             <!-- Current Stage Column -->

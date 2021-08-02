@@ -31,7 +31,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(giArray);
 
         } catch (error) {
-            throw new BaseError('Validate general information', error.status || 406, error.message, false);
+            throw new BaseError('Validate general information', error.status || 400, error.message, false);
         }
     }
 
@@ -49,7 +49,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(narrtvArray);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -72,7 +72,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(tocsArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -101,7 +101,7 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(wpArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
@@ -120,35 +120,35 @@ export class ConceptValidation extends InitiativeStageHandler {
             return this.checkEmptyArray(kpArr);
 
         } catch (error) {
-            throw new BaseError('Validate narratives', error.status || 406, error.message, false);
+            throw new BaseError('Validate narratives', error.status || 400, error.message, false);
         }
     }
 
 
-     /**
-     * @param initvStgId
-     * @returns sections validated
-     */
-      async validateSections() {
+    /**
+    * @param initvStgId
+    * @returns sections validated
+    */
+    async validateSections() {
         const validatedSection = <ConceptSections>{
             general_information: null,
-            narratives: null,
-            initial_theory_of_change: null,
-            work_packages: null,
-            key_partners: null
+            // narratives: null,
+            // initial_theory_of_change: null,
+            // work_packages: null,
+            // key_partners: null
         };
 
         try {
 
             validatedSection.general_information = await this.isGIComplete();
-            validatedSection.narratives = await this.isNarrtvComplete();
-            validatedSection.initial_theory_of_change = await this.isTOCComplete();
-            validatedSection.work_packages = await this.isWPComplete();
-            validatedSection.key_partners = await this.isKPComplete();
+            // validatedSection.narratives = await this.isNarrtvComplete();
+            // validatedSection.initial_theory_of_change = await this.isTOCComplete();
+            // validatedSection.work_packages = await this.isWPComplete();
+            // validatedSection.key_partners = await this.isKPComplete();
 
             return validatedSection
         } catch (error) {
-            throw new BaseError('Validate sections', error.status || 406, error.message, false);
+            throw new BaseError('Validate sections', error.status || 400, error.message, false);
         }
 
     }
