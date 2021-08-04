@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
-                    [options]="{inputTitle:'Learning from prior evaluations and Impact Assessments (IA)', form:contextForm, formControlName:'key_learnings', maxWords:250,
+                    [options]="{inputTitle:'Learning from prior evaluations and Impact Assessments (IA)',readOnlyVariable: this._initiativesService.initiative.readonly, form:contextForm, formControlName:'key_learnings', maxWords:250,
                     description:'Describe key learnings that have influenced the design of the Initiative, from relevant evaluations, impact assessments or other reviews whether internally or externally commissioned.'}">
                 </ibdc-textarea>
             </div>

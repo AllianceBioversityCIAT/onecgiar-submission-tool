@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
-                    [options]="{inputTitle:'Challenge statement', form:challengeStatementForm, formControlName:'challenge_statement', maxWords:500,
+                    [options]="{inputTitle:'Challenge statement',readOnlyVariable: this._initiativesService.initiative.readonly, form:challengeStatementForm, formControlName:'challenge_statement', maxWords:500,
                     description:'Update the  detailed challenge statement, expanding on the research challenge provided in the pre-concept'}">
                 </ibdc-textarea>
             </div>
