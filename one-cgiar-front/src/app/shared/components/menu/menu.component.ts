@@ -213,7 +213,7 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          console.log(this.stages)
+          // console.log(this.stages)
           this.simulateFullProposal();
         }
       )

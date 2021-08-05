@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
-                    [options]="{inputTitle:'Priority Setting', form:contextForm, formControlName:'priority_setting', maxWords:500,
+                    [options]="{inputTitle:'Priority Setting',readOnlyVariable: this._initiativesService.initiative.readonly, form:contextForm, formControlName:'priority_setting', maxWords:500,
                     description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
                 </ibdc-textarea>
             </div>
@@ -14,6 +14,7 @@
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
                     descriptions:'Add urls',
+                    readOnlyVariable: this._initiativesService.initiative.readonly,
                     savedList:{
                         list:citationsList,
                         attributeDescription:'title',
