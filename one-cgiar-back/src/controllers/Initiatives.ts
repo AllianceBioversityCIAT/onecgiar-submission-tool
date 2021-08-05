@@ -2,7 +2,7 @@ import { validate } from 'class-validator';
 import { Request, Response } from 'express'
 import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { ConceptInfo } from '../entity/ConceptInfo';
+import { Narratives } from '../entity/Narratives';
 import { Initiatives } from '../entity/Initiatives'
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
@@ -34,7 +34,7 @@ export const getInitiatives = async (req: Request, res: Response) => {
 
     const { userId } = res.locals.jwtPayload;
 
-    const conceptRepo = getRepository(ConceptInfo);
+    const conceptRepo = getRepository(Narratives);
     const queryRunner = getConnection().createQueryBuilder();
     let initiatives,
         initvSQL = ` 
@@ -121,7 +121,7 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 
     const { userId } = res.locals.jwtPayload;
     const queryRunner = getConnection().createQueryBuilder();
-    const conceptRepo = getRepository(ConceptInfo);
+    const conceptRepo = getRepository(Narratives);
 
     let initiatives,
         initvSQL = ` 
@@ -938,7 +938,7 @@ function getRepoConstStage(tableName: string) {
             return null;
             break;
         case 'concept':
-            return new ConceptInfo();
+            return new Narratives();
             break;
         case 'full_proposal':
             return null;

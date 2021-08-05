@@ -1,25 +1,23 @@
 import { Router } from "express";
-import { getGeneralInformation, upsertConceptGeneralInformation } from "../controllers/StageConcept";
-// import { getConceptGeneralInfo, upsertConceptGeneralInformation, getConceptNarratives, upsertConceptNarratives, getWorkPackages, getWorkPackage, createWorkPackage, updateWorkPackage, getRegionWorkPackage, upsertRegionWorkPackage, upsertCountryWorkPackage, getProjectedBenefitWorkPackage, upsertProjectedBenefitWorkPackage, upsertTimeFrameProjectedBenefit, getTimeFramesProjectedBenefit, upsertTOCandFile, getTOCFiles, updateTOCFile, upsertPartnerships, getPartnerships } from "../controllers/StageConcept";
+import { getConceptNarratives, getGeneralInformation, upsertConceptGeneralInformation, upsertConceptNarratives } from "../controllers/StageConcept";
 import { checkJwt } from "../middlewares/jwt";
-import { uploadFile } from "../middlewares/multer";
 import { checkRole } from "../middlewares/role";
 
 
 const router = Router();
 
 
-// get initiatives concept general information
+// get concept general information
 router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getGeneralInformation);
 
-// update initiatives concept general information
+// update concept general information
 router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
 
-// // get initiatives concept narratives
-// router.get("/:initvStgId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);
+// get concept narratives
+router.get("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);
 
-// // update initiatives concept narratives
-// router.patch("/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptNarratives);
+// update initiatives concept narratives
+router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptNarratives);
 
 
 

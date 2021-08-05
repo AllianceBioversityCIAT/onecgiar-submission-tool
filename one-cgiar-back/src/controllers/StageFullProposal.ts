@@ -30,7 +30,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
          // if not intitiative by stage, throw error
          if (initvStg == null) {
-            throw new BaseError('Read General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
+            throw new BaseError('General information: Error', 400, `Initiative not found in stage: ${stage.description}` , false);
         }
 
         // create new full proposal object

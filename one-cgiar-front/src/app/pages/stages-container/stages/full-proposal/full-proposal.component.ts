@@ -24,10 +24,11 @@ export class FullProposalComponent implements OnInit {
       if ( resp.response.roles[0]?.roleId) {
         this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
         const rol = this._initiativesService.initiative.roleId
-        this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
+        // this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
+        this._initiativesService.initiative.readonly = true;
       }else{
         this._initiativesService.initiative.readonly = true;
-        this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
+        // this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
       }
 
     });
