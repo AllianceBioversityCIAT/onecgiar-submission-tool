@@ -1,24 +1,13 @@
 import { APIError, BaseError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
-import { getConnection, getRepository, Like, QueryFailedError } from "typeorm";
-import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
-import { ResponseHandler } from "../handlers/Response";
-import { Request, Response } from 'express'
+import { getConnection } from "typeorm";
 import axios from 'axios';
 import { config } from 'dotenv';
-import { EntityNotFoundError } from "typeorm/error/EntityNotFoundError";
 
 config();
 
 
 const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
-// const oa = `${process.env['clarisa_user']}:${process.env['clarisa_password']}`
-// console.log(oa)
-// const clarisaHeader = {
-//     Authorization: `Basic ${Buffer.from(oa).toString('base64')}`
-// }
-
-// const PAGE_SIZE = 20;
 
 
 /**
@@ -36,7 +25,7 @@ export const getClaActionAreas = async () => {
         return actionAreas.data;
     } catch (error) {
         console.log(error)
-        throw new BaseError('CLARISA:Action Areas', 400, error.message, true);
+        throw new BaseError('CLARISA : Action Areas', 400, error.message, true);
     }
 
 }

@@ -1,38 +1,21 @@
-import { validate, ValidationError } from 'class-validator';
-import { countReset } from 'console';
 import { Request, Response } from 'express'
-import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { ConceptInfo } from '../entity/ConceptInfo';
-import { CountriesByWorkPackages } from '../entity/CountriesByWorkPackages';
-import { Files } from '../entity/Files';
-import { ImpactTimeFrames } from '../entity/ImpactTimeFrames';
-import { Initiatives } from '../entity/Initiatives';
+import { getRepository } from 'typeorm'
 import { InitiativesByStages } from '../entity/InititativesByStages';
-import { InitiativesByUsers } from '../entity/InititativesByUsers';
-import { KeyPartners } from '../entity/KeyPartner';
-import { Partnerships } from '../entity/Partnerships';
-import { ProjectionBenefits } from '../entity/ProjectionBenefits';
-import { RegionsByWorkPackages } from '../entity/RegionsByWorkPackages';
 import { Stages } from '../entity/Stages';
-import { TOCs } from '../entity/TOCs';
-import { Users } from '../entity/Users';
-import { WorkPackages } from '../entity/WorkPackages';
-import { APIError, BaseError } from '../handlers/BaseError';
+import { BaseError } from '../handlers/BaseError';
 import { ConceptHandler } from '../handlers/ConceptController';
-import { HttpStatusCode } from '../handlers/Constants';
-import { ProposalHandler } from '../handlers/FullProposalController';
 import { ResponseHandler } from '../handlers/Response';
-import { getClaActionAreas, getClaCountries, getClaRegions } from './Clarisa';
 
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+const currentStage = 'Concept';
 
 
 /**
  * 
  * @param req initiativeId
- * @param res  { generalInformation, metadata }
- * @returns  { generalInformation, metadata }
+ * @param res  { generalInformation }
+ * @returns  { generalInformation }
  */
 
 export const getGeneralInformation = async (req: Request, res: Response) => {
@@ -43,14 +26,13 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
     try {
 
         // get stage
-        const stage = await stageRepo.findOne({ where: { description: 'Concept' } });
+        const stage = await stageRepo.findOne({ where: { description: currentStage } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // console.log(initiativeId)
-        // console.log(initvStg)
+
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Get General Information: Error', 400, `Initiative not found in stage: Concept`, false);
+            throw new BaseError('General Information: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
 
         // create new Concept object
@@ -64,17 +46,62 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
         // and filter by section
         metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
-        res.json(new ResponseHandler('Concept: General information.', { generalInformation, metadata }));
+        res.json(new ResponseHandler('General information : Concept', { generalInformation, metadata }));
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);
     }
 }
 
+/**
+ * 
+ * @param req initiativeId
+ * @param res  { narratives }
+ * @returns  { narratives }
+ */
+
+export const getConceptNarratives = async (req: Request, res: Response) => {
+    // get initiative by stage id from client
+    const { initiativeId } = req.params;
+    console.log(initiativeId)
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: currentStage } });
+        console.log(stage)
+        // get intiative by stage : concept
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Narratives : Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        // create new Concept object
+        const concept = new ConceptHandler(initvStg.id.toString());
+
+        // get narratives from concept object
+        const narratives = await concept.getNarratives();
+
+        // get metadata
+        let metadata = await concept.metaData;
+        // and filter by section
+        metadata = metadata.filter(meta => meta.group_by == 'Narratives');
+
+        res.json(new ResponseHandler('Narratives : Concept', { narratives, metadata }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
 
 /**
  * 
- * @param req params: { conceptId, initvStgId, name, action_area_id, action_area_description }
+ * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
  * @param res 
  */
 
@@ -90,7 +117,7 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
     try {
 
         // get stage
-        const stage = await stageRepo.findOne({ where: { description: 'Concept' } });
+        const stage = await stageRepo.findOne({ where: { description: currentStage } });
         // get intiative by stage : concept
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         if (initvStg == null) {
@@ -115,72 +142,50 @@ export const upsertConceptGeneralInformation = async (req: Request, res: Respons
 }
 
 
+/**
+ * 
+ * @param req params: {  initiativeId, narrativeId, challenge, objectives, results, highlights }
+ * @param res 
+ */
+
+export const upsertConceptNarratives = async (req: Request, res: Response) => {
+    // get initiative by stage id from client
+    const { initiativeId } = req.params;
+    // get narrativeId, challenge, objectives, results, highlights by stage id from client
+    const { narrativeId, challenge, objectives, results, highlights } = req.body;
+
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: currentStage } });
+        // get intiative by stage : concept
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        if (initvStg == null) {
+            throw new BaseError('Upsert Narratives : Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new concept object
+        const concept = new ConceptHandler(initvStg.id.toString());
+
+        const narratives = await concept.upsertNarratives(narrativeId, challenge, objectives, results, highlights)
+
+        // get metadata
+        let metadata = await concept.metaData;
+        // and filter by section
+        metadata = metadata.filter(meta => meta.group_by == 'Narratives');
+
+        res.json(new ResponseHandler('Concept: Narratives.', { narratives, metadata }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 
-
-// /**
-//  * 
-//  * @param req params:{ initvStgId }
-//  * @param res 
-//  */
-
-// export const getConceptNarratives = async (req: Request, res: Response) => {
-//     const { initvStgId } = req.params;
-//     const queryRunner = getConnection().createQueryBuilder();
-
-//     try {
-//         let conceptInfo,
-//             conceptQuery = ` 
-//             SELECT
-//                 initvStgs.id AS initvStgId,
-//                 stage.description AS stageDesc,
-//                 stage.active AS stageIsActive,
-//                 concept.id AS conceptId,
-//                 concept.challenge AS conceptChallenge,
-//                 concept.objectives AS conceptObjectives,
-//                 concept.results AS conceptResults,
-//                 concept.highlights AS conceptHiglights
-//             FROM
-//                 initiatives_by_stages initvStgs
-//             LEFT JOIN stages stage ON stage.id = initvStgs.stageId
-//             LEFT JOIN concept_info concept ON concept.initvStgId = initvStgs.initiativeId
-
-//             WHERE initvStgs.id =:initvStgId;
-//         `;
-//         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-//             conceptQuery,
-//             { initvStgId },
-//             {}
-//         );
-//         conceptInfo = await queryRunner.connection.query(query, parameters);
-
-//         if (conceptInfo.length == 0) {
-//             throw new APIError(
-//                 'NOT FOUND',
-//                 HttpStatusCode.NOT_FOUND,
-//                 true,
-//                 'Concept Information not found.'
-//             );
-//         }
-//         else
-//             res.json(new ResponseHandler('Concept: Narratives.', { narratives: conceptInfo[0] }));
-//     } catch (error) {
-//         let e = error;
-//         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-//             e = new APIError(
-//                 'Bad Request',
-//                 HttpStatusCode.BAD_REQUEST,
-//                 true,
-//                 error.message
-//             );
-//         }
-//         return res.status(error.httpCode).json(error);
-//     }
-
-
-
-
-// }
 
 // /**
 //  * 

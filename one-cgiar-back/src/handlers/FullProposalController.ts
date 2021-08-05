@@ -1,6 +1,5 @@
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
-import { ConceptInfo } from "../entity/ConceptInfo";
 import { Context } from "../entity/Context";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
@@ -106,7 +105,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     /**
      * 
-     * @param initvStgId 
      * @returns { generalInfo }
      */
     async getGeneralInformation() {
@@ -148,7 +146,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     /**
      * 
-     * @param initvStgId 
      * @returns { context }
      */
     async getContext() {
@@ -249,7 +246,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return generalInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Upsert general information - full proposal', 400, error.message, false)
+            throw new BaseError('General information : Full proposal', 400, error.message, false)
         }
     }
 
