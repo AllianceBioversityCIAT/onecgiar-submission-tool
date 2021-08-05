@@ -7,14 +7,23 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
-
+import { trigger, state, style, animate, transition, AUTO_STYLE } from '@angular/animations'
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  animations:[
+    trigger('expandable',[
+      state('expand',style({ height: '*' })),
+      state('collapse',style({ height: '0' })),
+      transition('collapse => expand',animate('400ms ease-in')),
+      transition('expand => collapse',animate('400ms ease-out')),
+    ])
+  ]
 })
 export class MenuComponent implements OnInit {
+  state='inactive';
   stages: any[];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
@@ -51,12 +60,17 @@ export class MenuComponent implements OnInit {
     )
   }
 
-
-  expandOrCollapse(htmlElement:HTMLLIElement){
-    // htmlElement.classList.toggle('collapse');
-    console.log(htmlElement.className);
-    // htmlElement.style.height = "100%";
-    htmlElement.classList.toggle('expand');
+  toggleExpand(subSectionsList:HTMLElement,texto){
+    console.log('texto');
+    console.log(texto);
+    console.log('______________');
+    // console.log(subSectionsList.classList);
+    subSectionsList.classList.toggle('expandIbd');
+    subSectionsList.classList.toggle('collapseIbd');
+    
+    // console.log("collapse ?");
+    // console.log(subSectionsList.classList.contains('collapse'));
+    // this.state = this.state == 'inactive'?'active':'inactive';
   }
 
   simulateFullProposal(){

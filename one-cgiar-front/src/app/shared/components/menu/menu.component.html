@@ -1,40 +1,37 @@
-    <div class="menu">
-        <div class="stages" *ngFor="let stage of stages;">
-            <div class="stage_item" (click)="expandOrCollapse(sections)">{{stage.description}}</div> 
-            <div class="sections" #sections>
-                <div class="section_title" *ngFor="let meta of stage.grouped; let i = index">
-                    <div class="number">
-                        {{i+1}}
-                    </div>
-                    <div class="section_item">
-                        {{meta.title}}
-                    </div>
-                    
-                    <!-- <div class="subSections">
-                        <div class="subSection_title" *ngFor="let subSection of meta.subSections" >
-                            {{subSection.title}}
-                        </div>
-                    </div> -->
+    <div  class="menu">
+        <div (click)="toggleExpand(subSectionsList,subSectionsList.classList.contains('collapse')?'collapse':'expand')" class="stage-section" *ngFor="let stage of stages;">
+            <div class="stage-section-title">
+                <span>{{stage.description}}</span>
+            </div>
+            <div #subSectionsList class="stage-section-subSections collapseIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+                <div class="subSection" *ngFor="let meta of stage.grouped; let i = index">
+                    <span>{{meta.title}}</span>
+                    <div class="number">{{i+1}}</div>
                 </div>
             </div>
         </div>
-        <mat-accordion style="background-color: transparent !important; color: white">
-            <mat-expansion-panel style="background-color: transparent !important; box-shadow: none;">
-              <mat-expansion-panel-header style="color: white;">
-                texto
-              </mat-expansion-panel-header>
-              <p style="color: white">lorem1000</p>
-            </mat-expansion-panel>
-            <mat-expansion-panel >
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Self aware panel
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <p>I'm visible because I am open</p>
-            </mat-expansion-panel>
-          </mat-accordion>
+    
+
+
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;">
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>

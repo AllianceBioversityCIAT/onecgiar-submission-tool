@@ -2,6 +2,10 @@
 .mat-expansion-indicator{
     color: white !important;
 }
+.boxs{
+    width: 100px;
+    background-color: cyan;
+}
 .menu{
     padding: 50px 70px;
     width: 400px;
@@ -10,6 +14,53 @@
     overflow-y: scroll;
     background-color: rgba(128, 128, 128, 0.479);
     color: white;
+
+    //new menu with animations
+    .stage-section{
+        cursor: pointer;
+        margin-top: 12px;
+        .stage-section-title{
+            margin-bottom: 5px;
+            font-weight: 700;
+            font-size: 1.3em;
+            width: 100%;
+            background-color: #013243 ;
+            padding: 10px;
+            border-radius: 50px;
+            text-align: center;
+        }
+        .stage-section-subSections{
+            overflow: hidden;
+          .subSection{
+              margin-left: 10px;
+              position: relative;
+              margin-bottom: 15px;
+              .number{
+                position: absolute;
+                top: -5px;
+                left: -40px;
+                width: 30px;
+                height: 30px;
+                border-radius: 30px;
+                border: 2.9px white solid;
+                // display: flex;
+                text-align: center;
+                vertical-align: middle;
+                padding-top: 2px;
+            }
+          }  
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     .stages{
         height: auto;
         border: red 1px solid;
@@ -67,15 +118,7 @@
 
 }
 
-.expand{
-    max-height:250px !important;
-    // transition: max-height ease 4s !important;
-}
 
-// .collapse{
-//     height: 0px;
-//     transition: height ease .3s;
-// }
 
   /* width */
   .menu::-webkit-scrollbar {
