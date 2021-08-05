@@ -10,6 +10,9 @@
         "docs": "apidoc -i src -o ../docs",
         "lint": "eslint  \"**/*.ts\"",
         "lint:fix": "eslint --fix  \"**/*.ts\"",
+        "format": "prettier --write \"**/*.ts\"",
+        "test": "mocha -r ts-node/register src/**/*.test.ts --exit",
+        "coverage": "nyc npm run test",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
@@ -55,11 +58,19 @@
         "@types/node": "^14.14.7",
         "@typescript-eslint/eslint-plugin": "^2.25.0",
         "@typescript-eslint/parser": "^2.25.0",
+        "@types/chai": "^4.2.10",
+        "@types/chai-http": "^4.2.0",
+        "@types/mocha": "^7.0.2",
         "nodemon": "^2.0.6",
         "ts-node-dev": "^1.0.0",
         "tsc-watch": "^4.2.9",
         "typescript": "^4.0.5",
         "apidoc": "^0.20.0",
-        "eslint": "^6.8.0"
+        "eslint": "^6.8.0",
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "mocha": "^8.2.1",
+        "nyc": "^15.0.0",
+        "prettier": "^2.0.2"
     }
 }

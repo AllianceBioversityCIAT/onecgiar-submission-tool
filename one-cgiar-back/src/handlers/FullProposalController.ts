@@ -18,16 +18,86 @@ export class ProposalHandler extends InitiativeStageHandler {
     private metaData_;
 
     /**
+     * Getter
      * @returns stage section metadata
      */
     public get metaData() {
 
+        return this.metaData_;
+
+    }
+
+
+    /**
+     * Setter
+     * @set section name
+     */
+    public set metaData(sectionName: any) {
+
         try {
-            this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
-            return this.metaData_;
+            this.metaData_ = this.queryRunner.query(` SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
+
         } catch (error) {
             throw new BaseError('Get Metadata', 400, error.message, false)
         }
+
+    }
+
+
+    async getSections(){
+
+        let sections = this.queryRunner.query(` SELECT sections.id as sectionId,
+        stages.description as stage,sections.description as section
+        FROM stages stages
+        JOIN sections_meta sections
+          ON stages.id = sections.stageId
+        JOIN subsections_meta subsections
+          ON sections.id = subsections.sectionId
+        LEFT JOIN stages_meta stageMeta
+          ON stageMeta.subsectionId = subsections.id
+       WHERE sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+       GROUP BY sections.id,stages.description ,sections.description
+       ORDER BY sections.orderSection`);
+
+       return sections
+
+    }
+
+    async getSubSectios(sectionName:any){
+
+        let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description as subsections,subsections.display_name as display,subsections.single_section
+        FROM stages stages
+        JOIN sections_meta sections
+          ON stages.id = sections.stageId
+        JOIN subsections_meta subsections
+          ON sections.id = subsections.sectionId
+        LEFT JOIN stages_meta stageMeta
+          ON stageMeta.subsectionId = subsections.id
+       WHERE sections.description = "${sectionName}"
+         and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+         GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
+       ORDER BY subsections.order`);
+
+       return subsections
+
+    }
+
+    async getField(sectionName:any){
+
+        let fields = this.queryRunner.query(` SELECT stageMeta.display_name as field,stageMeta.order,stageMeta.subsectionId
+        FROM stages stages
+        JOIN sections_meta sections
+          ON stages.id = sections.stageId
+        JOIN subsections_meta subsections
+          ON sections.id = subsections.sectionId
+        LEFT JOIN stages_meta stageMeta
+          ON stageMeta.subsectionId = subsections.id
+       WHERE sections.description = "${sectionName}"
+         and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+       ORDER BY subsections.order
+      `);
+
+       return fields
 
     }
 
