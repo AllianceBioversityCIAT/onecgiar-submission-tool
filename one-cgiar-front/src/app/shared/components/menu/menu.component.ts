@@ -17,8 +17,8 @@ import { trigger, state, style, animate, transition, AUTO_STYLE } from '@angular
     trigger('expandable',[
       state('expand',style({ height: '*' })),
       state('collapse',style({ height: '0' })),
-      transition('collapse => expand',animate('400ms ease-in')),
-      transition('expand => collapse',animate('400ms ease-out')),
+      transition('collapse => expand',animate('.3s ease-in')),
+      transition('expand => collapse',animate('.3s ease-out')),
     ])
   ]
 })
