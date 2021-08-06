@@ -1,14 +1,21 @@
     <div  class="menu">
-        <div  class="stage-section" *ngFor="let stage of stages;">
-            <div class="stage-section-title" (click)="toggleExpand(subSectionsList,subSectionsList.classList.contains('collapse')?'collapse':'expand')">
+        <div  class="stage" *ngFor="let stage of stages;">
+            <div class="stage-title" (click)="toggleExpand(sectionsList)">
                 <span>{{stage.description}}</span>
             </div>
-            <div #subSectionsList class="stage-section-subSections expandIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+            <div #sectionsList class="stage-sections expandIbd" [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                 <br>
-                <div class="subSection" *ngFor="let meta of stage.grouped; let i = index">
-                    <div class="number">{{i+1}}</div>
-                    <span class="subSection-title">{{meta.title}}</span>
-                    <p *ngFor="let subSection of meta.subSections">{{subSection.title}}</p>
+                <div class="stage-section" *ngFor="let section of stage.grouped; let i = index">
+                    <div style="display: flex;" (click)="toggleExpand(subSectionsList)">
+                        <div class="number">{{i+1}}</div>
+                        <span class="stage-section-title">{{section.title}}</span>
+                    </div>
+                    <div #subSectionsList  class="sub-sections expandIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+                        <div class="sub-section" *ngFor="let subSection of section.subSections">
+                            <span>{{subSection.title}}</span>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>

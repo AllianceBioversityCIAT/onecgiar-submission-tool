@@ -60,17 +60,10 @@ export class MenuComponent implements OnInit {
     )
   }
 
-  toggleExpand(subSectionsList:HTMLElement,texto){
-    console.log('texto');
-    console.log(texto);
-    console.log('______________');
-    // console.log(subSectionsList.classList);
+  toggleExpand(subSectionsList:HTMLElement){
     subSectionsList.classList.toggle('expandIbd');
     subSectionsList.classList.toggle('collapseIbd');
-    
-    // console.log("collapse ?");
-    // console.log(subSectionsList.classList.contains('collapse'));
-    // this.state = this.state == 'inactive'?'active':'inactive';
+    console.log('toggleExpand');
   }
 
   simulateFullProposal(){
