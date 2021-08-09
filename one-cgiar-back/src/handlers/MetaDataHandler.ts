@@ -9,7 +9,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       try {
 
-        let stages = this.queryRunner.query(`SELECT id,description,active FROM submissiontooldb.stages`);
+        let stages = this.queryRunner.query(`SELECT id,description,active FROM stages`);
 
         return stages
         
