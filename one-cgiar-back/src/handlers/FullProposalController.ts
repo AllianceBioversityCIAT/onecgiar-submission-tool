@@ -17,19 +17,30 @@ export class ProposalHandler extends InitiativeStageHandler {
     private metaData_;
 
     /**
+     * Getter
      * @returns stage section metadata
      */
     public get metaData() {
 
+        return this.metaData_;
+
+    }
+
+
+    /**
+     * Setter
+     * @set section name
+     */
+    public set metaData(sectionName: any) {
+
         try {
-            this.metaData_ = this.queryRunner.query(`SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
-            return this.metaData_;
+            this.metaData_ = this.queryRunner.query(` SELECT * FROM stages_meta WHERE stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_}) ORDER BY stages_meta.order`);
+
         } catch (error) {
             throw new BaseError('Get Metadata', 400, error.message, false)
         }
 
     }
-
 
     /*****  FULL PROPOSAL GETTERS *******/
 

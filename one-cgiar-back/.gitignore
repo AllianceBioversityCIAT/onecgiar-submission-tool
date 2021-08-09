@@ -9,3 +9,8 @@ src/config/*
 /docs/DB/DB.sql
 /.env
 /logs
+
+# nyc test coverage
+.nyc_output
+# TypeScript v1 declaration files
+typings/
