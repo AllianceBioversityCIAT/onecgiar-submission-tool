@@ -10,7 +10,7 @@
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title">{{section.title}}</span>
                     </div>
-                    <div #subSectionsList  class="sub-sections expandIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+                    <div #subSectionsList  class="sub-sections collapseIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <div class="sub-section" *ngFor="let subSection of section.subSections">
                             <span>{{subSection.title}}</span>
                         </div>
@@ -41,7 +41,7 @@
 
 
 
-    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;">
+    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title >
