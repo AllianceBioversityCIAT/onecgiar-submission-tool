@@ -6,7 +6,7 @@
             <div #sectionsList class="stage-sections expandIbd" [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                 <br>
                 <div class="stage-section" *ngFor="let section of stage.grouped; let i = index">
-                    <div style="display: flex;" (click)="toggleExpand(subSectionsList)">
+                    <div class="number-and-title-container" style="display: flex;" (click)="toggleExpand(subSectionsList)">
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title">{{section.title}}</span>
                     </div>
@@ -41,7 +41,7 @@
 
 
 
-    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
+    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="true">
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title >
