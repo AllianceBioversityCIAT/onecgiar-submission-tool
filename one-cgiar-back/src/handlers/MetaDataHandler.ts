@@ -4,13 +4,34 @@ import { InitiativeStageHandler } from "./InitiativeStageController";
 
 export class MetaDataHandler extends InitiativeStageHandler {
 
+    
+    async getStages(){
+
+      try {
+
+        let stages = this.queryRunner.query(`SELECT id,description,active FROM submissiontooldb.stages`);
+
+        return stages
+        
+      } catch (error) {
+        
+
+        throw new BaseError('Get Metadata', 400, error.message, false)
+
+      }
+
+
+
+    }
+
 
     async getSections(initiativeId:string) {
 
         try {
 
             let sections = this.queryRunner.query(` SELECT sections.id as sectionId,
-            stages.description as stage,sections.description as section,sections.active, sections.visible,sections.orderSection
+            stages.description as stage,sections.description as section,sections.active, sections.visible,sections.orderSection,
+            sections.stageId
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
