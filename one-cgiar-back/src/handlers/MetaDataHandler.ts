@@ -10,7 +10,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         try {
 
             let sections = this.queryRunner.query(` SELECT sections.id as sectionId,
-            stages.description as stage,sections.description as section
+            stages.description as stage,sections.description as section,sections.active, sections.visible,sections.orderSection
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
@@ -39,7 +39,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
         try {
 
-            let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description as subsections,subsections.display_name as display,subsections.single_section
+            let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description as subsections,
+            subsections.display_name as display,subsections.single_section, subsections.sectionId,subsections.active,
+            subsections.visible,subsections.order
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
