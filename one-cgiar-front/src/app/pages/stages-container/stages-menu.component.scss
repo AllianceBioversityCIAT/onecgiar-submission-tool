@@ -8,6 +8,7 @@
     margin-top: 30px;
     position: relative;
     left: 4px;
+    // box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     // overflow: hidden;
     .inner-capsule{
         position: relative;
@@ -15,6 +16,7 @@
         border-radius: 100px;
         width: 50%;
         height: 100%;
+        box-shadow: 0 14px 28px rgba(53, 53, 53, 0.25), 0 10px 10px rgba(71, 71, 71, 0.22);
         // border: solid 20px #0f7296ff;
     }
 }
@@ -92,6 +94,7 @@
     width: 100%;
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: 0 14px 28px rgba(34, 34, 34, 0.25), 0 10px 10px rgba(49, 49, 49, 0.22);
 }
 
 .initiative-identification {
