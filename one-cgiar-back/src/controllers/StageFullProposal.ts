@@ -45,9 +45,9 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
         // get metadata
         let metadata = await fullPposal.metaData;
 
-        let sections = await fullPposal.getSections();
-        let subsection = await fullPposal.getSubSectios("General Information");
-        let fields = await fullPposal.getField("General Information");
+        // let sections = await fullPposal.getSections();
+        // let subsection = await fullPposal.getSubSectios("General Information");
+        // let fields = await fullPposal.getField("General Information");
 
         // and filter by section
         // metadata = metadata.filter(meta => meta.group_by == 'General Information');
@@ -95,10 +95,6 @@ export const getContext = async (req: Request, res: Response) => {
         let metadata = await fullPposal.metaData;
         // and filter by section
         // metadata = metadata.filter(meta => meta.group_by == 'Context');
-
-        // let sections = await fullPposal.getSections();
-        // let subsection = await fullPposal.getSubSectios("Context");
-        // let fields = await fullPposal.getField("Context");
 
         res.json(new ResponseHandler('Full Proposal: Context.', { context, metadata }));
     } catch (error) {
