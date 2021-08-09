@@ -1,3 +1,39 @@
+//new styles
+.capsule-header{
+    width: calc(100% - 4px);
+    height: 45px;
+    background-color: white;
+    // border-left: solid 2px #0f7296ff;
+    border-radius: 100px;
+    margin-top: 30px;
+    position: relative;
+    left: 4px;
+    // overflow: hidden;
+    .inner-capsule{
+        position: relative;
+        left: -4px;
+        border-radius: 100px;
+        width: 50%;
+        height: 100%;
+        // border: solid 20px #0f7296ff;
+    }
+}
+///
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .elements_container{
     width: 100%;
     display: flex;
@@ -52,7 +88,7 @@
 .card-container {
     background-color: #f7f8f9ff;
     padding: 0;
-    margin-top: 3rem;
+    margin-top: 15px;
     width: 100%;
     border-radius: 20px;
     overflow: hidden;
