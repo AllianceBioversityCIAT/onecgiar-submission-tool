@@ -5,7 +5,7 @@ import { InitiativeStageHandler } from "./InitiativeStageController";
 export class MetaDataHandler extends InitiativeStageHandler {
 
 
-    async getSections() {
+    async getSections(initiativeId:string) {
 
         try {
 
@@ -14,11 +14,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
-            JOIN subsections_meta subsections
+            LEFT JOIN subsections_meta subsections
               ON sections.id = subsections.sectionId
             LEFT JOIN stages_meta stageMeta
               ON stageMeta.subsectionId = subsections.id
-           WHERE sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+           WHERE sections.stageId in (SELECT stageId FROM initiatives_by_stages WHERE initiativeId = ${initiativeId})
            GROUP BY sections.id,stages.description ,sections.description
            ORDER BY sections.orderSection`);
 
@@ -32,10 +32,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     }
 
-
-    
-    async getSubSectios() {
-
+    async getSubSectios(initiativeId:string) {
 
         try {
 
@@ -45,11 +42,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
-            JOIN subsections_meta subsections
+            LEFT JOIN subsections_meta subsections
               ON sections.id = subsections.sectionId
             LEFT JOIN stages_meta stageMeta
               ON stageMeta.subsectionId = subsections.id
-           WHERE sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+           WHERE sections.stageId in (SELECT stageId FROM initiatives_by_stages WHERE initiativeId = ${initiativeId})
            GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
            ORDER BY subsections.order`);
 
@@ -65,11 +62,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     }
 
-
-
-
     async getSubSectiosByName(sectionName: any) {
-
 
         try {
 
@@ -77,12 +70,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
-            JOIN subsections_meta subsections
+            LEFT JOIN subsections_meta subsections
               ON sections.id = subsections.sectionId
             LEFT JOIN stages_meta stageMeta
               ON stageMeta.subsectionId = subsections.id
            WHERE sections.description = "${sectionName}"
-             and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+             and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE initiativeId = ${this.initvStgId_})
              GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
            ORDER BY subsections.order`);
 
@@ -98,9 +91,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     }
 
-
-
-
     async getField(sectionName: any) {
 
         try {
@@ -109,12 +99,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
-            JOIN subsections_meta subsections
+            LEFT JOIN subsections_meta subsections
               ON sections.id = subsections.sectionId
             LEFT JOIN stages_meta stageMeta
               ON stageMeta.subsectionId = subsections.id
            WHERE sections.description = "${sectionName}"
-             and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})
+             and sections.stageId = (SELECT stageId FROM initiatives_by_stages WHERE initiativeId = ${this.initvStgId_})
            ORDER BY subsections.order
           `);
 
@@ -126,9 +116,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
         }
 
-
     }
-
-
 
 }
