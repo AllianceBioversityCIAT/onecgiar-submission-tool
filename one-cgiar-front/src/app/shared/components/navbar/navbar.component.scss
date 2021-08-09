@@ -6,6 +6,7 @@
     font-size: 1.2em;
     justify-content: space-between;
     padding: 0 3rem 0 5rem;
+    background-color: #898e8966;
 }
 
 .navbar-title {
@@ -15,7 +16,13 @@
     font-weight: bold;
     font-size: 1.1em;
     outline: none;
-    padding: 1.3rem 0.5rem;
+    padding: 1.3rem 1rem;
+    transition: all ease .3s;
+    &:hover{
+        transition: all ease .3s;
+        background-color: #313131a8;
+        border-radius: 5px;
+    }
 }
 
 .isActive {
@@ -32,6 +39,8 @@
     display: block;
     text-align: center;
     padding: 0.7rem 3.5rem;
+    background-color: #313131a8;
+    border-radius: 5px;
 }
 
 .navbar-name {
