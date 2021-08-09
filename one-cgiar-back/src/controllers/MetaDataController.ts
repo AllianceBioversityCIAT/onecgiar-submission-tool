@@ -18,10 +18,11 @@ export async function getMenu(req: Request, res: Response) {
         // create new Meta Data object
         const metaData = new MetaDataHandler();
 
-        let sections = await metaData.getSections(initiativeId);
+        let sections= await metaData.getSections(initiativeId);
         let subsections = await metaData.getSubSectios(initiativeId);
- 
-        res.json(new ResponseHandler('MetaData:Menu ', { sections, subsections }));
+        let stages = await metaData.getStages();
+
+        res.json(new ResponseHandler('MetaData:Menu ', { stages,sections, subsections }));
 
     } catch (error) {
 
