@@ -65,22 +65,29 @@ export class MenuComponent implements OnInit {
 
   getMenu(){
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
-
-      resp.response.stages.map((stage:any)=>{
-        stage.sections = resp.response.sections.filter(sectionID=>sectionID.stageId == stage.id);
-        stage.sections.map((section:any)=>{
-          section.subSections  = resp.response.subsections.filter(items=>items.sectionId == section.sectionId)
-        })
-      })
-    //  resp.response.sections.map((element:any)=>{
-    //     console.log(element);
-    //     console.log(resp.response.subsections.filter(items=>items.sectionId == element.sectionId));
-    //     element.subsections = resp.response.subsections.filter(items=>items.sectionId == element.sectionId)
-    //   })
+      console.log(resp);
       this.userMenu = resp.response.stages;
       console.log(this.userMenu);
     })
    
+  }
+
+  menuNavigation(stage:string,section:string,subsection?:string){
+    console.log('******************');
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');
+    let sectionParam = section.toLowerCase().split(' ').join('-');
+    let subsectionParam = subsection?.toLowerCase().split(' ').join('-');
+    this.router.navigate([baseUrl,stageParam,sectionParam])
+    console.log(baseUrl);
+    console.log(stageParam);
+    console.log(sectionParam);
+    console.log(subsectionParam);
+    console.log('-----------------');
+    // console.log(stage.toLowerCase().split(' ').join('-')+section.toLocaleLowerCase().split(' ').join('-')+subSection.toLocaleLowerCase().split(' ').join('-'));
+    // console.log(section.toLocaleLowerCase().split(' ').join('-'));
+    // console.log(subSection.toLocaleLowerCase().split(' ').join('-'));
+    
   }
 
   toggleExpand(subSectionsList:HTMLElement){
@@ -91,6 +98,7 @@ export class MenuComponent implements OnInit {
 
   simulateFullProposal(){
     // console.log('%cto push','background: #222; color: #84c3fd');
+    // active: under contruction icon - visible: hide section
     let body=[
       {
         title:'General Information ',
