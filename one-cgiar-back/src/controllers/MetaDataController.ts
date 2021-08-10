@@ -1,9 +1,4 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-
-import { InitiativesByStages } from '../entity/InititativesByStages';
-import { Stages } from '../entity/Stages';
-import { BaseError } from '../handlers/BaseError';
 import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
 
@@ -18,15 +13,26 @@ export async function getMenu(req: Request, res: Response) {
         // create new Meta Data object
         const metaData = new MetaDataHandler();
 
-        let sections= await metaData.getSections(initiativeId);
+        let stages = await metaData.getStages(initiativeId);
+        let sections = await metaData.getSections(initiativeId);
         let subsections = await metaData.getSubSectios(initiativeId);
-        let stages = await metaData.getStages();
 
-        res.json(new ResponseHandler('MetaData:Menu ', { stages,sections, subsections }));
+        stages.map(stage => {
+            stage['sections'] = sections.filter(s => {
+                return (s.stageId === stage.stageId)
+            })
+
+            sections.map(section => {
+                section['subsections'] = subsections.filter(sb => {
+                    return (sb.sectionId === section.sectionId)
+                })
+            })
+        })
+
+        res.json(new ResponseHandler('MetaData:Menu ', { stages }));
 
     } catch (error) {
 
-        console.log(error)
         return res.status(error.httpCode).json(error);
 
     }
