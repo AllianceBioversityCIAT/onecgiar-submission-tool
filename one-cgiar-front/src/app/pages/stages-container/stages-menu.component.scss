@@ -64,12 +64,16 @@
 .elements_container{
     width: 100%;
     display: flex;
+    justify-content: space-between;
+    overflow: hidden;
     .left_menu{
         // width: 400px;
     }
     .right_container{
-        width: calc(100% - 440px);
-        padding: 10px 0px 0px 40px;
+        overflow-y: scroll;
+        max-height: calc(100vh - 120px);
+        width: calc(100%);
+        padding: 10px 40px 0px;
     }
 }
 .platform_backgorund{
