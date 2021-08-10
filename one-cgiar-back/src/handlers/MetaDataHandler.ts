@@ -5,11 +5,16 @@ import { InitiativeStageHandler } from "./InitiativeStageController";
 export class MetaDataHandler extends InitiativeStageHandler {
 
     
-    async getStages(){
+    async getStages(initiativeId:string){
 
       try {
 
-        let stages = this.queryRunner.query(`SELECT id,description,active FROM stages`);
+        let stages = this.queryRunner.query(`SELECT b.id as stageId,b.description,a.active,
+        b.start_date,b.end_date
+        FROM initiatives_by_stages a
+        JOIN stages b
+        ON a.stageId = b.id
+        WHERE initiativeId =  ${initiativeId}`);
 
         return stages
         
@@ -19,8 +24,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
         throw new BaseError('Get Metadata', 400, error.message, false)
 
       }
-
-
 
     }
 
