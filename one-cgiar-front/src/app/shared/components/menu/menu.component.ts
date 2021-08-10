@@ -71,10 +71,26 @@ export class MenuComponent implements OnInit {
    
   }
 
-  menuNavigation(stage:string,section:string,subsection?:string){
+  menuNavigation(active,stage:string,section:string,subsection?:string){
+
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');    
-    subsection?this.router.navigate([baseUrl,stageParam,section,subsection]):this.router.navigate([baseUrl,stageParam,section])
+    if (subsection) {
+      if (active) {
+        this.router.navigate([baseUrl,stageParam,section,subsection]) 
+      }else{
+        this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
+      }
+      
+    }else{
+      if (active) {
+        this.router.navigate([baseUrl,stageParam,section])
+      }else{
+        this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
+      }
+      
+    }
+
   }
 
   toggleExpand(subSectionsList:HTMLElement){
