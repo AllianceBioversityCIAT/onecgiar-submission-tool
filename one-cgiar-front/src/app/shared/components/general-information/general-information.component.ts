@@ -62,6 +62,7 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
+      budget: new FormControl(null),
     });
   }
   localEmitter: any;
