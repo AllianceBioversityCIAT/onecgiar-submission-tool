@@ -63,7 +63,16 @@
                     ></ibdc-select>
 
             </div>
-
+            <div class="col-sm-6" >
+                <br>
+                <ibdc-textarea
+                    [options]="{inputTitle:'Budget', form:generalInformationForm, formControlName:'budget'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-sm-12">
+                <app-geographic-scope></app-geographic-scope>
+            </div>
 
         </div>
 

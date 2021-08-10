@@ -1,0 +1,73 @@
+<form [formGroup]="workPackageForm" (ngSubmit)="saveGeographicScope()" *ngIf="showForm || true">
+    <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
+    <br>
+    <br>
+    <div style="width: 100%; text-align: center;">
+        <strong class="geographic-scope-title ibdc_primary_color">Geographic scope</strong>
+    </div>
+   
+    <div class="row">
+        <div class="col-sm-12 horizontal_padding">
+            <div class="geographic-scope-container">
+                <div class="geographic-scope-form">
+                    <p class="readonly_text_title"><strong class="color-secondary">Does the initiative have a global dimension?</strong><span class="asterisk">* </span></p>
+                    <div class="edit" *ngIf="!this._initiativesService.initiative.readonly">
+                        <div>
+                            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
+                                (click)="setIsGlobal(true);">Yes</button>
+                            <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
+                                (click)="setIsGlobal(false);">No</button>
+                        </div>
+                    </div>
+                    <div class="only_read" *ngIf="this._initiativesService.initiative.readonly">
+                        <p>{{this.workPackageForm.get('isGlobal').value?'Yes':'No'}}</p>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-6 horizontal_padding">
+            <div class="box_container">
+                <custom-multiple-choice [options]="{
+                    required:true,
+                    inputTitle:'Select regions',
+
+                    selectedList:this.regionsSelectedList,
+                    selectItemName:'name',
+                    selectItemId:'um49Code',
+                    selectedItemId:'um49Code',
+                    service:{
+                        serviceTS:this._initiativesService,
+                        functionName:'getCLARISARegions',
+                        objectName:'regions',
+                        frontendSearchAttribute:'name'
+                    }
+                   }"></custom-multiple-choice>
+            </div>
+
+        </div>
+
+        <div class="col-6  horizontal_padding">
+            <div class="box_container">
+            <custom-multiple-choice [options]="{
+                required:true,
+                inputTitle:'Select countries',
+
+                selectedList:this.countriesSelectedList,
+                selectItemName:'name',
+                selectItemId:'code',
+                selectedItemId:'code',
+                service:{
+                    serviceTS:this._initiativesService,
+                    functionName:'getCLARISACountries',
+                    objectName:'countries',
+                    frontendSearchAttribute:'name'
+                }
+               }"></custom-multiple-choice>
+            </div>
+        </div>
+    </div>
+
+    <br>
+</form>
