@@ -72,16 +72,12 @@ export class MenuComponent implements OnInit {
   }
 
   menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
-    console.log('%c*********************','background: #222; color: #ffff00');
+
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');   
-    console.log('%c'+ (subsection.length?'yes':'no'),'background: #222; color: #84c3fd');
+
    
     if (active){
-      console.log(section);
-      console.log(subsection);
-      console.log(isSection);
-
       if (isSection) {
         if (!subsection.length){
           this.router.navigate([baseUrl,stageParam,section])  
@@ -93,24 +89,6 @@ export class MenuComponent implements OnInit {
         }
         
       }
-
-      // console.log(section);
-      // console.log(subsection);
-      // if (section && (!subsection.length)) {
-      //   this.router.navigate([baseUrl,stageParam,section])  
-      // }else{
-      //     if (section && subsection.length) {
-      //       this.router.navigate([baseUrl,stageParam,section,subsection]) 
-      //     }
-          
-
-      // }
-
-
-        
-     
-      // }
-
     }else{
       this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
     }
@@ -120,13 +98,9 @@ export class MenuComponent implements OnInit {
 
   toggleExpand(subSectionsList:HTMLElement){
     subSectionsList.classList.toggle('expandIbd');
-    subSectionsList.classList.toggle('collapseIbd');
-    // console.log('toggleExpand');
   }
 
   simulateFullProposal(){
-    // console.log('%cto push','background: #222; color: #84c3fd');
-    // active: under contruction icon - visible: hide section
     let body=[
       {
         title:'General Information ',
@@ -255,7 +229,6 @@ export class MenuComponent implements OnInit {
 
     ]
     this.stages[2].grouped=body;
-    // console.log(this.stages[2]);
     if (this.currentStageName != 'concept') {
       this.stages[1].active = false;
       this.stages[2].active = true;
@@ -275,7 +248,6 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getStages()
       .subscribe(
         res => {
-          // console.log(res);
           res.stages.map(stage => {
             stage.groups = [];
             res.stagesMeta.forEach(meta => {
@@ -287,7 +259,6 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
-          // console.log(this.stages)
           this.simulateFullProposal();
         }
       )
@@ -296,7 +267,6 @@ export class MenuComponent implements OnInit {
 
   parseStageUrl(meta: any, section: string) {
     const snapshot = this.router.routerState.snapshot;
-    console.log(snapshot);
     const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
     const stage = meta.description.toLowerCase().split(' ').join('-');
     return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
