@@ -72,6 +72,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
             LEFT JOIN stages_meta stageMeta
               ON stageMeta.subsectionId = subsections.id
            WHERE sections.stageId in (SELECT stageId FROM initiatives_by_stages WHERE initiativeId = ${initiativeId})
+             AND subsections.single_section > 0
            GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
            ORDER BY subsections.order`);
 
