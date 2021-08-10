@@ -128,11 +128,8 @@ export class InitiativesService {
   }
 
   // Query to get CLARISA Countries
-  getCLARISACountries(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries?filter=${filterText}`).pipe(map(resp => {
-      console.log(resp);
-      return  resp.response.countries;
-    }));;
+  getCLARISACountries(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
   }
 
   // Query to get CLARISA Countries By filter
