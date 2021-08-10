@@ -65,7 +65,6 @@ export class MenuComponent implements OnInit {
 
   getMenu(){
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
-      console.log(resp);
       this.userMenu = resp.response.stages;
       console.log(this.userMenu);
     })

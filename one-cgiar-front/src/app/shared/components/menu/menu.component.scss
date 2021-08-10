@@ -41,6 +41,7 @@
             .number-and-title-container{
                 color: #ffffff;
                 transition: all ease .3s;
+                position: relative;
                 &:hover{
                     transition: all ease .3s;
                     color: white;
@@ -78,6 +79,7 @@
                     padding-top: 2px;
                     margin-right: 10px;
                 }
+
             }
 
             .sub-sections{
@@ -87,6 +89,7 @@
                 // border-radius: 10px;
                 overflow: hidden;
                 .sub-section{
+                    position: relative;
                     backdrop-filter: blur(3px);
                     background-color: #08080846;
                     margin-bottom: 10px;
@@ -104,7 +107,14 @@
 
 
 
-
+    .icon-under-contruction{
+        position: absolute;
+        height: 1.65em;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        // margin-right: 20px;
+    }
 
 
     .stages{

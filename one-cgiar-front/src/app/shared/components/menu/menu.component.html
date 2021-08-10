@@ -11,11 +11,13 @@
                     <div class="number-and-title-container" style="display: flex;" (click)="toggleExpand(subSectionsList);menuNavigation(stage.description,section.description)">
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title">{{section.display_name}}</span>
+                        <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                     </div>
                     <div #subSectionsList  class="sub-sections collapseIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <!-- sub sections list -->
                         <div class="sub-section" *ngFor="let subSection of section.subsections" (click)="menuNavigation(stage.description,section.description,subSection.description)">
                             <span>{{subSection.display_name}}</span>
+                            <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>
                     </div>
                     
