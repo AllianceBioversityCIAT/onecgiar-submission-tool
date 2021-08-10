@@ -66,16 +66,13 @@ export class MenuComponent implements OnInit {
   getMenu(){
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
       this.userMenu = resp.response.stages;
-      console.log(this.userMenu);
     })
    
   }
 
   menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
-
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');   
-
    
     if (active){
       if (isSection) {
@@ -89,6 +86,7 @@ export class MenuComponent implements OnInit {
         }
         
       }
+
     }else{
       this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
     }
@@ -98,9 +96,13 @@ export class MenuComponent implements OnInit {
 
   toggleExpand(subSectionsList:HTMLElement){
     subSectionsList.classList.toggle('expandIbd');
+    subSectionsList.classList.toggle('collapseIbd');
+    // console.log('toggleExpand');
   }
 
   simulateFullProposal(){
+    // console.log('%cto push','background: #222; color: #84c3fd');
+    // active: under contruction icon - visible: hide section
     let body=[
       {
         title:'General Information ',
@@ -229,6 +231,7 @@ export class MenuComponent implements OnInit {
 
     ]
     this.stages[2].grouped=body;
+    // console.log(this.stages[2]);
     if (this.currentStageName != 'concept') {
       this.stages[1].active = false;
       this.stages[2].active = true;
@@ -248,6 +251,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getStages()
       .subscribe(
         res => {
+          // console.log(res);
           res.stages.map(stage => {
             stage.groups = [];
             res.stagesMeta.forEach(meta => {
@@ -259,6 +263,7 @@ export class MenuComponent implements OnInit {
             // stage.grouped = stage.grouped
           })
           this.stages = res.stages;
+          // console.log(this.stages)
           this.simulateFullProposal();
         }
       )
