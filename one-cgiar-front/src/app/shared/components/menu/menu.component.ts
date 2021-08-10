@@ -8,7 +8,7 @@ import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition, AUTO_STYLE } from '@angular/animations'
-
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -30,6 +30,7 @@ export class MenuComponent implements OnInit {
   subMenusFormValidation: {};
   workPackagesList: any = [];
   currentStageName='';
+  userMenu=[];
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -47,6 +48,8 @@ export class MenuComponent implements OnInit {
       loadMenu$.unsubscribe();
     })
 
+    this.getMenu();
+
     this._dataControlService.menuChange$.subscribe(() => {
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
@@ -60,10 +63,30 @@ export class MenuComponent implements OnInit {
     )
   }
 
+  getMenu(){
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
+
+      resp.response.stages.map((stage:any)=>{
+        stage.sections = resp.response.sections.filter(sectionID=>sectionID.stageId == stage.id);
+        stage.sections.map((section:any)=>{
+          section.subSections  = resp.response.subsections.filter(items=>items.sectionId == section.sectionId)
+        })
+      })
+    //  resp.response.sections.map((element:any)=>{
+    //     console.log(element);
+    //     console.log(resp.response.subsections.filter(items=>items.sectionId == element.sectionId));
+    //     element.subsections = resp.response.subsections.filter(items=>items.sectionId == element.sectionId)
+    //   })
+      this.userMenu = resp.response.stages;
+      console.log(this.userMenu);
+    })
+   
+  }
+
   toggleExpand(subSectionsList:HTMLElement){
     subSectionsList.classList.toggle('expandIbd');
     subSectionsList.classList.toggle('collapseIbd');
-    console.log('toggleExpand');
+    // console.log('toggleExpand');
   }
 
   simulateFullProposal(){
@@ -237,6 +260,7 @@ export class MenuComponent implements OnInit {
 
   parseStageUrl(meta: any, section: string) {
     const snapshot = this.router.routerState.snapshot;
+    console.log(snapshot);
     const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
     const stage = meta.description.toLowerCase().split(' ').join('-');
     return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
