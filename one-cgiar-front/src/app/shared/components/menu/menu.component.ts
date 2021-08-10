@@ -73,21 +73,9 @@ export class MenuComponent implements OnInit {
   }
 
   menuNavigation(stage:string,section:string,subsection?:string){
-    console.log('******************');
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    let sectionParam = section.toLowerCase().split(' ').join('-');
-    let subsectionParam = subsection?.toLowerCase().split(' ').join('-');
-    this.router.navigate([baseUrl,stageParam,sectionParam])
-    console.log(baseUrl);
-    console.log(stageParam);
-    console.log(sectionParam);
-    console.log(subsectionParam);
-    console.log('-----------------');
-    // console.log(stage.toLowerCase().split(' ').join('-')+section.toLocaleLowerCase().split(' ').join('-')+subSection.toLocaleLowerCase().split(' ').join('-'));
-    // console.log(section.toLocaleLowerCase().split(' ').join('-'));
-    // console.log(subSection.toLocaleLowerCase().split(' ').join('-'));
-    
+    let stageParam = stage.toLowerCase().split(' ').join('-');    
+    subsection?this.router.navigate([baseUrl,stageParam,section,subsection]):this.router.navigate([baseUrl,stageParam,section])
   }
 
   toggleExpand(subSectionsList:HTMLElement){
