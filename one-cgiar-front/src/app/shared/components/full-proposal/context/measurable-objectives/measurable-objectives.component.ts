@@ -26,7 +26,7 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
-    console.log(this.contextForm.value);
+    // console.log(this.contextForm.value);
   }
 
   upserInfo(){
@@ -41,7 +41,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   getContext(){
     this.spinnerService.show('spinner');
     this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.contextForm.controls['smart_objectives'].setValue(resp?.response?.context?.smart_objectives);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;

@@ -3,7 +3,7 @@
             <div class="stage-title" (click)="toggleExpand(sectionsList)">
                 <span>{{stage.description}}</span>
             </div>
-            <div #sectionsList class="stage-sections expandIbd" [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+            <div #sectionsList class="stage-sections collapseIbd" [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                 <br>
                 <div class="stage-section" *ngFor="let section of stage.grouped; let i = index">
                     <div class="number-and-title-container" style="display: flex;" (click)="toggleExpand(subSectionsList)">

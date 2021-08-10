@@ -17,7 +17,32 @@
         width: 50%;
         height: 100%;
         box-shadow: 0 14px 28px rgba(53, 53, 53, 0.25), 0 10px 10px rgba(71, 71, 71, 0.22);
+        display: flex;
+        // justify-content: ;
+        align-items: center;
         // border: solid 20px #0f7296ff;
+        .initIdContainer{
+            .text-description{
+                color: white;
+                font-weight: 700;
+                margin-left: 25px;
+                font-size: 1.1em;
+                // margin-top: 12px;
+                position: relative;
+                top: 2px;
+            }
+            .initiative-id{
+                font-size: 1.2em;
+                background-color: white;
+                border-radius: 25px;
+                color: rgb(92, 92, 92);
+                font-weight: 700;
+                padding: 5px 15px;
+                font-size: .9em;
+                margin-left: 10px ;
+            }  
+        }
+      
     }
 }
 ///
@@ -107,22 +132,8 @@
     justify-content: space-between;
 }
 
-.initiative-id {
-    font-size: 1.2em;
-}
-
 .manage-button {
     border-radius: 20px;
     outline: none;
-}
-
-.initiative-id{
-    background-color: white;
-    border-radius: 5px;
-    color: rgb(18, 16, 36);
-    font-weight: 400;
-    padding:5px 8px;
-    font-size: .9em;
-    
 }
 
