@@ -9,7 +9,6 @@ import { ResponseHandler } from '../handlers/Response';
 
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
-
 /**
  * 
  * @param req initiativeId
@@ -44,10 +43,6 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
 
         // get metadata
         let metadata = await fullPposal.metaData;
-
-        // let sections = await fullPposal.getSections();
-        // let subsection = await fullPposal.getSubSectios("General Information");
-        // let fields = await fullPposal.getField("General Information");
 
         // and filter by section
         // metadata = metadata.filter(meta => meta.group_by == 'General Information');

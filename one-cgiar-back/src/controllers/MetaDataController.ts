@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
 
-
+/**
+ * 
+ * @param req initiativeId
+ * @param res { metadata }
+ * @returns { metadata }
+ */
 export async function getMenu(req: Request, res: Response) {
 
     // get initiative by stage id from clientF
