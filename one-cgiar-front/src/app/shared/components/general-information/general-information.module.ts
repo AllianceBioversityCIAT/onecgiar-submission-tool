@@ -7,6 +7,7 @@ import { MaterialModule } from '../../../material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { GeographicScopeModule } from '../geographic-scope/geographic-scope.module';
 
 @NgModule({
   declarations: [GeneralInformationComponent],
@@ -17,7 +18,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CustomFormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    GeographicScopeModule
   ],
   exports:[GeneralInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -2,37 +2,41 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, ManyToOne } 
 import { IsNotEmpty } from 'class-validator'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { Stages } from './Stages';
+import { SubSectionsMeta } from './SubSectionsMeta';
 
 @Entity('stages_meta')
 export class StagesMeta extends UpdatedCreatedAt {
 
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column({ length: '500' })
-    stage_name: string
-
+    stage_name: string;
+;
     @Column({ length: '250' })
-    col_name: string
+    col_name: string;
     
     @Column({ length: '250' })
-    table_name: string
+    table_name: string;
 
     @Column({ length: '250' })
-    display_name: string
+    display_name: string;
     
     @Column({ length: '250' })
-    group_by: string
+    group_by: string;
 
     @Column('tinyint')
-    active: boolean
+    active: boolean;
 
     @Column('tinyint')
-    visible: boolean
+    visible: boolean;
 
     @Column('int')
-    order: number
+    order: number;
 
     @ManyToOne(() => Stages, stage => stage.id)
     stage: Stages;
+
+    @ManyToOne(() => SubSectionsMeta, subsection => subsection.id)
+    subsection: SubSectionsMeta;
 }
