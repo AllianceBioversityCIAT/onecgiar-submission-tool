@@ -21,7 +21,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       } catch (error) {
         
 
-        throw new BaseError('Get Metadata', 400, error.message, false)
+        throw new BaseError('Get stages', 400, error.message, false)
 
       }
 
@@ -51,7 +51,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
         } catch (error) {
 
-            throw new BaseError('Get Metadata', 400, error.message, false)
+            throw new BaseError('Get Sections', 400, error.message, false)
 
         }
 
@@ -82,7 +82,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         } catch (error) {
 
 
-            throw new BaseError('Get Metadata', 400, error.message, false)
+            throw new BaseError('Get Subsections', 400, error.message, false)
 
         }
 

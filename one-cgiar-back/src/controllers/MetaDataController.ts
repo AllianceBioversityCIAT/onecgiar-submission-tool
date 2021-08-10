@@ -13,10 +13,12 @@ export async function getMenu(req: Request, res: Response) {
         // create new Meta Data object
         const metaData = new MetaDataHandler();
 
+        // Get metadata per sections
         let stages = await metaData.getStages(initiativeId);
         let sections = await metaData.getSections(initiativeId);
         let subsections = await metaData.getSubSectios(initiativeId);
 
+        // Map metadata
         stages.map(stage => {
             stage['sections'] = sections.filter(s => {
                 return (s.stageId === stage.stageId)
