@@ -9,14 +9,14 @@
                 <!-- sections list -->
                 <div class="stage-section" *ngFor="let section of stage.sections; let i = index">
                     <div class="number-and-title-container"  
-                        (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description)">
+                        (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description,true,section.subsections)">
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title" [ngStyle]="{'margin-right': section.visible?'0em':'2em'}" >{{section.display_name}}</span>
                         <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                     </div>
                     <div #subSectionsList  class="sub-sections collapseIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <!-- sub sections list -->
-                        <div class="sub-section" *ngFor="let subSection of section.subsections" (click)="menuNavigation(subSection.active,stage.description,section.description,subSection.description)">
+                        <div class="sub-section" *ngFor="let subSection of section.subsections" (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                             <span>{{subSection.display_name}}</span>
                             <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>

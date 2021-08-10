@@ -71,25 +71,50 @@ export class MenuComponent implements OnInit {
    
   }
 
-  menuNavigation(active,stage:string,section:string,subsection?:string){
-
+  menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
+    console.log('%c*********************','background: #222; color: #ffff00');
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');    
-    if (subsection) {
-      if (active) {
-        this.router.navigate([baseUrl,stageParam,section,subsection]) 
+    let stageParam = stage.toLowerCase().split(' ').join('-');   
+    console.log('%c'+ (subsection.length?'yes':'no'),'background: #222; color: #84c3fd');
+   
+    if (active){
+      console.log(section);
+      console.log(subsection);
+      console.log(isSection);
+
+      if (isSection) {
+        if (!subsection.length){
+          this.router.navigate([baseUrl,stageParam,section])  
+        }
+        
       }else{
-        this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
+        if (subsection) {
+          this.router.navigate([baseUrl,stageParam,section,subsection]) 
+        }
+        
       }
-      
+
+      // console.log(section);
+      // console.log(subsection);
+      // if (section && (!subsection.length)) {
+      //   this.router.navigate([baseUrl,stageParam,section])  
+      // }else{
+      //     if (section && subsection.length) {
+      //       this.router.navigate([baseUrl,stageParam,section,subsection]) 
+      //     }
+          
+
+      // }
+
+
+        
+     
+      // }
+
     }else{
-      if (active) {
-        this.router.navigate([baseUrl,stageParam,section])
-      }else{
-        this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
-      }
-      
+      this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
     }
+
 
   }
 
