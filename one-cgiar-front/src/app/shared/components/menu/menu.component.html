@@ -8,9 +8,10 @@
                 <br>
                 <!-- sections list -->
                 <div class="stage-section" *ngFor="let section of stage.sections; let i = index">
-                    <div class="number-and-title-container" style="display: flex;" (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description)">
+                    <div class="number-and-title-container"  
+                        (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description)">
                         <div class="number">{{i+1}}</div>
-                        <span class="stage-section-title">{{section.display_name}}</span>
+                        <span class="stage-section-title" [ngStyle]="{'margin-right': section.visible?'0em':'2em'}" >{{section.display_name}}</span>
                         <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                     </div>
                     <div #subSectionsList  class="sub-sections collapseIbd" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">

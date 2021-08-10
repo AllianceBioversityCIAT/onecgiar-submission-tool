@@ -42,6 +42,7 @@
                 color: #ffffff;
                 transition: all ease .3s;
                 position: relative;
+                display: flex;
                 &:hover{
                     transition: all ease .3s;
                     color: white;
@@ -60,7 +61,8 @@
                 .stage-section-title{
                     text-decoration: none;
                     transition: all ease .3s;
-                    border-bottom: 2px solid rgba(0, 0, 0, 0);     
+                    border-bottom: 2px solid rgba(0, 0, 0, 0);
+                    // margin-right: 100px !important;     
                   }
                   .number{
                     transition: all ease .3s;
@@ -109,7 +111,7 @@
 
     .icon-under-contruction{
         position: absolute;
-        height: 1.65em;
+        width: 1.65em;
         right: 0;
         top: 50%;
         transform: translateY(-50%);
