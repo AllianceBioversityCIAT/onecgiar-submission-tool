@@ -1,5 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import exp from 'constants';
 import 'mocha';
 import jwt from '../../helpers/jwt-auth';
 
@@ -9,7 +10,7 @@ chai.use(chaiHttp);
 const initiativeId = 2;
 
 
-describe('Metadata Handler', async () => {
+describe('Metadata Controller - Menu', async () => {
 
     const user: any = {
         id: 98,
@@ -40,7 +41,11 @@ describe('Metadata Handler', async () => {
             .get('/api/meta/menu/' + initiativeId)
             .set('auth', token)
             .then((res) => {
+                console.log(res.body)
                 expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('MetaData:Menu');
+                expect(res).to.be.a('object')
             });
 
     });

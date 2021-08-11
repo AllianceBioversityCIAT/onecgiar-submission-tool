@@ -36,7 +36,7 @@ export async function getMenu(req: Request, res: Response) {
             })
         })
 
-        res.json(new ResponseHandler('MetaData:Menu ', { stages }));
+        res.json(new ResponseHandler('MetaData:Menu', { stages }));
 
     } catch (error) {
 
