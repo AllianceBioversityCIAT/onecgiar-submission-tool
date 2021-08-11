@@ -1,9 +1,16 @@
-import { getConnection, getRepository } from "typeorm";
+import { getConnection, getRepository, In } from "typeorm";
 import { Citations } from "../entity/Citatitions";
+import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Initiatives } from "../entity/Initiatives";
 import { InitiativesByStages } from "../entity/InititativesByStages";
+import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
+import { Stages } from "../entity/Stages";
 import { BaseError } from "./BaseError";
 import { BaseValidation } from "./validation/BaseValidation";
+
+import _ from "lodash";
+
+
 
 export class InitiativeStageHandler extends BaseValidation {
     public initvStgId_;
@@ -11,9 +18,12 @@ export class InitiativeStageHandler extends BaseValidation {
     private stageId_;
     private initiativeId_;
 
+
     public queryRunner = getConnection().createQueryRunner().connection;
     public initvStgRepo = getRepository(InitiativesByStages);
     public initiativeRepo = getRepository(Initiatives);
+    private regionsRepo = getRepository(RegionsByInitiativeByStage);
+    private countriesRepo = getRepository(CountriesByInitiativeByStage);
 
     constructor(initvStgId?: string, stageId?: string, initiativeId?: string) {
         super();
@@ -83,7 +93,7 @@ export class InitiativeStageHandler extends BaseValidation {
 
             // upsert citation 
             const addedLink = await citationsRepo.save(citation);
-            return citation;
+            return addedLink;
         } catch (error) {
             throw new BaseError('Add link: Error', 400, error.message, false)
         }
@@ -119,6 +129,157 @@ export class InitiativeStageHandler extends BaseValidation {
         }
 
     }
+
+
+
+    /**
+    * 
+    * @returns { geoScope }
+    */
+    async getGeoScope() {
+
+        // get initiative by stage id from intitiative
+        const initvStgId: string = this.initvStgId_;
+        try {
+            // get initiative regions data
+            let regions = await this.queryRunner.query(`SELECT region_id FROM regions_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1`);
+            // get initiative countries data
+            let countries = await this.queryRunner.query(`SELECT country_id FROM countries_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1`);
+
+            return { regions, countries };
+        } catch (error) {
+            throw new BaseError('Geographic scope : Initiative by stage - Read', 400, error.message, false)
+        }
+    }
+
+    /**
+    * 
+    * @param region_id? 
+    * @param country_id? 
+    * @returns { regions , countries }
+    */
+
+    async upsertGeoScope(region_id, country_id) {
+
+
+
+        try {
+            // get current intiative by stage
+            const initvStg = await this.initvStage;
+            // get geo scope from initiative by stage
+            let initvStgRegions = await this.regionsRepo.findOne({ where: { initvStg: initvStg } });
+            let initvStgCountries = await this.countriesRepo.findOne({ where: { initvStg: initvStg } });
+
+            // if not exists, createe new element 
+            if (initvStgRegions == null) {
+                initvStgRegions = new RegionsByInitiativeByStage();
+            }
+            if (initvStgCountries == null) {
+                initvStgCountries = new CountriesByInitiativeByStage();
+            }
+
+            // assign regions and countries to initiatives 
+            initvStgRegions.region_id = region_id;
+            initvStgCountries.country_id = country_id;
+
+            // save geo scope
+            initvStgRegions = await this.regionsRepo.save(initvStgRegions);
+            initvStgCountries = await this.countriesRepo.save(initvStgCountries);
+
+            return { regions: initvStgRegions, countries: initvStgCountries }
+
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Geographic scope : Initiative by stage - Update', 400, error.message, false)
+        }
+    }
+
+    /******* REPLICATION STEPS *********/
+
+
+
+    async forwardGeoScope(stage: Stages | number, regions?, countries?) {
+        // get initiative by stage id from intitiative
+        const initvStg = await this.initvStage;
+        try {
+            // console.log(initvStg);
+            // get geo scope from initiative by stage
+            const initvStgGeoScope = await this.getGeoScope();
+
+
+            // find intitiative by stage object from stage and initiative
+            let forwardInitvStg = await this.initvStgRepo.findOne({ where: { stage: stage, initiative: initvStg[0].initiativeId } });
+            if (forwardInitvStg == null) {
+                forwardInitvStg = new InitiativesByStages();
+                forwardInitvStg.initiative = initvStg[0].initiativeId;
+                forwardInitvStg.stage = stage as Stages;
+            }
+
+
+            // let rRegions, rCountries;
+            // const prevRegionsId = regions.map(region => region.region_id);
+            // const prevCountriesId = countries.map(country => country.country_id);
+
+            // rRegions = await this.regionsRepo.find({ where: { region_id: In(prevRegionsId), initvStg: forwardInitvStg } });
+            // rCountries = await this.countriesRepo.find({ where: { country_id: In(prevCountriesId), initvStg: forwardInitvStg } });
+
+
+            // const comparedRegions = rRegions == null ? regions : rRegions;
+            // const comparedCountries =
+
+            // // console.log(regions[0])
+            // console.log(regions[1])
+            // console.log(initvStgGeoScope.regions[0])
+            // console.log(initvStgGeoScope.regions[1])
+
+            // if (_.differenceBy(initvStgGeoScope.regions, regions, _.isEqual).length > 0) {
+            //     comparedRegions = _.differenceBy(initvStgGeoScope.regions, regions, _.isEqual);
+            // } else {
+            //     comparedRegions = initvStgGeoScope.regions;
+
+            // }
+
+            // if (_.differenceBy(initvStgGeoScope.countries, countries, _.isEqual).length > 0) {
+            //     comparedCountries = _.differenceBy(initvStgGeoScope.countries, countries, _.isEqual);
+            // } else {
+            //     comparedCountries = initvStgGeoScope.countries;
+
+            // }
+
+            // for each region add initiative by stage
+            let pushedRegions = [];
+            regions.forEach(async comparedRegion => {
+                const rExists =  await this.regionsRepo.findOne({ where: { initvStg: forwardInitvStg, region_id: comparedRegion.region_id } })
+                pushedRegions.push(rExists)
+                const region = rExists ? rExists : new RegionsByInitiativeByStage();
+                region.initvStg = forwardInitvStg;
+                region.region_id = comparedRegion.region_id;
+                pushedRegions.push(region)
+            });
+            // // for each country add initiative by stage
+            // let pushedCountries = []
+            // countries.forEach(comparedCountry => {
+            //     const country = new CountriesByInitiativeByStage();
+            //     country.initvStg = forwardInitvStg;
+            //     country.country_id = comparedCountry;
+            //     pushedCountries.push(country)
+            // });
+
+            console.log(pushedRegions)
+
+            // and save
+            const nRegions = await this.regionsRepo.save(pushedRegions);
+            // const nCountries = await this.countriesRepo.save(pushedCountries);
+            // return { regions: nRegions, countries: nCountries }
+            return null
+
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Geographic scope : Initiative by stage - Forward', 400, error.message, false)
+        }
+
+    }
+
 
     async setInitvStage() {
         try {

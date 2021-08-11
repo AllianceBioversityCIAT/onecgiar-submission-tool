@@ -19,9 +19,84 @@ import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, get
 
 import _ from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
+import { CountriesByInitiativeByStage } from '../entity/CountriesByInitiativeByStage';
+import { RegionsByInitiativeByStage } from '../entity/RegionsByInitiativeByStage';
 
 
 require('dotenv').config();
+
+
+/***
+ * 
+ *  TO UPDATE!
+ * 
+ * 
+ */
+
+
+/** TEMPORAL */
+export const getSummary = async (req: Request, res: Response) => {
+    const { initiativeId, stageId } = req.params;
+
+    const queryRunner = getConnection().createQueryRunner().connection;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
+    const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { id: stageId } });
+        // get intiative by stage
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
+        }
+
+        const GIquery = ` 
+                SELECT
+                    initvStgs.id AS initvStgId,
+                    general.id AS generalInformationId,
+                    IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+                
+                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+                
+                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                            
+                    general.action_area_description AS action_area_description,
+                    general.action_area_id AS action_area_id
+                
+                FROM
+                    initiatives_by_stages initvStgs
+                LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+                
+                WHERE initvStgs.id = ${initvStg.id};
+            `;
+
+        const gI = await queryRunner.query(GIquery);
+        const generalInformation = gI[0];
+
+        // get geo scope from initiative
+        const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+        console.log(regions, initvStg.id)
+        const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+
+        const geoScope = { regions, countries }
+
+        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
 
 
 

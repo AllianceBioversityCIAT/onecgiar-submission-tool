@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, getInstitutionsTypes, addLink, getLink } from '../controllers/Initiatives';
+import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative, getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, getInstitutionsTypes, addLink, getLink, getSummary } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -181,6 +181,66 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  *     { message: "Initiative not found in stage:", error }
  */
 router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
+
+
+
+
+
+
+
+// get initiative summary
+/**
+ * @api {get} /:initiativeId/summary/:stageId Request Initiative summary
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetInitiativeSummary
+ * @apiGroup Initiatives
+ * 
+ * @apiDescription  Shows summary data from initiatives
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/1/summary/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/1/summary/3
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
+ * 
+ * 
+ * @apiSuccess {String} generalInformation general information data from initiatives.
+ * @apiSuccess {String} geoScope regions and countries from initiatives.
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *   "response": {
+ *       "getLinks": [
+ *           {
+ *               "created_at": "2021-07-28T02:27:29.000Z",
+ *               "updated_at": "2021-07-28T02:27:29.000Z",
+ *               "generalInformation": "{}",
+ *               "geoScope": "{}",
+ *           }
+ *       ]
+ *   },
+ *   "title": "Initiatives:Get summary."
+ *  }
+ *
+ * @apiError Error : Get summary.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Summary not found in stage:", error }
+ */
+router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getSummary);
+
+
+
+
+
+
 
 /**
  * 

@@ -16,8 +16,8 @@ export class ConceptValidation extends InitiativeStageHandler {
             // get general information data 
             const generalInformation = await this.queryRunner.query(`
             SELECT
-                (SELECT name FROM concept_info WHERE initvStgId = initvStgs.id) AS name,
-                (SELECT action_area_id FROM concept_info WHERE initvStgId = initvStgs.id) AS action_area_id,
+                (SELECT name FROM general_information WHERE initvStgId = initvStgs.id) AS name,
+                (SELECT action_area_id FROM general_information WHERE initvStgId = initvStgs.id) AS action_area_id,
                 (SELECT userId FROM initiatives_by_users WHERE initiativeId = initvStgs.initiativeId AND roleId = (SELECT id FROM roles WHERE acronym = 'SGD')) AS lead_user,
                 (SELECT userId FROM initiatives_by_users WHERE initiativeId = initvStgs.initiativeId AND roleId = (SELECT id FROM roles WHERE acronym = 'PI') ) AS co_lead_user
 
@@ -42,7 +42,7 @@ export class ConceptValidation extends InitiativeStageHandler {
     public async isNarrtvComplete() {
         try {
             // get narratives data
-            const narrativesData = await this.queryRunner.query(`SELECT challenge, objectives, results, highlights FROM concept_info WHERE initvStgId = ${this.initvStgId_}`);
+            const narrativesData = await this.queryRunner.query(`SELECT challenge, objectives, results, highlights FROM narratives WHERE initvStgId = ${this.initvStgId_}`);
             const narrtvArray = _.values(narrativesData[0])
 
             // return all validated sub sections

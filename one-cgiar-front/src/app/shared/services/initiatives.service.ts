@@ -17,7 +17,8 @@ export class InitiativesService {
   initiative={
     id:null,
     roleId:4,
-    readonly: true
+    readonly: true,
+    stageId:null
   }
 
   actionAreas: [];
@@ -315,6 +316,10 @@ export class InitiativesService {
 
   addLink(body,initiativeID,stageID){
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+  }
+
+  getMenu(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
   }
 
   getLinks(body,initiativeID,stageID){
