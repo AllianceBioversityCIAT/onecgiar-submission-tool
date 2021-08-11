@@ -8,8 +8,11 @@
     padding: 0 3rem 0 5rem;
     background-color: #898e8966;
 }
-
+.navbar-title.active{
+    background-color: #666;
+}
 .navbar-title {
+    border-radius: 5px;
     color: #fff;
     display: flex;
     cursor: pointer;
@@ -20,7 +23,7 @@
     transition: all ease .3s;
     &:hover{
         transition: all ease .3s;
-        background-color: #313131a8;
+        background-color: #616161a8;
         border-radius: 5px;
     }
 }
