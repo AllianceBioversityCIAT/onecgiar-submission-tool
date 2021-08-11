@@ -93,7 +93,7 @@ export class InitiativeStageHandler extends BaseValidation {
 
             // upsert citation 
             const addedLink = await citationsRepo.save(citation);
-            return citation;
+            return addedLink;
         } catch (error) {
             throw new BaseError('Add link: Error', 400, error.message, false)
         }
