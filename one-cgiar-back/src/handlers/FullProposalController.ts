@@ -1,7 +1,9 @@
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { Context } from "../entity/Context";
+import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { GeneralInformation } from "../entity/GeneralInformation";
+import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
 import { BaseError } from "./BaseError";
 import { InitiativeStageHandler } from "./InitiativeStageController";
@@ -104,6 +106,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
     }
 
+    
 
 
     /*******  FULL PROPOSAL SETTERS   *********/
@@ -191,6 +194,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
     }
 
+    
     /**
      * 
      * @param contextId? 
