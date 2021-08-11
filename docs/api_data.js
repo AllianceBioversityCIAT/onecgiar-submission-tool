@@ -1,5 +1,112 @@
 define({ "api": [
   {
+    "type": "get",
+    "url": "/:initiativeId/summary/:stageId",
+    "title": "Request Initiative summary",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetInitiativeSummary",
+    "group": "Initiatives",
+    "description": "<p>Shows summary data from initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/initiatives/1/summary/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/initiatives/1/summary/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "stageId",
+            "description": "<p>Id stage.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "generalInformation",
+            "description": "<p>general information data from initiatives.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "geoScope",
+            "description": "<p>regions and countries from initiatives.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"getLinks\": [\n         {\n             \"created_at\": \"2021-07-28T02:27:29.000Z\",\n             \"updated_at\": \"2021-07-28T02:27:29.000Z\",\n             \"generalInformation\": \"{}\",\n             \"geoScope\": \"{}\",\n         }\n     ]\n },\n \"title\": \"Initiatives:Get summary.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get summary.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Summary not found in stage:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Initiatives"
+  },
+  {
     "type": "patch",
     "url": "initiatives/add-link/:initiativeId/:stageId",
     "title": "Create and update citations",
@@ -10,7 +117,7 @@ define({ "api": [
       }
     ],
     "name": "PatchCitations",
-    "group": "Citations",
+    "group": "Initiatives",
     "examples": [
       {
         "title": "Example usage:",
@@ -194,7 +301,7 @@ define({ "api": [
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-    "groupTitle": "Citations"
+    "groupTitle": "Initiatives"
   },
   {
     "type": "post",
@@ -207,7 +314,7 @@ define({ "api": [
       }
     ],
     "name": "PostCitations",
-    "group": "Citations",
+    "group": "Initiatives",
     "description": "<p>Shows all cititations filtered by initiative id, estage id and status</p>",
     "examples": [
       {
@@ -371,7 +478,7 @@ define({ "api": [
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-    "groupTitle": "Citations"
+    "groupTitle": "Initiatives"
   },
   {
     "type": "get",

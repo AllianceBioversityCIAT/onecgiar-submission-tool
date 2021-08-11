@@ -49,7 +49,7 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchCitations
- * @apiGroup Citations
+ * @apiGroup Initiatives
  * 
  * @apiExample Example usage:
  * http://localhost:3000/api/initiatives/add-link/2/3
@@ -120,7 +120,7 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName PostCitations
- * @apiGroup Citations
+ * @apiGroup Initiatives
  * 
  * @apiDescription  Shows all cititations filtered by initiative id, estage id and status
  * 
@@ -181,12 +181,6 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  *     { message: "Initiative not found in stage:", error }
  */
 router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
-
-
-
-
-
-
 
 // get initiative summary
 /**
