@@ -159,7 +159,7 @@ export class InitiativeStageHandler extends BaseValidation {
     * @returns { regions , countries }
     */
 
-    async upsertGeoScope(region_id, country_id) {
+    async upsertGeoScope(region_id?, country_id?) {
 
 
 
@@ -198,77 +198,42 @@ export class InitiativeStageHandler extends BaseValidation {
 
 
 
-    async forwardGeoScope(stage: Stages | number, regions?, countries?) {
+    async forwardGeoScope(forwardStage: Stages | number) {
         // get initiative by stage id from intitiative
         const initvStg = await this.initvStage;
         try {
             // console.log(initvStg);
             // get geo scope from initiative by stage
-            const initvStgGeoScope = await this.getGeoScope();
+            const currentInitvStgGeoScope = await this.getGeoScope();
 
 
             // find intitiative by stage object from stage and initiative
-            let forwardInitvStg = await this.initvStgRepo.findOne({ where: { stage: stage, initiative: initvStg[0].initiativeId } });
+            let forwardInitvStg = await this.initvStgRepo.findOne({ where: { stage: forwardStage, initiative: initvStg[0].initiativeId } });
             if (forwardInitvStg == null) {
                 forwardInitvStg = new InitiativesByStages();
                 forwardInitvStg.initiative = initvStg[0].initiativeId;
-                forwardInitvStg.stage = stage as Stages;
+                forwardInitvStg.stage = forwardStage as Stages;
             }
 
+            // get regions forwarded
+            const forwardedRegions = await this.regionsRepo.find({ where: { initvStg: forwardInitvStg }, select: ['region_id', 'id'] });
 
-            // let rRegions, rCountries;
-            // const prevRegionsId = regions.map(region => region.region_id);
-            // const prevCountriesId = countries.map(country => country.country_id);
+            // add initiative by stage to regions
+            const addInitvStg = (currentValue) => currentValue['initvStgId'] = forwardInitvStg.id;
 
-            // rRegions = await this.regionsRepo.find({ where: { region_id: In(prevRegionsId), initvStg: forwardInitvStg } });
-            // rCountries = await this.countriesRepo.find({ where: { country_id: In(prevCountriesId), initvStg: forwardInitvStg } });
+            // valdate regions
+            let regions: [] = [];
+            console.log(forwardedRegions.length, currentInitvStgGeoScope.regions.length)
+            if (forwardedRegions.length < 0) {
+            } else {
+                regions = currentInitvStgGeoScope.regions.every(addInitvStg);
+            }
 
+            console.log(regions)
+            
 
-            // const comparedRegions = rRegions == null ? regions : rRegions;
-            // const comparedCountries =
-
-            // // console.log(regions[0])
-            // console.log(regions[1])
-            // console.log(initvStgGeoScope.regions[0])
-            // console.log(initvStgGeoScope.regions[1])
-
-            // if (_.differenceBy(initvStgGeoScope.regions, regions, _.isEqual).length > 0) {
-            //     comparedRegions = _.differenceBy(initvStgGeoScope.regions, regions, _.isEqual);
-            // } else {
-            //     comparedRegions = initvStgGeoScope.regions;
-
-            // }
-
-            // if (_.differenceBy(initvStgGeoScope.countries, countries, _.isEqual).length > 0) {
-            //     comparedCountries = _.differenceBy(initvStgGeoScope.countries, countries, _.isEqual);
-            // } else {
-            //     comparedCountries = initvStgGeoScope.countries;
-
-            // }
-
-            // for each region add initiative by stage
-            let pushedRegions = [];
-            regions.forEach(async comparedRegion => {
-                const rExists =  await this.regionsRepo.findOne({ where: { initvStg: forwardInitvStg, region_id: comparedRegion.region_id } })
-                pushedRegions.push(rExists)
-                const region = rExists ? rExists : new RegionsByInitiativeByStage();
-                region.initvStg = forwardInitvStg;
-                region.region_id = comparedRegion.region_id;
-                pushedRegions.push(region)
-            });
-            // // for each country add initiative by stage
-            // let pushedCountries = []
-            // countries.forEach(comparedCountry => {
-            //     const country = new CountriesByInitiativeByStage();
-            //     country.initvStg = forwardInitvStg;
-            //     country.country_id = comparedCountry;
-            //     pushedCountries.push(country)
-            // });
-
-            console.log(pushedRegions)
-
-            // and save
-            const nRegions = await this.regionsRepo.save(pushedRegions);
+            // // and save
+            // const nRegions = await this.regionsRepo.save(pushedRegions);
             // const nCountries = await this.countriesRepo.save(pushedCountries);
             // return { regions: nRegions, countries: nCountries }
             return null
