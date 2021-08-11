@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
 
-
+/**
+ * 
+ * @param req initiativeId
+ * @param res { metadata }
+ * @returns { metadata }
+ */
 export async function getMenu(req: Request, res: Response) {
 
     // get initiative by stage id from clientF
@@ -13,10 +18,12 @@ export async function getMenu(req: Request, res: Response) {
         // create new Meta Data object
         const metaData = new MetaDataHandler();
 
+        // Get metadata per sections
         let stages = await metaData.getStages(initiativeId);
         let sections = await metaData.getSections(initiativeId);
         let subsections = await metaData.getSubSectios(initiativeId);
 
+        // Map metadata
         stages.map(stage => {
             stage['sections'] = sections.filter(s => {
                 return (s.stageId === stage.stageId)

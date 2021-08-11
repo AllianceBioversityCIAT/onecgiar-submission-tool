@@ -6,7 +6,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "all"
+        "name": "admin"
       }
     ],
     "name": "PatchCitations",
@@ -20,7 +20,7 @@ define({ "api": [
     ],
     "sampleRequest": [
       {
-        "url": "{json}  http://localhost:3000/api/initiatives/add-link/2/3"
+        "url": "http://localhost:3000/api/initiatives/add-link/2/3"
       }
     ],
     "header": {
@@ -203,7 +203,7 @@ define({ "api": [
     "version": "1.0.2",
     "permission": [
       {
-        "name": "all"
+        "name": "admin"
       }
     ],
     "name": "PostCitations",
@@ -372,5 +372,74 @@ define({ "api": [
     },
     "filename": "src/routes/Initiatives.ts",
     "groupTitle": "Citations"
+  },
+  {
+    "type": "get",
+    "url": "meta/menu/:initiativeId",
+    "title": "Get Menu.",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetMenu",
+    "group": "Metadata",
+    "description": "<p>Show metadata from stages,sections and subsections</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/meta/menu/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/meta/menu/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n   \"stages\": [\n         {\n             \"stageId\": 2,\n             \"description\": \"Concept\",\n             \"active\": 0,\n             \"start_date\": \"2021-02-15T19:22:33.000Z\",\n             \"end_date\": \"2021-02-15T19:22:33.000Z\",\n             \"sections\": [\n                 {\n                     \"sectionId\": 3,\n                     \"stage\": \"Concept\",\n                     \"description\": \"context\",\n                     \"display_name\": \"Context\",\n                     \"active\": 1,\n                     \"visible\": 1,\n                     \"orderSection\": 2,\n                     \"stageId\": 2,\n                     \"subsections\": []\n                 }\n             ]\n         }\n     ]\n },\n \"title\": \"Initiatives:Get link.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>GetMenu.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Metadata:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/MetaDataRoutes.ts",
+    "groupTitle": "Metadata"
   }
 ] });
