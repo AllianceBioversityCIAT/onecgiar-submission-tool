@@ -1,6 +1,5 @@
-<div class="general-information-container animate__animated animate__fadeIn">
-
-    <strong class="general-information-title color-primary-3">General information</strong>
+<section-title name="General information"></section-title>
+<div class="section-container animate__animated animate__fadeIn">
     <form [formGroup]="generalInformationForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
         *ngIf="showForm">
         <div class="row">
