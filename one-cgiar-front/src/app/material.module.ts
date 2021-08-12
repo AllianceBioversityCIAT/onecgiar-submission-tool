@@ -47,7 +47,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 const myModules = [
   MatToolbarModule,
+  MatSidenavModule,
   MatButtonModule,
+  MatMenuModule,
   MatListModule,
   MatIconModule,
   MatInputModule,
