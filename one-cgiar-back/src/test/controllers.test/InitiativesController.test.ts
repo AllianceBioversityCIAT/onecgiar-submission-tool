@@ -134,9 +134,121 @@ describe('Initiatives Controller - links', async () => {
 
     });
 
+        /**BUDGET*/
+
+        it('POST initiatives/get-budget/ Read budget data without token ', async () => {
+
+            await chai
+                .request(app)
+                .post('/api/initiatives/get-budget/' + initiativeId + '/' + stageId)
+                .then((res) => {
+                    expect(res.status).to.equal(400);
+                });
+    
+        });
+    
+        it('POST initiatives/get-budget/ Read budget data with token', async () => {
+    
+            const token = await jwt.createToken(user);
+    
+            await chai
+                .request(app)
+                .post('/api/initiatives/get-budget/' + initiativeId + '/' + stageId)
+                .set('auth', token)
+                .type('form')
+                .send({
+                    'table_name': 'general-information',
+                    'col_name': 'budget',
+                    'active': true
+                })
+                .then((res) => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.have.property('response').to.be.a('object');
+                    expect(res.body).to.have.property('title').to.be.equal('Initiatives:Get budget.');
+                    expect(res).to.be.a('object')
+                });
+    
+        });
+
+        it('PATCH initiatives/add-budget/ Create Budget', async () => {
+
+            const token = await jwt.createToken(user);
+    
+            await chai
+                .request(app)
+                .patch('/api/initiatives/add-budget/' + initiativeId + '/' + stageId)
+                .set('auth', token)
+                .type('form')
+                .send({
+                    "value": 1234,
+                    "table_name": "general-information",
+                    "col_name": "budget",
+                    "budgetId":null,
+                    "active": 1
+                })
+                .then((res) => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.have.property('response').to.be.a('object');
+                    expect(res.body).to.have.property('title').to.be.equal('Initiatives:Add Budget.');
+                    expect(res).to.be.a('object')
+                });
+    
+        });
+
+        
+        it('PATCH initiatives/add-budget/ Update Budget', async () => {
+
+            const token = await jwt.createToken(user);
+    
+            await chai
+                .request(app)
+                .patch('/api/initiatives/add-budget/' + initiativeId + '/' + stageId)
+                .set('auth', token)
+                .type('form')
+                .send({
+                    "value": 123.12,
+                    "table_name": "general-information",
+                    "col_name": "budget",
+                    "budgetId":1,
+                    "active": 1
+                })
+                .then((res) => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.have.property('response').to.be.a('object');
+                    expect(res.body).to.have.property('title').to.be.equal('Initiatives:Add Budget.');
+                    expect(res).to.be.a('object')
+                });
+    
+        });
+
+        it('PATCH initiatives/add-budget/ Inactivate budget', async () => {
+
+            const token = await jwt.createToken(user);
+    
+            await chai
+                .request(app)
+                .patch('/api/initiatives/add-budget/' + initiativeId + '/' + stageId)
+                .set('auth', token)
+                .type('form')
+                .send({
+                    "value": 123.12,
+                    "table_name": "general-information",
+                    "col_name": "budget",
+                    "budgetId":1,
+                    "active": 0
+                })
+                .then((res) => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.have.property('response').to.be.a('object');
+                    expect(res.body).to.have.property('title').to.be.equal('Initiatives:Add Budget.');
+                    expect(res).to.be.a('object')
+                });
+    
+        });
+
        /**SUMMARY*/
 
-       it('GET initiatives/add-link/ Request Initiative summary', async () => {
+       it('GET initiatives/summary/ Request Initiative summary', async () => {
 
         const token = await jwt.createToken(user);
 
