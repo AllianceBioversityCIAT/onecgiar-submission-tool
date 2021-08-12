@@ -220,6 +220,11 @@ export class InitiativesService {
   getActionAreas() {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/areas`).pipe(map(res => {
       this.actionAreas = res.response.actionAreas;
+
+      res.response.actionAreas.map((resp,index)=>{
+        resp.index_name = `Action area ${index + 1} - ${resp.name}`;
+      })
+      // this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       return res.response.actionAreas
     }));
   }

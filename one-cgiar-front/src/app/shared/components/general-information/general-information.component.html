@@ -7,7 +7,7 @@
             <div class="col-sm-12" >
                 <ibdc-textarea
                     [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly}">
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
                 </ibdc-textarea>
             </div>
 
@@ -15,10 +15,10 @@
                 <mat-card>
                     <div class="row icon_cont">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></ibdc-simple-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></ibdc-simple-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
@@ -28,15 +28,15 @@
                 </mat-card>
                 <br>
             </div>
-            <div class="col-sm-12"></div>
+            <!-- <div class="col-sm-12"></div> -->
             <div class="col-sm-6">
                 <mat-card>
                     <div class="row">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></ibdc-simple-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></ibdc-simple-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
@@ -45,8 +45,8 @@
                 </mat-card>
                 <br>
             </div>
-
-            <div class="col-sm-12" *ngIf="showFormActionArea">
+            <!-- <div class="col-sm-12"></div> -->
+            <!-- <div class="col-sm-12" *ngIf="showFormActionArea">
 
                 <ibdc-select [options]="
             {
@@ -62,12 +62,28 @@
             }">
                     ></ibdc-select>
 
+            </div> -->
+            <div class="col-sm-6">
+                <ibdc-select [options]="
+                {
+                 required:true,
+                 inputTitle:'Primary CGIAR Action Area',
+                 form:generalInformationForm,
+                 formControlId:'action_area_id',
+                 selectItemName:'index_name',
+                 selectItemId:'id',
+                 service:{
+                     serviceTS:this._initiativesService,
+                     functionName:'getActionAreas',
+                     frontendSearchAttribute:'index_name'
+                 }
+                }">
+                ></ibdc-select>
             </div>
-            <div class="col-sm-6" >
-                <br>
+            <div class="col-sm-6">
                 <ibdc-textarea
                     [options]="{inputTitle:'Budget', form:generalInformationForm, formControlName:'budget'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly}">
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
                 </ibdc-textarea>
             </div>
             <div class="col-sm-12">
