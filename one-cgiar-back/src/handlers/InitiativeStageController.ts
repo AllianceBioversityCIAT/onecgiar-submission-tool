@@ -9,6 +9,7 @@ import { BaseError } from "./BaseError";
 import { BaseValidation } from "./validation/BaseValidation";
 
 import _ from "lodash";
+import { Budget } from "../entity/Budget";
 
 
 
@@ -77,9 +78,9 @@ export class InitiativeStageHandler extends BaseValidation {
         //  create empty object 
         let citation: Citations;
         try {
-         
+
             // if null, create object
-            if (citationId == null || citationId =='') {
+            if (citationId == null || citationId == '') {
                 citation = new Citations();
                 // assign initiative by stage
                 citation.initvStg = this.initvStgId_;
@@ -128,6 +129,76 @@ export class InitiativeStageHandler extends BaseValidation {
 
         } catch (error) {
             throw new BaseError('Add link: Error', 400, error.message, false)
+        }
+
+    }
+
+
+    /**
+    * 
+    * @param value 
+    * @param table_name 
+    * @param col_name 
+    * @param budgetId?
+    * @returns citation
+    */
+    async addBudget(value: number, table_name: string, col_name: string, budgetId?: string, active?: boolean) {
+
+        // get budget repo
+        const budgetRepo = await getRepository(Budget);
+        //  create empty object 
+        let budget: Budget;
+        try {
+
+            // if null, create object
+            if (budgetId == null || budgetId == '') {
+                budget = new Budget();
+                // assign initiative by stage
+                budget.initvStg = this.initvStgId_;
+            } else {
+                budget = await budgetRepo.findOne(budgetId);
+            }
+
+            budget.value = value;
+            budget.table_name = table_name;
+            budget.col_name = col_name;
+            budget.active = active;
+
+            // upsert budget 
+            const addedBudget = await budgetRepo.save(budget);
+            return addedBudget;
+        } catch (error) {
+            throw new BaseError('Add budget: Error', 400, error.message, false)
+        }
+
+
+    }
+
+/**
+ * 
+ * @param table_name 
+ * @param col_name 
+ * @param active 
+ * @returns 
+ */
+
+    async getBudget(table_name: string, col_name: string, active?: boolean) {
+
+        // get budget repo
+        const budgetRepo = await getRepository(Budget);
+        //  create empty object
+
+        try {
+
+            const initvStg = this.initvStgId_;
+
+            // upsert getBudget 
+            const getBudget = await budgetRepo.findOne({ where: { initvStg: initvStg, table_name: table_name, col_name: col_name, active: active } });
+
+            return getBudget;
+
+        } catch (error) {
+            throw new BaseError('Get budget: Error', 400, error.message, false)
         }
 
     }
@@ -251,7 +322,7 @@ export class InitiativeStageHandler extends BaseValidation {
             // for each region add initiative by stage
             let pushedRegions = [];
             regions.forEach(async comparedRegion => {
-                const rExists =  await this.regionsRepo.findOne({ where: { initvStg: forwardInitvStg, region_id: comparedRegion.region_id } })
+                const rExists = await this.regionsRepo.findOne({ where: { initvStg: forwardInitvStg, region_id: comparedRegion.region_id } })
                 pushedRegions.push(rExists)
                 const region = rExists ? rExists : new RegionsByInitiativeByStage();
                 region.initvStg = forwardInitvStg;
