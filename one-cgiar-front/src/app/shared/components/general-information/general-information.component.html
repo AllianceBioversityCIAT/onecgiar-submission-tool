@@ -15,10 +15,10 @@
                 <mat-card>
                     <div class="row icon_cont">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></ibdc-simple-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></ibdc-simple-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
@@ -33,10 +33,10 @@
                 <mat-card>
                     <div class="row">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></ibdc-simple-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
+                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></ibdc-simple-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
