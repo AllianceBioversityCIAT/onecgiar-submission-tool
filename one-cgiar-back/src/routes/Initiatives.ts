@@ -45,7 +45,7 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
 
 // assign citation / link to initiative/
 /**
- * @api {patch} initiatives/add-link/:initiativeId/:stageId Create and update citations
+ * @api {patch} initiatives/add-link/:initiativeId/:stageId Citations - Create and update citations
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchCitations
@@ -116,7 +116,7 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
 
 // get links to table and column
 /**
- * @api {post} initiatives/get-link/:initiativeId/:stageId Read data of citations.
+ * @api {post} initiatives/get-link/:initiativeId/:stageId Citations - Read data of citations.
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName PostCitations
@@ -184,7 +184,7 @@ router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, check
 
 // get initiative summary
 /**
- * @api {get} /:initiativeId/summary/:stageId Request Initiative summary
+ * @api {get} /:initiativeId/summary/:stageId Summary - Request Initiative summary
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetInitiativeSummary

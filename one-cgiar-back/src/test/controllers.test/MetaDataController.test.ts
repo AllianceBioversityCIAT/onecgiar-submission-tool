@@ -1,6 +1,5 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import exp from 'constants';
 import 'mocha';
 import jwt from '../../helpers/jwt-auth';
 
@@ -41,7 +40,6 @@ describe('Metadata Controller - Menu', async () => {
             .get('/api/meta/menu/' + initiativeId)
             .set('auth', token)
             .then((res) => {
-                console.log(res.body)
                 expect(res.status).to.equal(200);
                 expect(res.body).to.have.property('response').to.be.a('object');
                 expect(res.body).to.have.property('title').to.be.equal('MetaData:Menu');

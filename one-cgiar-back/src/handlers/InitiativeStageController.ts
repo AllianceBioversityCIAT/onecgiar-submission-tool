@@ -71,13 +71,15 @@ export class InitiativeStageHandler extends BaseValidation {
      * @returns citation
      */
     async addLink(title: string, link: string, table_name: string, col_name: string, citationId?: string, active?: boolean) {
+
         // get citations repo
         const citationsRepo = await getRepository(Citations);
         //  create empty object 
         let citation: Citations;
         try {
+         
             // if null, create object
-            if (citationId == null) {
+            if (citationId == null || citationId =='') {
                 citation = new Citations();
                 // assign initiative by stage
                 citation.initvStg = this.initvStgId_;

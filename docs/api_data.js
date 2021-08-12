@@ -2,7 +2,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/:initiativeId/summary/:stageId",
-    "title": "Request Initiative summary",
+    "title": "Summary - Request Initiative summary",
     "version": "1.0.2",
     "permission": [
       {
@@ -109,7 +109,7 @@ define({ "api": [
   {
     "type": "patch",
     "url": "initiatives/add-link/:initiativeId/:stageId",
-    "title": "Create and update citations",
+    "title": "Citations - Create and update citations",
     "version": "1.0.0",
     "permission": [
       {
@@ -306,7 +306,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "initiatives/get-link/:initiativeId/:stageId",
-    "title": "Read data of citations.",
+    "title": "Citations - Read data of citations.",
     "version": "1.0.2",
     "permission": [
       {
