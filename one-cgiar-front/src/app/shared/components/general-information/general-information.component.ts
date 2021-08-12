@@ -23,6 +23,7 @@ export class GeneralInformationComponent implements OnInit {
 
   @Input() stageName = '';
   public generalInformationForm: FormGroup;
+  public budgetForm: FormGroup;
   public actionAreas: any[];
   // public usersByInitiative: [];
 
@@ -62,7 +63,13 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
-      budget: new FormControl(null),
+    });
+    this.budgetForm = new FormGroup({
+      value: new FormControl(0),
+      table_name: new FormControl("general-information"),
+      col_name: new FormControl("budget"),
+      active: new FormControl(true),
+      budgetId: new FormControl(null),
     });
   }
   localEmitter: any;
@@ -90,8 +97,13 @@ export class GeneralInformationComponent implements OnInit {
 
   getConceptGeneralInfo() {
     this.spinnerService.show('general-information');
-
-    
+    this._initiativesService.getBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+      console.log(resp.response.getBudget);
+      this.budgetForm.controls['budgetId'].setValue(resp.response?.getBudget?.id);
+      this.budgetForm.controls['value'].setValue(resp.response?.getBudget?.value);
+      // this.budgetForm.get('id').setValue(resp.response?.getBudget?.id);
+      // this.budgetForm.get('value').setValue(resp.response?.getBudget?.value);
+    })
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       // console.log(resp);
       this.actionAreas = resp;
@@ -152,6 +164,14 @@ export class GeneralInformationComponent implements OnInit {
     // console.log(error, this.errorService.getServerMessage(error))
     this.spinnerService.hide('general-information');
     });
+
+    console.log('save in: '+this.stageName);
+    console.log(this.budgetForm.value);
+    console.log(this.stageName=='proposal'?3:2);
+    console.log(this._initiativesService.initiative.id);
+    this._initiativesService.saveBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+      console.log(resp);
+    })
 
   }
 

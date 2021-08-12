@@ -255,6 +255,17 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/roles`);
   }
 
+  getBudget (body:any,initiativeId,stageId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-budget/${initiativeId}/${stageId}`, body);
+  }
+
+
+  saveBudget (body:any,initiativeId,stageId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
+  }
+
+
+
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);
