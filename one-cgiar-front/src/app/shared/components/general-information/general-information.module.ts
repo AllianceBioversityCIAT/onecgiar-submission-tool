@@ -5,8 +5,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { CustomFormsModule } from '../custom-forms/custom-forms.module';
 import { MaterialModule } from '../../../material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
-// import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { GeographicScopeModule } from '../geographic-scope/geographic-scope.module';
 import { UtilsModule } from '../utils/utils.module';
 
