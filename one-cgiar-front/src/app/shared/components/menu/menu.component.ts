@@ -7,20 +7,30 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
-
-
+import { trigger, state, style, animate, transition, AUTO_STYLE } from '@angular/animations'
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  animations:[
+    trigger('expandable',[
+      state('expand',style({ height: '*' })),
+      state('collapse',style({ height: '0' })),
+      transition('collapse => expand',animate('.3s ease-in')),
+      transition('expand => collapse',animate('.3s ease-out')),
+    ])
+  ]
 })
 export class MenuComponent implements OnInit {
+  state='inactive';
   stages: any[];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   workPackagesList: any = [];
   currentStageName='';
+  userMenu=[];
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -38,6 +48,8 @@ export class MenuComponent implements OnInit {
       loadMenu$.unsubscribe();
     })
 
+    this.getMenu();
+
     this._dataControlService.menuChange$.subscribe(() => {
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
@@ -51,8 +63,46 @@ export class MenuComponent implements OnInit {
     )
   }
 
+  getMenu(){
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
+      this.userMenu = resp.response.stages;
+    })
+   
+  }
+
+  menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');   
+   
+    if (active){
+      if (isSection) {
+        if (!subsection.length){
+          this.router.navigate([baseUrl,stageParam,section])  
+        }
+        
+      }else{
+        if (subsection) {
+          this.router.navigate([baseUrl,stageParam,section,subsection]) 
+        }
+        
+      }
+
+    }else{
+      this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
+    }
+
+
+  }
+
+  toggleExpand(subSectionsList:HTMLElement){
+    subSectionsList.classList.toggle('expandIbd');
+    subSectionsList.classList.toggle('collapseIbd');
+    // console.log('toggleExpand');
+  }
+
   simulateFullProposal(){
     // console.log('%cto push','background: #222; color: #84c3fd');
+    // active: under contruction icon - visible: hide section
     let body=[
       {
         title:'General Information ',

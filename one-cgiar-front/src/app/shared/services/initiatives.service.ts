@@ -17,7 +17,8 @@ export class InitiativesService {
   initiative={
     id:null,
     roleId:4,
-    readonly: true
+    readonly: true,
+    stageId:null
   }
 
   actionAreas: [];
@@ -219,6 +220,11 @@ export class InitiativesService {
   getActionAreas() {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/areas`).pipe(map(res => {
       this.actionAreas = res.response.actionAreas;
+
+      res.response.actionAreas.map((resp,index)=>{
+        resp.index_name = `Action area ${index + 1} - ${resp.name}`;
+      })
+      // this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       return res.response.actionAreas
     }));
   }
@@ -248,6 +254,17 @@ export class InitiativesService {
   getAllRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/roles`);
   }
+
+  getBudget (body:any,initiativeId,stageId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-budget/${initiativeId}/${stageId}`, body);
+  }
+
+
+  saveBudget (body:any,initiativeId,stageId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
+  }
+
+
 
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
@@ -315,6 +332,10 @@ export class InitiativesService {
 
   addLink(body,initiativeID,stageID){
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
+  }
+
+  getMenu(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
   }
 
   getLinks(body,initiativeID,stageID){

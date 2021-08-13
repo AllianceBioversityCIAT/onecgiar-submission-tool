@@ -6,6 +6,7 @@ import { StagesMenuComponent } from './stages-menu.component';
 import { MaterialModule } from '@app/material.module';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { UtilsModule } from '../../shared/components/utils/utils.module';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     CommonModule,
     StagesMenuRoutingModule,
     MaterialModule,
-    
+    UtilsModule
   ]
 })
 export class StagesMenuModule { }

@@ -1,0 +1,10 @@
+.custom_breadcrumb{
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    .items{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+}

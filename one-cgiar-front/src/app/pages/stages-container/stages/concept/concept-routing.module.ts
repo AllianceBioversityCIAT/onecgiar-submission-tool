@@ -8,6 +8,7 @@ import { KeyPartnersComponent } from '../../../../shared/components/preconcept/k
 import { KeyPartnersConceptComponent } from '../../../../shared/components/concept/key-partners-concept/key-partners-concept.component';
 import { ConceptComponent } from './concept.component';
 import { UnderConstructionGuard } from '../../../../shared/guards/under-construction.guard';
+import { UnderConstructionPageComponent } from '../../../../shared/components/utils/under-construction-page/under-construction-page.component';
 
 
 const routes: Routes = [
@@ -24,20 +25,20 @@ const routes: Routes = [
         path: 'general-information',
         loadChildren: () => import('./general-info-concept/general-info-concept.module').then((m) => m.GeneralInfoConceptModule),
       },
-      // {
-      //   path: 'narratives',
-      //   component: NarrativesConceptComponent,
-      // },
-      // {
-      //   path: 'initial-theory-of-change',
-      //   component: TheoryOfChangeComponent,
-      // },
-      // {
-      //   path: 'work-packages',
-      //   component: WorkPackagesComponent,
-      //   // canActivate: [UnderConstructionGuard], 
-      //   // data: {section: 'work-packages'} 
-      // },
+      {
+        path: 'narratives',
+        component: NarrativesConceptComponent,
+      },
+      {
+        path: 'initial-theory-of-change',
+        component: TheoryOfChangeComponent,
+      },
+      {
+        path: 'work-packages',
+        component: WorkPackagesComponent,
+        // canActivate: [UnderConstructionGuard], 
+        // data: {section: 'work-packages'} 
+      },
       {
         path: 'work-package',
         loadChildren: () => import('../../../../shared/components/concept/work-package/work-package.module').then((m) => m.WorkPackageModule),
@@ -45,12 +46,16 @@ const routes: Routes = [
         // canActivate: [UnderConstructionGuard], 
         // data: {section: 'work-packages'}    import { WorkPackageComponent } from '../../../../shared/components/concept/work-package/work-package.component';
       },
-      // {
-      //   path: 'key-partners',
-      //   component: KeyPartnersConceptComponent,
-      //   // canActivate: [UnderConstructionGuard], 
-      //   // data: {section: 'key-partners'} 
-      // },
+      {
+        path: 'key-partners',
+        component: KeyPartnersConceptComponent,
+        // canActivate: [UnderConstructionGuard], 
+        // data: {section: 'key-partners'} 
+      },
+      {
+        path: 'under-construction-page',
+        component: UnderConstructionPageComponent,
+      },
     ]
        
   }
