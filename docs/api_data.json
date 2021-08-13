@@ -778,11 +778,7 @@
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-<<<<<<< Updated upstream
-    "groupTitle": "Citations"
-=======
     "groupTitle": "Initiatives"
->>>>>>> Stashed changes
   },
   {
     "type": "get",

@@ -778,11 +778,7 @@ define({ "api": [
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-<<<<<<< Updated upstream
-    "groupTitle": "Citations"
-=======
-    "groupTitle": "Initiatives"
->>>>>>> Stashed changes
+    "groupTitle":  "Initiatives"
   },
   {
     "type": "get",
