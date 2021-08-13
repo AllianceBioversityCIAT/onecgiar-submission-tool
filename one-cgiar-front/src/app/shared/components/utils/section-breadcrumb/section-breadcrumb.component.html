@@ -1,1 +1,5 @@
-<p>section-breadcrumb works!</p>
+<div class="custom_breadcrumb">
+    <span class="items animate__animated animate__fadeInDown" *ngFor="let section of sectionsList; let i = index">
+    <span [ngStyle]="{'color': i==0?'#ffffffa6':'white','cursor':i==0?'default':'pointer'}">{{section.routeName}}</span> 
+    <span *ngIf="i < sectionsList.length-1" class="material-icons">chevron_right</span></span>
+</div>

@@ -39,12 +39,16 @@ export class StagesMenuComponent implements OnInit {
     });
   }
 
+  sectionsList=[];
 
   ngOnInit(): void {
+    this.sectionsList =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
         // console.log("NavigationStart "+testi++);
+        // console.log(event);
+        this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo= event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })

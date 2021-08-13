@@ -35,7 +35,7 @@ $variable-page-theme: mat-light-theme(
 // that you are using.
 @include angular-material-theme($variable-page-theme);
 /* You can add global styles to this file, and also import other style files */
-html *:not(.pi,mat-icon) {
+html *:not(.pi,mat-icon,.material-icons) {
   font-family: "Poppins", sans-serif !important;
 }
 html,
