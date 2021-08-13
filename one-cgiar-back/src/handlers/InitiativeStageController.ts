@@ -309,6 +309,7 @@ export class InitiativeStageHandler extends BaseValidation {
             const currentCountries: CountriesByInitiativeByStage[] = JSON.parse(JSON.stringify(currentInitvStgGeoScope.countries));
 
             // unify arrays validating duplicated in forwarded countries
+            
             const uniqueCountries = [].concat(
                 forwardedCountries.filter(obj1 => currentCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
                 currentCountries.filter(obj2 => forwardedCountries.every(obj1 => obj2.country_id !== obj1.country_id))
