@@ -41,6 +41,7 @@ export class GeneralInformationComponent implements OnInit {
   @ViewChild("text") text: ElementRef;
   words: any;
   showForm = false;
+  showBudget = false;
   showFormActionArea = false;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
@@ -103,6 +104,9 @@ export class GeneralInformationComponent implements OnInit {
       this.budgetForm.controls['value'].setValue(resp.response?.getBudget?.value);
       // this.budgetForm.get('id').setValue(resp.response?.getBudget?.id);
       // this.budgetForm.get('value').setValue(resp.response?.getBudget?.value);
+      this.showBudget = true;
+    },err=>{
+      this.showBudget = true;
     })
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       // console.log(resp);

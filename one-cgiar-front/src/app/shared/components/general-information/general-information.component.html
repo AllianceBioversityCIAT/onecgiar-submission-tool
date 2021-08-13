@@ -72,6 +72,7 @@
                  selectItemName:'index_name',
                  selectItemId:'id',
                  frontendSearchAttribute:'index_name',
+                 readOnlyVariable: this._initiativesService.initiative.readonly,
                  service:{
                      serviceTS:this._initiativesService,
                      functionName:'getActionAreas'
@@ -79,7 +80,7 @@
                 }">
                 ></ibdc-select>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" *ngIf="showBudget">
                 <ibdc-textarea
                     [options]="{inputTitle:'Budget', form:budgetForm, formControlName:'value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
