@@ -69,10 +69,7 @@ export class ConceptHandler extends ConceptValidation {
             const pplGeneralInformation = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGeneralInformation.name, conceptGeneralInformation.action_area_id, conceptGeneralInformation.action_area_description);
 
             const pplGeoScope = await this.forwardGeoScope(pplStage[0]);
-            // const pplGeoScope = await this.forwardGeoScope(pplStage[0], conceptGeoScope.regions, conceptGeoScope.countries);
-
-
-            // return { p/plGeneralInformation };
+            
             return { pplGeneralInformation, pplGeoScope };
             
         } catch (error) {

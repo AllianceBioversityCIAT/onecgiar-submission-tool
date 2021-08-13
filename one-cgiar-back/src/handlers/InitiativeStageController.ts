@@ -202,7 +202,7 @@ export class InitiativeStageHandler extends BaseValidation {
         // get initiative by stage id from intitiative
         const initvStg = await this.initvStage;
         try {
-            // console.log(initvStg);
+
             // get geo scope from initiative by stage
             const currentInitvStgGeoScope = await this.getGeoScope();
 
@@ -216,27 +216,36 @@ export class InitiativeStageHandler extends BaseValidation {
             }
 
             // get regions forwarded
-            const forwardedRegions = await this.regionsRepo.find({ where: { initvStg: forwardInitvStg }, select: ['region_id', 'id'] });
+            const forwardedRegions = await this.regionsRepo.find({ where: { initvStg: forwardInitvStg }, select: ['region_id', 'initvStg'] });
 
-            // add initiative by stage to regions
-            const addInitvStg = (currentValue) => currentValue['initvStgId'] = forwardInitvStg.id;
+            // get regions from current initiative
+            const currentRegions: RegionsByInitiativeByStage[] = JSON.parse(JSON.stringify(currentInitvStgGeoScope.regions));
 
-            // valdate regions
-            let regions: [] = [];
-            console.log(forwardedRegions.length, currentInitvStgGeoScope.regions.length)
-            if (forwardedRegions.length < 0) {
-            } else {
-                regions = currentInitvStgGeoScope.regions.every(addInitvStg);
-            }
+            // unify arrays validating duplicated in forwarded regions
+            const uniqueRegions = [].concat(
+                forwardedRegions.filter(obj1 => currentRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
+                currentRegions.filter(obj2 => forwardedRegions.every(obj1 => obj2.region_id !== obj1.region_id))
+            );
+            uniqueRegions.every(uA => uA['initvStg'] = forwardInitvStg);
 
-            console.log(regions)
-            
 
-            // // and save
-            // const nRegions = await this.regionsRepo.save(pushedRegions);
-            // const nCountries = await this.countriesRepo.save(pushedCountries);
-            // return { regions: nRegions, countries: nCountries }
-            return null
+            // get countries forwarded
+            const forwardedCountries = await this.countriesRepo.find({ where: { initvStg: forwardInitvStg }, select: ['country_id', 'initvStg'] });
+
+            // get countries from current initiative
+            const currentCountries: CountriesByInitiativeByStage[] = JSON.parse(JSON.stringify(currentInitvStgGeoScope.countries));
+
+            // unify arrays validating duplicated in forwarded countries
+            const uniqueCountries = [].concat(
+                forwardedCountries.filter(obj1 => currentCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
+                currentCountries.filter(obj2 => forwardedCountries.every(obj1 => obj2.country_id !== obj1.country_id))
+            );
+            uniqueCountries.every(uA => uA['initvStg'] = forwardInitvStg);
+
+            // and save
+            const nRegions = await this.regionsRepo.save(uniqueRegions);
+            const nCountries = await this.countriesRepo.save(uniqueCountries);
+            return { regions: nRegions, countries: nCountries }
 
         } catch (error) {
             console.log(error)
