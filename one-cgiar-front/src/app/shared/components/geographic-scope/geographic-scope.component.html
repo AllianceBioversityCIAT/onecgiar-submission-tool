@@ -29,21 +29,23 @@
         </div>
         <div class="col-6 horizontal_padding">
             <div class="box_container">
-                <custom-multiple-choice [options]="{
+                <ibdc-select-multiple [options]="{
                     required:true,
                     inputTitle:'Select regions',
-
-                    selectedList:this.regionsSelectedList,
                     selectItemName:'name',
                     selectItemId:'um49Code',
-                    selectedItemId:'um49Code',
+                    frontendSearchAttribute:'name',
+                    readOnlyVariable: this._initiativesService.initiative.readonly,
+                    savedList:{
+                        list:this.regionsSelectedList,
+                        itemId:'um49Code'
+                    },
                     service:{
                         serviceTS:this._initiativesService,
                         functionName:'getCLARISARegions',
-                        objectName:'regions',
-                        frontendSearchAttribute:'name'
+                        objectName:['response','regions']
                     }
-                   }"></custom-multiple-choice>
+                   }"></ibdc-select-multiple>
             </div>
 
         </div>

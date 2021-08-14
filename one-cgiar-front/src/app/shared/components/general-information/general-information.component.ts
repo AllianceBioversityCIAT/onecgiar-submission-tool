@@ -43,6 +43,28 @@ export class GeneralInformationComponent implements OnInit {
   showForm = false;
   showBudget = false;
   showFormActionArea = false;
+  geographicScope = {
+    regions : [
+      {
+        name: "Eastern Africa",
+        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
+        um49Code: 14,
+      },
+      {
+        name: "Southern Asia",
+        parentRegion: null,
+        um49Code: 34
+      },
+      {
+        name: "Middle Africa",
+        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
+        um49Code: 17
+      }
+    ],
+    countries : []
+  }
+
+ 
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
@@ -99,7 +121,7 @@ export class GeneralInformationComponent implements OnInit {
   getConceptGeneralInfo() {
     this.spinnerService.show('general-information');
     this._initiativesService.getBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      console.log(resp.response.getBudget);
+      // console.log(resp.response.getBudget);
       this.budgetForm.controls['budgetId'].setValue(resp.response?.getBudget?.id);
       this.budgetForm.controls['value'].setValue(resp.response?.getBudget?.value);
       // this.budgetForm.get('id').setValue(resp.response?.getBudget?.id);
@@ -151,31 +173,31 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   upsertGeneralInfo() {
-    
-    this.spinnerService.show('general-information');
-    this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
+    console.log(this.geographicScope);
+    // this.spinnerService.show('general-information');
+    // this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
 
-      this.spinnerService.hide('general-information');
-      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-      // })
+    //   this.spinnerService.hide('general-information');
+    //   // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+    //   //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+    //   // })
 
-      this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
-      ?this._interactionsService.successMessage('General information has been saved')
-      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
+    //   this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+    //   ?this._interactionsService.successMessage('General information has been saved')
+    //   :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
-    },error => {
-    // console.log(error, this.errorService.getServerMessage(error))
-    this.spinnerService.hide('general-information');
-    });
+    // },error => {
+    // // console.log(error, this.errorService.getServerMessage(error))
+    // this.spinnerService.hide('general-information');
+    // });
 
-    console.log('save in: '+this.stageName);
-    console.log(this.budgetForm.value);
-    console.log(this.stageName=='proposal'?3:2);
-    console.log(this._initiativesService.initiative.id);
-    this._initiativesService.saveBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      console.log(resp);
-    })
+    // console.log('save in: '+this.stageName);
+    // console.log(this.budgetForm.value);
+    // console.log(this.stageName=='proposal'?3:2);
+    // console.log(this._initiativesService.initiative.id);
+    // this._initiativesService.saveBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+    //   console.log(resp);
+    // })
 
   }
 
