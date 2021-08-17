@@ -232,7 +232,7 @@ export class InitiativeStageHandler extends BaseValidation {
     * @returns { regions , countries }
     */
 
-    async upsertGeoScope(region_id, country_id) {
+    async upsertGeoScope(region_id?, country_id?) {
 
 
 
@@ -271,80 +271,55 @@ export class InitiativeStageHandler extends BaseValidation {
 
 
 
-    async forwardGeoScope(stage: Stages | number, regions?, countries?) {
+    async forwardGeoScope(forwardStage: Stages | number) {
         // get initiative by stage id from intitiative
         const initvStg = await this.initvStage;
         try {
-            // console.log(initvStg);
+
             // get geo scope from initiative by stage
-            const initvStgGeoScope = await this.getGeoScope();
+            const currentInitvStgGeoScope = await this.getGeoScope();
 
 
             // find intitiative by stage object from stage and initiative
-            let forwardInitvStg = await this.initvStgRepo.findOne({ where: { stage: stage, initiative: initvStg[0].initiativeId } });
+            let forwardInitvStg = await this.initvStgRepo.findOne({ where: { stage: forwardStage, initiative: initvStg[0].initiativeId } });
             if (forwardInitvStg == null) {
                 forwardInitvStg = new InitiativesByStages();
                 forwardInitvStg.initiative = initvStg[0].initiativeId;
-                forwardInitvStg.stage = stage as Stages;
+                forwardInitvStg.stage = forwardStage as Stages;
             }
 
+            // get regions forwarded
+            const forwardedRegions = await this.regionsRepo.find({ where: { initvStg: forwardInitvStg }, select: ['region_id', 'initvStg'] });
 
-            // let rRegions, rCountries;
-            // const prevRegionsId = regions.map(region => region.region_id);
-            // const prevCountriesId = countries.map(country => country.country_id);
+            // get regions from current initiative
+            const currentRegions: RegionsByInitiativeByStage[] = JSON.parse(JSON.stringify(currentInitvStgGeoScope.regions));
 
-            // rRegions = await this.regionsRepo.find({ where: { region_id: In(prevRegionsId), initvStg: forwardInitvStg } });
-            // rCountries = await this.countriesRepo.find({ where: { country_id: In(prevCountriesId), initvStg: forwardInitvStg } });
+            // unify arrays validating duplicated in forwarded regions
+            const uniqueRegions = [].concat(
+                forwardedRegions.filter(obj1 => currentRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
+                currentRegions.filter(obj2 => forwardedRegions.every(obj1 => obj2.region_id !== obj1.region_id))
+            );
+            uniqueRegions.every(uA => uA['initvStg'] = forwardInitvStg);
 
 
-            // const comparedRegions = rRegions == null ? regions : rRegions;
-            // const comparedCountries =
+            // get countries forwarded
+            const forwardedCountries = await this.countriesRepo.find({ where: { initvStg: forwardInitvStg }, select: ['country_id', 'initvStg'] });
 
-            // // console.log(regions[0])
-            // console.log(regions[1])
-            // console.log(initvStgGeoScope.regions[0])
-            // console.log(initvStgGeoScope.regions[1])
+            // get countries from current initiative
+            const currentCountries: CountriesByInitiativeByStage[] = JSON.parse(JSON.stringify(currentInitvStgGeoScope.countries));
 
-            // if (_.differenceBy(initvStgGeoScope.regions, regions, _.isEqual).length > 0) {
-            //     comparedRegions = _.differenceBy(initvStgGeoScope.regions, regions, _.isEqual);
-            // } else {
-            //     comparedRegions = initvStgGeoScope.regions;
+            // unify arrays validating duplicated in forwarded countries
 
-            // }
-
-            // if (_.differenceBy(initvStgGeoScope.countries, countries, _.isEqual).length > 0) {
-            //     comparedCountries = _.differenceBy(initvStgGeoScope.countries, countries, _.isEqual);
-            // } else {
-            //     comparedCountries = initvStgGeoScope.countries;
-
-            // }
-
-            // for each region add initiative by stage
-            let pushedRegions = [];
-            regions.forEach(async comparedRegion => {
-                const rExists = await this.regionsRepo.findOne({ where: { initvStg: forwardInitvStg, region_id: comparedRegion.region_id } })
-                pushedRegions.push(rExists)
-                const region = rExists ? rExists : new RegionsByInitiativeByStage();
-                region.initvStg = forwardInitvStg;
-                region.region_id = comparedRegion.region_id;
-                pushedRegions.push(region)
-            });
-            // // for each country add initiative by stage
-            // let pushedCountries = []
-            // countries.forEach(comparedCountry => {
-            //     const country = new CountriesByInitiativeByStage();
-            //     country.initvStg = forwardInitvStg;
-            //     country.country_id = comparedCountry;
-            //     pushedCountries.push(country)
-            // });
-
-            console.log(pushedRegions)
+            const uniqueCountries = [].concat(
+                forwardedCountries.filter(obj1 => currentCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
+                currentCountries.filter(obj2 => forwardedCountries.every(obj1 => obj2.country_id !== obj1.country_id))
+            );
+            uniqueCountries.every(uA => uA['initvStg'] = forwardInitvStg);
 
             // and save
-            const nRegions = await this.regionsRepo.save(pushedRegions);
-            // const nCountries = await this.countriesRepo.save(pushedCountries);
-            // return { regions: nRegions, countries: nCountries }
-            return null
+            const nRegions = await this.regionsRepo.save(uniqueRegions);
+            const nCountries = await this.countriesRepo.save(uniqueCountries);
+            return { regions: nRegions, countries: nCountries }
 
         } catch (error) {
             console.log(error)
