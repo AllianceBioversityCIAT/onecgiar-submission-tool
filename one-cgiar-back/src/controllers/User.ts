@@ -301,3 +301,28 @@ export const deleteUser = async (req: Request, res: Response) => {
         return res.status(e.httpCode).json(e);
     }
 };
+
+export async function removeUser(req:Request,res:Response){
+    const { id } = req.params;
+    const userRepository = getRepository(Users);
+
+    let user: any;
+
+    try {
+        user = await userRepository.findOne(id);
+        if (user == null) {
+            throw new BaseError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                'User not found.',
+                true,
+            );
+        }
+        user = await userRepository.delete(user);
+        
+       return res.json(new ResponseHandler('User removed.', { user }));
+    } catch (error) {
+        return error
+    }
+};
+

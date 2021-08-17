@@ -39,10 +39,10 @@ before(async () => {
 after(async () => {
     await chai
         .request(app)
-        .delete('/api/users/' + user.id)
+        .delete('/api/users/remove/' + user.id)
         .set('auth', token)
         .then((res) => {
-            console.log('User '+user.id+' was inactivated.',res.body.response.title);
+            console.log('User '+user.id+' was removed.');
         });
 })
 

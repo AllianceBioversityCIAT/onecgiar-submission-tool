@@ -2,7 +2,6 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import 'mocha';
 import jwt from '../helpers/jwt-auth';
-import dbfunctionstest from '../helpers/db-functions';
 
 
 chai.use(chaiHttp);
@@ -16,7 +15,6 @@ var user = {
 
 /**Create user and token for test */
 before(async () => {
-
     await chai
         .request(app)
         .post('/api/users/')
@@ -39,17 +37,13 @@ before(async () => {
 /**Delete user test */
 after(async () => {
 
-    const removeUser = await dbfunctionstest.deleteUser(user.id);
-    console.log(removeUser);
-    
-
-    // await chai
-    //     .request(app)
-    //     .delete('/api/users/' + user.id)
-    //     .set('auth', token)
-    //     .then((res) => {
-    //         console.log('User '+user.id+' was inactivated.',res.body.response.title);
-    //     });
+    await chai
+        .request(app)
+        .delete('/api/users/remove/' + user.id)
+        .set('auth', token)
+        .then((res) => {
+            console.log('User '+user.id+' was removed.');
+        });
 })
 
 /**Start test */

@@ -364,51 +364,6 @@ export async function getBudget(req: Request, res: Response) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * All Initiatives 
  * @param req 
