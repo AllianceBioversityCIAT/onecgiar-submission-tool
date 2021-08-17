@@ -70,19 +70,14 @@ export class MenuComponent implements OnInit {
    
   }
 
-  activeClassByRoute(route,stage:boolean){
+  activeClassByRoute(route){
     let baseUrl =  this.router.routerState.snapshot.url
-    if (stage) {
+    // if (stage) {
      let routeAux = route.toLowerCase().split(' ').join('-');
      return baseUrl.indexOf(routeAux)>-1?true:false
-    }else{
-      return baseUrl.indexOf(route)>-1?true:false
-    }
-    console.log(route);
-    
-   
-    // let baseUrl =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
-    console.log(baseUrl);
+    // }else{
+    //   return baseUrl.indexOf(route)>-1?true:false
+    // }
   }
 
   menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
