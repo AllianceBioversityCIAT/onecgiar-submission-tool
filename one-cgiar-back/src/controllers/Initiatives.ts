@@ -740,7 +740,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
 
     try {
         // get replicate to stage
-        const stage = await stageRepo.findOne(replicationStageId);
+        const stage = await stageRepo.findOne(replicationStageId);        
         // get replicate to stage description
         const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
         // data pushed to next stage

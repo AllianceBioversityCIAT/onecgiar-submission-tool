@@ -53,23 +53,19 @@ export class ConceptHandler extends ConceptValidation {
             // create proposal (next stage) object
             const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
 
-
-
             // get concept general information data 
             const conceptGeneralInformation = await this.getGeneralInformation();
-            
+
             // get geo scope
             const conceptGeoScope = await this.getGeoScope();
 
             // get general information if exists from proposalObject
             const proposalGI = await proposalObject.getGeneralInformation();
 
-
             // upsert full proposal general infomation
             const pplGeneralInformation = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGeneralInformation.name, conceptGeneralInformation.action_area_id, conceptGeneralInformation.action_area_description);
 
             const pplGeoScope = await this.forwardGeoScope(pplStage[0], conceptGeoScope.regions, conceptGeoScope.countries);
-
 
             // return { p/plGeneralInformation };
             return { pplGeneralInformation, pplGeoScope };

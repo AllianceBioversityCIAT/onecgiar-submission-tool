@@ -1,24 +1,54 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import 'mocha';
-import jwt from '../../helpers/jwt-auth';
+import jwt from '../helpers/jwt-auth';
 
 
 chai.use(chaiHttp);
 
-const initiativeId = 2;
+const app = 'http://localhost:3000';
+var token: any = '';
+var user = {
+    id: '',
+    email: ''
+};
 
+/**Create user and token for test */
+before(async () => {
+
+    await chai
+        .request(app)
+        .post('/api/users/')
+        .type('form')
+        .send({
+            "first_name": "test",
+            "last_name": "test",
+            "password": 'Test12345',
+            "is_cgiar": false,
+            "email": "test@hotmail.com",
+            "roles": [1]
+        })
+        .then((res) => {
+            user.id = res.body.response.user.id;
+            user.email = res.body.response.user.email;
+        });
+    token = await jwt.createToken(user);
+});
+
+/**Delete user test */
+after(async () => {
+    await chai
+        .request(app)
+        .delete('/api/users/' + user.id)
+        .set('auth', token)
+        .then((res) => {
+            console.log('User '+user.id+' was inactivated.',res.body.response.title);
+        });
+})
 
 describe('Metadata Controller - Menu', async () => {
 
-    const user: any = {
-        id: 98,
-        email: 'j.cadavid@cgiar.org',
-        roles: ['admin', 'customer'],
-    };
-
-    const app = 'http://localhost:3000';
-
+    const initiativeId = 2;
 
     it('GET /meta/menu/  Get Metadata menu without token ', async () => {
 
@@ -32,8 +62,6 @@ describe('Metadata Controller - Menu', async () => {
     });
 
     it('GET /meta/menu/  Get Metadata menu with token', async () => {
-
-        const token = await jwt.createToken(user);
 
         await chai
             .request(app)
