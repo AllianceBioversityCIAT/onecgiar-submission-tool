@@ -81,11 +81,17 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6" *ngIf="showBudget">
+                <ibdc-input
+                    [options]="{inputTitle:'Budget (USD)', form:budgetForm, formControlName:'value'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
+                </ibdc-input>
+            </div>
+            <!-- <div class="col-sm-6" *ngIf="showBudget">
                 <ibdc-textarea
                     [options]="{inputTitle:'Budget (USD)', form:budgetForm, formControlName:'value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
                 </ibdc-textarea>
-            </div>
+            </div> -->
             <div class="col-sm-12">
                 <app-geographic-scope></app-geographic-scope>
             </div>
