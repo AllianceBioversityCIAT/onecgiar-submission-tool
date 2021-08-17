@@ -3,7 +3,7 @@ import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, get
 import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, 
         getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative, 
         getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, 
-        getInstitutionsTypes, addLink, getLink, getSummary, addBudget, getBudget } from '../controllers/Initiatives';
+        getInstitutionsTypes, addLink, getLink, getSummary, addBudget, getBudget, upsertSummary } from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -232,6 +232,62 @@ router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, check
  *     { message: "Summary not found in stage:", error }
  */
 router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getSummary);
+
+
+/**
+ * @api {patch} /:initiativeId/summary/:stageId Summary - Request Initiative summary
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName PatchInitiativeSummary
+ * @apiGroup Initiatives
+ * 
+ * @apiDescription  Upserts summary data from initiatives
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/initiatives/1/summary/3
+ * 
+ * @apiSampleRequest http://localhost:3000/api/initiatives/1/summary/3
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} stageId Id stage.
+ * 
+ * 
+ * @apiSuccess {String} generalInformation general information data from initiatives.
+ * @apiSuccess {String} geoScope regions and countries from initiatives.
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *   "response": {
+ *       "getLinks": [
+ *           {
+ *               "created_at": "2021-07-28T02:27:29.000Z",
+ *               "updated_at": "2021-07-28T02:27:29.000Z",
+ *               "generalInformation": "{}",
+ *               "geoScope": "{}",
+ *           }
+ *       ]
+ *   },
+ *   "title": "Initiatives:Upsert summary."
+ *  }
+ *
+ * @apiError Error : Upsert summary.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Summary not found in stage:", error }
+ */
+router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertSummary);
+
+
+
+
+
+
+
+
 
 // assign budget
 /**
