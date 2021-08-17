@@ -70,6 +70,16 @@ export class MenuComponent implements OnInit {
    
   }
 
+  activeClassByRoute(route){
+    let baseUrl =  this.router.routerState.snapshot.url
+    // if (stage) {
+     let routeAux = route.toLowerCase().split(' ').join('-');
+     return baseUrl.indexOf(routeAux)>-1?true:false
+    // }else{
+    //   return baseUrl.indexOf(route)>-1?true:false
+    // }
+  }
+
   menuNavigation(active,stage:string,section:string,isSection:boolean,subsection?:string|[]){
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');   
