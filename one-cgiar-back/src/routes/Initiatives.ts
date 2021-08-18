@@ -1,11 +1,6 @@
 import { Router } from 'express';
-import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import {
-        getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg,
-        getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative,
-        getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions,
-        getInstitutionsTypes, addLink, getLink, getSummary, addBudget, getBudget, upsertSummary, removeBudget
-} from '../controllers/Initiatives';
+import * as clarisa from '../controllers/Clarisa';
+import * as initiatives from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -14,39 +9,39 @@ const router = Router();
 // get initiatives
 // router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
 
-router.get("/", [checkJwt], getInitiatives);
+router.get("/", [checkJwt], initiatives.getInitiatives);
 
 // get initiatives by user
-router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], getInitiativesByUser);
+router.get("/own", [checkJwt, checkRole('initiatives', 'readOwn')], initiatives.getInitiativesByUser);
 
 // get roles by user in initiative
-router.get("/:initiativeId([0-9]+)/roles/", [checkJwt, checkRole('initiatives', 'readOwn')], getUserRoleByInitiative);
+router.get("/:initiativeId([0-9]+)/roles/", [checkJwt, checkRole('initiatives', 'readOwn')], initiatives.getUserRoleByInitiative);
 
 // create initiatives
-router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], createInitiative);
+router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], initiatives.createInitiative);
 
 // get users by initiative
-router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), getUsersByInitiative);
+router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.getUsersByInitiative);
 
 // get users by initiative
-router.patch("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), assignUsersByInitiative);
+router.patch("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.assignUsersByInitiative);
 
 
 // get stages
-router.get("/stages", [checkJwt], getStage);
+router.get("/stages", [checkJwt], initiatives.getStage);
 
 // get stages meta
-router.get("/stages-meta/:initiativeId([0-9]+)", [checkJwt], getStageMeta);
+router.get("/stages-meta/:initiativeId([0-9]+)", [checkJwt], initiatives.getStageMeta);
 
 // create stages
-router.post("/stages", [checkJwt, checkRole('stages', 'createAny')], createStage);
+router.post("/stages", [checkJwt, checkRole('stages', 'createAny')], initiatives.createStage);
 
 // assign stage to initiative
-router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], assignStageToInitiative);
+router.post("/assign-stage", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.assignStageToInitiative);
 
 
 // assign TOC file to stage by initiative
-router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assignTOCsByInitvStg);
+router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], initiatives.assignTOCsByInitvStg);
 
 // assign citation / link to initiative/
 /**
@@ -117,7 +112,7 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], assig
  *     HTTP/1.1 400 Not Found
  *     { message: "Initiative not found in stage:", error }
  */
-router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addLink);
+router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.addLink);
 
 // get links to table and column
 /**
@@ -185,7 +180,7 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  *     HTTP/1.1 400 Not Found
  *     { message: "Initiative not found in stage:", error }
  */
-router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getLink);
+router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.getLink);
 
 // get initiative summary
 /**
@@ -233,7 +228,7 @@ router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, check
  *     HTTP/1.1 400 Not Found
  *     { message: "Summary not found in stage:", error }
  */
-router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getSummary);
+router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], initiatives.getSummary);
 
 
 /**
@@ -281,7 +276,7 @@ router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRo
  *     HTTP/1.1 400 Not Found
  *     { message: "Summary not found in stage:", error }
  */
-router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertSummary);
+router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.upsertSummary);
 
 // assign budget
 /**
@@ -348,7 +343,7 @@ router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, check
  *     HTTP/1.1 400 Not Found
  *     { message: "Add budget: Error:", error }
  */
-router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addBudget);
+router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')],initiatives.addBudget);
 
 
 // get budget
@@ -405,10 +400,10 @@ router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, ch
  *     HTTP/1.1 400 Not Found
  *     { message: "Initiative not found in stage:", error }
  */
-router.post("/get-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getBudget);
+router.post("/get-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.getBudget);
 
 
-router.delete("/delete-budget/:idBudget", [checkJwt], removeBudget);
+router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
 
 
 
@@ -420,7 +415,7 @@ router.delete("/delete-budget/:idBudget", [checkJwt], removeBudget);
  */
 
 // replicate to next stage
-router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], replicationProcess);
+router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
 
 
 
@@ -432,19 +427,19 @@ router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], replicationProc
  */
 
 //get Action areas
-router.get("/areas", [checkJwt], getActionAreas);
+router.get("/areas", [checkJwt], initiatives.getActionAreas);
 //get countries
-router.get("/countries", [checkJwt], getCountries);
+router.get("/countries", [checkJwt], initiatives.getCountries);
 //get regions
-router.get("/regions", [checkJwt], getRegions);
+router.get("/regions", [checkJwt], initiatives.getRegions);
 //get institutions
-router.get("/institutions", [checkJwt], getInstitutions);
+router.get("/institutions", [checkJwt], initiatives.getInstitutions);
 // get institutions types
-router.get("/institutions/types", [checkJwt], getInstitutionsTypes);
+router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 // get crps
-router.get("/cgiar-entities", [checkJwt], getClaCRPs);
+router.get("/cgiar-entities", [checkJwt], clarisa.getClaCRPs);
 //request institutions
-router.post("/institutions/institution-requests", [checkJwt], requestClaInstitution);
+router.post("/institutions/institution-requests", [checkJwt], clarisa.requestClaInstitution);
 
 
 export default router;

@@ -10,7 +10,7 @@ import { ResponseHandler } from '../handlers/Response';
  */
 export async function getMenu(req: Request, res: Response) {
 
-    // get initiative by stage id from clientF
+    // get initiative by stage id from client
     const { initiativeId } = req.params;
 
     try {
