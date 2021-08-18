@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClarisaService } from '@app/shared/services/clarisa.service';
 import { DataControlService } from '@app/shared/services/data-control.service';
@@ -11,9 +11,9 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
   styleUrls: ['./geographic-scope.component.scss']
 })
 export class GeographicScopeComponent implements OnInit {
-
-  regionsSelectedList=[];
-  countriesSelectedList=[];
+  @Input() regionsSelectedList=[];
+  @Input() countriesSelectedList=[];
+  
   workPackageForm: FormGroup;
   showForm=false;
   constructor(

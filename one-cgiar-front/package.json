@@ -30,7 +30,7 @@
     "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
-    "ibd-angular-components": "https://github.com/AllianceBioversityCIAT/ibd-angular-components_library/raw/dev/library/ibd-angular-components-1.2.1.tgz",
+    "ibd-angular-components": "https://github.com/AllianceBioversityCIAT/ibd-angular-components_library/raw/dev/library/ibd-angular-components-1.3.2.tgz",
     "jquery": "^3.5.1",
     "lodash": "^4.17.21",
     "ngx-quill": "^13.0.1",

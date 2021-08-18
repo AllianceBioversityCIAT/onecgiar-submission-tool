@@ -17,10 +17,11 @@ import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
 
-import _ from "lodash";
+import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
 import { CountriesByInitiativeByStage } from '../entity/CountriesByInitiativeByStage';
 import { RegionsByInitiativeByStage } from '../entity/RegionsByInitiativeByStage';
+import { InitiativeHandler } from '../handlers/InitiativesHandler';
 
 
 require('dotenv').config();
@@ -304,6 +305,7 @@ export async function addBudget(req: Request, res: Response) {
     const stageRepo = getRepository(Stages);
 
     try {
+
         const stage = await stageRepo.findOne(stageId);
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
@@ -365,95 +367,76 @@ export async function getBudget(req: Request, res: Response) {
 }
 
 
+export async function removeBudget(req: Request, res: Response) {
 
+    const { budgetId } = req.params;
 
+    try {
 
+        const initiative = new InitiativeStageHandler();
 
+        const removeBudget = await initiative.removeBudget(budgetId);
 
+        res.json(new ResponseHandler('Initiatives:Remove budget.', { removeBudget }));
 
+    } catch (error) {
 
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 /**
  * All Initiatives 
  * @param req 
  * @param res 
  */
-export const getInitiatives = async (req: Request, res: Response) => {
+export async function getInitiatives (req: Request, res: Response) {
 
-    const { userId } = res.locals.jwtPayload;
+    // const { userId } = res.locals.jwtPayload;
 
-    const conceptRepo = getRepository(Narratives);
-    const queryRunner = getConnection().createQueryBuilder();
-    let initiatives,
-        initvSQL = ` 
-        SELECT
-            initvStg.id AS initvStgId,
-            initiative.id AS id,
-            initiative.name AS name,
-            IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-            (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-            (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-            initvStg.active AS active,
-            initvStg.stageId AS stageId,
-            CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
-        FROM
-            initiatives initiative
-        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
-        LEFT JOIN stages stage ON stage.id = initvStg.stageId
-        `;
+    // const conceptRepo = getRepository(Narratives);
+    // const queryRunner = getConnection().createQueryBuilder().connection;
+    // let initiatives,
+    //     initvSQL = ` 
+    //     SELECT
+    //         initvStg.id AS initvStgId,
+    //         initiative.id AS id,
+    //         initiative.name AS name,
+    //         IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+    //         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+    //         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+    //         initvStg.active AS active,
+    //         initvStg.stageId AS stageId,
+    //         CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
+    //     FROM
+    //         initiatives initiative
+    //     LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
+    //     LEFT JOIN stages stage ON stage.id = initvStg.stageId
+    //     `;
 
     try {
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            initvSQL,
-            { userId },
-            {}
-        );
+        // const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+        //     initvSQL,
+        //     { userId },
+        //     {}
+        // );
+
+        
         // let initvs:Initiatives = new Initiatives();
         // initvs = await queryRunner.connection.query(query, parameters);
-        initiatives = await queryRunner.connection.query(query, parameters);
+        // initiatives = await queryRunner.query(initvSQL);
 
-        const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
-            clist => clist.map(pB_ => _.omit(pB_, 'id')));
+        // const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
+        //     clist => clist.map(pB_ => _.omit(pB_, 'id')));
 
         // console.log(grouped)
 
         // let initiativesIds = initiatives.map(init => init.initvStgId);
+        const initiativeshandler = new InitiativeHandler();
+        let initiatives = await initiativeshandler.getAllInitiatives();
+
         if (initiatives.length == 0)
             // res.sendStatus(204)
             res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
@@ -1031,9 +1014,6 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
 
 }
-
-
-
 
 
 /**

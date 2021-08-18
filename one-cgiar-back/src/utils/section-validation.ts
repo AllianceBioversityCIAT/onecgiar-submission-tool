@@ -35,7 +35,7 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
         switch (replicationStagDsc) {
             case 'full_proposal':
                 // concept handler object 
-                const conceptObj = new ConceptHandler(currentInitiativeId);
+                const conceptObj = new ConceptHandler(currentInitiativeId); 
                 const isComplete = await conceptObj.validateCompletness();
                 // if missing concept data, throw error 
                 if (isComplete) {

@@ -6,6 +6,10 @@
     width: 100px;
     background-color: cyan;
 }
+.activeSection{
+    border-color: #85e788  !important;
+    color: #85e788  !important;
+}
 .menu{
     padding: 50px 25px;
     width: 400px;
@@ -38,7 +42,7 @@
               position: relative;
               margin-bottom: 15px;
             //   display: flex;
-            .number-and-title-container{
+            .number-and-title-container.noActiveSection{
                 color: #ffffff;
                 transition: all ease .3s;
                 position: relative;
@@ -63,8 +67,8 @@
                     transition: all ease .3s;
                     border-bottom: 2px solid rgba(0, 0, 0, 0);
                     // margin-right: 100px !important;     
-                  }
-                  .number{
+                }
+                .number{
                     transition: all ease .3s;
                     background-color: rgba(255, 255, 255, 0);
                     position: relative;
@@ -80,6 +84,54 @@
                     vertical-align: middle;
                     padding-top: 2px;
                     margin-right: 10px;
+                }
+
+            }
+
+            .number-and-title-container.activeSection{
+                color: #ffffff;
+                transition: all ease .3s;
+                position: relative;
+                display: flex;
+                // &:hover{
+                    transition: all ease .3s;
+                    color: white;
+                    // .number{
+                        // transition: all ease .3s;
+                        // border: 2.9px #85e788  solid;
+                        // background-color: #85e788;
+                        // color: rgb(41, 41, 41);
+                    // }
+                    .stage-section-title{
+                        border-bottom: 2px solid #85e788; 
+                        border-radius: 1px;
+                        transition: all ease .3s;
+                    }
+                // }
+                // .stage-section-title{
+                //     text-decoration: none;
+                //     transition: all ease .3s;
+                //     border-bottom: 2px solid rgba(0, 0, 0, 0);
+                //     // margin-right: 100px !important;     
+                // }
+                .number{
+                    // transition: all ease .3s;
+                    // background-color: rgba(255, 255, 255, 0);
+                    position: relative;
+                    top: -5px;
+                    // left: -40px;
+                    min-width: 30px;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 30px;
+                    border: 2.9px #85e788 solid;
+                    // display: flex;
+                    text-align: center;
+                    vertical-align: middle;
+                    padding-top: 2px;
+                    margin-right: 10px;
+                    background-color: #85e788;
+                    color: rgb(41, 41, 41);
                 }
 
             }

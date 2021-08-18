@@ -255,6 +255,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/roles`);
   }
 
+  getSummary(initiativeId,stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`);
+  }
+
   getBudget (body:any,initiativeId,stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/get-budget/${initiativeId}/${stageId}`, body);
   }

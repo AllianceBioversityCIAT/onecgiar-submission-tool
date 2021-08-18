@@ -149,12 +149,20 @@ export class InitiativeStageHandler extends BaseValidation {
         //  create empty object 
         let budget: Budget;
         try {
-
             // if null, create object
             if (budgetId == null || budgetId == '') {
                 budget = new Budget();
                 // assign initiative by stage
                 budget.initvStg = this.initvStgId_;
+
+                var validateBudget = await budgetRepo.find({ where: { initvStg: budget.initvStg } });
+
+
+                if (validateBudget == undefined || validateBudget.length > 0) {
+
+                    throw new BaseError('Add budget: Error', 400, 'The budget was previously created', false)
+                }
+
             } else {
                 budget = await budgetRepo.findOne(budgetId);
             }
@@ -174,36 +182,69 @@ export class InitiativeStageHandler extends BaseValidation {
 
     }
 
-/**
- * 
- * @param table_name 
- * @param col_name 
- * @param active 
- * @returns 
- */
+    /**
+     * 
+     * @param table_name 
+     * @param col_name 
+     * @param active 
+     * @returns 
+     */
 
     async getBudget(table_name: string, col_name: string, active?: boolean) {
 
         // get budget repo
         const budgetRepo = await getRepository(Budget);
-        //  create empty object
 
         try {
 
             const initvStg = this.initvStgId_;
 
             // upsert getBudget 
-            const getBudget = await budgetRepo.findOne({ where: { initvStg: initvStg, table_name: table_name, col_name: col_name, active: active } });
+            var getBudget: Budget = await budgetRepo.findOne({ where: { initvStg: initvStg, table_name: table_name, col_name: col_name, active: active } });
 
-            return getBudget;
+
+            if (getBudget) {
+
+                getBudget.value = Number((Math.round(getBudget.value * 100) / 100).toFixed(2));
+
+            } else {
+
+                getBudget = new Budget;
+
+            }
+
+            return getBudget
 
         } catch (error) {
+
             throw new BaseError('Get budget: Error', 400, error.message, false)
+
         }
 
     }
 
+    /**
+     * 
+     * @param id 
+     */
+    async removeBudget(id) {
 
+        const budgetRepo = await getRepository(Budget);
+
+        try {
+            const budget = await budgetRepo.findOne(id);
+
+            const removeBudget = await budgetRepo.remove(budget);
+
+            return removeBudget;
+
+        } catch (error) {
+
+            throw new BaseError('remove budget: Error', 400, error.message, false);
+
+        }
+
+    }
 
     /**
     * 
