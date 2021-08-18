@@ -70,11 +70,16 @@ export class MenuComponent implements OnInit {
    
   }
 
-  activeClassByRoute(route){
-    let baseUrl =  this.router.routerState.snapshot.url
+  activeClassByRoute(route:[]){
+    let correct=0;
+    
+    let baseUrl =  this.router.routerState.snapshot.url;
+    route.map((resp:string)=>{
+      correct=baseUrl.indexOf(resp.toLowerCase().split(' ').join('-'))>-1?correct+1:correct
+    })
     // if (stage) {
-     let routeAux = route.toLowerCase().split(' ').join('-');
-     return baseUrl.indexOf(routeAux)>-1?true:false
+     
+     return correct == route.length ? true : false
     // }else{
     //   return baseUrl.indexOf(route)>-1?true:false
     // }
