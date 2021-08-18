@@ -169,14 +169,6 @@ export class GeneralInformationComponent implements OnInit {
     this.spinnerService.hide('general-information');
     });
 
-    // console.log('save in: '+this.stageName);
-    // console.log(this.budgetForm.value);
-    // console.log(this.stageName=='proposal'?3:2);
-    // console.log(this._initiativesService.initiative.id);
-    // console.log('budget');
-    // console.log(this.budgetForm.controls['value'].value);
-    console.log('%cBudget','background: #222; color: #37ff73');
-    console.log((this.budgetForm.controls['value'].value));
 
     if (!(this.budgetForm.controls['value'].value) || (this.budgetForm.controls['value'].value == "")) this.budgetForm.controls['value'].setValue(0);
     this._initiativesService.saveBudget((this.budgetForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
