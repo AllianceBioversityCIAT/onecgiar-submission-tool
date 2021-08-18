@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from '../controllers/Clarisa';
-import { getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg, 
-        getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative, 
-        getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions, 
-        getInstitutionsTypes, addLink, getLink, getSummary, addBudget, getBudget, upsertSummary } from '../controllers/Initiatives';
+import {
+        getInitiatives, createInitiative, createStage, assignStageToInitiative, assignTOCsByInitvStg,
+        getInitiativesByUser, getStage, getUsersByInitiative, assignUsersByInitiative, getUserRoleByInitiative,
+        getStageMeta, getActionAreas, replicationProcess, getCountries, getRegions, getInstitutions,
+        getInstitutionsTypes, addLink, getLink, getSummary, addBudget, getBudget, upsertSummary, removeBudget
+} from '../controllers/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -281,14 +283,6 @@ router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRo
  */
 router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertSummary);
 
-
-
-
-
-
-
-
-
 // assign budget
 /**
  * @api {patch} initiatives/add-budget/:initiativeId/:stageId Budget - Create and update budget
@@ -354,10 +348,10 @@ router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, check
  *     HTTP/1.1 400 Not Found
  *     { message: "Add budget: Error:", error }
  */
- router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addBudget);
+router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], addBudget);
 
 
- // get budget
+// get budget
 /**
  * @api {post} initiatives/get-budget/:initiativeId/:stageId Budget - Read data of Budget.
  * @apiVersion 1.0.2
@@ -412,6 +406,9 @@ router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, check
  *     { message: "Initiative not found in stage:", error }
  */
 router.post("/get-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], getBudget);
+
+
+router.delete("/delete-budget/:idBudget", [checkJwt], removeBudget);
 
 
 

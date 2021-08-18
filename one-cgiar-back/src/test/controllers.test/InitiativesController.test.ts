@@ -12,9 +12,14 @@ var user = {
     id: '',
     email: ''
 };
+var budgetId;
 
 /**Create user and token for test */
 before(async () => {
+    const initiativeId = 2;
+    const stageId = 3;
+
+    //Get user test
     await chai
         .request(app)
         .post('/api/users/')
@@ -31,19 +36,53 @@ before(async () => {
             user.id = res.body.response.user.id;
             user.email = res.body.response.user.email;
         });
+
+    //Get token test
     token = await jwt.createToken(user);
+
+    //Get budget test
+    await chai
+        .request(app)
+        .post('/api/initiatives/get-budget/' + initiativeId + '/' + stageId)
+        .set('auth', token)
+        .type('form')
+        .send({
+            'table_name': 'general-information',
+            'col_name': 'budget',
+            'active': true
+        })
+        .then((res) => {
+
+            budgetId = res.body.response.getBudget.id;
+
+        });
+
 });
 
-/**Delete user test */
+
 after(async () => {
 
+    //Remove user test
     await chai
         .request(app)
         .delete('/api/users/remove/' + user.id)
         .set('auth', token)
         .then((res) => {
-            console.log('User '+user.id+' was removed.');
+            console.log('User ' + user.id + ' was removed.');
         });
+
+    //Remove Budget test
+    await chai
+        .request(app)
+        .delete('/api/initiatives/delete-budget/' + budgetId)
+        .set('auth', token)
+        .then((res) => {
+
+            console.log(res.body.title);
+
+        });
+
+
 })
 
 /**Start test */
@@ -200,7 +239,7 @@ describe('Initiatives Controller - links', async () => {
             .set('auth', token)
             .type('form')
             .send({
-                "value": 1234,
+                "value": 1234.25,
                 "table_name": "general-information",
                 "col_name": "budget",
                 "budgetId": null,
@@ -218,17 +257,16 @@ describe('Initiatives Controller - links', async () => {
 
     it('PATCH initiatives/add-budget/ Update Budget', async () => {
 
-
         await chai
             .request(app)
             .patch('/api/initiatives/add-budget/' + initiativeId + '/' + stageId)
             .set('auth', token)
             .type('form')
             .send({
-                "value": 123.12,
+                "value": 123.15,
                 "table_name": "general-information",
                 "col_name": "budget",
-                "budgetId": 1,
+                "budgetId": 55,
                 "active": 1
             })
             .then((res) => {
@@ -240,28 +278,6 @@ describe('Initiatives Controller - links', async () => {
 
     });
 
-    it('PATCH initiatives/add-budget/ Inactivate budget', async () => {
-
-        await chai
-            .request(app)
-            .patch('/api/initiatives/add-budget/' + initiativeId + '/' + stageId)
-            .set('auth', token)
-            .type('form')
-            .send({
-                "value": 123.12,
-                "table_name": "general-information",
-                "col_name": "budget",
-                "budgetId": 1,
-                "active": 0
-            })
-            .then((res) => {
-                expect(res.status).to.equal(200);
-                expect(res.body).to.have.property('response').to.be.a('object');
-                expect(res.body).to.have.property('title').to.be.equal('Initiatives:Add Budget.');
-                expect(res).to.be.a('object')
-            });
-
-    });
 
     /**SUMMARY*/
 

@@ -17,7 +17,7 @@ import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
 import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
 
-import _ from "lodash";
+import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
 import { CountriesByInitiativeByStage } from '../entity/CountriesByInitiativeByStage';
 import { RegionsByInitiativeByStage } from '../entity/RegionsByInitiativeByStage';
@@ -304,6 +304,7 @@ export async function addBudget(req: Request, res: Response) {
     const stageRepo = getRepository(Stages);
 
     try {
+
         const stage = await stageRepo.findOne(stageId);
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
@@ -358,6 +359,27 @@ export async function getBudget(req: Request, res: Response) {
 
 
     } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function removeBudget(req: Request, res: Response) {
+
+    const { budgetId } = req.params;
+
+    try {
+
+        const initiative = new InitiativeStageHandler();
+
+        const removeBudget = await initiative.removeBudget(budgetId);
+
+        res.json(new ResponseHandler('Initiatives:Remove budget.', { removeBudget }));
+
+    } catch (error) {
+
         console.log(error)
         return res.status(error.httpCode).json(error);
     }
