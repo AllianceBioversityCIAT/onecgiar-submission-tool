@@ -43,6 +43,31 @@ export class GeneralInformationComponent implements OnInit {
   showForm = false;
   showBudget = false;
   showFormActionArea = false;
+  geographicScope = {
+    regions : [
+      {
+        name: "Eastern Africa",
+        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
+        um49Code: 14,
+        id:1
+      },
+      {
+        name: "Southern Asia",
+        parentRegion: null,
+        um49Code: 34,
+        id:2
+      },
+      {
+        name: "Middle Africa",
+        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
+        um49Code: 17,
+        id:3
+      }
+    ],
+    countries : []
+  }
+
+ 
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
@@ -99,7 +124,7 @@ export class GeneralInformationComponent implements OnInit {
   getConceptGeneralInfo() {
     this.spinnerService.show('general-information');
     this._initiativesService.getBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      console.log(resp.response.getBudget);
+      // console.log(resp.response.getBudget);
       this.budgetForm.controls['budgetId'].setValue(resp.response?.getBudget?.id);
       this.budgetForm.controls['value'].setValue(resp.response?.getBudget?.value);
       // this.budgetForm.get('id').setValue(resp.response?.getBudget?.id);
