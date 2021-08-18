@@ -35,6 +35,12 @@ require('dotenv').config();
 
 
 /** TEMPORAL */
+/**
+ * 
+ * @param req paramas: { initiativeId, stageId }
+ * @param res 
+ * @returns 
+ */
 export const getSummary = async (req: Request, res: Response) => {
     const { initiativeId, stageId } = req.params;
 
@@ -86,7 +92,6 @@ export const getSummary = async (req: Request, res: Response) => {
 
         // get geo scope from initiative
         const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
-        console.log(regions, initvStg.id)
         const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
 
         const geoScope = { regions, countries }
@@ -99,6 +104,265 @@ export const getSummary = async (req: Request, res: Response) => {
 }
 
 
+/**
+ * 
+ * @param req paramas: { initiativeId, stageId }
+ * @param res 
+ * @returns 
+ */
+export const upsertSummary = async (req: Request, res: Response) => {
+    const { initiativeId, stageId } = req.params;
+
+    // summary section data
+    const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries } = req.body;
+
+
+    const queryRunner = getConnection().createQueryRunner().connection;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
+    const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        // get stage
+        const stage = await stageRepo.findOne({ where: { id: stageId } });
+        // get intiative by stage
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
+        }
+        const GIquery = ` 
+                SELECT
+                    initvStgs.id AS initvStgId,
+                    general.id AS generalInformationId,
+                    IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+                
+                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+                
+                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                            
+                    general.action_area_description AS action_area_description,
+                    general.action_area_id AS action_area_id
+                
+                FROM
+                    initiatives_by_stages initvStgs
+                LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+                
+                WHERE initvStgs.id = ${initvStg.id};
+            `;
+
+        const gI = await queryRunner.query(GIquery);
+        const generalInformation = gI[0];
+
+        console.log();
+
+        res.end()
+
+        // res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
+
+/**
+ * 
+ * @param req paramas: { currentInitiativeId }
+ * @param res 
+ * @returns 
+ */
+export const replicationProcess = async (req: Request, res: Response) => {
+    const { currentInitiativeId } = req.params;
+    const { replicationStageId } = req.body;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        // get replicate to stage
+        const stage = await stageRepo.findOne(replicationStageId);
+        // get replicate to stage description
+        const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
+        // data pushed to next stage
+        const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
+        res.json(new ResponseHandler('Replication data', fordwarded));
+    } catch (error) {
+        console.log(error);
+        let e = error;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req params:{ title: string, link: string, table_name: string, col_name: string, citationId?: string }
+ * @param res 
+ */
+export const addLink = async (req: Request, res: Response) => {
+
+    const { title, link, table_name, col_name, citationId, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId, active);
+
+        res.json(new ResponseHandler('Initiatives:Add link.', { addedLink }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getLink(req: Request, res: Response) {
+
+    const { table_name, col_name, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const getLinks = await initiative.getLink(table_name, col_name, active);
+
+        res.json(new ResponseHandler('Initiatives:Get link.', { getLinks }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+/**
+ * 
+ * @param req params:{ value:number, table_name: string, col_name: string, budgetId?: string }
+ * @param res 
+ */
+export async function addBudget(req: Request, res: Response) {
+
+    const { value, table_name, col_name, budgetId, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add Budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const addedBudget = await initiative.addBudget(value, table_name, col_name, budgetId, active);
+
+        res.json(new ResponseHandler('Initiatives:Add Budget.', { addedBudget }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getBudget(req: Request, res: Response) {
+
+    const { table_name, col_name, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Get budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const getBudget = await initiative.getBudget(table_name, col_name, active);
+
+        res.json(new ResponseHandler('Initiatives:Get budget.', { getBudget }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
 
 /**
  * All Initiatives 
@@ -720,197 +984,6 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
         return res.status(error.httpCode).json(error);
     }
 
-
-}
-
-
-
-
-/**
- * 
- * @param req paramas: { currentInitiativeId }
- * @param res 
- * @returns 
- */
-export const replicationProcess = async (req: Request, res: Response) => {
-    const { currentInitiativeId } = req.params;
-    const { replicationStageId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-
-    try {
-        // get replicate to stage
-        const stage = await stageRepo.findOne(replicationStageId);
-        // get replicate to stage description
-        const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
-        // data pushed to next stage
-        const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-        res.json(new ResponseHandler('Replication data', fordwarded));
-    } catch (error) {
-        console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
-        return res.status(error.httpCode).json(error);
-    }
-}
-
-
-/**
- * 
- * @param req params:{ title: string, link: string, table_name: string, col_name: string, citationId?: string }
- * @param res 
- */
-export const addLink = async (req: Request, res: Response) => {
-
-    const { title, link, table_name, col_name, citationId, active } = req.body;
-
-    // get initiative by stage id from client
-    const { initiativeId, stageId } = req.params;
-
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-
-    try {
-        const stage = await stageRepo.findOne(stageId);
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-
-        const initiative = new InitiativeStageHandler(initvStg.id + '');
-
-        const addedLink = await initiative.addLink(title, link, table_name, col_name, citationId, active);
-
-        res.json(new ResponseHandler('Initiatives:Add link.', { addedLink }));
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
-    }
-}
-
-/**
- * 
- * @param req 
- * @param res 
- * @returns 
- */
-export async function getLink(req: Request, res: Response) {
-
-    const { table_name, col_name, active } = req.body;
-
-    // get initiative by stage id from client
-    const { initiativeId, stageId } = req.params;
-
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-
-    try {
-
-        const stage = await stageRepo.findOne(stageId);
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-
-        const initiative = new InitiativeStageHandler(initvStg.id + '');
-
-        const getLinks = await initiative.getLink(table_name, col_name, active);
-
-        res.json(new ResponseHandler('Initiatives:Get link.', { getLinks }));
-
-
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
-    }
-
-}
-
-
-/**
- * 
- * @param req params:{ value:number, table_name: string, col_name: string, budgetId?: string }
- * @param res 
- */
-export async function addBudget(req: Request, res: Response) {
-
-    const { value, table_name, col_name, budgetId, active } = req.body;
-
-    // get initiative by stage id from client
-    const { initiativeId, stageId } = req.params;
-
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-
-    try {
-        const stage = await stageRepo.findOne(stageId);
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Add Budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-
-        const initiative = new InitiativeStageHandler(initvStg.id + '');
-
-        const addedBudget = await initiative.addBudget(value, table_name, col_name, budgetId, active);
-
-        res.json(new ResponseHandler('Initiatives:Add Budget.', { addedBudget }));
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
-    }
-}
-
-
-/**
- * 
- * @param req 
- * @param res 
- * @returns 
- */
- export async function getBudget(req: Request, res: Response) {
-
-    const { table_name, col_name, active } = req.body;
-
-    // get initiative by stage id from client
-    const { initiativeId, stageId } = req.params;
-
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-
-    try {
-
-        const stage = await stageRepo.findOne(stageId);
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Get budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-
-        const initiative = new InitiativeStageHandler(initvStg.id + '');
-
-        const getBudget = await initiative.getBudget(table_name, col_name, active);
-
-        res.json(new ResponseHandler('Initiatives:Get budget.', { getBudget }));
-
-
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
-    }
 
 }
 

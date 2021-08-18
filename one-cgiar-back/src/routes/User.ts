@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUsers, createUsers, getUser, updateUser, deleteUser, getUsersByRoles, searchUser } from '../controllers/User';
+import { getUsers, createUsers, getUser, updateUser, deleteUser, getUsersByRoles, searchUser, removeUser } from '../controllers/User';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -26,5 +26,8 @@ router.put('/:id([0-9]+)', [checkJwt, checkRole('users', 'updateAny')], updateUs
 
 // delete user
 router.delete('/:id([0-9]+)', [checkJwt, checkRole('users', 'deleteAny')], deleteUser);
+
+// remove user
+router.delete('/remove/:id([0-9]+)', [checkJwt, checkRole('users', 'deleteAny')], removeUser);
 
 export default router;

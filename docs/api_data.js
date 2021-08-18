@@ -778,7 +778,7 @@ define({ "api": [
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-    "groupTitle": "Initiatives"
+    "groupTitle":  "Initiatives"
   },
   {
     "type": "get",

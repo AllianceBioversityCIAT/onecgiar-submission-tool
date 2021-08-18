@@ -173,31 +173,29 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   upsertGeneralInfo() {
-    console.log(this.geographicScope);
-    // this.spinnerService.show('general-information');
-    // this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
+    
+    this.spinnerService.show('general-information');
+    this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
 
-    //   this.spinnerService.hide('general-information');
-    //   // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-    //   //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-    //   // })
+      this.spinnerService.hide('general-information');
+      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+      // })
 
-    //   this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
-    //   ?this._interactionsService.successMessage('General information has been saved')
-    //   :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
+      this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      ?this._interactionsService.successMessage('General information has been saved')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
-    // },error => {
-    // // console.log(error, this.errorService.getServerMessage(error))
-    // this.spinnerService.hide('general-information');
-    // });
+    },error => {
+    // console.log(error, this.errorService.getServerMessage(error))
+    this.spinnerService.hide('general-information');
+    });
 
-    // console.log('save in: '+this.stageName);
-    // console.log(this.budgetForm.value);
-    // console.log(this.stageName=='proposal'?3:2);
-    // console.log(this._initiativesService.initiative.id);
-    // this._initiativesService.saveBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-    //   console.log(resp);
-    // })
+
+    if (!(this.budgetForm.controls['value'].value) || (this.budgetForm.controls['value'].value == "")) this.budgetForm.controls['value'].setValue(0);
+    this._initiativesService.saveBudget((this.budgetForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+      console.log(resp);
+    })
 
   }
 
