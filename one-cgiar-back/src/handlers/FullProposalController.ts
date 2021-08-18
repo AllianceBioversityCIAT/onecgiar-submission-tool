@@ -52,7 +52,8 @@ export class ProposalHandler extends InitiativeStageHandler {
      */
     async getGeneralInformation() {
         // get initiative by stage id from intitiative
-        const initvStgId: string = this.initvStgId_;
+        const initvStg = await this.initvStage
+        // string = this.initvStgId_;
         try {
             // general information sql query
             const GIquery = ` 
@@ -76,11 +77,10 @@ export class ProposalHandler extends InitiativeStageHandler {
                 initiatives_by_stages initvStgs
             LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
             
-            WHERE initvStgs.id = ${initvStgId};
+            WHERE initvStgs.id = ${initvStg[0].id};
         `;
             const generalInfo = await this.queryRunner.query(GIquery);
-
-            return generalInfo[0];
+            return generalInfo;
         } catch (error) {
             throw new BaseError('Get general information', 400, error.message, false)
         }
@@ -122,6 +122,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     async upsertGeneralInformation(generalInformationId?, name?, action_area_id?, action_area_description?) {
         const gnralInfoRepo = getRepository(GeneralInformation);
+
         //  create empty object 
         let generalInformation: GeneralInformation;
         try {
@@ -133,13 +134,12 @@ export class ProposalHandler extends InitiativeStageHandler {
             // get select action areas for initiative
             const selectedActionArea = actionAreas.find(area => area.id == action_area_id) || { name: null };
 
-
             // if null, create object
             if (generalInformationId == null) {
-
+                
                 generalInformation = new GeneralInformation();
                 generalInformation.name = name;
-
+                
                 generalInformation.action_area_description = action_area_description || selectedActionArea.name;
                 generalInformation.action_area_id = action_area_id;
                 // assign initiative by stage
@@ -149,51 +149,51 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.name = (name) ? name : generalInformation.name;
                 generalInformation.action_area_description = selectedActionArea.name;
                 generalInformation.action_area_id = (action_area_id) ? action_area_id : generalInformation.action_area_id;
-
+                
             }
             // upserted data 
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
-
+            
             //    update initiative name
             let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
-
-
-
+            
+            
+            
             // retrieve general information
             const GIquery = ` 
             SELECT
-                initvStgs.id AS initvStgId,
-                general.id AS generalInformationId,
-                IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+            initvStgs.id AS initvStgId,
+            general.id AS generalInformationId,
+            IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
             
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+            (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+            (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
             
                 (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
                 (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
                 (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                        
+                
                 general.action_area_description AS action_area_description,
                 general.action_area_id AS action_area_id
-            
-            FROM
+                
+                FROM
                 initiatives_by_stages initvStgs
             LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
             
-            WHERE initvStgs.id = ${this.initvStgId_};
+            WHERE initvStgs.id = ${initvStg[0].id};
             `;
             const generalInfo = await this.queryRunner.query(GIquery);
-
+            
             return generalInfo[0];
         } catch (error) {
             console.log(error)
             throw new BaseError('General information : Full proposal', 400, error.message, false)
         }
     }
-
+    
     
     /**
      * 

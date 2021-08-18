@@ -57,21 +57,22 @@ export class ConceptHandler extends ConceptValidation {
 
             // get concept general information data 
             const conceptGeneralInformation = await this.getGeneralInformation();
-            
+
             // get geo scope
             const conceptGeoScope = await this.getGeoScope();
 
             // get general information if exists from proposalObject
             const proposalGI = await proposalObject.getGeneralInformation();
 
-
+            
             // upsert full proposal general infomation
-            const pplGeneralInformation = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGeneralInformation.name, conceptGeneralInformation.action_area_id, conceptGeneralInformation.action_area_description);
-
+            const pplGeneralInformation = await proposalObject.upsertGeneralInformation(proposalGI && proposalGI[0] ? proposalGI[0].generalInformationId : null, conceptGeneralInformation.name, conceptGeneralInformation.action_area_id, conceptGeneralInformation.action_area_description);
+            
             const pplGeoScope = await this.forwardGeoScope(pplStage[0]);
-            
+
+            // return null;
             return { pplGeneralInformation, pplGeoScope };
-            
+
         } catch (error) {
             throw new BaseError('Concept: Forward', 400, error.message, false)
         }

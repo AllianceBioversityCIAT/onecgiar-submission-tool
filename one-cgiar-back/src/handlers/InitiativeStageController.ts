@@ -319,7 +319,11 @@ export class InitiativeStageHandler extends BaseValidation {
             // and save
             const nRegions = await this.regionsRepo.save(uniqueRegions);
             const nCountries = await this.countriesRepo.save(uniqueCountries);
-            return { regions: nRegions, countries: nCountries }
+
+            const geoScope = await this.getGeoScope();
+
+
+            return { regions: geoScope.regions, countries: geoScope.countries }
 
         } catch (error) {
             console.log(error)
