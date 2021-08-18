@@ -49,16 +49,19 @@ export class GeneralInformationComponent implements OnInit {
         name: "Eastern Africa",
         parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
         um49Code: 14,
+        id:1
       },
       {
         name: "Southern Asia",
         parentRegion: null,
-        um49Code: 34
+        um49Code: 34,
+        id:2
       },
       {
         name: "Middle Africa",
         parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
-        um49Code: 17
+        um49Code: 17,
+        id:3
       }
     ],
     countries : []
