@@ -64,7 +64,7 @@ export const getSummary = async (req: Request, res: Response) => {
             throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
         }
 
-        const GIquery = ` 
+        let GIquery = (` 
                 SELECT
                     initvStgs.id AS initvStgId,
                     general.id AS generalInformationId,
@@ -86,14 +86,22 @@ export const getSummary = async (req: Request, res: Response) => {
                 LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
                 
                 WHERE initvStgs.id = ${initvStg.id};
-            `;
+            `),
+            COquery = (
+                `SELECT id,country_id,initvStgId
+                FROM countries_by_initiative_by_stage 
+               WHERE initvStgId = ${ initvStg.id}
+                 AND active = 1
+              GROUP BY country_id`
+            )
 
         const gI = await queryRunner.query(GIquery);
         const generalInformation = gI[0];
 
         // get geo scope from initiative
         const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
-        const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+        // const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+        const countries = await queryRunner.query(COquery);
 
         const geoScope = { regions, countries }
 
