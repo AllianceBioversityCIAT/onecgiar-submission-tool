@@ -27,7 +27,7 @@
             </div>
             <br>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList.length">
+        <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required:true,
@@ -53,7 +53,7 @@
 
         </div>
 
-        <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList.length">
+        <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
             <div class="box_container">
             <ibdc-select-multiple [options]="{
                 required:true,

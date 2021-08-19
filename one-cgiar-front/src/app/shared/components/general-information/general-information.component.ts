@@ -113,6 +113,7 @@ export class GeneralInformationComponent implements OnInit {
             if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
           })
         })
+        this._dataControlService.showRegions = true;
       })
 
       this._initiativesService.getCLARISACountries().subscribe(countries=>{
@@ -123,6 +124,7 @@ export class GeneralInformationComponent implements OnInit {
           })
           
         })
+        this._dataControlService.showCountries = true;
       })
       
     })

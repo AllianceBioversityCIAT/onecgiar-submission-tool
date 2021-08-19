@@ -13,6 +13,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 export class GeographicScopeComponent implements OnInit {
   @Input() regionsSelectedList=[];
   @Input() countriesSelectedList=[];
+
   
   workPackageForm: FormGroup;
   showForm=false;

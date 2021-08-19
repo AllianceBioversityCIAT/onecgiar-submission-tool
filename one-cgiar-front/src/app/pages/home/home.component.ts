@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
         this.data = data;
+        console.log(data);
         this.spinnerService.hide();
       });
 

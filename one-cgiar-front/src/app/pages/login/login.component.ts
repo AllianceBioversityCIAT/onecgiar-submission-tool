@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLogin(): void {
-    console.log("spinner");
+    // console.log("spinner");
     this.spinnerService.show("login_spinner");
     // if (this.loginForm.invalid) {
     //   return;
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     // const formValue = this.loginForm.baseForm.value;
     this.subscription.add(
       this.authSvc.login(this.loginForm.value).subscribe((res) => {
-        console.log("quitar spinner");
+        // console.log("quitar spinner");s
         this.spinnerService.hide("login_spinner");
         if (res) {
           this.router.navigate(['/home']);
