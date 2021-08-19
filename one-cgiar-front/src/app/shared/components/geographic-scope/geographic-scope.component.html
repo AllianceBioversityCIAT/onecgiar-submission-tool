@@ -40,7 +40,8 @@
                         list:this.regionsSelectedList,
                         selectItemId:'region_id',
                         selectItemName:'name',
-                        idToSave:'id'
+                        idToSave:'id',
+                        labelName:'regions'
                     },
                     service:{
                         serviceTS:this._initiativesService,
@@ -57,14 +58,17 @@
             <ibdc-select-multiple [options]="{
                 required:true,
                 inputTitle:'Select countries',
-                savedList:{
-                    list:this.countriesSelectedList,
-                    selectItemId:'country_id',
-                    selectItemName:'name',
-                    idToSave:'id'
-                },
                 selectItemName:'name',
                 selectItemId:'code',
+                frontendSearchAttribute:'name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list:this.countriesSelectedList,
+                    selectItemName:'name',
+                    selectItemId:'country_id',
+                    idToSave:'id',
+                    labelName:'countries'
+                },
                 service:{
                     serviceTS:this._initiativesService,
                     functionName:'getCLARISACountries',
