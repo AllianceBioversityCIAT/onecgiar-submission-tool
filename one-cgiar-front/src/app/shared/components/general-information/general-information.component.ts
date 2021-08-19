@@ -44,26 +44,7 @@ export class GeneralInformationComponent implements OnInit {
   showBudget = false;
   showFormActionArea = false;
   geographicScope = {
-    regions : [
-      {
-        name: "Eastern Africa",
-        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
-        um49Code: 14,
-        id:1
-      },
-      {
-        name: "Southern Asia",
-        parentRegion: null,
-        um49Code: 34,
-        id:2
-      },
-      {
-        name: "Middle Africa",
-        parentRegion: {name: "Sub-Saharan Africa", um49Code: 202},
-        um49Code: 17,
-        id:3
-      }
-    ],
+    regions : [],
     countries : []
   }
 
@@ -123,6 +104,28 @@ export class GeneralInformationComponent implements OnInit {
 
   getConceptGeneralInfo() {
     this.spinnerService.show('general-information');
+    this._initiativesService.getSummary(this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+
+      this._initiativesService.getCLARISARegions('').subscribe(regions=>{
+        this.geographicScope.regions = resp.response.geoScope.regions;
+        this.geographicScope.regions.map(mapReg=>{
+          regions.response.regions.forEach(regionItem=>{
+            if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
+          })
+        })
+      })
+
+      this._initiativesService.getCLARISACountries().subscribe(countries=>{
+        this.geographicScope.countries = resp.response.geoScope.countries;
+        this.geographicScope.countries.map(mapCoun=>{
+          countries.response.countries.forEach(countryItem=>{
+            if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
+          })
+          
+        })
+      })
+      
+    })
     this._initiativesService.getBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
       // console.log(resp.response.getBudget);
       this.budgetForm.controls['budgetId'].setValue(resp.response?.getBudget?.id);
@@ -146,11 +149,10 @@ export class GeneralInformationComponent implements OnInit {
       this.spinnerService.hide('general-information');
       this.showFormActionArea = true;
     })
-
-
-      this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id,this.stageName).subscribe(resp=>{
+    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id,this.stageName).subscribe(resp=>{
       // console.log('%cinitiative.id: '+this._initiativesService.initiative.id+' - stageName: '+this.stageName,'background: #222; color: #ffff00');
-      
+      // console.log('%cGeneral info','background: #222; color: #fd8484');
+      // console.log(resp);
       let general_information_data = resp.response.generalInformation;
       // console.log(general_information_data);
 
@@ -197,7 +199,7 @@ export class GeneralInformationComponent implements OnInit {
 
     if (!(this.budgetForm.controls['value'].value) || (this.budgetForm.controls['value'].value == "")) this.budgetForm.controls['value'].setValue(0);
     this._initiativesService.saveBudget((this.budgetForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
     })
 
   }

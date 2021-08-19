@@ -28,11 +28,6 @@ export class GeographicScopeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRegionsAndCountries();
-      // this._initiativesService.getWorkPackageById(this._dataControlService.WorkPackageID).subscribe(resp=>{
-      //   this.setIsGlobal(resp.response.workPackage.is_global);        
-      // })
-
     this._dataControlService.countriesAndRegionsloaded$.subscribe(()=>{
     })
   }
@@ -45,9 +40,6 @@ export class GeographicScopeComponent implements OnInit {
 
   
   saveEachRegionAndCountries(){
-    console.log("guardando: regions an countries");
-    console.log(this.regionsSelectedList);
-    console.log(this.countriesSelectedList);
     for (const region of this.regionsSelectedList) {
       if (region.new){
         let body;
@@ -79,16 +71,6 @@ export class GeographicScopeComponent implements OnInit {
 
   setIsGlobal(value){
     this.workPackageForm.controls['isGlobal'].setValue(value);
-  }
-
-  getRegionsAndCountries(){
-
-    // this._initiativesService.getRegionsAndCountries(this._dataControlService.WorkPackageID).subscribe(resp=>{
-    //   this.showForm = true;
-    //   this.regionsSelectedList = resp.response.regions;
-    //   this.countriesSelectedList = resp.response.countries;
-    // })
-    
   }
 
 }
