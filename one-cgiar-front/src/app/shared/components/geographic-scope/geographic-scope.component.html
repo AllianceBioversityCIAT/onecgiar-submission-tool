@@ -27,7 +27,7 @@
             </div>
             <br>
         </div>
-        <div class="col-6 horizontal_padding">
+        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList.length">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required:true,
@@ -38,7 +38,8 @@
                     readOnlyVariable: this._initiativesService.initiative.readonly,
                     savedList:{
                         list:this.regionsSelectedList,
-                        selectItemId:'um49Code',
+                        selectItemId:'region_id',
+                        selectItemName:'name',
                         idToSave:'id'
                     },
                     service:{
@@ -51,23 +52,25 @@
 
         </div>
 
-        <div class="col-6  horizontal_padding">
+        <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList.length">
             <div class="box_container">
-            <custom-multiple-choice [options]="{
+            <ibdc-select-multiple [options]="{
                 required:true,
                 inputTitle:'Select countries',
-
-                selectedList:this.countriesSelectedList,
+                savedList:{
+                    list:this.countriesSelectedList,
+                    selectItemId:'country_id',
+                    selectItemName:'name',
+                    idToSave:'id'
+                },
                 selectItemName:'name',
                 selectItemId:'code',
-                selectedItemId:'code',
                 service:{
                     serviceTS:this._initiativesService,
                     functionName:'getCLARISACountries',
-                    objectName:'countries',
-                    frontendSearchAttribute:'name'
+                    objectName:['response','countries']
                 }
-               }"></custom-multiple-choice>
+               }"></ibdc-select-multiple>
             </div>
         </div>
     </div>
