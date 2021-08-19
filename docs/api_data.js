@@ -487,6 +487,113 @@ define({ "api": [
     "groupTitle": "Initiatives"
   },
   {
+    "type": "patch",
+    "url": "/:initiativeId/summary/:stageId",
+    "title": "Summary - Request Initiative summary",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchInitiativeSummary",
+    "group": "Initiatives",
+    "description": "<p>Upserts summary data from initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/initiatives/1/summary/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/initiatives/1/summary/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "stageId",
+            "description": "<p>Id stage.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "generalInformation",
+            "description": "<p>general information data from initiatives.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "geoScope",
+            "description": "<p>regions and countries from initiatives.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"getLinks\": [\n         {\n             \"created_at\": \"2021-07-28T02:27:29.000Z\",\n             \"updated_at\": \"2021-07-28T02:27:29.000Z\",\n             \"generalInformation\": \"{}\",\n             \"geoScope\": \"{}\",\n         }\n     ]\n },\n \"title\": \"Initiatives:Upsert summary.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Upsert summary.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Summary not found in stage:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Initiatives"
+  },
+  {
     "type": "post",
     "url": "initiatives/get-budget/:initiativeId/:stageId",
     "title": "Budget - Read data of Budget.",
@@ -778,7 +885,7 @@ define({ "api": [
       ]
     },
     "filename": "src/routes/Initiatives.ts",
-    "groupTitle":  "Initiatives"
+    "groupTitle": "Initiatives"
   },
   {
     "type": "get",

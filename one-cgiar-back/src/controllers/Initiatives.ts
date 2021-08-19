@@ -394,71 +394,20 @@ export async function removeBudget(req: Request, res: Response) {
  */
 export async function getInitiatives (req: Request, res: Response) {
 
-    // const { userId } = res.locals.jwtPayload;
-
-    // const conceptRepo = getRepository(Narratives);
-    // const queryRunner = getConnection().createQueryBuilder().connection;
-    // let initiatives,
-    //     initvSQL = ` 
-    //     SELECT
-    //         initvStg.id AS initvStgId,
-    //         initiative.id AS id,
-    //         initiative.name AS name,
-    //         IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-    //         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-    //         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-    //         initvStg.active AS active,
-    //         initvStg.stageId AS stageId,
-    //         CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
-    //     FROM
-    //         initiatives initiative
-    //     LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initiative.id
-    //     LEFT JOIN stages stage ON stage.id = initvStg.stageId
-    //     `;
-
     try {
-        // const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-        //     initvSQL,
-        //     { userId },
-        //     {}
-        // );
 
-        
-        // let initvs:Initiatives = new Initiatives();
-        // initvs = await queryRunner.connection.query(query, parameters);
-        // initiatives = await queryRunner.query(initvSQL);
-
-        // const grouped = _.mapValues(_.groupBy(initiatives, 'id'),
-        //     clist => clist.map(pB_ => _.omit(pB_, 'id')));
-
-        // console.log(grouped)
-
-        // let initiativesIds = initiatives.map(init => init.initvStgId);
+        // create new Meta Data object
         const initiativeshandler = new InitiativeHandler();
+
+        // Get active initiatives and detail
         let initiatives = await initiativeshandler.getAllInitiatives();
 
         if (initiatives.length == 0)
-            // res.sendStatus(204)
-            res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
-        else {
-            /**
-             * more stages to be added
-             */
-            // const concepts = await conceptRepo.find({
-            //     where: {
-            //         initvStg: In(initiativesIds)
-            //     },
-            //     relations: ['initvStg'],
-            //     select: ["name", "action_area_description", "action_area_id"]
 
-            // });
-            // initiatives.forEach(initiative => {
-            //     initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
-            // });
-            /**
-             * more stages to be added
-             */
-            // res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
+        res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
+
+        else {
+      
             res.json(new ResponseHandler('All Initiatives.', { initiatives }));
 
         }
