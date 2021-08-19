@@ -4,7 +4,7 @@ import { BaseError } from "./BaseError";
 
 export class InitiativeHandler {
 
-    public queryRunner = getConnection().createQueryRunner();
+    public queryRunner = getConnection().createQueryRunner().connection;
 
     /** Get all initiatives for main table */
     async getAllInitiatives() {
