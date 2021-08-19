@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getConceptNarratives, getGeneralInformation, upsertConceptGeneralInformation, upsertConceptNarratives } from "../controllers/StageConcept";
+import * as stageconcept from "../controllers/StageConcept";
 import { checkJwt } from "../middlewares/jwt";
 import { checkRole } from "../middlewares/role";
 
@@ -8,16 +8,16 @@ const router = Router();
 
 
 // get concept general information
-router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], getGeneralInformation);
+router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], stageconcept.getGeneralInformation);
 
 // update concept general information
-router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptGeneralInformation);
+router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], stageconcept.upsertConceptGeneralInformation);
 
 // get concept narratives
-router.get("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], getConceptNarratives);
+router.get("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], stageconcept.getConceptNarratives);
 
 // update initiatives concept narratives
-router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], upsertConceptNarratives);
+router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], stageconcept.upsertConceptNarratives);
 
 
 
