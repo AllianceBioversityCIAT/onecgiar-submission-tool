@@ -84,6 +84,19 @@ export class InitTableComponent implements AfterViewInit {
   ngAfterViewInit() {
   }
 
+  parseCurrentStageColor(description:string){
+    if (description.indexOf('1')>-1) {
+      return '#3d85c6ff';
+    }
+    if (description.indexOf('2')>-1) {
+      return '#6aa84fff';
+    }
+    if (description.indexOf('3')>-1) {
+      return '#a64d79ff';
+    }
+    return 'gray'
+  }
+
   parseStageLink(description: string) {
     switch (description) {
       case 'Stage 2: Concept':
