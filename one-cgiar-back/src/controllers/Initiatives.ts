@@ -93,14 +93,24 @@ export const getSummary = async (req: Request, res: Response) => {
                WHERE initvStgId = ${ initvStg.id}
                  AND active = 1
               GROUP BY country_id`
+            ),
+            REquery = (
+                `
+                SELECT id,region_id,initvStgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE initvStgId = ${ initvStg.id}
+                   AND active = 1
+                GROUP BY region_id
+                `
             )
 
         const gI = await queryRunner.query(GIquery);
         const generalInformation = gI[0];
 
         // get geo scope from initiative
-        const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+        // const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
         // const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
+        const regions = await queryRunner.query(REquery);
         const countries = await queryRunner.query(COquery);
 
         const geoScope = { regions, countries }
