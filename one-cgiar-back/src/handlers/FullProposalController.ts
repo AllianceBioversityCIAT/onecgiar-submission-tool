@@ -80,7 +80,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             WHERE initvStgs.id = ${initvStg[0].id};
         `;
             const generalInfo = await this.queryRunner.query(GIquery);
-            return generalInfo;
+            return generalInfo[0];
         } catch (error) {
             throw new BaseError('Get general information', 400, error.message, false)
         }
