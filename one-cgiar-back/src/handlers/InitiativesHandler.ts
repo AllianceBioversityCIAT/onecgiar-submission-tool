@@ -28,6 +28,7 @@ export class InitiativeHandler {
         ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage 
         ON stage.id = initvStg.stageId
+        WHERE  initvStg.active = 1
         ORDER BY id
         `),
             initvDetailSQL = (`
