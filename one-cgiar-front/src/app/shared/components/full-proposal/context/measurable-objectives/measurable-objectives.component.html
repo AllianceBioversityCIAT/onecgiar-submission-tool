@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
-                    [options]="{inputTitle:'Measurable three-year (End of Initiative) outcomes:',readOnlyVariable: true, editText:true, form:contextForm, formControlName:'smart_objectives', maxWords:250,
+                    [options]="{inputTitle:'Measurable three-year (End of Initiative) outcomes:',readOnlyVariable: false, editText:true, form:contextForm, formControlName:'smart_objectives', maxWords:250,
                     description:'Update objective statement submitted in the pre-concept with clear 3-year measurable (SMART) outcomes. Ensure this is consistent with the ToC diagrams and narrative, and MELIA sections.'}">
                 </ibdc-textarea>
             </div>
@@ -14,7 +14,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: true}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
