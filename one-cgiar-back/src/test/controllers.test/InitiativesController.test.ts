@@ -86,10 +86,28 @@ after(async () => {
 })
 
 /**Start test */
-describe('Initiatives Controller - links', async () => {
+describe('Initiatives Controller', async () => {
 
     const initiativeId = 2;
     const stageId = 3;
+
+    /**INITIATIVES*/
+
+    it('GET initiatives/ Request all Initiatives', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/initiatives/')
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('All Initiatives.');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
 
     /**LINKS*/
 

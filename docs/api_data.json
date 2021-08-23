@@ -107,6 +107,75 @@
     "groupTitle": "Initiatives"
   },
   {
+    "type": "get",
+    "url": "/initiatives",
+    "title": "Initiatives - Request all Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetInitiatives",
+    "group": "Initiatives",
+    "description": "<p>Shows all initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/initiatives/",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/initiatives/"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\t\t\t\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Initiatives.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Initiatives:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Initiatives"
+  },
+  {
     "type": "patch",
     "url": "initiatives/add-budget/:initiativeId/:stageId",
     "title": "Budget - Create and update budget",
