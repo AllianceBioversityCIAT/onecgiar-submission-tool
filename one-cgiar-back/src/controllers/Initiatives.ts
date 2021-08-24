@@ -22,6 +22,8 @@ import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
 import { CountriesByInitiativeByStage } from '../entity/CountriesByInitiativeByStage';
 import { RegionsByInitiativeByStage } from '../entity/RegionsByInitiativeByStage';
 import { InitiativeHandler } from '../handlers/InitiativesHandler';
+import { ProposalHandler } from '../handlers/FullProposalController';
+import { ConceptHandler } from '../handlers/ConceptController';
 
 
 require('dotenv').config();
@@ -118,55 +120,46 @@ export const upsertSummary = async (req: Request, res: Response) => {
     const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries } = req.body;
 
 
-    const queryRunner = getConnection().createQueryRunner().connection;
+    // const queryRunner = getConnection().createQueryRunner().connection;
+    // const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
+    // const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
     const initvStgRepo = getRepository(InitiativesByStages);
-    const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
-    const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
     const stageRepo = getRepository(Stages);
 
     try {
         // get stage
         const stage = await stageRepo.findOne({ where: { id: stageId } });
         // get intiative by stage
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage }, relations: ['stage', 'initiative'] });
 
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
         }
-        const GIquery = ` 
-                SELECT
-                    initvStgs.id AS initvStgId,
-                    general.id AS generalInformationId,
-                    IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-                
-                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
-                
-                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
-                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
-                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                            
-                    general.action_area_description AS action_area_description,
-                    general.action_area_id AS action_area_id
-                
-                FROM
-                    initiatives_by_stages initvStgs
-                LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
-                
-                WHERE initvStgs.id = ${initvStg.id};
-            `;
 
-        const gI = await queryRunner.query(GIquery);
-        const generalInformation = gI[0];
+        // create initiative by stage handler object
+        const initvStgObj = new InitiativeStageHandler(`${initvStg.id}`, `${initvStg.stage.id}`, `${initvStg.initiative.id}`);
+        // get current stage object
+        const currentStage = await initvStgObj.stage;
 
-        console.log();
 
-        res.end()
 
-        // res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope }));
+        // create object for concept or full proposal
+        let dummyHandler;
+        if (currentStage[0].description === 'Full Proposal') {
+            dummyHandler = new ProposalHandler(initvStg.id.toString());
+        } else {
+            dummyHandler = new ConceptHandler(initvStg.id.toString());
+        }
+
+
+        // upsert geo scope, budget, general information
+        const upsertedGeoScope = await initvStgObj.upsertGeoScopes(regions, countries);
+        const upsertedBudget = await initvStgObj.addBudget(budget_value, 'general_information', 'budget', budgetId, true);
+        const upsertedGeneralInformation = await dummyHandler.upsertGeneralInformation(generalInformationId, name, action_area_id, action_area_description);
+
+        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation: upsertedGeneralInformation, geoScope: upsertedGeoScope, budget: upsertedBudget }));
 
     } catch (error) {
         console.log(error)
@@ -392,7 +385,7 @@ export async function removeBudget(req: Request, res: Response) {
  * @param req 
  * @param res 
  */
-export async function getInitiatives (req: Request, res: Response) {
+export async function getInitiatives(req: Request, res: Response) {
 
     // const { userId } = res.locals.jwtPayload;
 
@@ -423,7 +416,7 @@ export async function getInitiatives (req: Request, res: Response) {
         //     {}
         // );
 
-        
+
         // let initvs:Initiatives = new Initiatives();
         // initvs = await queryRunner.connection.query(query, parameters);
         // initiatives = await queryRunner.query(initvSQL);
