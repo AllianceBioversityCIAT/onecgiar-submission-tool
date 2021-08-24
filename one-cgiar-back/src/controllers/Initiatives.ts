@@ -57,18 +57,19 @@ export const getSummary = async (req: Request, res: Response) => {
 
         // get stage
         const stage = await stageRepo.findOne({ where: { id: stageId } });
+
+
         // get intiative by stage
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
-        const initiative = new InitiativeStageHandler(initvStg.id + '');
-
-        const budget = await initiative.getBudget('general_information', 'budget', true);
-
+        console.log('aca', initvStg);
 
         // if not intitiative by stage, throw error
-        if (initvStg == null) {
+        if (initvStg == null || initvStg == undefined) {
             throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
         }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
 
         let GIquery = (` 
                 SELECT
@@ -118,6 +119,7 @@ export const getSummary = async (req: Request, res: Response) => {
         // const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
         const regions = await queryRunner.query(REquery);
         const countries = await queryRunner.query(COquery);
+        const budget = await initiative.getBudget('general_information', 'budget', true);
 
         const geoScope = { regions, countries }
 
