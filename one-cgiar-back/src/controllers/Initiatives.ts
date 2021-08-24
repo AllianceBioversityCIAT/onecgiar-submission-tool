@@ -60,6 +60,10 @@ export const getSummary = async (req: Request, res: Response) => {
         // get intiative by stage
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const budget = await initiative.getBudget('general_information', 'budget', true);
+
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
@@ -117,7 +121,7 @@ export const getSummary = async (req: Request, res: Response) => {
 
         const geoScope = { regions, countries }
 
-        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope }));
+        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope,budget }));
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);

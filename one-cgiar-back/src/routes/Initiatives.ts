@@ -289,7 +289,7 @@ router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRo
 
 
 /**
- * @api {patch} /:initiativeId/summary/:stageId Summary - Request Initiative summary
+ * @api {patch} /:initiativeId/summary/:stageId Summary - Upserts Initiative summary
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName PatchInitiativeSummary
