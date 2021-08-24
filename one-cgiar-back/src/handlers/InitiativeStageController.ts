@@ -23,6 +23,7 @@ export class InitiativeStageHandler extends BaseValidation {
     public queryRunner = getConnection().createQueryRunner().connection;
     public initvStgRepo = getRepository(InitiativesByStages);
     public initiativeRepo = getRepository(Initiatives);
+    public stageRepo = getRepository(Stages);
     private regionsRepo = getRepository(RegionsByInitiativeByStage);
     private countriesRepo = getRepository(CountriesByInitiativeByStage);
 
@@ -45,6 +46,19 @@ export class InitiativeStageHandler extends BaseValidation {
             return this.stageId_;
         } catch (error) {
             throw new BaseError('Get Stage id', 400, error.message, false)
+        }
+    }
+    public get stage() {
+        try {
+            let sql;
+            if (this.stageId_ && this.initiativeId_) {
+                sql = `SELECT * FROM stages WHERE id = ${this.stageId_}`
+            } else {
+                sql = `SELECT * FROM stages WHERE id = (SELECT stageId FROM initiatives_by_stages WHERE id = ${this.initvStgId_})`
+            }
+            return this.queryRunner.query(sql);
+        } catch (error) {
+            throw new BaseError('Get Stage', 400, error.message, false)
         }
     }
     public get initvStage() {
@@ -299,6 +313,47 @@ export class InitiativeStageHandler extends BaseValidation {
             // save geo scope
             initvStgRegions = await this.regionsRepo.save(initvStgRegions);
             initvStgCountries = await this.countriesRepo.save(initvStgCountries);
+
+            return { regions: initvStgRegions, countries: initvStgCountries }
+
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Geographic scope : Initiative by stage - Update', 400, error.message, false)
+        }
+    }
+
+
+    /**
+    * 
+    * @param region? 
+    * @param countries? 
+    * @returns { regions , countries }
+    */
+
+    async upsertGeoScopes(regions?, countries?) {
+
+        let initvStgRegions, initvStgCountries;
+
+        try {
+            // get current intiative by stage
+            const initvStg = await this.initvStage;
+            // get geo scope from initiative by stage
+            initvStgRegions = await this.regionsRepo.find({ where: { initvStg: initvStg[0] } });
+            initvStgCountries = await this.countriesRepo.find({ where: { initvStg: initvStg[0] } });
+
+            const uniqueCountries = [].concat(
+                countries.filter(obj1 => initvStgCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
+            );
+            uniqueCountries.every(uA => uA['initvStg'] = initvStg[0].id);
+
+            const uniqueRegions = [].concat(
+                regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
+            );
+            uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
+
+            // save geo scope
+            initvStgRegions = await this.regionsRepo.save(uniqueRegions);
+            initvStgCountries = await this.countriesRepo.save(uniqueCountries);
 
             return { regions: initvStgRegions, countries: initvStgCountries }
 
