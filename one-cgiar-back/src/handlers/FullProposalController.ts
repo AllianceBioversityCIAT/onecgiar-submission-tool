@@ -4,6 +4,7 @@ import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
+import { WorkPackages } from "../entity/WorkPackages";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
 import { BaseError } from "./BaseError";
 import { InitiativeStageHandler } from "./InitiativeStageController";
@@ -106,7 +107,36 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
     }
 
-    
+
+    async getWorkPackage() {
+
+        const initvStgId: string = this.initvStgId_;
+        const wpRepo = getRepository(WorkPackages);
+
+        try {
+
+            var workPackages = await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
+                        
+
+            if (workPackages == undefined || workPackages.length == 0) {
+
+                workPackages = []
+
+              //  throw new BaseError('NOT FOUND.', 400,   'Workpackages not found for initiative.', false)
+            }
+
+            return workPackages
+
+        } catch (error) {
+
+            throw new BaseError('Get workpackage', 400, error.message, false)
+
+        }
+
+    }
+
+
+
 
 
     /*******  FULL PROPOSAL SETTERS   *********/
@@ -136,10 +166,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // if null, create object
             if (generalInformationId == null) {
-                
+
                 generalInformation = new GeneralInformation();
                 generalInformation.name = name;
-                
+
                 generalInformation.action_area_description = action_area_description || selectedActionArea.name;
                 generalInformation.action_area_id = action_area_id;
                 // assign initiative by stage
@@ -149,18 +179,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.name = (name) ? name : generalInformation.name;
                 generalInformation.action_area_description = selectedActionArea.name;
                 generalInformation.action_area_id = (action_area_id) ? action_area_id : generalInformation.action_area_id;
-                
+
             }
             // upserted data 
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
-            
+
             //    update initiative name
             let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
-            
-            
-            
+
+
+
             // retrieve general information
             const GIquery = ` 
             SELECT
@@ -186,15 +216,15 @@ export class ProposalHandler extends InitiativeStageHandler {
             WHERE initvStgs.id = ${initvStg[0].id};
             `;
             const generalInfo = await this.queryRunner.query(GIquery);
-            
+
             return generalInfo[0];
         } catch (error) {
             console.log(error)
             throw new BaseError('General information : Full proposal', 400, error.message, false)
         }
     }
-    
-    
+
+
     /**
      * 
      * @param contextId? 

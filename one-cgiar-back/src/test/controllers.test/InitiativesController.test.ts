@@ -282,9 +282,9 @@ describe('Initiatives Controller', async () => {
             .type('form')
             .send({
                 "value": 123.15,
-                "table_name": "general-information",
+                "table_name": "general_information",
                 "col_name": "budget",
-                "budgetId": 55,
+                "budgetId": 64,
                 "active": 1
             })
             .then((res) => {

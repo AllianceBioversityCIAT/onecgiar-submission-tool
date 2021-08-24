@@ -99,6 +99,37 @@ export const getContext = async (req: Request, res: Response) => {
 }
 
 
+export async function getWorkPackage(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        // get workpackage from porposal object
+        const workpackage = await fullPposal.getWorkPackage();
+
+        res.json(new ResponseHandler('Full Proposal: Workpackage.', { workpackage }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
 /**
  * 
  * @param req initiativeId, generalInformationId, name, action_area_id, action_area_description 
@@ -197,3 +228,5 @@ export const upsertContext = async (req: Request, res: Response, next) => {
         return res.status(error.httpCode).json(error);
     }
 }
+
+

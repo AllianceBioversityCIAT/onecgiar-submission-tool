@@ -96,7 +96,7 @@ export const getSummary = async (req: Request, res: Response) => {
             COquery = (
                 `SELECT country_id,initvStgId
                 FROM countries_by_initiative_by_stage 
-               WHERE initvStgId = ${ initvStg.id}
+               WHERE initvStgId = ${initvStg.id}
                  AND active = 1
               GROUP BY country_id`
             ),
@@ -104,7 +104,7 @@ export const getSummary = async (req: Request, res: Response) => {
                 `
                 SELECT region_id,initvStgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${ initvStg.id}
+                 WHERE initvStgId = ${initvStg.id}
                    AND active = 1
                 GROUP BY region_id
                 `
@@ -121,7 +121,7 @@ export const getSummary = async (req: Request, res: Response) => {
 
         const geoScope = { regions, countries }
 
-        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope,budget }));
+        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope, budget }));
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);
@@ -429,10 +429,10 @@ export async function getInitiatives(req: Request, res: Response) {
 
         if (initiatives.length == 0)
 
-        res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
+            res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
 
         else {
-      
+
             res.json(new ResponseHandler('All Initiatives.', { initiatives }));
 
         }
