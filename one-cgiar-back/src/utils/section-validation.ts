@@ -1,4 +1,6 @@
 import _ from "lodash";
+import { getRepository } from "typeorm";
+import { Stages } from "../entity/Stages";
 import { BaseError } from "../handlers/BaseError";
 import { ConceptHandler } from "../handlers/ConceptController";
 /**
@@ -29,13 +31,15 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
 }
 
 export const forwardStage = async (replicationStagDsc: string, currentInitiativeId: string) => {
-
+    const stagesRepo = getRepository(Stages);
     try {
 
         switch (replicationStagDsc) {
             case 'full_proposal':
+                const currentStage = await stagesRepo.findOne({ where: { description: 'Concept' } })
                 // concept handler object 
-                const conceptObj = new ConceptHandler(currentInitiativeId); 
+                const conceptObj = new ConceptHandler(null, currentStage.id.toString(), currentInitiativeId);
+                const initvStg = await conceptObj.setInitvStage();
                 const isComplete = await conceptObj.validateCompletness();
                 // if missing concept data, throw error 
                 if (isComplete) {
