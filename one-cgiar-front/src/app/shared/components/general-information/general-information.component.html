@@ -80,9 +80,9 @@
                 }">
                 ></ibdc-select>
             </div>
-            <div class="col-sm-6" *ngIf="showBudget">
+            <div class="col-sm-6">
                 <ibdc-input
-                    [options]="{inputTitle:'Budget (USD)', form:budgetForm, formControlName:'value'
+                    [options]="{inputTitle:'Budget (USD)', form:generalInformationForm, formControlName:'budget_value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
                 </ibdc-input>
             </div>

@@ -23,7 +23,6 @@ export class GeneralInformationComponent implements OnInit {
 
   @Input() stageName = '';
   public generalInformationForm: FormGroup;
-  public budgetForm: FormGroup;
   public actionAreas: any[];
   // public usersByInitiative: [];
 
@@ -70,21 +69,21 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
-    });
-    this.budgetForm = new FormGroup({
-      value: new FormControl(0),
-      table_name: new FormControl("general-information"),
+      budget_value: new FormControl(0),
+      table_name: new FormControl("general_information"),
       col_name: new FormControl("budget"),
       active: new FormControl(true),
       budgetId: new FormControl(null),
     });
+
   }
+
   localEmitter: any;
 
 
   ngOnInit(): void {
     this.localEmitter= this._dataControlService.generalInfoChange$.subscribe(resp=>{
-        this.getConceptGeneralInfo();
+        this.getSummary();
     })
     this._dataControlService.generalInfoChange$.emit();
   }
@@ -102,12 +101,32 @@ export class GeneralInformationComponent implements OnInit {
     }
   }
 
-  getConceptGeneralInfo() {
+  getSummary() {
     this.spinnerService.show('general-information');
     this._initiativesService.getSummary(this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+      // get general information leads
+      let general_information_data = resp.response.generalInformation;
+      this.leads.lead_name = general_information_data.first_name;
+      this.leads.lead_email = general_information_data.email;
+      this.leads.lead_id = general_information_data.lead_id;
+      this.leads.co_lead_name = general_information_data.co_first_name;
+      this.leads.co_lead_email = general_information_data.co_email;
+      this.leads.co_lead_id = general_information_data.co_lead_id;
+      //general information fields
+      this.generalInformationForm.controls['name'].setValue(general_information_data.name);
+      this.generalInformationForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
+      this.generalInformationForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
+      this.generalInformationForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId)
+      // get budget
+      let budget_data = resp.response.budget;
+      console.log(budget_data);
+      this.generalInformationForm.controls['budgetId'].setValue(budget_data.id);
+      this.generalInformationForm.controls['budget_value'].setValue(budget_data.value);
+      // get Geo
+      this.geographicScope.regions = resp.response.geoScope.regions;
+      this.geographicScope.countries = resp.response.geoScope.countries;
 
       this._initiativesService.getCLARISARegions('').subscribe(regions=>{
-        this.geographicScope.regions = resp.response.geoScope.regions;
         this.geographicScope.regions.map(mapReg=>{
           regions.response.regions.forEach(regionItem=>{
             if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
@@ -116,8 +135,7 @@ export class GeneralInformationComponent implements OnInit {
         this._dataControlService.showRegions = true;
       })
 
-      this._initiativesService.getCLARISACountries().subscribe(countries=>{
-        this.geographicScope.countries = resp.response.geoScope.countries;
+      this._initiativesService.getCLARISACountries().subscribe(countries=>{        
         this.geographicScope.countries.map(mapCoun=>{
           countries.response.countries.forEach(countryItem=>{
             if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
@@ -127,16 +145,8 @@ export class GeneralInformationComponent implements OnInit {
         this._dataControlService.showCountries = true;
       })
       
-    })
-    this._initiativesService.getBudget(this.budgetForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      // console.log(resp.response.getBudget);
-      this.budgetForm.controls['budgetId'].setValue(resp.response?.getBudget?.id);
-      this.budgetForm.controls['value'].setValue(resp.response?.getBudget?.value);
-      // this.budgetForm.get('id').setValue(resp.response?.getBudget?.id);
-      // this.budgetForm.get('value').setValue(resp.response?.getBudget?.value);
-      this.showBudget = true;
-    },err=>{
-      this.showBudget = true;
+      this.showForm = true;
+
     })
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       // console.log(resp);
@@ -151,32 +161,8 @@ export class GeneralInformationComponent implements OnInit {
       this.spinnerService.hide('general-information');
       this.showFormActionArea = true;
     })
-    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id,this.stageName).subscribe(resp=>{
-      // console.log('%cinitiative.id: '+this._initiativesService.initiative.id+' - stageName: '+this.stageName,'background: #222; color: #ffff00');
-      // console.log('%cGeneral info','background: #222; color: #fd8484');
-      // console.log(resp);
-      let general_information_data = resp.response.generalInformation;
-      // console.log(general_information_data);
 
-      this.leads.lead_name = general_information_data.first_name;
-      this.leads.lead_email = general_information_data.email;
-      this.leads.lead_id = general_information_data.lead_id;
-      this.leads.co_lead_name = general_information_data.co_first_name;
-      this.leads.co_lead_email = general_information_data.co_email;
-      this.leads.co_lead_id = general_information_data.co_lead_id;
 
-      this.generalInformationForm.controls['name'].setValue(general_information_data.name);
-
-      this.generalInformationForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
-      this.generalInformationForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
-      this.generalInformationForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId)
-      this.showForm = true;
-    }, err => {
-      console.log(err instanceof HttpErrorResponse);
-      this.errorService.handleError(err);
-      // this.spinnerService.hide('general-information');
-      this.showForm = true;
-    });
   }
 
   upsertGeneralInfo() {
@@ -199,8 +185,8 @@ export class GeneralInformationComponent implements OnInit {
     });
 
 
-    if (!(this.budgetForm.controls['value'].value) || (this.budgetForm.controls['value'].value == "")) this.budgetForm.controls['value'].setValue(0);
-    this._initiativesService.saveBudget((this.budgetForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+    if (!(this.generalInformationForm.controls['value'].value) || (this.generalInformationForm.controls['value'].value == "")) this.generalInformationForm.controls['value'].setValue(0);
+    this._initiativesService.saveBudget((this.generalInformationForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
       // console.log(resp);
     })
 
@@ -214,7 +200,7 @@ export class GeneralInformationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getConceptGeneralInfo();
+      this.getSummary();
       // let currentUrl = this.router.url;
       // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
       //     this.router.navigate([currentUrl]);
