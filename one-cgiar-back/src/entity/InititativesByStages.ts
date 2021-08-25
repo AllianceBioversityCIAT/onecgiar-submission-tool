@@ -12,6 +12,9 @@ export class InitiativesByStages extends UpdatedCreatedAt {
     @Column('tinyint')
     active: boolean;
 
+    @Column('tinyint')
+    global_dimension: boolean;
+
     @Column('text')
     status: boolean;
     

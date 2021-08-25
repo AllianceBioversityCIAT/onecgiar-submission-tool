@@ -341,19 +341,28 @@ export class InitiativeStageHandler extends BaseValidation {
             initvStgRegions = await this.regionsRepo.find({ where: { initvStg: initvStg[0] } });
             initvStgCountries = await this.countriesRepo.find({ where: { initvStg: initvStg[0] } });
 
-            const uniqueCountries = [].concat(
-                countries.filter(obj1 => initvStgCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
-            );
-            uniqueCountries.every(uA => uA['initvStg'] = initvStg[0].id);
+            if (regions) {
+                const uniqueRegions = [].concat(
+                    regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
+                );
+                uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
+                // save geo scope
+                initvStgRegions = await this.regionsRepo.save(uniqueRegions);
+            }
+            if (countries) {
+                const uniqueCountries = [].concat(
+                    countries.filter(obj1 => initvStgCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
+                );
+                uniqueCountries.every(uA => uA['initvStg'] = initvStg[0].id);
 
-            const uniqueRegions = [].concat(
-                regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
-            );
-            uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
+                // save geo scope
+                initvStgCountries = await this.countriesRepo.save(uniqueCountries);
 
-            // save geo scope
-            initvStgRegions = await this.regionsRepo.save(uniqueRegions);
-            initvStgCountries = await this.countriesRepo.save(uniqueCountries);
+            }
+
+            // const regions_ = await this.regionsRepo.find({ where: { initvStg: initvStg[0] } });
+            // const countries_ = await this.countriesRepo.find({ where: { initvStg: initvStg[0] } });
+
 
             return { regions: initvStgRegions, countries: initvStgCountries }
 

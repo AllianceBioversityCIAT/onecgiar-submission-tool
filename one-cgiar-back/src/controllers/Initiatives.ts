@@ -142,11 +142,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
 
     // summary section data
     const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries } = req.body;
-
-
-    // const queryRunner = getConnection().createQueryRunner().connection;
-    // const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
-    // const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
+    
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
