@@ -54,9 +54,19 @@ export class ProposalHandler extends InitiativeStageHandler {
     async getGeneralInformation() {
         // get initiative by stage id from intitiative
         const initvStg = await this.initvStage
+
+        let generalInfo;
+    
         // string = this.initvStgId_;
         try {
             // general information sql query
+  
+        if (initvStg.length == 0 || initvStg == undefined ) {
+
+            generalInfo = []
+            
+        }else{
+
             const GIquery = ` 
             SELECT
                 initvStgs.id AS initvStgId,
@@ -79,8 +89,14 @@ export class ProposalHandler extends InitiativeStageHandler {
             LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
             
             WHERE initvStgs.id = ${initvStg[0].id};
+            
         `;
-            const generalInfo = await this.queryRunner.query(GIquery);
+
+
+            generalInfo = await this.queryRunner.query(GIquery);
+
+        }
+         
             return generalInfo[0];
         } catch (error) {
             throw new BaseError('Get general information', 400, error.message, false)
@@ -151,6 +167,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      */
 
     async upsertGeneralInformation(generalInformationId?, name?, action_area_id?, action_area_description?) {
+
         const gnralInfoRepo = getRepository(GeneralInformation);
 
         //  create empty object 
@@ -167,6 +184,9 @@ export class ProposalHandler extends InitiativeStageHandler {
             // if null, create object
             if (generalInformationId == null) {
 
+                console.log('aca dentro',  initvStg);
+                
+                
                 generalInformation = new GeneralInformation();
                 generalInformation.name = name;
 
@@ -174,6 +194,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.action_area_id = action_area_id;
                 // assign initiative by stage
                 generalInformation.initvStg = initvStg[0].id;
+                
             } else {
                 generalInformation = await gnralInfoRepo.findOne(generalInformationId);
                 generalInformation.name = (name) ? name : generalInformation.name;

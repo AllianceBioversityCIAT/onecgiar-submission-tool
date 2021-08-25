@@ -92,19 +92,19 @@ export const getSummary = async (req: Request, res: Response) => {
                 WHERE initvStgs.id = ${initvStg.id};
             `),
             COquery = (
-                `SELECT country_id,initvStgId
+                `SELECT id,country_id,initvStgId
                 FROM countries_by_initiative_by_stage 
                WHERE initvStgId = ${initvStg.id}
                  AND active = 1
-              GROUP BY country_id`
+              GROUP BY id,country_id`
             ),
             REquery = (
                 `
-                SELECT region_id,initvStgId
+                SELECT id,region_id,initvStgId
                   FROM regions_by_initiative_by_stage
                  WHERE initvStgId = ${initvStg.id}
                    AND active = 1
-                GROUP BY region_id
+                GROUP BY id,region_id
                 `
             )
 

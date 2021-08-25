@@ -62,6 +62,7 @@ export class InitiativeStageHandler extends BaseValidation {
         }
     }
     public get initvStage() {
+        
         try {
             let sql;
             if (this.stageId_ && this.initiativeId_) {
@@ -270,9 +271,9 @@ export class InitiativeStageHandler extends BaseValidation {
         const initvStgId: string = this.initvStgId_;
         try {
             // get initiative regions data
-            let regions = await this.queryRunner.query(`SELECT region_id FROM regions_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1`);
+            let regions = await this.queryRunner.query(`SELECT region_id FROM regions_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1 GROUP BY region_id`);
             // get initiative countries data
-            let countries = await this.queryRunner.query(`SELECT country_id FROM countries_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1`);
+            let countries = await this.queryRunner.query(`SELECT country_id FROM countries_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1 GROUP BY country_id`);
 
             return { regions, countries };
         } catch (error) {

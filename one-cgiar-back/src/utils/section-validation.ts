@@ -38,9 +38,11 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
             case 'full_proposal':
                 const currentStage = await stagesRepo.findOne({ where: { description: 'Concept' } })
                 // concept handler object 
+
                 const conceptObj = new ConceptHandler(null, currentStage.id.toString(), currentInitiativeId);
                 const initvStg = await conceptObj.setInitvStage();
                 const isComplete = await conceptObj.validateCompletness();
+                
                 // if missing concept data, throw error 
                 if (isComplete) {
                     // get full proposal data

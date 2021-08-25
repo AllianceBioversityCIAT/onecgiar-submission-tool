@@ -51,13 +51,14 @@ export class ConceptHandler extends ConceptValidation {
             const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
 
             // create proposal (next stage) object
+            
             const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
 
             // get concept general information data 
             const conceptGeneralInformation = await this.getGeneralInformation();
-
+    
             // get geo scope
-            const conceptGeoScope = await this.getGeoScope();
+            // const conceptGeoScope = await this.getGeoScope();
 
             // get general information if exists from proposalObject
             // console.log(conceptGeneralInformation)
