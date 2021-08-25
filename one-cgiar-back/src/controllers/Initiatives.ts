@@ -139,7 +139,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
     const { initiativeId, stageId } = req.params;
 
     // summary section data
-    const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries } = req.body;
+    const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries, is_global } = req.body;
     
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -148,13 +148,15 @@ export const upsertSummary = async (req: Request, res: Response) => {
         // get stage
         const stage = await stageRepo.findOne({ where: { id: stageId } });
         // get intiative by stage
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage }, relations: ['stage', 'initiative'] });
+        let initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage }, relations: ['stage', 'initiative'] });
 
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
         }
+        initvStg.global_dimension = is_global;
+        initvStg = await initvStgRepo.save(initvStg)
 
         // create initiative by stage handler object
         const initvStgObj = new InitiativeStageHandler(`${initvStg.id}`, `${initvStg.stage.id}`, `${initvStg.initiative.id}`);
