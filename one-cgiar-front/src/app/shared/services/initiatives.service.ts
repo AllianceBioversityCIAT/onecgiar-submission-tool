@@ -259,6 +259,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`);
   }
 
+  patchSummary(body:any,initiativeId,stageId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`,body);
+  }
+
   getBudget (body:any,initiativeId,stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/get-budget/${initiativeId}/${stageId}`, body);
   }

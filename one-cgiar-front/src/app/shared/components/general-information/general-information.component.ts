@@ -22,7 +22,7 @@ import { ManageAccessComponent } from '../manage-access/manage-access.component'
 export class GeneralInformationComponent implements OnInit {
 
   @Input() stageName = '';
-  public generalInformationForm: FormGroup;
+  public summaryForm: FormGroup;
   public actionAreas: any[];
   // public usersByInitiative: [];
 
@@ -64,7 +64,7 @@ export class GeneralInformationComponent implements OnInit {
     public _dataControlService:DataControlService,
     private _StagesMenuService:StagesMenuService
     ) {
-    this.generalInformationForm = new FormGroup({
+    this.summaryForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
@@ -74,6 +74,7 @@ export class GeneralInformationComponent implements OnInit {
       col_name: new FormControl("budget"),
       active: new FormControl(true),
       budgetId: new FormControl(null),
+      is_global: new FormControl(true),
     });
 
   }
@@ -94,7 +95,7 @@ export class GeneralInformationComponent implements OnInit {
 
   validateFormAndLeads(){
     ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
-    if (this.generalInformationForm.status == 'VALID' &&  ((this.leads.lead_name && this.leads.co_lead_name)?true:false)==true) {
+    if (this.summaryForm.status == 'VALID' &&  ((this.leads.lead_name && this.leads.co_lead_name)?true:false)==true) {
       return  'VALID';
     } else{
       return  'INVALID'
@@ -113,18 +114,20 @@ export class GeneralInformationComponent implements OnInit {
       this.leads.co_lead_email = general_information_data.co_email;
       this.leads.co_lead_id = general_information_data.co_lead_id;
       //general information fields
-      this.generalInformationForm.controls['name'].setValue(general_information_data.name);
-      this.generalInformationForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
-      this.generalInformationForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
-      this.generalInformationForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId)
+      this.summaryForm.controls['name'].setValue(general_information_data.name);
+      this.summaryForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
+      this.summaryForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
+      this.summaryForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId);
       // get budget
       let budget_data = resp.response.budget;
-      console.log(budget_data);
-      this.generalInformationForm.controls['budgetId'].setValue(budget_data.id);
-      this.generalInformationForm.controls['budget_value'].setValue(budget_data.value);
+      this.summaryForm.controls['budgetId'].setValue(budget_data.id);
+      this.summaryForm.controls['budget_value'].setValue(budget_data.value);
       // get Geo
-      this.geographicScope.regions = resp.response.geoScope.regions;
-      this.geographicScope.countries = resp.response.geoScope.countries;
+      let geo_data = resp.response.geoScope;
+      this.geographicScope.regions = geo_data.regions;
+      this.geographicScope.countries = geo_data.countries;
+      this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
+
 
       this._initiativesService.getCLARISARegions('').subscribe(regions=>{
         this.geographicScope.regions.map(mapReg=>{
@@ -147,7 +150,12 @@ export class GeneralInformationComponent implements OnInit {
       
       this.showForm = true;
 
+    },
+    err=>{
+      console.log(err);
     })
+
+
     this.conceptSvc.getActionAreas().subscribe(resp=>{
       // console.log(resp);
       this.actionAreas = resp;
@@ -168,14 +176,17 @@ export class GeneralInformationComponent implements OnInit {
   upsertGeneralInfo() {
     
     this.spinnerService.show('general-information');
-    this._initiativesService.patchGeneralInformation(this._initiativesService.initiative.id,this.stageName,this.generalInformationForm.value).subscribe(generalResp => {
+    console.log(this.summaryForm.value);
+    console.log(this._initiativesService.initiative.id);
+    console.log(this.stageName=='proposal'?3:2);
+    this._initiativesService.patchSummary(this.summaryForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
 
       this.spinnerService.hide('general-information');
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
       //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
       // })
 
-      this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      this.summaryForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
@@ -185,8 +196,8 @@ export class GeneralInformationComponent implements OnInit {
     });
 
 
-    if (!(this.generalInformationForm.controls['value'].value) || (this.generalInformationForm.controls['value'].value == "")) this.generalInformationForm.controls['value'].setValue(0);
-    this._initiativesService.saveBudget((this.generalInformationForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+    if (!(this.summaryForm.controls['budget_value'].value) || (this.summaryForm.controls['budget_value'].value == "")) this.summaryForm.controls['budget_value'].setValue(0);
+    this._initiativesService.saveBudget((this.summaryForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
       // console.log(resp);
     })
 

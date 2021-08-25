@@ -13,9 +13,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 export class GeographicScopeComponent implements OnInit {
   @Input() regionsSelectedList=[];
   @Input() countriesSelectedList=[];
-
-  
-  workPackageForm: FormGroup;
+  @Input() localForm:FormGroup;
   showForm=false;
   constructor(
     public _initiativesService:InitiativesService,
@@ -23,55 +21,15 @@ export class GeographicScopeComponent implements OnInit {
     private _interactionsService:InteractionsService,
     public _clarisaService:ClarisaService
   ) { 
-    this.workPackageForm = new FormGroup({
-      isGlobal: new FormControl('', Validators.required),
-    });
+
   }
 
   ngOnInit(): void {
-    this._dataControlService.countriesAndRegionsloaded$.subscribe(()=>{
-    })
+    console.log(this.localForm.get('is_global').value);
   }
-
-  saveGeographicScope(){
-    this._initiativesService.updateWorkPackage({id:this._dataControlService.WorkPackageID,isGlobal:this.workPackageForm.value.isGlobal}).subscribe(resp=>{
-      this.saveEachRegionAndCountries();
-    });
-  }
-
   
-  saveEachRegionAndCountries(){
-    for (const region of this.regionsSelectedList) {
-      if (region.new){
-        let body;
-        body = region;
-        body.wrkPkgId = this._dataControlService.WorkPackageID;
-        body.regionId = body.um49Code;
-        console.log(body);
-       this._initiativesService.createRegion(body).subscribe(resp=>{
-         console.log('%ccreateRegion','background: #222; color: #37ff73');
-         console.log(resp);
-       })
-      }
-    }
-
-    for (const countrie of this.countriesSelectedList) {
-      let body;
-      body = countrie;
-      body.wrkPkgId = this._dataControlService.WorkPackageID
-      body.countryId = body.code;
-      if (countrie.new){
-       this._initiativesService.createCountrie(body).subscribe(resp=>{
-       })
-      }
-    }
-  
-    this._interactionsService.successMessage('Geographic scope information has been saved',1000)
-
-  }
-
   setIsGlobal(value){
-    this.workPackageForm.controls['isGlobal'].setValue(value);
+    this.localForm.controls['is_global'].setValue(value);
   }
 
 }

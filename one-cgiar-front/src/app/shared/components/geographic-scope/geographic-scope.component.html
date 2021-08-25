@@ -1,4 +1,4 @@
-<form [formGroup]="workPackageForm" (ngSubmit)="saveGeographicScope()" *ngIf="showForm || true">
+<form>
     <!-- <app-geographic-scope [workPackageData]="workPackageData"></app-geographic-scope> -->
     <br>
     <br>
@@ -13,14 +13,14 @@
                     <p class="readonly_text_title"><strong class="color-secondary">Does the initiative have a global dimension?</strong><span class="asterisk">* </span></p>
                     <div class="edit" *ngIf="!this._initiativesService.initiative.readonly">
                         <div>
-                            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.workPackageForm.value.isGlobal?'accent':''"
+                            <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.localForm.value.is_global?'accent':''"
                                 (click)="setIsGlobal(true);">Yes</button>
-                            <button type="button" mat-raised-button [color] = "!this.workPackageForm.value.isGlobal?'warn':''"
+                            <button type="button" mat-raised-button [color] = "!this.localForm.value.is_global?'warn':''"
                                 (click)="setIsGlobal(false);">No</button>
                         </div>
                     </div>
                     <div class="only_read" *ngIf="this._initiativesService.initiative.readonly">
-                        <p>{{this.workPackageForm.get('isGlobal').value?'Yes':'No'}}</p>
+                        <p>{{this.localForm.get('is_global').value?'Yes':'No'}}</p>
                     </div>
                     <br>
                 </div>
