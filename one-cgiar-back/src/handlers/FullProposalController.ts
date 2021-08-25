@@ -184,9 +184,6 @@ export class ProposalHandler extends InitiativeStageHandler {
             // if null, create object
             if (generalInformationId == null) {
 
-                console.log('aca dentro',  initvStg);
-                
-                
                 generalInformation = new GeneralInformation();
                 generalInformation.name = name;
 
