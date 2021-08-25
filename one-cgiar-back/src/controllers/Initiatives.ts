@@ -61,9 +61,6 @@ export const getSummary = async (req: Request, res: Response) => {
 
         // get intiative by stage
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        console.log('aca', initvStg);
-
         // if not intitiative by stage, throw error
         if (initvStg == null || initvStg == undefined) {
             throw new BaseError('Summary: Error', 400, `Summary not found in stage: ${stage.description}`, false);
@@ -120,10 +117,11 @@ export const getSummary = async (req: Request, res: Response) => {
         const regions = await queryRunner.query(REquery);
         const countries = await queryRunner.query(COquery);
         const budget = await initiative.getBudget('general_information', 'budget', true);
+        const goblalDimension = initvStg.global_dimension;
 
-        const geoScope = { regions, countries }
+        const geoScope = { regions, countries, goblalDimension }
 
-        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, geoScope, budget }));
+        res.json(new ResponseHandler('Initiatives: Summary.', { generalInformation, budget, geoScope }));
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);
@@ -142,7 +140,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
 
     // summary section data
     const { generalInformationId, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries, is_global } = req.body;
-    
+
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
