@@ -105,6 +105,7 @@ export class GeneralInformationComponent implements OnInit {
   getSummary() {
     this.spinnerService.show('general-information');
     this._initiativesService.getSummary(this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
+      console.log(resp);
       // get general information leads
       let general_information_data = resp.response.generalInformation;
       this.leads.lead_name = general_information_data.first_name;
@@ -176,11 +177,29 @@ export class GeneralInformationComponent implements OnInit {
   upsertGeneralInfo() {
     
     this.spinnerService.show('general-information');
-    console.log(this.summaryForm.value);
-    console.log(this._initiativesService.initiative.id);
-    console.log(this.stageName=='proposal'?3:2);
-    this._initiativesService.patchSummary(this.summaryForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
 
+    this.geographicScope.regions.map(newRegId=>{
+      if (newRegId.um49Code) {
+        newRegId.region_id = newRegId.um49Code;
+      }
+    })
+
+    this.geographicScope.countries.map(newCountId=>{
+      if (newCountId.code) {
+        newCountId.country_id = newCountId.code;
+      }
+    })
+
+    this.summaryForm.value.regions=this.geographicScope.regions;
+    this.summaryForm.value.countries=this.geographicScope.countries;
+    // console.log(this.summaryForm.value);
+    // console.log(this._initiativesService.initiative.id);
+    // console.log(this.stageName=='proposal'?3:2);
+    
+    if (!(this.summaryForm.controls['budget_value'].value) || (this.summaryForm.controls['budget_value'].value == "")) this.summaryForm.controls['budget_value'].setValue(0);
+    console.log(this.summaryForm.value);
+    this._initiativesService.patchSummary(this.summaryForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
+      console.log(generalResp);
       this.spinnerService.hide('general-information');
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
       //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
@@ -194,13 +213,10 @@ export class GeneralInformationComponent implements OnInit {
     // console.log(error, this.errorService.getServerMessage(error))
     this.spinnerService.hide('general-information');
     });
-
-
-    if (!(this.summaryForm.controls['budget_value'].value) || (this.summaryForm.controls['budget_value'].value == "")) this.summaryForm.controls['budget_value'].setValue(0);
-    this._initiativesService.saveBudget((this.summaryForm.value),this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      // console.log(resp);
-    })
-
+    // console.log('%cregions','background: #222; color: #84c3fd');
+    // console.log(this.geographicScope.regions);
+    // console.log('%ccountries','background: #222; color: #fd8484');
+    // console.log(this.geographicScope.countries);
   }
 
   openDialog(): void {

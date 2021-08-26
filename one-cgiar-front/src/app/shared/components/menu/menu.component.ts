@@ -7,14 +7,13 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
-import { trigger, state, style, animate, transition, AUTO_STYLE } from '@angular/animations'
+import { trigger, state, style, animate, transition} from '@angular/animations';
 import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
-  animations:[
-    trigger('expandable',[
+  animations:[trigger('expandable',[
       state('expand',style({ height: '*' })),
       state('collapse',style({ height: '0' })),
       transition('collapse => expand',animate('.3s ease-in')),
@@ -76,7 +75,7 @@ export class MenuComponent implements OnInit {
     let baseUrl =  this.router.routerState.snapshot.url;
     route.map((resp:string)=>{
       correct=baseUrl.indexOf(resp.toLowerCase().split(' ').join('-'))>-1?correct+1:correct
-    })
+    });
     // if (stage) {
      
      return correct == route.length ? true : false
