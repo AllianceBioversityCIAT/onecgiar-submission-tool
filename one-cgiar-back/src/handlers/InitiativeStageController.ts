@@ -62,6 +62,9 @@ export class InitiativeStageHandler extends BaseValidation {
         }
     }
     public get initvStage() {
+
+        console.log('acaInitiative Stage','stageId '+ this.stageId_,'initiativeId_ '+this.initiativeId_,'initvStgId_ '+this.initvStgId_);
+        
         
         try {
             let sql;
@@ -165,7 +168,7 @@ export class InitiativeStageHandler extends BaseValidation {
         let budget: Budget;
         try {
             // if null, create object
-            if (budgetId == null || budgetId == '') {
+            if (budgetId == null || budgetId == '' || budgetId == undefined ) {
                 budget = new Budget();
                 // assign initiative by stage
                 budget.initvStg = this.initvStgId_;
