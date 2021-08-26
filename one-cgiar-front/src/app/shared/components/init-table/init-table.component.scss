@@ -1,7 +1,7 @@
 .table-container {
-    padding: 20px 150px;
+  margin: 50px 0px;
+  padding: 20px 150px;
 }
-
 .chip_stage{
   padding: 7px 10px;
   color: white;
@@ -28,11 +28,13 @@ table {
   
 td, th {
     width: auto;
-    font-size: 1em;
+    font-size: 1.05em;
+    font-weight: 600;
+    color: rgb(116, 116, 116);
 }
 
 th {
-    background-color: #014d66;
+   background-color: #5cc560 !important;
     color: #fff;
 }
 
@@ -70,17 +72,20 @@ th {
    
   /* Handle */
   .with_scroll::-webkit-scrollbar-thumb {
-    background: #025c7a; 
+    background: #5cc560; 
     border-radius: 30px;
   }
   
   /* Handle on hover */
   .with_scroll::-webkit-scrollbar-thumb:hover {
-    background: #014d66; 
+    background: #5cc560; 
     border-radius: 30px;
   }
 
   .with_scroll{
     max-height: 70vh; 
-    overflow: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 4px solid white;
+    // overflow: auto;
   }
