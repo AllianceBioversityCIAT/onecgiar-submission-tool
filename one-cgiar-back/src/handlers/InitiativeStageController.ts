@@ -484,8 +484,4 @@ export class InitiativeStageHandler extends BaseValidation {
         }
     }
 
-    async inactivateOldStageInitiative() {
-
-    }
-
 }
