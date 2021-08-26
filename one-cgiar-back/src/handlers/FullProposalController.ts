@@ -195,6 +195,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.initvStg = initvStg.id;
                 
             } else {
+
                 generalInformation = await gnralInfoRepo.findOne(generalInformationId);
                 generalInformation.name = (name) ? name : generalInformation.name;
                 generalInformation.action_area_description = selectedActionArea.name;

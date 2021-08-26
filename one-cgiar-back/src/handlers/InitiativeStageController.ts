@@ -444,9 +444,13 @@ export class InitiativeStageHandler extends BaseValidation {
 
 
     async setInitvStage() {
+
+        let oldInitiative;
+
         try {
             const existInitvStg = await this.initvStage;
             this.intvStage_ = existInitvStg[0] ? existInitvStg[0] : new InitiativesByStages();
+
 
             this.intvStage_.active = true;
             this.intvStage_.initiative = this.initiativeId_;
@@ -454,6 +458,23 @@ export class InitiativeStageHandler extends BaseValidation {
             // save intiative by stage
             this.intvStage_ = await this.initvStgRepo.save(this.intvStage_);
             this.initvStgId_ = this.intvStage_.id;
+
+            oldInitiative = await this.queryRunner.query(`
+            SELECT a.id,a.initiativeId,MIN(a.stageId) AS stageId,a.active
+            FROM initiatives_by_stages a
+           where a.initiativeId = (SELECT initiativeId
+            FROM initiatives_by_stages a
+           where a.id = ${this.intvStage_.id})
+        `)
+
+            if (this.intvStage_.stageId ? this.intvStage_.stageId : this.initvStgId_ > oldInitiative[0].stageId) {
+
+                oldInitiative[0].active = false;
+
+                await this.initvStgRepo.save(oldInitiative[0]);
+
+            }
+
             return this.intvStage_;
 
         } catch (error) {
@@ -461,6 +482,10 @@ export class InitiativeStageHandler extends BaseValidation {
             throw new BaseError('Set intitative by stage object', 400, error.message, false)
 
         }
+    }
+
+    async inactivateOldStageInitiative() {
+
     }
 
 }
