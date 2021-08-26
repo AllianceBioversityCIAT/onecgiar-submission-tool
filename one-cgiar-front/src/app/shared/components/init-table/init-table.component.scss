@@ -28,11 +28,13 @@ table {
   
 td, th {
     width: auto;
-    font-size: 1em;
+    font-size: 1.05em;
+    font-weight: 600;
+    color: rgb(88, 88, 88);
 }
 
 th {
-    background-color: #014d66;
+   background-color: #5cc560 !important;
     color: #fff;
 }
 
@@ -82,5 +84,8 @@ th {
 
   .with_scroll{
     max-height: 70vh; 
-    overflow: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 4px solid white;
+    // overflow: auto;
   }
