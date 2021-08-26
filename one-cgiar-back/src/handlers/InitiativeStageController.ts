@@ -336,6 +336,9 @@ export class InitiativeStageHandler extends BaseValidation {
 
     async upsertGeoScopes(regions?, countries?) {
 
+        console.log('upsertGeoScopes',regions);
+        
+
         let initvStgRegions, initvStgCountries;
 
         try {
@@ -347,15 +350,17 @@ export class InitiativeStageHandler extends BaseValidation {
 
             if (regions) {
                 const uniqueRegions = [].concat(
-                    regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id)),
+                    regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id || obj1.active !== obj2.active)),
                 );
                 uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
+                console.log('uniqueRe',uniqueRegions);
+                
                 // save geo scope
                 initvStgRegions = await this.regionsRepo.save(uniqueRegions);
             }
             if (countries) {
                 const uniqueCountries = [].concat(
-                    countries.filter(obj1 => initvStgCountries.every(obj2 => obj1.country_id !== obj2.country_id)),
+                    countries.filter(obj1 => initvStgCountries.every(obj2 => obj1.country_id !== obj2.country_id || obj1.active !== obj2.active)),
                 );
                 uniqueCountries.every(uA => uA['initvStg'] = initvStg[0].id);
 
