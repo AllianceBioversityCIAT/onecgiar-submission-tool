@@ -174,7 +174,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         let generalInformation: GeneralInformation;
         try {
             // get current intiative by stage
-            const initvStg = await this.initvStage;
+            // const initvStg = await this.initvStage;
+            const initvStg = await this.setInitvStage();
+            
             // get clarisa action action areas
             const actionAreas = await getClaActionAreas();
 
@@ -190,7 +192,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.action_area_description = action_area_description || selectedActionArea.name;
                 generalInformation.action_area_id = action_area_id;
                 // assign initiative by stage
-                generalInformation.initvStg = initvStg[0].id;
+                generalInformation.initvStg = initvStg.id;
                 
             } else {
                 generalInformation = await gnralInfoRepo.findOne(generalInformationId);
@@ -203,7 +205,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             let upsertedInfo = await gnralInfoRepo.save(generalInformation);
 
             //    update initiative name
-            let initiative = await this.initiativeRepo.findOne(initvStg[0].initiativeId);
+            let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
             initiative.name = upsertedInfo.name;
             initiative = await this.initiativeRepo.save(initiative);
 
@@ -231,7 +233,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 initiatives_by_stages initvStgs
             LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
             
-            WHERE initvStgs.id = ${initvStg[0].id};
+            WHERE initvStgs.id = ${initvStg.id};
             `;
             const generalInfo = await this.queryRunner.query(GIquery);
 

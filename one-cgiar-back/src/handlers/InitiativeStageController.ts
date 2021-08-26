@@ -62,10 +62,6 @@ export class InitiativeStageHandler extends BaseValidation {
         }
     }
     public get initvStage() {
-
-        console.log('acaInitiative Stage','stageId '+ this.stageId_,'initiativeId_ '+this.initiativeId_,'initvStgId_ '+this.initvStgId_);
-        
-        
         try {
             let sql;
             if (this.stageId_ && this.initiativeId_) {
@@ -168,7 +164,7 @@ export class InitiativeStageHandler extends BaseValidation {
         let budget: Budget;
         try {
             // if null, create object
-            if (budgetId == null || budgetId == '' || budgetId == undefined ) {
+            if (budgetId == null || budgetId == '' || budgetId == undefined) {
                 budget = new Budget();
                 // assign initiative by stage
                 budget.initvStg = this.initvStgId_;
@@ -336,8 +332,8 @@ export class InitiativeStageHandler extends BaseValidation {
 
     async upsertGeoScopes(regions?, countries?) {
 
-        console.log('upsertGeoScopes',regions);
-        
+        console.log('upsertGeoScopes', regions);
+
 
         let initvStgRegions, initvStgCountries;
 
@@ -353,8 +349,8 @@ export class InitiativeStageHandler extends BaseValidation {
                     regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id || obj1.active !== obj2.active)),
                 );
                 uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
-                console.log('uniqueRe',uniqueRegions);
-                
+                console.log('uniqueRe', uniqueRegions);
+
                 // save geo scope
                 initvStgRegions = await this.regionsRepo.save(uniqueRegions);
             }
