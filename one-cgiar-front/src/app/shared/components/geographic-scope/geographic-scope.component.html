@@ -27,6 +27,9 @@
             </div>
             <br>
         </div>
+        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showRegions">
+            <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
+        </div>
         <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
@@ -52,7 +55,9 @@
             </div>
 
         </div>
-
+        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showCountries">
+            <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
+        </div>
         <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
             <div class="box_container">
             <ibdc-select-multiple [options]="{

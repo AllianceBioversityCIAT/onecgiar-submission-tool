@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomFormsModule } from '../custom-forms/custom-forms.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { SkeletonsModule } from '../skeletons/skeletons.module';
 
 
 
@@ -19,6 +20,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     ReactiveFormsModule,
     CustomFormsModule,
     IbdAngularComponentsModule,
+    SkeletonsModule
   ],
   exports: [GeographicScopeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
