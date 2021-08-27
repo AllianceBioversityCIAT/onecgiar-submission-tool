@@ -40,7 +40,6 @@ export class GeneralInformationComponent implements OnInit {
   @ViewChild("text") text: ElementRef;
   words: any;
   showForm = false;
-  showBudget = false;
   showFormActionArea = false;
   geographicScope = {
     regions : [],
@@ -139,7 +138,7 @@ export class GeneralInformationComponent implements OnInit {
         this._dataControlService.showRegions = true;
       })
 
-      this._initiativesService.getCLARISACountries().subscribe(countries=>{        
+      this._initiativesService.getCLARISACountries().subscribe(countries=>{       
         this.geographicScope.countries.map(mapCoun=>{
           countries.response.countries.forEach(countryItem=>{
             if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;

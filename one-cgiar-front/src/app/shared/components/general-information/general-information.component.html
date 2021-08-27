@@ -1,5 +1,9 @@
 <section-title name="General information"></section-title>
+
 <div class="section-container animate__animated animate__fadeIn">
+    <div class="sekeletons_load" *ngIf="!showForm">
+        <app-general-information-skeleton></app-general-information-skeleton>
+    </div>
     <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
         *ngIf="showForm">
         <div class="row">

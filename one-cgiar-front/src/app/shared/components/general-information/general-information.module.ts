@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { GeographicScopeModule } from '../geographic-scope/geographic-scope.module';
 import { UtilsModule } from '../utils/utils.module';
+import { SkeletonsModule } from '../skeletons/skeletons.module';
 
 @NgModule({
   declarations: [GeneralInformationComponent],
@@ -21,7 +22,8 @@ import { UtilsModule } from '../utils/utils.module';
     ReactiveFormsModule,
     FormsModule,
     GeographicScopeModule,
-    UtilsModule
+    UtilsModule,
+    SkeletonsModule
   ],
   exports:[GeneralInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
