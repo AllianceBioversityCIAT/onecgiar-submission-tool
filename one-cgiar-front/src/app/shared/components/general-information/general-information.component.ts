@@ -189,16 +189,17 @@ export class GeneralInformationComponent implements OnInit {
         newCountId.country_id = newCountId.code;
       }
     })
-
-    this.summaryForm.value.regions=this.geographicScope.regions;
-    this.summaryForm.value.countries=this.geographicScope.countries;
+    let body = this.summaryForm.value;
+    body.regions=this.geographicScope.regions;
+    body.countries=this.geographicScope.countries;
+    console.log(this.geographicScope);
     // console.log(this.summaryForm.value);
     // console.log(this._initiativesService.initiative.id);
     // console.log(this.stageName=='proposal'?3:2);
     
     if (!(this.summaryForm.controls['budget_value'].value) || (this.summaryForm.controls['budget_value'].value == "")) this.summaryForm.controls['budget_value'].setValue(0);
-    console.log(this.summaryForm.value);
-    this._initiativesService.patchSummary(this.summaryForm.value,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
+    console.log(body);
+    this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       console.log(generalResp);
       this.spinnerService.hide('general-information');
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{

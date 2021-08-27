@@ -125,12 +125,22 @@ export class InitiativesService {
 
   // Query to get CLARISA Regions 
   getCLARISARegions(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?filter=${filterText}`);
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?filter=${filterText}`).pipe(map(resp => {
+      resp.response.regions.map(region => {
+        region.region_id = region.um49Code;
+      })
+      return  resp;
+    }));;
   }
 
   // Query to get CLARISA Countries
   getCLARISACountries(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`);
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`).pipe(map(resp => {
+      resp.response.countries.map(country => {
+        country.country_id = country.code;
+      })
+      return  resp;
+    }));;
   }
 
   // Query to get CLARISA Countries By filter
