@@ -332,8 +332,6 @@ export class InitiativeStageHandler extends BaseValidation {
 
     async upsertGeoScopes(regions?, countries?) {
 
-        console.log('upsertGeoScopes', regions);
-
 
         let initvStgRegions, initvStgCountries;
 
@@ -349,7 +347,6 @@ export class InitiativeStageHandler extends BaseValidation {
                     regions.filter(obj1 => initvStgRegions.every(obj2 => obj1.region_id !== obj2.region_id || obj1.active !== obj2.active)),
                 );
                 uniqueRegions.every(uA => uA['initvStg'] = initvStg[0].id);
-                console.log('uniqueRe', uniqueRegions);
 
                 // save geo scope
                 initvStgRegions = await this.regionsRepo.save(uniqueRegions);
@@ -465,6 +462,7 @@ export class InitiativeStageHandler extends BaseValidation {
            where a.initiativeId = (SELECT initiativeId
             FROM initiatives_by_stages a
            where a.id = ${this.intvStage_.id})
+           GROUP BY a.id,a.initiativeId,a.stageId,a.active
         `)
 
             if (this.intvStage_.stageId ? this.intvStage_.stageId : this.initvStgId_ > oldInitiative[0].stageId) {
