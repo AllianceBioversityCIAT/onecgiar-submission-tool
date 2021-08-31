@@ -56,18 +56,18 @@ export class ProposalHandler extends InitiativeStageHandler {
         const initvStg = await this.initvStage
 
         let generalInfo;
-    
+
         // string = this.initvStgId_;
         try {
             // general information sql query
-  
-        if (initvStg.length == 0 || initvStg == undefined ) {
 
-            generalInfo = []
-            
-        }else{
+            if (initvStg.length == 0 || initvStg == undefined) {
 
-            const GIquery = ` 
+                generalInfo = []
+
+            } else {
+
+                const GIquery = ` 
             SELECT
                 initvStgs.id AS initvStgId,
                 general.id AS generalInformationId,
@@ -93,10 +93,10 @@ export class ProposalHandler extends InitiativeStageHandler {
         `;
 
 
-            generalInfo = await this.queryRunner.query(GIquery);
+                generalInfo = await this.queryRunner.query(GIquery);
 
-        }
-         
+            }
+
             return generalInfo[0];
         } catch (error) {
             throw new BaseError('Get general information', 400, error.message, false)
@@ -126,19 +126,19 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     async getWorkPackage() {
 
+        const initvStg = await this.initvStage
         const initvStgId: string = this.initvStgId_;
         const wpRepo = getRepository(WorkPackages);
 
         try {
 
-            var workPackages = await wpRepo.find({ where: { initvStg: initvStgId, active: 1 } });
-                        
+            var workPackages = await wpRepo.find({ where: { initvStg: initvStg[0].id, active: 1 } });
 
             if (workPackages == undefined || workPackages.length == 0) {
 
                 workPackages = []
 
-              //  throw new BaseError('NOT FOUND.', 400,   'Workpackages not found for initiative.', false)
+                //  throw new BaseError('NOT FOUND.', 400,   'Workpackages not found for initiative.', false)
             }
 
             return workPackages
@@ -176,7 +176,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             // get current intiative by stage
             // const initvStg = await this.initvStage;
             const initvStg = await this.setInitvStage();
-            
+
             // get clarisa action action areas
             const actionAreas = await getClaActionAreas();
 
@@ -193,7 +193,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 generalInformation.action_area_id = action_area_id;
                 // assign initiative by stage
                 generalInformation.initvStg = initvStg.id;
-                
+
             } else {
 
                 generalInformation = await gnralInfoRepo.findOne(generalInformationId);
@@ -293,5 +293,67 @@ export class ProposalHandler extends InitiativeStageHandler {
             throw new BaseError('Upsert context - full proposal', 400, error.message, false)
         }
     }
+
+    /**
+     * 
+     * @param workPackageId 
+     * @param acronym 
+     * @param name 
+     * @param pathway_content 
+     * @returns workPackageInfo
+     */
+    async upsertWorkPackages(fullProposalWP?, conceptWP?) {
+
+        const wpRepo = getRepository(WorkPackages);
+
+        //  create empty object 
+        var workPackage = [];
+        try {
+            // get current intiative by stage
+            const initvStg = await this.setInitvStage();
+
+            if (fullProposalWP.length > 0) {
+
+                for (let index = 0; index < fullProposalWP.length; index++) {
+                    const proposalWP = fullProposalWP[index];
+
+                    workPackage.push(proposalWP);
+                }
+
+            } else {
+
+                for (let index = 0; index < conceptWP.length; index++) {
+                    var conceptWp = conceptWP[index];
+                    conceptWp.initvStg = initvStg.id;
+
+                    workPackage.push(conceptWp);
+
+                }
+
+            }
+
+            // upserted data 
+            let upsertedInfo = await wpRepo.save(workPackage);
+
+            // retrieve general information
+            const WPquery = ` 
+             SELECT acronym,name,pathway_content,initvStgId
+               FROM work_packages
+              WHERE initvStgId = ${initvStg.id}
+                AND active = 1;
+            `;
+            const workPackageInfo = await this.queryRunner.query(WPquery);
+
+            return workPackageInfo[0];
+        } catch (error) {
+            console.log(error)
+            throw new BaseError('Work Package: Full proposal', 400, error.message, false)
+        }
+
+
+
+    }
+
+
 
 }

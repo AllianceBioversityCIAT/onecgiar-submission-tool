@@ -51,14 +51,13 @@ export class ConceptHandler extends ConceptValidation {
             const pplStage = await this.queryRunner.query(`SELECT * FROM stages WHERE description LIKE 'Full Proposal'`);
 
             // create proposal (next stage) object
-            
+
             const proposalObject = new ProposalHandler(null, pplStage[0].id, curruentInitvByStg[0].initiativeId);
+
+            /**GENERAL INFORMATION */
 
             // get concept general information data 
             const conceptGeneralInformation = await this.getGeneralInformation();
-    
-            // get geo scope
-            // const conceptGeoScope = await this.getGeoScope();
 
             // get general information if exists from proposalObject
             const proposalGI = await proposalObject.getGeneralInformation();
@@ -66,11 +65,26 @@ export class ConceptHandler extends ConceptValidation {
             // upsert full proposal general infomation
             const pplGeneralInformation = await proposalObject.upsertGeneralInformation(proposalGI ? proposalGI.generalInformationId : null, conceptGeneralInformation.name, conceptGeneralInformation.action_area_id, conceptGeneralInformation.action_area_description);
 
+
+            /**WORK PACKAGES*/
+
+            //get concept  work packages information data
+            const conceptWorkPackagesInformation = await this.getWorkPackages();
+
+            // get  work packages if exists from proposalObject
+            const proposalWP = await proposalObject.getWorkPackage();
+
+            // upsert full proposal work Package
+            const pplWorkPackageInformation = await proposalObject.upsertWorkPackages(proposalWP, conceptWorkPackagesInformation);
+
+
+            /**GEOGRAPHIC SCOPE*/
+
             await this.forwardGeoScope(pplStage[0]);
             const pplGeoScope = await proposalObject.getGeoScope();
 
             // return null;
-            return { pplGeneralInformation, pplGeoScope };
+            return { pplGeneralInformation, pplGeoScope, pplWorkPackageInformation };
 
         } catch (error) {
             throw new BaseError('Concept: Forward', 400, error.message, false)
@@ -154,6 +168,34 @@ export class ConceptHandler extends ConceptValidation {
         }
     }
 
+
+    async getWorkPackages() {
+
+        const initvStgId: string = this.initvStgId_;
+
+        try {
+
+            const WPquery = `
+            SELECT acronym,name,pathway_content,initvStgId
+              FROM work_packages
+             WHERE initvStgId = ${initvStgId}
+               AND active = 1
+            `
+
+            const workPackages = await this.queryRunner.query(WPquery);
+
+            return workPackages;
+
+        } catch (error) {
+
+
+            throw new BaseError('Get Work Packages', 400, error.message, false)
+
+        }
+
+
+
+    }
 
 
     /*******  CONCEPT SECTIONS SETTERS   *********/

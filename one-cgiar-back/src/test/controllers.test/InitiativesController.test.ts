@@ -13,6 +13,7 @@ var user = {
     email: ''
 };
 var budgetId;
+var newBudget;
 
 /**Create user and token for test */
 before(async () => {
@@ -268,6 +269,8 @@ describe('Initiatives Controller', async () => {
                 expect(res.body).to.have.property('response').to.be.a('object');
                 expect(res.body).to.have.property('title').to.be.equal('Initiatives:Add Budget.');
                 expect(res).to.be.a('object')
+                newBudget = res.body.response.addedBudget.id;
+                
             });
 
     });
@@ -281,10 +284,10 @@ describe('Initiatives Controller', async () => {
             .set('auth', token)
             .type('form')
             .send({
-                "value": 123.15,
+                "value": 400000,
                 "table_name": "general_information",
                 "col_name": "budget",
-                "budgetId": 64,
+                "budgetId": newBudget,
                 "active": 1
             })
             .then((res) => {

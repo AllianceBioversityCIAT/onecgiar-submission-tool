@@ -96,6 +96,7 @@ export const getSummary = async (req: Request, res: Response) => {
                 FROM countries_by_initiative_by_stage 
                WHERE initvStgId = ${initvStg.id}
                  AND active = 1
+                 AND wrkPkgId IS NULL
               GROUP BY id,country_id`
             ),
             REquery = (
@@ -104,6 +105,7 @@ export const getSummary = async (req: Request, res: Response) => {
                   FROM regions_by_initiative_by_stage
                  WHERE initvStgId = ${initvStg.id}
                    AND active = 1
+                   AND wrkPkgId IS NULL
                 GROUP BY id,region_id
                 `
             )

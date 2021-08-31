@@ -459,11 +459,7 @@ router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, ch
  */
 router.post("/get-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.getBudget);
 
-
 router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
-
-
-
 
 
 /**

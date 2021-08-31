@@ -248,7 +248,7 @@ export class InitiativeStageHandler extends BaseValidation {
         try {
             const budget = await budgetRepo.findOne(id);
 
-            const removeBudget = await budgetRepo.remove(budget);
+            const removeBudget = await budgetRepo.delete(budget);
 
             return removeBudget;
 
@@ -270,9 +270,31 @@ export class InitiativeStageHandler extends BaseValidation {
         const initvStgId: string = this.initvStgId_;
         try {
             // get initiative regions data
-            let regions = await this.queryRunner.query(`SELECT region_id FROM regions_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1 GROUP BY region_id`);
+            let regions = await this.queryRunner.query(`
+            SELECT region_id,NULL AS wrkPkg
+              FROM regions_by_initiative_by_stage 
+             WHERE initvStgId =  ${initvStgId}
+               AND active = 1 
+            GROUP BY region_id
+            UNION ALL
+            SELECT region_id,wrkPkgId 
+              FROM regions_by_initiative_by_stage 
+             WHERE initvStgId =  ${initvStgId}
+               AND active = 1 
+            `);
             // get initiative countries data
-            let countries = await this.queryRunner.query(`SELECT country_id FROM countries_by_initiative_by_stage WHERE initvStgId =  ${initvStgId} AND active = 1 GROUP BY country_id`);
+            let countries = await this.queryRunner.query(`
+            SELECT country_id, NULL AS wrkPkg 
+              FROM countries_by_initiative_by_stage 
+              WHERE initvStgId =  ${initvStgId}
+                AND active = 1 
+           GROUP BY country_id
+           UNION ALL 
+           SELECT country_id, wrkPkgId
+             FROM countries_by_initiative_by_stage 
+             WHERE initvStgId = ${initvStgId}
+           	AND active = 1;
+            `);
 
             return { regions, countries };
         } catch (error) {
