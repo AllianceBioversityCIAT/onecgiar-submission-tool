@@ -160,15 +160,24 @@
 
 
 
-
+.status_icons{
+    position: absolute;
+    right: 0;
+    // top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .icon-under-contruction{
-        position: absolute;
+        
         width: 1.65em;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
+       
+
         // margin-right: 20px;
     }
+}
+
 
 
     .stages{
