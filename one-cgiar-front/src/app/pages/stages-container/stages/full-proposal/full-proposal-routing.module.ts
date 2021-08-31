@@ -26,8 +26,8 @@ const routes: Routes = [
         loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
       },
       {
-        path: 'work-packages',
-        loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
+        path: 'work-package-research-plans-and-tocs',
+        loadChildren: () => import('./wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
       }
     ]
   }
