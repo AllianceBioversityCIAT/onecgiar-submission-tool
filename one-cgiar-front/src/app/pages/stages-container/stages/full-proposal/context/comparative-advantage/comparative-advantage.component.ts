@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { InitiativesService } from '../../../../services/initiatives.service';
-import { FullProposalService } from '../../../../services/full-proposal.service';
+import { FullProposalService } from '@app/shared/services/full-proposal.service';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { InteractionsService } from '../../../../services/interactions.service';
+
 @Component({
   selector: 'app-comparative-advantage',
   templateUrl: './comparative-advantage.component.html',
