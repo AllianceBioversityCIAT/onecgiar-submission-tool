@@ -19,15 +19,15 @@ const routes: Routes = [
       },
       {
         path: 'general-information',
-        loadChildren: () => import('./general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
+        loadChildren: () => import('./pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
       },
       {
         path: 'context',
-        loadChildren: () => import('./context/context.module').then(mod => mod.ContextModule),
+        loadChildren: () => import('./pages/context/context.module').then(mod => mod.ContextModule),
       },
       {
         path: 'work-package-research-plans-and-tocs',
-        loadChildren: () => import('./wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
+        loadChildren: () => import('./pages/wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
       }
     ]
   }
