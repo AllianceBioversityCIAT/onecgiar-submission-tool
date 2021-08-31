@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FpWorkPackagesComponent } from './fp-work-packages.component';
+import { FpWorkPackageComponent } from './fp-work-package.component';
 
 const routes: Routes = [
   {
     path:'',
-    component:FpWorkPackagesComponent
+    component:FpWorkPackageComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class FpWorkPackagesRoutingModule { }
+export class FpWorkPackageRoutingModule { }
