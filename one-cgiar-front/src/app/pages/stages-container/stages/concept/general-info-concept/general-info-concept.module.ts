@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { GeneralInfoConceptRoutingModule } from './general-info-concept-routing.module';
 import { GeneralInfoConceptComponent } from './general-info-concept.component';
-import { GeneralInformationModule } from '../../../../../shared/components/general-information/general-information.module';
+import { GeneralInformationModule } from '../../shared/components/general-information/general-information.module';
 
 
 @NgModule({
