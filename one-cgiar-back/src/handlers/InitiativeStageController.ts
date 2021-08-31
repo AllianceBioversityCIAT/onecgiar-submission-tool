@@ -279,11 +279,25 @@ export class InitiativeStageHandler extends BaseValidation {
                AND active = 1 
             GROUP BY region_id
             UNION ALL
-            SELECT region_id,wrkPkgId 
-              FROM regions_by_initiative_by_stage 
-             WHERE initvStgId =  ${initvStgId}
-               AND active = 1) A
-            GROUP BY A.region_id,A.wrkPkg
+            SELECT a.region_id,
+            CASE 
+            WHEN wrkPkgId > 0
+             THEN (
+             SELECT c.id
+               from work_packages c
+              where c.initvStgId = (SELECT MAX(e.id)
+              FROM initiatives_by_stages e
+             where e.initiativeId = a.initvStgId)
+                and c.name = b.name  
+             )
+             ELSE NULL 
+             END AS newWrkPkgId  
+              FROM regions_by_initiative_by_stage a
+               JOIN work_packages b 
+             WHERE a.wrkPkgId = b.id
+               AND a.initvStgId =  ${initvStgId}
+               AND a.active = 1) A
+            GROUP BY A.region_id,A.wrkPkg;
             `);
             // get initiative countries data
             let countries = await this.queryRunner.query(`
@@ -295,11 +309,25 @@ export class InitiativeStageHandler extends BaseValidation {
                AND active = 1 
            GROUP BY country_id
            UNION ALL 
-           SELECT country_id, wrkPkgId
-             FROM countries_by_initiative_by_stage 
-             WHERE initvStgId = ${initvStgId}
-           	AND active = 1) A
-           GROUP BY A.country_id,A.wrkPkg
+           SELECT a.country_id,
+             CASE 
+             WHEN wrkPkgId > 0
+              THEN (
+              SELECT c.id
+                from work_packages c
+               where c.initvStgId = (SELECT MAX(e.id)
+               FROM initiatives_by_stages e
+              where e.initiativeId = a.initvStgId)
+                 and c.name = b.name  
+              )
+              ELSE NULL 
+              END AS newWrkPkgId  
+               FROM countries_by_initiative_by_stage a
+                JOIN work_packages b 
+              WHERE a.wrkPkgId = b.id
+                AND a.initvStgId =  ${initvStgId}
+                AND a.active = 1) A
+                        GROUP BY A.country_id,A.wrkPkg
             `);
 
             return { regions, countries };
