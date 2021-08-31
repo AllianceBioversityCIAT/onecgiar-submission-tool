@@ -7,10 +7,10 @@ const routes: Routes = [
     path: '',
     component: FpWorkPackagesComponent,
     children: [
-      {
-        path: 'general-information',
-        loadChildren: () => import('../../../../../shared/components/full-proposal/fp-work-packages/fp-general-information/fp-general-information.module').then(mod => mod.FpGeneralInformationModule),
-      }
+      // {
+      //   path: 'general-information',
+      //   loadChildren: () => import('../../../../../shared/components/full-proposal/fp-work-packages/fp-general-information/fp-general-information.module').then(mod => mod.FpGeneralInformationModule),
+      // }
     ]
   }
 ];
