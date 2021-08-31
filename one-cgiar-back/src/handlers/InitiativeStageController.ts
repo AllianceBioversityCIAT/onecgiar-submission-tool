@@ -271,6 +271,8 @@ export class InitiativeStageHandler extends BaseValidation {
         try {
             // get initiative regions data
             let regions = await this.queryRunner.query(`
+            SELECT * 
+            FROM (
             SELECT region_id,NULL AS wrkPkg
               FROM regions_by_initiative_by_stage 
              WHERE initvStgId =  ${initvStgId}
@@ -280,20 +282,24 @@ export class InitiativeStageHandler extends BaseValidation {
             SELECT region_id,wrkPkgId 
               FROM regions_by_initiative_by_stage 
              WHERE initvStgId =  ${initvStgId}
-               AND active = 1 
+               AND active = 1) A
+            GROUP BY A.region_id,A.wrkPkg
             `);
             // get initiative countries data
             let countries = await this.queryRunner.query(`
+            SELECT * 
+              FROM (
             SELECT country_id, NULL AS wrkPkg 
               FROM countries_by_initiative_by_stage 
-              WHERE initvStgId =  ${initvStgId}
-                AND active = 1 
+             WHERE initvStgId =  ${initvStgId}
+               AND active = 1 
            GROUP BY country_id
            UNION ALL 
            SELECT country_id, wrkPkgId
              FROM countries_by_initiative_by_stage 
              WHERE initvStgId = ${initvStgId}
-           	AND active = 1;
+           	AND active = 1) A
+           GROUP BY A.country_id,A.wrkPkg
             `);
 
             return { regions, countries };
