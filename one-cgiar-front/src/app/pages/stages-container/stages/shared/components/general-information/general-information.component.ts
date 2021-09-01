@@ -104,7 +104,7 @@ export class GeneralInformationComponent implements OnInit {
   getSummary() {
     this.spinnerService.show('general-information');
     this._initiativesService.getSummary(this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       // get general information leads
       let general_information_data = resp.response.generalInformation;
       this.leads.lead_name = general_information_data.first_name;

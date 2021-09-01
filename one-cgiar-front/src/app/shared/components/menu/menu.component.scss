@@ -145,10 +145,20 @@
                 .sub-section{
                     position: relative;
                     backdrop-filter: blur(3px);
-                    background-color: #08080846;
+                    background-color: #08080888;
                     margin-bottom: 10px;
                     padding: 5px 5px 5px 10px;
                     border-radius: 5px;
+                    border-bottom: 1px solid rgb(168, 168, 168);
+                }
+                .dynamicList{
+                    .dynamicListButton{
+                        border: 2px solid rgb(167, 167, 167);
+                        border-radius: 10px;
+                        margin-bottom: 10px;
+                        margin-left: 15px;
+                        padding: 10px;
+                    }
                 }
             }
           }  

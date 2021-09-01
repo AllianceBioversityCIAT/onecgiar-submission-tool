@@ -63,8 +63,18 @@ export class MenuComponent implements OnInit {
   }
 
   getMenu(){
-    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((resp:any)=>{
-      this.userMenu = resp.response.stages;
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp:any)=>{
+      this.userMenu = userMenuResp.response.stages;
+      this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
+        let stageId = 3;
+        let sectionId = 5;
+        let subSectionId = 12;
+        let sectionFinded = this.userMenu.find(menuItem=>menuItem.stageId == stageId)
+                            .sections.find(section=>section.sectionId == sectionId)
+                            .subsections.find(subSection=>subSection.subSectionId == subSectionId)
+                            .dynamicList = wpsResp.response.workpackage;
+        // console.log(sectionFinded);
+      })
     })
    
   }
@@ -104,8 +114,13 @@ export class MenuComponent implements OnInit {
     }else{
       this.router.navigate([baseUrl,stageParam,'under-construction-page']) 
     }
+  }
 
-
+  dynamicListNavigation(itemID,stage:string,section:string,subsection?:string|[]){
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');   
+    console.log([baseUrl,stageParam,section,subsection,itemID]);
+    this.router.navigate([baseUrl,stageParam,section,subsection,itemID]) 
   }
 
   toggleExpand(subSectionsList:HTMLElement){
