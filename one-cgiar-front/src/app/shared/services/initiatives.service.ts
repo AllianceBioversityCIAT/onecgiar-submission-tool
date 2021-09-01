@@ -338,6 +338,10 @@ export class InitiativesService {
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
   }
+  // get all work packages by initiative by stage with stage full proposal
+  getWpsFpByInititative(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);
+  }
 
     // Query to create a work package
   createPartner(body: any): Observable<any> {
