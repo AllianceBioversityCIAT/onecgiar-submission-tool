@@ -74,20 +74,21 @@ export class MenuComponent implements OnInit {
       this.userMenu = userMenuResp.response.stages;
       console.log(this.userMenu);
       this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
+        wpsResp.response.workpackage.map(wpResp=>wpResp.subSectionName = 'work-package');
         this.mapDataInMenu(3,5,12, wpsResp.response.workpackage);
 
         let impacAreasQuemados = [
           {
             name:'Nutrition, health and food security',
-            subSectionNAme:'impact-area',
+            subSectionName:'impact-area',
             id:1
           },          {
             name:'Poverty reduction, livelihoods and jobs',
-            subSectionNAme:'impact-area',
+            subSectionName:'impact-area',
             id:2
           },          {
             name:'Gender equality, youth and social inclusion',
-            subSectionNAme:'impact-area',
+            subSectionName:'impact-area',
             id:3
           },          {
             name:'Climate adaptation and mitigation',
@@ -95,7 +96,7 @@ export class MenuComponent implements OnInit {
             id:4
           },          {
             name:'Environmental health and biodiversity',
-            subSectionNAme:'impact-area',
+            subSectionName:'impact-area',
             id:5
           }
         ]
