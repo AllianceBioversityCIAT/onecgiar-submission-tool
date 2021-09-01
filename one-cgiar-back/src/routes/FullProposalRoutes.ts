@@ -133,6 +133,6 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
 router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
 
 
-router.patch("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.upsertWorkPackage);
+router.patch("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.upsertWorkPackage);
 
 export default router;
