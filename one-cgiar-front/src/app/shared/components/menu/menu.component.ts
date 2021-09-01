@@ -119,7 +119,7 @@ export class MenuComponent implements OnInit {
   dynamicListNavigation(itemID,stage:string,section:string,subsection?:string|[]){
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');   
-    console.log([baseUrl,stageParam,section,subsection,itemID]);
+    // console.log([baseUrl,stageParam,section,subsection,itemID]);
     this.router.navigate([baseUrl,stageParam,section,subsection,itemID]) 
   }
 
