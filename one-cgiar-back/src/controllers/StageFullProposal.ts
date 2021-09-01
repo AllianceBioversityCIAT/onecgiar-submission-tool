@@ -155,10 +155,9 @@ export async function getWorkPackage(req: Request, res: Response) {
 
 export async function upsertWorkPackage(req: Request, res: Response) {
 
-  // get initiative by stage id from client
-    const { initiativeId, stageId } = req.params;
+    const { initiativeId } = req.params;
 
-    // Work Package section data
+    // summary section data
     const { id, acronym, name, pathway_content, regions, countries } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -174,7 +173,7 @@ export async function upsertWorkPackage(req: Request, res: Response) {
         newWorkPackage.pathway_content = pathway_content;
 
         // get stage
-         const stage = await stageRepo.findOne(stageId);
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
@@ -190,7 +189,6 @@ export async function upsertWorkPackage(req: Request, res: Response) {
         // upsert workpackage from porposal object
         const workpackage = await fullPposal.upsertWorkPackages(newWorkPackage);
 
-        // upsert GeoScope from porposal object
         const upsertedGeoScope = await initvStgObj.upsertGeoScopes(regions, countries);
 
         res.json(new ResponseHandler('Full Proposal: Patch Workpackage.', { workpackage,upsertedGeoScope }));
