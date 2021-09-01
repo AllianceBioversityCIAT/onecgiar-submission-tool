@@ -34,6 +34,10 @@ const routes: Routes = [
       {
         path: 'projection-of-benefits',
         loadChildren: () => import('./projection-of-benefits/projection-of-benefits.module').then(mod => mod.ProjectionOfBenefitsModule),
+      },
+      {
+        path: 'impact-area/:pobIaID',
+        loadChildren: () => import('./pob-impact-area/pob-impact-area.module').then(mod => mod.PobImpactAreaModule),
       }
     ],
   }

@@ -43,7 +43,6 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
    let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
       this.currentStageName = stageName;
-      this.getStages();
       loadMenu$.unsubscribe();
     })
 
@@ -62,18 +61,45 @@ export class MenuComponent implements OnInit {
     )
   }
 
+  mapDataInMenu(stageId,sectionId,subSectionId,list){
+    let sectionFinded = this.userMenu.find(menuItem=>menuItem.stageId == stageId)
+                        .sections.find(section=>section.sectionId == sectionId)
+                        .subsections.find(subSection=>subSection.subSectionId == subSectionId)
+                        .dynamicList =list;
+    // console.log(sectionFinded);
+  }
+
   getMenu(){
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp:any)=>{
       this.userMenu = userMenuResp.response.stages;
+      console.log(this.userMenu);
       this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
-        let stageId = 3;
-        let sectionId = 5;
-        let subSectionId = 12;
-        let sectionFinded = this.userMenu.find(menuItem=>menuItem.stageId == stageId)
-                            .sections.find(section=>section.sectionId == sectionId)
-                            .subsections.find(subSection=>subSection.subSectionId == subSectionId)
-                            .dynamicList = wpsResp.response.workpackage;
-        // console.log(sectionFinded);
+        this.mapDataInMenu(3,5,12, wpsResp.response.workpackage);
+
+        let impacAreasQuemados = [
+          {
+            name:'Nutrition, health and food security',
+            subSectionNAme:'impact-area',
+            id:1
+          },          {
+            name:'Poverty reduction, livelihoods and jobs',
+            subSectionNAme:'impact-area',
+            id:2
+          },          {
+            name:'Gender equality, youth and social inclusion',
+            subSectionNAme:'impact-area',
+            id:3
+          },          {
+            name:'Climate adaptation and mitigation',
+            subSectionNAme:'impact-area',
+            id:4
+          },          {
+            name:'Environmental health and biodiversity',
+            subSectionNAme:'impact-area',
+            id:5
+          }
+        ]
+        this.mapDataInMenu(3,1,8, impacAreasQuemados);
       })
     })
    
@@ -119,7 +145,7 @@ export class MenuComponent implements OnInit {
   dynamicListNavigation(itemID,stage:string,section:string,subsection?:string|[]){
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');   
-    // console.log([baseUrl,stageParam,section,subsection,itemID]);
+    console.log([baseUrl,stageParam,section,subsection,itemID]);
     this.router.navigate([baseUrl,stageParam,section,subsection,itemID]) 
   }
 
@@ -129,144 +155,6 @@ export class MenuComponent implements OnInit {
     // console.log('toggleExpand');
   }
 
-  simulateFullProposal(){
-    // console.log('%cto push','background: #222; color: #84c3fd');
-    // active: under contruction icon - visible: hide section
-    let body=[
-      {
-        title:'General Information ',
-        route:'general-information'
-      },
-      {
-        title: "Context",
-        route:'context',
-        subSections:[
-          {
-            title:'Challenge statement',
-            route:'context/challenge-statement'
-          },
-          {
-            title:'Measurable three-year outcomes',
-            route:'context/measurable-objectives'
-          },
-          {
-            title:'Learning from prior evaluations and Impact Assessments (IA)',
-            route:'context/learning-fpe-and-ia'
-          },
-          {
-            title:'Priority setting',
-            route:'context/priority-setting'
-          },
-          {
-            title:'Comparative Advantage',
-            route:'context/comparative-advantage'
-          },
-          // {
-          //   title:'Risk assessment',
-          //   route:'context/risk-assessment'
-          // },
-          {
-            title:'Participatory design process',
-            route:'context/participatory-design-process'
-          },
-          {
-            title:'Projection of benefits',
-            route:'context/projection-of-benefits'
-          },
-        ]
-      },
-      {
-        title: "Management Plans and policy compliance",
-        subSections:[
-          {
-            title:'Management plan',
-            route:'management-plans-and-policy-compliance/management-plan'
-          },
-          {
-            title:'Ethics',
-            route:'management-plans-and-policy-compliance/ethics'
-          },
-          {
-            title:'Open and FAIR data assets',
-            route:'management-plans-and-policy-compliance/open-and-fair-data-assets'
-          }
-        ]
-      },
-      {
-        title: "Work Packages",
-        subSections:[
-          {
-            title:'General information.',
-            route:'work-packages/general-information'
-          },
-        ]
-      },
-      {
-        title: "Innovation packages and Projection of Benefits",
-        subSections:[
-          {
-            title:'Innovation Packages and Scaling Readiness Strategy',
-            route:'innovation-packages-and-projection-of-benefits/innovation-packages-and-scaling-readiness-strategy'
-          }
-        ]
-      },
-      {
-        title: "Theories of Change",
-        subSections:[
-          {
-            title:'Full Initiative TOC',
-            route:'theories-of-change/full-initiative-TOC'
-          },
-          {
-            title:'Work Package TOCs',
-            route:'theories-of-change/work-package-TOC'
-          },
-          {
-            title:'Impact strategies',
-            route:'theories-of-change/impact-strategies'
-          },
-        ]
-      },
-      {
-        title: "MELIA",
-        subSections:[]
-      },
-      {
-        title: "People and Culture",
-        subSections:[
-          {
-            title:'Initiative Team',
-            route:'people-and-culture/initiative-Team'
-          },
-          {
-            title:'Gender, Diversity and Inclusion',
-            route:'people-and-culture/gender-diversity-inclusion'
-          },
-          {
-            title:'Capacity development',
-            route:'people-and-culture/capacity-development'
-          },
-        ]
-      },
-      {
-        title: "Financial Resources",
-        subSections:[
-          {
-            title:'Budget',
-            route:'financial-resources/budget'
-          },
-        ]
-      },
-
-    ]
-    this.stages[2].grouped=body;
-    // console.log(this.stages[2]);
-    if (this.currentStageName != 'concept') {
-      this.stages[1].active = false;
-      this.stages[2].active = true;
-    }
-  }
-
   goToWp(id) {
     let currentUrl = this.router.url;
     this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package`, { skipLocationChange: true }).then(() => {
@@ -274,30 +162,6 @@ export class MenuComponent implements OnInit {
     });
   }
 
-
-
-  getStages() {
-    this.initiativesSvc.getStages()
-      .subscribe(
-        res => {
-          // console.log(res);
-          res.stages.map(stage => {
-            stage.groups = [];
-            res.stagesMeta.forEach(meta => {
-              if (meta.stage_name == stage.description)
-                stage.groups.push(meta)
-            });
-            // stage.grouped = this.utilsHandler.groupData(stage.groups)
-            stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by');
-            // stage.grouped = stage.grouped
-          })
-          this.stages = res.stages;
-          // console.log(this.stages)
-          this.simulateFullProposal();
-        }
-      )
-
-  }
 
   parseStageUrl(meta: any, section: string) {
     const snapshot = this.router.routerState.snapshot;
