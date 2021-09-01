@@ -126,19 +126,50 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     async getWorkPackage() {
 
+        // const initvStgId: string = this.initvStgId_;
         const initvStg = await this.initvStage
-        const initvStgId: string = this.initvStgId_;
         const wpRepo = getRepository(WorkPackages);
 
         try {
 
-            var workPackages = await wpRepo.find({ where: { initvStg: initvStg[0].id, active: 1 } });
+            let COquery = (
+                `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+                 AND active = 1
+              GROUP BY id,country_id`
+            ),
+                REquery = (
+                    `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+                   AND active = 1
+                GROUP BY id,region_id
+                `
+                )
+
+            var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
+            const regions = await this.queryRunner.query(REquery);
+            const countries = await this.queryRunner.query(COquery);
 
             if (workPackages == undefined || workPackages.length == 0) {
 
                 workPackages = []
 
-                //  throw new BaseError('NOT FOUND.', 400,   'Workpackages not found for initiative.', false)
+            } else {
+
+                // Map Initiatives
+                workPackages.map(geo => {
+                    geo['regions'] = regions.filter(wp => {
+                        return (wp.wrkPkgId === geo.id)
+                    })
+
+                    geo['countries'] = countries.filter(wp => {
+                        return (wp.wrkPkgId === geo.id)
+                    })
+
+                })
             }
 
             return workPackages
