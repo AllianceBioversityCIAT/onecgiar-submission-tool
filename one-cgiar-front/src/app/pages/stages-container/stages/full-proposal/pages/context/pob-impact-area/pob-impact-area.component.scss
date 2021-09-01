@@ -1,0 +1,32 @@
+.check_box_with_text{
+    display: flex;
+    // justify-content: center; 
+    align-items: center;
+    p-checkbox{
+        margin-right: 10px;
+    }
+}
+
+.custom_card{
+    background-color: #fafafefe;
+    box-shadow: 0 3px 6px #cfcfcf88, 0 3px 6px #cfcfcf88;
+    border-radius: 15px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.center_metadata{
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    padding-left: 50px;
+    
+    .metada_data_box{
+
+        .metadata-title{
+            font-weight: 700;
+            color: var(--ibdc-tertiary-color);
+        }
+    }
+}

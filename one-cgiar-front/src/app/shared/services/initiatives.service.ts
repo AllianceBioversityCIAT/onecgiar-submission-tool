@@ -338,9 +338,14 @@ export class InitiativesService {
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
   }
-  // get all work packages by initiative by stage with stage full proposal
+  // get all work packages by initiative with stage full proposal
   getWpsFpByInititative(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);
+  }
+
+  // get one work package by id with stage full proposal
+  getWpFpByInititative(wpID){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
   }
 
     // Query to create a work package
