@@ -389,25 +389,28 @@ export class ProposalHandler extends InitiativeStageHandler {
         const wpRepo = getRepository(WorkPackages);
         // get current intiative by stage
         const initvStg = await this.initvStage;
+        
         var upsertedInfo;
 
         try {
 
             if (newWP.id !== null) {
 
-                var savedWP: WorkPackages = await wpRepo.findOne(newWP.id);
+                var savedWP = await this.queryRunner.query(` SELECT *
+                FROM work_packages 
+               WHERE id = ${newWP.id}`);
 
                 wpRepo.merge(
-                    savedWP,
-                    newWP,
+                    savedWP[0],
+                    newWP
                 );
 
-
-                upsertedInfo = await wpRepo.save(savedWP);
+                upsertedInfo = await wpRepo.save(savedWP[0]);
 
             } else {
+              
+                newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id ;
 
-                newWP.initvStg = initvStg[0].id;
                 upsertedInfo = await wpRepo.save(newWP);
 
             }
@@ -417,7 +420,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Work Package Replication: Full proposal', 400, error.message, false)
+            throw new BaseError('Work Package: Full proposal', 400, error.message, false)
 
         }
 

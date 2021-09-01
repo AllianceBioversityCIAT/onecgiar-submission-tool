@@ -153,24 +153,23 @@ export async function getWorkPackage(req: Request, res: Response) {
 
 }
 
-export async function upsertWorkPackage(req: Request, res: Response) {
+export async function patchWorkPackage(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
-
-    // summary section data
-    const { id, acronym, name, pathway_content, regions, countries } = req.body;
+    const { acronym, name, pathway_content, is_global, id, regions, countries } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
-    var newWorkPackage: WorkPackages;
+    var newWorkPackage = new WorkPackages();
+
+    newWorkPackage.id = id;
+    newWorkPackage.acronym = acronym;
+    newWorkPackage.name = name;
+    newWorkPackage.pathway_content = pathway_content;
+    newWorkPackage.is_global = is_global;
 
     try {
-
-        newWorkPackage.id = id;
-        newWorkPackage.acronym = acronym;
-        newWorkPackage.name = name;
-        newWorkPackage.pathway_content = pathway_content;
 
         // get stage
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
@@ -184,7 +183,7 @@ export async function upsertWorkPackage(req: Request, res: Response) {
 
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
-        const initvStgObj = new InitiativeStageHandler(`${initvStg.id}`, `${initvStg.stage.id}`, `${initvStg.initiative.id}`);
+        const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
 
         // upsert workpackage from porposal object
         const workpackage = await fullPposal.upsertWorkPackages(newWorkPackage);
