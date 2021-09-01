@@ -208,7 +208,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `
                 )
 
-            var workPackages = await wpRepo.find({ where: { id:id, active: 1 } });
+            var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
@@ -383,6 +383,46 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
     }
 
+
+    async upsertWorkPackages(newWP?) {
+
+        const wpRepo = getRepository(WorkPackages);
+        // get current intiative by stage
+        const initvStg = await this.initvStage;
+        var upsertedInfo;
+
+        try {
+
+            if (newWP.id !== null) {
+
+                var savedWP: WorkPackages = await wpRepo.findOne(newWP.id);
+
+                wpRepo.merge(
+                    savedWP,
+                    newWP,
+                );
+
+
+                upsertedInfo = await wpRepo.save(savedWP);
+
+            } else {
+
+                newWP.initvStg = initvStg[0].id;
+                upsertedInfo = await wpRepo.save(newWP);
+
+            }
+
+            return upsertedInfo
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Work Package Replication: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
     /**
      * 
      * @param workPackageId 
@@ -391,7 +431,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @param pathway_content 
      * @returns workPackageInfo
      */
-    async upsertWorkPackages(fullProposalWP?, conceptWP?) {
+    async upsertWorkPackagesRepl(fullProposalWP?, conceptWP?) {
 
         const wpRepo = getRepository(WorkPackages);
 
@@ -406,7 +446,17 @@ export class ProposalHandler extends InitiativeStageHandler {
                 for (let index = 0; index < fullProposalWP.length; index++) {
                     const proposalWP = fullProposalWP[index];
 
-                    workPackage.push(proposalWP);
+                    for (let index = 0; index < conceptWP.length; index++) {
+                        var conceptWp = conceptWP[index];
+                        conceptWp.initvStg = initvStg.id;
+
+                        if (proposalWP.acronym == conceptWp.acronym) {
+
+                            workPackage.push(proposalWP);
+
+                        }
+
+                    }
                 }
 
             } else {
@@ -436,7 +486,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             return workPackageInfo[0];
         } catch (error) {
             console.log(error)
-            throw new BaseError('Work Package: Full proposal', 400, error.message, false)
+            throw new BaseError('Work Package Replication: Full proposal', 400, error.message, false)
         }
 
     }

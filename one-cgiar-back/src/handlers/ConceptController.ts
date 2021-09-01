@@ -75,7 +75,7 @@ export class ConceptHandler extends ConceptValidation {
             const proposalWP = await proposalObject.getWorkPackage();
 
             // upsert full proposal work Package
-            const pplWorkPackageInformation = await proposalObject.upsertWorkPackages(proposalWP, conceptWorkPackagesInformation);
+            const pplWorkPackageInformation = await proposalObject.upsertWorkPackagesRepl(proposalWP, conceptWorkPackagesInformation);
 
 
             /**GEOGRAPHIC SCOPE*/
