@@ -65,6 +65,9 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  *     HTTP/1.1 400 Not Found
  *     { message: "Get workpackage:", error }
  */
-router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
+router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackages);
+
+
+router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
 
 export default router;

@@ -183,6 +183,64 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
+    async getWorkPackageId(id) {
+
+        // const initvStgId: string = this.initvStgId_;
+        // const initvStg = await this.initvStage
+        const wpRepo = getRepository(WorkPackages);
+
+        try {
+
+            let COquery = (
+                `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE wrkPkgId = ${id}
+                 AND active = 1
+              GROUP BY id,country_id`
+            ),
+                REquery = (
+                    `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE wrkPkgId = ${id}
+                   AND active = 1
+                GROUP BY id,region_id
+                `
+                )
+
+            var workPackages = await wpRepo.find({ where: { id:id, active: 1 } });
+            const regions = await this.queryRunner.query(REquery);
+            const countries = await this.queryRunner.query(COquery);
+
+            if (workPackages == undefined || workPackages.length == 0) {
+
+                workPackages = []
+
+            } else {
+
+                // Map Initiatives
+                workPackages.map(geo => {
+                    geo['regions'] = regions.filter(wp => {
+                        return (wp.wrkPkgId === geo.id)
+                    })
+
+                    geo['countries'] = countries.filter(wp => {
+                        return (wp.wrkPkgId === geo.id)
+                    })
+
+                })
+            }
+
+            return workPackages
+
+        } catch (error) {
+
+            throw new BaseError('Get workpackage', 400, error.message, false)
+
+        }
+
+    }
+
 
 
 

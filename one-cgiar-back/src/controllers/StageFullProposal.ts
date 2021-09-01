@@ -99,7 +99,7 @@ export const getContext = async (req: Request, res: Response) => {
 }
 
 
-export async function getWorkPackage(req: Request, res: Response) {
+export async function getWorkPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
     
@@ -127,6 +127,28 @@ export async function getWorkPackage(req: Request, res: Response) {
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
+
+}
+
+
+export async function getWorkPackage(req: Request, res: Response) {
+
+    const { wrkPkgId } = req.params;
+    
+    try {
+
+        // create new full proposal object
+        const fullPposal = new ProposalHandler();
+
+        // get workpackage from porposal object
+        const workpackage = await fullPposal.getWorkPackageId(wrkPkgId);
+
+        res.json(new ResponseHandler('Full Proposal: Workpackage id.', { workpackage }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+
 
 }
 
