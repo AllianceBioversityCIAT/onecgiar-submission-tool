@@ -57,10 +57,10 @@ export class FpWorkPackageComponent implements OnInit {
           })
           this._dataControlService.showCountries = true;
         })
-        console.log(directResp);
+        // console.log(directResp);
       })
 
-      console.log(resp.wpID);
+      // console.log(resp.wpID);
     });
 
 
@@ -70,6 +70,7 @@ export class FpWorkPackageComponent implements OnInit {
         this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
         this.workPackageForm.controls['name'].setValue(directResp.name);
         this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);
+        this.workPackageForm.controls['is_global'].setValue(directResp.is_global);
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;
