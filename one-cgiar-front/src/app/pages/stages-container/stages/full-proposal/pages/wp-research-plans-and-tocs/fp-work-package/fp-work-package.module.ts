@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 import { GeographicScopeModule } from '../../../../shared/components/geographic-scope/geographic-scope.module';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { SkeletonsModule } from '../../../../../../../shared/components/skeletons/skeletons.module';
 
 @NgModule({
   declarations: [FpWorkPackageComponent],
@@ -15,7 +16,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     FpWorkPackageRoutingModule,
     UtilsModule,
     GeographicScopeModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    SkeletonsModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

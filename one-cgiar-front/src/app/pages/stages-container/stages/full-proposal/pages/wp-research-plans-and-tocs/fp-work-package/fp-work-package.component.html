@@ -1,5 +1,7 @@
 <section-title name="Work package"></section-title>
-
+<div class="section-container animate__animated animate__fadeIn" *ngIf="!showForm">
+<app-fp-work-package-sekelton></app-fp-work-package-sekelton>
+</div>
 <div class="section-container animate__animated animate__fadeIn" *ngIf="showForm">
 <div class="row" >
     <div class="col-sm-5" >
