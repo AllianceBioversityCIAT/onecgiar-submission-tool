@@ -231,7 +231,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 })
             }
 
-            return workPackages
+            return workPackages[0]
 
         } catch (error) {
 
@@ -438,8 +438,6 @@ export class ProposalHandler extends InitiativeStageHandler {
             console.log(error)
             throw new BaseError('Work Package: Full proposal', 400, error.message, false)
         }
-
-
 
     }
 

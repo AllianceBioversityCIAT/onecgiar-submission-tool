@@ -67,7 +67,72 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  */
 router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackages);
 
-
+// read work package for id
+/**
+ * @api {get} stages-control/proposal/package/:wrkPkgId Workpackage - Request workpackage for id
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetWorkPackageId
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows workpackage data from initiatives
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/stages-control/proposal/package/177
+ * 
+ * @apiSampleRequest http://localhost:3000/api/stages-control/proposal/package/177
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} wrkPkgId Id WP
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *      "response": {
+ *          "workpackage": [
+ *              {
+ *                  "created_at": "2021-08-31T16:39:08.000Z",
+ *                  "updated_at": "2021-08-31T16:39:08.000Z",
+ *                  "id": 177,
+ *                  "active": 1,
+ *                  "name": "One CGIAR nodes of excellence for utilization of state-of-the-art precision genetics",
+ *                  "acronym": "Work Package 1",
+ *                  "results": null,
+ *                  "pathway_content": "Gain access and develop state-of-the-art precision genetic technologies  and associated enabling technologies such as allele replacement, DNA-free editing, double haploid; establish three nodes of excellence (LAC, Africa, Asia) with One CGIAR focus crop specialization and linked phenotyping facilities in relevant locations.",
+ *                  "is_global": null,
+ *                  "regions": [
+ *                      {
+ *                          "id": 2007,
+ *                          "region_id": 5,
+ *                          "initvStgId": 35,
+ *                          "wrkPkgId": 177
+ *                      },
+ *                      {
+ *                          "id": 2008,
+ *                          "region_id": 34,
+ *                          "initvStgId": 35,
+ *                          "wrkPkgId": 177
+ *                      }
+ *  
+ *                  ],
+ *                  "countries": []
+ *              }
+ *          ]
+ *      },
+ *      "title": "Full Proposal: Workpackage id."
+ *  }
+ *
+ * @apiError Error : Get workpackage id.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get workpackage id:", error }
+ */
 router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
+
+
+router.patch("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.upsertWorkPackage);
 
 export default router;

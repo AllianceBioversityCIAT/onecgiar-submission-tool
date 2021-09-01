@@ -1106,5 +1106,87 @@ define({ "api": [
     },
     "filename": "src/routes/FullProposalRoutes.ts",
     "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
+    "url": "stages-control/proposal/package/:wrkPkgId",
+    "title": "Workpackage - Request workpackage for id",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetWorkPackageId",
+    "group": "Proposal",
+    "description": "<p>Shows workpackage data from initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/stages-control/proposal/package/177",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/stages-control/proposal/package/177"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "wrkPkgId",
+            "description": "<p>Id WP</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"created_at\": \"2021-08-31T16:39:08.000Z\",\n                \"updated_at\": \"2021-08-31T16:39:08.000Z\",\n                \"id\": 177,\n                \"active\": 1,\n                \"name\": \"One CGIAR nodes of excellence for utilization of state-of-the-art precision genetics\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": null,\n                \"pathway_content\": \"Gain access and develop state-of-the-art precision genetic technologies  and associated enabling technologies such as allele replacement, DNA-free editing, double haploid; establish three nodes of excellence (LAC, Africa, Asia) with One CGIAR focus crop specialization and linked phenotyping facilities in relevant locations.\",\n                \"is_global\": null,\n                \"regions\": [\n                    {\n                        \"id\": 2007,\n                        \"region_id\": 5,\n                        \"initvStgId\": 35,\n                        \"wrkPkgId\": 177\n                    },\n                    {\n                        \"id\": 2008,\n                        \"region_id\": 34,\n                        \"initvStgId\": 35,\n                        \"wrkPkgId\": 177\n                    }\n\n                ],\n                \"countries\": []\n            }\n        ]\n    },\n    \"title\": \"Full Proposal: Workpackage id.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get workpackage id.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get workpackage id:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
   }
 ] });

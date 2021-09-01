@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { InitiativesByStages } from '../entity/InititativesByStages';
-import { InitiativesByUsers } from '../entity/InititativesByUsers';
+import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
 import { Stages } from '../entity/Stages';
 import { BaseError } from '../handlers/BaseError';
 import { ProposalHandler } from '../handlers/FullProposalController';
@@ -102,7 +102,7 @@ export const getContext = async (req: Request, res: Response) => {
 export async function getWorkPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
-    
+
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
@@ -111,7 +111,7 @@ export async function getWorkPackages(req: Request, res: Response) {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        
+
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -134,7 +134,7 @@ export async function getWorkPackages(req: Request, res: Response) {
 export async function getWorkPackage(req: Request, res: Response) {
 
     const { wrkPkgId } = req.params;
-    
+
     try {
 
         // create new full proposal object
@@ -149,6 +149,46 @@ export async function getWorkPackage(req: Request, res: Response) {
     }
 
 
+
+}
+
+export async function upsertWorkPackage(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+      // summary section data
+      const { acronym, name, action_area_id, action_area_description, budgetId, budget_value, regions, countries } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+            // get stage
+            const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+            // get intiative by stage : proposal
+            const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+    
+            // if not intitiative by stage, throw error
+            if (initvStg == null) {
+                throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+            }
+    
+            // create new full proposal object
+            const fullPposal = new ProposalHandler(initvStg.id.toString());
+            const initvStgObj = new InitiativeStageHandler(`${initvStg.id}`, `${initvStg.stage.id}`, `${initvStg.initiative.id}`);
+
+         // upsert workpackage from porposal object
+        const workpackage = await fullPposal.upsertWorkPackages();
+
+        const upsertedGeoScope = await initvStgObj.upsertGeoScopes(regions, countries);
+
+        res.json(new ResponseHandler('Full Proposal: Workpackage.', { workpackage }));
+
+
+    } catch (error) {
+        
+        return res.status(error.httpCode).json(error);
+    }
 
 }
 
