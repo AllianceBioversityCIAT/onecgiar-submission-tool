@@ -73,35 +73,40 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp:any)=>{
       this.userMenu = userMenuResp.response.stages;
       console.log(this.userMenu);
-      this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
-        wpsResp.response.workpackage.map(wpResp=>wpResp.subSectionName = 'work-package');
-        this.mapDataInMenu(3,5,12, wpsResp.response.workpackage);
-
-        let impacAreasQuemados = [
-          {
-            name:'Nutrition, health and food security',
-            subSectionName:'impact-area',
-            id:1
-          },          {
-            name:'Poverty reduction, livelihoods and jobs',
-            subSectionName:'impact-area',
-            id:2
-          },          {
-            name:'Gender equality, youth and social inclusion',
-            subSectionName:'impact-area',
-            id:3
-          },          {
-            name:'Climate adaptation and mitigation',
-            subSectionNAme:'impact-area',
-            id:4
-          },          {
-            name:'Environmental health and biodiversity',
-            subSectionName:'impact-area',
-            id:5
-          }
-        ]
-        this.mapDataInMenu(3,1,8, impacAreasQuemados);
-      })
+      console.log(userMenuResp.response.stages.length);
+      if (userMenuResp.response.stages.length > 1) {
+        this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
+          wpsResp.response.workpackage.map(wpResp=>wpResp.subSectionName = 'work-package');
+          this.mapDataInMenu(3,5,12, wpsResp.response.workpackage);
+  
+          let impacAreasQuemados = [
+            {
+              name:'Nutrition, health and food security',
+              subSectionName:'impact-area',
+              id:1
+            },          {
+              name:'Poverty reduction, livelihoods and jobs',
+              subSectionName:'impact-area',
+              id:2
+            },          {
+              name:'Gender equality, youth and social inclusion',
+              subSectionName:'impact-area',
+              id:3
+            },          {
+              name:'Climate adaptation and mitigation',
+              subSectionNAme:'impact-area',
+              id:4
+            },          {
+              name:'Environmental health and biodiversity',
+              subSectionName:'impact-area',
+              id:5
+            }
+          ]
+          this.mapDataInMenu(3,1,8, impacAreasQuemados);
+        },err=>{
+          console.log(err);
+        })
+      }
     })
    
   }

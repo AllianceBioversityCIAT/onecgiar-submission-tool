@@ -196,7 +196,8 @@ export class GeneralInformationComponent implements OnInit {
     // console.log(this._initiativesService.initiative.id);
     // console.log(this.stageName=='proposal'?3:2);
     
-    if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;    console.log(body);
+    if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
+    console.log(body);
     this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       console.log(generalResp);
       this.spinnerService.hide('general-information');
