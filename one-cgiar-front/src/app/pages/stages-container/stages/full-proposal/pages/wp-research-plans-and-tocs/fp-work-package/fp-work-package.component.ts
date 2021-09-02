@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-fp-work-package',
@@ -19,7 +20,8 @@ export class FpWorkPackageComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private activatedRoute: ActivatedRoute,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _interactionsService: InteractionsService
   ) {
     this.workPackageForm = new FormGroup({
       acronym: new FormControl(null),
@@ -76,6 +78,10 @@ export class FpWorkPackageComponent implements OnInit {
     console.log(body);
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
+      console.log(this.workPackageForm.valid?true:false);
+      this.workPackageForm.valid?
+      this._interactionsService.successMessage('Work package has been saved'):
+      this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
     })
   }
 
