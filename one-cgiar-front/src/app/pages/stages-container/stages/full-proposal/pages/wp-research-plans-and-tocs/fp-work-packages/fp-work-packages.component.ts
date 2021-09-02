@@ -7,15 +7,22 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
   styleUrls: ['./fp-work-packages.component.scss']
 })
 export class FpWorkPackagesComponent implements OnInit {
-  cars: any;
+  cols: any[];
   workPackagesList = [];
   constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
     this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
-      // this.workPackagesList = resp.?;
+      console.log(resp.response.workpackage);
+      this.workPackagesList = resp.response.workpackage;
     })
+    
+
+    this.cols = [
+        { field: 'name', header: 'Name' },
+        { field: 'active', header: 'General information status' },
+        { field: 'active', header: 'Theory of change status' }
+    ];
   }
   
 

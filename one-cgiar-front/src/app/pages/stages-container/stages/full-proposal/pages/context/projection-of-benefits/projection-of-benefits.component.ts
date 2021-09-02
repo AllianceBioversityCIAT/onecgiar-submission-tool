@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projection-of-benefits.component.scss']
 })
 export class ProjectionOfBenefitsComponent implements OnInit {
-  cars: any;
+  cols: any[];
+  impactAreas = [];
   constructor() { }
 
   ngOnInit(): void {
+    this.cols = [
+      { field: 'name', header: 'Name' },
+      { field: 'active', header: 'Status' },
+  ];
   }
 
 }
