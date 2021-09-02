@@ -26,6 +26,7 @@ export class FpWorkPackageComponent implements OnInit {
       name: new FormControl(null),
       pathway_content: new FormControl(null),
       is_global: new FormControl(true),
+      id: new FormControl(null),
     });
 
 
@@ -33,12 +34,12 @@ export class FpWorkPackageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe((resp: any) => {
-      this._initiativesService.getWpFpByInititative(resp.wpID).subscribe(resp => {
+    this.activatedRoute.params.subscribe((routeResp: any) => {
+      this._initiativesService.getWpFpByInititative(routeResp.wpID).subscribe(resp => {
         let directResp = resp.response.workpackage;
         this.geographicScope.regions = directResp.regions;
         this.geographicScope.countries = directResp.countries;
-        this.updateFields(directResp);
+        this.updateFields(directResp,routeResp.wpID);
         this._initiativesService.getCLARISARegions('').subscribe(regions=>{
           this.geographicScope.regions.map(mapReg=>{
             regions.response.regions.forEach(regionItem=>{
@@ -66,11 +67,25 @@ export class FpWorkPackageComponent implements OnInit {
 
   }
 
-  updateFields(directResp){
+  updateWp(){
+    let body = this.workPackageForm.value;
+    body.regions = this.geographicScope.regions;
+    body.countries = this.geographicScope.countries;
+    body.regions.map(resp=>resp.wrkPkgId = this.workPackageForm.value.id);
+    body.countries.map(resp=>resp.wrkPkgId = this.workPackageForm.value.id);
+    console.log(body);
+    this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
+    })
+  }
+
+  updateFields(directResp,id){
+        console.log(id);
         this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
         this.workPackageForm.controls['name'].setValue(directResp.name);
         this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);
         this.workPackageForm.controls['is_global'].setValue(directResp.is_global);
+        this.workPackageForm.controls['id'].setValue(id);
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;

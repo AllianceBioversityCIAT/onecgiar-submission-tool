@@ -8,6 +8,7 @@ import { GeographicScopeModule } from '../../../../shared/components/geographic-
 // import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { SkeletonsModule } from '../../../../../../../shared/components/skeletons/skeletons.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [FpWorkPackageComponent],
@@ -17,7 +18,9 @@ import { SkeletonsModule } from '../../../../../../../shared/components/skeleton
     UtilsModule,
     GeographicScopeModule,
     IbdAngularComponentsModule,
-    SkeletonsModule
+    SkeletonsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
