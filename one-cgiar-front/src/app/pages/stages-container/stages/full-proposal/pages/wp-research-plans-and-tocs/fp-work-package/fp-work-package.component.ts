@@ -71,21 +71,21 @@ export class FpWorkPackageComponent implements OnInit {
     let body = this.workPackageForm.value;
     body.regions = this.geographicScope.regions;
     body.countries = this.geographicScope.countries;
-    body.regions.map(resp=>resp.wrkPkgId = this.workPackageForm.value.id);
-    body.countries.map(resp=>resp.wrkPkgId = this.workPackageForm.value.id);
+    body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
+    body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     console.log(body);
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
     })
   }
 
-  updateFields(directResp,id){
+  updateFields(directResp,id:number){
         console.log(id);
         this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
         this.workPackageForm.controls['name'].setValue(directResp.name);
         this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);
         this.workPackageForm.controls['is_global'].setValue(directResp.is_global);
-        this.workPackageForm.controls['id'].setValue(id);
+        this.workPackageForm.controls['id'].setValue(Number(id));
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;

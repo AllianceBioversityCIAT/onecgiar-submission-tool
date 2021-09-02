@@ -348,6 +348,16 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
   }
 
+  // get one work package by id with stage full proposal
+  getImpactAreas(){
+    return this.http.get<any>(`/assets/DB/impact-areas.json`);
+  }
+
+  // get one work package by id with stage full proposal
+  getProjectionOfBenefitsImpactAreas(){
+    return this.http.get<any>(`/assets/DB/impact-areas.json`);
+  }
+
   saveWpFp(body: any,initiativeId): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
   }

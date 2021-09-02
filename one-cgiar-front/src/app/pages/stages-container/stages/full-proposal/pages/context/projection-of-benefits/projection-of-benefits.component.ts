@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projection-of-benefits.component.scss']
 })
 export class ProjectionOfBenefitsComponent implements OnInit {
-
+  cars: any;
   constructor() { }
 
   ngOnInit(): void {

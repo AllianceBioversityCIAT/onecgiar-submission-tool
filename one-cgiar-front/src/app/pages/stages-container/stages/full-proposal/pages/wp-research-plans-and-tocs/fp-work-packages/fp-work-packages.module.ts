@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FpWorkPackagesRoutingModule } from './fp-work-packages-routing.module';
 import { FpWorkPackagesComponent } from './fp-work-packages.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { TableModule } from 'primeng/table';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
   imports: [
     CommonModule,
     FpWorkPackagesRoutingModule,
-    UtilsModule
+    UtilsModule,
+    TableModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
