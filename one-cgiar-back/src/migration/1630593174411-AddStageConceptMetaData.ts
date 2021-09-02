@@ -3,9 +3,10 @@ import { Stages } from "../entity/Stages";
 import { StagesMeta } from "../entity/StagesMeta";
 import { logger } from "../handlers/Logger";
 
-export class AddStageConceptMetaData1614965884584 implements MigrationInterface {
 
-    name = 'AddStageConceptMetaData1614965884584'
+export class AddStageConceptMetaData1630593174411 implements MigrationInterface {
+
+    name = 'AddStageConceptMetaData1630593174411'
     public async up(queryRunner: QueryRunner): Promise<void> {
 
         const metaRepo = getRepository(StagesMeta);
