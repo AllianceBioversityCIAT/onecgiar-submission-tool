@@ -54,7 +54,7 @@ export class InsertWorPackagesPreConceptSBTConcept1621451356424 implements Migra
             workPackage.pathway_content = pathwayContent || null;
             workPackage.is_global = null;
 
-            workPackage.initvStg = intvStg || null;
+            workPackage.initvStg = intvStg;
             // validate WP
             const errors = await validate(workPackage);
             if (errors.length > 0) {

@@ -12,6 +12,7 @@
         "lint:fix": "eslint --fix  \"**/*.ts\"",
         "format": "prettier --write \"**/*.ts\"",
         "test": "mocha -r ts-node/register src/**/*.test.ts --exit",
+        "prod":"set debug=* && npx tsnd ./dist/index.js --respawn --transpileOnly",
         "coverage": "nyc npm run test",
         "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
         "synch": "ts-node ./node_modules/typeorm/cli.js schema:sync",
