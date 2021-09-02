@@ -21,7 +21,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'name',
                 table_name:'',
                 display_name: 'Initiative name',
-                group_by: 'General Information'
+                group_by: 'General Information',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -32,7 +33,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'challenge',
                 table_name:'',
                 display_name: 'Challenge statement',
-                group_by: 'Narratives'
+                group_by: 'Narratives',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -43,7 +45,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'objectives',
                 table_name:'',
                 display_name: 'Measurable objectives',
-                group_by: 'Narratives'
+                group_by: 'Narratives',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -54,7 +57,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'results',
                 table_name:'',
                 display_name: 'Results',
-                group_by: 'Narratives'
+                group_by: 'Narratives',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -65,7 +69,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'highlights',
                 table_name:'',
                 display_name: 'Highlights',
-                group_by: 'Narratives'
+                group_by: 'Narratives',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -76,7 +81,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'action_area_description',
                 table_name:'',
                 display_name: 'Primary CGIAR Action Area',
-                group_by: 'General Information'
+                group_by: 'General Information',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -87,7 +93,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'work_packages',
                 table_name:'',
                 display_name: 'Work packages',
-                group_by: 'Work packages'
+                group_by: 'Work packages',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -98,7 +105,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 table_name:'',
                 order: 3,
                 display_name: 'Initial theory of change',
-                group_by: 'Initial theory of change'
+                group_by: 'Initial theory of change',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -109,7 +117,8 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 col_name: 'key_partners',
                 table_name:'',
                 display_name: 'Key partners',
-                group_by: 'Key partners'
+                group_by: 'Key partners',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -118,6 +127,7 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 visible: false,
                 col_name: 'action_area_id',
                 table_name:'',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -126,6 +136,7 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 visible: false,
                 col_name: 'initvStgId',
                 table_name:'',
+                subsection:null
             },
             {
                 stage_name: cpnt.description,
@@ -134,6 +145,7 @@ export class AddStageConceptMetaData1614965884584 implements MigrationInterface 
                 visible: false,
                 col_name: 'id',
                 table_name:'',
+                subsection:null
             },
         ])
 
