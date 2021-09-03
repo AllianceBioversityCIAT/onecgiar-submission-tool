@@ -72,32 +72,35 @@ export class MenuComponent implements OnInit {
   getMenu(){
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp:any)=>{
       this.userMenu = userMenuResp.response.stages;
-      console.log(this.userMenu);
-      console.log(userMenuResp.response.stages.length);
+      // console.log(this.userMenu);
+      // console.log(userMenuResp.response.stages.length);
       if (userMenuResp.response.stages.length > 1) {
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe(wpsResp=>{
-          wpsResp.response.workpackage.map(wpResp=>wpResp.subSectionName = 'work-package');
+          wpsResp.response.workpackage.map(wpResp=>{
+            wpResp.subSectionName = 'work-package';
+            wpResp.showName = wpResp.acronym;
+          });
           this.mapDataInMenu(3,5,12, wpsResp.response.workpackage);
   
           let impacAreasQuemados = [
             {
-              name:'Nutrition, health and food security',
+              showName:'Nutrition, health and food security',
               subSectionName:'impact-area',
               id:1
             },          {
-              name:'Poverty reduction, livelihoods and jobs',
+              showName:'Poverty reduction, livelihoods and jobs',
               subSectionName:'impact-area',
               id:2
             },          {
-              name:'Gender equality, youth and social inclusion',
+              showName:'Gender equality, youth and social inclusion',
               subSectionName:'impact-area',
               id:3
             },          {
-              name:'Climate adaptation and mitigation',
+              showName:'Climate adaptation and mitigation',
               subSectionNAme:'impact-area',
               id:4
             },          {
-              name:'Environmental health and biodiversity',
+              showName:'Environmental health and biodiversity',
               subSectionName:'impact-area',
               id:5
             }
