@@ -147,9 +147,33 @@ export class ProposalHandler extends InitiativeStageHandler {
                    AND active = 1
                 GROUP BY id,region_id
                 `
+                ),
+                WPquery = (
+                    `
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    IF (
+                        name IS NULL
+                        OR name = ''
+                        OR pathway_content IS NULL
+                        OR pathway_content = '',
+                        true,
+                        false
+                    ) AS validateWP,
+                    IF (
+                        ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        AND 
+                        (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        true,
+                        false
+                    ) AS validateGeographicScope
+                   FROM work_packages wp 
+                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id}
+                    AND wp.active = 1                    
+                    `
                 )
 
-            var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
+            // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
+            var workPackages = await this.queryRunner.query(WPquery);
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
@@ -240,9 +264,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
     }
-
-
-
 
     /*******  FULL PROPOSAL SETTERS   *********/
 
@@ -389,7 +410,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         const wpRepo = getRepository(WorkPackages);
         // get current intiative by stage
         const initvStg = await this.initvStage;
-        
+
         var upsertedInfo;
 
         try {
@@ -408,8 +429,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                 upsertedInfo = await wpRepo.save(savedWP[0]);
 
             } else {
-              
-                newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id ;
+
+                newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id;
 
                 upsertedInfo = await wpRepo.save(newWP);
 

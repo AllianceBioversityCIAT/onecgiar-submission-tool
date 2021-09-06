@@ -958,6 +958,88 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "initiatives/initiativeId([0-9]+)/users/",
+    "title": "Users by initiative - Request users by initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "all"
+      }
+    ],
+    "name": "GetUserInitiative",
+    "group": "Manage_Access",
+    "description": "<p>Shows users by initiative data</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "http://localhost:3000/api/intiatives/2/users/",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/intiatives/2/users/"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"users\": [\n            {\n                \"userId\": 41,\n                \"first_name\": \"First Name\",\n                \"last_name\": \"Last Name\",\n                \"email\": \"e.mail@mail.org\",\n                \"role_name\": \"Science Group Directors/Designated (SGD) / Initiative Design Team\",\n                \"role_acronym\": \"SGD\",\n                \"roleId\": 1\n            },\n             ...\n\t\t\t\n\t\t\t     ]\n    },\n    \"title\": \"Users by Initiative\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get users by initiative.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get users by initiative:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Manage_Access"
+  },
+  {
+    "type": "get",
     "url": "meta/menu/:initiativeId",
     "title": "Get Menu.",
     "version": "1.0.2",
@@ -1028,7 +1110,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
-    "title": "Workpackage - Request workpackage",
+    "title": "Work package - Request workpackage",
     "version": "1.0.2",
     "permission": [
       {
@@ -1037,7 +1119,7 @@ define({ "api": [
     ],
     "name": "GetWorkPackage",
     "group": "Proposal",
-    "description": "<p>Shows workpackage data from initiatives</p>",
+    "description": "<p>Shows work packages data from initiatives</p>",
     "examples": [
       {
         "title": "Example usage:",
@@ -1110,7 +1192,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/package/:wrkPkgId",
-    "title": "Workpackage - Request workpackage for id",
+    "title": "Work package - Request workpackage for id",
     "version": "1.0.2",
     "permission": [
       {
@@ -1119,7 +1201,7 @@ define({ "api": [
     ],
     "name": "GetWorkPackageId",
     "group": "Proposal",
-    "description": "<p>Shows workpackage data from initiatives</p>",
+    "description": "<p>Shows work package data from initiatives</p>",
     "examples": [
       {
         "title": "Example usage:",
