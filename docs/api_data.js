@@ -15,13 +15,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/1/summary/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/1/summary/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3"
       }
     ],
     "header": {
@@ -122,13 +122,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/"
       }
     ],
     "header": {
@@ -190,13 +190,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/add-budget/2/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/add-budget/2/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/add-budget/2/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/add-budget/2/3"
       }
     ],
     "header": {
@@ -373,13 +373,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/add-link/2/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/add-link/2/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/add-link/2/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/add-link/2/3"
       }
     ],
     "header": {
@@ -571,13 +571,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/1/summary/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/1/summary/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3"
       }
     ],
     "header": {
@@ -678,13 +678,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/get-budget/2/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/get-budget/2/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/get-budget/2/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/get-budget/2/3"
       }
     ],
     "header": {
@@ -795,13 +795,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/initiatives/get-link/2/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/get-link/2/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/initiatives/get-link/2/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/get-link/2/3"
       }
     ],
     "header": {
@@ -972,13 +972,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/intiatives/2/users/",
+        "content": "https://initiativestest.ciat.cgiar.org/api/intiatives/2/users/",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/intiatives/2/users/"
+        "url": "https://initiativestest.ciat.cgiar.org/api/intiatives/2/users/"
       }
     ],
     "header": {

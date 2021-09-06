@@ -18,9 +18,9 @@ const router = Router();
  * @apiDescription  Shows all initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/
  * @apiHeader {String} auth
  * 
  * 
@@ -93,9 +93,9 @@ router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], initiatives.
  * @apiDescription  Shows users by initiative data 
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/intiatives/2/users/
+ * https://initiativestest.ciat.cgiar.org/api/intiatives/2/users/
  * 
- * @apiSampleRequest http://localhost:3000/api/intiatives/2/users/
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/intiatives/2/users/
  *
  * @apiHeader {String} auth
  * 
@@ -179,9 +179,9 @@ router.post("/assign-files", [checkJwt, checkRole('stages', 'updateOwn')], initi
  * @apiGroup Initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/add-link/2/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/add-link/2/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/add-link/2/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/add-link/2/3
  * 
  * @apiHeader {String} auth
  * 
@@ -252,9 +252,9 @@ router.patch("/add-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, chec
  * @apiDescription  Shows all cititations filtered by initiative id, estage id and status
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/get-link/2/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/get-link/2/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/get-link/2/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/get-link/2/3
  *
  * @apiHeader {String} auth
  * 
@@ -320,9 +320,9 @@ router.post("/get-link/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, check
  * @apiDescription  Shows summary data from initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/1/summary/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/1/summary/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3
  *
  * @apiHeader {String} auth
  * 
@@ -368,9 +368,9 @@ router.get("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, checkRo
  * @apiDescription  Upserts summary data from initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/1/summary/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/1/summary/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3
  *
  * @apiHeader {String} auth
  * 
@@ -414,9 +414,9 @@ router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, check
  * @apiGroup Initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/add-budget/2/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/add-budget/2/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/add-budget/2/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/add-budget/2/3
  * 
  * @apiHeader {String} auth
  * 
@@ -484,9 +484,9 @@ router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, ch
  * @apiDescription  Shows budget filtered by initiative id, estage id and status
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/initiatives/get-budget/2/3
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/get-budget/2/3
  * 
- * @apiSampleRequest http://localhost:3000/api/initiatives/get-budget/2/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/get-budget/2/3
  *
  * @apiHeader {String} auth
  * 
