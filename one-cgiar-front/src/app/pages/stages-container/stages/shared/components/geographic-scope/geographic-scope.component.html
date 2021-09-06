@@ -8,7 +8,7 @@
         <div class="col-sm-12 horizontal_padding">
             <div class="geographic-scope-container">
                 <div class="geographic-scope-form">
-                    <p class="readonly_text_title"><strong class="color-secondary">Does the initiative have a global dimension?</strong><span class="asterisk">* </span></p>
+                    <p class="readonly_text_title"><strong class="color-secondary">Does the initiative have a global dimension?: </strong><span class="ibdc_asterisk">* </span></p>
                     <div class="edit" *ngIf="!this._initiativesService.initiative.readonly">
                         <div>
                             <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.localForm.value.is_global?'accent':''"
@@ -31,7 +31,7 @@
         <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
-                    required:true,
+                    required: !this.localForm.value.is_global,
                     inputTitle:'Select regions',
                     selectItemName:'name',
                     selectItemId:'region_id',
@@ -59,7 +59,7 @@
         <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
             <div class="box_container">
             <ibdc-select-multiple [options]="{
-                required:true,
+                required: !this.localForm.value.is_global,
                 inputTitle:'Select countries',
                 selectItemName:'name',
                 selectItemId:'country_id',

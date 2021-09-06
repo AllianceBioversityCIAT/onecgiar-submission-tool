@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GeographicScopeComponent } from './geographic-scope.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-// import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { SkeletonsModule } from '../../../../../../shared/components/skeletons/skeletons.module';
 import { CustomFormsModule } from '../../../../../../shared/components/custom-forms/custom-forms.module';
 import { MaterialModule } from '../../../../../../material.module';
