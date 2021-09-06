@@ -7,6 +7,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { SkeletonsModule } from '../../../../../../shared/components/skeletons/skeletons.module';
 import { CustomFormsModule } from '../../../../../../shared/components/custom-forms/custom-forms.module';
 import { MaterialModule } from '../../../../../../material.module';
+import { UtilsModule } from '../../../../../../shared/components/utils/utils.module';
 
 
 
@@ -21,7 +22,8 @@ import { MaterialModule } from '../../../../../../material.module';
     ReactiveFormsModule,
     CustomFormsModule,
     IbdAngularComponentsModule,
-    SkeletonsModule
+    SkeletonsModule,
+    UtilsModule
   ],
   exports: [GeographicScopeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

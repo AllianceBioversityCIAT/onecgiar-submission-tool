@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-section-sub-title',
+  selector: 'section-sub-title',
   templateUrl: './section-sub-title.component.html',
   styleUrls: ['./section-sub-title.component.scss']
 })
 export class SectionSubTitleComponent implements OnInit {
-
+  @Input() name:string = "";
   constructor() { }
 
   ngOnInit(): void {
