@@ -19,13 +19,13 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
 
 // read work packages list
 /**
- * @api {get} stages-control/proposal/packages/:initiativeId Workpackage - Request workpackage
+ * @api {get} stages-control/proposal/packages/:initiativeId Work package - Request workpackage
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetWorkPackage
  * @apiGroup Proposal
  * 
- * @apiDescription  Shows workpackage data from initiatives
+ * @apiDescription  Shows work packages data from initiatives
  * 
  * @apiExample Example usage:
  * http://localhost:3000/api/stages-control/proposal/packages/2
@@ -69,13 +69,13 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
 
 // read work package for id
 /**
- * @api {get} stages-control/proposal/package/:wrkPkgId Workpackage - Request workpackage for id
+ * @api {get} stages-control/proposal/package/:wrkPkgId Work package - Request workpackage for id
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetWorkPackageId
  * @apiGroup Proposal
  * 
- * @apiDescription  Shows workpackage data from initiatives
+ * @apiDescription  Shows work package data from initiatives
  * 
  * @apiExample Example usage:
  * http://localhost:3000/api/stages-control/proposal/package/177
