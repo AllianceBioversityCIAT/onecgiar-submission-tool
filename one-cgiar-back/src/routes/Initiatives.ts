@@ -77,8 +77,78 @@ router.get("/:initiativeId([0-9]+)/roles/", [checkJwt, checkRole('initiatives', 
 // create initiatives
 router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], initiatives.createInitiative);
 
+
+
+
+
+
 // get users by initiative
+/**
+ * @api {get} initiatives/initiativeId([0-9]+)/users/ Users by initiative - Request users by initiative
+ * @apiVersion 1.0.2
+ * @apiPermission all
+ * @apiName GetUserInitiative
+ * @apiGroup Manage Access
+ * 
+ * @apiDescription  Shows users by initiative data 
+ * 
+ * @apiExample Example usage:
+ * http://localhost:3000/api/intiatives/2/users/
+ * 
+ * @apiSampleRequest http://localhost:3000/api/intiatives/2/users/
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "users": [
+ *             {
+ *                 "userId": 41,
+ *                 "first_name": "First Name",
+ *                 "last_name": "Last Name",
+ *                 "email": "e.mail@mail.org",
+ *                 "role_name": "Science Group Directors/Designated (SGD) / Initiative Design Team",
+ *                 "role_acronym": "SGD",
+ *                 "roleId": 1
+ *             },
+ *              ...
+ * 			
+ * 			     ]
+ *     },
+ *     "title": "Users by Initiative"
+ * }
+ *
+ * @apiError Error : Get users by initiative.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get users by initiative:", error }
+ */
+
 router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.getUsersByInitiative);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // get users by initiative
 router.patch("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.assignUsersByInitiative);
@@ -400,7 +470,7 @@ router.patch("/:initiativeId([0-9]+)/summary/:stageId([0-9]+)", [checkJwt, check
  *     HTTP/1.1 400 Not Found
  *     { message: "Add budget: Error:", error }
  */
-router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')],initiatives.addBudget);
+router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.addBudget);
 
 
 // get budget

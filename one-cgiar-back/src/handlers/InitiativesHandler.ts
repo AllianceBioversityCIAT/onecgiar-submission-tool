@@ -67,4 +67,28 @@ export class InitiativeHandler {
 
     }
 
+    /**
+     * 
+     * @param initiativeId 
+     * @returns users
+     */
+    async getUsersByInitiative(initiativeId: string | number) {
+        const querySql = `
+            SELECT
+                users.first_name AS first_name,
+                users.last_name AS last_name,
+                users.email AS email,
+                (SELECT description FROM roles WHERE id = initvUsr.roleId) AS role_name,
+                (SELECT acronym FROM roles WHERE id = initvUsr.roleId) AS role_acronym,
+                roleId
+            FROM
+                initiatives_by_users initvUsr
+            LEFT JOIN users users ON users.id = initvUsr.userId
+            WHERE
+                initiativeId = ${initiativeId};
+    `;
+        const users = await this.queryRunner.query(querySql);
+        return users;   
+    }
+
 }

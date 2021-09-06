@@ -589,28 +589,9 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
  */
 export const getUsersByInitiative = async (req: Request, res: Response) => {
     const { initiativeId } = req.params;
-    const queryRunner = getConnection().createQueryBuilder();
-    const querySql = `
-        SELECT
-            initvUsr.*, users.first_name AS first_name,
-            users.last_name AS last_name,
-            users.email AS email
-        FROM
-            initiatives_by_users initvUsr
-        LEFT JOIN users users ON users.id = initvUsr.userId
-        WHERE
-            initiativeId = :initiativeId;
-    `;
-
-    let users;
-
     try {
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            querySql,
-            { initiativeId },
-            {}
-        );
-        users = await queryRunner.connection.query(query, parameters);
+        const initiativeshandler = new InitiativeHandler();
+        const users = await initiativeshandler.getUsersByInitiative(initiativeId);
         res.json(new ResponseHandler('Users by Initiative.', { users }));
     } catch (error) {
         console.log(error);
