@@ -1054,13 +1054,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/meta/menu/2",
+        "content": "https://initiativestest.ciat.cgiar.org/api/meta/menu/2",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/meta/menu/2"
+        "url": "https://initiativestest.ciat.cgiar.org/api/meta/menu/2"
       }
     ],
     "header": {
@@ -1123,13 +1123,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/stages-control/proposal/packages/2",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/stages-control/proposal/packages/2"
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2"
       }
     ],
     "header": {
@@ -1205,13 +1205,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "http://localhost:3000/api/stages-control/proposal/package/177",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/stages-control/proposal/package/177"
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177"
       }
     ],
     "header": {

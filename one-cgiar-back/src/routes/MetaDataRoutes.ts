@@ -18,9 +18,9 @@ const router = Router();
  * @apiDescription  Show metadata from stages,sections and subsections
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/meta/menu/2
+ * https://initiativestest.ciat.cgiar.org/api/meta/menu/2
  * 
- * @apiSampleRequest http://localhost:3000/api/meta/menu/2
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/meta/menu/2
  *
  * @apiHeader {String} auth Token
  * 

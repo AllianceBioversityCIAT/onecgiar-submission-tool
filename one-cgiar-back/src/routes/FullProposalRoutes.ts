@@ -28,9 +28,9 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  * @apiDescription  Shows work packages data from initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/stages-control/proposal/packages/2
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
  * 
- * @apiSampleRequest http://localhost:3000/api/stages-control/proposal/packages/2
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
  *
  * @apiHeader {String} auth
  * 
@@ -78,9 +78,9 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  * @apiDescription  Shows work package data from initiatives
  * 
  * @apiExample Example usage:
- * http://localhost:3000/api/stages-control/proposal/package/177
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
  * 
- * @apiSampleRequest http://localhost:3000/api/stages-control/proposal/package/177
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
  *
  * @apiHeader {String} auth
  * 
