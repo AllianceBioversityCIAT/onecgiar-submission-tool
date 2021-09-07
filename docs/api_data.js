@@ -1109,6 +1109,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/meta/validations/menu/:initiativeId/:stageId",
+    "title": "Get Validations.",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetValidations",
+    "group": "Metadata",
+    "description": "<p>Show validations (Green Checks)</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"validationGI\": [\n            {\n                \"sectionId\": 2,\n                \"description\": \"general-information\",\n                \"ValidateGI\": \"1\"\n            }\n        ]\n    },\n    \"title\": \"Validations General Information:Menu\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Get validations GI.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get validations GI\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/MetaDataRoutes.ts",
+    "groupTitle": "Metadata"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
     "title": "Work package - Request workpackage",
     "version": "1.0.2",

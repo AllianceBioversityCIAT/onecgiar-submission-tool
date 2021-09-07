@@ -42,13 +42,14 @@ after(async () => {
         .delete('/api/users/remove/' + user.id)
         .set('auth', token)
         .then((res) => {
-            console.log('User '+user.id+' was removed.');
+            console.log('User ' + user.id + ' was removed.');
         });
 })
 
 describe('Metadata Controller - Menu', async () => {
 
     const initiativeId = 2;
+    const stageId = 3;
 
     it('GET /meta/menu/  Get Metadata menu without token ', async () => {
 
@@ -71,6 +72,36 @@ describe('Metadata Controller - Menu', async () => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.have.property('response').to.be.a('object');
                 expect(res.body).to.have.property('title').to.be.equal('MetaData:Menu');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
+
+    it('GET /meta/validations/menu/  Get validations menu with token', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/meta/validations/menu/' + initiativeId + '/' + stageId)
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('Validations General Information:Menu');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
+    it('GET /meta/validations/menu/  Get validations menu bad stage', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/meta/validations/menu/' + initiativeId + '/' + 500)
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(400);
+                expect(res.body).to.have.property('name').to.be.equal('Get validations GI');
                 expect(res).to.be.a('object')
             });
 

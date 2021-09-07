@@ -3,6 +3,11 @@ import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
 
 /**
+ * METADATA
+ */
+
+
+/**
  * 
  * @param req initiativeId
  * @param res { metadata }
@@ -44,5 +49,35 @@ export async function getMenu(req: Request, res: Response) {
 
     }
 
+
+}
+
+
+/**
+ * VALIDATIONS
+ */
+
+export async function getValidations(req: Request, res: Response) {
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    try {
+
+        // create new Meta Data object
+        const metaData = new MetaDataHandler();
+
+        // Get validations for general information
+        let validationGI = await metaData.validationGI(initiativeId,stageId);
+
+
+        res.json(new ResponseHandler('Validations General Information:Menu', { validationGI }));
+
+
+    } catch (error) {
+
+        return res.status(error.httpCode).json(error);
+
+    }
 
 }

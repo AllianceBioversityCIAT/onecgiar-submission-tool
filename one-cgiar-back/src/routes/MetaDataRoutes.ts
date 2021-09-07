@@ -1,6 +1,5 @@
-
 import { Router } from "express";
-import { getMenu } from "../controllers/MetaDataController";
+import { getMenu, getValidations } from "../controllers/MetaDataController";
 import { checkJwt } from "../middlewares/jwt";
 import { checkRole } from "../middlewares/role";
 
@@ -62,5 +61,47 @@ const router = Router();
  *     { message: "Get Metadata:", error }
  */
 router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getMenu);
+
+
+// get validations per stage
+/**
+ * @api {get} /meta/validations/menu/:initiativeId/:stageId Get Validations.
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetValidations
+ * @apiGroup Metadata
+ * 
+ * @apiDescription  Show validations (Green Checks)
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3
+ *
+ * @apiHeader {String} auth Token
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "validationGI": [
+ *             {
+ *                 "sectionId": 2,
+ *                 "description": "general-information",
+ *                 "ValidateGI": "1"
+ *             }
+ *         ]
+ *     },
+ *     "title": "Validations General Information:Menu"
+ * }
+ * 
+ *
+ * @apiError Error Get validations GI.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get validations GI", error }
+ */
+router.get("/validations/menu/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getValidations);
 
 export default router;

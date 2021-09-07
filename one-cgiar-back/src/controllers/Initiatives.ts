@@ -58,7 +58,6 @@ export const getSummary = async (req: Request, res: Response) => {
         // get stage
         const stage = await stageRepo.findOne({ where: { id: stageId } });
 
-
         // get intiative by stage
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         // if not intitiative by stage, throw error
