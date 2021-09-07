@@ -34,9 +34,39 @@ export class FpWorkPackageComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
+  wpColorselected(stageId, sectionId, subSectionId, wpId){
+    // select all wp 
+    let allWp =this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
+    .sections.find((section) => section.sectionId == sectionId)
+    .subsections.find((subSection) => subSection.subSectionId == subSectionId)
+    .dynamicList
+    // clean wp activeSection attribute
+    allWp.map(wp=>wp.activeSection = false)
+    // select current wp
+    if (wpId != -1) {
+      let sectionFinded = allWp.find((wp) => wp.id == wpId).activeSection = true;
+      // console.log(sectionFinded);
+    }
+    // console.log(allWp);
+     
+  }
 
+  cleanAllwpColorselected(){
+    
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    
+   this.wpColorselected(3, 5, 12,-1)
+  }
+
+  ngOnInit(): void {
     this.activatedRoute.params.subscribe((routeResp: any) => {
+      // Add activeSection = true if is the current wp open
+      this.wpColorselected(3, 5, 12,routeResp.wpID);
+      // console.log(this._dataControlService.userMenu);
       this._initiativesService.getWpFpByInititative(routeResp.wpID).subscribe(resp => {
         let directResp = resp.response.workpackage;
         this.geographicScope.regions = directResp.regions;
@@ -75,10 +105,10 @@ export class FpWorkPackageComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    console.log(body);
+    // console.log(body);
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
-      console.log(this.workPackageForm.valid?true:false);
+      // console.log(resp);
+      // console.log(this.workPackageForm.valid?true:false);
       this.workPackageForm.valid?
       this._interactionsService.successMessage('Work package has been saved'):
       this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
@@ -86,7 +116,7 @@ export class FpWorkPackageComponent implements OnInit {
   }
 
   updateFields(directResp,id:number){
-        console.log(id);
+        // console.log(id);
         this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
         this.workPackageForm.controls['name'].setValue(directResp.name);
         this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);

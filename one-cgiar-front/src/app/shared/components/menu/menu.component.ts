@@ -28,9 +28,8 @@ export class MenuComponent implements OnInit {
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
-  workPackagesList: any = [];
   currentStageName = '';
-  userMenu = [];
+
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -76,7 +75,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
-    let sectionFinded = (this.userMenu
+    let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
       .subsections.find(
@@ -89,8 +88,8 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc
       .getMenu(this.initiativesSvc.initiative.id)
       .subscribe((userMenuResp: any) => {
-        this.userMenu = userMenuResp.response.stages;
-        // console.log(this.userMenu);
+        this._dataControlService.userMenu = userMenuResp.response.stages;
+        // console.log(this._dataControlService.userMenu);
         // console.log(userMenuResp.response.stages.length);
         if (userMenuResp.response.stages.length > 1) {
           this.initiativesSvc
@@ -131,9 +130,11 @@ export class MenuComponent implements OnInit {
                   },
                 ];
                 this.mapDataInMenu(3, 1, 8, impacAreasQuemados);
+                this._dataControlService.wpMaped = true;
               },
               (err) => {
                 console.log(err);
+                this._dataControlService.wpMaped = true;
               }
             );
         }
