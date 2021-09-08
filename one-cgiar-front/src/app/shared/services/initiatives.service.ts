@@ -354,7 +354,12 @@ export class InitiativesService {
 
   // get one work package by id with stage full proposal
   getImpactAreas(){
-    return this.http.get<any>(`/assets/DB/impact-areas.json`);
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas`);
+  }
+
+  // get one work package by id with stage full proposal
+  getImpactAreasIndicators(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas/inidicators`);
   }
 
   // get one work package by id with stage full proposal
