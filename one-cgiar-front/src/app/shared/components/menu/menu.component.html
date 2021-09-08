@@ -13,7 +13,7 @@
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title" [ngStyle]="{'margin-right': section.visible?'0em':'2em'}" >{{section.display_name}}</span>
                         <div class="status_icons">
-                            <span style="color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
+                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
                             <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>
 
