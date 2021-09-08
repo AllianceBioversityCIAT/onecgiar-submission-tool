@@ -563,6 +563,10 @@ router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 router.get("/cgiar-entities", [checkJwt], clarisa.getClaCRPs);
 //request institutions
 router.post("/institutions/institution-requests", [checkJwt], clarisa.requestClaInstitution);
+//get Impact areas
+router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
+//get Impact areas inticators
+router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
 
 
 export default router;

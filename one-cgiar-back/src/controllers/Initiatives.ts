@@ -15,7 +15,7 @@ import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
-import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, requestClaInstitution } from './Clarisa';
+import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, requestClaInstitution } from './Clarisa';
 
 import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
@@ -1111,7 +1111,30 @@ export const requestInstitution = async (req: Request, res: Response) => {
 }
 
 
+export async function requestImpactAreas(req: Request, res: Response) {
 
+    try {
+        const impactAreasRequested = await getImpactAreas();
+        res.json(new ResponseHandler('Requested Impact areas.', { impactAreasRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function requestImpactAreasIndicators(req: Request, res: Response) {
+
+    try {
+        const impactAreasIndicatorsRequested = await getImpactAreasIndicators();
+        res.json(new ResponseHandler('Requested Impact areas indicators.', { impactAreasIndicatorsRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+
+}
 
 
 

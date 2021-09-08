@@ -1,8 +1,8 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class AlterInitvStgTableGlobalDimessionColumnAdded1620664266932 implements MigrationInterface {
+export class AlterInitvStgTableGlobalDimessionColumnAdded1629832672160 implements MigrationInterface {
 
-    name = "AlterInitvStgTableGlobalDimessionColumnAdded1620664266932";
+    name = "AlterInitvStgTableGlobalDimessionColumnAdded1629832672160";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`

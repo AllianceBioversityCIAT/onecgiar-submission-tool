@@ -12,9 +12,9 @@ const parentD = `${pth}/uploads/`;
 
 // 1620653808976
 
-export class InsertPreConceptLeadCoLead1629832672160 implements MigrationInterface {
+export class InsertPreConceptLeadCoLead1620664266932 implements MigrationInterface {
 
-    name = "InsertPreConceptLeadCoLead1629832672160";
+    name = "InsertPreConceptLeadCoLead1620664266932";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
 

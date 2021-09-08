@@ -205,9 +205,50 @@ export const requestClaInstitution = async (body) => {
     }
 }
 
+export async function getImpactAreas(){
+
+    try {
+        const institutionsTypes = await axios.get(clarisaHost + 'impact-areas', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return institutionsTypes.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
 
 
+export async function getImpactAreasIndicators(){
 
+    try {
+        const institutionsTypes = await axios.get(clarisaHost + 'impact-areas-indicators', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return institutionsTypes.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
 
 
 
