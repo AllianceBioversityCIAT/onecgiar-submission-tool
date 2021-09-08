@@ -12,21 +12,18 @@
         <div class="row">
             <div class="col-6">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12" *ngIf="this.indicatorsList.length">
                         <ibdc-select [options]="
                         {
                          required:true,
                          inputTitle:'Choose a breadth indicator',
                          form:pobImpactAreaForm,
                          formControlId:'action_area_id',
-                         selectItemName:'index_name',
-                         selectItemId:'id',
-                         frontendSearchAttribute:'index_name',
+                         selectItemName:'indicatorStatement',
+                         selectItemId:'indicatorId',
+                         frontendSearchAttribute:'indicatorStatement',
                          readOnlyVariable: this._initiativesService.initiative.readonly,
-                         service:{
-                             serviceTS:this._initiativesService,
-                             functionName:'getActionAreas'
-                         }
+                         selectList: this.indicatorsList
                         }">
                         ></ibdc-select>
                     </div>

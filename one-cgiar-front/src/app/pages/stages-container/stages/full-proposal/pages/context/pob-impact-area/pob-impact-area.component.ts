@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class PobImpactAreaComponent implements OnInit {
   checked: boolean = true;
   pobImpactAreaForm: FormGroup;
+  indicatorsList=[];
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -28,7 +29,7 @@ export class PobImpactAreaComponent implements OnInit {
     this.activatedRoute.params.subscribe((routeResp: any) => {
       // console.log(routeResp);
      this.pobColorselected(3, 1, 8,routeResp.pobIaID);
-     this.getImpactAreasIndicators();
+     this.getImpactAreasIndicators(routeResp.pobIaID);
     })
 
   }
@@ -41,10 +42,16 @@ export class PobImpactAreaComponent implements OnInit {
 
   }
 
-  getImpactAreasIndicators(){
+  getImpactAreasIndicators(impactAreaId){
     this._initiativesService.getImpactAreasIndicators().subscribe(resp=>{
-      // console.log(resp.response.impactAreasIndicatorsRequested);
+      console.log(resp.response.impactAreasIndicatorsRequested);
+      this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested,impactAreaId);
+      console.log(this.indicatorsList);
     })
+  }
+
+  filterIndicatorsByImpactArea(indicators,impactAreaId){
+    return indicators.filter(item=>item.impactAreaId == impactAreaId)
   }
 
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
