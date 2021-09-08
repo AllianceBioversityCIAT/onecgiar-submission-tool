@@ -338,6 +338,10 @@ export class InitiativesService {
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
   }
+
+  getSectionsValidation(initiativeId,stageId){
+    return this.http.get<any>(`${environment.apiUrl}/meta/validations/menu/${initiativeId}/${stageId}`);
+  }
   // get all work packages by initiative with stage full proposal
   getWpsFpByInititative(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);

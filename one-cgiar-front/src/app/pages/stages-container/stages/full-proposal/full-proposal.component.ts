@@ -15,6 +15,9 @@ export class FullProposalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
+      // console.log(resp.response.validationGI);
+    })
     this._dataControlService.loadMenu$.emit('full-proposal');
     this.getRolefromInitiativeById();
   }
