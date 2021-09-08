@@ -17,6 +17,8 @@ export class DataControlService {
   //  } 
   // }
   // Variables used in various sections
+  wpMaped = false;
+  userMenu = [];
   WorkPackageID:number=null;
   showRegions=false;
   showCountries=false;

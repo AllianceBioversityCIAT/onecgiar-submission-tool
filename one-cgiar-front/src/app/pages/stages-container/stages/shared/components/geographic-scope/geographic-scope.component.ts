@@ -31,7 +31,7 @@ export class GeographicScopeComponent implements OnInit {
   
   setIsGlobal(value){
     this.localForm.controls['is_global'].setValue(value);
-    console.log(this.localForm.value.is_global);
+    // console.log(this.localForm.value.is_global);
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,6 @@
     <div  class="menu">
          <!-- stages list -->
-        <div  class="stage" *ngFor="let stage of this.userMenu;">
+        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;">
             <div class="stage-title" [ngClass]="{'activeSection': activeClassByRoute([stage.description])}" (click)="toggleExpand(sectionsList)">
                 <span>{{stage.description}}</span>
             </div>
@@ -13,7 +13,7 @@
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title" [ngStyle]="{'margin-right': section.visible?'0em':'2em'}" >{{section.display_name}}</span>
                         <div class="status_icons">
-                            <span style="color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
+                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
                             <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>
 
@@ -30,7 +30,7 @@
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
                                 <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList,'showName')" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.subSectionName)">
-                                        <span>{{item.showName||'(Unnamed)'}}</span>
+                                        <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
                                 </div>
 
                             </div>
