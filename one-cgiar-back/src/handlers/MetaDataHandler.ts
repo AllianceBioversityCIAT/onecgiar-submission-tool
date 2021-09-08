@@ -245,7 +245,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
      AND sec.description='general-information'`
       )
 
-      let validationGI = this.queryRunner.query(validationGISQL)
+      var validationGI = this.queryRunner.query(validationGISQL);
 
       return validationGI
 

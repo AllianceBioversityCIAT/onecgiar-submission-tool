@@ -68,8 +68,10 @@ export async function getValidations(req: Request, res: Response) {
         const metaData = new MetaDataHandler();
 
         // Get validations for general information
-        let validationGI = await metaData.validationGI(initiativeId,stageId);
+        let validationGI = await metaData.validationGI(initiativeId, stageId);
 
+        // Convert boolean ('0' and '1' to number)
+        validationGI[0].ValidateGI = parseInt(validationGI[0].ValidateGI);
 
         res.json(new ResponseHandler('Validations General Information:Menu', { validationGI }));
 
