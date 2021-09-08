@@ -969,6 +969,73 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns depthScale
+ */
+export async function getDepthScale(req: Request, res: Response) {
+
+    const { impactIndicatorId } = req.params
+    const initiativeshandler = new InitiativeHandler();
+
+    try {
+
+        let depthScale = await initiativeshandler.requestDepthScale(impactIndicatorId);
+
+        res.json(new ResponseHandler('Get Depth Scale.', { depthScale }));
+
+    } catch (error) {
+
+        console.log(error);
+        let e = error;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns depthDescription
+ */
+export async function getDepthDescription(req: Request, res: Response) {
+
+    const { impactIndicatorId } = req.params
+    const initiativeshandler = new InitiativeHandler();
+
+    try {
+
+        let depthDescription = await initiativeshandler.requestDepthDescription(impactIndicatorId);
+
+        res.json(new ResponseHandler('Get Depth Description.', { depthDescription }));
+
+    } catch (error) {
+        console.log(error);
+        let e = error;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+
+    }
+}
+
 
 /**
  * 
@@ -1135,29 +1202,6 @@ export async function requestImpactAreasIndicators(req: Request, res: Response) 
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function getRepoConstStage(tableName: string) {

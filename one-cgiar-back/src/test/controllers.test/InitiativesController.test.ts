@@ -317,4 +317,39 @@ describe('Initiatives Controller', async () => {
 
     });
 
+
+    /**PROJECTION BENEFIST */
+
+    it('GET initiatives/depth-scale/ Request depth scale ', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/initiatives/depth-scale/' + 1)
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('Get Depth Scale.');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
+    it('GET initiatives/depth-description/ Request depth description ', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/initiatives/depth-description/' + 1)
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('Get Depth Description.');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
+
+
 });

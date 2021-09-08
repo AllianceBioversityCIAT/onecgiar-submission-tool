@@ -7,6 +7,9 @@ export class DepthScales extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({ type: "int" })
+    impactIndicatorId: number;
+
     @Column({ type: "text" })
     name: string;
 
