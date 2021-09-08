@@ -85,58 +85,33 @@ export class MenuComponent implements OnInit {
   }
 
   getMenu() {
-    this.initiativesSvc
-      .getMenu(this.initiativesSvc.initiative.id)
-      .subscribe((userMenuResp: any) => {
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
         this._dataControlService.userMenu = userMenuResp.response.stages;
         // console.log(this._dataControlService.userMenu);
         // console.log(userMenuResp.response.stages.length);
         if (userMenuResp.response.stages.length > 1) {
-          this.initiativesSvc
-            .getWpsFpByInititative(this.initiativesSvc.initiative.id)
-            .subscribe(
-              (wpsResp) => {
+
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
                   wpResp.showName = wpResp.acronym;
                 });
                 this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
-
-                let impacAreasQuemados = [
-                  {
-                    showName: 'Nutrition, health and food security',
-                    subSectionName: 'impact-area',
-                    id: 1,
-                  },
-                  {
-                    showName: 'Poverty reduction, livelihoods and jobs',
-                    subSectionName: 'impact-area',
-                    id: 2,
-                  },
-                  {
-                    showName: 'Gender equality, youth and social inclusion',
-                    subSectionName: 'impact-area',
-                    id: 3,
-                  },
-                  {
-                    showName: 'Climate adaptation and mitigation',
-                    subSectionNAme: 'impact-area',
-                    id: 4,
-                  },
-                  {
-                    showName: 'Environmental health and biodiversity',
-                    subSectionName: 'impact-area',
-                    id: 5,
-                  },
-                ];
-                this.mapDataInMenu(3, 1, 8, impacAreasQuemados);
                 this._dataControlService.wpMaped = true;
-              },
-              (err) => {
+                // console.log(this._dataControlService.userMenu);
+              },(err) => {
                 console.log(err);
                 this._dataControlService.wpMaped = true;
-              }
-            );
+              });
+
+          this.initiativesSvc.getImpactAreas().subscribe(impacAreasQuemados=>{
+            // console.log(impacAreasQuemados);
+            impacAreasQuemados.map(item=>{
+              item.showName = item.name;
+              item.subSectionName='impact-area';
+            })
+            this.mapDataInMenu(3, 1, 8, impacAreasQuemados);
+          })
         }
       });
   }
