@@ -18,6 +18,7 @@ export class DataControlService {
   // }
   // Variables used in various sections
   wpMaped = false;
+  pobMaped = false;
   userMenu = [];
   WorkPackageID:number=null;
   showRegions=false;

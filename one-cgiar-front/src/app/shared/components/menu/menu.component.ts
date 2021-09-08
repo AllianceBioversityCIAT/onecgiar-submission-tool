@@ -104,13 +104,17 @@ export class MenuComponent implements OnInit {
                 this._dataControlService.wpMaped = true;
               });
 
-          this.initiativesSvc.getImpactAreas().subscribe(impacAreasQuemados=>{
-            // console.log(impacAreasQuemados);
-            impacAreasQuemados.map(item=>{
+          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+            // console.log(impacAreas.response.impactAreasRequested);
+            impacAreas.response.impactAreasRequested.map(item=>{
               item.showName = item.name;
               item.subSectionName='impact-area';
             })
-            this.mapDataInMenu(3, 1, 8, impacAreasQuemados);
+            this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
+            this._dataControlService.pobMaped = true;
+          },(err) => {
+            console.log(err);
+            this._dataControlService.pobMaped = true;
           })
         }
       });
@@ -175,7 +179,7 @@ export class MenuComponent implements OnInit {
         this.router.routerState.snapshot.url.indexOf('stages/')
       ) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-    console.log([baseUrl, stageParam, section, subsection, itemID]);
+    // console.log([baseUrl, stageParam, section, subsection, itemID]);
     this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 
