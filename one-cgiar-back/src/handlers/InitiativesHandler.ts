@@ -91,4 +91,30 @@ export class InitiativeHandler {
         return users;   
     }
 
+
+
+    async requestDepthScale(impactIndicatorId){
+
+        const querySql = `
+        SELECT * 
+        FROM depth_descriptions
+       WHERE impactIndicatorId =${impactIndicatorId}
+`;
+    const depthScaleData = await this.queryRunner.query(querySql);
+    return depthScaleData;   
+
+    }
+
+    async requestDepthDescription(impactIndicatorId){
+
+        const querySql = `
+        SELECT * 
+        FROM depth_scales 
+       WHERE impactIndicatorId =${impactIndicatorId}
+`;
+    const depthDescriptionData = await this.queryRunner.query(querySql);
+    return depthDescriptionData;   
+
+    }
+
 }

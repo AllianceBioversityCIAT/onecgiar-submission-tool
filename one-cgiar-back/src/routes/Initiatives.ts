@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/Initiatives';
+import { Initiatives } from '../entity/Initiatives';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -528,8 +529,97 @@ router.patch("/add-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, ch
  *     { message: "Initiative not found in stage:", error }
  */
 router.post("/get-budget/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'updateOwn')], initiatives.getBudget);
-
 router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
+
+
+// get depth scale per impact indicator
+/**
+ * @api {get} /initiatives/depth-scale/:impactIndicatorId Get depthScale.
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetDepthScale
+ * @apiGroup Initiatives
+ * 
+ * @apiDescription  Show validations (Green Checks)
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/depth-scale/1
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/depth-scale/1
+ *
+ * @apiHeader {String} auth Token
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "depthScale": [
+ *             {
+ *                 "id": 21,
+ *                 "impactIndicatorId": 6,
+ *                 "name": "Not applicable",
+ *                 "active": 1,
+ *                 "created_at": "2021-09-08T19:38:14.000Z",
+ *                 "updated_at": "2021-09-08T19:38:14.000Z"
+ *             }
+ *         ]
+ *     },
+ *     "title": "Get Depth Scale."
+ * }
+ * 
+ *
+ * @apiError Error Get Depth Scale..
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get Depth Scale.", error }
+ */
+router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthScale);
+
+
+// get depth description per impact indicator
+/**
+ * @api {get} /initiatives/depth-description/:impactIndicatorId Get depth Description.
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetDepthDescription
+ * @apiGroup Initiatives
+ * 
+ * @apiDescription  Show validations (Green Checks)
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/depth-description/1
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/depth-description/1
+ *
+ * @apiHeader {String} auth Token
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "depthScale": [
+ *             {
+ *                 "id": 21,
+ *                 "impactIndicatorId": 6,
+ *                 "name": "Not applicable",
+ *                 "active": 1,
+ *                 "created_at": "2021-09-08T19:38:14.000Z",
+ *                 "updated_at": "2021-09-08T19:38:14.000Z"
+ *             }
+ *         ]
+ *     },
+ *     "title": "Get Depth Description."
+ * }
+ * 
+ *
+ * @apiError Error Get Depth Description.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get Depth Description.", error }
+ */
+router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
 
 
 /**

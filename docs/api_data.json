@@ -1,6 +1,144 @@
 [
   {
     "type": "get",
+    "url": "/initiatives/depth-description/:impactIndicatorId",
+    "title": "Get depth Description.",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetDepthDescription",
+    "group": "Initiatives",
+    "description": "<p>Show validations (Green Checks)</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/depth-description/1",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/depth-description/1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"depthScale\": [\n            {\n                \"id\": 21,\n                \"impactIndicatorId\": 6,\n                \"name\": \"Not applicable\",\n                \"active\": 1,\n                \"created_at\": \"2021-09-08T19:38:14.000Z\",\n                \"updated_at\": \"2021-09-08T19:38:14.000Z\"\n            }\n        ]\n    },\n    \"title\": \"Get Depth Description.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Get Depth Description.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Depth Description.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Initiatives"
+  },
+  {
+    "type": "get",
+    "url": "/initiatives/depth-scale/:impactIndicatorId",
+    "title": "Get depthScale.",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetDepthScale",
+    "group": "Initiatives",
+    "description": "<p>Show validations (Green Checks)</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/initiatives/depth-scale/1",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/initiatives/depth-scale/1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"depthScale\": [\n            {\n                \"id\": 21,\n                \"impactIndicatorId\": 6,\n                \"name\": \"Not applicable\",\n                \"active\": 1,\n                \"created_at\": \"2021-09-08T19:38:14.000Z\",\n                \"updated_at\": \"2021-09-08T19:38:14.000Z\"\n            }\n        ]\n    },\n    \"title\": \"Get Depth Scale.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Get Depth Scale..</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Depth Scale.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/Initiatives.ts",
+    "groupTitle": "Initiatives"
+  },
+  {
+    "type": "get",
     "url": "/:initiativeId/summary/:stageId",
     "title": "Summary - Request Initiative summary",
     "version": "1.0.2",
