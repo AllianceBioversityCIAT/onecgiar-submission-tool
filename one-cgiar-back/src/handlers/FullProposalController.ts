@@ -548,11 +548,11 @@ export class ProposalHandler extends InitiativeStageHandler {
                 var savedProjectionBenefits = await projBeneRepo.findOne(newWorkProjectionBenefits.id);
 
                 projBeneRepo.merge(
-                    savedProjectionBenefits[0],
+                    savedProjectionBenefits,
                     newWorkProjectionBenefits
                 );
 
-                upsertedPjectionBenefits = await projBeneRepo.save(savedProjectionBenefits[0]);
+                upsertedPjectionBenefits = await projBeneRepo.save(savedProjectionBenefits);
 
             } else {
 
@@ -578,16 +578,14 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     if (newDimensions.id !== null) {
 
-                        var savedDimensions = await this.queryRunner.query(` SELECT *
-                        FROM dimensions
-                       WHERE id = ${newDimensions.id}`);
+                        var savedDimensions = await dimensionsRepo.findOne(newDimensions.id);
 
-                        projBeneRepo.merge(
-                            savedDimensions[0],
+                        dimensionsRepo.merge(
+                            savedDimensions,
                             dim
                         );
 
-                        upsertedDimensions = await dimensionsRepo.save(savedDimensions[0]);
+                        upsertedDimensions = await dimensionsRepo.save(savedDimensions);
 
                     } else {
 
