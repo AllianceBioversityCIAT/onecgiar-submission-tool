@@ -12,6 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 export class PobImpactAreaComponent implements OnInit {
   checked: boolean = true;
   pobImpactAreaForm: FormGroup;
+  indicatorsList=[];
+  currentIaId:number;
+  showForm = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -22,13 +25,24 @@ export class PobImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm = new FormGroup({
       action_area_id: new FormControl(null),
       contextId:new FormControl(null),
+      indicatorId:new FormControl(8),
+      impactAreaId:new FormControl(null),
     });
 
 
     this.activatedRoute.params.subscribe((routeResp: any) => {
-      // console.log(routeResp);
+      console.log('%ccambio de ruta', 'background: #222; color: #bada55');
+
+      console.log(routeResp);
+      this.showForm = false;
+      this.currentIaId = this.pobImpactAreaForm.value.indicatorId;
+      console.log(this.currentIaId);
+
+     
      this.pobColorselected(3, 1, 8,routeResp.pobIaID);
-     this.getImpactAreasIndicators();
+     this.getImpactAreasIndicators(routeResp.pobIaID);
+    //  this.getDepthScale();
+     
     })
 
   }
@@ -41,10 +55,31 @@ export class PobImpactAreaComponent implements OnInit {
 
   }
 
-  getImpactAreasIndicators(){
+  getImpactAreasIndicators(impactAreaId){
     this._initiativesService.getImpactAreasIndicators().subscribe(resp=>{
+      this.showForm= true;
       // console.log(resp.response.impactAreasIndicatorsRequested);
+      console.log(resp.response.impactAreasIndicatorsRequested,impactAreaId);
+      this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested,impactAreaId);
+      console.log(this.indicatorsList);
+      // setTimeout(() => {
+        
+      // }, 3000);
+      
+      console.log(this.showForm);
     })
+  }
+
+  // getDepthScale(){
+  //   console.log(this.pobImpactAreaForm.value);
+  //   console.log(this.pobImpactAreaForm.value.indicatorId);
+  //   this._initiativesService.getDepthScale(this.pobImpactAreaForm.value.indicatorId).subscribe(resp=>{
+  //     console.log(resp);
+  //   })
+  // }
+
+  filterIndicatorsByImpactArea(indicators,impactAreaId){
+    return indicators.filter(item=>item.impactAreaId == impactAreaId)
   }
 
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
