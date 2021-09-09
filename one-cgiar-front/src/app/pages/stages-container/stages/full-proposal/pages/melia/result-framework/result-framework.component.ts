@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-result-framework',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResultFrameworkComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public _initiativesService: InitiativesService
+  ) { }
 
   ngOnInit(): void {
   }
+
+
 
 }

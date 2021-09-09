@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InitiativesService } from '@app/shared/services/initiatives.service';
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public _initiativesService: InitiativesService
+  ) { }
 
   ngOnInit(): void {
   }
