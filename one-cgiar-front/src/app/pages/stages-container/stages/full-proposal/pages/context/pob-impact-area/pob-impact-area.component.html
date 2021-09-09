@@ -8,17 +8,17 @@
 
     <div class="forms_container" *ngIf="checked">
         
-    <div class="first_form custom_card">
+    <div class="first_form custom_card" >
         <div class="row">
             <div class="col-6">
                 <div class="row">
-                    <div class="col-12" *ngIf="this.indicatorsList.length">
+                    <div class="col-12" *ngIf="this.indicatorsList.length && this.showForm">
                         <ibdc-select [options]="
                         {
                          required:true,
                          inputTitle:'Choose a breadth indicator',
                          form:pobImpactAreaForm,
-                         formControlId:'action_area_id',
+                         formControlId:'indicatorId',
                          selectItemName:'indicatorStatement',
                          selectItemId:'indicatorId',
                          frontendSearchAttribute:'indicatorStatement',
@@ -34,13 +34,15 @@
                          inputTitle:'Choose a depth scale',
                          form:pobImpactAreaForm,
                          formControlId:'action_area_id',
-                         selectItemName:'index_name',
+                         selectItemName:'name',
                          selectItemId:'id',
-                         frontendSearchAttribute:'index_name',
+                         frontendSearchAttribute:'name',
                          readOnlyVariable: this._initiativesService.initiative.readonly,
                          service:{
                              serviceTS:this._initiativesService,
-                             functionName:'getActionAreas'
+                             functionName:'getDepthScale',
+                             objectName: ['response','depthScale'],
+                             functionfirstParam: this.currentIaId
                          }
                         }">
                         ></ibdc-select>

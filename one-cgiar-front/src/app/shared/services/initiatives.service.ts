@@ -357,9 +357,19 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas`);
   }
 
-  // get one work package by id with stage full proposal
+  // get getImpactAreasIndicators
   getImpactAreasIndicators(){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas/inidicators`);
+  }
+
+  // get getDepthDescription
+  getDepthDescription(impactAreaIndicator){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-description/${impactAreaIndicator}`);
+  }
+
+    // get getDepthDescription
+  getDepthScale(impactAreaIndicator){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
   }
 
   // get one work package by id with stage full proposal
