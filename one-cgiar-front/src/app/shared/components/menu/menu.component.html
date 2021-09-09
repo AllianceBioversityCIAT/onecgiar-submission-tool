@@ -11,7 +11,7 @@
                     <div class="number-and-title-container" [ngClass]="{'activeSection': activeClassByRoute([stage.description,section.description]),'noActiveSection': !activeClassByRoute([stage.description,section.description])}" 
                         (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description,true,section.subsections)">
                         <div class="number">{{i+1}}</div>
-                        <span class="stage-section-title" [ngStyle]="{'margin-right': section.visible?'0em':'2em'}" >{{section.display_name}}</span>
+                        <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}" >{{section.display_name}}</span>
                         <div class="status_icons">
                             <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
                             <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
@@ -22,7 +22,7 @@
                         <!-- sub sections list -->
                         <div class="sub-section-container" *ngFor="let subSection of section.subsections">
                             <div class="sub-section"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
-                                <span [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
+                                <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
                                     <span style="margin-right: 8px; color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
                                     <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
