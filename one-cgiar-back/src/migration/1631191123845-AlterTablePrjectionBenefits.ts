@@ -25,7 +25,7 @@ export class AlterTablePrjectionBenefits1631191123845 implements MigrationInterf
         console.log('Add column reference to depth description');
         await queryRunner.query(`
         ALTER TABLE projection_benefits
-        ADD COLUMN depth_probability_id int(11) DEFAULT NULL
+        ADD COLUMN probability_id int(11) DEFAULT NULL
         `);
 
         console.log('Add column impact area active');

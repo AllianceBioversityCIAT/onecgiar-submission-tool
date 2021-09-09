@@ -308,7 +308,7 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // summary section data
-    const { projectionBenefitsId, impact_area_id, impact_area_indicator_id, notes, depth_scale_id, depth_descriptions_id,impact_area_active,active,dimensions } = req.body;
+    const { projectionBenefitsId, impact_area_id, impact_area_indicator_id, notes, depth_scale_id, probability_id, impact_area_active, active, dimensions } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -328,7 +328,7 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
         const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impact_area_id, impact_area_indicator_id, notes,
-            depth_scale_id, depth_descriptions_id,impact_area_active,active,dimensions);
+            depth_scale_id, probability_id, impact_area_active, active, dimensions);
 
         res.json(new ResponseHandler('Full Proposal: Patch Projection of benefits.', { projectionBenefits }));
 
@@ -348,23 +348,23 @@ export async function getProjectionBenefits(req: Request, res: Response) {
 
     try {
 
-           // get stage
-           const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
-           // get intiative by stage : proposal
-           const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-   
-           // if not intitiative by stage, throw error
-           if (initvStg == null) {
-               throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-           }
-           // create new full proposal object
-           const fullPposal = new ProposalHandler(initvStg.id.toString());
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
-           const projectionBenefits  = await fullPposal.requestProjectionBenefits();
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-           res.json(new ResponseHandler('Full Proposal: Get Projection of benefits.', { projectionBenefits }));
+        const projectionBenefits = await fullPposal.requestProjectionBenefits();
 
-        
+        res.json(new ResponseHandler('Full Proposal: Get Projection of benefits.', { projectionBenefits }));
+
+
     } catch (error) {
         console.log(error)
         return res.status(error.httpCode).json(error);
