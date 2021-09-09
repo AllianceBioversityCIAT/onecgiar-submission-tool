@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class AleterTablePrjectionBenefits1631191123845 implements MigrationInterface {
+export class AlterTablePrjectionBenefits1631191123845 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         console.log('Add column reference to initiatives by stages');
