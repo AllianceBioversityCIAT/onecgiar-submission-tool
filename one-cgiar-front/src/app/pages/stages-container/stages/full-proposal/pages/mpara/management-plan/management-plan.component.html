@@ -1,1 +1,15 @@
 <section-title name="Management plan" ></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+    <div class="row">
+        <div class="col-sm-12" >
+            <ibdc-textarea
+                [options]="{inputTitle:'Management plan narrative',readOnlyVariable: false,editText:true, form:managementPlanForm,editText:true, formControlName:'example', maxWords:250,
+                description:'Describe how your Initiative will be adaptively managed to navigate towards impact during the three years of implementation'}">
+            </ibdc-textarea>
+        </div>
+        
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </div>
+</div>
