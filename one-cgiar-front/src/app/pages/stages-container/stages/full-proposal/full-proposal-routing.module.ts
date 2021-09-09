@@ -33,6 +33,10 @@ const routes: Routes = [
         path: 'melia',
         loadChildren: () => import('./pages/melia/melia.module').then(mod => mod.MeliaModule),
       },
+      {
+        path: 'mpara',
+        loadChildren: () => import('./pages/mpara/mpara.module').then(mod => mod.MparaModule),
+      },
     ]
   }
 ];
