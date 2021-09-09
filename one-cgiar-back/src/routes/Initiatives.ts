@@ -534,7 +534,7 @@ router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
 
 // get depth scale per impact indicator
 /**
- * @api {get} /initiatives/depth-scale/:impactIndicatorId Get depthScale.
+ * @api {get} /initiatives/depth-scale/:impactIndicatorId Get Depth Scale.
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetDepthScale
@@ -579,7 +579,7 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
 
 // get depth description per impact indicator
 /**
- * @api {get} /initiatives/depth-description/:impactIndicatorId Get depth Description.
+ * @api {get} /initiatives/depth-description/:impactIndicatorId Get Depth Description.
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetDepthDescription

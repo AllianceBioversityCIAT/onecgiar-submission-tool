@@ -21,7 +21,6 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
     @Column({type: 'int'})
     impact_area_indicator_id: number;
 
-
     @Column({length: '500'})
     @IsNotEmpty()
     impact_area_indicator_name: string
@@ -33,6 +32,18 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
     @Column({length: '1000'})
     @IsNotEmpty()
     notes: string
+
+    @Column({type: 'int'})
+    initvStgId: number;
+
+    @Column({type: 'int'})
+    depth_scale_id: number;
+
+    @Column({type: 'int'})
+    depth_descriptions_id: number;
+    
+    @Column('tinyint')
+    impact_area_active: boolean
 
 
 }

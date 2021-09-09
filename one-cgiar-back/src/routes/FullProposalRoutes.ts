@@ -135,4 +135,8 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
 
 router.patch("/packages/:initiativeId([0-9]+)", [checkJwt], stagefull.patchWorkPackage);
 
+router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.patchProjectionBenefits);
+
+router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.getProjectionBenefits);
+
 export default router;

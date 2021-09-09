@@ -2,7 +2,9 @@ import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
+import { Dimensions } from "../entity/Dimensions";
 import { GeneralInformation } from "../entity/GeneralInformation";
+import { ProjectionBenefits } from "../entity/ProjectionBenefits";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
@@ -511,6 +513,146 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
             console.log(error)
             throw new BaseError('Work Package Replication: Full proposal', 400, error.message, false)
+        }
+
+    }
+
+
+
+    async upsertProjectionBenefits(projectionBenefitsId?, impact_area_id?, impact_area_indicator_id?,
+        notes?, depth_scale_id?, depth_descriptions_id?, impact_area_active?, active?, dimensions?) {
+
+        const projBeneRepo = getRepository(ProjectionBenefits);
+        const dimensionsRepo = getRepository(Dimensions);
+        const initvStg = await this.setInitvStage();
+        var newWorkProjectionBenefits = new ProjectionBenefits();
+        var newDimensions = new Dimensions();
+        var upsertedPjectionBenefits;
+        var upsertedDimensions;
+
+        newWorkProjectionBenefits.id = projectionBenefitsId;
+        newWorkProjectionBenefits.impact_area_id = impact_area_id;
+        newWorkProjectionBenefits.impact_area_indicator_id = impact_area_indicator_id;
+        newWorkProjectionBenefits.notes = notes;
+        newWorkProjectionBenefits.depth_scale_id = depth_scale_id;
+        newWorkProjectionBenefits.depth_descriptions_id = depth_descriptions_id;
+        newWorkProjectionBenefits.impact_area_active = impact_area_active;
+        newWorkProjectionBenefits.wrkPkg = null;
+        newWorkProjectionBenefits.active = active ? active : true;
+
+
+        try {
+
+            if (newWorkProjectionBenefits.id !== null) {
+
+                var savedProjectionBenefits = await projBeneRepo.findOne(newWorkProjectionBenefits.id);
+
+                projBeneRepo.merge(
+                    savedProjectionBenefits[0],
+                    newWorkProjectionBenefits
+                );
+
+                upsertedPjectionBenefits = await projBeneRepo.save(savedProjectionBenefits[0]);
+
+            } else {
+
+                newWorkProjectionBenefits.initvStgId = initvStg.id;
+
+                upsertedPjectionBenefits = await projBeneRepo.save(newWorkProjectionBenefits);
+
+            }
+
+            console.log(upsertedPjectionBenefits);
+
+
+            if (dimensions.length > 0) {
+
+                for (let index = 0; index < dimensions.length; index++) {
+                    const dim = dimensions[index];
+
+                    newDimensions.id = dim.id;
+                    newDimensions.projectionId = upsertedPjectionBenefits.id;
+                    newDimensions.depthDescriptionId = dim.depthDescriptionId;
+                    newDimensions.breadth_value = dim.breadth_value;
+                    newDimensions.active = dim.active ? dim.active : true;
+
+                    if (newDimensions.id !== null) {
+
+                        var savedDimensions = await this.queryRunner.query(` SELECT *
+                        FROM dimensions
+                       WHERE id = ${newDimensions.id}`);
+
+                        projBeneRepo.merge(
+                            savedDimensions[0],
+                            dim
+                        );
+
+                        upsertedDimensions = await dimensionsRepo.save(savedDimensions[0]);
+
+                    } else {
+
+                        upsertedDimensions = await dimensionsRepo.save(newDimensions);
+                    }
+
+                }
+
+            }
+
+            return { upsertedPjectionBenefits, upsertedDimensions };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Projection Benefits: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestProjectionBenefits() {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+
+
+            // retrieve general information
+            const prjBenQuery = (` 
+            SELECT * 
+            FROM projection_benefits
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                dimensionsQuery = (
+                    `
+                SELECT * 
+                FROM dimensions
+               WHERE projectionId in (SELECT id
+                FROM projection_benefits
+               WHERE initvStgId = ${initvStg.id})
+                 AND active = 1
+                `
+                )
+
+            const projectBenefits = await this.queryRunner.query(prjBenQuery);
+            const dimensions = await this.queryRunner.query(dimensionsQuery);
+
+            projectBenefits.map(pb => {
+                pb['dimensions'] = dimensions.filter(dim => {
+                    return (dim.projectionId === pb.id)
+                })
+            }
+
+            )
+
+            return { projectBenefits };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get Projection Benefits: Full proposal', 400, error.message, false)
+
         }
 
     }

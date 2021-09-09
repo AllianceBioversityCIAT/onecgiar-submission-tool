@@ -88,32 +88,32 @@ export class InitiativeHandler {
                 initiativeId = ${initiativeId};
     `;
         const users = await this.queryRunner.query(querySql);
-        return users;   
+        return users;
     }
 
 
 
-    async requestDepthScale(impactIndicatorId){
+    async requestDepthScale(impactIndicatorId) {
 
         const querySql = `
         SELECT * 
         FROM depth_descriptions
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
-    const depthScaleData = await this.queryRunner.query(querySql);
-    return depthScaleData;   
+        const depthScaleData = await this.queryRunner.query(querySql);
+        return depthScaleData;
 
     }
 
-    async requestDepthDescription(impactIndicatorId){
+    async requestDepthDescription(impactIndicatorId) {
 
         const querySql = `
         SELECT * 
         FROM depth_scales 
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
-    const depthDescriptionData = await this.queryRunner.query(querySql);
-    return depthDescriptionData;   
+        const depthDescriptionData = await this.queryRunner.query(querySql);
+        return depthDescriptionData;
 
     }
 
