@@ -535,7 +535,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newWorkProjectionBenefits.impact_area_indicator_id = impact_area_indicator_id;
         newWorkProjectionBenefits.notes = notes;
         newWorkProjectionBenefits.depth_scale_id = depth_scale_id;
-        newWorkProjectionBenefits.depth_descriptions_id = depth_descriptions_id;
+        newWorkProjectionBenefits.depth_probability_id = depth_descriptions_id;
         newWorkProjectionBenefits.impact_area_active = impact_area_active;
         newWorkProjectionBenefits.wrkPkg = null;
         newWorkProjectionBenefits.active = active ? active : true;

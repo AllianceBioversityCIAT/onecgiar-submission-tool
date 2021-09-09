@@ -40,7 +40,7 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
     depth_scale_id: number;
 
     @Column({type: 'int'})
-    depth_descriptions_id: number;
+    depth_probability_id: number;
     
     @Column('tinyint')
     impact_area_active: boolean
