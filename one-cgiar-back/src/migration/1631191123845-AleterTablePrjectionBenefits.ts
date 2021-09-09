@@ -34,11 +34,11 @@ export class AleterTablePrjectionBenefits1631191123845 implements MigrationInter
         ADD COLUMN impact_area_active tinyint(2) NOT NULL DEFAULT 1
         `);
 
-        console.log('Add column reference to depth description');
-        await queryRunner.query(`
-        ALTER TABLE projection_benefits
-        ALTER wrkPkgId SET DEFAULT NULL
-        `);
+        // console.log('Add column reference to depth description');
+        // await queryRunner.query(`
+        // ALTER TABLE projection_benefits
+        // ALTER wrkPkgId SET DEFAULT NULL
+        // `);
     
     }
 
