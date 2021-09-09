@@ -37,6 +37,14 @@ const routes: Routes = [
         path: 'mpara',
         loadChildren: () => import('./pages/mpara/mpara.module').then(mod => mod.MparaModule),
       },
+      {
+        path: 'human-resources',
+        loadChildren: () => import('./pages/human-resources/human-resources.module').then(mod => mod.HumanResourcesModule),
+      },
+      {
+        path: 'financial-resources',
+        loadChildren: () => import('./pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+      },
     ]
   }
 ];
