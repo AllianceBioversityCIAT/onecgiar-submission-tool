@@ -28,7 +28,11 @@ const routes: Routes = [
       {
         path: 'work-package-research-plans-and-tocs',
         loadChildren: () => import('./pages/wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
-      }
+      },
+      {
+        path: 'melia',
+        loadChildren: () => import('./pages/melia/melia.module').then(mod => mod.MeliaModule),
+      },
     ]
   }
 ];
