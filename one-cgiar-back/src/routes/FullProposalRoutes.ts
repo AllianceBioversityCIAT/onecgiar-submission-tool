@@ -132,7 +132,103 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  */
 router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
 
-
+// assign Work Package
+/**
+ * @api {patch} stages-control/proposal/package/:wrkPkgId Work Package - Create and update WP
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchWorkPackage
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ *
+ * @apiParam {Number} id identificator wp
+ * @apiParam {String} acronym short description wp.
+ * @apiParam {String} name name wp.
+ * @apiParam {String} pathway_content narrative wp.
+ * @apiParam {Number} is_global indicator if wp is global.
+ * @apiParam {Boolean} active status.
+ * @apiParam {Object} regions regions wp.
+ * @apiParam {Object} countries countries wp.
+ * 
+ * @apiParamExample {json} Request-Example:
+ * {
+ *     "acronym": "Work Package 6",
+ *     "name": "khe waza? nuevo 1235411 test",
+ *     "pathway_content": "Esta es una humilde prueba",
+ *     "is_global": true,
+ *     "id": 256,
+ *     "regions": [
+ *            {
+ *             "name": "Eastern Africa",
+ *             "parentRegion": {
+ *                 "name": "Sub-Saharan Africa",
+ *                 "um49Code": 202
+ *             },
+ *             "um49Code": 14,
+ *             "region_id": 14,
+ *             "selected": true,
+ *             "wrkPkg": 256
+ *         }
+ *     ],
+ *     "countries": []
+ * }
+ * 
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *{
+ *    "response": {
+ *        "workpackage": {
+ *            "id": 256,
+ *            "active": true,
+ *            "name": "khe waza? nuevo 1235411 test",
+ *            "results": null,
+ *            "pathway_content": "Esta es una humilde prueba a",
+ *            "is_global": true,
+ *            "initvStgId": 35,
+ *            "created_at": "2021-09-01T22:54:54.000Z",
+ *            "updated_at": "2021-09-01T22:54:54.000Z",
+ *            "acronym": "Work Package 7"
+ *        },
+ *        "upsertedGeoScope": {
+ *            "regions": [
+ *                {
+ *                    "name": "Eastern Africa",
+ *                    "parentRegion": {
+ *                        "name": "Sub-Saharan Africa",
+ *                        "um49Code": 202
+ *                    },
+ *                    "um49Code": 14,
+ *                    "region_id": 14,
+ *                    "selected": true,
+ *                    "wrkPkg": 256,
+ *                    "initvStg": 35,
+ *                    "updated_at": "2021-09-10T21:28:44.000Z",
+ *                    "created_at": "2021-09-10T21:28:44.000Z",
+ *                    "id": 2272
+ *                }
+ *            ],
+ *            "countries": []
+ *        }
+ *    },
+    "title": "Full Proposal: Patch Workpackage."
+}
+ *
+ * @apiError Error Work Package: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Work Package: Full proposal","httpCode": 400,"isOperational": false}
+ */
 router.patch("/packages/:initiativeId([0-9]+)", [checkJwt], stagefull.patchWorkPackage);
 
 router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.patchProjectionBenefits);

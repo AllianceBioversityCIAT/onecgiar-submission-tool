@@ -158,7 +158,7 @@ export async function getWorkPackage(req: Request, res: Response) {
 export async function patchWorkPackage(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
-    const { acronym, name, pathway_content, is_global, id, regions, countries } = req.body;
+    const { acronym, name, pathway_content, is_global, id, regions, countries, active } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -170,6 +170,7 @@ export async function patchWorkPackage(req: Request, res: Response) {
     newWorkPackage.name = name;
     newWorkPackage.pathway_content = pathway_content;
     newWorkPackage.is_global = is_global;
+    newWorkPackage.active = active ? active : true;
 
     try {
 

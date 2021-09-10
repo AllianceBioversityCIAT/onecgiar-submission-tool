@@ -1477,5 +1477,149 @@ define({ "api": [
     },
     "filename": "src/routes/FullProposalRoutes.ts",
     "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/package/:wrkPkgId",
+    "title": "Work Package - Create and update WP",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchWorkPackage",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator wp</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "acronym",
+            "description": "<p>short description wp.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>name wp.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "pathway_content",
+            "description": "<p>narrative wp.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "is_global",
+            "description": "<p>indicator if wp is global.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "regions",
+            "description": "<p>regions wp.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "countries",
+            "description": "<p>countries wp.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n    \"acronym\": \"Work Package 6\",\n    \"name\": \"khe waza? nuevo 1235411 test\",\n    \"pathway_content\": \"Esta es una humilde prueba\",\n    \"is_global\": true,\n    \"id\": 256,\n    \"regions\": [\n           {\n            \"name\": \"Eastern Africa\",\n            \"parentRegion\": {\n                \"name\": \"Sub-Saharan Africa\",\n                \"um49Code\": 202\n            },\n            \"um49Code\": 14,\n            \"region_id\": 14,\n            \"selected\": true,\n            \"wrkPkg\": 256\n        }\n    ],\n    \"countries\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n   \"response\": {\n       \"workpackage\": {\n           \"id\": 256,\n           \"active\": true,\n           \"name\": \"khe waza? nuevo 1235411 test\",\n           \"results\": null,\n           \"pathway_content\": \"Esta es una humilde prueba a\",\n           \"is_global\": true,\n           \"initvStgId\": 35,\n           \"created_at\": \"2021-09-01T22:54:54.000Z\",\n           \"updated_at\": \"2021-09-01T22:54:54.000Z\",\n           \"acronym\": \"Work Package 7\"\n       },\n       \"upsertedGeoScope\": {\n           \"regions\": [\n               {\n                   \"name\": \"Eastern Africa\",\n                   \"parentRegion\": {\n                       \"name\": \"Sub-Saharan Africa\",\n                       \"um49Code\": 202\n                   },\n                   \"um49Code\": 14,\n                   \"region_id\": 14,\n                   \"selected\": true,\n                   \"wrkPkg\": 256,\n                   \"initvStg\": 35,\n                   \"updated_at\": \"2021-09-10T21:28:44.000Z\",\n                   \"created_at\": \"2021-09-10T21:28:44.000Z\",\n                   \"id\": 2272\n               }\n           ],\n           \"countries\": []\n       }\n   },\n    \"title\": \"Full Proposal: Patch Workpackage.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Work Package: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Work Package: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
   }
 ] });
