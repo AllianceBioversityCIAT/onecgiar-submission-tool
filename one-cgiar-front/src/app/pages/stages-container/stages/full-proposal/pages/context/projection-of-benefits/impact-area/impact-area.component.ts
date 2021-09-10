@@ -11,7 +11,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ImpactAreaComponent implements OnInit {
 
-  checked: boolean = true;
   pobImpactAreaForm: FormGroup;
   indicatorsList=[];
   currentIaId:number;
@@ -21,19 +20,26 @@ export class ImpactAreaComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute
-  ) { }
-
-  ngOnInit(): void {
+  ) { 
     this.pobImpactAreaForm = new FormGroup({
-      action_area_id: new FormControl(null),
-      contextId:new FormControl(null),
       impact_area_indicator_id:new FormControl(null),
       impact_area_id:new FormControl(null),
+      checked:new FormControl(null),
+      projectionBenefitsId:new FormControl(null),
+      notes:new FormControl(null),
+      depth_scale_id:new FormControl(null),
+      probability_id:new FormControl(null),
+      impact_area_active:new FormControl(null),
     });
 
+  }
+
+  ngOnInit(): void {
+
+
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-      console.log("cambio en impact_area_indicator_id");
-      console.log(resp);
+      // console.log("cambio en impact_area_indicator_id");
+      // console.log(resp);
       this.showDepthSacale = false;
       setTimeout(() => {
       this.showDepthSacale = true;
@@ -45,15 +51,21 @@ export class ImpactAreaComponent implements OnInit {
 
       this.activatedRoute.params.subscribe((routeResp: any) => {
         this.cleanForm();
-        console.log('%ccambio de ruta', 'background: #222; color: #bada55');
+        this.pobImpactAreaForm.controls['checked'].setValue(true);
+        this.pobImpactAreaForm.controls['impact_area_active'].setValue(true);
+        // console.log('%ccambio de ruta', 'background: #222; color: #bada55');
         this.showDepthSacale= false;
-        console.log(routeResp);
+        // console.log(routeResp);
         this.showForm = false;
-        console.log(this.currentIaId);
+        // console.log(this.currentIaId);
   
        this.getPobImpatAreaData(routeResp.pobIaID)
        this.pobColorselected(3, 1, 8,routeResp.pobIaID);
        this.getImpactAreasIndicators(routeResp.pobIaID);
+
+       this._initiativesService.getDepthDescription(routeResp.pobIaID).subscribe(resp=>{
+        console.log(resp.response.depthDescription);
+      })
        
       //  this.getDepthScale();
        
@@ -67,10 +79,14 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   cleanForm(){
-    this.pobImpactAreaForm.controls['action_area_id'].setValue(null);
-    this.pobImpactAreaForm.controls['contextId'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
+    this.pobImpactAreaForm.controls['checked'].setValue(null);
+    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
+    this.pobImpactAreaForm.controls['notes'].setValue(null);
+    this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
+    this.pobImpactAreaForm.controls['probability_id'].setValue(null);
+    this.pobImpactAreaForm.controls['impact_area_active'].setValue(null);
   }
 
   ngOnDestroy(): void {
@@ -85,14 +101,14 @@ export class ImpactAreaComponent implements OnInit {
     this._initiativesService.getImpactAreasIndicators().subscribe(resp=>{
       this.showForm= true;
       // console.log(resp.response.impactAreasIndicatorsRequested);
-      console.log(resp.response.impactAreasIndicatorsRequested,impactAreaId);
+      // console.log(resp.response.impactAreasIndicatorsRequested,impactAreaId);
       this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested,impactAreaId);
-      console.log(this.indicatorsList);
+      // console.log(this.indicatorsList);
       // setTimeout(() => {
         
       // }, 3000);
       
-      console.log(this.showForm);
+      // console.log(this.showForm);
     })
   }
 
@@ -119,7 +135,7 @@ export class ImpactAreaComponent implements OnInit {
 
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
     // select all wp 
-    console.log(this._dataControlService.userMenu);
+    // console.log(this._dataControlService.userMenu);
     let cont = 0;
     
       
