@@ -1,12 +1,14 @@
 <section-title name="Impact area" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
 
+    <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.indicatorsList.length && this.showForm">
+
     <div class="check_box_with_text">
-        <p-checkbox [(ngModel)]="checked" binary="true" inputId="binary"></p-checkbox>
+        <p-checkbox formControlName="checked" binary="true" inputId="binary"></p-checkbox>
         <span>Please select this check-box if your initiative does not address this Impact Area.</span>
     </div>
 
-    <div class="forms_container" *ngIf="checked">
+    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('checked').value">
         <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
@@ -33,7 +35,7 @@
                          required:true,
                          inputTitle:'Choose a depth scale',
                          form:pobImpactAreaForm,
-                         formControlId:'action_area_id',
+                         formControlId:'depth_scale_id',
                          selectItemName:'name',
                          selectItemId:'id',
                          frontendSearchAttribute:'name',
@@ -59,22 +61,24 @@
         </div>
     </div>
 
-    <div class="second_form custom_card" *ngIf="false">
+    <!-- <div class="second_form custom_card">
         <div class="row">
-            <div class="col-6">
+            <div class="col-6" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
                 <ibdc-select [options]="
                 {
                  required:true,
-                 inputTitle:'Choose a breadth indicator',
+                 inputTitle:'Depth description',
                  form:pobImpactAreaForm,
                  formControlId:'action_area_id',
-                 selectItemName:'index_name',
+                 selectItemName:'name',
                  selectItemId:'id',
-                 frontendSearchAttribute:'index_name',
+                 frontendSearchAttribute:'name',
                  readOnlyVariable: this._initiativesService.initiative.readonly,
                  service:{
                      serviceTS:this._initiativesService,
-                     functionName:'getActionAreas'
+                     functionName:'getDepthDescription',
+                     objectName: ['response','depthDescription'],
+                     functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
                  }
                 }">
                 ></ibdc-select>
@@ -86,9 +90,9 @@
             </ibdc-input>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="third_form custom_card" *ngIf="false">
+    <div class="third_form custom_card" >
         <div class="row">
             <div class="col-6">
                 <ibdc-select [options]="
@@ -96,7 +100,7 @@
                  required:true,
                  inputTitle:'Probability',
                  form:pobImpactAreaForm,
-                 formControlId:'action_area_id',
+                 formControlId:'probability_id',
                  selectItemName:'index_name',
                  selectItemId:'id',
                  frontendSearchAttribute:'index_name',
@@ -110,7 +114,7 @@
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: false, form:pobImpactAreaForm,editText:true, formControlName:'contextId', maxWords:200,
+                [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: false, form:pobImpactAreaForm,editText:true, formControlName:'notes', maxWords:200,
                 description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
             </ibdc-textarea>
             </div>
@@ -121,5 +125,5 @@
     <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
         <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
     </div>
-
+</form>
 </div>
