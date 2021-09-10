@@ -21,6 +21,7 @@
                          inputTitle:'Choose a breadth indicator',
                          form:pobImpactAreaForm,
                          formControlId:'impact_area_indicator_id',
+                         formControlName:'impact_area_indicator_name',
                          selectItemName:'indicatorStatement',
                          selectItemId:'indicatorId',
                          frontendSearchAttribute:'indicatorStatement',
@@ -101,13 +102,14 @@
                  inputTitle:'Probability',
                  form:pobImpactAreaForm,
                  formControlId:'probability_id',
-                 selectItemName:'index_name',
+                 selectItemName:'name',
                  selectItemId:'id',
                  frontendSearchAttribute:'index_name',
                  readOnlyVariable: this._initiativesService.initiative.readonly,
                  service:{
                      serviceTS:this._initiativesService,
-                     functionName:'getActionAreas'
+                     functionName:'getPobProbabilities',
+                     objectName: ['response','projectedProbabilities']
                  }
                 }">
                 ></ibdc-select>
