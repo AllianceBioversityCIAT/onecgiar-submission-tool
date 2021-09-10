@@ -562,9 +562,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             }
 
-            console.log(upsertedPjectionBenefits);
-
-
             if (dimensions.length > 0) {
 
                 for (let index = 0; index < dimensions.length; index++) {

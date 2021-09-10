@@ -97,7 +97,7 @@ export class InitiativeHandler {
 
         const querySql = `
         SELECT * 
-        FROM depth_descriptions
+        FROM depth_scales
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
         const depthScaleData = await this.queryRunner.query(querySql);
@@ -109,7 +109,7 @@ export class InitiativeHandler {
 
         const querySql = `
         SELECT * 
-        FROM depth_scales 
+        FROM  depth_descriptions
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
         const depthDescriptionData = await this.queryRunner.query(querySql);
