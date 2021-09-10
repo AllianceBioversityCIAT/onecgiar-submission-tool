@@ -36,7 +36,7 @@ export class FpWorkPackageComponent implements OnInit {
 
   wpColorselected(stageId, sectionId, subSectionId, wpId){
     // select all wp 
-    let allWp =this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
+    let allWp = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
     .sections.find((section) => section.sectionId == sectionId)
     .subsections.find((subSection) => subSection.subSectionId == subSectionId)
     .dynamicList

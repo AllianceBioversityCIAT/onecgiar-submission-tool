@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PobImpactAreaComponent } from './pob-impact-area.component';
+import { IaTableComponent } from './ia-table.component';
 
-describe('PobImpactAreaComponent', () => {
-  let component: PobImpactAreaComponent;
-  let fixture: ComponentFixture<PobImpactAreaComponent>;
+describe('IaTableComponent', () => {
+  let component: IaTableComponent;
+  let fixture: ComponentFixture<IaTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PobImpactAreaComponent ]
+      declarations: [ IaTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PobImpactAreaComponent);
+    fixture = TestBed.createComponent(IaTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
