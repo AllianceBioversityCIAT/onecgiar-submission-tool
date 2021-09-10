@@ -94,6 +94,7 @@ export class MenuComponent implements OnInit {
           this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
+                  wpResp.frontRoute = '/work-packages/work-package/';
                   wpResp.showName = wpResp.acronym;
                 });
                 this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
@@ -108,6 +109,7 @@ export class MenuComponent implements OnInit {
             // console.log(impacAreas.response.impactAreasRequested);
             impacAreas.response.impactAreasRequested.map(item=>{
               item.showName = item.name;
+              item.frontRoute = '/projection-of-benefits/impact-area/';
               item.subSectionName='impact-area';
             })
             this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
@@ -138,18 +140,8 @@ export class MenuComponent implements OnInit {
     // }
   }
 
-  menuNavigation(
-    active,
-    stage: string,
-    section: string,
-    isSection: boolean,
-    subsection?: string | []
-  ) {
-    let baseUrl =
-      this.router.routerState.snapshot.url.substring(
-        0,
-        this.router.routerState.snapshot.url.indexOf('stages/')
-      ) + 'stages/';
+  menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
 
     if (active) {
@@ -167,20 +159,12 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  dynamicListNavigation(
-    itemID,
-    stage: string,
-    section: string,
-    subsection?: string | []
-  ) {
-    let baseUrl =
-      this.router.routerState.snapshot.url.substring(
-        0,
-        this.router.routerState.snapshot.url.indexOf('stages/')
-      ) + 'stages/';
+  dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log([baseUrl, stageParam, section, subsection, itemID]);
-    this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
+    this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
+    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 
   toggleExpand(subSectionsList: HTMLElement) {

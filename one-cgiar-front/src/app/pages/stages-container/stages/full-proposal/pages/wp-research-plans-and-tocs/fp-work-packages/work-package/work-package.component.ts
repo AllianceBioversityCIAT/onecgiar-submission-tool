@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
-import { DataControlService } from '../../../../../../../shared/services/data-control.service';
-import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 
 @Component({
-  selector: 'app-fp-work-package',
-  templateUrl: './fp-work-package.component.html',
-  styleUrls: ['./fp-work-package.component.scss']
+  selector: 'app-work-package',
+  templateUrl: './work-package.component.html',
+  styleUrls: ['./work-package.component.scss']
 })
-export class FpWorkPackageComponent implements OnInit {
+export class WorkPackageComponent implements OnInit {
+
   showForm = false;
   workPackageForm: FormGroup;
   geographicScope = {
@@ -124,5 +125,4 @@ export class FpWorkPackageComponent implements OnInit {
         }, 100);
         
   }
-
 }

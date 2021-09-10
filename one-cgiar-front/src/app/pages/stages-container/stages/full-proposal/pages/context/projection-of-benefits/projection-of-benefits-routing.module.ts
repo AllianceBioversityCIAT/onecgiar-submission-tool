@@ -5,7 +5,17 @@ import { ProjectionOfBenefitsComponent } from './projection-of-benefits.componen
 const routes: Routes = [
     {
     path:'',
-    component: ProjectionOfBenefitsComponent
+    component: ProjectionOfBenefitsComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./ia-table/ia-table.module').then(mod => mod.IaTableModule),
+      },
+      {
+        path: 'impact-area/:pobIaID',
+        loadChildren: () => import('./impact-area/impact-area.module').then(mod => mod.ImpactAreaModule),
+      }
+    ],
   }
 ];
 

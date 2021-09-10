@@ -7,7 +7,7 @@
     </div>
 
     <div class="forms_container" *ngIf="checked">
-        
+        <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
             <div class="col-6">
@@ -18,7 +18,7 @@
                          required:true,
                          inputTitle:'Choose a breadth indicator',
                          form:pobImpactAreaForm,
-                         formControlId:'indicatorId',
+                         formControlId:'impact_area_indicator_id',
                          selectItemName:'indicatorStatement',
                          selectItemId:'indicatorId',
                          frontendSearchAttribute:'indicatorStatement',
@@ -27,7 +27,7 @@
                         }">
                         ></ibdc-select>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
                         <ibdc-select [options]="
                         {
                          required:true,
@@ -42,7 +42,7 @@
                              serviceTS:this._initiativesService,
                              functionName:'getDepthScale',
                              objectName: ['response','depthScale'],
-                             functionfirstParam: this.currentIaId
+                             functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
                          }
                         }">
                         ></ibdc-select>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card">
+    <div class="second_form custom_card" *ngIf="false">
         <div class="row">
             <div class="col-6">
                 <ibdc-select [options]="
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div class="third_form custom_card">
+    <div class="third_form custom_card" *ngIf="false">
         <div class="row">
             <div class="col-6">
                 <ibdc-select [options]="
