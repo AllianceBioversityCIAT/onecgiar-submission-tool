@@ -94,7 +94,7 @@ export class MenuComponent implements OnInit {
           this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
-                  wpResp.frontRoute = '/projection-of-benefits/impact-area/';
+                  wpResp.frontRoute = '/work-packages/work-package/';
                   wpResp.showName = wpResp.acronym;
                 });
                 this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);

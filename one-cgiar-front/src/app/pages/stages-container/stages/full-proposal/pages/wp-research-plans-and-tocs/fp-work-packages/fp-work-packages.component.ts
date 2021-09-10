@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-fp-work-packages',
@@ -7,22 +8,10 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
   styleUrls: ['./fp-work-packages.component.scss']
 })
 export class FpWorkPackagesComponent implements OnInit {
-  cols: any[];
-  workPackagesList = [];
-  constructor( private _initiativesService:InitiativesService) { }
+  constructor( public _dataControlService:DataControlService) { }
 
   ngOnInit(): void {
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp.response.workpackage);
-      this.workPackagesList = resp.response.workpackage;
-    })
-    
 
-    this.cols = [
-        { field: 'name', header: 'Name' },
-        { field: 'active', header: 'General information status' },
-        { field: 'active', header: 'Theory of change status' }
-    ];
   }
   
 
