@@ -117,4 +117,19 @@ export class InitiativeHandler {
 
     }
 
+
+    async requestProjectedProbabilities() {
+
+        const querySql = `
+        SELECT * 
+        FROM  projected_probabilities
+    `;
+        const projectedData = await this.queryRunner.query(querySql);
+        return projectedData;
+    
+    }
+    
+
 }
+
+

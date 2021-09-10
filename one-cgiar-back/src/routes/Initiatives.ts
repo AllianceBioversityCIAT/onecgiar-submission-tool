@@ -621,6 +621,9 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
  */
 router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
 
+//get projected probabilities
+router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProbabilities);
+
 
 /**
  * 

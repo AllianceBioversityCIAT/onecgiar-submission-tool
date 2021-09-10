@@ -1037,6 +1037,33 @@ export async function getDepthDescription(req: Request, res: Response) {
 }
 
 
+export async function getProjectedProbabilities(req: Request, res: Response) {
+
+    const initiativeshandler = new InitiativeHandler();
+
+    try {
+
+        let projectedProbabilities = await initiativeshandler.requestProjectedProbabilities();
+
+        res.json(new ResponseHandler('Get Projected Probabilites.', { projectedProbabilities }));
+
+    } catch (error) {
+        console.log(error);
+        let e = error;
+        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+            e = new APIError(
+                'Bad Request',
+                HttpStatusCode.BAD_REQUEST,
+                true,
+                error.message
+            );
+        }
+        return res.status(error.httpCode).json(error);
+
+    }
+}
+
+
 /**
  * 
  * CLARISA getters
