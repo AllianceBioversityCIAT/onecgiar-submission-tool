@@ -2,7 +2,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/initiatives/depth-description/:impactIndicatorId",
-    "title": "Get depth Description.",
+    "title": "Get Depth Description.",
     "version": "1.0.2",
     "permission": [
       {
@@ -71,7 +71,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/initiatives/depth-scale/:impactIndicatorId",
-    "title": "Get depthScale.",
+    "title": "Get Depth Scale.",
     "version": "1.0.2",
     "permission": [
       {
