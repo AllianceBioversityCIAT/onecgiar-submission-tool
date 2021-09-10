@@ -367,9 +367,14 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-description/${impactAreaIndicator}`);
   }
 
-    // get getDepthDescription
+  // get getDepthDescription
   getDepthScale(impactAreaIndicator){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
+  }
+
+  // get getPobProbabilities
+  getPobProbabilities(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-probabilities`);
   }
 
   // get one work package by id with stage full proposal

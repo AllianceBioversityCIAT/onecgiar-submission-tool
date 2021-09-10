@@ -23,7 +23,9 @@ export class ImpactAreaComponent implements OnInit {
   ) { 
     this.pobImpactAreaForm = new FormGroup({
       impact_area_indicator_id:new FormControl(null),
+      impact_area_indicator_name:new FormControl(null),
       impact_area_id:new FormControl(null),
+      impact_area_name:new FormControl(null),
       checked:new FormControl(null),
       projectionBenefitsId:new FormControl(null),
       notes:new FormControl(null),
@@ -33,7 +35,6 @@ export class ImpactAreaComponent implements OnInit {
     });
 
   }
-
   ngOnInit(): void {
 
 
@@ -80,7 +81,9 @@ export class ImpactAreaComponent implements OnInit {
 
   cleanForm(){
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
+    this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
+    this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
     this.pobImpactAreaForm.controls['checked'].setValue(null);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
@@ -136,20 +139,22 @@ export class ImpactAreaComponent implements OnInit {
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
     // select all wp 
     // console.log(this._dataControlService.userMenu);
-    let cont = 0;
-    
-      
-  
+
         let allImpactAreas = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
         .sections.find((section) => section.sectionId == sectionId)
         .subsections.find((subSection) => subSection.subSectionId == subSectionId)
         .dynamicList
         // console.log(allImpactAreas);
         // clean wp activeSection attribute
-        allImpactAreas.map(wp=>wp.activeSection = false)
+        allImpactAreas.map(ia=>ia.activeSection = false)
+
+        
         // select current wp
         if (pobIaID != -1) {
-          let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
+          allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
+          let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
+          // console.log(sectionFinded);
+          this.pobImpactAreaForm.controls['impact_area_name'].setValue(sectionFinded.showName);
           // console.log(sectionFinded);
         }
         // console.log(allImpactAreas);
