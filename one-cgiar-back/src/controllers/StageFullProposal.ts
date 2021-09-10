@@ -302,14 +302,20 @@ export const upsertContext = async (req: Request, res: Response, next) => {
 }
 
 
-
+/**
+ * 
+ * @param req projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name,
+        notes, depth_scale_id, probability_id, impact_area_active, active, dimensions
+ * @param res { projectionBenefits }
+ * @returns { projectionBenefits }
+ */
 export async function patchProjectionBenefits(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
 
-    // summary section data
-    const { projectionBenefitsId, impact_area_id,impact_area_name, impact_area_indicator_id,impact_area_indicator_name,
-            notes, depth_scale_id, probability_id, impact_area_active, active, dimensions } = req.body;
+    // projection benefits section data
+    const { projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name,
+        notes, depth_scale_id, probability_id, impact_area_active, active, dimensions } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -323,12 +329,12 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+            throw new BaseError('Read Projection of benefits: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id,impact_area_indicator_name, notes,
+        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name, notes,
             depth_scale_id, probability_id, impact_area_active, active, dimensions);
 
         res.json(new ResponseHandler('Full Proposal: Patch Projection of benefits.', { projectionBenefits }));
@@ -340,7 +346,12 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
 
 }
 
-
+/**
+ * 
+ * @param req 
+ * @param res { projectionBenefits }
+ * @returns { projectionBenefits }
+ */
 export async function getProjectionBenefits(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -356,7 +367,7 @@ export async function getProjectionBenefits(req: Request, res: Response) {
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Read Workpackage: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+            throw new BaseError('Read Projection of benefits: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
@@ -373,4 +384,82 @@ export async function getProjectionBenefits(req: Request, res: Response) {
 
 }
 
+/**
+ * 
+ * @param req impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners
+ * @param res { impactStrategies }
+ * @returns { impactStrategies }
+ */
+export async function patchImpactStrategies(req: Request, res: Response) {
 
+    const { initiativeId } = req.params;
+
+    // impact strategies section data
+    const { impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch Impact Strategies: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const impactStrategies = await fullPposal.upsertImpactStrategies(impact_strategies_id, active, challenge_priorization, research_questions,
+            component_work_package, performance_results, human_capacity, partners);
+
+        res.json(new ResponseHandler('Full Proposal: Patch Impact Strategies.', { impactStrategies }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * 
+ * @param req 
+ * @param res { impactStrategies }
+ * @returns { impactStrategies }
+ */
+export async function getImpactStrategies(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read Impact Stretegies: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const impactStrategies = await fullPposal.requestImpactStrategies();
+
+        res.json(new ResponseHandler('Full Proposal: Get Impact Stretegies.', { impactStrategies }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}

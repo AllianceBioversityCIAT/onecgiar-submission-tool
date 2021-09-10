@@ -139,4 +139,8 @@ router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull
 
 router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.getProjectionBenefits);
 
+router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.patchImpactStrategies);
+
+router.get("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.getImpactStrategies);
+
 export default router;

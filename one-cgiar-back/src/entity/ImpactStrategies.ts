@@ -8,6 +8,9 @@ export class ImpactStrategies extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({type:"int"})
+    initvStgId: number
+
     @Column('tinyint')
     active: boolean
 
@@ -25,9 +28,5 @@ export class ImpactStrategies extends UpdatedCreatedAt {
 
     @Column({ type: "text" })
     human_capacity: string
-
-    @OneToOne(() => InitiativesByStages)
-    @JoinColumn()
-    initvStg!: InitiativesByStages;
 
 }

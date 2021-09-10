@@ -4,6 +4,8 @@ import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Dimensions } from "../entity/Dimensions";
 import { GeneralInformation } from "../entity/GeneralInformation";
+import { ImpactStrategies } from "../entity/ImpactStrategies";
+import { Partners } from "../entity/Partners";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
@@ -518,9 +520,23 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-
-    async upsertProjectionBenefits(projectionBenefitsId?, impact_area_id?,impact_area_name?,
-        impact_area_indicator_id?,impact_area_indicator_name?,
+    /**
+     * 
+     * @param projectionBenefitsId 
+     * @param impact_area_id 
+     * @param impact_area_name 
+     * @param impact_area_indicator_id 
+     * @param impact_area_indicator_name 
+     * @param notes 
+     * @param depth_scale_id 
+     * @param probability_id 
+     * @param impact_area_active 
+     * @param active 
+     * @param dimensions 
+     * @returns { upsertedPjectionBenefits, upsertedDimensions }
+     */
+    async upsertProjectionBenefits(projectionBenefitsId?, impact_area_id?, impact_area_name?,
+        impact_area_indicator_id?, impact_area_indicator_name?,
         notes?, depth_scale_id?, probability_id?, impact_area_active?, active?, dimensions?) {
 
         const projBeneRepo = getRepository(ProjectionBenefits);
@@ -533,9 +549,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         newWorkProjectionBenefits.id = projectionBenefitsId;
         newWorkProjectionBenefits.impact_area_id = impact_area_id;
-        newWorkProjectionBenefits.impact_area_name = impact_area_name; 
+        newWorkProjectionBenefits.impact_area_name = impact_area_name;
         newWorkProjectionBenefits.impact_area_indicator_id = impact_area_indicator_id;
-        newWorkProjectionBenefits.impact_area_indicator_name = impact_area_indicator_name; 
+        newWorkProjectionBenefits.impact_area_indicator_name = impact_area_indicator_name;
         newWorkProjectionBenefits.notes = notes;
         newWorkProjectionBenefits.depth_scale_id = depth_scale_id;
         newWorkProjectionBenefits.probability_id = probability_id;
@@ -607,6 +623,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
+    /**
+     * 
+     * @returns { projectBenefits }
+     */
     async requestProjectionBenefits() {
 
         const initvStg = await this.setInitvStage();
@@ -649,6 +669,153 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             console.log(error)
             throw new BaseError('Get Projection Benefits: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    /**
+     * 
+     * @param impact_strategies_id 
+     * @param active 
+     * @param challenge_priorization 
+     * @param research_questions 
+     * @param component_work_package 
+     * @param performance_results 
+     * @param human_capacity 
+     * @param partners 
+     * @returns { upsertedImpactStrategies,upsertedPartners }
+     */
+    async upsertImpactStrategies(impact_strategies_id?, active?, challenge_priorization?, research_questions?, component_work_package?,
+        performance_results?, human_capacity?, partners?) {
+
+        const impactStrategiesRepo = getRepository(ImpactStrategies);
+        const partnersRepo = getRepository(Partners);
+        const initvStg = await this.setInitvStage();
+        var newImpactStrategies = new ImpactStrategies();
+        var newPartners = new Partners();
+        var upsertedImpactStrategies;
+        var upsertedPartners;
+
+        newImpactStrategies.id = impact_strategies_id;
+        newImpactStrategies.active = active ? active : true;
+        newImpactStrategies.challenge_priorization = challenge_priorization;
+        newImpactStrategies.research_questions = research_questions;
+        newImpactStrategies.component_work_package = component_work_package;
+        newImpactStrategies.performance_results = performance_results;
+        newImpactStrategies.human_capacity = human_capacity;
+
+        try {
+
+            if (newImpactStrategies.id !== null) {
+
+                var savedImpactStrategies = await impactStrategiesRepo.findOne(newImpactStrategies.id);
+
+                impactStrategiesRepo.merge(
+                    savedImpactStrategies,
+                    newImpactStrategies
+                );
+
+                upsertedImpactStrategies = await impactStrategiesRepo.save(savedImpactStrategies);
+
+            } else {
+
+                newImpactStrategies.initvStgId = initvStg.id;
+
+                upsertedImpactStrategies = await impactStrategiesRepo.save(newImpactStrategies);
+
+            }
+
+            if (partners.length > 0) {
+
+                for (let index = 0; index < partners.length; index++) {
+                    const par = partners[index];
+
+                    newPartners.id = par.id;
+                    newPartners.impact_strategies_id = upsertedImpactStrategies.id;
+                    newPartners.institutions_id = par.institutions_id;
+                    newPartners.institutions_name = par.institutions_name;
+                    newPartners.tag_id = par.tag_id;
+                    newPartners.type_id = par.type_id;
+                    newPartners.type_name = par.type_name;
+                    newPartners.active = par.active ? par.active : true;
+
+                    if (newPartners.id !== null) {
+
+                        var savedPartners = await partnersRepo.findOne(newPartners.id);
+
+                        partnersRepo.merge(
+                            savedPartners,
+                            par
+                        );
+
+                        upsertedPartners = await partnersRepo.save(savedPartners);
+
+                    } else {
+
+                        upsertedPartners = await partnersRepo.save(newPartners);
+                    }
+
+                }
+
+            }
+
+            return { upsertedImpactStrategies, upsertedPartners };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Impact Strategies: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+
+    async requestImpactStrategies() {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+
+
+            // retrieve general information
+            const impStraQuery = (` 
+            SELECT *
+            FROM impact_strategies
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                partnersQuery = (
+                    `
+                SELECT * 
+                FROM dimensions
+               WHERE projectionId in (SELECT id
+                FROM projection_benefits
+               WHERE initvStgId = ${initvStg.id})
+                 AND active = 1
+                `
+                )
+
+            const impactStrategies = await this.queryRunner.query(impStraQuery);
+            const partners = await this.queryRunner.query(partnersQuery);
+
+            impactStrategies.map(imp => {
+                imp['partners'] = partners.filter(par => {
+                    return (par.impact_strategies_id === imp.id)
+                })
+            }
+
+            )
+
+            return { impactStrategies };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get Impact Strategies: Full proposal', 400, error.message, false)
 
         }
 
