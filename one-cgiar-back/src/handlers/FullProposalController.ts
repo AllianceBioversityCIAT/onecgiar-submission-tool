@@ -663,7 +663,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return { projectBenefits };
+            return projectBenefits[0];
 
         } catch (error) {
 
