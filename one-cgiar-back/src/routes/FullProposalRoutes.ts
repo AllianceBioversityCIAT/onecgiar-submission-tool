@@ -235,6 +235,8 @@ router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull
 
 router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.getProjectionBenefits);
 
+router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt], stagefull.getProjectionBenefitsByImpact);
+
 router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.patchImpactStrategies);
 
 router.get("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.getImpactStrategies);

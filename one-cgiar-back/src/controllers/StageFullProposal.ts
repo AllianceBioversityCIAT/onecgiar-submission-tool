@@ -387,6 +387,44 @@ export async function getProjectionBenefits(req: Request, res: Response) {
 
 /**
  * 
+ * @param req 
+ * @param res 
+ * @returns projectionBenefitsByImpact
+ */
+export async function getProjectionBenefitsByImpact(req: Request, res: Response) {
+
+    const { initiativeId, impactId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read Projection of benefits: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const projectionBenefitsByImpact = await fullPposal.requestProjectionBenefitsByImpact(impactId);
+
+        res.json(new ResponseHandler('Full Proposal: Get Projection of benefits by impact area.', { projectionBenefitsByImpact }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * 
  * @param req impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners
  * @param res { impactStrategies }
  * @returns { impactStrategies }

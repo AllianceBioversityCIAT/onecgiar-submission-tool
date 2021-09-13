@@ -663,7 +663,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return projectBenefits[0];
+            return projectBenefits;
 
         } catch (error) {
 
@@ -673,6 +673,59 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
     }
+
+
+        /**
+     * 
+     * @returns { projectBenefits }
+     */
+         async requestProjectionBenefitsByImpact(impactAreaId) {
+
+            const initvStg = await this.setInitvStage();
+    
+            try {
+    
+    
+                // retrieve general information
+                const prjBenQuery = (` 
+                SELECT * 
+                FROM projection_benefits
+               WHERE initvStgId = ${initvStg.id}
+                 AND impact_area_id = ${impactAreaId}
+                 AND active = 1;
+                `),
+                    dimensionsQuery = (
+                        `
+                    SELECT * 
+                    FROM dimensions
+                   WHERE projectionId in (SELECT id
+                    FROM projection_benefits
+                   WHERE initvStgId = ${initvStg.id})
+                     AND active = 1
+                    `
+                    )
+    
+                const projectBenefits = await this.queryRunner.query(prjBenQuery);
+                const dimensions = await this.queryRunner.query(dimensionsQuery);
+    
+                projectBenefits.map(pb => {
+                    pb['dimensions'] = dimensions.filter(dim => {
+                        return (dim.projectionId === pb.id)
+                    })
+                }
+    
+                )
+    
+                return projectBenefits[0];
+    
+            } catch (error) {
+    
+                console.log(error)
+                throw new BaseError('Get Projection Benefits: Full proposal', 400, error.message, false)
+    
+            }
+    
+        }
 
 
     /**
