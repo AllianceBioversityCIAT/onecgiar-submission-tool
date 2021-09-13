@@ -56,25 +56,23 @@ export class ImpactAreaComponent implements OnInit {
   getPobProbabilities(){
     this._initiativesService.getPobProbabilities().subscribe(resp=>{
       this.pobProbabilities = resp.response.projectedProbabilities;
-      // console.log(resp.response.projectedProbabilities);
     })
   }
 
   getDepthDescription(impactAreaId){
     this._initiativesService.getDepthDescription(impactAreaId).subscribe(resp=>{
-      console.log(resp.response.depthDescription);
       this.depthDescriptions = resp.response.depthDescription;
       this.depthDescriptions.map(item=>{
         item.impactAreaId = impactAreaId;
+        item.depthDescriptionId = item.id;
       })
-      console.log(this.depthDescriptions);
     })
   }
 
   getIndicatorMetaData(indicatorId){
     if (indicatorId) {
       let item = this.indicatorsList.find(resp => resp.indicatorId == indicatorId);
-      // console.log(item);
+
       this.indicatorMetaData.targetUnit = '';
       this.indicatorMetaData.value = '';
       this.indicatorMetaData.targetYear = '';
@@ -96,8 +94,7 @@ export class ImpactAreaComponent implements OnInit {
     let borrar = false;
  
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-      console.log("******valueChanges*****");
-      this.clearFormThatDependedsOnIndicators();
+
       if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
         this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
       }
@@ -128,6 +125,7 @@ export class ImpactAreaComponent implements OnInit {
             if (resp.response.projectionBenefitsByImpact) {
               this.updateForm(resp.response.projectionBenefitsByImpact);
             }
+
             this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
             this.showForm = true;
           })
@@ -156,6 +154,7 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   updateForm(resp){
+
     this.pobImpactAreaForm.controls['id'].setValue(resp.id);
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(resp.impact_area_indicator_id);
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(resp.impact_area_indicator_name);
@@ -168,6 +167,7 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['probability_id'].setValue(resp.probability_id);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active);
     this.dimensionsList = resp.dimensions;
+
   }
 
   cleanForm(){
@@ -188,11 +188,6 @@ export class ImpactAreaComponent implements OnInit {
     this.dimensionsList = [];
   }
 
-  clearFormThatDependedsOnIndicators(){
-    this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
-    this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
-  }
-
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
@@ -207,6 +202,7 @@ export class ImpactAreaComponent implements OnInit {
   saveForm(){
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
+    console.log(body);
   }
 
   getPobImpatAreaData(impactAreaId){

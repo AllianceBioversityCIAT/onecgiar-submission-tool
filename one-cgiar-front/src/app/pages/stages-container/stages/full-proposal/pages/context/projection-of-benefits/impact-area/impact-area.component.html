@@ -73,7 +73,7 @@
                  item: item,   
                  itemName:'name',
                  selectList: this.depthDescriptions,
-                 itemId:'id',
+                 itemId:'depthDescriptionId',
                  frontendSearchAttribute:'name',
                  readOnlyVariable: this._initiativesService.initiative.readonly
                 }"></ibdc-select-ngmodel>
@@ -101,35 +101,6 @@
             (click)="addDimension()" 
             ></button>
         </div>
-
-        <!-- <div class="row">
-            <div class="col-6" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
-                <ibdc-select [options]="
-                {
-                 required:true,
-                 inputTitle:'Depth description',
-                 form:pobImpactAreaForm,
-                 formControlId:'action_area_id',
-                 selectItemName:'name',
-                 selectItemId:'id',
-                 frontendSearchAttribute:'name',
-                 readOnlyVariable: this._initiativesService.initiative.readonly,
-                 service:{
-                     serviceTS:this._initiativesService,
-                     functionName:'getDepthDescription',
-                     objectName: ['response','depthDescription'],
-                     functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
-                 }
-                }">
-                ></ibdc-select>
-            </div>
-            <div class="col-6">
-                <ibdc-input
-                [options]="{inputTitle:'Breadth - Numbers reached ', form:pobImpactAreaForm, formControlName:'contextId'
-                ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'text'}">
-            </ibdc-input>
-            </div>
-        </div> -->
     </div>
 
     <div class="third_form custom_card" >
