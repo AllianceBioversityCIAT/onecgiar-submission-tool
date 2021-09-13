@@ -4,11 +4,11 @@
     <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.indicatorsList.length && this.showForm">
 
     <div class="check_box_with_text">
-        <p-checkbox formControlName="checked" binary="true" inputId="binary"></p-checkbox>
+        <p-checkbox formControlName="impact_area_active" binary="true" inputId="binary"></p-checkbox>
         <span>Please select this check-box if your initiative does not address this Impact Area.</span>
     </div>
 
-    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('checked').value">
+    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('impact_area_active').value">
         <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
@@ -64,8 +64,8 @@
     </div>
 
     <div class="second_form custom_card" *ngIf="this.pobProbabilities.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable')">
-        <div class="row" *ngFor="let item of this.dimensionsList">
-            <div class="col-5">
+        <div class="row dimension" *ngFor="let item of this.dimensionsList">
+            <div class="col-xl-5 col-lg-12">
                 <ibdc-select-ngmodel [options]="
                 {
                  required:true,
@@ -78,17 +78,19 @@
                  readOnlyVariable: this._initiativesService.initiative.readonly
                 }"></ibdc-select-ngmodel>
             </div>
-            <div class="col-5">
+            <div class="col-xl-5">
                 <ibdc-input-ngmodel
                     [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
                 </ibdc-input-ngmodel>
             </div>
-            <div class="col-2 targetUnit">
+            <div class="col-xl-2 targetUnit">
                 <strong class="ibdc_secondary_color">{{this.indicatorMetaData.targetUnit}}</strong>
             </div>
 
         </div>
+
+        <h3 style="text-align: center;"><strong class="ibdc_secondary_color" *ngIf="this.dimensionsList.length == 0">No dimensions added</strong></h3>
 
         <div class="button_add_container center_flex">
             <button 
