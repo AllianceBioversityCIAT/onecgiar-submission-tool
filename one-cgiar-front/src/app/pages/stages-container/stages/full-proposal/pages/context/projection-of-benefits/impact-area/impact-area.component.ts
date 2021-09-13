@@ -40,14 +40,12 @@ export class ImpactAreaComponent implements OnInit {
       impact_area_indicator_name:new FormControl(null),
       impact_area_id:new FormControl(null),
       impact_area_name:new FormControl(null),
-      checked:new FormControl(null),
       projectionBenefitsId:new FormControl(null),
       notes:new FormControl(null),
       depth_scale_id:new FormControl(null),
       depth_scale_name:new FormControl(null),
       probability_id:new FormControl(null),
       impact_area_active:new FormControl(null),
-
     });
 
   }
@@ -86,6 +84,7 @@ export class ImpactAreaComponent implements OnInit {
       // console.log(resp);
       this.clearFormThatDependedsOnIndicators();
       this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
+      this.dimensionsList = [];
       this.showDepthSacale = false;
       setTimeout(() => {
       this.showDepthSacale = true;
@@ -97,7 +96,6 @@ export class ImpactAreaComponent implements OnInit {
 
       this.activatedRoute.params.subscribe((routeResp: any) => {
         this.cleanForm();
-        this.pobImpactAreaForm.controls['checked'].setValue(true);
         this.pobImpactAreaForm.controls['impact_area_active'].setValue(true);
         // console.log('%ccambio de ruta', 'background: #222; color: #bada55');
         this.showDepthSacale= false;
@@ -108,6 +106,9 @@ export class ImpactAreaComponent implements OnInit {
        this.getPobImpatAreaData(routeResp.pobIaID)
        this.pobColorselected(3, 1, 8,routeResp.pobIaID);
        this.getImpactAreasIndicators(routeResp.pobIaID);
+       this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id,routeResp.pobIaID).subscribe(resp=>{
+        console.log(resp.projectionBenefitsByImpact);
+       })
 
        this._initiativesService.getDepthDescription(routeResp.pobIaID).subscribe(resp=>{
         // console.log(resp.response.depthDescription);
@@ -138,13 +139,16 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
-    this.pobImpactAreaForm.controls['checked'].setValue(null);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
     this.pobImpactAreaForm.controls['probability_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(null);
+    this.indicatorMetaData.targetUnit = '';
+    this.indicatorMetaData.value = '';
+    this.indicatorMetaData.targetYear = '';
+    this.dimensionsList = [];
   }
 
   clearFormThatDependedsOnIndicators(){
@@ -157,7 +161,7 @@ export class ImpactAreaComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     
    this.pobColorselected(3, 1, 8,-1)
-
+   this.cleanForm();
   }
 
   getImpactAreasIndicators(impactAreaId){
