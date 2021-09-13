@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card" *ngIf="this.pobProbabilities.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable')">
+    <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthSacale" >
         <div class="row dimension" *ngFor="let item of this.dimensionsList">
             <div class="col-xl-5 col-lg-12">
                 <ibdc-select-ngmodel [options]="
@@ -72,7 +72,7 @@
                  inputTitle:'Depth description',
                  item: item,   
                  itemName:'name',
-                 selectList: this.pobProbabilities,
+                 selectList: this.depthDescriptions,
                  itemId:'id',
                  frontendSearchAttribute:'name',
                  readOnlyVariable: this._initiativesService.initiative.readonly
