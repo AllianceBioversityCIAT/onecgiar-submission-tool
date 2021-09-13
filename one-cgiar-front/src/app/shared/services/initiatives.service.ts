@@ -319,6 +319,14 @@ export class InitiativesService {
   getPOBenefits(WorkPackageID) {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/${WorkPackageID}`);
   }
+
+  getPOBenefitsFp(initiativeId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}`);
+  }
+
+  getPOBenefitsFpByImpactArea(initiativeId,impactId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}/${impactId}`);
+  }
   // 
   getPOBenefitsTimetimeframes(benefitId) {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes/${benefitId}`);
