@@ -37,6 +37,7 @@
                          inputTitle:'Choose a depth scale',
                          form:pobImpactAreaForm,
                          formControlId:'depth_scale_id',
+                         formControlName:'depth_scale_name',
                          selectItemName:'name',
                          selectItemId:'id',
                          frontendSearchAttribute:'name',
@@ -54,16 +55,52 @@
             </div>
             <div class="col-6 center_metadata">
                 <div class="metada_data_box">
-                    <p><span class="metadata-title">Target  year:</span> 2030 (example)</p>
-                    <p><span class="metadata-title">Unit:</span> # of people (example)</p>
-                    <p><span class="metadata-title">Target value:</span> 3,000,000,000 (example)</p>
+                    <p><span class="metadata-title">Target  year:</span> {{this.indicatorMetaData.targetYear || 'not available'}}</p>
+                    <p><span class="metadata-title">Unit:</span> {{this.indicatorMetaData.targetUnit || 'not available'}}</p>
+                    <p><span class="metadata-title">Target value:</span> {{this.indicatorMetaData.value || 'not available'}}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- <div class="second_form custom_card">
-        <div class="row">
+    <div class="second_form custom_card" *ngIf="this.pobProbabilities.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable')">
+        <div class="row" *ngFor="let item of this.dimensionsList">
+            <div class="col-5">
+                <ibdc-select-ngmodel [options]="
+                {
+                 required:true,
+                 inputTitle:'Depth description',
+                 item: item,   
+                 itemName:'name',
+                 selectList: this.pobProbabilities,
+                 itemId:'id',
+                 frontendSearchAttribute:'name',
+                 readOnlyVariable: this._initiativesService.initiative.readonly
+                }"></ibdc-select-ngmodel>
+            </div>
+            <div class="col-5">
+                <ibdc-input-ngmodel
+                    [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
+                </ibdc-input-ngmodel>
+            </div>
+            <div class="col-2 targetUnit">
+                <strong class="ibdc_secondary_color">{{this.indicatorMetaData.targetUnit}}</strong>
+            </div>
+
+        </div>
+
+        <div class="button_add_container center_flex">
+            <button 
+            pButton pRipple 
+            type="button" label="Add dimension" 
+            class="p-button-success save-button"     
+            icon="pi pi-plus" iconPos="right" 
+            (click)="addDimension()" 
+            ></button>
+        </div>
+
+        <!-- <div class="row">
             <div class="col-6" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
                 <ibdc-select [options]="
                 {
@@ -90,8 +127,8 @@
                 ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'text'}">
             </ibdc-input>
             </div>
-        </div>
-    </div> -->
+        </div> -->
+    </div>
 
     <div class="third_form custom_card" >
         <div class="row">
