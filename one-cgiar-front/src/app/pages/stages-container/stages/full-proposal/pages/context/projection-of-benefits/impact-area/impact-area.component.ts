@@ -12,10 +12,24 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class ImpactAreaComponent implements OnInit {
 
   pobImpactAreaForm: FormGroup;
+  pobProbabilities = [];
   indicatorsList=[];
+  dimensionsList:any = [
+    {
+      id: 1,
+      depthDescriptionId:1,
+      breadth_value:30000,
+      active:true
+     }
+  ];
   currentIaId:number;
   showForm = false;
   showDepthSacale = false;
+  indicatorMetaData = {
+      targetYear:"",
+      targetUnit: "",
+      value: ""
+  }
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -30,17 +44,48 @@ export class ImpactAreaComponent implements OnInit {
       projectionBenefitsId:new FormControl(null),
       notes:new FormControl(null),
       depth_scale_id:new FormControl(null),
+      depth_scale_name:new FormControl(null),
       probability_id:new FormControl(null),
       impact_area_active:new FormControl(null),
+
     });
 
   }
+
+
+  getPobProbabilities(){
+    this._initiativesService.getPobProbabilities().subscribe(resp=>{
+      this.pobProbabilities = resp.response.projectedProbabilities;
+      // console.log(resp.response.projectedProbabilities);
+    })
+  }
+
+  getIndicatorMetaData(indicatorId){
+    if (indicatorId) {
+      console.log(indicatorId);
+      console.log(this.indicatorsList);
+      let item = this.indicatorsList.find(resp => resp.indicatorId == indicatorId);
+      console.log(item);
+
+      this.indicatorMetaData.targetUnit = '';
+      this.indicatorMetaData.value = '';
+      this.indicatorMetaData.targetYear = '';
+
+      this.indicatorMetaData.targetUnit = item.targetUnit;
+      this.indicatorMetaData.value = item.value;
+      this.indicatorMetaData.targetYear = item.targetYear;
+    }
+  }
+
+
   ngOnInit(): void {
 
-
+    this.getPobProbabilities();
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
       // console.log("cambio en impact_area_indicator_id");
       // console.log(resp);
+      this.clearFormThatDependedsOnIndicators();
+      this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
       this.showDepthSacale = false;
       setTimeout(() => {
       this.showDepthSacale = true;
@@ -65,7 +110,7 @@ export class ImpactAreaComponent implements OnInit {
        this.getImpactAreasIndicators(routeResp.pobIaID);
 
        this._initiativesService.getDepthDescription(routeResp.pobIaID).subscribe(resp=>{
-        console.log(resp.response.depthDescription);
+        // console.log(resp.response.depthDescription);
       })
        
       //  this.getDepthScale();
@@ -79,6 +124,15 @@ export class ImpactAreaComponent implements OnInit {
 
   }
 
+  addDimension(){
+    // let item={};
+    let item = new Object();
+    item['name'] = "";
+    item['id'] = "";
+    this.dimensionsList.push(item);
+    // console.log(this.dimensionsList);
+  }
+
   cleanForm(){
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
@@ -88,8 +142,14 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
+    this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
     this.pobImpactAreaForm.controls['probability_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(null);
+  }
+
+  clearFormThatDependedsOnIndicators(){
+    this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
+    this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
   }
 
   ngOnDestroy(): void {
@@ -117,7 +177,9 @@ export class ImpactAreaComponent implements OnInit {
 
 
   saveForm(){
-    console.log(this.pobImpactAreaForm.value);
+    // console.log(this.pobImpactAreaForm.value);
+    let body = this.pobImpactAreaForm.value;
+    body.dimensions = this.dimensionsList;
   }
 
   getPobImpatAreaData(impactAreaId){

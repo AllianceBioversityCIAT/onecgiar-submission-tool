@@ -6,7 +6,11 @@ import { ImpactAreaComponent } from './impact-area.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
+import {ButtonModule} from 'primeng/button';
+
+//7:00 pm
 
 
 @NgModule({
@@ -14,12 +18,13 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
   imports: [
     CommonModule,
     ImpactAreaRoutingModule,
-    UtilsModule,
     CheckboxModule,
     FormsModule,
     IbdAngularComponentsModule,
+    UtilsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
   
