@@ -380,6 +380,11 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
   }
 
+    // 
+  patchPOBenefitsFp(body: any,pobId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${pobId}`, body);
+  }
+
   // get getPobProbabilities
   getPobProbabilities(){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-probabilities`);

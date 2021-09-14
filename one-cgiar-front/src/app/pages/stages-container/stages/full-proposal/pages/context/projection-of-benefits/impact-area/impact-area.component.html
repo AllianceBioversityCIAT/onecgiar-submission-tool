@@ -64,8 +64,8 @@
     </div>
 
     <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthSacale" >
-        <div class="row dimension" *ngFor="let item of this.dimensionsList">
-            <div class="col-xl-5 col-lg-12">
+        <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
+            <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="
                 {
                  required:true,
@@ -78,7 +78,7 @@
                  readOnlyVariable: this._initiativesService.initiative.readonly
                 }"></ibdc-select-ngmodel>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-4">
                 <ibdc-input-ngmodel
                     [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
@@ -86,6 +86,11 @@
             </div>
             <div class="col-xl-2 targetUnit">
                 <strong class="ibdc_secondary_color">{{this.indicatorMetaData.targetUnit}}</strong>
+            </div>
+            <div class="col-xl-1 iconRemove">
+                <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">
+                    delete
+                </span>
             </div>
 
         </div>

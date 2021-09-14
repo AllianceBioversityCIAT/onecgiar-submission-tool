@@ -37,7 +37,6 @@ export class ImpactAreaComponent implements OnInit {
     public activatedRoute:ActivatedRoute
   ) { 
     this.pobImpactAreaForm = new FormGroup({
-      id:new FormControl(null),
       impact_area_indicator_id:new FormControl(null),
       impact_area_indicator_name:new FormControl(null),
       impact_area_id:new FormControl(null),
@@ -48,6 +47,7 @@ export class ImpactAreaComponent implements OnInit {
       depth_scale_name:new FormControl(null),
       probability_id:new FormControl(null),
       impact_area_active:new FormControl(null),
+      
     });
 
   }
@@ -113,7 +113,7 @@ export class ImpactAreaComponent implements OnInit {
       this.getPobImpatAreaData(routeResp.pobIaID)
       this.pobColorselected(3, 1, 8, routeResp.pobIaID);
       this.getDepthDescription(routeResp.pobIaID);
-      this.pobImpactAreaForm.controls['id'].setValue(null);
+      this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
 
       this._initiativesService.getImpactAreasIndicators().subscribe(resp => {
 
@@ -146,21 +146,42 @@ export class ImpactAreaComponent implements OnInit {
 
   }
 
+  removeDimension(index,object,itemLink:HTMLElement){
+    itemLink.classList.remove('animate__animated', 'animate__fadeInRight', 'animate__faster');
+    itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
+    itemLink.addEventListener('animationend', () => {
+      itemLink.style.maxHeight = '0px';
+      if (object.depthDescriptionId) {
+        object.edited = true;
+        object.active = false;
+        setTimeout(() => {
+          itemLink.style.display = 'none';
+        }, 300);
+      }else{
+        setTimeout(() => {
+          this.dimensionsList.splice(index,1);
+        }, 300);
+     
+      }
+      
+      console.log(this.dimensionsList);
+    });
+  }
+
   addDimension(){
     let item = new Object();
     item['name'] = "";
-    item['id'] = "";
+    item['id'] = null;
     this.dimensionsList.push(item);
   }
 
   updateForm(resp){
-
-    this.pobImpactAreaForm.controls['id'].setValue(resp.id);
+    console.log(resp);
+    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id);
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(resp.impact_area_indicator_id);
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(resp.impact_area_indicator_name);
     this.pobImpactAreaForm.controls['impact_area_id'].setValue(resp.impact_area_id);
-    this.pobImpactAreaForm.controls['impact_area_name'].setValue(resp.impact_area_name);
-    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.projectionBenefitsId);
+    // this.pobImpactAreaForm.controls['impact_area_name'].setValue(resp.impact_area_name);
     this.pobImpactAreaForm.controls['notes'].setValue(resp.notes);
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(resp.depth_scale_id);
     this.pobImpactAreaForm.controls['depth_scale_name'].setValue(resp.depth_scale_name);
@@ -171,12 +192,11 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   cleanForm(){
-    this.pobImpactAreaForm.controls['id'].setValue(null);
+    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
-    this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
-    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
+    // this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
@@ -203,6 +223,9 @@ export class ImpactAreaComponent implements OnInit {
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
     console.log(body);
+    this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
+    })
   }
 
   getPobImpatAreaData(impactAreaId){
