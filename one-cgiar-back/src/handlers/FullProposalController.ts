@@ -880,7 +880,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async upsertMeliaAndFiles(meliaId?, melia_plan?, meliaActive?, section?, files?) {
+    async upsertMeliaAndFiles(meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
 
 
         const meliaRepo = getRepository(Melia);
@@ -939,6 +939,39 @@ export class ProposalHandler extends InitiativeStageHandler {
                         filesRepo.merge(
                             savedFiles,
                             file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
                         );
 
                         upsertedFile = await filesRepo.save(savedFiles);
