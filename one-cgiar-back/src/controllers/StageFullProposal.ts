@@ -510,7 +510,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     //melia section data
-    const { meliaId, melia_plan, active, result_framework, melias } = req.body.data;
+    const { meliaId, melia_plan, active, result_framework, melias } = req.body;
 
     //melia section files
     const files = req['files'];
