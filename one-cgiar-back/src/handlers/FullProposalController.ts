@@ -743,7 +743,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @returns { upsertedImpactStrategies,upsertedPartners }
      */
     async upsertImpactStrategies(impact_strategies_id?, active?, challenge_priorization?, research_questions?, component_work_package?,
-        performance_results?, human_capacity?, partners?) {
+        performance_results?, human_capacity?, impact_area_id?, impact_area_name?, partners?) {
 
         const impactStrategiesRepo = getRepository(ImpactStrategies);
         const partnersRepo = getRepository(Partners);
@@ -760,6 +760,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         newImpactStrategies.component_work_package = component_work_package;
         newImpactStrategies.performance_results = performance_results;
         newImpactStrategies.human_capacity = human_capacity;
+        newImpactStrategies.impact_area_id = impact_area_id;
+        newImpactStrategies.impact_area_name = impact_area_name;
 
         try {
 
@@ -829,7 +831,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
 
 
-    async requestImpactStrategies() {
+    async requestImpactStrategies(impact_area_id) {
 
         const initvStg = await this.setInitvStage();
 
@@ -841,6 +843,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             SELECT *
             FROM impact_strategies
            WHERE initvStgId = ${initvStg.id}
+             AND impact_area_id = ${impact_area_id}
              AND active = 1;
             `),
                 partnersQuery = (

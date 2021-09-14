@@ -29,4 +29,10 @@ export class ImpactStrategies extends UpdatedCreatedAt {
     @Column({ type: "text" })
     human_capacity: string
 
+    @Column({type:"int"})
+    impact_area_id: number
+
+    @Column({ type: "text" })
+    impact_area_name: string
+
 }

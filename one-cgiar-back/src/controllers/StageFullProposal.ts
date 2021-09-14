@@ -435,7 +435,9 @@ export async function patchImpactStrategies(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // impact strategies section data
-    const { impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners } = req.body;
+    const { impact_strategies_id, active, challenge_priorization, research_questions, 
+            component_work_package, performance_results, human_capacity, impact_area_id,
+            impact_area_name,partners } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -455,7 +457,8 @@ export async function patchImpactStrategies(req: Request, res: Response) {
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
         const impactStrategies = await fullPposal.upsertImpactStrategies(impact_strategies_id, active, challenge_priorization, research_questions,
-            component_work_package, performance_results, human_capacity, partners);
+            component_work_package, performance_results, human_capacity, impact_area_id,
+            impact_area_name, partners);
 
         res.json(new ResponseHandler('Full Proposal: Patch Impact Strategies.', { impactStrategies }));
 
@@ -474,7 +477,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
  */
 export async function getImpactStrategies(req: Request, res: Response) {
 
-    const { initiativeId } = req.params;
+    const { initiativeId,impactAreaId } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
@@ -492,7 +495,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const impactStrategies = await fullPposal.requestImpactStrategies();
+        const impactStrategies = await fullPposal.requestImpactStrategies(impactAreaId);
 
         res.json(new ResponseHandler('Full Proposal: Get Impact Stretegies.', { impactStrategies }));
 

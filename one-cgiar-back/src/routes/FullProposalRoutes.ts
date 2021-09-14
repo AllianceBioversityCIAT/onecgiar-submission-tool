@@ -240,10 +240,10 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
 
 router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.patchImpactStrategies);
 
-router.get("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.getImpactStrategies);
+router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative
-router.patch("/melia/:initiativeId([0-9]+)", [checkJwt,uploadFile.any()], stagefull.patchMeliaAndFiles);
+router.patch("/melia/:initiativeId([0-9]+)", [checkJwt, uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
 router.get("/melia/:initiativeId([0-9]+)", [checkJwt], stagefull.getMeliaAndFiles);
