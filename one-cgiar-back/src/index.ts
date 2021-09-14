@@ -57,6 +57,7 @@ createConnection()
             res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
             next();
         });
+
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
 
         // if connection timed out go next()
@@ -72,12 +73,13 @@ createConnection()
 
         console.log(path.resolve('./uploads'))
         // public files
-        app.use('/public', express.static(path.resolve('./uploads')));
+        app.use(express.static('public'))
+        // app.use('/public', express.static(path.resolve('./uploads')));
 
         // routes
         app.use("/api", Routes);
 
-        //load front
+       // load front
         app.get('/', (req, res) => {
             res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
         });

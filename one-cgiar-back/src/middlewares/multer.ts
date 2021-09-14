@@ -6,7 +6,8 @@ const fs = require('fs');
 const mkdirp = require('mkdirp')
 
 
-const pth = require('path').resolve(process.cwd(), '../');
+// const pth = require('path').resolve(process.cwd(), '../');
+import pth from 'path';
 const parentD = `${pth}/uploads/`;
 
 
@@ -34,16 +35,27 @@ export const startMulter = async (parentpath?: string) => {
 }
 
 
-const storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-        let { finalPath, _path } = await validateSubFolder(JSON.parse(JSON.stringify(req.body)));
-        req.body.path = _path;
-        cb(null, `${finalPath}`);
+// const storage = multer.diskStorage({
+//     destination: async (req, file, cb) => {
+//         let { finalPath, _path } = await validateSubFolder(JSON.parse(JSON.stringify(req.body)));
+//         req.body.path = _path;
+//         cb(null, `${finalPath}`);
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, file.originalname);
+//     },
+// });
+
+
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/uploads')
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
+        cb(null, file.fieldname + '-' + Date.now() + pth.extname(file.originalname))
+    }
 });
+
 export let uploadFile = multer({ storage: storage });
 
 const validateSubFolder = async (body: object) => {

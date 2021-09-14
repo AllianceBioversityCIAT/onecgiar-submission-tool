@@ -3,8 +3,10 @@ import { getClaActionAreas } from "../controllers/Clarisa";
 import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Dimensions } from "../entity/Dimensions";
+import { Files } from "../entity/Files";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
+import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
@@ -675,27 +677,27 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-        /**
-     * 
-     * @returns { projectBenefits }
-     */
-         async requestProjectionBenefitsByImpact(impactAreaId) {
+    /**
+ * 
+ * @returns { projectBenefits }
+ */
+    async requestProjectionBenefitsByImpact(impactAreaId) {
 
-            const initvStg = await this.setInitvStage();
-    
-            try {
-    
-    
-                // retrieve general information
-                const prjBenQuery = (` 
+        const initvStg = await this.setInitvStage();
+
+        try {
+
+
+            // retrieve general information
+            const prjBenQuery = (` 
                 SELECT * 
                 FROM projection_benefits
                WHERE initvStgId = ${initvStg.id}
                  AND impact_area_id = ${impactAreaId}
                  AND active = 1;
                 `),
-                    dimensionsQuery = (
-                        `
+                dimensionsQuery = (
+                    `
                     SELECT * 
                     FROM dimensions
                    WHERE projectionId in (SELECT id
@@ -703,29 +705,29 @@ export class ProposalHandler extends InitiativeStageHandler {
                    WHERE initvStgId = ${initvStg.id})
                      AND active = 1
                     `
-                    )
-    
-                const projectBenefits = await this.queryRunner.query(prjBenQuery);
-                const dimensions = await this.queryRunner.query(dimensionsQuery);
-    
-                projectBenefits.map(pb => {
-                    pb['dimensions'] = dimensions.filter(dim => {
-                        return (dim.projectionId === pb.id)
-                    })
-                }
-    
                 )
-    
-                return projectBenefits[0];
-    
-            } catch (error) {
-    
-                console.log(error)
-                throw new BaseError('Get Projection Benefits: Full proposal', 400, error.message, false)
-    
+
+            const projectBenefits = await this.queryRunner.query(prjBenQuery);
+            const dimensions = await this.queryRunner.query(dimensionsQuery);
+
+            projectBenefits.map(pb => {
+                pb['dimensions'] = dimensions.filter(dim => {
+                    return (dim.projectionId === pb.id)
+                })
             }
-    
+
+            )
+
+            return projectBenefits[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get Projection Benefits: Full proposal', 400, error.message, false)
+
         }
+
+    }
 
 
     /**
@@ -871,6 +873,146 @@ export class ProposalHandler extends InitiativeStageHandler {
             throw new BaseError('Get Impact Strategies: Full proposal', 400, error.message, false)
 
         }
+
+    }
+
+
+    async upsertMeliaAndFiles(meliaId?, melia_plan?, active?, result_framework?, melias?, files?) {
+
+
+        const meliaRepo = getRepository(Melia);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+        const path =  'uploads'
+
+        var newMelia = new Melia();
+        var newFiles = new Files();
+        var upsertedMelia;
+        var upsertedFile;
+
+        newMelia.id = null;
+        newMelia.melia_plan = melia_plan;
+        newMelia.active = active ? active : true;
+
+        try {
+
+            if (newMelia.id !== null) {
+
+                var savedMelia = await meliaRepo.findOne(newMelia.id);
+
+                meliaRepo.merge(
+                    savedMelia,
+                    newMelia
+                );
+
+                upsertedMelia = await meliaRepo.save(savedMelia);
+
+            } else {
+
+                newMelia.initvStgId = initvStg.id;
+
+                upsertedMelia = await meliaRepo.save(newMelia);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.meliaId = upsertedMelia.id;
+                    // newFiles.section = result_framework ? result_framework : melias;
+                    newFiles.section = 'result_framework'
+
+                    newFiles.url = urlDB
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedMelia, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Impact Strategies: Full proposal', 400, error.message, false)
+
+        }
+
+
+
+    }
+
+
+    async requestMeliaFiles(){
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+
+
+            // retrieve general information
+            const meliaQuery = (` 
+            SELECT * 
+            FROM melia
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE meliaId in (SELECT id
+                    FROM melia
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "result_framework"
+                     AND active = 1
+                `
+                )
+
+            const melia = await this.queryRunner.query(meliaQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            melia.map(mel => {
+                mel['files'] = files.filter(f => {
+                    return (f.meliaId === mel.id)
+                })
+            }
+
+            )
+
+            return { melia };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get melia and files: Full proposal', 400, error.message, false)
+
+        }
+
+
 
     }
 

@@ -9,6 +9,7 @@ import { ResponseHandler } from '../handlers/Response';
 import { WorkPackages } from '../entity/WorkPackages';
 import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { Dimensions } from '../entity/Dimensions';
+import { toInteger } from 'lodash';
 
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
@@ -500,5 +501,79 @@ export async function getImpactStrategies(req: Request, res: Response) {
         console.log(error)
         return res.status(error.httpCode).json(error);
     }
+
+}
+
+
+export async function patchMeliaAndFiles(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+    //melia section data
+    const { meliaId, melia_plan, active, result_framework, melias } = req.body.data;
+
+    //melia section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch melia: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const melia = await fullPposal.upsertMeliaAndFiles(meliaId, melia_plan, active, result_framework, melias,files);
+
+        res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia,files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getMeliaAndFiles(req: Request, res: Response) {
+
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read melia and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const impactStrategies = await fullPposal.requestMeliaFiles();
+
+        res.json(new ResponseHandler('Full Proposal: melia and files.', { impactStrategies }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
 
 }
