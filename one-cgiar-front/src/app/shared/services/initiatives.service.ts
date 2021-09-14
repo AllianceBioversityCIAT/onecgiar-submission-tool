@@ -319,6 +319,14 @@ export class InitiativesService {
   getPOBenefits(WorkPackageID) {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/${WorkPackageID}`);
   }
+
+  getPOBenefitsFp(initiativeId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}`);
+  }
+
+  getPOBenefitsFpByImpactArea(initiativeId,impactId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}/${impactId}`);
+  }
   // 
   getPOBenefitsTimetimeframes(benefitId) {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes/${benefitId}`);
@@ -370,6 +378,11 @@ export class InitiativesService {
   // get getDepthDescription
   getDepthScale(impactAreaIndicator){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
+  }
+
+    // 
+  patchPOBenefitsFp(body: any,pobId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${pobId}`, body);
   }
 
   // get getPobProbabilities

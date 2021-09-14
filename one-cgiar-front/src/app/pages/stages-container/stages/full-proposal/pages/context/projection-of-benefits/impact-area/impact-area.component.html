@@ -4,11 +4,11 @@
     <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.indicatorsList.length && this.showForm">
 
     <div class="check_box_with_text">
-        <p-checkbox formControlName="checked" binary="true" inputId="binary"></p-checkbox>
+        <p-checkbox formControlName="impact_area_active" binary="true" inputId="binary"></p-checkbox>
         <span>Please select this check-box if your initiative does not address this Impact Area.</span>
     </div>
 
-    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('checked').value">
+    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('impact_area_active').value">
         <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
@@ -63,32 +63,39 @@
         </div>
     </div>
 
-    <div class="second_form custom_card" *ngIf="this.pobProbabilities.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable')">
-        <div class="row" *ngFor="let item of this.dimensionsList">
-            <div class="col-5">
+    <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthSacale" >
+        <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
+            <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="
                 {
                  required:true,
                  inputTitle:'Depth description',
                  item: item,   
                  itemName:'name',
-                 selectList: this.pobProbabilities,
-                 itemId:'id',
+                 selectList: this.depthDescriptions,
+                 itemId:'depthDescriptionId',
                  frontendSearchAttribute:'name',
                  readOnlyVariable: this._initiativesService.initiative.readonly
                 }"></ibdc-select-ngmodel>
             </div>
-            <div class="col-5">
+            <div class="col-xl-4">
                 <ibdc-input-ngmodel
                     [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
                 </ibdc-input-ngmodel>
             </div>
-            <div class="col-2 targetUnit">
+            <div class="col-xl-2 targetUnit">
                 <strong class="ibdc_secondary_color">{{this.indicatorMetaData.targetUnit}}</strong>
+            </div>
+            <div class="col-xl-1 iconRemove">
+                <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">
+                    delete
+                </span>
             </div>
 
         </div>
+
+        <h3 style="text-align: center;"><strong class="ibdc_secondary_color" *ngIf="this.dimensionsList.length == 0">No dimensions added</strong></h3>
 
         <div class="button_add_container center_flex">
             <button 
@@ -99,35 +106,6 @@
             (click)="addDimension()" 
             ></button>
         </div>
-
-        <!-- <div class="row">
-            <div class="col-6" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
-                <ibdc-select [options]="
-                {
-                 required:true,
-                 inputTitle:'Depth description',
-                 form:pobImpactAreaForm,
-                 formControlId:'action_area_id',
-                 selectItemName:'name',
-                 selectItemId:'id',
-                 frontendSearchAttribute:'name',
-                 readOnlyVariable: this._initiativesService.initiative.readonly,
-                 service:{
-                     serviceTS:this._initiativesService,
-                     functionName:'getDepthDescription',
-                     objectName: ['response','depthDescription'],
-                     functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
-                 }
-                }">
-                ></ibdc-select>
-            </div>
-            <div class="col-6">
-                <ibdc-input
-                [options]="{inputTitle:'Breadth - Numbers reached ', form:pobImpactAreaForm, formControlName:'contextId'
-                ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'text'}">
-            </ibdc-input>
-            </div>
-        </div> -->
     </div>
 
     <div class="third_form custom_card" >
