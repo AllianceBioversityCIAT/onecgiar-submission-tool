@@ -877,23 +877,23 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async upsertMeliaAndFiles(meliaId?, melia_plan?, active?, result_framework?, melias?, files?) {
+    async upsertMeliaAndFiles(meliaId?, melia_plan?, meliaActive?, section?, files?) {
 
 
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
         const initvStg = await this.setInitvStage();
         const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-        const path =  'uploads'
+        const path = 'uploads'
 
         var newMelia = new Melia();
         var newFiles = new Files();
         var upsertedMelia;
         var upsertedFile;
 
-        newMelia.id = null;
+        newMelia.id = meliaId;
         newMelia.melia_plan = melia_plan;
-        newMelia.active = active ? active : true;
+        newMelia.active = meliaActive ? meliaActive : true;
 
         try {
 
@@ -925,10 +925,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
                     newFiles.meliaId = upsertedMelia.id;
-                    // newFiles.section = result_framework ? result_framework : melias;
-                    newFiles.section = 'result_framework'
-
-                    newFiles.url = urlDB
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
                     newFiles.name = file.originalname;
 
                     if (newFiles.id !== null) {
@@ -965,7 +963,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async requestMeliaFiles(){
+    async requestMeliaFiles() {
 
         const initvStg = await this.setInitvStage();
 

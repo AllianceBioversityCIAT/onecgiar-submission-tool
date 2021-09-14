@@ -15,7 +15,8 @@ export class CreateMeliaTable1631561243086 implements MigrationInterface {
             updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             KEY IDX_135465411ss89856_initvStgId (initvStgId),
             PRIMARY KEY (id),
-            CONSTRAINT FK_845588899492qwd456789_initiatives_by_stages FOREIGN KEY (initvStgId) REFERENCES initiatives_by_stages (id) ON DELETE CASCADE
+            CONSTRAINT FK_845588899492qwd456789_initiatives_by_stages FOREIGN KEY (initvStgId) REFERENCES initiatives_by_stages (id) ON DELETE CASCADE,
+            CONSTRAINT initiative_id UNIQUE (initvStgId)
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
