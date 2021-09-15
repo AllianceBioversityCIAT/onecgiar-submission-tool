@@ -282,6 +282,11 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
   }
 
+  saveMelia (body:any,initiativeId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}`, body);
+  }
+
+
 
 
   // Query to get all the users by roles
