@@ -31,7 +31,6 @@ import { KeyPartnersComponent } from './shared/components/preconcept/key-partner
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 import { CountryControlComponent } from './shared/components/preconcept/country-control/country-control.component';
 import { RegionControlComponent } from './shared/components/preconcept/region-control/region-control.component';
-import { MenuComponent } from './shared/components/menu/menu.component';
 import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';

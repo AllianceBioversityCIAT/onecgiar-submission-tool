@@ -21,7 +21,7 @@
                     <div #subSectionsList  class="sub-sections" [ngClass]="{'expandIbd': activeClassByRoute([section.description]),'collapseIbd': !activeClassByRoute([section.description])}" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <!-- sub sections list -->
                         <div class="sub-section-container" *ngFor="let subSection of section.subsections">
-                            <div class="sub-section"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
+                            <div class="sub-section {{subSection.dynamicList?'sub-section-with-dynamicList':''}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                                 <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
                                     <span style="margin-right: 8px; color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
@@ -30,7 +30,9 @@
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
                                 <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList,'showName')" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
-                                        <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                    <div class="point"></div>
+                                    <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                        
                                 </div>
 
                             </div>
@@ -42,7 +44,9 @@
             </div>
         </div>
     
-
+        <div class="submitButtonInitiative">
+            <button pButton type="button" label="Submit initiative" class="p-button-rounded p-button-success" disabled="true"></button>
+        </div>
 
     </div>
 
