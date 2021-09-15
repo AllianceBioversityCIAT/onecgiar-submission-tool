@@ -14,6 +14,7 @@ export const checkRole = (entityName: string, permissionActions: string) => {
             let user = await userRepository.findOne(userId, { relations: ['roles'] });
             let rolesAcronyms = user.roles.map(role => role.acronym);
             const permission = accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
+            
             if (permission.granted) {
                 next();
             } else {

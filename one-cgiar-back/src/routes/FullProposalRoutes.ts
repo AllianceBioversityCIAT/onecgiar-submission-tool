@@ -230,22 +230,22 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
  *     HTTP/1.1 400 Not Found
  *     {"name": "Work Package: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/packages/:initiativeId([0-9]+)", [checkJwt], stagefull.patchWorkPackage);
+router.patch("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'updateOwn')], stagefull.patchWorkPackage);
 
-router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.patchProjectionBenefits);
+router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'updateOwn')], stagefull.patchProjectionBenefits);
 
-router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt], stagefull.getProjectionBenefits);
+router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefits);
 
-router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt], stagefull.getProjectionBenefitsByImpact);
+router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefitsByImpact);
 
-router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt], stagefull.patchImpactStrategies);
+router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'updateOwn')], stagefull.patchImpactStrategies);
 
-router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt], stagefull.getImpactStrategies);
+router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative
-router.patch("/melia/:initiativeId([0-9]+)", [checkJwt, uploadFile.any()], stagefull.patchMeliaAndFiles);
+router.patch("/melia/:initiativeId([0-9]+)", [checkJwt,checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
-router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt], stagefull.getMeliaAndFiles);
+router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
 
 export default router;
