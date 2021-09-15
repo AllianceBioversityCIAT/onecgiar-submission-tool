@@ -59,6 +59,7 @@ import { PobContributionComponent } from './shared/components/concept/work-packa
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import {InputTextModule} from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     MatPaginatorModule,
     NgxSpinnerModule,
     CustomFormsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    InputTextModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
