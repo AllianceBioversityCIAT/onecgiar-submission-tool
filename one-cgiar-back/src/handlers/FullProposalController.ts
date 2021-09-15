@@ -1013,8 +1013,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         const initvStg = await this.setInitvStage();
 
         try {
-
-
             // retrieve general information
             const meliaQuery = (` 
             SELECT * 
