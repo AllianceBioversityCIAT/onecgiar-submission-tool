@@ -8,7 +8,7 @@
         <span>Please select this check-box if your initiative does not address this Impact Area.</span>
     </div>
 
-    <div class="forms_container" *ngIf="this.pobImpactAreaForm.get('impact_area_active').value">
+    <div class="forms_container" *ngIf="!this.pobImpactAreaForm.get('impact_area_active').value">
         <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthSacale" >
+    <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthDescription" >
         <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
             <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="

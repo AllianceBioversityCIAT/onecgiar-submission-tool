@@ -26,6 +26,7 @@ export class ImpactAreaComponent implements OnInit {
   currentIaId:number;
   showForm = false;
   showDepthSacale = false;
+  showDepthDescription = false;
   indicatorMetaData = {
       targetYear:"",
       targetUnit: "",
@@ -66,6 +67,11 @@ export class ImpactAreaComponent implements OnInit {
         item.impactAreaId = impactAreaId;
         item.depthDescriptionId = item.id;
       })
+      // console.log(resp);
+      
+    },err=>{},
+    ()=>{
+      this.showDepthDescription = true;
     })
   }
 
@@ -89,19 +95,24 @@ export class ImpactAreaComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    // console.log(this.pobImpactAreaForm.value);
     this.getPobProbabilities();
     let borrar = false;
  
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-
+      console.log("valueChanges");
       if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
         this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
       }
       this.showDepthSacale = false;
       setTimeout(() => {
       this.showDepthSacale = true;
+      // console.log(this.pobImpactAreaForm.value);
       }, 500);
+
+      if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
+        this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
+      }
       
     })
 
@@ -112,7 +123,6 @@ export class ImpactAreaComponent implements OnInit {
 
       this.getPobImpatAreaData(routeResp.pobIaID)
       this.pobColorselected(3, 1, 8, routeResp.pobIaID);
-      this.getDepthDescription(routeResp.pobIaID);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
 
       this._initiativesService.getImpactAreasIndicators().subscribe(resp => {
@@ -124,6 +134,8 @@ export class ImpactAreaComponent implements OnInit {
           this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
             if (resp.response.projectionBenefitsByImpact) {
               this.updateForm(resp.response.projectionBenefitsByImpact);
+              // console.log(this.pobImpactAreaForm.value.impact_area_indicator_id);
+              this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
             }
 
             this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
@@ -131,9 +143,9 @@ export class ImpactAreaComponent implements OnInit {
           })
         })
 
-      if (this.pobImpactAreaForm.controls['impact_area_active'].value === null) {
-        this.pobImpactAreaForm.controls['impact_area_active'].setValue(true);
-      }
+      // if (this.pobImpactAreaForm.controls['impact_area_active'].value === null) {
+      //   this.pobImpactAreaForm.controls['impact_area_active'].setValue(true);
+      // }
 
 
 
@@ -176,7 +188,7 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   updateForm(resp){
-    console.log(resp);
+    // console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id);
     this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(resp.impact_area_indicator_id);
     this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(resp.impact_area_indicator_name);
