@@ -999,7 +999,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async requestMeliaFiles() {
+    async requestMeliaFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
 
@@ -1021,7 +1021,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     FROM melia
                    WHERE initvStgId = ${initvStg.id}
                      AND active = 1)
-                     AND section = "result_framework"
+                     AND section = "${sectionName}"
                      AND active = 1
                 `
                 )

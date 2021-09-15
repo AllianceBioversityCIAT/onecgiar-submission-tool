@@ -550,7 +550,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 export async function getMeliaAndFiles(req: Request, res: Response) {
 
 
-    const { initiativeId } = req.params;
+    const { initiativeId,sectionName } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
@@ -568,7 +568,7 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const impactStrategies = await fullPposal.requestMeliaFiles();
+        const impactStrategies = await fullPposal.requestMeliaFiles(sectionName);
 
         res.json(new ResponseHandler('Full Proposal: melia and files.', { impactStrategies }));
 

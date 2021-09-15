@@ -246,6 +246,6 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
 router.patch("/melia/:initiativeId([0-9]+)", [checkJwt, uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
-router.get("/melia/:initiativeId([0-9]+)", [checkJwt], stagefull.getMeliaAndFiles);
+router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt], stagefull.getMeliaAndFiles);
 
 export default router;
