@@ -1,13 +1,17 @@
-<section-title name="Result Framework" ></section-title>
+<section-title name="Result Framework"></section-title>
+
 <div class="section-container animate__animated animate__fadeIn">
 
-    <ibdc-upload-files 
-    [options]="{
-        inputTitle:'Provide any additional support document(s)',
-        description:'Add urls'
-    }"></ibdc-upload-files>
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
-    </div>
-</div>
+    <form (ngSubmit)="saveSection()">
 
+        <ibdc-upload-files (selectFile)="filesChange($event)" [options]="{
+            inputTitle:'Provide any additional support document(s)',description:'Add urls'}">
+        </ibdc-upload-files>
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </form>
+
+
+</div>
