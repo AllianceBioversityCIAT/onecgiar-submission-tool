@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
-                                <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList,'showName')" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
+                                <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
                                     <div class="point"></div>
                                     <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
                                         

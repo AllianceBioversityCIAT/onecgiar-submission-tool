@@ -13,6 +13,7 @@
         <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
                 <td *ngFor="let col of columns" style="text-align: center; cursor: pointer;" [routerLink]="'work-package/'+rowData.id">
+                    
                     <span [ngSwitch]="col.field">
                         <span *ngSwitchCase="'active'">
                             <span [style.color]="rowData[col.field]?'var(--ibdc-secondary-color)':'#d3d3d3'"
