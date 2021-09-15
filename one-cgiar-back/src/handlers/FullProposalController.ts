@@ -961,7 +961,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             }
 
-
             if (updateFiles.length > 0) {
 
                 for (let index = 0; index < updateFiles.length; index++) {
@@ -1003,8 +1002,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         }
 
-
-
     }
 
 
@@ -1044,7 +1041,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return { melia };
+            return melia[0] ;
 
         } catch (error) {
 

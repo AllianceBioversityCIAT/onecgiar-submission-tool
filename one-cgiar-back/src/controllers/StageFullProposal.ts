@@ -568,9 +568,9 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const impactStrategies = await fullPposal.requestMeliaFiles(sectionName);
+        const meliaData = await fullPposal.requestMeliaFiles(sectionName);
 
-        res.json(new ResponseHandler('Full Proposal: melia and files.', { impactStrategies }));
+        res.json(new ResponseHandler('Full Proposal: melia and files.', { meliaData }));
 
 
     } catch (error) {
