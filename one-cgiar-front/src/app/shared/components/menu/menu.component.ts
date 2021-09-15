@@ -61,12 +61,12 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  sortAlphabetically(list,attribute) {
+  sortAlphabetically(list) {
     list.sort(function (a, b) {
-      if (a[attribute] < b[attribute]) {
+      if (a[list.sort] < b[list.sort]) {
         return -1;
       }
-      if (a[attribute]> b[attribute]) {
+      if (a[list.sort]> b[list.sort]) {
         return 1;
       }
       return 0;
@@ -95,6 +95,7 @@ export class MenuComponent implements OnInit {
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
                   wpResp.frontRoute = '/work-packages/work-package/';
+                  wpResp.sort = 'showName';
                   wpResp.showName = wpResp.acronym;
                 });
                 this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
@@ -111,6 +112,7 @@ export class MenuComponent implements OnInit {
               item.showName = item.name;
               item.frontRoute = '/projection-of-benefits/impact-area/';
               item.subSectionName='impact-area';
+              item.sort = 'id';
             })
             this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
             this._dataControlService.pobMaped = true;
