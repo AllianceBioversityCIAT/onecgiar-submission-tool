@@ -886,8 +886,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
         const initvStg = await this.setInitvStage();
-        // const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-        const host = `${process.env.EXT_HOST}`;
+        var host = `${process.env.EXT_HOST}`;
         const path = 'uploads'
 
         var newMelia = new Melia();
@@ -900,6 +899,15 @@ export class ProposalHandler extends InitiativeStageHandler {
         newMelia.active = meliaActive ? meliaActive : true;
 
         try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+                
+            }else{
+
+                host = `${process.env.EXT_HOST}`;
+            }
 
             if (newMelia.id !== null) {
 
