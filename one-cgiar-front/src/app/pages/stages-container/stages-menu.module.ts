@@ -7,6 +7,7 @@ import { MaterialModule } from '@app/material.module';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { UtilsModule } from '../../shared/components/utils/utils.module';
+import {ButtonModule} from 'primeng/button';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { UtilsModule } from '../../shared/components/utils/utils.module';
     CommonModule,
     StagesMenuRoutingModule,
     MaterialModule,
-    UtilsModule
+    UtilsModule,
+    ButtonModule
   ]
 })
 export class StagesMenuModule { }
