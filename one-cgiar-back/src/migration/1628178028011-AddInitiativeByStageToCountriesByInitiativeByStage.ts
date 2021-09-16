@@ -2,7 +2,7 @@ import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
 
-export class AddInitiativeByStageToCountriesByInitiativeByStage1628178028011 implements MigrationInterface {
+export class AddInitiativeByStageToCountriesByInitiativeByStage1629832672160 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
 
