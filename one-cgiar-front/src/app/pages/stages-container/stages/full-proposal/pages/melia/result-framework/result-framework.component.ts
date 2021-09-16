@@ -7,72 +7,78 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
   styleUrls: ['./result-framework.component.scss']
 })
 export class ResultFrameworkComponent implements OnInit {
-  files:any;
+  filesList:any[]=[];
+  filesSavedList = [];
+  showForm = false;
+  data = {
+    meliaId : null,
+    melia_plan : "algo no tan implicito",
+    active : true,
+    section : "result_framework",
+    updateFiles : []
+  };
   constructor(
     public _initiativesService: InitiativesService
   ) { }
 
   ngOnInit(): void {
+    this.getMelia();
   }
 
-  filesChange(event){
-    console.log('##### filesChange #####');
-    console.log(event.currentFiles);
-    this.files = event.currentFiles;
-  }
-
-  saveSection(){
-  //   let data:any = { "meliaId":null,
-  //   "melia_plan": "algo especial",
-  //   "active": true,
-  //   "result_framework":"result_framework"
-  //  }
-
-    const formData = new FormData();
-      for  (var i =  0; i <  this.files.length; i++)  {  
-        this.files[i].atributo = "si funciona"
-    formData.append("file[]",  this.files[i]);
-    } 
-
-    console.log(this.files);
-
-    // formData.append('file[]', this.files);
-    // formData.append('data', data);
-    // formData.append('meliaId', null);
-    formData.append('melia_plan', "algo no especial");
-    // formData.append('active', 'true');
-    // formData.append('result_framework', "result_framework");
-
-
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
+  getMelia(){
+    this._initiativesService.getMelia(this._initiativesService.initiative.id,'result_framework').subscribe(resp=>{
       console.log(resp);
+      this.filesList = [];
+      let melia = resp.response.meliaData;
+      this.filesSavedList = melia?.files?melia.files:[];
+      this.data.meliaId = melia?.id;
+      console.log(melia);
+      console.log(this.filesSavedList);
+    },
+    err=>{console.log(err);}
+    ,()=>{
+      this.showForm = true;
     })
   }
+  saveSection(){
 
-//   for  (var i =  0; i <  this.myFiles.length; i++)  {  
-//     formData.append("file[]",  this.myFiles[i]);
-// } 
+    const formData = new FormData();
 
-  // submitForm() {
-  //   var formData: any = new FormData();
-  //   formData.append("name", this.form.get('name').value);
-  //   formData.append("avatar", this.form.get('avatar').value);
-  
-  //   this.http.post('http://localhost:4000/api/create-user', formData).subscribe(
-  //     (response) => console.log(response),
-  //     (error) => console.log(error)
-  //   )
-  // }
+    if (this.filesList.length) {
+      for  (var i =  0; i <  this.filesList.length; i++)  {  
+        this.filesList[i].atributo = "si funciona"
+       formData.append("file",  this.filesList[i]);
+      } 
+    }
 
-  // onSubmit() {
-  //   const formData = new FormData();
-  //   formData.append('file', this.uploadForm.get('profile').value);
+    if (this.filesSavedList.length) {
+      for  (var i =  0; i <  this.filesSavedList.length; i++)  {  
+        if (this.filesSavedList[i].show === false) {
+          let item = {
+            id: this.filesSavedList[i].id,
+            active: false
+          }
+          this.data.updateFiles.push(item);
+        }
+      } 
+    }
 
-  //   this.httpClient.post<any>(this.SERVER_URL, formData).subscribe(
-  //     (res) => console.log(res),
-  //     (err) => console.log(err)
-  //   );
-  // }
+    this.data.meliaId = this.data.meliaId == undefined ? null : this.data.meliaId;
+
+    formData.append('data', JSON.stringify(this.data));
+    console.log("-------------------------------");  
+    console.log(this.data);
+    console.log(formData.getAll('data'));
+    console.log(this.filesList);
+    console.log("*****************+***");
+    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log("saveMelia");
+      console.log(resp);
+      this.getMelia();
+    })
+
+    
+  }
 
 
 

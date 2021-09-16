@@ -4,8 +4,8 @@
 
     <form (ngSubmit)="saveSection()">
 
-        <ibdc-upload-files (selectFile)="filesChange($event)" [options]="{
-            inputTitle:'Provide any additional support document(s)',description:'Add urls'}">
+        <ibdc-upload-files *ngIf="showForm" [options]="{
+            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
         </ibdc-upload-files>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">

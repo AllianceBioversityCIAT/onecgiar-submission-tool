@@ -286,8 +286,9 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}`, body);
   }
 
-
-
+  getMelia (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${section}`);
+  }
 
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
