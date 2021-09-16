@@ -55,7 +55,7 @@ export class GeneralInformationConceptComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _interactions: InteractionsService,
     private router:Router, 
-    private _dataControlService:DataControlService,
+    public _dataControlService:DataControlService,
     private _StagesMenuService:StagesMenuService
     ) {
     this.generalInformationForm = new FormGroup({
@@ -139,10 +139,9 @@ export class GeneralInformationConceptComponent implements OnInit {
         gnrlInfo => {
           this.spinnerService.hide('general-information');
 
-
-          this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-            this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-          })
+          // this._initiativesService.getGreenCheckStatus(this._initiativesService.initiative.id).subscribe(resp=>{
+          //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+          // })
 
           this.generalInformationForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)?  this.interactionsService.successMessage('General information has been saved'):
                       this.interactionsService.warningMessage('General information has been saved, but there are incomplete fields')

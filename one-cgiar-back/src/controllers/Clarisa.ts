@@ -1,24 +1,13 @@
-import { APIError } from "../handlers/BaseError";
+import { APIError, BaseError } from "../handlers/BaseError";
 import { HttpStatusCode } from "../handlers/Constants";
-import { getConnection, getRepository, Like, QueryFailedError } from "typeorm";
-import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
-import { ResponseHandler } from "../handlers/Response";
-import { Request, Response } from 'express'
+import { getConnection } from "typeorm";
 import axios from 'axios';
 import { config } from 'dotenv';
-import { EntityNotFoundError } from "typeorm/error/EntityNotFoundError";
 
 config();
 
 
 const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
-// const oa = `${process.env['clarisa_user']}:${process.env['clarisa_password']}`
-// console.log(oa)
-// const clarisaHeader = {
-//     Authorization: `Basic ${Buffer.from(oa).toString('base64')}`
-// }
-
-// const PAGE_SIZE = 20;
 
 
 /**
@@ -33,16 +22,10 @@ export const getClaActionAreas = async () => {
                 password: process.env['clarisa_password']
             }
         });
-        // res.json(new ResponseHandler('CLARISA action areas.', { actionAreas: actionAreas.data }));
         return actionAreas.data;
     } catch (error) {
         console.log(error)
-        throw new APIError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            true,
-            error.message
-        );
+        throw new BaseError('CLARISA : Action Areas', 400, error.message, true);
     }
 
 }
@@ -222,9 +205,50 @@ export const requestClaInstitution = async (body) => {
     }
 }
 
+export async function getImpactAreas(){
+
+    try {
+        const institutionsTypes = await axios.get(clarisaHost + 'impact-areas', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return institutionsTypes.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
 
 
+export async function getImpactAreasIndicators(){
 
+    try {
+        const institutionsTypes = await axios.get(clarisaHost + 'impact-areas-indicators', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return institutionsTypes.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
 
 
 

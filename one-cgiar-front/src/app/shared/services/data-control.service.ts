@@ -17,8 +17,12 @@ export class DataControlService {
   //  } 
   // }
   // Variables used in various sections
+  wpMaped = false;
+  pobMaped = false;
+  userMenu = [];
   WorkPackageID:number=null;
-
+  showRegions=false;
+  showCountries=false;
 
   // events to reload info in sections
   generalInfoChange$= new EventEmitter<any>();

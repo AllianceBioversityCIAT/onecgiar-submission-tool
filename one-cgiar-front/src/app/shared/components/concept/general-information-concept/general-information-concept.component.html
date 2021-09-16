@@ -5,9 +5,10 @@
         *ngIf="showForm">
         <div class="row">
             <div class="col-sm-12" >
-                <custom-textarea
-                    [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'}">
-                </custom-textarea>
+                <ibdc-textarea
+                    [options]="{inputTitle:'Initiative name', form:generalInformationForm, formControlName:'name'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly}">
+                </ibdc-textarea>
             </div>
 
             <div class="col-sm-6">
@@ -32,10 +33,10 @@
                 <mat-card>
                     <div class="row">
                         <div class="col-sm-6">
-                            <custom-text [options]="{inputTitle:'Co-Lead name', value:leads.co_lead_name||'Not available'}"></custom-text>
+                            <custom-text [options]="{inputTitle:'', value:leads.co_lead_name||'Not available'}"></custom-text>
                         </div>
                         <div class="col-sm-4">
-                            <custom-text [options]="{inputTitle:'Co-Lead email', value:leads.co_lead_email||'Not available'}"></custom-text>
+                            <custom-text [options]="{inputTitle:'', value:leads.co_lead_email||'Not available'}"></custom-text>
                         </div>
                         <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
                             <mat-icon >edit</mat-icon>
@@ -47,7 +48,7 @@
 
             <div class="col-sm-12" *ngIf="showFormActionArea">
 
-                <custom-select [options]="
+                <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Primary CGIAR Action Area',
@@ -56,17 +57,21 @@
              description:'Indicate to which CGIAR Action Area this initiative is contributing to',
              selectList:this.actionAreas,
              selectItemName:'index_name',
-             selectItemId:'id'
+             selectItemId:'id',
+             readOnlyVariable: this._initiativesService.initiative.readonly
             }">
-                    ></custom-select>
+                    ></ibdc-select>
 
             </div>
+
+
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <save-button></save-button>
+            <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
+            <!-- [underConstruction] = "_dataControlService.general_information.secondLeadEmail == 'Deputy email' " -->
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

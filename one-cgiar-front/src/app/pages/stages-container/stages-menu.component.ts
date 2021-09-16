@@ -39,18 +39,24 @@ export class StagesMenuComponent implements OnInit {
     });
   }
 
+  sectionsList=[];
 
   ngOnInit(): void {
+    this.sectionsList =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
         // console.log("NavigationStart "+testi++);
+        // console.log(event);
+        this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo= event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })
     this._interactionsService.collapseHeader=true;
     this.activatedRoute.params.subscribe(resp => {
       this.initiativesSvc.initvStgId = resp['id'];
+      this.initiativesSvc.initiative.id = resp['id'];
+      // console.log("initiative id menu : "+this.initiativesSvc.initiative.id);
       this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
       // this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
       //   console.log(resp);

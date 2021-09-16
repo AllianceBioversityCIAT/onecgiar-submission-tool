@@ -8,6 +8,7 @@ import { KeyPartnersComponent } from '../../../../shared/components/preconcept/k
 import { KeyPartnersConceptComponent } from '../../../../shared/components/concept/key-partners-concept/key-partners-concept.component';
 import { ConceptComponent } from './concept.component';
 import { UnderConstructionGuard } from '../../../../shared/guards/under-construction.guard';
+import { UnderConstructionPageComponent } from '../../../../shared/components/utils/under-construction-page/under-construction-page.component';
 
 
 const routes: Routes = [
@@ -22,7 +23,7 @@ const routes: Routes = [
       },
       {
         path: 'general-information',
-        component: GeneralInformationConceptComponent,
+        loadChildren: () => import('./general-info-concept/general-info-concept.module').then((m) => m.GeneralInfoConceptModule),
       },
       {
         path: 'narratives',
@@ -41,6 +42,7 @@ const routes: Routes = [
       {
         path: 'work-package',
         loadChildren: () => import('../../../../shared/components/concept/work-package/work-package.module').then((m) => m.WorkPackageModule),
+        canActivate:[false]
         // canActivate: [UnderConstructionGuard], 
         // data: {section: 'work-packages'}    import { WorkPackageComponent } from '../../../../shared/components/concept/work-package/work-package.component';
       },
@@ -49,6 +51,10 @@ const routes: Routes = [
         component: KeyPartnersConceptComponent,
         // canActivate: [UnderConstructionGuard], 
         // data: {section: 'key-partners'} 
+      },
+      {
+        path: 'under-construction-page',
+        component: UnderConstructionPageComponent,
       },
     ]
        

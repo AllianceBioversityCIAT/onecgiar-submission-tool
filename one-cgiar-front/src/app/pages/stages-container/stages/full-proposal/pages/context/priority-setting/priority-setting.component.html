@@ -1,0 +1,36 @@
+<section-title name="Priority setting" ></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+
+    
+    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
+
+        <div class="row">
+            <div class="col-sm-12" >
+                <ibdc-textarea *ngIf="showform"
+                    [options]="{inputTitle:'Priority Setting',readOnlyVariable: false,editText:true, form:contextForm,editText:true, formControlName:'priority_setting', maxWords:500,
+                    description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-sm-12">
+                <ibdc-link-list [options]="{
+                    inputTitle:'Provide any additional support document(s)',
+                    descriptions:'Add urls',
+                    readOnlyVariable: false,
+                    savedList:{
+                        list:citationsList,
+                        attributeDescription:'title',
+                        attributeLink:'link'
+                    }
+                }"></ibdc-link-list>
+            </div>
+        </div>
+
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </form>
+    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
+</div>
+

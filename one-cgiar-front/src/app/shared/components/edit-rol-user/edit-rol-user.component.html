@@ -22,9 +22,8 @@
     </mat-expansion-panel-header>
     <div class="row">
         <div class="col-sm-12">
-            <custom-select [options]="
+            <ibdc-select [options]="
             {
-             readonly:false,
              inputTitle:'Select rol',
              form:this.userRolForm,
              formControlId:'roleId',
@@ -33,7 +32,7 @@
              selectItemName:'name',
              selectItemId:'id'
             }">
-            ></custom-select>
+            ></ibdc-select>
         </div>
         <div class="col-sm-12" align="end">
             <button (click)="cancelAction()"  mat-raised-button color="primary"   [class]="_interactions.animateButtonSave?'animate__animated animate__repeat-2 animate__bounce':''" style="margin-right: 20px;">cancel<mat-icon class="tab-icon">close</mat-icon></button>

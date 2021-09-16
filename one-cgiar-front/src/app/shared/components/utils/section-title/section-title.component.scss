@@ -1,0 +1,17 @@
+.title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: white;
+}
+
+.local_container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .left_container{
+        background-color: var(--ibdc-secondary-color);
+        padding: 15px 20px;
+        border-radius: 0px 0px 10px 0px;
+        margin-right: 5px;
+    }
+}

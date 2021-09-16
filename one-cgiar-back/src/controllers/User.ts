@@ -3,7 +3,7 @@ import { getConnection, getRepository, In, QueryFailedError } from 'typeorm'
 import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
-import { APIError, BaseError } from '../handlers/BaseError';
+import { BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -21,11 +21,11 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
         console.log(error);
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(404).json({ msg: 'Something went wrong', data: error });
@@ -52,11 +52,11 @@ export const getUsersByRoles = async (req: Request, res: Response): Promise<Resp
         console.log(error);
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(404).json({ msg: 'Something went wrong', data: error });
@@ -77,11 +77,11 @@ export const getUser = async (req: Request, res: Response) => {
         console.log(error);
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         res.status(404).json({ msg: 'Something went wrong', data: error });
@@ -123,11 +123,11 @@ export const searchUser = async (req: Request, res: Response) => {
         console.log(error);
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(error.httpCode).json(error);
@@ -143,12 +143,12 @@ export const createUsers = async (req: Request, res: Response) => {
 
     try {
 
-        if (!(email && password)) {
-            throw new APIError(
+        if (!email) {
+            throw new BaseError(
                 'INVALID',
                 HttpStatusCode.BAD_REQUEST,
-                true,
-                'Missing required fields: email or password.'
+                'Missing required fields: email or password.',
+                true
             );
         }
         const user = new Users();
@@ -163,11 +163,11 @@ export const createUsers = async (req: Request, res: Response) => {
         const errors = await validate(user);
         if (errors.length > 0) {
             const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
-            throw new APIError(
+            throw new BaseError(
                 'BAD REQUEST',
                 HttpStatusCode.BAD_REQUEST,
+                message,
                 true,
-                message
             );
         }
         const rolesDB = await rolesRepository.find({
@@ -179,11 +179,11 @@ export const createUsers = async (req: Request, res: Response) => {
         if (rolesDB && rolesDB.length > 0)
             user.roles = rolesDB;
         else {
-            throw new APIError(
+            throw new BaseError(
                 'NOT FOUND',
                 HttpStatusCode.NOT_FOUND,
+                'Roles not found.',
                 true,
-                'Roles not found.'
             );
         }
 
@@ -211,11 +211,11 @@ export const createUsers = async (req: Request, res: Response) => {
         console.log(error)
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(e.httpCode).json(e);
@@ -258,11 +258,11 @@ export const updateUser = async (req: Request, res: Response) => {
         console.log(error);
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(e.httpCode).json(e);
@@ -278,11 +278,11 @@ export const deleteUser = async (req: Request, res: Response) => {
     try {
         user = await userRepository.findOne(id);
         if (user == null) {
-            throw new APIError(
+            throw new BaseError(
                 'NOT FOUND',
                 HttpStatusCode.NOT_FOUND,
+                'User not found.',
                 true,
-                'User not found.'
             );
         }
         user.is_active = false;
@@ -291,13 +291,38 @@ export const deleteUser = async (req: Request, res: Response) => {
     } catch (error) {
         let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            e = new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
+                error.message,
                 true,
-                error.message
             );
         }
         return res.status(e.httpCode).json(e);
     }
 };
+
+export async function removeUser(req:Request,res:Response){
+    const { id } = req.params;
+    const userRepository = getRepository(Users);
+
+    let user: any;
+
+    try {
+        user = await userRepository.findOne(id);
+        if (user == null) {
+            throw new BaseError(
+                'NOT FOUND',
+                HttpStatusCode.NOT_FOUND,
+                'User not found.',
+                true,
+            );
+        }
+        user = await userRepository.delete(user);
+        
+       return res.json(new ResponseHandler('User removed.', { user }));
+    } catch (error) {
+        return error
+    }
+};
+

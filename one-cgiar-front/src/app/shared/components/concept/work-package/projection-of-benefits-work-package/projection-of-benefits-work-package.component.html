@@ -15,7 +15,7 @@
                             <mat-icon (click)="_requests.removeContribution(contribution)">delete</mat-icon>
                         </div>
                         
-                        <custom-select [options]="
+                        <ibdc-select [options]="
                         {
                          required:true,
                          inputTitle:'Indicate a common impact indicators attributable to CGIAR',
@@ -25,7 +25,7 @@
                          selectItemName:'indicatorStatement',
                          selectItemId:'indicatorId'
                         }">
-                        ></custom-select>
+                        ></ibdc-select>
 
                         <table>
                             <tr>
@@ -51,13 +51,13 @@
 
                         </div>
 
-                        <custom-textarea  
+                        <ibdc-textarea  
                         [options]="{form:this.workPackageGeneralInfoForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
-                        </custom-textarea>
+                        </ibdc-textarea>
 
                         <div class="set-data-container">
                             <div>
-                                <save-button></save-button>
+                                <saveree-button></save-button>
                             </div>
 
                         </div>

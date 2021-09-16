@@ -79,6 +79,7 @@ export class KeyPartnersConceptComponent implements OnInit {
         }
 
         this.partnership.key_partners = resp.response.keyPartners;
+        // console.log(this.partnership.key_partners);
         this.showTable = this.partnership.key_partners.length ? true : false;
         // console.log(this.partnership.key_partners.length);
         if(resp.response?.partnership){
@@ -103,21 +104,25 @@ export class KeyPartnersConceptComponent implements OnInit {
       // console.log(resp);
       this.interactionsService.successMessage('Key partners information has been saved')
       this.getPartnershipByInitiativeId();
-      this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-        this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-      })
+      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
+      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
+      // })
     })
   }
 
   openDialog(add,data?,i?) {
-    data.toDisableList = this.convertToDisableList();
-    if(add){
+    this.partnership.key_partners.forEach((resp:any) => {
+      resp.code = resp.key_partner_id;
+    });
+    data.toDisableList = this.partnership.key_partners;
+    
+    // if(add){
       
-      data.key_partner_id = -1;
-      data.key_partner_name = '';
-      data.description = '';
-      data.active = true;
-    }
+    //   data.key_partner_id = -1;
+    //   data.key_partner_name = '';
+    //   data.description = '';
+    //   data.active = true;
+    // }
     const dialogRef = this.dialog.open(AddPartnersModalComponent, 
       { 
         width: '100%',
@@ -147,16 +152,16 @@ export class KeyPartnersConceptComponent implements OnInit {
     });
   }
 
-  convertToDisableList(){
-    let resultList = []
-    for (const iterator of this.partnership.key_partners) {
-      if (iterator.active) {
-        resultList.push(iterator.key_partner_id)
-      }
-      // console.log(iterator);
-    }
-    return resultList;
-  }
+  // convertToDisableList(){
+  //   let resultList = []
+  //   for (const iterator of this.partnership.key_partners) {
+  //     if (iterator.active) {
+  //       resultList.push(iterator.key_partner_id)
+  //     }
+  //     // console.log(iterator);
+  //   }
+  //   return resultList;
+  // }
 
   removeKeyPartner(index){
     this.partnership.key_partners[index].active=false;

@@ -1,5 +1,4 @@
 import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
-import { ConceptInfo } from "../entity/ConceptInfo";
 import { Initiatives } from "../entity/Initiatives";
 import { ExcelUtil } from "../utils/excel-util";
 

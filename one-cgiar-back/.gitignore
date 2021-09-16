@@ -1,6 +1,8 @@
 node_modules
 build
 dist
+docs
+coverage
 ormconfig.json
 src/config/*
 /nodemon.json
@@ -8,3 +10,9 @@ src/config/*
 /docs/DB/DB.sql
 /.env
 /logs
+public
+
+# nyc test coverage
+.nyc_output
+# TypeScript v1 declaration files
+typings/

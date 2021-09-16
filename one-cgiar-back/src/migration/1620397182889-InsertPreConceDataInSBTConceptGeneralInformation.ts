@@ -1,5 +1,5 @@
 import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
-import { ConceptInfo } from "../entity/ConceptInfo";
+import { Narratives } from "../entity/Narratives";
 import { Initiatives } from "../entity/Initiatives";
 import { InitiativesByStages } from "../entity/InititativesByStages";
 import { Stages } from "../entity/Stages";
@@ -20,7 +20,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const fileName = '20210430_initiatives_transformed_v1.1.xlsx';
-        const conceptRepo = getRepository(ConceptInfo);
+        const conceptRepo = getRepository(Narratives);
         const stageRepo = getRepository(Stages);
         const initvStageRepo = getRepository(InitiativesByStages);
         try {
@@ -80,7 +80,7 @@ export class InsertPreConceDataInSBTConceptGeneralInformation1620397182889 imple
                 /**
                  * create concept info
                  */
-                let newConceptInfo = new ConceptInfo();
+                let newConceptInfo = new Narratives();
                 newConceptInfo.name = initiative.name;
                 newConceptInfo.id = initiative.id;
                 newConceptInfo.initvStg = initvStg;

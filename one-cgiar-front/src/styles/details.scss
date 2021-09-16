@@ -1,0 +1,73 @@
+.swal2-cancel,.swal2-confirm{
+    &:focus{
+      box-shadow: none !important;
+    }
+  }
+  
+  .tooltip_font{
+    font-size: 1em;
+  }
+  
+  
+  .mat-tooltip {
+    margin-right: 60px !important;
+  }
+
+  .marginSnackTop{
+    margin-top: 200px !important;
+  }
+  
+  .outline_none{
+    outline: none !important;
+  }
+  
+  .pos_relative{
+    margin-top: 5px;
+    position: relative;
+  }
+
+  textarea[cdktextareaautosize].mat-input-element {
+    overflow: hidden;
+  }    
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  ngx-editor-menu{
+    .NgxEditor__MenuBar{
+      background-color: transparent !important;
+    }
+  }
+  
+  ngx-editor {
+    .NgxEditor {
+      border-radius: 0px !important;
+      border: none!important;
+      border-bottom: 1px solid #a7a7a7 !important;
+      background-color: transparent !important;
+      p{
+        margin: 0px;
+        background-color: transparent !important;
+      }
+  
+      .NgxEditor__Content{
+        padding: 0px !important;
+        p{
+          background-color: transparent !important;
+  
+        }
+          background-color: transparent !important;
+        
+      }
+    }
+  }
+
+  .mat-form-field-aux{
+    .mat-form-field-wrapper{
+        .mat-form-field-flex,.mat-form-field-underline{
+            position: absolute !important;
+        }
+    }
+  
+  }

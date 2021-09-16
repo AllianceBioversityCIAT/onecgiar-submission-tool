@@ -15,8 +15,27 @@ export class FullProposalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.validateAllSections();
     this._dataControlService.loadMenu$.emit('full-proposal');
     this.getRolefromInitiativeById();
+  }
+
+  validateAllSections(){
+    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
+
+      resp.response.validationGI.map(item=>{
+        // console.log(item);
+        this.validateSection(3,2,item.ValidateGI);
+      })
+
+    })
+  }
+
+  validateSection(stageId,sectionId,ValidateGI){
+    let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId)
+                  .sections.find(item=>item.sectionId == sectionId)
+    result.fieldsCompleted = ValidateGI;
+
   }
 
   getRolefromInitiativeById(){
@@ -24,10 +43,11 @@ export class FullProposalComponent implements OnInit {
       if ( resp.response.roles[0]?.roleId) {
         this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
         const rol = this._initiativesService.initiative.roleId
-        this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
+        // this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
+        this._initiativesService.initiative.readonly = false;
       }else{
-        this._initiativesService.initiative.readonly = true;
-        this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
+        this._initiativesService.initiative.readonly = false;
+        // this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
       }
 
     });

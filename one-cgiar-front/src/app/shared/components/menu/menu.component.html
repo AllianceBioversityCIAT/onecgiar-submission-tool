@@ -1,6 +1,73 @@
+    <div  class="menu">
+         <!-- stages list -->
+        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;">
+            <div class="stage-title" [ngClass]="{'activeSection': activeClassByRoute([stage.description])}" (click)="toggleExpand(sectionsList)">
+                <span>{{stage.description}}</span>
+            </div>
+            <div #sectionsList class="stage-sections" [ngClass]="{'expandIbd': activeClassByRoute([stage.description]),'collapseIbd': !activeClassByRoute([stage.description])}" [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+                <br>
+                <!-- sections list -->
+                <div class="stage-section" *ngFor="let section of stage.sections; let i = index">
+                    <div class="number-and-title-container" [ngClass]="{'activeSection': activeClassByRoute([stage.description,section.description]),'noActiveSection': !activeClassByRoute([stage.description,section.description])}" 
+                        (click)="toggleExpand(subSectionsList);menuNavigation(section.active,stage.description,section.description,true,section.subsections)">
+                        <div class="number">{{i+1}}</div>
+                        <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}" >{{section.display_name}}</span>
+                        <div class="status_icons">
+                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
+                            <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
+                        </div>
 
-    <div class="menu-title">Stages</div>
-    <mat-accordion>
+                    </div>
+                    <div #subSectionsList  class="sub-sections" [ngClass]="{'expandIbd': activeClassByRoute([section.description]),'collapseIbd': !activeClassByRoute([section.description])}" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+                        <!-- sub sections list -->
+                        <div class="sub-section-container" *ngFor="let subSection of section.subsections">
+                            <div class="sub-section {{subSection.dynamicList?'sub-section-with-dynamicList':''}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
+                                <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
+                                <div class="status_icons">
+                                    <span style="margin-right: 8px; color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
+                                    <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
+                                </div>
+                            </div>
+                            <div class="dynamicList" *ngIf="subSection.dynamicList">
+                                <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
+                                    <div class="point"></div>
+                                    <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                        
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="submitButtonInitiative">
+            <button pButton type="button" label="Submit initiative" class="p-button-rounded p-button-success" disabled="true"></button>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
         <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
             <mat-expansion-panel-header>
                 <mat-panel-title >
@@ -40,27 +107,12 @@
     
             </mat-list>
             </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <mat-accordion  *ngIf="currentStageName != 'concept'">
                 <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
                     <!-- no subesection -->
                     <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color" >
                       <mat-panel-title  class="subSections_color" >
-                        {{meta.title}}
+                          <span [style.width]="'85%'">{{meta.title}}</span>
                       </mat-panel-title>
 
                       <button mat-icon-button style="margin-right: 40px;" class="mat-icon-no-color_new"
@@ -72,9 +124,9 @@
                       
                     </mat-expansion-panel-header>
                     <!-- have subsections -->
-                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/3/stages/full-proposal/'+meta.route">
+                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal/'+meta.route">
                       <mat-panel-title  class="subSections_color" >
-                        {{meta.title}}
+                        <span [style.width]="'85%'">{{meta.title}}</span>
                       </mat-panel-title>
 
                       <button mat-icon-button class="mat-icon-no-color_new"
@@ -88,14 +140,14 @@
                     </mat-expansion-panel-header>
 
                     <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
-                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/context/'+subSection.route">
-                          {{subSection.title}}
+                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/'+subSection.route">
+                          <span style="width: 80%;">{{subSection.title}}</span>
                           
                       <button mat-icon-button class="mat-icon-no-color_new"
                       [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                       aria-label="Verified icon">
                       <mat-icon>verified</mat-icon>
-                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
+                      <img class="icon_under_construction" *ngIf="validate_under_construction(subSection.title)" src="/assets/images/under-construction.png" alt="" srcset="">
                       </button>
 
                         </mat-list-option>
@@ -103,6 +155,21 @@
                   </mat-expansion-panel>
             </mat-accordion>
             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
 
 
 

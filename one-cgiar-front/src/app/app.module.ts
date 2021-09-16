@@ -31,7 +31,6 @@ import { KeyPartnersComponent } from './shared/components/preconcept/key-partner
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 import { CountryControlComponent } from './shared/components/preconcept/country-control/country-control.component';
 import { RegionControlComponent } from './shared/components/preconcept/region-control/region-control.component';
-import { MenuComponent } from './shared/components/menu/menu.component';
 import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
@@ -58,7 +57,9 @@ import { ChangePasswordComponent } from './shared/components/login/change-passwo
 import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
-import { ExampleComponent } from './shared/components/full-proposal/example/example.component';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import {InputTextModule} from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,6 @@ import { ExampleComponent } from './shared/components/full-proposal/example/exam
     ChangePasswordComponent,
     PartnersRequestComponent,
     ProjectionTimeFrameComponent,
-    ExampleComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -118,7 +118,9 @@ import { ExampleComponent } from './shared/components/full-proposal/example/exam
     MatSortModule,
     MatPaginatorModule,
     NgxSpinnerModule,
-    CustomFormsModule
+    CustomFormsModule,
+    IbdAngularComponentsModule,
+    InputTextModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
