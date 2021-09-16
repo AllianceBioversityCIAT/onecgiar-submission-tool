@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-impact-area',
@@ -35,7 +36,8 @@ export class ImpactAreaComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
-    public activatedRoute:ActivatedRoute
+    public activatedRoute:ActivatedRoute,
+    public _interactionsService:InteractionsService
   ) { 
     this.pobImpactAreaForm = new FormGroup({
       impact_area_indicator_id:new FormControl(null),
@@ -143,15 +145,6 @@ export class ImpactAreaComponent implements OnInit {
           })
         })
 
-      // if (this.pobImpactAreaForm.controls['impact_area_active'].value === null) {
-      //   this.pobImpactAreaForm.controls['impact_area_active'].setValue(true);
-      // }
-
-
-
-
-
-
 
     })
     
@@ -198,7 +191,7 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(resp.depth_scale_id);
     this.pobImpactAreaForm.controls['depth_scale_name'].setValue(resp.depth_scale_name);
     this.pobImpactAreaForm.controls['probability_id'].setValue(resp.probability_id);
-    this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active);
+    this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active == null ? false : resp.impact_area_active);
     this.dimensionsList = resp.dimensions;
 
   }
@@ -213,7 +206,7 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
     this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
     this.pobImpactAreaForm.controls['probability_id'].setValue(null);
-    this.pobImpactAreaForm.controls['impact_area_active'].setValue(null);
+    this.pobImpactAreaForm.controls['impact_area_active'].setValue(false);
     this.indicatorMetaData.targetUnit = '';
     this.indicatorMetaData.value = '';
     this.indicatorMetaData.targetYear = '';
@@ -236,7 +229,12 @@ export class ImpactAreaComponent implements OnInit {
     body.dimensions = this.dimensionsList;
     console.log(body);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
+      // console.log(resp.response.projectionBenefits.upsertedPjectionBenefits);
+      this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
+      this.pobImpactAreaForm.valid?
+      this._interactionsService.successMessage('Projection of benfits - Impact area has been saved'):
+      this._interactionsService.warningMessage('Projection of benfits - Impact area has been saved, but there are incomplete fields')
     })
   }
 

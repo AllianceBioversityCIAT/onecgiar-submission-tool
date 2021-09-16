@@ -66,11 +66,6 @@ export class ResultFrameworkComponent implements OnInit {
     this.data.meliaId = this.data.meliaId == undefined ? null : this.data.meliaId;
 
     formData.append('data', JSON.stringify(this.data));
-    console.log("-------------------------------");  
-    console.log(this.data);
-    console.log(formData.getAll('data'));
-    console.log(this.filesList);
-    console.log("*****************+***");
     this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
