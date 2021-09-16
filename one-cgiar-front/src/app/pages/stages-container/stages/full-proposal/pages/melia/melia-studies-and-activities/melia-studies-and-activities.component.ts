@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -12,13 +13,14 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   showForm = false;
   data = {
     meliaId : null,
-    melia_plan : "algo no tan implicito",
+    // melia_plan : "algo no tan implicito",
     active : true,
     section : "melia",
     updateFiles : []
   };
   constructor(
-    public _initiativesService: InitiativesService
+    public _initiativesService: InitiativesService,
+    private _interactionsService:InteractionsService
   ) { }
 
   ngOnInit(): void {
@@ -69,6 +71,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
+      this.filesSavedList.length || this.filesList.length?
+      this._interactionsService.successMessage('Melia studies and activities has been saved'):
+      this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')
       this.getMelia();
     })
 

@@ -6,6 +6,7 @@ import { MeliaPlanComponent } from './melia-plan.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [MeliaPlanComponent],
@@ -13,7 +14,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     MeliaPlanRoutingModule,
     IbdAngularComponentsModule,
-    UtilsModule
+    UtilsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
