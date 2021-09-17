@@ -1,6 +1,6 @@
     <div  class="menu">
          <!-- stages list -->
-        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;">
+        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;" [hidden]="stage.stageId == 2">
             <div class="stage-title" [ngClass]="{'activeSection': activeClassByRoute([stage.description])}" (click)="toggleExpand(sectionsList)">
                 <span>{{stage.description}}</span>
             </div>

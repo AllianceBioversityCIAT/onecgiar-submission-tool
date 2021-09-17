@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   public user: any = null;
   public data: any = [];
   public role: string = null;
-
+  showTable = false;
   constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
 
   ngOnInit(): void {    
@@ -38,8 +38,14 @@ export class HomeComponent implements OnInit {
   getInitiatives() {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
-        this.data = data;
-        // console.log(data);
+        // this.data = data;
+        data.map(item=>{
+          if (item.stageId == 3) {
+            this.data.push(item)
+            console.log(item);
+          }
+        })
+        this.showTable = true;
         this.spinnerService.hide();
       });
 
