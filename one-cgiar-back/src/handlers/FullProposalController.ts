@@ -1187,7 +1187,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         try {
             // retrieve general information
-            const meliaQuery = (` 
+            const managePlanQuery = (` 
             SELECT * 
             FROM manage_plan_risk
            WHERE initvStgId = ${initvStg.id}
@@ -1206,18 +1206,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `
                 )
 
-            const melia = await this.queryRunner.query(meliaQuery);
+            const managePlan = await this.queryRunner.query(managePlanQuery);
             const files = await this.queryRunner.query(filesQuery);
 
-            melia.map(mel => {
+            managePlan.map(mel => {
                 mel['files'] = files.filter(f => {
-                    return (f.meliaId === mel.id)
+                    return (f.manage_plan_risk_id === mel.id)
                 })
             }
 
             )
 
-            return melia[0];
+            return managePlan[0];
 
         } catch (error) {
 
