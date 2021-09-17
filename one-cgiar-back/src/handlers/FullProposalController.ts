@@ -1112,7 +1112,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
-                    newFiles.meliaId = upsertedManagePlan.id;
+                    newFiles.manage_plan_risk_id = upsertedManagePlan.id;
                     newFiles.section = section;
                     newFiles.url = urlDB;
                     newFiles.name = file.originalname;
