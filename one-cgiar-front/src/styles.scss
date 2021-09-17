@@ -89,6 +89,25 @@ button {
 .icon_verify_valid {
   color: #4caf50;
 }
+.ibdc_button_template_container{
+  display: flex;
+  justify-content: center;
+  .ibdc_button_template{
+    border-radius: 50px;
+    background-color: var(--ibdc-secondary-color);
+    font-weight: 500;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: all ease .3s;
+    &:hover{
+      box-shadow: 0 3px 10px #aedab0b2, 0 3px 10px #aedab0b2;
+      transition: all ease .3s;
+      background-color: #6bd16f;
+    }
+  }
+}
+
 
 //primary
 .color-primary{
