@@ -1197,8 +1197,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                     `
                     SELECT * 
                     FROM files 
-                   WHERE meliaId in (SELECT id
-                    FROM melia
+                   WHERE manage_plan_risk_id in (SELECT id
+                    FROM manage_plan_risk
                    WHERE initvStgId = ${initvStg.id}
                      AND active = 1)
                      AND section = "${sectionName}"
