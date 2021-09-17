@@ -6,6 +6,7 @@ import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
+import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
@@ -880,7 +881,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async upsertMeliaAndFiles(initiativeId?,ubication?,stege?,meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
+    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
 
 
         const meliaRepo = getRepository(Melia);
@@ -903,8 +904,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (host == 'http://localhost') {
 
                 host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-                
-            }else{
+
+            } else {
 
                 host = `${process.env.EXT_HOST}`;
             }
@@ -998,7 +999,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Upsert Impact Strategies: Full proposal', 400, error.message, false)
+            throw new BaseError('Upsert melia: Full proposal', 400, error.message, false)
 
         }
 
@@ -1041,7 +1042,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return melia[0] ;
+            return melia[0];
 
         } catch (error) {
 
@@ -1054,6 +1055,180 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
+
+    async upsertManagePlanAndFiles(initiativeId?, ubication?, stege?, managePlanId?, management_plan?, managePlanActive?, section?, files?, updateFiles?) {
+
+
+        const manageRepo = getRepository(ManagePlanRisk);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newManagePlan = new ManagePlanRisk();
+        var newFiles = new Files();
+        var upsertedManagePlan;
+        var upsertedFile;
+
+        newManagePlan.id = managePlanId;
+        newManagePlan.management_plan = management_plan;
+        newManagePlan.active = managePlanActive ? managePlanActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newManagePlan.id !== null) {
+
+                var savedManagePlan = await manageRepo.findOne(newManagePlan.id);
+
+                manageRepo.merge(
+                    savedManagePlan,
+                    newManagePlan
+                );
+
+                upsertedManagePlan = await manageRepo.save(savedManagePlan);
+
+            } else {
+
+                newManagePlan.initvStgId = initvStg.id;
+
+                upsertedManagePlan = await manageRepo.save(newManagePlan);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.meliaId = upsertedManagePlan.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedManagePlan, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert management plan risk: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestManagePlanFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const meliaQuery = (` 
+            SELECT * 
+            FROM manage_plan_risk
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE meliaId in (SELECT id
+                    FROM melia
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const melia = await this.queryRunner.query(meliaQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            melia.map(mel => {
+                mel['files'] = files.filter(f => {
+                    return (f.meliaId === mel.id)
+                })
+            }
+
+            )
+
+            return melia[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get manage plan risk and files: Full proposal', 400, error.message, false)
+
+        }
+
+
+
+    }
 
 
 }

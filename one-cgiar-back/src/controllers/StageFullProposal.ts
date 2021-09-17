@@ -582,3 +582,78 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
 
 
 }
+
+
+export async function patchManagePlanAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, ubication } = req.params;
+
+    //melia section data
+    const { managePlanId, management_plan, managePlanActive, section, updateFiles } = JSON.parse(req.body.data);
+
+    //melia section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        console.log(stage);
+        
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch management plan and risk: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const managePlanRisk = await fullPposal.upsertManagePlanAndFiles(initiativeId, ubication, stage, managePlanId, management_plan, managePlanActive, section, files, updateFiles);
+
+        res.json(new ResponseHandler('Full Proposal: Patch management plan and risk.', { managePlanRisk, files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getManagePlanAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read manage plan risk and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const managePlanData = await fullPposal.requestManagePlanFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal: manage plan risk  and files.', { managePlanData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}

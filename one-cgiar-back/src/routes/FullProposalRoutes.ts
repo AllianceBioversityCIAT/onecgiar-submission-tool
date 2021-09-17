@@ -248,4 +248,10 @@ router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,check
 // Get melia and files to initiative
 router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
 
+// upsert management plan risk and files to initiative
+router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('mpr', 'updateOwn'), uploadFile.any()], stagefull.patchManagePlanAndFiles);
+
+// Get management plan risk and files to initiative
+router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('mpr', 'readOwn')], stagefull.getManagePlanAndFiles);
+
 export default router;
