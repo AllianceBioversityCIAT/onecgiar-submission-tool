@@ -510,7 +510,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
 
 export async function patchMeliaAndFiles(req: Request, res: Response) {
 
-    const { initiativeId } = req.params;
+    const { initiativeId, ubication } = req.params;
 
     //melia section data
     const { meliaId, melia_plan, meliaActive, section, updateFiles } = JSON.parse(req.body.data);
@@ -528,6 +528,8 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
+        console.log(stage);
+        
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch melia: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -535,7 +537,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(meliaId, melia_plan, meliaActive, section, files, updateFiles);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, meliaId, melia_plan, meliaActive, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 
@@ -550,7 +552,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 export async function getMeliaAndFiles(req: Request, res: Response) {
 
 
-    const { initiativeId,sectionName } = req.params;
+    const { initiativeId, sectionName } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 

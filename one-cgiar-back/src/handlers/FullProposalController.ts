@@ -880,7 +880,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async upsertMeliaAndFiles(meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
+    async upsertMeliaAndFiles(initiativeId?,ubication?,stege?,meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
 
 
         const meliaRepo = getRepository(Melia);
@@ -933,7 +933,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 for (let index = 0; index < files.length; index++) {
                     const file = files[index];
 
-                    const urlDB = `${host}/${path}/${file.filename}`
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
                     newFiles.meliaId = upsertedMelia.id;

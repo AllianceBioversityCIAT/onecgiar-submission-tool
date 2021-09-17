@@ -243,7 +243,7 @@ router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('s
 router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative
-router.patch("/melia/:initiativeId([0-9]+)", [checkJwt,checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
+router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
 router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
