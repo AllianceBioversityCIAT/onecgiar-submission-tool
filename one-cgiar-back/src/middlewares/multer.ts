@@ -52,8 +52,8 @@ export const startMulter = async (parentpath?: string) => {
 var storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         console.log(req.params);
-        const { initiativeId, unication, stageId } = req.params;
-        let finalPath = await createFolder(parentD + '/INIT-' + initiativeId + '/' + unication + '/' + 'stage-' + stageId);
+        const { initiativeId, ubication, stageId } = req.params;
+        let finalPath = await createFolder(parentD + '/INIT-' + initiativeId + '/' + ubication + '/' + 'stage-' + stageId);
         cb(null, finalPath)
     },
     filename: (req, file, cb) => {
