@@ -513,7 +513,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, narrative, active, section, updateFiles } = JSON.parse(req.body.data);
+    const { id, melia_plan, active, section, updateFiles } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -537,7 +537,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, narrative, active, section, files, updateFiles);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 
@@ -589,7 +589,7 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, narrative, active, section, updateFiles } = JSON.parse(req.body.data);
+    const { id, management_plan, active, section, updateFiles } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -613,7 +613,7 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const managePlanRisk = await fullPposal.upsertManagePlanAndFiles(initiativeId, ubication, stage, id, narrative, active, section, files, updateFiles);
+        const managePlanRisk = await fullPposal.upsertManagePlanAndFiles(initiativeId, ubication, stage, id, management_plan, active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch management plan and risk.', { managePlanRisk, files }));
 
