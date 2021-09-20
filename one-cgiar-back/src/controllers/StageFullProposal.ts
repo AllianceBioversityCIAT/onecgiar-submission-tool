@@ -533,9 +533,6 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        console.log(stage);
-        
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch melia: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -619,9 +616,6 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        console.log(stage);
-        
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch management plan and risk: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -705,9 +699,6 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        console.log(stage);
-        
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch human resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -792,8 +783,6 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
 
-        console.log(stage);
-        
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch financial resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
