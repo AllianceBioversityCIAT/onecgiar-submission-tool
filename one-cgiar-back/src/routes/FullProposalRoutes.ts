@@ -254,9 +254,141 @@ router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,check
 router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
 
 // upsert management plan risk and files to initiative
+/**
+ * @api {patch} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId 7.Manage Plan and Risk - Create and update MPR
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchManagePlan
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative
+ * @apiParam {Number} id identificator Manage Plan
+ * @apiParam {String} gender_diversity_inclusion description gender diversity inclusion.
+ * @apiParam {Boolean} active status.
+ * @apiParam {String} section section location.
+ * @apiParam {Object} updateFiles file to updtate.
+ * @apiParam {File} file template Manage Plan
+ * 
+ * @apiParamExample {json} Request-Example:
+ * data: [
+ * {   "id":null,
+ *     "management_plan": "new plan",
+ *     "active": true,
+ *     "section":"management_plan",
+ *     "updateFiles":[]
+ * }
+ * ]
+ *  
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *    {
+ *   "response": {
+ *       "managePlanRisk": {
+ *           "upsertedManagePlan": {
+ *               "id": 1,
+ *               "management_plan": "new plan",
+ *               "active": true,
+ *               "initvStgId": 35,
+ *               "updated_at": "2021-09-20T20:03:51.000Z",
+ *               "created_at": "2021-09-20T20:03:51.000Z"
+ *           },
+ *           "upsertedFile": {
+ *               "id": 73,
+ *               "active": true,
+ *               "manage_plan_risk_id": 1,
+ *               "section": "management_plan",
+ *               "url": "http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx",
+ *               "name": "Book1.xlsx",
+ *               "updated_at": "2021-09-20T20:03:51.000Z",
+ *               "created_at": "2021-09-20T20:03:51.000Z"
+ *           }
+ *       },
+ *       "files": [
+ *           {
+ *               "fieldname": "file",
+ *               "originalname": "Book1.xlsx",
+ *               "encoding": "7bit",
+ *               "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+ *               "destination": "./public/uploads/INIT-2/7.manage-plan/stage-3",
+ *               "filename": "1632168231799-Book1.xlsx",
+ *               "path": "public\\uploads\\INIT-2\\7.manage-plan\\stage-3\\1632168231799-Book1.xlsx",
+ *               "size": 22386
+ *           }
+ *       ]
+ *   },
+ *   "title": "Full Proposal: Patch management plan and risk."
+ *   }
+ *
+ * @apiError Error Upsert management plan risk: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert management plan risk: Full proposal","httpCode": 400,"isOperational": false}
+ */
 router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('mpr', 'updateOwn'), uploadFile.any()], stagefull.patchManagePlanAndFiles);
 
 // Get management plan risk and files to initiative
+/**
+ * @api {get} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId 7.Manage Plan and Risk - Request MPR
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetManagePlan
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows Manage Plan and Risk
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "managePlanData": {
+ *             "id": 1,
+ *             "initvStgId": 35,
+ *             "management_plan": "new plan",
+ *             "active": 1,
+ *             "created_at": "2021-09-20T20:03:51.000Z",
+ *             "updated_at": "2021-09-20T20:03:51.000Z",
+ *             "files": [
+ *                 {
+ *                     "id": 73,
+ *                     "tocsId": null,
+ *                     "url": "http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx",
+ *                     "name": "Book1.xlsx",
+ *                     "active": 1,
+ *                     "created_at": "2021-09-20T20:03:51.000Z",
+ *                     "updated_at": "2021-09-20T20:03:51.000Z",
+ *                     "meliaId": null,
+ *                     "manage_plan_risk_id": 1,
+ *                     "humanId": null,
+ *                     "financial_resources_id": null,
+ *                     "section": "management_plan"
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Full Proposal: manage plan risk  and files."
+ * }
+ *
+ * @apiError Error : Get manage plan risk and files: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get manage plan risk and files: Full proposal", error }
+ */
 router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('mpr', 'readOwn')], stagefull.getManagePlanAndFiles);
 
 // upsert human resources and files to initiative
@@ -281,7 +413,7 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  * @apiParam {Boolean} active status.
  * @apiParam {String} section section location.
  * @apiParam {Object} updateFiles file to updtate.
- * @apiParam {File} file template Financial Resources
+ * @apiParam {File} file template Human Resources
  * 
  * @apiParamExample {json} Request-Example:
  * data: [

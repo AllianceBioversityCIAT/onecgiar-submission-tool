@@ -1454,6 +1454,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
+    "title": "7.Manage Plan and Risk - Request MPR",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetManagePlan",
+    "group": "Proposal",
+    "description": "<p>Shows Manage Plan and Risk</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"managePlanData\": {\n            \"id\": 1,\n            \"initvStgId\": 35,\n            \"management_plan\": \"new plan\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-20T20:03:51.000Z\",\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"files\": [\n                {\n                    \"id\": 73,\n                    \"tocsId\": null,\n                    \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n                    \"name\": \"Book1.xlsx\",\n                    \"active\": 1,\n                    \"created_at\": \"2021-09-20T20:03:51.000Z\",\n                    \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n                    \"meliaId\": null,\n                    \"manage_plan_risk_id\": 1,\n                    \"humanId\": null,\n                    \"financial_resources_id\": null,\n                    \"section\": \"management_plan\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: manage plan risk  and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get manage plan risk and files: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get manage plan risk and files: Full proposal\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
     "title": "3.Work package - Request workpackage",
     "version": "1.0.2",
@@ -1840,7 +1909,7 @@ define({ "api": [
             "type": "File",
             "optional": false,
             "field": "file",
-            "description": "<p>template Financial Resources</p>"
+            "description": "<p>template Human Resources</p>"
           }
         ]
       },
@@ -1876,6 +1945,136 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert human Resources: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
+    "title": "7.Manage Plan and Risk - Create and update MPR",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchManagePlan",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Manage Plan</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "gender_diversity_inclusion",
+            "description": "<p>description gender diversity inclusion.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "section",
+            "description": "<p>section location.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "updateFiles",
+            "description": "<p>file to updtate.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>template Manage Plan</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "data: [\n{   \"id\":null,\n    \"management_plan\": \"new plan\",\n    \"active\": true,\n    \"section\":\"management_plan\",\n    \"updateFiles\":[]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"response\": {\n    \"managePlanRisk\": {\n        \"upsertedManagePlan\": {\n            \"id\": 1,\n            \"management_plan\": \"new plan\",\n            \"active\": true,\n            \"initvStgId\": 35,\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        },\n        \"upsertedFile\": {\n            \"id\": 73,\n            \"active\": true,\n            \"manage_plan_risk_id\": 1,\n            \"section\": \"management_plan\",\n            \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n            \"name\": \"Book1.xlsx\",\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        }\n    },\n    \"files\": [\n        {\n            \"fieldname\": \"file\",\n            \"originalname\": \"Book1.xlsx\",\n            \"encoding\": \"7bit\",\n            \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n            \"destination\": \"./public/uploads/INIT-2/7.manage-plan/stage-3\",\n            \"filename\": \"1632168231799-Book1.xlsx\",\n            \"path\": \"public\\\\uploads\\\\INIT-2\\\\7.manage-plan\\\\stage-3\\\\1632168231799-Book1.xlsx\",\n            \"size\": 22386\n        }\n    ]\n},\n\"title\": \"Full Proposal: Patch management plan and risk.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert management plan risk: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert management plan risk: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
           "type": "json"
         }
       ]
