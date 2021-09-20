@@ -657,3 +657,80 @@ export async function getManagePlanAndFiles(req: Request, res: Response) {
 
 
 }
+
+
+
+export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, ubication } = req.params;
+
+    //melia section data
+    const { id, gender_diversity_inclusion,capacity_development, active, section, updateFiles } = JSON.parse(req.body.data);
+
+    //melia section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        console.log(stage);
+        
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch human resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const humanResources = await fullPposal.upsertHumanResourcesAndFiles(initiativeId, ubication, stage, id, gender_diversity_inclusion,capacity_development,
+                                                                             active, section, files, updateFiles);
+
+        res.json(new ResponseHandler('Full Proposal: Patch human resources.', { humanResources, files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getHumanResources(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read human resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const humanResourcesData = await fullPposal.requestHumanResourcesFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal:human resources  and files.', { humanResourcesData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}

@@ -254,4 +254,10 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
 // Get management plan risk and files to initiative
 router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('mpr', 'readOwn')], stagefull.getManagePlanAndFiles);
 
+// upsert human resources and files to initiative
+router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('hr', 'updateOwn'), uploadFile.any()], stagefull.patchHumanResourcesAndFiles);
+
+// Get human resources and files to initiative
+router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('hr', 'readOwn')], stagefull.getHumanResources);
+
 export default router;

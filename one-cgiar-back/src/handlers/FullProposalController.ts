@@ -5,6 +5,7 @@ import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByS
 import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
 import { GeneralInformation } from "../entity/GeneralInformation";
+import { HumanResources } from "../entity/HumanResources";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
 import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
@@ -1229,6 +1230,187 @@ export class ProposalHandler extends InitiativeStageHandler {
 
 
     }
+
+
+
+
+    async upsertHumanResourcesAndFiles(initiativeId?, ubication?, stege?, humanResourcesId?, gender_diversity_inclusion?, capacity_development?,
+        humanResourcesActive?, section?, files?, updateFiles?) {
+
+
+        const humanResourcesRepo = getRepository(HumanResources);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newHumanResources = new HumanResources();
+        var newFiles = new Files();
+        var upsertedHumanResources;
+        var upsertedFile;
+
+        newHumanResources.id = humanResourcesId;
+        newHumanResources.gender_diversity_inclusion = gender_diversity_inclusion;
+        newHumanResources.capacity_development = capacity_development;
+        newHumanResources.active = humanResourcesActive ? humanResourcesActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newHumanResources.id !== null) {
+
+                var savedHumanResources = await humanResourcesRepo.findOne(newHumanResources.id);
+
+                humanResourcesRepo.merge(
+                    savedHumanResources,
+                    newHumanResources
+                );
+
+                upsertedHumanResources = await humanResourcesRepo.save(savedHumanResources);
+
+            } else {
+
+                newHumanResources.initvStgId = initvStg.id;
+
+                upsertedHumanResources = await humanResourcesRepo.save(newHumanResources);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.manage_plan_risk_id = upsertedHumanResources.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedHumanResources, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert human Resources: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestHumanResourcesFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const humanResourcesQuery = (` 
+            SELECT * 
+            FROM human_resources
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE humanId in (SELECT id
+                    FROM human_resources
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const humanResources = await this.queryRunner.query(humanResourcesQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            humanResources.map(hr => {
+                hr['files'] = files.filter(f => {
+                    return (f.humanId === hr.id)
+                })
+            }
+
+            )
+
+            return humanResources[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get human resources and files: Full proposal', 400, error.message, false)
+
+        }
+
+
+
+    }
+
+
 
 
 }
