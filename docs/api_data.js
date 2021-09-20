@@ -286,7 +286,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\t\t\t\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"oficial_code\":\"INIT-2\"\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\t\t\t\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
           "type": "json"
         }
       ]
@@ -1316,8 +1316,215 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
+    "title": "10.Financial Resources - Request Financial Resources",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetFinancialResources",
+    "group": "Proposal",
+    "description": "<p>Shows Financial Resources</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n {\n  \"response\": {\n      \"financialResourcesData\": {\n          \"id\": 2,\n          \"initvStgId\": 35,\n          \"detailed_budget\": \"new detail\",\n          \"active\": 1,\n          \"created_at\": \"2021-09-20T17:06:53.000Z\",\n          \"updated_at\": \"2021-09-20T17:06:53.000Z\",\n          \"files\": [\n              {\n                  \"id\": 69,\n                  \"tocsId\": null,\n                  \"url\": \"http://localhost:3000/uploads/INIT-2/financial-resources/stage-3/1632157613540-Book1.xlsx\",\n                  \"name\": \"Book1.xlsx\",\n                  \"active\": 1,\n                  \"created_at\": \"2021-09-20T17:06:53.000Z\",\n                  \"updated_at\": \"2021-09-20T17:06:53.000Z\",\n                  \"meliaId\": null,\n                  \"manage_plan_risk_id\": null,\n                  \"humanId\": null,\n                  \"financial_resources_id\": 2,\n                  \"section\": \"budget\"\n              }\n          ]\n      }\n  },\n  \"title\": \"Full Proposal:financial resources and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get financial resources and files: Full proposal.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get financial resources and files: Full proposal.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
+    "url": "stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId",
+    "title": "9.Human Resources - Request Human Resources",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetHumanResources",
+    "group": "Proposal",
+    "description": "<p>Shows Human Resources</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/initiative-team",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/initiative-team"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"humanResourcesData\": {\n         \"id\": 1,\n         \"initvStgId\": 35,\n         \"gender_diversity_inclusion\": \"\",\n         \"capacity_development\": \"\",\n         \"active\": 1,\n         \"created_at\": \"2021-09-20T19:43:28.000Z\",\n         \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n         \"files\": [\n             {\n                 \"id\": 72,\n                 \"tocsId\": null,\n                 \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n                 \"name\": \"Book1.xlsx\",\n                 \"active\": 1,\n                 \"created_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"meliaId\": null,\n                 \"manage_plan_risk_id\": null,\n                 \"humanId\": 1,\n                 \"financial_resources_id\": null,\n                 \"section\": \"initiative-team\"\n             }\n         ]\n     }\n },\n \"title\": \"Full Proposal:human resources and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get human resources and files: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get human resources and files: Full proposal\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
+    "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
+    "title": "7.Manage Plan and Risk - Request MPR",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetManagePlan",
+    "group": "Proposal",
+    "description": "<p>Shows Manage Plan and Risk</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"managePlanData\": {\n            \"id\": 1,\n            \"initvStgId\": 35,\n            \"management_plan\": \"new plan\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-20T20:03:51.000Z\",\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"files\": [\n                {\n                    \"id\": 73,\n                    \"tocsId\": null,\n                    \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n                    \"name\": \"Book1.xlsx\",\n                    \"active\": 1,\n                    \"created_at\": \"2021-09-20T20:03:51.000Z\",\n                    \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n                    \"meliaId\": null,\n                    \"manage_plan_risk_id\": 1,\n                    \"humanId\": null,\n                    \"financial_resources_id\": null,\n                    \"section\": \"management_plan\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: manage plan risk  and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get manage plan risk and files: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get manage plan risk and files: Full proposal\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
-    "title": "Work package - Request workpackage",
+    "title": "3.Work package - Request workpackage",
     "version": "1.0.2",
     "permission": [
       {
@@ -1399,7 +1606,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/package/:wrkPkgId",
-    "title": "Work package - Request workpackage for id",
+    "title": "3.Work package - Request workpackage for id",
     "version": "1.0.2",
     "permission": [
       {
@@ -1480,8 +1687,405 @@ define({ "api": [
   },
   {
     "type": "patch",
+    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
+    "title": "10.Financial Resources - Create and update FR",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchFinancialResources",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/10.financial-resources/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/10.financial-resources/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Financial Resources</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "detailed_budget",
+            "description": "<p>description budget.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "section",
+            "description": "<p>section location.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "updateFiles",
+            "description": "<p>file to updtate.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>template Financial Resources</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "data: [\n{   \"id\":null,\n  \"detailed_budget\": \"new detail\",\n  \"active\": true,\n  \"section\":\"budget\",\n  \"updateFiles\":[]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n  {\n  \"response\": {\n      \"financialResources\": {\n          \"upsertedFinancialResources\": {\n              \"id\": 6,\n              \"detailed_budget\": \"new detail\",\n               \"active\": true,\n               \"initvStgId\": 35,\n               \"updated_at\": \"2021-09-20T17:21:59.000Z\",\n               \"created_at\": \"2021-09-20T17:21:59.000Z\"\n           },\n           \"upsertedFile\": {\n               \"id\": 71,\n               \"active\": true,\n               \"financial_resources_id\": 6,\n               \"section\": \"budget\",\n               \"url\": \"http://localhost:3000/uploads/INIT-2/10.financial-resources/stage-3/1632158519519-Book1.xlsx\",\n               \"name\": \"Book1.xlsx\",\n               \"updated_at\": \"2021-09-20T17:21:59.000Z\",\n               \"created_at\": \"2021-09-20T17:21:59.000Z\"\n           }\n       },\n       \"files\": [\n           {\n               \"fieldname\": \"file\",\n               \"originalname\": \"Book1.xlsx\",\n               \"encoding\": \"7bit\",\n               \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n               \"destination\": \"./public/uploads/INIT-2/10.financial-resources/stage-3\",\n               \"filename\": \"1632158519519-Book1.xlsx\",\n               \"path\": \"public\\\\uploads\\\\INIT-2\\\\10.financial-resources\\\\stage-3\\\\1632158519519-Book1.xlsx\",\n               \"size\": 22386\n           }\n       ]\n   },\n   \"title\": \"Full Proposal: Patch financial resources\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Full Proposal: Patch financial resources</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert financial Resources: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId",
+    "title": "9.Human Resources - Create and update HR",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchHumanResources",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/9.human-resources/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/9.human-resources/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Human Resources</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "gender_diversity_inclusion",
+            "description": "<p>description gender diversity inclusion.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "capacity_development",
+            "description": "<p>description capacity development.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "section",
+            "description": "<p>section location.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "updateFiles",
+            "description": "<p>file to updtate.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>template Human Resources</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "data: [\n{   \"id\":null,\n   \"gender_diversity_inclusion\": \"\",\n  \"capacity_development\": \"\",\n   \"active\": true,\n   \"section\":\"initiative-team\",\n   \"updateFiles\":[]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n  {\n \"response\": {\n     \"humanResources\": {\n         \"upsertedHumanResources\": {\n             \"id\": 1,\n             \"gender_diversity_inclusion\": \"\",\n             \"capacity_development\": \"\",\n             \"active\": true,\n             \"initvStgId\": 35,\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         },\n         \"upsertedFile\": {\n             \"id\": 72,\n             \"active\": true,\n             \"humanId\": 1,\n             \"section\": \"initiative-team\",\n             \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n             \"name\": \"Book1.xlsx\",\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         }\n     },\n     \"files\": [\n         {\n             \"fieldname\": \"file\",\n             \"originalname\": \"Book1.xlsx\",\n             \"encoding\": \"7bit\",\n             \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n             \"destination\": \"./public/uploads/INIT-2/9.human-resources/stage-3\",\n             \"filename\": \"1632167008334-Book1.xlsx\",\n             \"path\": \"public\\\\uploads\\\\INIT-2\\\\9.human-resources\\\\stage-3\\\\1632167008334-Book1.xlsx\",\n             \"size\": 22386\n         }\n     ]\n },\n \"title\": \"Full Proposal: Patch human resources.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Full Proposal: Patch human resources.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert human Resources: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
+    "title": "7.Manage Plan and Risk - Create and update MPR",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchManagePlan",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Manage Plan</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "gender_diversity_inclusion",
+            "description": "<p>description gender diversity inclusion.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "section",
+            "description": "<p>section location.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "updateFiles",
+            "description": "<p>file to updtate.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>template Manage Plan</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "data: [\n{   \"id\":null,\n    \"management_plan\": \"new plan\",\n    \"active\": true,\n    \"section\":\"management_plan\",\n    \"updateFiles\":[]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"response\": {\n    \"managePlanRisk\": {\n        \"upsertedManagePlan\": {\n            \"id\": 1,\n            \"management_plan\": \"new plan\",\n            \"active\": true,\n            \"initvStgId\": 35,\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        },\n        \"upsertedFile\": {\n            \"id\": 73,\n            \"active\": true,\n            \"manage_plan_risk_id\": 1,\n            \"section\": \"management_plan\",\n            \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n            \"name\": \"Book1.xlsx\",\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        }\n    },\n    \"files\": [\n        {\n            \"fieldname\": \"file\",\n            \"originalname\": \"Book1.xlsx\",\n            \"encoding\": \"7bit\",\n            \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n            \"destination\": \"./public/uploads/INIT-2/7.manage-plan/stage-3\",\n            \"filename\": \"1632168231799-Book1.xlsx\",\n            \"path\": \"public\\\\uploads\\\\INIT-2\\\\7.manage-plan\\\\stage-3\\\\1632168231799-Book1.xlsx\",\n            \"size\": 22386\n        }\n    ]\n},\n\"title\": \"Full Proposal: Patch management plan and risk.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert management plan risk: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert management plan risk: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
     "url": "stages-control/proposal/package/:wrkPkgId",
-    "title": "Work Package - Create and update WP",
+    "title": "3.Work Package - Create and update WP",
     "version": "1.0.0",
     "permission": [
       {

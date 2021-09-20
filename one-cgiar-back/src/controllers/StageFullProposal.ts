@@ -746,7 +746,7 @@ export async function getHumanResources(req: Request, res: Response) {
 
         const humanResourcesData = await fullPposal.requestHumanResourcesFiles(sectionName);
 
-        res.json(new ResponseHandler('Full Proposal:human resources  and files.', { humanResourcesData }));
+        res.json(new ResponseHandler('Full Proposal:human resources and files.', { humanResourcesData }));
 
 
     } catch (error) {
@@ -767,10 +767,10 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
 
     const { initiativeId, ubication } = req.params;
 
-    //melia section data
+    //financial resources section data
     const { id, detailed_budget, active, section, updateFiles } = JSON.parse(req.body.data);
 
-    //melia section files
+    //financial resources  section files
     const files = req['files'];
 
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -785,7 +785,7 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Patch Patch financial resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+            throw new BaseError('Patch financial resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
