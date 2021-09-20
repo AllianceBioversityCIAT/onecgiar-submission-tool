@@ -630,8 +630,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
         const coLeadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
         const coordinatorRole = await rolesRepo.findOne({ where: { acronym: 'CO' } });
-
-
+        
         if (role.acronym == 'ADM') {
             throw new APIError(
                 'UNAUTHORIZED',

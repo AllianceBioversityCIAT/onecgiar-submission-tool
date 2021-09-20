@@ -1170,7 +1170,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newFiles.id = updateFile.id;
                     newFiles.active = updateFile.active ? updateFile.active : true;
-                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.manage_plan_risk_id = updateFile.managePlanId;
                     newFiles.section = updateFile.section;
                     newFiles.url = updateFile.urlDB;
                     newFiles.name = updateFile.originalname;
@@ -1334,7 +1334,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
-                    newFiles.manage_plan_risk_id = upsertedHumanResources.id;
+                    newFiles.humanId = upsertedHumanResources.id;
                     newFiles.section = section;
                     newFiles.url = urlDB;
                     newFiles.name = file.originalname;
@@ -1366,7 +1366,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newFiles.id = updateFile.id;
                     newFiles.active = updateFile.active ? updateFile.active : true;
-                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.humanId = updateFile.humanResourcesId;
                     newFiles.section = updateFile.section;
                     newFiles.url = updateFile.urlDB;
                     newFiles.name = updateFile.originalname;
@@ -1526,7 +1526,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
-                    newFiles.manage_plan_risk_id = upsertedFinancialResources.id;
+                    newFiles.financial_resources_id = upsertedFinancialResources.id;
                     newFiles.section = section;
                     newFiles.url = urlDB;
                     newFiles.name = file.originalname;
@@ -1558,7 +1558,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newFiles.id = updateFile.id;
                     newFiles.active = updateFile.active ? updateFile.active : true;
-                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.financial_resources_id = updateFile.financialResourcesId;
                     newFiles.section = updateFile.section;
                     newFiles.url = updateFile.urlDB;
                     newFiles.name = updateFile.originalname;

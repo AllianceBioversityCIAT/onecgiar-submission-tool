@@ -273,57 +273,49 @@ router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [
  * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources
  * @apiVersion 1.0.2
  * @apiPermission admin
- * @apiName GetWorkPackageId
+ * @apiName GetFinancialResources
  * @apiGroup Proposal
  * 
- * @apiDescription  Shows work package data from initiatives
+ * @apiDescription  Shows Financial Resources
  * 
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget
  * 
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget
  *
  * @apiHeader {String} auth
- * 
- * @apiParam {Number} wrkPkgId Id WP
- * 
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *  {
- *      "response": {
- *          "workpackage": [
- *              {
- *                  "created_at": "2021-08-31T16:39:08.000Z",
- *                  "updated_at": "2021-08-31T16:39:08.000Z",
- *                  "id": 177,
- *                  "active": 1,
- *                  "name": "One CGIAR nodes of excellence for utilization of state-of-the-art precision genetics",
- *                  "acronym": "Work Package 1",
- *                  "results": null,
- *                  "pathway_content": "Gain access and develop state-of-the-art precision genetic technologies  and associated enabling technologies such as allele replacement, DNA-free editing, double haploid; establish three nodes of excellence (LAC, Africa, Asia) with One CGIAR focus crop specialization and linked phenotyping facilities in relevant locations.",
- *                  "is_global": null,
- *                  "regions": [
- *                      {
- *                          "id": 2007,
- *                          "region_id": 5,
- *                          "initvStgId": 35,
- *                          "wrkPkgId": 177
- *                      },
- *                      {
- *                          "id": 2008,
- *                          "region_id": 34,
- *                          "initvStgId": 35,
- *                          "wrkPkgId": 177
- *                      }
- *  
- *                  ],
- *                  "countries": []
- *              }
- *          ]
- *      },
- *      "title": "Full Proposal:financial resources and files."
- *  }
+ *   "response": {
+ *       "financialResourcesData": {
+ *           "id": 2,
+ *           "initvStgId": 35,
+ *           "detailed_budget": "new detail",
+ *           "active": 1,
+ *           "created_at": "2021-09-20T17:06:53.000Z",
+ *           "updated_at": "2021-09-20T17:06:53.000Z",
+ *           "files": [
+ *               {
+ *                   "id": 69,
+ *                   "tocsId": null,
+ *                   "url": "http://localhost:3000/uploads/INIT-2/financial-resources/stage-3/1632157613540-Book1.xlsx",
+ *                   "name": "Book1.xlsx",
+ *                   "active": 1,
+ *                   "created_at": "2021-09-20T17:06:53.000Z",
+ *                   "updated_at": "2021-09-20T17:06:53.000Z",
+ *                   "meliaId": null,
+ *                   "manage_plan_risk_id": null,
+ *                   "humanId": null,
+ *                   "financial_resources_id": 2,
+ *                   "section": "budget"
+ *               }
+ *           ]
+ *       }
+ *   },
+ *   "title": "Full Proposal:financial resources and files."
+ * }
  *
  * @apiError Error : Get financial resources and files: Full proposal.
  *

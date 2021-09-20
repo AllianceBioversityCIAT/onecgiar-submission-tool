@@ -27,8 +27,8 @@ export class AddFinancialResourcesPermissions1632146533031 implements MigrationI
                 roles: [IO_role]
             },
             {
-                name: 'update.hr.initiative_owner',
-                resource: 'hr',
+                name: 'update.fr.initiative_owner',
+                resource: 'fr',
                 action: 'update:Own',
                 attributes: '*',
                 roles: [IO_role]
