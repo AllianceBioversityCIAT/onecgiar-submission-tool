@@ -232,14 +232,19 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
  */
 router.patch("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'updateOwn')], stagefull.patchWorkPackage);
 
+// upsert projection benefits to initiative
 router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'updateOwn')], stagefull.patchProjectionBenefits);
 
+// get all projection benefits
 router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefits);
 
+// get projection benefits per impact area
 router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefitsByImpact);
 
+// upsert impact strategies to initiative
 router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'updateOwn')], stagefull.patchImpactStrategies);
 
+// get impact strategies to initiative
 router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative
@@ -264,6 +269,68 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
 router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
 
 // Get financial resources and files to initiative
-router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getHumanResources);
+/**
+ * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetWorkPackageId
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows work package data from initiatives
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} wrkPkgId Id WP
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *      "response": {
+ *          "workpackage": [
+ *              {
+ *                  "created_at": "2021-08-31T16:39:08.000Z",
+ *                  "updated_at": "2021-08-31T16:39:08.000Z",
+ *                  "id": 177,
+ *                  "active": 1,
+ *                  "name": "One CGIAR nodes of excellence for utilization of state-of-the-art precision genetics",
+ *                  "acronym": "Work Package 1",
+ *                  "results": null,
+ *                  "pathway_content": "Gain access and develop state-of-the-art precision genetic technologies  and associated enabling technologies such as allele replacement, DNA-free editing, double haploid; establish three nodes of excellence (LAC, Africa, Asia) with One CGIAR focus crop specialization and linked phenotyping facilities in relevant locations.",
+ *                  "is_global": null,
+ *                  "regions": [
+ *                      {
+ *                          "id": 2007,
+ *                          "region_id": 5,
+ *                          "initvStgId": 35,
+ *                          "wrkPkgId": 177
+ *                      },
+ *                      {
+ *                          "id": 2008,
+ *                          "region_id": 34,
+ *                          "initvStgId": 35,
+ *                          "wrkPkgId": 177
+ *                      }
+ *  
+ *                  ],
+ *                  "countries": []
+ *              }
+ *          ]
+ *      },
+ *      "title": "Full Proposal:financial resources and files."
+ *  }
+ *
+ * @apiError Error : Get financial resources and files: Full proposal.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get financial resources and files: Full proposal.", error }
+ */
+router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getFinancialResources);
 
 export default router;

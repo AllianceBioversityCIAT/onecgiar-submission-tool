@@ -508,6 +508,12 @@ export async function getImpactStrategies(req: Request, res: Response) {
 }
 
 
+/**
+ * PATCH Melia and files
+ * @param req 
+ * @param res {melia}
+ * @returns melia
+ */
 export async function patchMeliaAndFiles(req: Request, res: Response) {
 
     const { initiativeId, ubication } = req.params;
@@ -548,7 +554,12 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET Melia and files data
+ * @param req 
+ * @param res {meliaData}
+ * @returns meliaData
+ */
 export async function getMeliaAndFiles(req: Request, res: Response) {
 
 
@@ -583,7 +594,12 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
 
 }
 
-
+/**
+ * PATCH manage plan risk and files
+ * @param req 
+ * @param res {managePlanRisk}
+ * @returns managePlanRisk
+ */
 export async function patchManagePlanAndFiles(req: Request, res: Response) {
 
     const { initiativeId, ubication } = req.params;
@@ -624,7 +640,12 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET manage plan risk and files data
+ * @param req 
+ * @param res {managePlanData}
+ * @returns managePlanData
+ */
 export async function getManagePlanAndFiles(req: Request, res: Response) {
 
     const { initiativeId, sectionName } = req.params;
@@ -659,7 +680,12 @@ export async function getManagePlanAndFiles(req: Request, res: Response) {
 }
 
 
-
+/**
+ * PATCH Human Resources and Files
+ * @param req 
+ * @param res {humanResources}
+ * @returns humanResources
+ */
 export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
 
     const { initiativeId, ubication } = req.params;
@@ -701,7 +727,12 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET Human Resources Data
+ * @param req 
+ * @param res {humanResourcesData}
+ * @returns humanResourcesData
+ */
 export async function getHumanResources(req: Request, res: Response) {
 
     const { initiativeId, sectionName } = req.params;
@@ -735,7 +766,12 @@ export async function getHumanResources(req: Request, res: Response) {
 
 }
 
-
+/**
+ * PATCH Financial Resources and Files
+ * @param req 
+ * @param res {financialResources}
+ * @returns financialResources
+ */
 export async function patchFinancialResourcesAndFiles(req: Request, res: Response) {
 
     const { initiativeId, ubication } = req.params;
@@ -777,7 +813,12 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
 
 }
 
-
+/**
+ * GET Financial Resources
+ * @param req 
+ * @param res {financialResourcesData}
+ * @returns financialResourcesData
+ */
 export async function getFinancialResources(req: Request, res: Response) {
 
     const { initiativeId, sectionName } = req.params;

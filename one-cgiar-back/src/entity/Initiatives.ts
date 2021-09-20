@@ -14,6 +14,11 @@ export class Initiatives extends UpdatedCreatedAt {
     @IsNotEmpty()
     name: string
 
+    @Column()
+    @IsNotEmpty()
+    official_code: string
+
+
     @OneToMany(() => InitiativesByUsers, initiativeByUsers => initiativeByUsers.user)
     public userByStages!: InitiativesByUsers[];
 

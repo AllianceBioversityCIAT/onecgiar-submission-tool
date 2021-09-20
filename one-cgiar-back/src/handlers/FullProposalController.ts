@@ -882,9 +882,20 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * UPSERT MELIA and Files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param meliaId 
+     * @param melia_plan 
+     * @param meliaActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedMelia, upsertedFile }
+     */
     async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
-
 
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
@@ -1007,7 +1018,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * REQUEST MELIA
+     * @param sectionName 
+     * @returns {melia}
+     */
     async requestMeliaFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
@@ -1053,13 +1068,22 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         }
 
-
-
     }
 
-
+    /**
+     * UPSERT Manage plan risk and files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param managePlanId 
+     * @param management_plan 
+     * @param managePlanActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedManagePlan, upsertedFile }
+     */
     async upsertManagePlanAndFiles(initiativeId?, ubication?, stege?, managePlanId?, management_plan?, managePlanActive?, section?, files?, updateFiles?) {
-
 
         const manageRepo = getRepository(ManagePlanRisk);
         const filesRepo = getRepository(Files);
@@ -1182,7 +1206,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * REQUEST Manage plan risk and files data 
+     * @param sectionName 
+     * @returns {managePlan}
+     */
     async requestManagePlanFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
@@ -1233,7 +1261,20 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-
+    /**
+     * UPSERT Human Resources and Files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param humanResourcesId 
+     * @param gender_diversity_inclusion 
+     * @param capacity_development 
+     * @param humanResourcesActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedHumanResources, upsertedFile }
+     */
 
     async upsertHumanResourcesAndFiles(initiativeId?, ubication?, stege?, humanResourcesId?, gender_diversity_inclusion?, capacity_development?,
         humanResourcesActive?, section?, files?, updateFiles?) {
@@ -1361,7 +1402,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * REQUEST Human Resources and files data
+     * @param sectionName 
+     * @returns {humanResources}
+     */
     async requestHumanResourcesFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
@@ -1411,7 +1456,19 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * UPSERT Financial Resourches
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param financialResourcesId 
+     * @param detailed_budget 
+     * @param financialResourcesActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedFinancialResources, upsertedFile }
+     */
     async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stege?, financialResourcesId?, detailed_budget?,
         financialResourcesActive?, section?, files?, updateFiles?) {
 
@@ -1537,7 +1594,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
+    /**
+     * REQUEST Finanacial Resources
+     * @param sectionName 
+     * @returns {financialResources}
+     */
     async requestFinancialResourcesFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
@@ -1579,15 +1640,10 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Get financial resources and files: Full proposal', 400, error.message, false)
+            throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
 
         }
 
-
-
     }
-
-
-
 
 }

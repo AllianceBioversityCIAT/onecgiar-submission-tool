@@ -16,6 +16,7 @@ export class InitiativeHandler {
         initvStg.id AS initvStgId,
         initiative.id AS id,
         initiative.name AS name,
+        initiative.official_code,
         IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
