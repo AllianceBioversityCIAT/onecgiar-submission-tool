@@ -1,16 +1,23 @@
 <section-title name="Summary management plan Gantt table" ></section-title>
-<div class="section-container animate__animated animate__fadeIn">
 
-    <ibdc-upload-files 
-    [options]="{
-        inputTitle:'Provide any additional support document(s)',
-        description:'Add urls'
-    }">
-    </ibdc-upload-files>
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
-    </div>
+<div class="ibdc_button_template_container">
+    <a href="https://drive.google.com/file/d/1LbD3xkj4UCPyiI40_hoeOtZ28W3F9cAt/view?usp=sharing" target="_blank" class="ibdc_button_template">
+        Download template
+    </a>
 </div>
 
 
- 
+<div class="section-container animate__animated animate__fadeIn">
+
+    <form (ngSubmit)="saveSection()">
+
+        <ibdc-upload-files *ngIf="showForm" [options]="{
+            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
+        </ibdc-upload-files>
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </form>
+
+</div>

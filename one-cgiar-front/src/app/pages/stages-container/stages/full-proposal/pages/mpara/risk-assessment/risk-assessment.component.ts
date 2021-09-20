@@ -76,8 +76,8 @@ export class RiskAssessmentComponent implements OnInit {
       console.log(resp);
       this.getManagePlan();
       this.filesSavedList.length || this.filesList.length?
-      this._interactionsService.successMessage('Management plan has been saved'):
-      this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
+      this._interactionsService.successMessage('Risk assessment plan has been saved'):
+      this._interactionsService.warningMessage('Risk assessment plan has been saved, but there are incomplete fields')
     })
 
   }
