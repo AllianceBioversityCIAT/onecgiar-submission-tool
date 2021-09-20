@@ -21,6 +21,10 @@ export class IaTableComponent implements OnInit {
         console.log(this.impactAreas);
       })
       
+    },err=>{
+      console.log(err);
+    }, ()=>{
+
     })
 
 
