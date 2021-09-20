@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
         data.map(item=>{
           if (item.stageId == 3) {
             this.data.push(item)
-            console.log(item);
+            // console.log(item);
           }
         })
         this.showTable = true;

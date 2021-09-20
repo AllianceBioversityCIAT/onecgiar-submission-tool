@@ -31,7 +31,7 @@ export class InitTableComponent implements AfterViewInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   constructor(public dialog: MatDialog, public initiativesSvc: InitiativesService) {
