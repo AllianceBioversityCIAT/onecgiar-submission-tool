@@ -282,12 +282,20 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
   }
 
-  saveMelia (body:any,initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}`, body);
+  saveMelia (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${location}/${stageId}`, body);
   }
 
   getMelia (initiativeId,section:string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${section}`);
+  }
+
+  saveManagePlan (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getManagePlan (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${section}`);
   }
 
   // Query to get all the users by roles

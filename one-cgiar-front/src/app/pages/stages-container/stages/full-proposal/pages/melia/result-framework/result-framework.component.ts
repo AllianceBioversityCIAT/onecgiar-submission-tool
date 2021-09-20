@@ -12,7 +12,7 @@ export class ResultFrameworkComponent implements OnInit {
   filesSavedList = [];
   showForm = false;
   data = {
-    meliaId : null,
+    id : null,
     // melia_plan : "algo no tan implicito",
     active : true,
     section : "result_framework",
@@ -33,7 +33,7 @@ export class ResultFrameworkComponent implements OnInit {
       this.filesList = [];
       let melia = resp.response.meliaData;
       this.filesSavedList = melia?.files?melia.files:[];
-      this.data.meliaId = melia?.id;
+      this.data.id = melia?.id;
       console.log(melia);
       console.log(this.filesSavedList);
     },
@@ -65,10 +65,10 @@ export class ResultFrameworkComponent implements OnInit {
       } 
     }
 
-    this.data.meliaId = this.data.meliaId == undefined ? null : this.data.meliaId;
+    this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
       this.filesSavedList.length || this.filesList.length?
