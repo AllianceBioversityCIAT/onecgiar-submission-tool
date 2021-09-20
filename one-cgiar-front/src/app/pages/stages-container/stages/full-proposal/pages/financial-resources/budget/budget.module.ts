@@ -6,6 +6,7 @@ import { BudgetComponent } from './budget.component';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [BudgetComponent],
@@ -13,7 +14,9 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
     CommonModule,
     BudgetRoutingModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
