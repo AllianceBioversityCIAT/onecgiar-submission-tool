@@ -68,7 +68,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
+    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
       this.filesSavedList.length || this.filesList.length?
