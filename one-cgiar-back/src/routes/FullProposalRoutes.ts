@@ -260,4 +260,10 @@ router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [chec
 // Get human resources and files to initiative
 router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('hr', 'readOwn')], stagefull.getHumanResources);
 
+// upsert financial resources and files to initiative
+router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
+
+// Get financial resources and files to initiative
+router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getHumanResources);
+
 export default router;

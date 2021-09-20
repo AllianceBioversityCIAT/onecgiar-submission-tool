@@ -4,6 +4,7 @@ import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
+import { FinancialResources } from "../entity/FinancialResources";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { HumanResources } from "../entity/HumanResources";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
@@ -1403,6 +1404,182 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             console.log(error)
             throw new BaseError('Get human resources and files: Full proposal', 400, error.message, false)
+
+        }
+
+
+
+    }
+
+
+    async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stege?, financialResourcesId?, detailed_budget?,
+        financialResourcesActive?, section?, files?, updateFiles?) {
+
+
+        const financialResourcesRepo = getRepository(FinancialResources);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newFinancialResources = new FinancialResources();
+        var newFiles = new Files();
+        var upsertedFinancialResources;
+        var upsertedFile;
+
+        newFinancialResources.id = financialResourcesId;
+        newFinancialResources.detailed_budget = detailed_budget;
+        newFinancialResources.active = financialResourcesActive ? financialResourcesActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newFinancialResources.id !== null) {
+
+                var savedFinancialResources = await financialResourcesRepo.findOne(newFinancialResources.id);
+
+                financialResourcesRepo.merge(
+                    savedFinancialResources,
+                    newFinancialResources
+                );
+
+                upsertedFinancialResources = await financialResourcesRepo.save(savedFinancialResources);
+
+            } else {
+
+                newFinancialResources.initvStgId = initvStg.id;
+
+                upsertedFinancialResources = await financialResourcesRepo.save(newFinancialResources);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.manage_plan_risk_id = upsertedFinancialResources.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.meliaId = updateFile.meliaId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedFinancialResources, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert financial Resources: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestFinancialResourcesFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const financialResourcesQuery = (` 
+            SELECT * 
+            FROM financial_resources
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE financial_resources_id in (SELECT id
+                    FROM financial_resources
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const financialResources = await this.queryRunner.query(financialResourcesQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            financialResources.map(fr => {
+                fr['files'] = files.filter(f => {
+                    return (f.financial_resources_id === fr.id)
+                })
+            }
+
+            )
+
+            return financialResources[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get financial resources and files: Full proposal', 400, error.message, false)
 
         }
 
