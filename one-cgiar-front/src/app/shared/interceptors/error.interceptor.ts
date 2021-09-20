@@ -23,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
           // refresh token
-          this.authSrv.logout();
+          // this.authSrv.logout();
         } else {
           return throwError(error);
         }
