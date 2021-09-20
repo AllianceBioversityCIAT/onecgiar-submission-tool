@@ -22,7 +22,7 @@ export interface TableData {
 export class InitTableComponent implements AfterViewInit {
   @Input() data: any;
 
-  displayedColumns: string[] = ['id', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
+  displayedColumns: string[] = ['official_code', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
   dataSource: MatTableDataSource<TableData>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
