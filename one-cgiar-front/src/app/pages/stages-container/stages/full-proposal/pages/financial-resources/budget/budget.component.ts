@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
@@ -8,12 +9,13 @@ import { InteractionsService } from '../../../../../../../shared/services/intera
   styleUrls: ['./budget.component.scss']
 })
 export class BudgetComponent implements OnInit {
+  sectionForm: FormGroup;
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
   data = {
     id : null,
-    // detailed_budget : "algo no tan implicito",
+    detailed_budget : "algo no tan implicito",
     active : true,
     section : "budget",
     updateFiles : []
@@ -21,7 +23,11 @@ export class BudgetComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService
-  ) { }
+  ) { 
+    this.sectionForm = new FormGroup({
+      detailed_budget: new FormControl(null),
+    });
+  }
 
   ngOnInit(): void {
     this.getFinancialResources();
@@ -36,6 +42,8 @@ export class BudgetComponent implements OnInit {
       this.data.id = financialResources?.id;
       console.log(financialResources);
       console.log(this.filesSavedList);
+      this.sectionForm.controls['detailed_budget'].setValue(financialResources?.detailed_budget);
+      
     },
     err=>{console.log(err);}
     ,()=>{
@@ -44,6 +52,7 @@ export class BudgetComponent implements OnInit {
   }
   
   saveSection(){
+    console.log("ssave section");
 
     const formData = new FormData();
 
@@ -66,9 +75,11 @@ export class BudgetComponent implements OnInit {
       } 
     }
 
+    this.data.detailed_budget = this.sectionForm.get("detailed_budget").value;
     this.data.id = this.data.id == undefined ? null : this.data.id;
-    formData.get('file')
     formData.append('data', JSON.stringify(this.data));
+
+    formData.get('file')
     this._initiativesService.saveFinancialResources(formData,this._initiativesService.initiative.id,'10.financial-resources',3).subscribe(resp=>{
       console.log("saveFinancialResources");
       console.log(resp);
