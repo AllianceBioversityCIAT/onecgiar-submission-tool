@@ -26,6 +26,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
       },
       {
+        path: 'impact-statements',
+        loadChildren: () => import('./pages/impact-statements/impact-statements.module').then(mod => mod.ImpactStatementsModule),
+      },
+      {
         path: 'context',
         loadChildren: () => import('./pages/context/context.module').then(mod => mod.ContextModule),
       },
