@@ -245,9 +245,164 @@ router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('b
 router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefitsByImpact);
 
 // upsert impact strategies to initiative
+/**
+ * @api {patch} stages-control/proposal/impact-strategies/:initiativeId Impact Strategies - Create and update 
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchImpactStrategies
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative.
+ * @apiParam {Number} id identificator Impact Strategiese.
+ * @apiParam {String} challenge_priorization description challenge priorization.
+ * @apiParam {String} research_questions description research questions.
+ * @apiParam {String} component_work_package description component work package.
+ * @apiParam {String} performance_results description performance results.
+ * @apiParam {String} human_capacity description human capacity.
+ * @apiParam {Number} impact_area_id impact area id.
+ * @apiParam {String} impact_area_name impact area name.
+ * @apiParam {Boolean} active status.
+ * @apiParam {Object} partners partners to updtate.
+ * 
+ * @apiParamExample {json} Request-Example:
+ * {
+ *     "id": 1,
+ *     "active": true,
+ *     "challenge_priorization": "Test challenge",
+ *     "research_questions": "",
+ *     "component_work_package": "",
+ *     "performance_results": "",
+ *     "human_capacity": "",
+ *     "impact_area_id": 1,
+ *     "impact_area_name": "Test impact Area",
+ *     "partners": [
+ *         {
+ *             "id": null,
+ *             "impact_strategies_id": 1,
+ *             "institutions_id": 1,
+ *             "institutions_name": "Wageningen University and Research Centre",
+ *             "tag_id": 1,
+ *             "type_id":3,
+ *             "type_name":"CGIAR Center",
+ *             "active": true
+ *         }
+ *     ]
+ * }
+ *  
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "impactStrategies": {
+ *             "upsertedImpactStrategies": {
+ *                 "created_at": "2021-09-21T21:13:33.000Z",
+ *                 "updated_at": "2021-09-21T21:13:33.000Z",
+ *                 "id": 1,
+ *                 "initvStgId": 35,
+ *                 "active": true,
+ *                 "challenge_priorization": "Test challenge",
+ *                 "research_questions": "",
+ *                 "component_work_package": "",
+ *                 "performance_results": "",
+ *                 "human_capacity": "",
+ *                 "impact_area_id": 1,
+ *                 "impact_area_name": "Test impact Area"
+ *             },
+ *             "upsertedPartners": {
+ *                 "id": 1,
+ *                 "impact_strategies_id": 1,
+ *                 "institutions_id": 1,
+ *                 "institutions_name": "Wageningen University and Research Centre",
+ *                 "tag_id": 1,
+ *                 "type_id": 3,
+ *                 "type_name": "CGIAR Center",
+ *                 "active": true,
+ *                 "updated_at": "2021-09-21T21:14:11.000Z",
+ *                 "created_at": "2021-09-21T21:14:11.000Z"
+ *             }
+ *         }
+ *     },
+ *     "title": "Full Proposal: Patch Impact Strategies."
+ * }
+ *  
+ * @apiError Error Upsert Impact Strategies: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert Impact Strategies: Full proposal","httpCode": 400,"isOperational": false}
+ */
 router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'updateOwn')], stagefull.patchImpactStrategies);
 
 // get impact strategies to initiative
+/**
+ * @api {get} stages-control/proposal/impact-strategies/:initiativeId/:impactAreaId Impact Strategies - Request Impact Strategies
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetImpactStrategies
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows Impact Strategies by impact area
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "impactStrategies": {
+ *             "impactStrategies": [
+ *                 {
+ *                     "id": 2,
+ *                     "initvStgId": 42,
+ *                     "active": 1,
+ *                     "challenge_priorization": "Test challenge",
+ *                     "research_questions": "",
+ *                     "component_work_package": "",
+ *                     "performance_results": "",
+ *                     "human_capacity": "",
+ *                     "created_at": "2021-09-21T21:32:15.000Z",
+ *                     "updated_at": "2021-09-21T21:32:15.000Z",
+ *                     "impact_area_id": 1,
+ *                     "impact_area_name": "Test impact Area",
+ *                     "partners": [
+ *                         {
+ *                             "id": 3,
+ *                             "impact_strategies_id": 2,
+ *                             "institutions_id": 1,
+ *                             "institutions_name": "Wageningen University and Research Centre",
+ *                             "tag_id": 1,
+ *                             "type_id": 3,
+ *                             "type_name": "CGIAR Center",
+ *                             "active": 1,
+ *                             "created_at": "2021-09-21T21:32:15.000Z",
+ *                             "updated_at": "2021-09-21T21:32:15.000Z"
+ *                         }
+ *                     ]
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Full Proposal: Get Impact Stretegies."
+ * }
+ *
+ * @apiError Error : Get Impact Strategies: Full proposal.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get Impact Strategies: Full proposal.", error }
+ */
 router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative

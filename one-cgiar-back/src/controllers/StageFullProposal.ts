@@ -456,7 +456,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // impact strategies section data
-    const { impact_strategies_id, active, challenge_priorization, research_questions,
+    const { id, active, challenge_priorization, research_questions,
         component_work_package, performance_results, human_capacity, impact_area_id,
         impact_area_name, partners } = req.body;
 
@@ -477,7 +477,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const impactStrategies = await fullPposal.upsertImpactStrategies(impact_strategies_id, active, challenge_priorization, research_questions,
+        const impactStrategies = await fullPposal.upsertImpactStrategies(id, active, challenge_priorization, research_questions,
             component_work_package, performance_results, human_capacity, impact_area_id,
             impact_area_name, partners);
 

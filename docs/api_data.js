@@ -1454,6 +1454,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/impact-strategies/:initiativeId/:impactAreaId",
+    "title": "Impact Strategies - Request Impact Strategies",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetImpactStrategies",
+    "group": "Proposal",
+    "description": "<p>Shows Impact Strategies by impact area</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"impactStrategies\": {\n            \"impactStrategies\": [\n                {\n                    \"id\": 2,\n                    \"initvStgId\": 42,\n                    \"active\": 1,\n                    \"challenge_priorization\": \"Test challenge\",\n                    \"research_questions\": \"\",\n                    \"component_work_package\": \"\",\n                    \"performance_results\": \"\",\n                    \"human_capacity\": \"\",\n                    \"created_at\": \"2021-09-21T21:32:15.000Z\",\n                    \"updated_at\": \"2021-09-21T21:32:15.000Z\",\n                    \"impact_area_id\": 1,\n                    \"impact_area_name\": \"Test impact Area\",\n                    \"partners\": [\n                        {\n                            \"id\": 3,\n                            \"impact_strategies_id\": 2,\n                            \"institutions_id\": 1,\n                            \"institutions_name\": \"Wageningen University and Research Centre\",\n                            \"tag_id\": 1,\n                            \"type_id\": 3,\n                            \"type_name\": \"CGIAR Center\",\n                            \"active\": 1,\n                            \"created_at\": \"2021-09-21T21:32:15.000Z\",\n                            \"updated_at\": \"2021-09-21T21:32:15.000Z\"\n                        }\n                    ]\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: Get Impact Stretegies.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Impact Strategies: Full proposal.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Impact Strategies: Full proposal.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
     "title": "Manage Plan and Risk - Request MPR",
     "version": "1.0.2",
@@ -2014,6 +2083,164 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert human Resources: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/impact-strategies/:initiativeId",
+    "title": "Impact Strategies - Create and update",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchImpactStrategies",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Impact Strategiese.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "challenge_priorization",
+            "description": "<p>description challenge priorization.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "research_questions",
+            "description": "<p>description research questions.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "component_work_package",
+            "description": "<p>description component work package.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "performance_results",
+            "description": "<p>description performance results.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "human_capacity",
+            "description": "<p>description human capacity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "impact_area_id",
+            "description": "<p>impact area id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "impact_area_name",
+            "description": "<p>impact area name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "partners",
+            "description": "<p>partners to updtate.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n    \"id\": 1,\n    \"active\": true,\n    \"challenge_priorization\": \"Test challenge\",\n    \"research_questions\": \"\",\n    \"component_work_package\": \"\",\n    \"performance_results\": \"\",\n    \"human_capacity\": \"\",\n    \"impact_area_id\": 1,\n    \"impact_area_name\": \"Test impact Area\",\n    \"partners\": [\n        {\n            \"id\": null,\n            \"impact_strategies_id\": 1,\n            \"institutions_id\": 1,\n            \"institutions_name\": \"Wageningen University and Research Centre\",\n            \"tag_id\": 1,\n            \"type_id\":3,\n            \"type_name\":\"CGIAR Center\",\n            \"active\": true\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"impactStrategies\": {\n            \"upsertedImpactStrategies\": {\n                \"created_at\": \"2021-09-21T21:13:33.000Z\",\n                \"updated_at\": \"2021-09-21T21:13:33.000Z\",\n                \"id\": 1,\n                \"initvStgId\": 35,\n                \"active\": true,\n                \"challenge_priorization\": \"Test challenge\",\n                \"research_questions\": \"\",\n                \"component_work_package\": \"\",\n                \"performance_results\": \"\",\n                \"human_capacity\": \"\",\n                \"impact_area_id\": 1,\n                \"impact_area_name\": \"Test impact Area\"\n            },\n            \"upsertedPartners\": {\n                \"id\": 1,\n                \"impact_strategies_id\": 1,\n                \"institutions_id\": 1,\n                \"institutions_name\": \"Wageningen University and Research Centre\",\n                \"tag_id\": 1,\n                \"type_id\": 3,\n                \"type_name\": \"CGIAR Center\",\n                \"active\": true,\n                \"updated_at\": \"2021-09-21T21:14:11.000Z\",\n                \"created_at\": \"2021-09-21T21:14:11.000Z\"\n            }\n        }\n    },\n    \"title\": \"Full Proposal: Patch Impact Strategies.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert Impact Strategies: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert Impact Strategies: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
           "type": "json"
         }
       ]

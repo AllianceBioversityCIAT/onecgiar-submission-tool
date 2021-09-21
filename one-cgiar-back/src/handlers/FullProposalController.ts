@@ -910,9 +910,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                 partnersQuery = (
                     `
                 SELECT * 
-                FROM dimensions
-               WHERE projectionId in (SELECT id
-                FROM projection_benefits
+                FROM partners
+               WHERE impact_strategies_id in (SELECT id
+                FROM impact_strategies
                WHERE initvStgId = ${initvStg.id})
                  AND active = 1
                 `
@@ -1706,7 +1706,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
 
     async upsertPolicyComplianceOversight(policyComplianceId?, research_governance_policy?,
-        open_fair_data_policy?,open_fair_data_details?,policyComplianceActive?) {
+        open_fair_data_policy?, open_fair_data_details?, policyComplianceActive?) {
 
         const PolicyComplianceRepo = getRepository(PolicyComplianceOrversight);
         const initvStg = await this.setInitvStage();
@@ -1741,7 +1741,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             }
 
-            return { upsertedPolicyCompliance};
+            return { upsertedPolicyCompliance };
 
         } catch (error) {
 
@@ -1765,7 +1765,7 @@ export class ProposalHandler extends InitiativeStageHandler {
            WHERE initvStgId = ${initvStg.id}
              AND active = 1;
             `)
-        
+
             const policyCompliance = await this.queryRunner.query(policyComplianceQuery);
 
             return policyCompliance[0];
