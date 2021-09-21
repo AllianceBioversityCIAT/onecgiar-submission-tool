@@ -300,8 +300,6 @@ export class ProposalHandler extends InitiativeStageHandler {
                 )
 
             var workPackages = await wpRepo.find({ where: { active: 1 } });
-            console.log(workPackages);
-            
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
