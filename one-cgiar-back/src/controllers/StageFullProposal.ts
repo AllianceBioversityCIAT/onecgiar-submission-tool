@@ -156,6 +156,27 @@ export async function getWorkPackage(req: Request, res: Response) {
 
 }
 
+
+export async function getAllWorkPackages(req: Request, res: Response) {
+
+
+    try {
+
+        // create new full proposal object
+        const fullPposal = new ProposalHandler();
+
+        // get ALL workpackage from porposal
+        const workpackage = await fullPposal.requestAllWorkPackages();
+
+        res.json(new ResponseHandler('Full Proposal: All Work Package.', { workpackage }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
+
+
+
+}
+
 export async function patchWorkPackage(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -809,6 +830,78 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
  * @returns financialResourcesData
  */
 export async function getFinancialResources(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read financial resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const financialResourcesData = await fullPposal.requestFinancialResourcesFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal:financial resources and files.', { financialResourcesData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+
+
+export async function patchPolicyComplianceOversight(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+    //Policy compliance Oversight section data
+    const { id, research_governance_policy,open_fair_data_policy,open_fair_data_details, active } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const policyComplianceOversight = await fullPposal.upsertPolicyComplianceOversight(id, research_governance_policy,
+                                                                                         open_fair_data_policy,open_fair_data_details,active);
+
+        res.json(new ResponseHandler('Full Proposal: Patch policy compliance oversight.', { policyComplianceOversight }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getPolicyComplianceOversight(req: Request, res: Response) {
 
     const { initiativeId, sectionName } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);

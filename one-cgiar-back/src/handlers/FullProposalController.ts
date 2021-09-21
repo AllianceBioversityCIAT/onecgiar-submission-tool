@@ -11,6 +11,7 @@ import { ImpactStrategies } from "../entity/ImpactStrategies";
 import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
+import { PolicyComplianceOrversight } from "../entity/PolicyComplianceOversight";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
@@ -265,6 +266,65 @@ export class ProposalHandler extends InitiativeStageHandler {
             }
 
             return workPackages[0]
+
+        } catch (error) {
+
+            throw new BaseError('Get workpackage', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestAllWorkPackages() {
+
+        // const initvStgId: string = this.initvStgId_;
+        // const initvStg = await this.initvStage
+        const wpRepo = getRepository(WorkPackages);
+
+        try {
+
+            let COquery = (
+                `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE active = 1
+              GROUP BY id,country_id`
+            ),
+                REquery = (
+                    `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE active = 1
+                GROUP BY id,region_id
+                `
+                )
+
+            var workPackages = await wpRepo.find({ where: { active: 1 } });
+            console.log(workPackages);
+            
+            const regions = await this.queryRunner.query(REquery);
+            const countries = await this.queryRunner.query(COquery);
+
+            if (workPackages == undefined || workPackages.length == 0) {
+
+                workPackages = []
+
+            } else {
+
+                // Map Initiatives
+                workPackages.map(wp => {
+                    wp['regions'] = regions.filter(reg => {
+                        return (reg.wrkPkgId === wp.id)
+                    })
+
+                    wp['countries'] = countries.filter(cou => {
+                        return (cou.wrkPkgId === wp.id)
+                    })
+
+                })
+            }
+
+            return workPackages
 
         } catch (error) {
 
@@ -1645,5 +1705,81 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
     }
+
+
+    async upsertPolicyComplianceOversight(policyComplianceId?, research_governance_policy?,
+        open_fair_data_policy?,open_fair_data_details?,policyComplianceActive?) {
+
+        const PolicyComplianceRepo = getRepository(PolicyComplianceOrversight);
+        const initvStg = await this.setInitvStage();
+
+        var newPolicyCompliance = new PolicyComplianceOrversight();
+        var upsertedPolicyCompliance;
+
+        newPolicyCompliance.id = policyComplianceId;
+        newPolicyCompliance.research_governance_policy = research_governance_policy;
+        newPolicyCompliance.open_fair_data_policy = open_fair_data_policy;
+        newPolicyCompliance.open_fair_data_details = open_fair_data_details;
+        newPolicyCompliance.active = policyComplianceActive ? policyComplianceActive : true;
+
+        try {
+
+            if (newPolicyCompliance.id !== null) {
+
+                var savedPolicyCompliance = await PolicyComplianceRepo.findOne(newPolicyCompliance.id);
+
+                PolicyComplianceRepo.merge(
+                    savedPolicyCompliance,
+                    newPolicyCompliance
+                );
+
+                upsertedPolicyCompliance = await PolicyComplianceRepo.save(savedPolicyCompliance);
+
+            } else {
+
+                newPolicyCompliance.initvStgId = initvStg.id;
+
+                upsertedPolicyCompliance = await PolicyComplianceRepo.save(newPolicyCompliance);
+
+            }
+
+            return { upsertedPolicyCompliance};
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert policy compliance oversight: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestPolicyComplianceOversight(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const policyComplianceQuery = (` 
+            SELECT * 
+            FROM policy_compliance_oversight
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `)
+        
+            const policyCompliance = await this.queryRunner.query(policyComplianceQuery);
+
+            return policyCompliance[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
+
+        }
+
+    }
+
 
 }

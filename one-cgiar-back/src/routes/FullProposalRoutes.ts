@@ -133,6 +133,9 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  */
 router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
 
+// read all work package
+router.get("/packages", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getAllWorkPackages);
+
 // assign Work Package
 /**
  * @api {patch} stages-control/proposal/package/:wrkPkgId 3.Work Package - Create and update WP
@@ -670,5 +673,12 @@ router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [
  *     { message: "Get financial resources and files: Full proposal.", error }
  */
 router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getFinancialResources);
+
+// upsert policy compliance oversight to initiative
+router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pco', 'updateOwn')], stagefull.patchPolicyComplianceOversight);
+
+// Get policy compliance oversight to initiative
+router.get("/policy-compliance/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
+
 
 export default router;
