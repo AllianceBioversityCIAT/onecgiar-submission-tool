@@ -1317,7 +1317,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
-    "title": "10.Financial Resources - Request Financial Resources",
+    "title": "Financial Resources - Request Financial Resources",
     "version": "1.0.2",
     "permission": [
       {
@@ -1386,7 +1386,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId",
-    "title": "9.Human Resources - Request Human Resources",
+    "title": "Human Resources - Request Human Resources",
     "version": "1.0.2",
     "permission": [
       {
@@ -1455,7 +1455,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
-    "title": "7.Manage Plan and Risk - Request MPR",
+    "title": "Manage Plan and Risk - Request MPR",
     "version": "1.0.2",
     "permission": [
       {
@@ -1524,7 +1524,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
-    "title": "3.Work package - Request workpackage",
+    "title": "Work package - Request workpackage",
     "version": "1.0.2",
     "permission": [
       {
@@ -1606,7 +1606,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "stages-control/proposal/package/:wrkPkgId",
-    "title": "3.Work package - Request workpackage for id",
+    "title": "Work package - Request workpackage for id",
     "version": "1.0.2",
     "permission": [
       {
@@ -1688,7 +1688,7 @@ define({ "api": [
   {
     "type": "patch",
     "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
-    "title": "10.Financial Resources - Create and update FR",
+    "title": "Financial Resources - Create and update FR",
     "version": "1.0.0",
     "permission": [
       {
@@ -1818,7 +1818,7 @@ define({ "api": [
   {
     "type": "patch",
     "url": "stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId",
-    "title": "9.Human Resources - Create and update HR",
+    "title": "Human Resources - Create and update HR",
     "version": "1.0.0",
     "permission": [
       {
@@ -1955,7 +1955,7 @@ define({ "api": [
   {
     "type": "patch",
     "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
-    "title": "7.Manage Plan and Risk - Create and update MPR",
+    "title": "Manage Plan and Risk - Create and update MPR",
     "version": "1.0.0",
     "permission": [
       {
@@ -2083,9 +2083,201 @@ define({ "api": [
     "groupTitle": "Proposal"
   },
   {
+    "type": "get",
+    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
+    "title": "Policy Compliance - Request PCO",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchPolicyCompliance",
+    "group": "Proposal",
+    "description": "<p>Shows Policy Compliance Oversight</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"policyComplianceData\": {\n            \"id\": 3,\n            \"initvStgId\": 40,\n            \"research_governance_policy\": 1,\n            \"open_fair_data_policy\": 0,\n            \"open_fair_data_details\": \"Test 1 policy\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T19:31:10.000Z\",\n            \"updated_at\": \"2021-09-21T19:31:10.000Z\"\n        }\n    },\n    \"title\": \"Full Proposal:policy compliance oversight\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get policy compliance oversight.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get policy compliance oversight.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
+    "title": "Policy Compliance - Create and update PCO",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchPolicyCompliance",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Policy Compliance.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "research_governance_policy",
+            "description": "<p>Policy research governance.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "open_fair_data_policy",
+            "description": "<p>Policy open fair data.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "open_fair_data_details",
+            "description": "<p>description Open fair data.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"id\": null,\n \"research_governance_policy\": true,\n \"open_fair_data_policy\": false,\n \"open_fair_data_details\": \"Test 1 policy\",\n \"active\": true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n    {\n    \"response\": {\n        \"policyComplianceOversight\": {\n            \"upsertedPolicyCompliance\": {\n                \"id\": 3,\n                \"research_governance_policy\": true,\n                \"open_fair_data_policy\": false,\n                \"open_fair_data_details\": \"Test 1 policy\",\n                \"active\": true,\n                \"initvStgId\": 40,\n                \"updated_at\": \"2021-09-21T19:31:10.000Z\",\n                \"created_at\": \"2021-09-21T19:31:10.000Z\"\n            }\n        }\n    },\n    \"title\": \"Full Proposal: Patch policy compliance oversight.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert policy compliance oversight: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert policy compliance oversight: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
     "type": "patch",
     "url": "stages-control/proposal/package/:wrkPkgId",
-    "title": "3.Work Package - Create and update WP",
+    "title": "Work Package - Create and update WP",
     "version": "1.0.0",
     "permission": [
       {

@@ -300,8 +300,6 @@ export class ProposalHandler extends InitiativeStageHandler {
                 )
 
             var workPackages = await wpRepo.find({ where: { active: 1 } });
-            console.log(workPackages);
-            
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
@@ -1755,7 +1753,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
-    async requestPolicyComplianceOversight(sectionName) {
+    async requestPolicyComplianceOversight() {
 
         const initvStg = await this.setInitvStage();
 
@@ -1775,7 +1773,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
+            throw new BaseError('Get policy compliance oversight.', 400, error.message, false)
 
         }
 
