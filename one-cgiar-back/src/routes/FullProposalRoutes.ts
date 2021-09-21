@@ -20,7 +20,7 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
 
 // read work packages list
 /**
- * @api {get} stages-control/proposal/packages/:initiativeId 3.Work package - Request workpackage
+ * @api {get} stages-control/proposal/packages/:initiativeId Work package - Request workpackage
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetWorkPackage
@@ -70,7 +70,7 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
 
 // read work package for id
 /**
- * @api {get} stages-control/proposal/package/:wrkPkgId 3.Work package - Request workpackage for id
+ * @api {get} stages-control/proposal/package/:wrkPkgId Work package - Request workpackage for id
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetWorkPackageId
@@ -138,7 +138,7 @@ router.get("/packages", stagefull.getAllWorkPackages);
 
 // assign Work Package
 /**
- * @api {patch} stages-control/proposal/package/:wrkPkgId 3.Work Package - Create and update WP
+ * @api {patch} stages-control/proposal/package/:wrkPkgId Work Package - Create and update WP
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchWorkPackage
@@ -258,7 +258,7 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
 
 // upsert management plan risk and files to initiative
 /**
- * @api {patch} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId 7.Manage Plan and Risk - Create and update MPR
+ * @api {patch} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId Manage Plan and Risk - Create and update MPR
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchManagePlan
@@ -339,7 +339,7 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
 
 // Get management plan risk and files to initiative
 /**
- * @api {get} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId 7.Manage Plan and Risk - Request MPR
+ * @api {get} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId Manage Plan and Risk - Request MPR
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetManagePlan
@@ -396,7 +396,7 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
 
 // upsert human resources and files to initiative
 /**
- * @api {patch} stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId 9.Human Resources - Create and update HR
+ * @api {patch} stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId Human Resources - Create and update HR
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchHumanResources
@@ -480,7 +480,7 @@ router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [chec
 
 // Get human resources and files to initiative
 /**
- * @api {get} stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId 9.Human Resources - Request Human Resources
+ * @api {get} stages-control/proposal/human-resources/:initiativeId/:ubication/:stageId Human Resources - Request Human Resources
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetHumanResources
@@ -538,7 +538,7 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
 
 // upsert financial resources and files to initiative
 /**
- * @api {patch} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId 10.Financial Resources - Create and update FR
+ * @api {patch} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Create and update FR
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchFinancialResources
@@ -619,7 +619,7 @@ router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [
 
 // Get financial resources and files to initiative
 /**
- * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId 10.Financial Resources - Request Financial Resources
+ * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetFinancialResources
@@ -675,10 +675,106 @@ router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [
 router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getFinancialResources);
 
 // upsert policy compliance oversight to initiative
+/**
+ * @api {patch} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Policy Compliance Oversight - Create and update PCO
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchPolicyCompliance
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative.
+ * @apiParam {Number} id identificator Policy Compliance.
+ * @apiParam {Boolean} research_governance_policy Policy research governance.
+ * @apiParam {Boolean} open_fair_data_policy Policy open fair data.
+ * @apiParam {String} open_fair_data_details description Open fair data.
+ * @apiParam {Boolean} active status.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *   "id": null,
+ *   "research_governance_policy": true,
+ *   "open_fair_data_policy": false,
+ *   "open_fair_data_details": "Test 1 policy",
+ *   "active": true
+ *  }
+ *  
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *     "response": {
+ *         "policyComplianceOversight": {
+ *             "upsertedPolicyCompliance": {
+ *                 "id": 3,
+ *                 "research_governance_policy": true,
+ *                 "open_fair_data_policy": false,
+ *                 "open_fair_data_details": "Test 1 policy",
+ *                 "active": true,
+ *                 "initvStgId": 40,
+ *                 "updated_at": "2021-09-21T19:31:10.000Z",
+ *                 "created_at": "2021-09-21T19:31:10.000Z"
+ *             }
+ *         }
+ *     },
+ *     "title": "Full Proposal: Patch policy compliance oversight."
+ * }
+ *
+ * @apiError Error Upsert policy compliance oversight: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert policy compliance oversight: Full proposal","httpCode": 400,"isOperational": false}
+ */
 router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pco', 'updateOwn')], stagefull.patchPolicyComplianceOversight);
 
 // Get policy compliance oversight to initiative
-router.get("/policy-compliance/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
+/**
+ * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Policy Compliance Oversight - Request Policy Compliance Oversight
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName PatchPolicyCompliance
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows Policy Compliance Oversight
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "policyComplianceData": {
+ *             "id": 3,
+ *             "initvStgId": 40,
+ *             "research_governance_policy": 1,
+ *             "open_fair_data_policy": 0,
+ *             "open_fair_data_details": "Test 1 policy",
+ *             "active": 1,
+ *             "created_at": "2021-09-21T19:31:10.000Z",
+ *             "updated_at": "2021-09-21T19:31:10.000Z"
+ *         }
+ *     },
+ *     "title": "Full Proposal:policy compliance oversight"
+ * }
+ *
+ * @apiError Error : Get policy compliance oversight.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get policy compliance oversight.", error }
+ */
+router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
 
 
 export default router;

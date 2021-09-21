@@ -12,6 +12,7 @@ export class CreatePolicyComplianceOversightTable1632238241607 implements Migrat
             research_governance_policy tinyint(2) NOT NULL DEFAULT 0,
             open_fair_data_policy tinyint(2) NOT NULL DEFAULT 0,
             open_fair_data_details TEXT DEFAULT NULL,
+            active tinyint(2) NOT NULL DEFAULT 1,
             created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             KEY IDX_135465411as77989_initvStgId (initvStgId),
