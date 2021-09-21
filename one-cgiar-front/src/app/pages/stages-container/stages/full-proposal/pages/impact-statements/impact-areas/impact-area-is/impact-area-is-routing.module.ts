@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ImpactAreaComponent } from './impact-area.component';
+import { ImpactAreaIsComponent } from './impact-area-is.component';
 
 const routes: Routes = [
   {
     path:'',
-    component:ImpactAreaComponent
+    component:ImpactAreaIsComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ImpactAreaRoutingModule { }
+export class ImpactAreaIsRoutingModule { }

@@ -108,19 +108,74 @@ export class MenuComponent implements OnInit {
 
           this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
             // console.log(impacAreas.response.impactAreasRequested);
+
+            let pobList = impacAreas.response.impactAreasRequested;
+            let impactStatementsList = impacAreas.response.impactAreasRequested;
+
+            pobList.map(item=>{
+              item.showName = item.name;
+              item.frontRoute = '/projection-of-benefits/impact-area/';
+              item.subSectionName='impact-area';
+              item.sort = 'id';
+            })
+            this.mapDataInMenu(3, 1, 8, pobList);
+
+            impactStatementsList.map(item=>{
+              item.showName = item.name;
+              item.frontRoute = 'impact-areas/impact-area/';
+              item.subSectionName='impact-area';
+              item.sort = 'id';
+            })
+
+            this.mapDataInMenu(3, 7, 16, impactStatementsList);
+
+            this._dataControlService.pobMaped = true;
+          },(err) => {
+            console.log(err);
+            this._dataControlService.pobMaped = true;
+          })
+
+
+
+
+          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+
             impacAreas.response.impactAreasRequested.map(item=>{
               item.showName = item.name;
               item.frontRoute = '/projection-of-benefits/impact-area/';
               item.subSectionName='impact-area';
               item.sort = 'id';
             })
-            this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
-            this.mapDataInMenu(3, 7, 16, impacAreas.response.impactAreasRequested);
+
+            this.mapDataInMenu(3, 1, 8,  impacAreas.response.impactAreasRequested);
+
             this._dataControlService.pobMaped = true;
           },(err) => {
             console.log(err);
             this._dataControlService.pobMaped = true;
           })
+
+
+
+
+          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+
+            impacAreas.response.impactAreasRequested.map(item=>{
+              item.showName = item.name;
+              item.frontRoute = '/impact-areas/impact-area/';
+              item.subSectionName='impact-area';
+              item.sort = 'id';
+            })
+
+            this.mapDataInMenu(3, 7, 16, impacAreas.response.impactAreasRequested);
+
+            this._dataControlService.impactStatementsMaped = true;
+          },(err) => {
+            console.log(err);
+            this._dataControlService.impactStatementsMaped = true;
+          })
+
+
         }
       });
   }
@@ -146,7 +201,7 @@ export class MenuComponent implements OnInit {
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-
+    console.log(active, stage, section, isSection, subsection)
     if (active) {
       if (isSection) {
         if (!subsection.length) {

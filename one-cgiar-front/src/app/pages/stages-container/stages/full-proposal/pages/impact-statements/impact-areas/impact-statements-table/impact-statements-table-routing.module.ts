@@ -5,7 +5,7 @@ import { ImpactStatementsTableComponent } from './impact-statements-table.compon
 const routes: Routes = [
   {
     path:'',
-    component:ImpactStatementsTableComponent
+    component: ImpactStatementsTableComponent,
   }
 ];
 

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImpactAreaComponent } from './impact-area.component';
+import { ImpactAreaIsComponent } from './impact-area-is.component';
 
-describe('ImpactAreaComponent', () => {
-  let component: ImpactAreaComponent;
-  let fixture: ComponentFixture<ImpactAreaComponent>;
+describe('ImpactAreaIsComponent', () => {
+  let component: ImpactAreaIsComponent;
+  let fixture: ComponentFixture<ImpactAreaIsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImpactAreaComponent ]
+      declarations: [ ImpactAreaIsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImpactAreaComponent);
+    fixture = TestBed.createComponent(ImpactAreaIsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
