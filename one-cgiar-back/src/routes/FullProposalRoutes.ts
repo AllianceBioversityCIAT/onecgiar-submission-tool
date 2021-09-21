@@ -251,9 +251,141 @@ router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('s
 router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
 
 // upsert melia and files to initiative
+/**
+ * @api {patch} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Create and update MELIA
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchMELIA
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative.
+ * @apiParam {Number} id identificator MELIA.
+ * @apiParam {String} melia_plan description gender melia plan.
+ * @apiParam {Boolean} active status.
+ * @apiParam {String} section section location.
+ * @apiParam {Object} updateFiles file to updtate.
+ * @apiParam {File} file template  6.1 RESULT FRAMEWORK AND 6.3 MELIA.
+ * 
+ * @apiParamExample {json} Request-Example:
+ * data: [
+ * {   "id":null,
+ *     "melia_plan": "new plan",
+ *     "active": true,
+ *     "section":"result-framework",
+ *     "updateFiles":[]
+ * }
+ * ]
+ *  
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "melia": {
+ *             "upsertedMelia": {
+ *                 "created_at": "2021-09-14T19:40:41.000Z",
+ *                 "updated_at": "2021-09-14T19:40:41.000Z",
+ *                 "id": 5,
+ *                 "initvStgId": 35,
+ *                 "melia_plan": "test melia 12",
+ *                 "active": true
+ *             },
+ *             "upsertedFile": {
+ *                 "id": 75,
+ *                 "active": true,
+ *                 "meliaId": 5,
+ *                 "section": "result_framework",
+ *                 "url": "http://localhost:3000/uploads/INIT-12/6.melia/stage-3/1632255132043-depth_scale.xlsx",
+ *                 "name": "depth_scale.xlsx",
+ *                 "updated_at": "2021-09-21T20:12:12.000Z",
+ *                 "created_at": "2021-09-21T20:12:12.000Z"
+ *             }
+ *         },
+ *         "files": [
+ *             {
+ *                 "fieldname": "file",
+ *                 "originalname": "depth_scale.xlsx",
+ *                 "encoding": "7bit",
+ *                 "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+ *                 "destination": "./public/uploads/INIT-12/6.melia/stage-3",
+ *                 "filename": "1632255132043-depth_scale.xlsx",
+ *                 "path": "public\\uploads\\INIT-12\\6.melia\\stage-3\\1632255132043-depth_scale.xlsx",
+ *                 "size": 9192
+ *             }
+ *         ]
+ *     },
+ *     "title": "Full Proposal: Patch melia."
+ * }
+ *
+ * @apiError Error Upsert melia: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
+ */
 router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
+/**
+ * @api {get} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Request MELIA
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName PatchMELIA
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows MELIA per initiativeId and section
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "meliaData": {
+ *             "id": 8,
+ *             "initvStgId": 44,
+ *             "melia_plan": "test melia 14",
+ *             "active": 1,
+ *             "created_at": "2021-09-21T20:35:13.000Z",
+ *             "updated_at": "2021-09-21T20:35:13.000Z",
+ *             "files": [
+ *                 {
+ *                     "id": 85,
+ *                     "tocsId": null,
+ *                     "url": "http://localhost:3000/uploads/INIT-14/6.melia/stage-3/1632256513858-depth_scale.xlsx",
+ *                     "name": "depth_scale.xlsx",
+ *                     "active": 1,
+ *                     "created_at": "2021-09-21T20:35:13.000Z",
+ *                     "updated_at": "2021-09-21T20:35:13.000Z",
+ *                     "meliaId": 8,
+ *                     "manage_plan_risk_id": null,
+ *                     "humanId": null,
+ *                     "financial_resources_id": null,
+ *                     "section": "result_framework"
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Full Proposal: melia and files."
+ * }
+ *
+ * @apiError Error : Get melia and files: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get melia and files: Full proposal", error }
+ */
 router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
 
 // upsert management plan risk and files to initiative
@@ -263,6 +395,8 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  * @apiPermission admin
  * @apiName PatchManagePlan
  * @apiGroup Proposal
+ * 
+ * @apiDescription  Create and Update Melia
  * 
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3

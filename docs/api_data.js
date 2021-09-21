@@ -2022,6 +2022,205 @@ define({ "api": [
     "groupTitle": "Proposal"
   },
   {
+    "type": "get",
+    "url": "stages-control/proposal/melia/:initiativeId/:ubication/:stageId",
+    "title": "MELIA - Request MELIA",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchMELIA",
+    "group": "Proposal",
+    "description": "<p>Shows MELIA per initiativeId and section</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"meliaData\": {\n            \"id\": 8,\n            \"initvStgId\": 44,\n            \"melia_plan\": \"test melia 14\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T20:35:13.000Z\",\n            \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n            \"files\": [\n                {\n                    \"id\": 85,\n                    \"tocsId\": null,\n                    \"url\": \"http://localhost:3000/uploads/INIT-14/6.melia/stage-3/1632256513858-depth_scale.xlsx\",\n                    \"name\": \"depth_scale.xlsx\",\n                    \"active\": 1,\n                    \"created_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"meliaId\": 8,\n                    \"manage_plan_risk_id\": null,\n                    \"humanId\": null,\n                    \"financial_resources_id\": null,\n                    \"section\": \"result_framework\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: melia and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get melia and files: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get melia and files: Full proposal\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/melia/:initiativeId/:ubication/:stageId",
+    "title": "MELIA - Create and update MELIA",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchMELIA",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator MELIA.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "melia_plan",
+            "description": "<p>description gender melia plan.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "section",
+            "description": "<p>section location.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "updateFiles",
+            "description": "<p>file to updtate.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>template  6.1 RESULT FRAMEWORK AND 6.3 MELIA.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "data: [\n{   \"id\":null,\n    \"melia_plan\": \"new plan\",\n    \"active\": true,\n    \"section\":\"result-framework\",\n    \"updateFiles\":[]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"melia\": {\n            \"upsertedMelia\": {\n                \"created_at\": \"2021-09-14T19:40:41.000Z\",\n                \"updated_at\": \"2021-09-14T19:40:41.000Z\",\n                \"id\": 5,\n                \"initvStgId\": 35,\n                \"melia_plan\": \"test melia 12\",\n                \"active\": true\n            },\n            \"upsertedFile\": {\n                \"id\": 75,\n                \"active\": true,\n                \"meliaId\": 5,\n                \"section\": \"result_framework\",\n                \"url\": \"http://localhost:3000/uploads/INIT-12/6.melia/stage-3/1632255132043-depth_scale.xlsx\",\n                \"name\": \"depth_scale.xlsx\",\n                \"updated_at\": \"2021-09-21T20:12:12.000Z\",\n                \"created_at\": \"2021-09-21T20:12:12.000Z\"\n            }\n        },\n        \"files\": [\n            {\n                \"fieldname\": \"file\",\n                \"originalname\": \"depth_scale.xlsx\",\n                \"encoding\": \"7bit\",\n                \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n                \"destination\": \"./public/uploads/INIT-12/6.melia/stage-3\",\n                \"filename\": \"1632255132043-depth_scale.xlsx\",\n                \"path\": \"public\\\\uploads\\\\INIT-12\\\\6.melia\\\\stage-3\\\\1632255132043-depth_scale.xlsx\",\n                \"size\": 9192\n            }\n        ]\n    },\n    \"title\": \"Full Proposal: Patch melia.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert melia: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert melia: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
     "type": "patch",
     "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
     "title": "Manage Plan and Risk - Create and update MPR",
@@ -2033,6 +2232,7 @@ define({ "api": [
     ],
     "name": "PatchManagePlan",
     "group": "Proposal",
+    "description": "<p>Create and Update Melia</p>",
     "examples": [
       {
         "title": "Example usage:",
