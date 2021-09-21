@@ -22,6 +22,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
       },
       {
+        path: 'innovation-packages-and-srp',
+        loadChildren: () => import('./pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
+      },
+      {
         path: 'context',
         loadChildren: () => import('./pages/context/context.module').then(mod => mod.ContextModule),
       },
