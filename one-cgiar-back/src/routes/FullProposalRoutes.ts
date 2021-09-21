@@ -134,7 +134,7 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
 router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
 
 // read all work package
-router.get("/packages", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getAllWorkPackages);
+router.get("/packages", stagefull.getAllWorkPackages);
 
 // assign Work Package
 /**

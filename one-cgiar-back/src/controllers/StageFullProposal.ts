@@ -706,7 +706,7 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, gender_diversity_inclusion,capacity_development, active, section, updateFiles } = JSON.parse(req.body.data);
+    const { id, gender_diversity_inclusion, capacity_development, active, section, updateFiles } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -727,8 +727,8 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const humanResources = await fullPposal.upsertHumanResourcesAndFiles(initiativeId, ubication, stage, id, gender_diversity_inclusion,capacity_development,
-                                                                             active, section, files, updateFiles);
+        const humanResources = await fullPposal.upsertHumanResourcesAndFiles(initiativeId, ubication, stage, id, gender_diversity_inclusion, capacity_development,
+            active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch human resources.', { humanResources, files }));
 
@@ -812,7 +812,7 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
         const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
-                                                                             active, section, files, updateFiles);
+            active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch financial resources.', { financialResources, files }));
 
@@ -869,7 +869,7 @@ export async function patchPolicyComplianceOversight(req: Request, res: Response
     const { initiativeId } = req.params;
 
     //Policy compliance Oversight section data
-    const { id, research_governance_policy,open_fair_data_policy,open_fair_data_details, active } = req.body;
+    const { id, research_governance_policy, open_fair_data_policy, open_fair_data_details, active } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -889,7 +889,7 @@ export async function patchPolicyComplianceOversight(req: Request, res: Response
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
         const policyComplianceOversight = await fullPposal.upsertPolicyComplianceOversight(id, research_governance_policy,
-                                                                                         open_fair_data_policy,open_fair_data_details,active);
+            open_fair_data_policy, open_fair_data_details, active);
 
         res.json(new ResponseHandler('Full Proposal: Patch policy compliance oversight.', { policyComplianceOversight }));
 
@@ -903,7 +903,7 @@ export async function patchPolicyComplianceOversight(req: Request, res: Response
 
 export async function getPolicyComplianceOversight(req: Request, res: Response) {
 
-    const { initiativeId, sectionName } = req.params;
+    const { initiativeId } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
@@ -916,14 +916,14 @@ export async function getPolicyComplianceOversight(req: Request, res: Response) 
 
         // if not intitiative by stage, throw error
         if (initvStg == null) {
-            throw new BaseError('Read financial resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+            throw new BaseError('Read policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const financialResourcesData = await fullPposal.requestFinancialResourcesFiles(sectionName);
+        const policyComplianceData = await fullPposal.requestPolicyComplianceOversight();
 
-        res.json(new ResponseHandler('Full Proposal:financial resources and files.', { financialResourcesData }));
+        res.json(new ResponseHandler('Full Proposal:policy compliance oversight', { policyComplianceData }));
 
 
     } catch (error) {
