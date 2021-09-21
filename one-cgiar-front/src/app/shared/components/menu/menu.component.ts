@@ -115,6 +115,7 @@ export class MenuComponent implements OnInit {
               item.sort = 'id';
             })
             this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
+            this.mapDataInMenu(3, 7, 16, impacAreas.response.impactAreasRequested);
             this._dataControlService.pobMaped = true;
           },(err) => {
             console.log(err);
