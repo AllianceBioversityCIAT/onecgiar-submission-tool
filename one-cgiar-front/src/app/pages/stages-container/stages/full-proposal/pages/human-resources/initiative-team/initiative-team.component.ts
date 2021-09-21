@@ -24,11 +24,11 @@ export class InitiativeTeamComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getFinancialResources();
+    this.getHumanResources();
   }
 
-  getFinancialResources(){
-    this._initiativesService.getFinancialResources(this._initiativesService.initiative.id,'initiative-team').subscribe(resp=>{
+  getHumanResources(){
+    this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'initiative-team').subscribe(resp=>{
       console.log(resp);
       this.filesList = [];
       let humanResourcesData = resp.response.humanResourcesData;
@@ -74,7 +74,7 @@ export class InitiativeTeamComponent implements OnInit {
       this.filesSavedList.length || this.filesList.length?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources and activities has been saved, but there are incomplete fields')
-      this.getFinancialResources();
+      this.getHumanResources();
     })
 
     
