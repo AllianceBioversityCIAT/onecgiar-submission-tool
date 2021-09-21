@@ -1523,6 +1523,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/policy-compliance/:initiativeId",
+    "title": "Policy Compliance - Request PCO",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPolicyCompliance",
+    "group": "Proposal",
+    "description": "<p>Shows Policy Compliance Oversight</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"policyComplianceData\": {\n            \"id\": 3,\n            \"initvStgId\": 40,\n            \"research_governance_policy\": 1,\n            \"open_fair_data_policy\": 0,\n            \"open_fair_data_details\": \"Test 1 policy\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T19:31:10.000Z\",\n            \"updated_at\": \"2021-09-21T19:31:10.000Z\"\n        }\n    },\n    \"title\": \"Full Proposal:policy compliance oversight\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get policy compliance oversight.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get policy compliance oversight.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages/:initiativeId",
     "title": "Work package - Request workpackage",
     "version": "1.0.2",
@@ -2083,77 +2152,8 @@ define({ "api": [
     "groupTitle": "Proposal"
   },
   {
-    "type": "get",
-    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
-    "title": "Policy Compliance - Request PCO",
-    "version": "1.0.2",
-    "permission": [
-      {
-        "name": "admin"
-      }
-    ],
-    "name": "PatchPolicyCompliance",
-    "group": "Proposal",
-    "description": "<p>Shows Policy Compliance Oversight</p>",
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10",
-        "type": "json"
-      }
-    ],
-    "sampleRequest": [
-      {
-        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "auth",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"policyComplianceData\": {\n            \"id\": 3,\n            \"initvStgId\": 40,\n            \"research_governance_policy\": 1,\n            \"open_fair_data_policy\": 0,\n            \"open_fair_data_details\": \"Test 1 policy\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T19:31:10.000Z\",\n            \"updated_at\": \"2021-09-21T19:31:10.000Z\"\n        }\n    },\n    \"title\": \"Full Proposal:policy compliance oversight\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Error",
-            "description": "<p>: Get policy compliance oversight.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get policy compliance oversight.\", error }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/routes/FullProposalRoutes.ts",
-    "groupTitle": "Proposal"
-  },
-  {
     "type": "patch",
-    "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
+    "url": "stages-control/proposal/policy-compliance/:initiativeId/",
     "title": "Policy Compliance - Create and update PCO",
     "version": "1.0.0",
     "permission": [

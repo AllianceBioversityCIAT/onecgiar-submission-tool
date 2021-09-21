@@ -676,7 +676,7 @@ router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt,
 
 // upsert policy compliance oversight to initiative
 /**
- * @api {patch} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Policy Compliance - Create and update PCO
+ * @api {patch} stages-control/proposal/policy-compliance/:initiativeId/ Policy Compliance - Create and update PCO
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchPolicyCompliance
@@ -735,10 +735,10 @@ router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pc
 
 // Get policy compliance oversight to initiative
 /**
- * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Policy Compliance - Request PCO
+ * @api {get} stages-control/proposal/policy-compliance/:initiativeId Policy Compliance - Request PCO
  * @apiVersion 1.0.2
  * @apiPermission admin
- * @apiName PatchPolicyCompliance
+ * @apiName GetPolicyCompliance
  * @apiGroup Proposal
  * 
  * @apiDescription  Shows Policy Compliance Oversight
