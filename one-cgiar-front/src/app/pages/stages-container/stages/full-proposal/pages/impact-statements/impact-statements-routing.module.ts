@@ -8,8 +8,12 @@ const routes: Routes = [
     component: ImpactStatementsComponent,
     children: [
       {
-        path: 'impact-statements-table',
+        path: '',
         loadChildren: () => import('./impact-statements-table/impact-statements-table.module').then(mod => mod.ImpactStatementsTableModule),
+      },
+      {
+        path: 'impact-area/:iaID',
+        loadChildren: () => import('./impact-area/impact-area.module').then(mod => mod.ImpactAreaModule),
       }
     ],
   }

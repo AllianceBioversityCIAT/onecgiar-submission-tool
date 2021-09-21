@@ -1,1 +1,34 @@
-<p>impact-statements-table works!</p>
+<section-title name="Impact strategies table" ></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+    
+    <p-table [columns]="cols" [value]="impactAreas" responsiveLayout="scroll">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [style.textAlign]="col.header == 'Name' ? '' : 'center'">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns" [style.textAlign]="col.field == 'active' ? 'center' : ''" [routerLink]="'impact-area/'+rowData.id">
+
+                    <span [ngSwitch]="col.field">
+
+                        <span *ngSwitchCase="'active'">
+                            <span [style.color]="rowData[col.field]?'var(--ibdc-secondary-color)':'#d3d3d3'"
+                                class="material-icons-outlined material-icons">check_circle</span>
+                        </span>
+                
+                        <span *ngSwitchDefault>
+                            {{rowData[col.field]}}
+                        </span>
+
+                    </span>
+
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
