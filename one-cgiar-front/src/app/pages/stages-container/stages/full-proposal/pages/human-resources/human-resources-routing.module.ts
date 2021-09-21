@@ -6,12 +6,20 @@ const routes: Routes = [
   {
     path:'',
     component:HumanResourcesComponent,
-    // children: [
-    //   {
-    //     path: 'budget',
-    //     loadChildren: () => import('./budget/budget.module').then(mod => mod.BudgetModule),
-    //   }
-    // ],
+    children: [
+      {
+        path: 'capacity-development',
+        loadChildren: () => import('./capacity-development/capacity-development.module').then(mod => mod.CapacityDevelopmentModule),
+      },
+      {
+        path: 'gender-diw',
+        loadChildren: () => import('./gender-diw/gender-diw.module').then(mod => mod.GenderDiwModule),
+      },
+      {
+        path: 'initiative-team',
+        loadChildren: () => import('./initiative-team/initiative-team.module').then(mod => mod.InitiativeTeamModule),
+      }
+    ],
   }
 ];
 
