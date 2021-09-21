@@ -3,13 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { ImpactStatementsTableRoutingModule } from './impact-statements-table-routing.module';
 import { ImpactStatementsTableComponent } from './impact-statements-table.component';
+import { TableModule } from 'primeng/table';
+import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
   declarations: [ImpactStatementsTableComponent],
   imports: [
     CommonModule,
-    ImpactStatementsTableRoutingModule
+    ImpactStatementsTableRoutingModule,
+    TableModule,
+    UtilsModule
   ]
 })
 export class ImpactStatementsTableModule { }
