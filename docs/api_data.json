@@ -2085,7 +2085,7 @@
   {
     "type": "get",
     "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
-    "title": "Policy Compliance Oversight - Request Policy Compliance Oversight",
+    "title": "Policy Compliance - Request PCO",
     "version": "1.0.2",
     "permission": [
       {
@@ -2154,7 +2154,7 @@
   {
     "type": "patch",
     "url": "stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId",
-    "title": "Policy Compliance Oversight - Create and update PCO",
+    "title": "Policy Compliance - Create and update PCO",
     "version": "1.0.0",
     "permission": [
       {
