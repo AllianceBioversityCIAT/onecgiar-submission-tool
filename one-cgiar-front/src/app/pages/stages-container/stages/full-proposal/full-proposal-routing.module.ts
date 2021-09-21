@@ -45,6 +45,10 @@ const routes: Routes = [
         path: 'financial-resources',
         loadChildren: () => import('./pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
       },
+      {
+        path: 'policy-compliance-and-oversight',
+        loadChildren: () => import('./pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
+      },
     ]
   }
 ];
