@@ -34,10 +34,10 @@ export class ManagementPlanComponent implements OnInit {
 
   getManagePlan(){
     this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'management-plan').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       let mpara = resp.response.managePlanData;
       this.data.id = mpara?.id;
-      console.log(mpara);
+      // console.log(mpara);
       this.managementPlanForm.controls['example'].setValue(mpara?.management_plan);
     },
     err=>{console.log(err);}
