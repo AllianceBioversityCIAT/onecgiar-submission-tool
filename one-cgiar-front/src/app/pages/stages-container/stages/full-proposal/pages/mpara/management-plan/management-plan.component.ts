@@ -54,7 +54,7 @@ export class ManagementPlanComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'management-plan',3).subscribe(resp=>{
+    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'7.management-plan',3).subscribe(resp=>{
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();

@@ -298,6 +298,22 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${section}`);
   }
 
+  saveHumanResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getHumanResources (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${section}`);
+  }
+
+  saveFinancialResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getFinancialResources (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${section}`);
+  }
+
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);
