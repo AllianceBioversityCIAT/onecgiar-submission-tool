@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-impact-area-is',
@@ -10,13 +11,21 @@ import { InteractionsService } from '../../../../../../../../shared/services/int
   styleUrls: ['./impact-area-is.component.scss']
 })
 export class ImpactAreaIsComponent implements OnInit {
-
+  showForm = true;
+  sectionForm: FormGroup;
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
     public _interactionsService:InteractionsService
-  ) { }
+  ) { 
+    this.sectionForm = new FormGroup({
+      example1:new FormControl(null),
+      example2:new FormControl(null),
+      example3:new FormControl(null),
+      example4:new FormControl(null),
+    });
+  }
 
   ngOnInit(): void {
 
@@ -83,6 +92,9 @@ export class ImpactAreaIsComponent implements OnInit {
 
   }
 
+  saveSection(){
+    console.log(this.sectionForm.value);
+  }
 
   cleanForm(){
     // this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);

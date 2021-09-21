@@ -1,4 +1,44 @@
 <section-title name="Impact area" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, ipsam.
+    <form (ngSubmit)="saveSection()">
+
+        <div class="row">
+            <div class="col-12">
+                <ibdc-textarea *ngIf="showForm"
+                    [options]="{inputTitle:'Challenges and prioritization',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'example1', maxWords:500,
+                    description:'Provide an evidence-based statement identifying the Impact Area challenge(s) the Initiative will address, and how those informed the priority-setting for the Initiative’s research and innovation. If the Initiative does not address this Impact Area, provide a justification'}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-12">
+                <ibdc-textarea *ngIf="showForm"
+                    [options]="{inputTitle:'Research questions',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'example2', maxWords:500,
+                    description:'Note the key research questions that deliver on this Impact Area.'}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-12">
+                <ibdc-textarea *ngIf="showForm"
+                    [options]="{inputTitle:'Components of Work Packages',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'example3', maxWords:500,
+                    description:'Highlight the specific Work Packages or components of Work Packages (research and associated work, outputs, outcomes) that deliver on the Impact Area.'}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-12">
+                <ibdc-textarea *ngIf="showForm"
+                    [options]="{inputTitle:'Measuring performance and results',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'example4', maxWords:500,
+                    description:'Describe the 3-year (End-of-Initiative) outcomes and metrics for this Impact Area.'}">
+                </ibdc-textarea>
+            </div>
+
+            <div class="col-sm-12">
+                <app-global-partners-request></app-global-partners-request>
+            </div>
+
+        </div>
+        
+        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+
+    </form>
 </div>

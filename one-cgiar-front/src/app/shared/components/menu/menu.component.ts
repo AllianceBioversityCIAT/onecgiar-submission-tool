@@ -201,7 +201,7 @@ export class MenuComponent implements OnInit {
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-    console.log(active, stage, section, isSection, subsection)
+    // console.log(active, stage, section, isSection, subsection)
     if (active) {
       if (isSection) {
         if (!subsection.length) {
