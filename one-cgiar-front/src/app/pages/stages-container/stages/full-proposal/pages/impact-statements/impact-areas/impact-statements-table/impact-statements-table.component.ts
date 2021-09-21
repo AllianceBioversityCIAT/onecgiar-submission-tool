@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-impact-statements-table',

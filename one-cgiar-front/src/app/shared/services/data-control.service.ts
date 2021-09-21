@@ -20,6 +20,7 @@ export class DataControlService {
   clarisaIsDown = false;
   wpMaped = false;
   pobMaped = false;
+  impactStatementsMaped = false;
   userMenu = [];
   WorkPackageID:number=null;
   showRegions=false;
