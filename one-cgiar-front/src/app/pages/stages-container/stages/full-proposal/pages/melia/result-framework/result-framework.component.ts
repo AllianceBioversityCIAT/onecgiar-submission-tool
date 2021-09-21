@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-result-framework',
@@ -20,7 +22,8 @@ export class ResultFrameworkComponent implements OnInit {
   };
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataValidatorsService:DataValidatorsService
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +43,7 @@ export class ResultFrameworkComponent implements OnInit {
     err=>{console.log(err);}
     ,()=>{
       this.showForm = true;
+      this.validateSection();
     })
   }
   saveSection(){
@@ -68,7 +72,7 @@ export class ResultFrameworkComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
+    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
       this.filesSavedList.length || this.filesList.length?
@@ -78,6 +82,47 @@ export class ResultFrameworkComponent implements OnInit {
     })
 
     
+  }
+
+  validateSection(){
+    let ej1 = [
+      {
+        id:7,
+        rata:'Perro'
+      },
+      {
+        id:4,
+        rata:'Perro'
+      },
+      {
+        id:1,
+        rata:'Perro'
+      },
+      {
+        id:2,
+        rata:'Perro'
+      }
+    ]
+
+    let ej2 = [
+      {
+        id:4,
+        rata:'Perro'
+      },
+      {
+        id:7,
+        rata:'Perro'
+      },
+      {
+        id:1,
+        rata:'Perro'
+      },
+      {
+        id:2,
+        rata:'Perro'
+      }
+    ]
+    this._dataValidatorsService.validateArray(ej1,ej2,'id')
   }
 
 
