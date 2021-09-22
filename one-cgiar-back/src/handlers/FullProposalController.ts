@@ -923,7 +923,10 @@ export class ProposalHandler extends InitiativeStageHandler {
                 FROM partners
                WHERE impact_strategies_id in (SELECT id
                 FROM impact_strategies
-               WHERE initvStgId = ${initvStg.id})
+               WHERE initvStgId = ${initvStg.id}
+               AND impact_area_id = ${impact_area_id}
+               AND active = 1
+               )
                  AND active = 1
                 `
                 )
