@@ -1839,4 +1839,31 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
 
 
+    async requestInnovationPackages() {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const innovationPackagesQuery = (` 
+            SELECT * 
+            FROM innovation_packages
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `)
+
+            const innovationPackages = await this.queryRunner.query(innovationPackagesQuery);
+
+            return innovationPackages[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get InnovationPackages.', 400, error.message, false)
+
+        }
+
+    }
+
+
 }

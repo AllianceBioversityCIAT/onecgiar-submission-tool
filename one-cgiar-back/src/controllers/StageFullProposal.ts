@@ -988,9 +988,9 @@ export async function getInnovationPackages(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const policyComplianceData = await fullPposal.requestPolicyComplianceOversight();
+        const innovationPackagesData = await fullPposal.requestInnovationPackages();
 
-        res.json(new ResponseHandler('Full Proposal:policy compliance oversight', { policyComplianceData }));
+        res.json(new ResponseHandler('Full Proposal:Innovation Packages', { innovationPackagesData }));
 
 
     } catch (error) {
