@@ -335,7 +335,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         } catch (error) {
 
-            throw new BaseError('Get workpackage', 400, error.message, false)
+            throw new BaseError('Get All work packages', 400, error.message, false)
 
         }
 
