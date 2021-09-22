@@ -871,15 +871,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     if (newPartners.id !== null) {
 
-                        newPartners.id = partners.id;
-                        newPartners.impact_strategies_id = partners.impact_strategies_id;
-                        newPartners.institutions_id = partners.code;
-                        newPartners.institutions_name = partners.name;
-                        newPartners.tag_id = partners.tag_id ? partners.tag_id : null;
-                        newPartners.type_id = partners.type_id ? partners.type_id : null;
-                        newPartners.type_name = partners.institutionType;
-                        newPartners.active = partners.active ? partners.active : true;
-
                         var savedPartners = await partnersRepo.findOne(newPartners.id);
 
                         partnersRepo.merge(
