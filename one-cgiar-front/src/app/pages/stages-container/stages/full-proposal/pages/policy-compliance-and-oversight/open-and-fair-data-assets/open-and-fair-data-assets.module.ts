@@ -6,6 +6,7 @@ import { OpenAndFairDataAssetsComponent } from './open-and-fair-data-assets.comp
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +16,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     OpenAndFairDataAssetsRoutingModule,
     UtilsModule,
     CheckboxModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class OpenAndFairDataAssetsModule { }
