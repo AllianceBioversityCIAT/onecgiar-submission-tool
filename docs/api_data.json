@@ -1605,6 +1605,75 @@
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/innovation-packages/:initiativeId",
+    "title": "Innovation Packages - Request PCO",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetInnovationPackages",
+    "group": "Proposal",
+    "description": "<p>Shows Innovation Packages</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"innovationPackagesData\": {\n          \"id\": 1,\n          \"initvStgId\": 35,\n          \"key_principles\": \"Test 1 innovation package\",\n          \"active\": 1,\n          \"created_at\": \"2021-09-22T16:09:07.000Z\",\n          \"updated_at\": \"2021-09-22T16:09:07.000Z\"\n      }\n  },\n  \"title\": \"Full Proposal:Innovation Packages\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get InnovationPackages.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get InnovationPackages.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId",
     "title": "Manage Plan and Risk - Request MPR",
     "version": "1.0.2",
@@ -2323,6 +2392,115 @@
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert Impact Strategies: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/innovation-packages/:initiativeId/",
+    "title": "Innovation Packages - Create and update IP",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchInnovationPackages",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>identificator Policy Compliance.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "key_principles",
+            "description": "<p>description key principles.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"id\": null,\n \"key_principles\": \"Test 1 policy\",\n \"active\": true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"innovationPackages\": {\n          \"upsertedInnovationPackages\": {\n              \"id\": 1,\n              \"key_principles\": \"Test 1 innovation package\",\n              \"active\": true,\n              \"initvStgId\": 35,\n              \"updated_at\": \"2021-09-22T16:09:07.000Z\",\n              \"created_at\": \"2021-09-22T16:09:07.000Z\"\n          }\n      }\n  },\n  \"title\": \"Full Proposal: Innovation Packages.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert Innovation Packages: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert Innovation Packages: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
           "type": "json"
         }
       ]
