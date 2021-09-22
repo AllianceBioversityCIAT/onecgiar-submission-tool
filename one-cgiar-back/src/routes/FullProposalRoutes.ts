@@ -333,11 +333,11 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  *         {
  *             "id": null,
  *             "impact_strategies_id": 1,
- *             "institutions_id": 1,
- *             "institutions_name": "Wageningen University and Research Centre",
+ *             "code": 1,
+ *             "name": "Wageningen University and Research Centre",
  *             "tag_id": 1,
  *             "type_id":3,
- *             "type_name":"CGIAR Center",
+ *             "institutionType":"CGIAR Center",
  *             "active": true
  *         }
  *     ]
@@ -427,11 +427,11 @@ router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('s
  *                         {
  *                             "id": 3,
  *                             "impact_strategies_id": 2,
- *                             "institutions_id": 1,
- *                             "institutions_name": "Wageningen University and Research Centre",
+ *                             "code": 1,
+ *                             "name": "Wageningen University and Research Centre",
  *                             "tag_id": 1,
  *                             "type_id": 3,
- *                             "type_name": "CGIAR Center",
+ *                             "institutionType": "CGIAR Center",
  *                             "active": 1,
  *                             "created_at": "2021-09-21T21:32:15.000Z",
  *                             "updated_at": "2021-09-21T21:32:15.000Z"
