@@ -297,9 +297,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                  WHERE active = 1
                 GROUP BY id,region_id
                 `
+                ), WPquery = (
+                    `
+                    SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+                      FROM work_packages wp
+                      JOIN initiatives_by_stages init
+                     WHERE wp.initvStgId = init.id
+                       AND wp.active = 1
+                    `
                 )
 
-            var workPackages = await wpRepo.find({ where: { active: 1 } });
+            // var workPackages = await wpRepo.find({ where: { active: 1 } });
+            var workPackages = await this.queryRunner.query(WPquery);
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
