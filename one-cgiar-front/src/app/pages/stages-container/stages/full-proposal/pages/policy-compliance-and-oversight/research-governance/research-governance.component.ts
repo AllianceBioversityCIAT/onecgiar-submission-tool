@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-research-governance',
@@ -11,7 +12,8 @@ export class ResearchGovernanceComponent implements OnInit {
   sectionForm: FormGroup;
   showForm = true;
   constructor(
-   public _initiativesService:InitiativesService
+   public _initiativesService:InitiativesService,
+   private _interactionsService:InteractionsService
   ) {
     this.sectionForm = new FormGroup({
       research_governance_policy:new FormControl(null),
@@ -27,6 +29,9 @@ export class ResearchGovernanceComponent implements OnInit {
     // console.log(this.sectionForm.value);
     this._initiativesService.savePolicyCompliance(this.sectionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
+      this.sectionForm.valid?
+      this._interactionsService.successMessage('Research governance has been saved'):
+      this._interactionsService.warningMessage('Research governance has been saved, but there are incomplete fields')
     })
   }
 
