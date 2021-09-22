@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-research-governance',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResearchGovernanceComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+   public _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  saveSection(){
+    
   }
 
 }
