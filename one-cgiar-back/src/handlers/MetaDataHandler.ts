@@ -14,6 +14,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
    */
 
 
+  
+  public get value() : string {
+    return 
+  }
+  
+
   /**
    * 
    * @param initiativeId 
@@ -200,23 +206,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
    * Validation General Information (Summary Table)
    * @returns validationGI (True or False)
    */
-  async validationGI(initiativeId, stageId) {
+  async validationGI() {
 
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
 
     try {
 
-      // get stage
-      const stage = await stageRepo.findOne({ where: { id: stageId } });
-
-      // get intiative by stage
-      const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-      // if not intitiative by stage, throw error
-      if (initvStg == null || initvStg == undefined) {
-        throw new BaseError('Validations: Error', 400, `Validations not found in stage: ${stage.description}`, false);
-      }
-
+    
 
       let validationGISQL = (
         `
@@ -240,7 +235,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       END AS ValidateGI
     FROM initiatives_by_stages ini
     JOIN sections_meta sec
-   WHERE ini.id = ${initvStg.id}
+   WHERE ini.id = ${this.initvStgId_}
      AND sec.stageId= ini.stageId
      AND sec.description='general-information'`
       )
@@ -256,6 +251,43 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
 
   }
+
+
+  async validationInnovationPackages() {
+
+
+    try {
+
+
+
+      let validationInnovationPackagesSQL = (
+        `
+     SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id ) IS NULL 
+        OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id ) = ''
+       THEN FALSE
+         ELSE TRUE
+         END AS ValidateInnovationPackages
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='Innovation Packages and Scaling Readiness Plan';`
+      )
+
+      var innovationPackagesSQL = this.queryRunner.query(validationInnovationPackagesSQL);
+
+      return innovationPackagesSQL
+
+    } catch (error) {
+
+      throw new BaseError('Get validations innovations packages', 400, error.message, false)
+
+    }
+
+  }
+
 
 
   /**

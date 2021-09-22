@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
+import { getRepository } from 'typeorm';
+import { InitiativesByStages } from '../entity/InititativesByStages';
+import { Stages } from '../entity/Stages';
+import { BaseError } from '../handlers/BaseError';
 
 /**
  * METADATA
@@ -62,18 +66,40 @@ export async function getValidations(req: Request, res: Response) {
     // get initiative by stage id from client
     const { initiativeId, stageId } = req.params;
 
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
     try {
 
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { id: stageId } });
+
+        // get intiative by stage
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null || initvStg == undefined) {
+            throw new BaseError('Validations: Error', 400, `Validations not found in stage: ${stage.description}`, false);
+        }
+
+
         // create new Meta Data object
-        const metaData = new MetaDataHandler();
+        const metaData = new MetaDataHandler(initvStg.id.toString());
 
         // Get validations for general information
-        let validationGI = await metaData.validationGI(initiativeId, stageId);
+        let validationGI = await metaData.validationGI();
+
+        // Get validations for general information
+
+        let validationInnovationPackages = await metaData.validationInnovationPackages();
+
+        /*******************************************/
 
         // Convert boolean ('0' and '1' to number)
         validationGI[0].ValidateGI = parseInt(validationGI[0].ValidateGI);
+        validationInnovationPackages[0].ValidateInnovationPackages = parseInt(validationInnovationPackages[0].ValidateInnovationPackages);
 
-        res.json(new ResponseHandler('Validations General Information:Menu', { validationGI }));
+        res.json(new ResponseHandler('Validations General Information:Menu', { validationGI, validationInnovationPackages }));
 
 
     } catch (error) {

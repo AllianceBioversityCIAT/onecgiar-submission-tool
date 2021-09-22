@@ -195,13 +195,13 @@ export class ProposalHandler extends InitiativeStageHandler {
             } else {
 
                 // Map Initiatives
-                workPackages.map(geo => {
-                    geo['regions'] = regions.filter(wp => {
-                        return (wp.wrkPkgId === geo.id)
+                workPackages.map(wp => {
+                    wp['regions'] = regions.filter(reg => {
+                        return (reg.wrkPkgId === wp.id)
                     })
 
-                    geo['countries'] = countries.filter(wp => {
-                        return (wp.wrkPkgId === geo.id)
+                    wp['countries'] = countries.filter(cou => {
+                        return (cou.wrkPkgId === wp.id)
                     })
 
                 })
@@ -862,11 +862,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newPartners.id = par.id;
                     newPartners.impact_strategies_id = upsertedImpactStrategies.id;
-                    newPartners.institutions_id = par.institutions_id;
-                    newPartners.institutions_name = par.institutions_name;
+                    newPartners.institutions_id = par.code;
+                    newPartners.institutions_name = par.name;
                     newPartners.tag_id = par.tag_id;
                     newPartners.type_id = par.type_id;
-                    newPartners.type_name = par.type_name;
+                    newPartners.type_name = par.institutionType;
                     newPartners.active = par.active ? par.active : true;
 
                     if (newPartners.id !== null) {
@@ -919,7 +919,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             `),
                 partnersQuery = (
                     `
-                SELECT * 
+                SELECT id,impact_strategies_id,institutions_id as code,institutions_name as name,tag_id,type_id,
+                type_name as institutionType,active,created_at,updated_at
                 FROM partners
                WHERE impact_strategies_id in (SELECT id
                 FROM impact_strategies
