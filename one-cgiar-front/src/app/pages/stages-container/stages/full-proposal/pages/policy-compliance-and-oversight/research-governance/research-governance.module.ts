@@ -6,6 +6,7 @@ import { ResearchGovernanceComponent } from './research-governance.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ResearchGovernanceComponent],
@@ -14,7 +15,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     ResearchGovernanceRoutingModule,
     UtilsModule,
     CheckboxModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ResearchGovernanceModule { }
