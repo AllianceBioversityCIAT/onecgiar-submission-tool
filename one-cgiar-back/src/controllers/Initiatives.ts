@@ -1165,8 +1165,6 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
     }
 }
 
-
-
 /**
  * 
  * @param req 
