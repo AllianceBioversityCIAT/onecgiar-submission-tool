@@ -323,6 +323,14 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${initiativeId}`);
   }
 
+  saveImpactStrategies (body:any, initiativeId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}`, body);
+  }
+
+  getImpactStrategies (initiativeId,impactAreaId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}/${impactAreaId}`);
+  }
+
   // Query to get all the users by roles
   getUsersByRoles(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/users/roles?roles=1&roles=2&roles=3`);
