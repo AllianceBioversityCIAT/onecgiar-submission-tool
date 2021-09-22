@@ -864,7 +864,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newPartners.impact_strategies_id = upsertedImpactStrategies.id;
                     newPartners.institutions_id = par.code;
                     newPartners.institutions_name = par.name;
-                    newPartners.tag_id = par.tag_id;
+                    newPartners.tag_id = par.tag_id ? par.tag_id : null;
                     newPartners.type_id = par.type_id ? par.type_id : null;
                     newPartners.type_name = par.institutionType;
                     newPartners.active = par.active ? par.active : true;
