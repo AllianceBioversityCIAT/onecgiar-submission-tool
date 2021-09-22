@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 @Component({
@@ -7,10 +8,15 @@ import { InitiativesService } from '../../../../../../shared/services/initiative
   styleUrls: ['./innovation-packages-and-srp.component.scss']
 })
 export class InnovationPackagesAndSrpComponent implements OnInit {
+  secionForm: FormGroup;
   showForm = true;
   constructor(
     public _initiativesService:InitiativesService
-  ) { }
+  ) {
+    this.secionForm = new FormGroup({
+      example: new FormControl(null),
+    });
+   }
 
   ngOnInit(): void {
   }
