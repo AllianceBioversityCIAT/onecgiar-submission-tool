@@ -20,10 +20,13 @@ export class ImpactAreaIsComponent implements OnInit {
     public _interactionsService:InteractionsService
   ) { 
     this.sectionForm = new FormGroup({
-      example1:new FormControl(null),
-      example2:new FormControl(null),
-      example3:new FormControl(null),
-      example4:new FormControl(null),
+      id:new FormControl(null),
+      challenge_priorization:new FormControl(null),
+      research_questions:new FormControl(null),
+      component_work_package:new FormControl(null),
+      performance_results:new FormControl(null),
+      impact_area_id:new FormControl(null),
+      partners:new FormControl([]),
     });
   }
 
@@ -33,29 +36,19 @@ export class ImpactAreaIsComponent implements OnInit {
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.cleanForm();
       // this.showDepthSacale = false;
-      // this.showForm = false;
+      this.showForm = false;
 
       // this.getPobImpatAreaData(routeResp.pobIaID)
       this.pobColorselected(3, 7, 16, routeResp.iaID);
-      // this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
+      this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
 
-      this._initiativesService.getImpactAreasIndicators().subscribe(resp => {
+      this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
+        console.log(resp);
+        if (resp.response.impactStrategies) this.updateForm(resp.response.impactStrategies);
+        
+      },err=>{console.log(err);},
+      ()=>{this.showForm = true;})
 
-        // this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested, routeResp.pobIaID);
-      },
-        error => { console.log('#2 Error:', error) },
-        () => {
-          // this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-          //   if (resp.response.projectionBenefitsByImpact) {
-          //     this.updateForm(resp.response.projectionBenefitsByImpact);
-          //     // console.log(this.pobImpactAreaForm.value.impact_area_indicator_id);
-          //     this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
-          //   }
-
-          //   this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
-          //   this.showForm = true;
-          // })
-        })
 
 
     })
@@ -68,6 +61,15 @@ export class ImpactAreaIsComponent implements OnInit {
     
    this.pobColorselected(3, 7, 16,-1)
    this.cleanForm();
+  }
+
+  updateForm(resp){
+    // console.log(resp);
+    this.sectionForm.controls['id'].setValue(resp.id == undefined? null: resp.id);
+    this.sectionForm.controls['challenge_priorization'].setValue(resp.challenge_priorization);
+    this.sectionForm.controls['research_questions'].setValue(resp.research_questions);
+    this.sectionForm.controls['component_work_package'].setValue(resp.component_work_package);
+    this.sectionForm.controls['performance_results'].setValue(resp.performance_results);
   }
 
   
@@ -93,24 +95,21 @@ export class ImpactAreaIsComponent implements OnInit {
   }
 
   saveSection(){
+    let body = this.sectionForm.value;
     console.log(this.sectionForm.value);
+    this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
+      // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
+      this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
+    })
   }
 
   cleanForm(){
-    // this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
-    // this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
-    // this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
-    // this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
-    // // this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
-    // this.pobImpactAreaForm.controls['notes'].setValue(null);
-    // this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
-    // this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
-    // this.pobImpactAreaForm.controls['probability_id'].setValue(null);
-    // this.pobImpactAreaForm.controls['impact_area_active'].setValue(false);
-    // this.indicatorMetaData.targetUnit = '';
-    // this.indicatorMetaData.value = '';
-    // this.indicatorMetaData.targetYear = '';
-    // this.dimensionsList = [];
+    this.sectionForm.controls['challenge_priorization'].setValue(null);
+    this.sectionForm.controls['research_questions'].setValue(null);
+    this.sectionForm.controls['component_work_package'].setValue(null);
+    this.sectionForm.controls['performance_results'].setValue(null);
+    this.sectionForm.controls['id'].setValue(null);
   }
 
 }
