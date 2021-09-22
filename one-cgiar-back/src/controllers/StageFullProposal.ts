@@ -159,7 +159,6 @@ export async function getWorkPackage(req: Request, res: Response) {
 
 export async function getAllWorkPackages(req: Request, res: Response) {
 
-
     try {
 
         // create new full proposal object
@@ -172,8 +171,6 @@ export async function getAllWorkPackages(req: Request, res: Response) {
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
-
-
 
 }
 
@@ -902,6 +899,76 @@ export async function patchPolicyComplianceOversight(req: Request, res: Response
 
 
 export async function getPolicyComplianceOversight(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const policyComplianceData = await fullPposal.requestPolicyComplianceOversight();
+
+        res.json(new ResponseHandler('Full Proposal:policy compliance oversight', { policyComplianceData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+
+export async function patchInnovationPackages(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+    //Policy compliance Oversight section data
+    const { id, key_principles, active } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const innovationPackages = await fullPposal.upsertInnovationPackages(id, key_principles, active);
+
+        res.json(new ResponseHandler('Full Proposal: Innovation Packages.', { innovationPackages }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getInnovationPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);

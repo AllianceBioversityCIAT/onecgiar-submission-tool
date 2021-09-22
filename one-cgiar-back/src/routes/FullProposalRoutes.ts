@@ -1112,5 +1112,11 @@ router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pc
  */
 router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
 
+// upsert innovation packages to initiative
+router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt,checkRole('pco', 'updateOwn')], stagefull.patchInnovationPackages);
+
+// Get innovation packages to initiative
+router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getInnovationPackages);
+
 
 export default router;

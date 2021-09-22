@@ -8,6 +8,7 @@ import { FinancialResources } from "../entity/FinancialResources";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { HumanResources } from "../entity/HumanResources";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
+import { InnovationPackages } from "../entity/InnovationPackages";
 import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
@@ -938,7 +939,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return { impactStrategies };
+            return impactStrategies[0];
 
         } catch (error) {
 
@@ -1783,6 +1784,52 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             console.log(error)
             throw new BaseError('Get policy compliance oversight.', 400, error.message, false)
+
+        }
+
+    }
+
+
+
+    async upsertInnovationPackages(innovationPackageId?, key_principles?, innovationPackageActive?) {
+
+        const innovationPackagesRepo = getRepository(InnovationPackages);
+        const initvStg = await this.setInitvStage();
+
+        var newInnovationPackages = new InnovationPackages();
+        var upsertedInnovationPackages;
+
+        newInnovationPackages.id = innovationPackageId;
+        newInnovationPackages.key_principles = key_principles;
+        newInnovationPackages.active = innovationPackageActive ? innovationPackageActive : true;
+
+        try {
+
+            if (newInnovationPackages.id !== null) {
+
+                var savedInnovationPackages = await innovationPackagesRepo.findOne(newInnovationPackages.id);
+
+                innovationPackagesRepo.merge(
+                    savedInnovationPackages,
+                    newInnovationPackages
+                );
+
+                upsertedInnovationPackages = await innovationPackagesRepo.save(savedInnovationPackages);
+
+            } else {
+
+                newInnovationPackages.initvStgId = initvStg.id;
+
+                upsertedInnovationPackages = await innovationPackagesRepo.save(newInnovationPackages);
+
+            }
+
+            return { upsertedInnovationPackages };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Innovation Packages: Full proposal', 400, error.message, false)
 
         }
 
