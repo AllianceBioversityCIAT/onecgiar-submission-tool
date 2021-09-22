@@ -531,7 +531,7 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
+router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
 
 // Get melia and files to initiative
 /**
@@ -671,7 +671,7 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert management plan risk: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('mpr', 'updateOwn'), uploadFile.any()], stagefull.patchManagePlanAndFiles);
+router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()], stagefull.patchManagePlanAndFiles);
 
 // Get management plan risk and files to initiative
 /**
@@ -812,7 +812,7 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert human Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('hr', 'updateOwn'), uploadFile.any()], stagefull.patchHumanResourcesAndFiles);
+router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()], stagefull.patchHumanResourcesAndFiles);
 
 // Get human resources and files to initiative
 /**
@@ -951,7 +951,7 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert financial Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt,checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
+router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
 
 // Get financial resources and files to initiative
 /**
@@ -1067,7 +1067,7 @@ router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt,
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert policy compliance oversight: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pco', 'updateOwn')], stagefull.patchPolicyComplianceOversight);
+router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'updateOwn')], stagefull.patchPolicyComplianceOversight);
 
 // Get policy compliance oversight to initiative
 /**
@@ -1113,9 +1113,97 @@ router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt,checkRole('pc
 router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
 
 // upsert innovation packages to initiative
-router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt,checkRole('pco', 'updateOwn')], stagefull.patchInnovationPackages);
+/**
+ * @api {patch} stages-control/proposal/innovation-packages/:initiativeId/ Innovation Packages - Create and update IP
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchInnovationPackages
+ * @apiGroup Proposal
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
+ * 
+ * @apiHeader {String} auth
+ * 
+ * @apiParam {Number} initiativeId Id initiative.
+ * @apiParam {Number} id identificator Policy Compliance.
+ * @apiParam {String} key_principles description key principles.
+ * @apiParam {Boolean} active status.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *   "id": null,
+ *   "key_principles": "Test 1 policy",
+ *   "active": true
+ *  }
+ *  
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *   "response": {
+ *       "innovationPackages": {
+ *           "upsertedInnovationPackages": {
+ *               "id": 1,
+ *               "key_principles": "Test 1 innovation package",
+ *               "active": true,
+ *               "initvStgId": 35,
+ *               "updated_at": "2021-09-22T16:09:07.000Z",
+ *               "created_at": "2021-09-22T16:09:07.000Z"
+ *           }
+ *       }
+ *   },
+ *   "title": "Full Proposal: Innovation Packages."
+ * }
+ *
+ * @apiError Error Upsert Innovation Packages: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert Innovation Packages: Full proposal","httpCode": 400,"isOperational": false}
+ */
+router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'updateOwn')], stagefull.patchInnovationPackages);
 
 // Get innovation packages to initiative
+/**
+ * @api {get} stages-control/proposal/innovation-packages/:initiativeId Innovation Packages - Request PCO
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetInnovationPackages
+ * @apiGroup Proposal
+ * 
+ * @apiDescription  Shows Innovation Packages
+ * 
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
+ * 
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
+ *
+ * @apiHeader {String} auth
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *   "response": {
+ *       "innovationPackagesData": {
+ *           "id": 1,
+ *           "initvStgId": 35,
+ *           "key_principles": "Test 1 innovation package",
+ *           "active": 1,
+ *           "created_at": "2021-09-22T16:09:07.000Z",
+ *           "updated_at": "2021-09-22T16:09:07.000Z"
+ *       }
+ *   },
+ *   "title": "Full Proposal:Innovation Packages"
+ * }
+ *
+ * @apiError Error : Get InnovationPackages.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get InnovationPackages.", error }
+ */
 router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getInnovationPackages);
 
 
