@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-innovation-packages-and-srp',
@@ -6,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./innovation-packages-and-srp.component.scss']
 })
 export class InnovationPackagesAndSrpComponent implements OnInit {
-
-  constructor() { }
+  showForm = true;
+  constructor(
+    public _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  saveSection(){
+
   }
 
 }
