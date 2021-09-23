@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-smpg-table',
@@ -20,7 +21,8 @@ export class SmpgTableComponent implements OnInit {
 
   constructor(
     public _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { 
   }
 
@@ -77,6 +79,7 @@ export class SmpgTableComponent implements OnInit {
       this.filesSavedList.length || this.filesList.length?
       this._interactionsService.successMessage('Summary management plan Gantt table has been saved'):
       this._interactionsService.warningMessage('Summary management plan Gantt table, but there are incomplete fields')
+      this._dataControlService.validateMenu$.emit();
     })
 
   }

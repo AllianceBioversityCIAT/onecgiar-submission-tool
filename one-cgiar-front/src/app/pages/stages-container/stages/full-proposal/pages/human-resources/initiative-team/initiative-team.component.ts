@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-initiative-team',
@@ -20,7 +21,8 @@ export class InitiativeTeamComponent implements OnInit {
   };
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +77,7 @@ export class InitiativeTeamComponent implements OnInit {
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources and activities has been saved, but there are incomplete fields')
       this.getHumanResources();
+      this._dataControlService.validateMenu$.emit();
     })
 
     

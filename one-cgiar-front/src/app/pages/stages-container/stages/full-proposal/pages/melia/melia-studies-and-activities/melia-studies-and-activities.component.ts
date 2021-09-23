@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -20,7 +21,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   };
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +77,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       this._interactionsService.successMessage('Melia studies and activities has been saved'):
       this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')
       this.getMelia();
+      this._dataControlService.validateMenu$.emit();
+
     })
 
     

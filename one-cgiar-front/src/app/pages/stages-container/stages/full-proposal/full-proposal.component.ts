@@ -28,7 +28,7 @@ export class FullProposalComponent implements OnInit {
 
   validateAllSections(){
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      
+      console.log(resp.response);
       Object.keys(resp.response).map(key=>{
         let stageId = 3; 
         let sectionId = resp.response[key].sectionId; 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-management-plan',
@@ -21,7 +22,8 @@ export class ManagementPlanComponent implements OnInit {
 
   constructor(
     public _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { 
     this.managementPlanForm = new FormGroup({
       example: new FormControl(null),
@@ -61,6 +63,8 @@ export class ManagementPlanComponent implements OnInit {
       this.managementPlanForm.valid?
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
+      this._dataControlService.validateMenu$.emit();
+
     })
 
     

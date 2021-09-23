@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-budget',
@@ -22,7 +23,8 @@ export class BudgetComponent implements OnInit {
   };
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { 
     this.sectionForm = new FormGroup({
       detailed_budget: new FormControl(null),
@@ -87,6 +89,7 @@ export class BudgetComponent implements OnInit {
       this._interactionsService.successMessage('Financial Resources has been saved'):
       this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
       this.getFinancialResources();
+      this._dataControlService.validateMenu$.emit();
     })
 
     
