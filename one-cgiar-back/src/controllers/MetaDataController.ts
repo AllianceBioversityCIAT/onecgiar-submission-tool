@@ -91,7 +91,7 @@ export async function getValidations(req: Request, res: Response) {
 
         // // Get validations for general information
 
-        // let innovationPackages = await metaData.validationInnovationPackages();
+        let innovationPackages = await metaData.validationInnovationPackages();
 
         // // Get validations for MELIA
 
@@ -113,7 +113,7 @@ export async function getValidations(req: Request, res: Response) {
 
         // Convert boolean ('0' and '1' to number)
         generalInformation[0].ValidateGI = parseInt(generalInformation[0].ValidateGI);
-        // innovationPackages[0].ValidateInnovationPackages = parseInt(innovationPackages[0].ValidateInnovationPackages);
+        innovationPackages[0].ValidateInnovationPackages = parseInt(innovationPackages[0].ValidateInnovationPackages);
         // melia[0].ValidateMelia = parseInt(melia[0].ValidateMelia);
         // managePlan[0].ValidateManagePlan = parseInt(managePlan[0].ValidateManagePlan);
         // humanResources[0].ValidateHumanResources = parseInt(humanResources[0].ValidateHumanResources);
@@ -121,7 +121,7 @@ export async function getValidations(req: Request, res: Response) {
 
         // res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
 
-        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation}));
+        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation,innovationPackages}));
 
 
     } catch (error) {
