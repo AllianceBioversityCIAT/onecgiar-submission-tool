@@ -12,7 +12,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ImpactAreaIsComponent implements OnInit {
   showForm = true;
+  institutionsLoaded = false;
   sectionForm: FormGroup;
+  institutionsList = [];
+  savedList = [];
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -32,7 +35,7 @@ export class ImpactAreaIsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    
+    this.getCLARISAInstitutions();
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.cleanForm();
       // this.showDepthSacale = false;
@@ -44,23 +47,29 @@ export class ImpactAreaIsComponent implements OnInit {
 
       this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
         console.log(resp);
-        if (resp.response.impactStrategies) this.updateForm(resp.response.impactStrategies);
-        
+        if (resp.response.impactStrategies) {
+          this.updateForm(resp.response.impactStrategies);
+          this.savedList = resp.response.impactStrategies.partners;
+        }
       },err=>{console.log(err);},
       ()=>{this.showForm = true;})
 
-
-
     })
   }
-
-  
+ 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     
    this.pobColorselected(3, 7, 16,-1)
    this.cleanForm();
+  }
+
+  getCLARISAInstitutions(){
+    this._initiativesService.getCLARISAInstitutions('').subscribe(resp=>{
+      this.institutionsList = resp;
+      this.institutionsLoaded = true;
+    })
   }
 
   updateForm(resp){
@@ -96,7 +105,9 @@ export class ImpactAreaIsComponent implements OnInit {
 
   saveSection(){
     let body = this.sectionForm.value;
+    body.partners = this.savedList;
     console.log(this.sectionForm.value);
+    console.log(this.savedList);
     this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
@@ -105,6 +116,8 @@ export class ImpactAreaIsComponent implements OnInit {
   }
 
   cleanForm(){
+    this.savedList = [];
+    this.institutionsList.map(item=>item.selected = false);
     this.sectionForm.controls['challenge_priorization'].setValue(null);
     this.sectionForm.controls['research_questions'].setValue(null);
     this.sectionForm.controls['component_work_package'].setValue(null);

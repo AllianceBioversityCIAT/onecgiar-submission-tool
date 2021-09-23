@@ -5,6 +5,7 @@ import { InnovationPackagesAndSrpRoutingModule } from './innovation-packages-and
 import { InnovationPackagesAndSrpComponent } from './innovation-packages-and-srp.component';
 import { UtilsModule } from '../../../../../../shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     InnovationPackagesAndSrpRoutingModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class InnovationPackagesAndSrpModule { }
