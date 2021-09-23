@@ -2963,7 +2963,7 @@ define({ "api": [
   },
   {
     "type": "patch",
-    "url": "stages-control/proposal/package/:wrkPkgId",
+    "url": "stages-control/proposal/packages/:wrkPkgId",
     "title": "Work Package - Create and update WP",
     "version": "1.0.0",
     "permission": [
@@ -2976,13 +2976,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2"
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2"
       }
     ],
     "header": {
