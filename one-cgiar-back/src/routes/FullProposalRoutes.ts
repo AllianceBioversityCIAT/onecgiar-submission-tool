@@ -185,16 +185,16 @@ router.get("/packages", stagefull.getAllWorkPackages);
 
 // assign Work Package
 /**
- * @api {patch} stages-control/proposal/package/:wrkPkgId Work Package - Create and update WP
+ * @api {patch} stages-control/proposal/packages/:wrkPkgId Work Package - Create and update WP
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchWorkPackage
  * @apiGroup Proposal
  * 
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
  * 
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/2
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
  * 
  * @apiHeader {String} auth
  * 
