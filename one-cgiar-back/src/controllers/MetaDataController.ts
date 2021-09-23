@@ -89,37 +89,39 @@ export async function getValidations(req: Request, res: Response) {
         // Get validations for general information
         let generalInformation = await metaData.validationGI();
 
-        // Get validations for general information
+        // // Get validations for general information
 
-        let innovationPackages = await metaData.validationInnovationPackages();
+        // let innovationPackages = await metaData.validationInnovationPackages();
 
-        // Get validations for MELIA
+        // // Get validations for MELIA
 
-        let melia = await metaData.validationMelia();
+        // let melia = await metaData.validationMelia();
 
-        // Get validations for Manage Plan
+        // // Get validations for Manage Plan
 
-        let managePlan = await metaData.validationManagementPlan();
+        // let managePlan = await metaData.validationManagementPlan();
 
-        // Get validations human resources
+        // // Get validations human resources
 
-        let humanResources = await metaData.validationHumanResources();
+        // let humanResources = await metaData.validationHumanResources();
 
-        // Get validations financial resources
+        // // Get validations financial resources
 
-        let financialResources = await metaData.validationFinancialResources();
+        // let financialResources = await metaData.validationFinancialResources();
 
         /*******************************************/
 
         // Convert boolean ('0' and '1' to number)
         generalInformation[0].ValidateGI = parseInt(generalInformation[0].ValidateGI);
-        innovationPackages[0].ValidateInnovationPackages = parseInt(innovationPackages[0].ValidateInnovationPackages);
-        melia[0].ValidateMelia = parseInt(melia[0].ValidateMelia);
-        managePlan[0].ValidateManagePlan = parseInt(managePlan[0].ValidateManagePlan);
-        humanResources[0].ValidateHumanResources = parseInt(humanResources[0].ValidateHumanResources);
-        financialResources[0].ValidateFinancialResources = parseInt(financialResources[0].ValidateFinancialResources);
+        // innovationPackages[0].ValidateInnovationPackages = parseInt(innovationPackages[0].ValidateInnovationPackages);
+        // melia[0].ValidateMelia = parseInt(melia[0].ValidateMelia);
+        // managePlan[0].ValidateManagePlan = parseInt(managePlan[0].ValidateManagePlan);
+        // humanResources[0].ValidateHumanResources = parseInt(humanResources[0].ValidateHumanResources);
+        // financialResources[0].ValidateFinancialResources = parseInt(financialResources[0].ValidateFinancialResources);
 
-        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
+        // res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
+
+        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation}));
 
 
     } catch (error) {
