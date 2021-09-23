@@ -15,7 +15,7 @@ import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
-import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, requestClaInstitution } from './Clarisa';
+import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, getProjectedBenefits, requestClaInstitution } from './Clarisa';
 
 import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
@@ -1226,6 +1226,20 @@ export async function requestImpactAreasIndicators(req: Request, res: Response) 
     }
 
 }
+
+
+export async function requestProjectedBenefits(req: Request, res: Response) {
+
+    try {
+        const impactProjectedBenefitsRequested = await getProjectedBenefits();
+        res.json(new ResponseHandler('Requested projected benefits.', { impactProjectedBenefitsRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
 
 
 function getRepoConstStage(tableName: string) {

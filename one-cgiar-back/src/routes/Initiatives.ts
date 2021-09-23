@@ -661,6 +661,8 @@ router.post("/institutions/institution-requests", [checkJwt], clarisa.requestCla
 router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 //get Impact areas inticators
 router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
+//get Impact areas inticators
+router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefits);
 
 
 export default router;
