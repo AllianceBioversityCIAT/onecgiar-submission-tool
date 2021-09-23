@@ -14,11 +14,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
    */
 
 
-  
-  public get value() : string {
-    return 
+
+  public get value(): string {
+    return
   }
-  
+
 
   /**
    * 
@@ -211,7 +211,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
-    
+
 
       let validationGISQL = (
         `
@@ -264,8 +264,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         `
      SELECT sec.id as sectionId,sec.description, 
         CASE
-      WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id ) IS NULL 
-        OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id ) = ''
+      WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) = ''
        THEN FALSE
          ELSE TRUE
          END AS ValidateInnovationPackages
@@ -283,6 +283,206 @@ export class MetaDataHandler extends InitiativeStageHandler {
     } catch (error) {
 
       throw new BaseError('Get validations innovations packages', 400, error.message, false)
+
+    }
+
+  }
+
+
+  async validationMelia() {
+
+
+    try {
+
+
+
+      let validationMeliaSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "result_framework"
+                        AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "result_framework"
+                        AND active = 1 ) IS NULL
+        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                         WHERE initvStgId = ini.id
+                           AND active = 1)
+                           AND section = "melia"
+                           AND active = 1 ) = ''
+        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                         WHERE initvStgId = ini.id
+                           AND active = 1)
+                           AND section = "melia"
+                           AND active = 1 ) IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS ValidateMelia
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='melia';`
+      )
+
+      var validationMelia = this.queryRunner.query(validationMeliaSQL);
+
+      return validationMelia
+
+    } catch (error) {
+
+      throw new BaseError('Get validations MELAI', 400, error.message, false)
+
+    }
+
+  }
+
+
+  async validationManagementPlan() {
+
+
+    try {
+
+
+
+      let validationManagementPlanSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "management_plan"
+                        AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "management_plan"
+                        AND active = 1 ) IS NULL
+        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                         WHERE initvStgId = ini.id
+                           AND active = 1)
+                           AND section = "risk_assessment"
+                           AND active = 1 ) = ''
+        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                         WHERE initvStgId = ini.id
+                           AND active = 1)
+                           AND section = "risk_assessment"
+                           AND active = 1 ) IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS ValidateManagePlan
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='mpara'`
+      )
+
+      var managementPlan = this.queryRunner.query(validationManagementPlanSQL);
+
+      return managementPlan
+
+    } catch (error) {
+
+      throw new BaseError('Get validations management plan', 400, error.message, false)
+
+    }
+
+  }
+
+
+  async validationHumanResources() {
+
+    try {
+
+      let validationHumanResourcesSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+          OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "initiative-team"
+                        AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "initiative-team"
+                        AND active = 1 ) IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS ValidateHumanResources
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='human-resources'`
+      )
+
+      var HumanResources = this.queryRunner.query(validationHumanResourcesSQL);
+
+      return HumanResources
+
+    } catch (error) {
+
+      throw new BaseError('Get validations human resources', 400, error.message, false)
+
+    }
+
+  }
+
+
+  async validationFinancialResources() {
+
+    try {
+
+      let validationFinancialResourcesSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "budget"
+                        AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "budget"
+                        AND active = 1 ) IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS ValidateFinancialResources
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='financial-resources'`
+      )
+
+      var financialResources = this.queryRunner.query(validationFinancialResourcesSQL);
+
+      return financialResources
+
+    } catch (error) {
+
+      throw new BaseError('Get validations financial resources', 400, error.message, false)
 
     }
 
