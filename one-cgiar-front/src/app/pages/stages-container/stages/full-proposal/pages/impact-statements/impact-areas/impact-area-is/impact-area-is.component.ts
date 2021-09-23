@@ -112,6 +112,10 @@ export class ImpactAreaIsComponent implements OnInit {
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
       this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
+      let sectionName = 'Impact strategie'
+      this.sectionForm.valid?
+      this._interactionsService.successMessage(`${sectionName} has been saved`):
+      this._interactionsService.warningMessage(`${sectionName} has been saved, but there are incomplete fields`)
     })
   }
 

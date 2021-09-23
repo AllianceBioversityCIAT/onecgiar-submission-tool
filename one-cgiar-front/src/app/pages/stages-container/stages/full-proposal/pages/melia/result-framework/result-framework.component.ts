@@ -23,7 +23,8 @@ export class ResultFrameworkComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
+    private _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
@@ -79,6 +80,8 @@ export class ResultFrameworkComponent implements OnInit {
       this._interactionsService.successMessage('Result Framework has been saved'):
       this._interactionsService.warningMessage('Result Framework has been saved, but there are incomplete fields')
       this.getMelia();
+      this._dataControlService.validateMenu$.emit();
+
     })
 
     
