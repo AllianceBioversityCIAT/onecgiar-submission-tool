@@ -361,12 +361,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
                       WHERE initvStgId = ini.id
                         AND active = 1)
-                        AND section = "management_plan"
+                        AND section = "management_gantt"
                         AND active = 1 ) = ''
           OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
                       WHERE initvStgId = ini.id
                         AND active = 1)
-                        AND section = "management_plan"
+                        AND section = "management_gantt"
                         AND active = 1 ) IS NULL
         OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
                          WHERE initvStgId = ini.id
@@ -416,12 +416,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
                       WHERE initvStgId = ini.id
                         AND active = 1)
-                        AND section = "initiative-team"
+                        AND section = "initiative_team"
                         AND active = 1 ) = ''
           OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
                       WHERE initvStgId = ini.id
                         AND active = 1)
-                        AND section = "initiative-team"
+                        AND section = "initiative_team"
                         AND active = 1 ) IS NULL
        THEN FALSE
          ELSE TRUE
