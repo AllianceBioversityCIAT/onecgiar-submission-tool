@@ -94,9 +94,15 @@ export class ImpactAreaComponent implements OnInit {
       this.indicatorMetaData.targetYear = '';
     }
   }
-
+  
+  getProjectedBenefits(){
+    this._initiativesService.getProjectedBenefits().subscribe(resp=>{
+      console.log(resp);
+    })
+  }
 
   ngOnInit(): void {
+    this.getProjectedBenefits();
     // console.log(this.pobImpactAreaForm.value);
     this.getPobProbabilities();
     let borrar = false;

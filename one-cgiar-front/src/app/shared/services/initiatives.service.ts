@@ -336,6 +336,10 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`, body);
   }
 
+  getProjectedBenefits (): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-benefits`);
+  }
+
   getImpactStrategies (initiativeId,impactAreaId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}/${impactAreaId}`);
   }
@@ -454,7 +458,6 @@ export class InitiativesService {
   saveWpFp(body: any,initiativeId): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
   }
-  // http://localhost:3000/api/stages-control/proposal/packages/:initiativeId([0-9]+)/:stageId([0-9]+
     // Query to create a work package
   createPartner(body: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/institutions/institution-requests`, body);
