@@ -37,7 +37,7 @@ export class ResearchGovernanceComponent implements OnInit {
 
   getPolicyCompliance(){
     this._initiativesService.getPolicyCompliance(this._initiativesService.initiative.id).subscribe(resp=>{
-      let response = resp.response.policyComplianceData
+      let response = resp.response.policyComplianceData;
       // console.log(response);
       if (resp.response.policyComplianceData) {
         this.sectionForm.controls['research_governance_policy'].setValue(response.research_governance_policy);
