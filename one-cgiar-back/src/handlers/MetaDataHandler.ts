@@ -273,7 +273,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='Innovation Packages and Scaling Readiness Plan';`
+        AND sec.description='innovation-packages-and-srp';`
       )
 
       var innovationPackagesSQL = this.queryRunner.query(validationInnovationPackagesSQL);
