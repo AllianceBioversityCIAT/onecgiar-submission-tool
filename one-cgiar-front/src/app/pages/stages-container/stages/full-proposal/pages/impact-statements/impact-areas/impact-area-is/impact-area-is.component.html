@@ -3,7 +3,7 @@
     <form (ngSubmit)="saveSection()">
 
         <div class="row" *ngIf="showForm">
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <ibdc-textarea *ngIf="showForm"
                     [options]="{inputTitle:'Challenges and prioritization',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'challenge_priorization', maxWords:500,
                     description:'Provide an evidence-based statement identifying the Impact Area challenge(s) the Initiative will address, and how those informed the priority-setting for the Initiative’s research and innovation. If the Initiative does not address this Impact Area, provide a justification'}">
@@ -26,10 +26,10 @@
                     [options]="{inputTitle:'Measuring performance and results',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'performance_results', maxWords:500,
                     description:'Describe the 3-year (End-of-Initiative) outcomes and metrics for this Impact Area.'}">
                 </ibdc-textarea>
-            </div>
+            </div> -->
 
-            <div class="col-sm-12">
-                <app-global-partners-request></app-global-partners-request>
+            <div class="col-sm-12" *ngIf="this.institutionsLoaded">
+                <app-global-partners-request [institutions]="this.institutionsList" [savedList]="this.savedList"></app-global-partners-request>
             </div>
 
         </div>
