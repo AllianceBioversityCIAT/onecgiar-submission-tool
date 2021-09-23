@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataControlService } from '../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../shared/services/initiatives.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-full-proposal',
@@ -23,9 +24,8 @@ export class FullProposalComponent implements OnInit {
   validateAllSections(){
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
 
-      resp.response.validationGI.map(item=>{
-        // console.log(item);
-        this.validateSection(3,2,item.ValidateGI);
+      Object.keys(resp.response).map(key=>{
+        this.validateSection(3,resp.response[key].sectionId,resp.response[key].validation);
       })
 
     })
