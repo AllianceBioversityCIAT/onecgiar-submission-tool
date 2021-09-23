@@ -89,7 +89,7 @@ export async function getValidations(req: Request, res: Response) {
         // Get validations for general information
         let generalInformation = await metaData.validationGI();
 
-        // // Get validations for general information
+        // Get validations for general information
 
         let innovationPackages = await metaData.validationInnovationPackages();
 
@@ -110,14 +110,6 @@ export async function getValidations(req: Request, res: Response) {
         let financialResources = await metaData.validationFinancialResources();
 
         /*******************************************/
-
-        // Convert boolean ('0' and '1' to number)
-        // generalInformation[0].validation = parseInt(generalInformation[0].validation);
-        // innovationPackages[0].validation = parseInt(innovationPackages[0].validation);
-        // melia[0].validation = parseInt(melia[0].validation);
-        // managePlan[0].validation = parseInt(managePlan[0].validation);
-        // humanResources[0].validation = parseInt(humanResources[0].validation);
-        // financialResources[0].validation = parseInt(financialResources[0].validation);
 
         res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
 
