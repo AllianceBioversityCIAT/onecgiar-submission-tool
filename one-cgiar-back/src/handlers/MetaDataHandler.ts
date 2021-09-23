@@ -232,7 +232,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 	      OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id OR wrkPkgId IS NULL) = 0
     THEN FALSE
       ELSE TRUE
-      END AS ValidateGI
+      END AS validation
     FROM initiatives_by_stages ini
     JOIN sections_meta sec
    WHERE ini.id = ${this.initvStgId_}
@@ -240,9 +240,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
      AND sec.description='general-information'`
       )
 
-      var validationGI = this.queryRunner.query(validationGISQL);
+      var validationGI = await this.queryRunner.query(validationGISQL);
 
-      return validationGI
+      validationGI[0].validation = parseInt(validationGI[0].validation);
+
+      return validationGI[0]
 
     } catch (error) {
 
@@ -268,7 +270,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) = ''
        THEN FALSE
          ELSE TRUE
-         END AS ValidateInnovationPackages
+         END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -276,9 +278,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='innovation-packages-and-srp';`
       )
 
-      var innovationPackagesSQL = this.queryRunner.query(validationInnovationPackagesSQL);
+      var innovationPackages = await this.queryRunner.query(validationInnovationPackagesSQL);
 
-      return innovationPackagesSQL
+      innovationPackages[0].validation = parseInt(innovationPackages[0].validation);
+
+      return innovationPackages[0]
 
     } catch (error) {
 
@@ -324,7 +328,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                            AND active = 1 ) IS NULL
        THEN FALSE
          ELSE TRUE
-         END AS ValidateMelia
+         END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -332,9 +336,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='melia';`
       )
 
-      var validationMelia = this.queryRunner.query(validationMeliaSQL);
+      var validationMelia = await this.queryRunner.query(validationMeliaSQL);
 
-      return validationMelia
+      validationMelia[0].validation = parseInt(validationMelia[0].validation);
+
+      return validationMelia[0]
 
     } catch (error) {
 
@@ -380,7 +386,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                            AND active = 1 ) IS NULL
        THEN FALSE
          ELSE TRUE
-         END AS ValidateManagePlan
+         END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -388,9 +394,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='mpara'`
       )
 
-      var managementPlan = this.queryRunner.query(validationManagementPlanSQL);
+      var managementPlan = await this.queryRunner.query(validationManagementPlanSQL);
 
-      return managementPlan
+      managementPlan[0].validation = parseInt(managementPlan[0].validation);
+
+      return managementPlan[0]
 
     } catch (error) {
 
@@ -425,7 +433,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                         AND active = 1 ) IS NULL
        THEN FALSE
          ELSE TRUE
-         END AS ValidateHumanResources
+         END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -433,9 +441,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='human-resources'`
       )
 
-      var HumanResources = this.queryRunner.query(validationHumanResourcesSQL);
+      var humanResources = await this.queryRunner.query(validationHumanResourcesSQL);
 
-      return HumanResources
+      humanResources[0].validation = parseInt(humanResources[0].validation);
+
+      return humanResources[0]
 
     } catch (error) {
 
@@ -468,7 +478,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                         AND active = 1 ) IS NULL
        THEN FALSE
          ELSE TRUE
-         END AS ValidateFinancialResources
+         END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -476,9 +486,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='financial-resources'`
       )
 
-      var financialResources = this.queryRunner.query(validationFinancialResourcesSQL);
+      var financialResources = await this.queryRunner.query(validationFinancialResourcesSQL);
 
-      return financialResources
+      financialResources[0].validation = parseInt(financialResources[0].validation);
+
+      return financialResources[0]
 
     } catch (error) {
 

@@ -112,12 +112,12 @@ export async function getValidations(req: Request, res: Response) {
         /*******************************************/
 
         // Convert boolean ('0' and '1' to number)
-        generalInformation[0].ValidateGI = parseInt(generalInformation[0].ValidateGI);
-        innovationPackages[0].ValidateInnovationPackages = parseInt(innovationPackages[0].ValidateInnovationPackages);
-        melia[0].ValidateMelia = parseInt(melia[0].ValidateMelia);
-        managePlan[0].ValidateManagePlan = parseInt(managePlan[0].ValidateManagePlan);
-        humanResources[0].ValidateHumanResources = parseInt(humanResources[0].ValidateHumanResources);
-        financialResources[0].ValidateFinancialResources = parseInt(financialResources[0].ValidateFinancialResources);
+        // generalInformation[0].validation = parseInt(generalInformation[0].validation);
+        // innovationPackages[0].validation = parseInt(innovationPackages[0].validation);
+        // melia[0].validation = parseInt(melia[0].validation);
+        // managePlan[0].validation = parseInt(managePlan[0].validation);
+        // humanResources[0].validation = parseInt(humanResources[0].validation);
+        // financialResources[0].validation = parseInt(financialResources[0].validation);
 
         res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
 
