@@ -211,14 +211,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
-
-
       let validationGISQL = (
         `
    SELECT sec.id as sectionId,sec.description, 
      CASE
       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
 		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+        OR (SELECT LENGTH(NAME) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(NAME,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM general_information WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 50
 	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
@@ -257,10 +257,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationInnovationPackages() {
 
-
     try {
-
-
 
       let validationInnovationPackagesSQL = (
         `
@@ -297,10 +294,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationMelia() {
 
-
     try {
-
-
 
       let validationMeliaSQL = (
         `
@@ -510,6 +504,46 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   }
 
+
+  async validationPolicyCompliance() {
+
+    try {
+
+      let validationPolicyComplianceSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+        OR (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+        OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+          OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(open_fair_data_details) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(open_fair_data_details,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='policy-compliance-and-oversight';`
+      )
+
+      var policyCompliance = await this.queryRunner.query(validationPolicyComplianceSQL);
+
+      policyCompliance[0].validation = parseInt(policyCompliance[0].validation);
+
+      return policyCompliance[0]
+
+    } catch (error) {
+
+      throw new BaseError('Get validations policy compliance', 400, error.message, false)
+
+    }
+
+  }
 
 
   /**

@@ -109,6 +109,10 @@ export async function getValidations(req: Request, res: Response) {
 
         let financialResources = await metaData.validationFinancialResources();
 
+        // Get validations financial resources
+
+        let policyCompliance = await metaData.validationPolicyCompliance();
+
         /*******************************************/
 
         res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
