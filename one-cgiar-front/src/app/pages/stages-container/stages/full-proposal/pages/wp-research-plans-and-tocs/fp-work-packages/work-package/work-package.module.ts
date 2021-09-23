@@ -8,6 +8,7 @@ import { SkeletonsModule } from '../../../../../../../../shared/components/skele
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { GeographicScopeModule } from '../../../../../shared/components/geographic-scope/geographic-scope.module';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
+import {TabViewModule} from 'primeng/tabview';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
     IbdAngularComponentsModule,
     SkeletonsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TabViewModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

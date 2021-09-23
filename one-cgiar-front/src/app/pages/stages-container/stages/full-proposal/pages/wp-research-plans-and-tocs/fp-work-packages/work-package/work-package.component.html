@@ -3,33 +3,51 @@
 <app-fp-work-package-sekelton></app-fp-work-package-sekelton>
 </div>
 <div class="section-container animate__animated animate__fadeIn" *ngIf="showForm">
-    <form [formGroup]="workPackageForm" (ngSubmit)="updateWp()" class="general-information-form">
-        <div class="row" >
-            <div class="col-sm-5" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Short format', form:workPackageForm, formControlName:'acronym'
+
+    <p-tabView>
+      <p-tabPanel header="General information">
+        <br>
+        <form [formGroup]="workPackageForm" (ngSubmit)="updateWp()" class="general-information-form">
+          <div class="row">
+            <div class="col-sm-5">
+              <ibdc-textarea [options]="{inputTitle:'Short format', form:workPackageForm, formControlName:'acronym'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:3}">
-                </ibdc-textarea>
+              </ibdc-textarea>
             </div>
-            <div class="col-sm-7" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Title', form:workPackageForm, formControlName:'name'
+            <div class="col-sm-7">
+              <ibdc-textarea [options]="{inputTitle:'Title', form:workPackageForm, formControlName:'name'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:30}">
-                </ibdc-textarea>
-            </div>
-            <div class="col-sm-12" >
-                <ibdc-textarea
-                    [options]="{inputTitle:'Main focus and prioritization',editText:true, form:workPackageForm, formControlName:'pathway_content'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:2,maxWords:100}">
-                </ibdc-textarea>
+              </ibdc-textarea>
             </div>
             <div class="col-sm-12">
-                <app-geographic-scope [localForm]="this.workPackageForm" [regionsSelectedList]="this.geographicScope.regions" [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
+              <ibdc-textarea [options]="{inputTitle:'Main focus and prioritization',editText:true, form:workPackageForm, formControlName:'pathway_content'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:2,maxWords:100}">
+              </ibdc-textarea>
+            </div>
+            <div class="col-sm-12">
+              <app-geographic-scope [localForm]="this.workPackageForm"
+                [regionsSelectedList]="this.geographicScope.regions"
+                [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
+            </div>
+          </div>
+          <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+          </div>
+        </form>
+
+      </p-tabPanel>
+      <p-tabPanel header="Theory of change">
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <ibdc-simple-text [options]="{inputTitle:'The Science narrative:', value:'WP research questions, associated scientific methods and key outputs (narrative, or tabular format if preferred)'}"></ibdc-simple-text>
+            </div>
+            <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
+                <img src="https://cdn.pixabay.com/photo/2017/05/14/03/45/gui-2311261_960_720.png" alt="" sizes="100%" srcset="">
             </div>
         </div>
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
-        </div>
-    </form>
+      </p-tabPanel>
+    </p-tabView>
+
 
 </div>
