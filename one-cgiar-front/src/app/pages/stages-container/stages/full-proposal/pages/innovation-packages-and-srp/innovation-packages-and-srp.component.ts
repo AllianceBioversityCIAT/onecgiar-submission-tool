@@ -9,20 +9,34 @@ import { InitiativesService } from '../../../../../../shared/services/initiative
 })
 export class InnovationPackagesAndSrpComponent implements OnInit {
   secionForm: FormGroup;
-  showForm = true;
+  showForm = false;
   constructor(
     public _initiativesService:InitiativesService
   ) {
     this.secionForm = new FormGroup({
-      example: new FormControl(null),
+      id: new FormControl(null),
+      key_principles: new FormControl(null),
     });
    }
 
   ngOnInit(): void {
+    this.getInnovationPackages()
+  }
+  getInnovationPackages(){
+    this._initiativesService.getInnovationPackages(this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp.response.innovationPackagesData);
+      this.secionForm.controls['key_principles'].setValue(resp.response.innovationPackagesData.key_principles);
+      this.secionForm.controls['id'].setValue(resp.response.innovationPackagesData.id);
+      this.showForm = true
+    })
   }
 
   saveSection(){
-
+    console.log(this.secionForm.value);
+    this._initiativesService.saveInnovationPackages(this.secionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
+      this.secionForm.controls['id'].setValue(resp.response.innovationPackages.upsertedInnovationPackages.id);
+    })
   }
 
 }

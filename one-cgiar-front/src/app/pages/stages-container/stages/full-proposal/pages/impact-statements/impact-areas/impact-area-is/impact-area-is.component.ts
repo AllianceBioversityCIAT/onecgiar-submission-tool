@@ -117,7 +117,7 @@ export class ImpactAreaIsComponent implements OnInit {
 
   cleanForm(){
     this.savedList = [];
-    this.institutionsList.map(item=>item.selected = false)
+    this.institutionsList.map(item=>item.selected = false);
     this.sectionForm.controls['challenge_priorization'].setValue(null);
     this.sectionForm.controls['research_questions'].setValue(null);
     this.sectionForm.controls['component_work_package'].setValue(null);
