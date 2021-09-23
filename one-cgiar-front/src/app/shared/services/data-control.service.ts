@@ -29,7 +29,9 @@ export class DataControlService {
   // events to reload info in sections
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
+  validateMenu$= new EventEmitter<any>();
   countriesAndRegionsloaded$ = new EventEmitter<any>();
   loadMenu$= new EventEmitter<any>();
+  
   constructor() { }
 }

@@ -16,27 +16,33 @@ export class FullProposalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.validateAllSections();
+    
+    this._dataControlService.validateMenu$.subscribe(resp=>{
+      console.log("validateMenu$");
+      this.validateAllSections();
+    })
+    this._dataControlService.validateMenu$.emit();
     this._dataControlService.loadMenu$.emit('full-proposal');
     this.getRolefromInitiativeById();
   }
 
   validateAllSections(){
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-
+      
       Object.keys(resp.response).map(key=>{
-        this.validateSection(3,resp.response[key].sectionId,resp.response[key].validation);
+        let stageId = 3; 
+        let sectionId = resp.response[key].sectionId; 
+        let ValidateGI = resp.response[key].validation;
+
+        let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId)
+        .sections.find(item=>item.sectionId == sectionId)
+        result.fieldsCompleted = ValidateGI;
+
       })
 
     })
   }
 
-  validateSection(stageId,sectionId,ValidateGI){
-    let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId)
-                  .sections.find(item=>item.sectionId == sectionId)
-    result.fieldsCompleted = ValidateGI;
-
-  }
 
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
