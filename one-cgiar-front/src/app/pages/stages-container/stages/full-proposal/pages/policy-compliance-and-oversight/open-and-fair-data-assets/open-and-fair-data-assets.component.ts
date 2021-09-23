@@ -41,9 +41,12 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
     this._initiativesService.getPolicyCompliance(this._initiativesService.initiative.id).subscribe(resp=>{
       let response = resp.response.policyComplianceData
       // console.log(response);
-      this.sectionForm.controls['open_fair_data_policy'].setValue(response.open_fair_data_policy);
-      this.sectionForm.controls['open_fair_data_details'].setValue(response.open_fair_data_details);
-      this.sectionForm.controls['id'].setValue(response.id);
+      if (resp.response.policyComplianceData) {
+        this.sectionForm.controls['open_fair_data_policy'].setValue(response.open_fair_data_policy);
+        this.sectionForm.controls['open_fair_data_details'].setValue(response.open_fair_data_details);
+        this.sectionForm.controls['id'].setValue(response.id);
+      }
+
     },err=>{
 
     },()=>{
