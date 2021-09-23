@@ -219,6 +219,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
      CASE
       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
 		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+        OR (SELECT LENGTH(NAME) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(NAME,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM general_information WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 50
 	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
