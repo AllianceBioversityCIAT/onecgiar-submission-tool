@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 @Component({
@@ -11,7 +12,8 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   secionForm: FormGroup;
   showForm = false;
   constructor(
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    private _interactionsService:InteractionsService
   ) {
     this.secionForm = new FormGroup({
       id: new FormControl(null),
@@ -36,6 +38,9 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
     this._initiativesService.saveInnovationPackages(this.secionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this.secionForm.controls['id'].setValue(resp.response.innovationPackages.upsertedInnovationPackages.id);
+      this.secionForm.valid?
+      this._interactionsService.successMessage('Innovation Packages and Scaling Readiness Plan has been saved'):
+      this._interactionsService.warningMessage('Innovation Packages and Scaling Readiness Plan has been saved, but there are incomplete fields')
     })
   }
 
