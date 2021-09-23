@@ -15,7 +15,7 @@ export class InitiativeTeamComponent implements OnInit {
   data = {
     id : null,
     active : true,
-    section : "initiative-team",
+    section : "initiative_team",
     updateFiles : []
   };
   constructor(
@@ -28,7 +28,7 @@ export class InitiativeTeamComponent implements OnInit {
   }
 
   getHumanResources(){
-    this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'initiative-team').subscribe(resp=>{
+    this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'initiative_team').subscribe(resp=>{
       console.log(resp);
       this.filesList = [];
       let humanResourcesData = resp.response.humanResourcesData;

@@ -15,7 +15,7 @@ export class RiskAssessmentComponent implements OnInit {
   data = {
     id : null,
     active : true,
-    section : "risk-assessment",
+    section : "risk_assessment",
     updateFiles : []
   };
 
@@ -30,7 +30,7 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'risk-assessment').subscribe(resp=>{
+    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'risk_assessment').subscribe(resp=>{
       console.log(resp);
       this.filesList = [];
       let mpara = resp.response.managePlanData;

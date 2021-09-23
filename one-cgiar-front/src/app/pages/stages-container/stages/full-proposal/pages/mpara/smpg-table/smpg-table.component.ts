@@ -14,7 +14,7 @@ export class SmpgTableComponent implements OnInit {
   data = {
     id : null,
     active : true,
-    section : "summary-management-plan-gantt-table",
+    section : "management_gantt",
     updateFiles : []
   };
 
@@ -29,7 +29,7 @@ export class SmpgTableComponent implements OnInit {
   }
 
   getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'summary-management-plan-gantt-table').subscribe(resp=>{
+    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'management_gantt').subscribe(resp=>{
       console.log(resp);
       this.filesList = [];
       let mpara = resp.response.managePlanData;
