@@ -18,7 +18,7 @@ export class FullProposalComponent implements OnInit {
   ngOnInit(): void {
     
     this._dataControlService.validateMenu$.subscribe(resp=>{
-      console.log("validateMenu$");
+      // console.log("validateMenu$");
       this.validateAllSections();
     })
     this._dataControlService.validateMenu$.emit();
@@ -28,7 +28,7 @@ export class FullProposalComponent implements OnInit {
 
   validateAllSections(){
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      console.log(resp.response);
+      // console.log(resp.response);
       Object.keys(resp.response).map(key=>{
         let stageId = 3; 
         let sectionId = resp.response[key].sectionId; 
@@ -46,15 +46,19 @@ export class FullProposalComponent implements OnInit {
 
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
-      if ( resp.response.roles[0]?.roleId) {
-        this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
-        const rol = this._initiativesService.initiative.roleId
+      console.log(resp.response);
+      console.log(this.user);
+      // if ( resp.response.roles[0]?.roleId) {
+      //   this._initiativesService.initiative.roleId = resp.response.roles[0].roleId;
+        // const rol = this._initiativesService.initiative.roleId
         // this._initiativesService.initiative.readonly = ( rol=== 1||rol=== 2||rol=== 3||rol=== 5||this.user?.roles[0].id === 1)?false:true;
-        this._initiativesService.initiative.readonly = false;
-      }else{
-        this._initiativesService.initiative.readonly = false;
-        // this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
-      }
+        this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1)?false:true;
+       console.log(this._initiativesService.initiative.readonly);
+        //   this._initiativesService.initiative.readonly = false;
+      // }else{
+      //   this._initiativesService.initiative.readonly = false;
+      //   // this._initiativesService.initiative.readonly =this.user?.roles[0].id === 1?false:true;
+      // }
 
     });
   }

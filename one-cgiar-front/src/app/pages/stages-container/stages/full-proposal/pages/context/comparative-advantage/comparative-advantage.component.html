@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
-                    [options]="{inputTitle:'Comparative advantage', form:contextForm,readOnlyVariable: false, editText:true, formControlName:'comparative_advantage',maxWords:500,
+                    [options]="{inputTitle:'Comparative advantage', form:contextForm,readOnlyVariable: _initiativesService.initiative.readonly, editText:true, formControlName:'comparative_advantage',maxWords:500,
                     description:'Provide evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service provider.'}">
                 </ibdc-textarea>
             </div>
@@ -13,7 +13,7 @@
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
                     descriptions:'Add urls',
-                    readOnlyVariable: false,
+                    readOnlyVariable: _initiativesService.initiative.readonly,
                     savedList:{
                         list:citationsList,
                         attributeDescription:'title',
@@ -28,7 +28,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

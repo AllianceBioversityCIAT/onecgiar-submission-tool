@@ -97,7 +97,7 @@ export class ImpactAreaComponent implements OnInit {
   
   getProjectedBenefits(){
     this._initiativesService.getProjectedBenefits().subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
     })
   }
 
@@ -108,7 +108,7 @@ export class ImpactAreaComponent implements OnInit {
     let borrar = false;
  
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-      console.log("valueChanges");
+      // console.log("valueChanges");
       if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
         this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
       }

@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
-                    [options]="{inputTitle:'Participatory design process', form:contextForm, readOnlyVariable: false, editText:true, formControlName:'participatory_design', maxWords:500,
+                    [options]="{inputTitle:'Participatory design process', form:contextForm, readOnlyVariable: _initiativesService.initiative.readonly, editText:true, formControlName:'participatory_design', maxWords:500,
                     description:'This section and annexes should show partner support statements + links to evidence, e.g. to country or regional development strategies or action plans, details on process Concise narrative and evidence that the research and innovations proposed is demand-driven (specifically that it has emerged from stakeholder discussion and co-design, including therelevant Investment Advisory Group) and consistent with country/region/global stakeholderpriorities.'}">
                 </ibdc-textarea>
             </div>
@@ -13,7 +13,7 @@
                 <ibdc-link-list [options]="{
                     inputTitle:'Provide any additional support document(s)',
                     descriptions:'Add urls',
-                    readOnlyVariable: false,
+                    readOnlyVariable: _initiativesService.initiative.readonly,
                     savedList:{
                         list:citationsList,
                         attributeDescription:'title',
@@ -26,7 +26,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly}"></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
