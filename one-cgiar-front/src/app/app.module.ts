@@ -35,7 +35,6 @@ import { NarrativesConceptComponent } from './shared/components/concept/narrativ
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
-import { GeneralInformationConceptComponent } from './shared/components/concept/general-information-concept/general-information-concept.component';
 import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
 import { ProjectionIndicatorsModalComponent } from './shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
@@ -50,9 +49,6 @@ import { WorkPackageComponent } from './shared/components/concept/work-package/w
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
-import { ManageAccessComponent } from './shared/components/manage-access/manage-access.component';
-import { CreateUsersComponent } from './shared/components/create-users/create-users.component';
-import { EditRolUserComponent } from './shared/components/edit-rol-user/edit-rol-user.component';
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
 import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
@@ -84,7 +80,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
-    GeneralInformationConceptComponent,
     TheoryOfChangeComponent,
     WorkPackagesComponent,
     ProjectionIndicatorsModalComponent,
@@ -95,9 +90,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     WorkPackageComponent,
     DevTagComponent,
     DevPanelComponent,
-    ManageAccessComponent,
-    CreateUsersComponent,
-    EditRolUserComponent,
     ChangePasswordComponent,
     PartnersRequestComponent,
     ProjectionTimeFrameComponent,

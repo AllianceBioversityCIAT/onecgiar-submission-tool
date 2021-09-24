@@ -12,7 +12,7 @@ import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { DataControlService } from '@app/shared/services/data-control.service';
-import { ManageAccessComponent } from '../../../../../../shared/components/manage-access/manage-access.component';
+import { ManageAccessComponent } from '../manage-access/manage-access.component';
 
 @Component({
   selector: 'app-general-information',

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { GeneralInformationConceptComponent } from '@shared/components/concept/general-information-concept/general-information-concept.component';
 import { NarrativesConceptComponent } from '../../../../shared/components/concept/narratives-concept/narratives-concept.component';
 import { TheoryOfChangeComponent } from '../../../../shared/components/concept/theory-of-change/theory-of-change.component';
 import { WorkPackagesComponent } from '../../../../shared/components/concept/work-packages/work-packages.component';

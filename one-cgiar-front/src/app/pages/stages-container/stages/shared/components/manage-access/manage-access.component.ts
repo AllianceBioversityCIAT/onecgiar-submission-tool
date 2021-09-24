@@ -20,6 +20,8 @@ export class ManageAccessComponent implements OnInit {
   initiative;
   showForm=false;
   tabNumber=0;
+  rolesLoaded = false;
+  usersLoaded = false;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -48,7 +50,7 @@ export class ManageAccessComponent implements OnInit {
           this.allRoles.splice(index,1)
         }
       }
-    })
+    },err=>{},()=>{this.rolesLoaded = true})
   }
 
   removeInactiveUsers(){
@@ -61,11 +63,13 @@ export class ManageAccessComponent implements OnInit {
   }
 
   getUsersByInitiative(){
+    console.log(this.initiativesSvc.initvStgId);
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();
-    })
+      console.log(resp);
+    },err=>{},()=>{this.usersLoaded = true})
   }
 
   firstTab(){

@@ -177,6 +177,7 @@ export class MenuComponent implements OnInit {
 
 
         }
+        // this._dataControlService.validateMenu$.emit();
       });
   }
 

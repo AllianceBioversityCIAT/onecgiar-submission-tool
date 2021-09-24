@@ -29,7 +29,12 @@
             </div>
 
             <div class="col-sm-12" *ngIf="this.institutionsLoaded">
-                <app-global-partners-request [institutions]="this.institutionsList" [savedList]="this.savedList"></app-global-partners-request>
+                <app-global-partners-request 
+                [institutions]="this.institutionsList" 
+                [savedList]="this.savedList" 
+                [institutionsTypes]="this.institutionsTypes"
+                [institutionsTypesSavedList]="this.institutionsTypesSavedList"
+                ></app-global-partners-request>
             </div>
 
         </div>

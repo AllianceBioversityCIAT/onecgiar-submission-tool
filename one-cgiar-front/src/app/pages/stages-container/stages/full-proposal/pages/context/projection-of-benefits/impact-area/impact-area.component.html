@@ -1,7 +1,7 @@
 <section-title name="Impact area" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
 
-    <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.indicatorsList.length && this.showForm">
+    <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.showForm">
 
     <div class="check_box_with_text">
         <p-checkbox formControlName="impact_area_active" binary="true" inputId="binary"></p-checkbox>
@@ -9,12 +9,14 @@
     </div>
 
     <div class="forms_container" *ngIf="!this.pobImpactAreaForm.get('impact_area_active').value">
-        <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
     <div class="first_form custom_card" >
         <div class="row">
             <div class="col-6">
                 <div class="row">
-                    <div class="col-12" *ngIf="this.indicatorsList.length && this.showForm">
+                    <div class="col-12">
+                        
+
+
                         <ibdc-select [options]="
                         {
                          required:true,
@@ -22,15 +24,15 @@
                          form:pobImpactAreaForm,
                          formControlId:'impact_area_indicator_id',
                          formControlName:'impact_area_indicator_name',
-                         selectItemName:'indicatorStatement',
-                         selectItemId:'indicatorId',
-                         frontendSearchAttribute:'indicatorStatement',
+                         selectItemName:'impactAreaIndicatorName',
+                         selectItemId:'impactAreaIndicator',
+                         frontendSearchAttribute:'impactAreaIndicatorName',
                          readOnlyVariable: this._initiativesService.initiative.readonly,
                          selectList: this.indicatorsList
                         }">
                         ></ibdc-select>
                     </div>
-                    <div class="col-12" *ngIf="this.pobImpactAreaForm.value.impact_area_indicator_id && this.showDepthSacale">
+                    <div class="col-12" *ngIf="showDepthScale">
                         <ibdc-select [options]="
                         {
                          required:true,
@@ -38,16 +40,11 @@
                          form:pobImpactAreaForm,
                          formControlId:'depth_scale_id',
                          formControlName:'depth_scale_name',
-                         selectItemName:'name',
-                         selectItemId:'id',
-                         frontendSearchAttribute:'name',
+                         selectItemName:'depthScaleName',
+                         selectItemId:'depthScaleId',
+                         frontendSearchAttribute:'depthScaleName',
                          readOnlyVariable: this._initiativesService.initiative.readonly,
-                         service:{
-                             serviceTS:this._initiativesService,
-                             functionName:'getDepthScale',
-                             objectName: ['response','depthScale'],
-                             functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
-                         }
+                         selectList: this.depthScalesList
                         }">
                         ></ibdc-select>
                     </div>
@@ -63,7 +60,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card" *ngIf="this.depthDescriptions.length && (this.pobImpactAreaForm.value.depth_scale_name != 'Not Applicable') && this.showDepthDescription" >
+    <div class="second_form custom_card"  *ngIf="showDimensions && this.pobImpactAreaForm.value.depth_scale_id !== 4">
         <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
             <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="
@@ -71,10 +68,10 @@
                  required:true,
                  inputTitle:'Depth description',
                  item: item,   
-                 itemName:'name',
-                 selectList: this.depthDescriptions,
-                 itemId:'depthDescriptionId',
-                 frontendSearchAttribute:'name',
+                 itemName:'description',
+                 selectList: this.depthDescriptionsList,
+                 itemId:'descriptionID',
+                 frontendSearchAttribute:'description',
                  readOnlyVariable: this._initiativesService.initiative.readonly
                 }"></ibdc-select-ngmodel>
             </div>
@@ -95,7 +92,7 @@
 
         </div>
 
-        <h3 style="text-align: center;"><strong class="ibdc_secondary_color" *ngIf="this.dimensionsList.length == 0">No dimensions added</strong></h3>
+        <h3 style="text-align: center;"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
 
         <div class="button_add_container center_flex">
             <button 

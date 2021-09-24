@@ -56,7 +56,7 @@
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>
                             <div class="scroll_container">
 
-                                <mat-accordion class="example-headers-align" >
+                                <mat-accordion class="example-headers-align" *ngIf="rolesLoaded && usersLoaded">
                                     <app-edit-rol-user *ngFor="let user of selectedUsers" [user]="user" [roles]="allRoles" [activeWithUserId]="4"  initiativeId (reload)="getUsersByInitiative()"></app-edit-rol-user>
                                 </mat-accordion>
 
