@@ -659,9 +659,8 @@ router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
 //get Impact areas inticators
 router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefits);
-
 //get projected probabilities
-router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProbabilities);
+router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
 
 
 export default router;
