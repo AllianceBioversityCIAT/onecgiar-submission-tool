@@ -14,8 +14,12 @@ export class ImpactAreaComponent implements OnInit {
 
   pobImpactAreaForm: FormGroup;
   pobProbabilities = [];
-  depthDescriptions = [];
+  
+  // select lists
   indicatorsList=[];
+  depthDescriptionsList:any = [];
+  //
+
   dimensionsList:any = [
     {
       id: 1,
@@ -26,6 +30,7 @@ export class ImpactAreaComponent implements OnInit {
   ];
   currentIaId:number;
   showForm = false;
+  showDimensions = false;
   showDepthSacale = false;
   showDepthDescription = false;
   indicatorMetaData = {
@@ -55,25 +60,68 @@ export class ImpactAreaComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    
+   this.pobColorselected(3, 1, 8,-1)
+   this.cleanForm();
+
+  }
+
+  ngOnInit(): void {
+    
+    // console.log(this.pobImpactAreaForm.value);
+    this.getPobProbabilities();
+ 
+    this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
+     
+      console.log("impact_area_indicator_id changed");
+      console.log(resp);
+      if (resp) {
+        this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp).weightingValues;
+        console.log(this.depthDescriptionsList);
+        this.reloadDimensions();
+      }
+
+
+    })
+
+    this.activatedRoute.params.subscribe((routeResp: any) => {
+      this.getProjectedBenefitLists(routeResp.pobIaID);
+
+    })
+    
+
+  }
+
+    
+  getProjectedBenefitLists(impactAreaId){
+    this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
+      this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId);
+      console.log(this.indicatorsList);
+      this.reloadForm();
+    })
+  }
+
+  reloadForm(){
+    this.showForm = false;
+    setTimeout(() => {
+     this.showForm = true;
+    }, 500);
+  }
+
+  reloadDimensions(){
+    this.showDimensions = false;
+    setTimeout(() => {
+     this.showDimensions = true;
+    }, 500);
+    this.dimensionsList = [];
+  }
 
   getPobProbabilities(){
     this._initiativesService.getPobProbabilities().subscribe(resp=>{
       this.pobProbabilities = resp.response.projectedProbabilities;
-    })
-  }
-
-  getDepthDescription(impactAreaId){
-    this._initiativesService.getDepthDescription(impactAreaId).subscribe(resp=>{
-      this.depthDescriptions = resp.response.depthDescription;
-      this.depthDescriptions.map(item=>{
-        item.impactAreaId = impactAreaId;
-        item.depthDescriptionId = item.id;
-      })
-      // console.log(resp);
-      
-    },err=>{},
-    ()=>{
-      this.showDepthDescription = true;
     })
   }
 
@@ -93,68 +141,6 @@ export class ImpactAreaComponent implements OnInit {
       this.indicatorMetaData.value = '';
       this.indicatorMetaData.targetYear = '';
     }
-  }
-  
-  getProjectedBenefits(){
-    this._initiativesService.getProjectedBenefits().subscribe(resp=>{
-      // console.log(resp);
-    })
-  }
-
-  ngOnInit(): void {
-    this.getProjectedBenefits();
-    // console.log(this.pobImpactAreaForm.value);
-    this.getPobProbabilities();
-    let borrar = false;
- 
-    this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-      // console.log("valueChanges");
-      if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
-        this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
-      }
-      this.showDepthSacale = false;
-      setTimeout(() => {
-      this.showDepthSacale = true;
-      // console.log(this.pobImpactAreaForm.value);
-      }, 500);
-
-      if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
-        this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
-      }
-      
-    })
-
-    this.activatedRoute.params.subscribe((routeResp: any) => {
-      this.cleanForm();
-      this.showDepthSacale = false;
-      this.showForm = false;
-
-      this.getPobImpatAreaData(routeResp.pobIaID)
-      this.pobColorselected(3, 1, 8, routeResp.pobIaID);
-      this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
-
-      this._initiativesService.getImpactAreasIndicators().subscribe(resp => {
-
-        this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested, routeResp.pobIaID);
-      },
-        error => { console.log('#2 Error:', error) },
-        () => {
-          this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-            if (resp.response.projectionBenefitsByImpact) {
-              this.updateForm(resp.response.projectionBenefitsByImpact);
-              // console.log(this.pobImpactAreaForm.value.impact_area_indicator_id);
-              this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
-            }
-
-            this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
-            this.showForm = true;
-          })
-        })
-
-
-    })
-    
-
   }
 
   removeDimension(index,object,itemLink:HTMLElement){
@@ -219,17 +205,6 @@ export class ImpactAreaComponent implements OnInit {
     this.dimensionsList = [];
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    
-   this.pobColorselected(3, 1, 8,-1)
-   this.cleanForm();
-  }
-
- 
-
-
   saveForm(){
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
@@ -244,14 +219,6 @@ export class ImpactAreaComponent implements OnInit {
     })
   }
 
-  getPobImpatAreaData(impactAreaId){
-    this.pobImpactAreaForm.controls['impact_area_id'].setValue(impactAreaId);
-  }
-
-
-  filterIndicatorsByImpactArea(indicators,impactAreaId){
-    return indicators.filter(item=>item.impactAreaId == impactAreaId)
-  }
 
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
     // select all wp 

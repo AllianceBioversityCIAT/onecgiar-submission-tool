@@ -336,7 +336,7 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`, body);
   }
 
-  getProjectedBenefits (): Observable<any> {
+  getProjectedBenefitLists (): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-benefits`);
   }
 
