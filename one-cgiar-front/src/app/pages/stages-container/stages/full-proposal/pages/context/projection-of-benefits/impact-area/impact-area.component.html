@@ -114,14 +114,14 @@
                  inputTitle:'Probability',
                  form:pobImpactAreaForm,
                  formControlId:'probability_id',
-                 selectItemName:'name',
-                 selectItemId:'id',
-                 frontendSearchAttribute:'index_name',
+                 selectItemName:'probabilityName',
+                 selectItemId:'probabilityID',
+                 frontendSearchAttribute:'probabilityName',
                  readOnlyVariable: this._initiativesService.initiative.readonly,
                  service:{
                      serviceTS:this._initiativesService,
                      functionName:'getPobProbabilities',
-                     objectName: ['response','projectedProbabilities']
+                     objectName: ['response','probabilities']
                  }
                 }">
                 ></ibdc-select>
