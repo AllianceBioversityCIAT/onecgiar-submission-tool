@@ -9,6 +9,8 @@ import { map } from 'rxjs/operators';
 export class GlobalPartnersRequestComponent implements OnInit {
   @Input() institutions:any;
   @Input() savedList:any;
+  @Input() institutionsTypes:any;
+  @Input() institutionsTypesSavedList:any;
 
   button_changing = [
     {
@@ -30,6 +32,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.institutions);
     this.institutions.map(item=>{
       item.type_id = 1000;
       item.id = null;

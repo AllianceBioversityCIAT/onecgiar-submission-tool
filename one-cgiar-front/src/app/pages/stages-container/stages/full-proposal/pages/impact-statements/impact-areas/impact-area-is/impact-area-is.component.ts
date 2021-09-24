@@ -15,6 +15,8 @@ export class ImpactAreaIsComponent implements OnInit {
   institutionsLoaded = false;
   sectionForm: FormGroup;
   institutionsList = [];
+  institutionsTypes = [];
+  institutionsTypesSavedList = [];
   savedList = [];
   constructor(
     public _initiativesService:InitiativesService,
@@ -36,6 +38,7 @@ export class ImpactAreaIsComponent implements OnInit {
   ngOnInit(): void {
 
     this.getCLARISAInstitutions();
+    this.getInstitutionsTypes();
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.cleanForm();
       // this.showDepthSacale = false;
@@ -69,6 +72,14 @@ export class ImpactAreaIsComponent implements OnInit {
     this._initiativesService.getCLARISAInstitutions('').subscribe(resp=>{
       this.institutionsList = resp;
       this.institutionsLoaded = true;
+    })
+  }
+
+  getInstitutionsTypes(){
+    this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
+      
+      this.institutionsTypes = resp.response.regions;
+      console.log(this.institutionsTypes);
     })
   }
 

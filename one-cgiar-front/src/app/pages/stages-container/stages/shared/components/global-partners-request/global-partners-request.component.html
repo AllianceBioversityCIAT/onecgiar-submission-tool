@@ -3,7 +3,6 @@
     <div class="row">
         <div class="col-12">
             <div class="local_container">
-                <p>Partners</p>
                 <ibdc-select-multiple [options]="{
                     inputTitle:'Select partners',
                     selectList: this.institutions,
@@ -40,6 +39,22 @@
                 </div>
 
                 <div class="col-6">
+                    <ibdc-select-multiple [options]="{
+                        inputTitle:'Select institutions types',
+                        selectList: this.institutionsTypes,
+                        selectItemName:'name',
+                        selectItemId:'code',
+                        hideSavedList: true,
+                        frontendSearchAttribute:'name',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.institutionsTypesSavedList,
+                            selectItemId:'code',
+                            selectItemName:'name',
+                            idToSave:'id',
+                            labelName:'Institutions'
+                        }
+                       }"></ibdc-select-multiple>
                     <div class="institution_types_container">
                         <p *ngFor="let item of countDuplicates(this.savedList,'institutionType')">{{item.institutionType}} - ({{item.cont}})</p>
                     </div>
