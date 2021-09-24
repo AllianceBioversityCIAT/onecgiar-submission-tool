@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '../../services/interactions.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-edit-rol-user',
@@ -108,6 +108,8 @@ export class EditRolUserComponent implements OnInit {
     console.log(this.userRolForm.value);
     let body =  this.userRolForm.value;
     body.active = true;
+    console.log(this.userRolForm.value);
+    console.log(body);
     this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
       console.log(resp);
       this._interactions.expandWithUserId=-1;

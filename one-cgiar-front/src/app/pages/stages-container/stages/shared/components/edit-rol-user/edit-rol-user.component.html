@@ -24,15 +24,32 @@
         <div class="col-sm-12">
             <ibdc-select [options]="
             {
+             required:true,
              inputTitle:'Select rol',
              form:this.userRolForm,
              formControlId:'roleId',
              description:'Select role to assign privileges',
              selectList:this.roles,
              selectItemName:'name',
+             frontendSearchAttribute:'name',
+             readOnlyVariable: this._initiativesService.initiative.readonly,
              selectItemId:'id'
             }">
-            ></ibdc-select>
+            </ibdc-select>
+            <!-- <ibdc-select [options]="
+            {
+             required:true,
+             inputTitle:'Choose a breadth indicator',
+             form:pobImpactAreaForm,
+             formControlId:'impact_area_indicator_id',
+             formControlName:'impact_area_indicator_name',
+             selectItemName:'indicatorStatement',
+             selectItemId:'indicatorId',
+             frontendSearchAttribute:'indicatorStatement',
+             readOnlyVariable: this._initiativesService.initiative.readonly,
+             selectList: this.indicatorsList
+            }">
+            ></ibdc-select> -->
         </div>
         <div class="col-sm-12" align="end">
             <button (click)="cancelAction()"  mat-raised-button color="primary"   [class]="_interactions.animateButtonSave?'animate__animated animate__repeat-2 animate__bounce':''" style="margin-right: 20px;">cancel<mat-icon class="tab-icon">close</mat-icon></button>
