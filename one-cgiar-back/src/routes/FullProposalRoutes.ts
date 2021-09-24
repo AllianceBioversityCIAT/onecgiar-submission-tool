@@ -336,7 +336,7 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  *             "code": 1,
  *             "name": "Wageningen University and Research Centre",
  *             "tag_id": 1,
- *             "type_id":3,
+ *             "institutionTypeId":3,
  *             "institutionType":"CGIAR Center",
  *             "active": true
  *         }
@@ -368,7 +368,7 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  *                 "institutions_id": 1,
  *                 "institutions_name": "Wageningen University and Research Centre",
  *                 "tag_id": 1,
- *                 "type_id": 3,
+ *                 "institutionTypeId": 3,
  *                 "type_name": "CGIAR Center",
  *                 "active": true,
  *                 "updated_at": "2021-09-21T21:14:11.000Z",

@@ -865,7 +865,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newPartners.institutions_id = par.code;
                     newPartners.institutions_name = par.name;
                     newPartners.tag_id = par.tag_id ? par.tag_id : null;
-                    newPartners.type_id = par.type_id ? par.type_id : null;
+                    newPartners.type_id = par.institutionTypeId ? par.institutionTypeId : null;
                     newPartners.type_name = par.institutionType;
                     newPartners.active = par.active ? par.active : true;
 
@@ -919,7 +919,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             `),
                 partnersQuery = (
                     `
-                SELECT id,impact_strategies_id,institutions_id as code,institutions_name as name,tag_id,type_id,
+                SELECT id,impact_strategies_id,institutions_id as code,institutions_name as name,tag_id,institutionTypeId,
                 type_name as institutionType,active,created_at,updated_at
                 FROM partners
                WHERE impact_strategies_id in (SELECT id
