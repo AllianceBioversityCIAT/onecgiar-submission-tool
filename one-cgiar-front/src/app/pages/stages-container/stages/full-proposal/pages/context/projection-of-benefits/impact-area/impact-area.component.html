@@ -33,7 +33,7 @@
                         }">
                         ></ibdc-select>
                     </div>
-                    <!-- <div class="col-12">
+                    <div class="col-12" *ngIf="showDepthScale">
                         <ibdc-select [options]="
                         {
                          required:true,
@@ -41,19 +41,14 @@
                          form:pobImpactAreaForm,
                          formControlId:'depth_scale_id',
                          formControlName:'depth_scale_name',
-                         selectItemName:'name',
-                         selectItemId:'id',
-                         frontendSearchAttribute:'name',
+                         selectItemName:'depthScaleName',
+                         selectItemId:'depthScaleId',
+                         frontendSearchAttribute:'depthScaleName',
                          readOnlyVariable: this._initiativesService.initiative.readonly,
-                         service:{
-                             serviceTS:this._initiativesService,
-                             functionName:'getDepthScale',
-                             objectName: ['response','depthScale'],
-                             functionfirstParam: this.pobImpactAreaForm.value.impact_area_indicator_id
-                         }
+                         selectList: this.depthScalesList
                         }">
                         ></ibdc-select>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <div class="col-6 center_metadata">
@@ -66,7 +61,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card"  *ngIf="showDimensions">
+    <div class="second_form custom_card"  *ngIf="showDimensions && this.pobImpactAreaForm.value.depth_scale_id !== 4">
         <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
             <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="
@@ -114,7 +109,7 @@
     <div class="third_form custom_card" >
         <div class="row">
             <div class="col-6">
-                <!-- <ibdc-select [options]="
+                <ibdc-select [options]="
                 {
                  required:true,
                  inputTitle:'Probability',
@@ -130,7 +125,7 @@
                      objectName: ['response','projectedProbabilities']
                  }
                 }">
-                ></ibdc-select> -->
+                ></ibdc-select>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
