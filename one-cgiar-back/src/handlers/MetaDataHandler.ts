@@ -546,6 +546,47 @@ export class MetaDataHandler extends InitiativeStageHandler {
   }
 
 
+  async validationImpactStrategies() {
+
+    try {
+
+      let validationImpactStrategiesSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+        OR (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+        OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+          OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(open_fair_data_details) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(open_fair_data_details,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='policy-compliance-and-oversight';`
+      )
+
+      var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);
+
+      impactStrategies[0].validation = parseInt(impactStrategies[0].validation);
+
+      return impactStrategies[0]
+
+    } catch (error) {
+
+      throw new BaseError('Get validations policy compliance', 400, error.message, false)
+
+    }
+
+  }
+
+
   /**
   * VALIDATIONS (GREEN CHECKS)
   * SUBSECTIONS:

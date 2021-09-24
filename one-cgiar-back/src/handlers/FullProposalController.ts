@@ -719,7 +719,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             `),
                 dimensionsQuery = (
                     `
-                SELECT * 
+                SELECT id,projectionId,depthDescriptionId as descriptionID,breadth_value,active,created_at,updated_at
                 FROM dimensions
                WHERE projectionId in (SELECT id
                 FROM projection_benefits
@@ -775,7 +775,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `),
                 dimensionsQuery = (
                     `
-                    SELECT * 
+                    SELECT id,projectionId,depthDescriptionId as descriptionID,breadth_value,active,created_at,updated_at
                     FROM dimensions
                    WHERE projectionId in (SELECT id
                     FROM projection_benefits
