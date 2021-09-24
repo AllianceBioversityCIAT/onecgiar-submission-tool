@@ -113,9 +113,13 @@ export async function getValidations(req: Request, res: Response) {
 
         let policyCompliance = await metaData.validationPolicyCompliance();
 
+        // Get impact strategies
+
+        let impactStrategies = await metaData.validationImpactStrategies();
+
         /*******************************************/
 
-        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources, policyCompliance }));
+        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources, policyCompliance, impactStrategies }));
 
     } catch (error) {
 

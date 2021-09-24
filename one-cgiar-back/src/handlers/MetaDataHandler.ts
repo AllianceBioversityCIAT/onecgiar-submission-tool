@@ -554,14 +554,28 @@ export class MetaDataHandler extends InitiativeStageHandler {
         `
         SELECT sec.id as sectionId,sec.description, 
         CASE
-      WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
-        OR (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-        OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
-          OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
-          OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(open_fair_data_details) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(open_fair_data_details,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+      WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+        OR (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
+          OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
+          OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
+        OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
+          OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
+        OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
+          OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
+        OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
+          OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+          OR (SELECT LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
+          OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = 35 AND p.active = 1)  IS NULL
+          OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = 35 AND p.active = 1)   = ''
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -569,7 +583,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='policy-compliance-and-oversight';`
+        AND sec.description='impact-statements';
+        `
       )
 
       var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);

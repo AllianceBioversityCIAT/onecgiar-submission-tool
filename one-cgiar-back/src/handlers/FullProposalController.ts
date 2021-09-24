@@ -670,7 +670,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                         dimensionsRepo.merge(
                             savedDimensions,
-                            dim
+                            newDimensions
                         );
 
                         upsertedDimensions = await dimensionsRepo.save(savedDimensions);
@@ -881,7 +881,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                         partnersRepo.merge(
                             savedPartners,
-                            par
+                            newPartners
                         );
 
                         upsertedPartners = await partnersRepo.save(savedPartners);
