@@ -22,8 +22,8 @@
                          required:true,
                          inputTitle:'Choose a breadth indicator',
                          form:pobImpactAreaForm,
-                         formControlId:'impact_area_indicator_id',
-                         formControlName:'impact_area_indicator_name',
+                         formControlId:'impactAreaIndicator',
+                         formControlName:'impactAreaIndicatorName',
                          selectItemName:'impactAreaIndicatorName',
                          selectItemId:'impactAreaIndicator',
                          frontendSearchAttribute:'impactAreaIndicatorName',
@@ -38,8 +38,8 @@
                          required:true,
                          inputTitle:'Choose a depth scale',
                          form:pobImpactAreaForm,
-                         formControlId:'depth_scale_id',
-                         formControlName:'depth_scale_name',
+                         formControlId:'depthScaleId',
+                         formControlName:'depthScaleName',
                          selectItemName:'depthScaleName',
                          selectItemId:'depthScaleId',
                          frontendSearchAttribute:'depthScaleName',
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="second_form custom_card"  *ngIf="showDimensions && this.pobImpactAreaForm.value.depth_scale_id !== 4">
+    <div class="second_form custom_card"  *ngIf="showDimensions && this.pobImpactAreaForm.value.depthScaleId !== 4">
         <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
             <div class="col-xl-5">
                 <ibdc-select-ngmodel [options]="
@@ -113,7 +113,7 @@
                  required:true,
                  inputTitle:'Probability',
                  form:pobImpactAreaForm,
-                 formControlId:'probability_id',
+                 formControlId:'probabilityID',
                  selectItemName:'probabilityName',
                  selectItemId:'probabilityID',
                  frontendSearchAttribute:'probabilityName',
