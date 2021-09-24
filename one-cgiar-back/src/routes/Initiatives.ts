@@ -134,6 +134,8 @@ router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], initiatives.
 
 router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.getUsersByInitiative);
 
+router.get("/get-initvStgId/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], initiatives.getInitvStgId);
+
 
 
 

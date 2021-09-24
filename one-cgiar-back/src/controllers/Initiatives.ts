@@ -262,6 +262,41 @@ export const addLink = async (req: Request, res: Response) => {
     }
 }
 
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getInitvStgId(req: Request, res: Response) {
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        res.json(new ResponseHandler('Initiatives:Get initvStg.',  initvStg.id ));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
 /**
  * 
  * @param req 
@@ -630,7 +665,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
         const coLeadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
         const coordinatorRole = await rolesRepo.findOne({ where: { acronym: 'CO' } });
-        
+
         if (role.acronym == 'ADM') {
             throw new APIError(
                 'UNAUTHORIZED',
