@@ -8,8 +8,7 @@
         <span>Please select this check-box if your initiative does not address this Impact Area.</span>
     </div>
 
-    <div class="forms_container" >
-        <!-- <h1>{{this.pobImpactAreaForm.value.impact_area_id}} - here {{this.pobImpactAreaForm.value.impact_area_indicator_id}}</h1> -->
+    <div class="forms_container" *ngIf="!this.pobImpactAreaForm.get('impact_area_active').value">
     <div class="first_form custom_card" >
         <div class="row">
             <div class="col-6">

@@ -82,10 +82,11 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
       console.log("impact_area_indicator_id changed");
       console.log(resp);
+
       if (resp) {
 
-        this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp).weightingValues;
-        this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp).depthScales;
+        this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
+        this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
         console.log(this.depthDescriptionsList);
         console.log(this.depthScalesList);
         this.reloadDepthScale();
@@ -102,6 +103,16 @@ export class ImpactAreaComponent implements OnInit {
       console.log(routeResp.pobIaID);
       this.pobColorselected(3, 1, 8, routeResp.pobIaID);
       this.getProjectedBenefitLists(routeResp.pobIaID);
+
+
+      this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+        console.log(resp.response.projectionBenefitsByImpact);
+        if (resp.response.projectionBenefitsByImpact) {
+          this.updateForm(resp.response.projectionBenefitsByImpact);
+        }
+        this.reloadForm();
+      })
+
 
     })
     
