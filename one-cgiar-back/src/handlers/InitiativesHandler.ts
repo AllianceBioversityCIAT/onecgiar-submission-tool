@@ -81,7 +81,7 @@ export class InitiativeHandler {
                 users.email AS email,
                 (SELECT description FROM roles WHERE id = initvUsr.roleId) AS role_name,
                 (SELECT acronym FROM roles WHERE id = initvUsr.roleId) AS role_acronym,
-                roleId
+                roleId,users.id
             FROM
                 initiatives_by_users initvUsr
             LEFT JOIN users users ON users.id = initvUsr.userId
