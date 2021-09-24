@@ -622,8 +622,7 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
  */
 router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
 
-//get projected probabilities
-router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProbabilities);
+
 
 
 /**
@@ -633,9 +632,6 @@ router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProb
 
 // replicate to next stage
 router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
-
-
-
 
 /**
  * 
@@ -663,6 +659,9 @@ router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
 //get Impact areas inticators
 router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefits);
+
+//get projected probabilities
+router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProbabilities);
 
 
 export default router;

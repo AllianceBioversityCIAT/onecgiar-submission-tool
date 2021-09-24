@@ -275,6 +275,30 @@ export async function getProjectedBenefits(){
 
 
 
+export async function requestProjectedProbabilities(){
+
+    try {
+        const institutionsTypes = await axios.get(clarisaHost + 'projectedBenefitsProbabilities', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return institutionsTypes.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
+
+
+
 
 
 
