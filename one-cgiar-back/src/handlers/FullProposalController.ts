@@ -660,7 +660,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newDimensions.id = dim.id;
                     newDimensions.projectionId = upsertedPjectionBenefits.id;
-                    newDimensions.depthDescriptionId = dim.depthDescriptionId;
+                    newDimensions.depthDescriptionId = dim.descriptionID;
                     newDimensions.breadth_value = dim.breadth_value;
                     newDimensions.active = dim.active ? dim.active : true;
 
@@ -709,7 +709,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // retrieve general information
             const prjBenQuery = (` 
-            SELECT * 
+            SELECT  id,active,wrkPkgId,impact_area_indicator_id as impactAreaIndicator,
+            impact_area_id as impactAreaId, impact_area_indicator_name as impactAreaIndicatorName,
+            impact_area_name as impactAreaName,notes,created_at,updated_at,initvStgId,
+            depth_scale_id as depthScaleId,probability_id as probabilityID,impact_area_active
             FROM projection_benefits
            WHERE initvStgId = ${initvStg.id}
              AND active = 1;
@@ -761,7 +764,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // retrieve general information
             const prjBenQuery = (` 
-                SELECT * 
+                SELECT  id,active,wrkPkgId,impact_area_indicator_id as impactAreaIndicator,
+                impact_area_id as impactAreaId, impact_area_indicator_name as impactAreaIndicatorName,
+                impact_area_name as impactAreaName,notes,created_at,updated_at,initvStgId,
+                depth_scale_id as depthScaleId,probability_id as probabilityID,impact_area_active
                 FROM projection_benefits
                WHERE initvStgId = ${initvStg.id}
                  AND impact_area_id = ${impactAreaId}

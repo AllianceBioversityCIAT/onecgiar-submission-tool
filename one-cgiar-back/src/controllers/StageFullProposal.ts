@@ -334,8 +334,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // projection benefits section data
-    const { projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name,
-        notes, depth_scale_id, probability_id, impact_area_active, active, dimensions } = req.body;
+    const { projectionBenefitsId, impactAreaId, impactAreaName, impactAreaIndicator, impactAreaIndicatorName,
+        notes, depthScaleId, probabilityID, impact_area_active, active, dimensions } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -354,8 +354,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name, notes,
-            depth_scale_id, probability_id, impact_area_active, active, dimensions);
+        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impactAreaId, impactAreaName, impactAreaIndicator, impactAreaIndicatorName,
+            notes, depthScaleId, probabilityID, impact_area_active, active, dimensions);
 
         res.json(new ResponseHandler('Full Proposal: Patch Projection of benefits.', { projectionBenefits }));
 
