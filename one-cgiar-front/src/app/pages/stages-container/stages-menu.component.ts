@@ -57,9 +57,6 @@ export class StagesMenuComponent implements OnInit {
       this.initiativesSvc.initvStgId = resp['id'];
       this.initiativesSvc.initiative.id = resp['id'];
       this.initiativesSvc.getAllInitiatives().subscribe(initiativeResp=>{
-        console.log(initiativeResp);
-        console.log(resp['id']);
-        console.log(initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId);
         this.initiativesSvc.initvStgId = initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId;
       })
       // console.log("initiative id menu : "+this.initiativesSvc.initiative.id);
