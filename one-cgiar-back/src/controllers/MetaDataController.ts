@@ -115,7 +115,7 @@ export async function getValidations(req: Request, res: Response) {
 
         /*******************************************/
 
-        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources }));
+        res.json(new ResponseHandler('Green Checks:Menu', { generalInformation, innovationPackages, melia, managePlan, humanResources, financialResources, policyCompliance }));
 
     } catch (error) {
 
