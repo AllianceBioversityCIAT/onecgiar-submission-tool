@@ -36,21 +36,29 @@
 
                         </div>
                         <div class="col-sm-12" *ngIf="showForm">
-                            <custom-multiple-choice [options]="{
+                              
+                               <ibdc-select-multiple [options]="{
                                 required:false,
                                 inputTitle:'Please select the users who yo should access to this initiative',
-                                showChips:false,
-                                selectedList:this.selectedUsers,
                                 selectItemName:'firstN_lastN_email',
                                 selectItemId:'userId',
-                                selectedItemId:'userId',
-                                attributeNameToSearch:'firstN_lastN_email',
+                                frontendSearchAttribute:'firstN_lastN_email',
+                                readOnlyVariable: this.initiativesSvc.initiative.readonly,
+                                hideSavedList: true,
+                                savedList:{
+                                    list:this.selectedUsers,
+                                    selectItemId:'userId',
+                                    selectItemName:'firstN_lastN_email',
+                                    idToSave:'id',
+                                    labelName:'regions'
+                                },
                                 service:{
                                     serviceTS:this.initiativesSvc,
                                     functionName:'getAllUsers',
-                                    objectName:'users'
+                                    objectName:['response','users']
                                 }
-                               }"></custom-multiple-choice>
+                               }"></ibdc-select-multiple>
+
                         </div>
                         <div class="col-sm-12">
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>

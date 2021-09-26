@@ -327,6 +327,11 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}`, body);
   }
 
+  // Query to get all the users 
+  getInitvStgId(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${initiativeId}/${stageId}`);
+    // api/initiatives/get-initvStgId/2/3
+  }
 
   getInnovationPackages (initiativeId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`);
@@ -350,8 +355,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users 
-  getAllUsers(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=${filterText}`).pipe(map(resp=> {
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=`).pipe(map(resp=> {
       resp.response.users.map(user=>{
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
         user.is_active = true;

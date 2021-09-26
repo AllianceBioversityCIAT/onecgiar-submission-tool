@@ -54,11 +54,12 @@ export class StagesMenuComponent implements OnInit {
     })
     this._interactionsService.collapseHeader=true;
     this.activatedRoute.params.subscribe(resp => {
-      this.initiativesSvc.initvStgId = resp['id'];
+      // this.initiativesSvc.initvStgId = resp['id'];
       this.initiativesSvc.initiative.id = resp['id'];
-      this.initiativesSvc.getAllInitiatives().subscribe(initiativeResp=>{
-        this.initiativesSvc.initvStgId = initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId;
-      })
+      // this.initiativesSvc.getInitvStgId()
+      // this.initiativesSvc.getAllInitiatives().subscribe(initiativeResp=>{
+      //   this.initiativesSvc.initvStgId = initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId;
+      // })
       // console.log("initiative id menu : "+this.initiativesSvc.initiative.id);
       // this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
       // this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
