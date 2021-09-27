@@ -34,16 +34,18 @@ export class FullProposalComponent implements OnInit {
 
   validateAllSections(){
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      // console.log(resp.response);
       Object.keys(resp.response).map(key=>{
         let stageId = 3; 
         let sectionId = resp.response[key].sectionId; 
         let ValidateGI = resp.response[key].validation;
 
-        let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId)
-        .sections.find(item=>item.sectionId == sectionId)
+        let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
 
+        if (resp.response[key].subSections) resp.response[key].subSections
+          .map(item=>result.subsections
+          .find(subSeItem=>subSeItem.subSectionId == item.subSectionId).fieldsCompleted = item.validation);
+        
       })
 
     })

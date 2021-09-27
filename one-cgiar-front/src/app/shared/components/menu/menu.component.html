@@ -24,7 +24,7 @@
                             <div class="sub-section {{subSection.dynamicList?'sub-section-with-dynamicList':''}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                                 <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
-                                    <span style="margin-right: 8px; color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
+                                    <span style="margin-right: 8px;" [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
                                     <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                                 </div>
                             </div>
