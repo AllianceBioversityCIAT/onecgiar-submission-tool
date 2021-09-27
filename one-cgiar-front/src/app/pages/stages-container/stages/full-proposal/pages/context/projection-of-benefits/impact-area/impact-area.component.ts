@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-impact-area',
@@ -89,8 +90,9 @@ export class ImpactAreaComponent implements OnInit {
     })
 
     this.activatedRoute.params.subscribe((routeResp: any) => {
-      this.cleanForm();
       this.pobColorselected(3, 1, 8, routeResp.pobIaID);
+      this.cleanForm();
+      
       this.getProjectedBenefitLists(routeResp.pobIaID);
 
       this.pobImpactAreaForm.controls['impactAreaId'].setValue(Number(routeResp.pobIaID));
@@ -237,15 +239,35 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   saveForm(){
+
+    if (this.pobImpactAreaForm.value.impactAreaIndicator != this.originalIndicatorId && (this.dimensionsListByIndicatorID.length)) {
+      console.log("Desactovararray");
+      this.dimensionsListByIndicatorID.map(item=>{
+        item.active = false;
+        console.log(item);
+        this.dimensionsList.push(item)
+      })
+
+    }
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
     console.log(body);
+    console.log(this.pobImpactAreaForm.value.impactAreaId);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
       this.pobImpactAreaForm.valid?
       this._interactionsService.successMessage('Projection of benfits - Impact area has been saved'):
       this._interactionsService.warningMessage('Projection of benfits - Impact area has been saved, but there are incomplete fields')
+
+      this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, this.pobImpactAreaForm.value.impactAreaId).subscribe(resp => {
+        this.cleanForm();
+        if (resp.response.projectionBenefitsByImpact) {
+          this.updateForm(resp.response.projectionBenefitsByImpact);
+        }
+        this.reloadForm();
+      })
+
     })
   }
 
