@@ -662,11 +662,11 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newDimensions.projectionId = upsertedPjectionBenefits.id;
                     newDimensions.depthDescriptionId = dim.descriptionID;
                     newDimensions.breadth_value = dim.breadth_value;
-                    newDimensions.active = dim.active ? dim.active : true;
+                    newDimensions.active = dim.active;
 
                     if (newDimensions.id !== null) {
 
-                        var savedDimensions = await dimensionsRepo.findOne(newDimensions.id);
+                        var savedDimensions:any = await dimensionsRepo.findOne(newDimensions.id);
 
                         dimensionsRepo.merge(
                             savedDimensions,
