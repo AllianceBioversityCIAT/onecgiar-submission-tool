@@ -92,7 +92,7 @@
 
         </div>
 
-        <h3 style="text-align: center;"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
+        <h3 style="text-align: center;" *ngIf="!this.dimensionsList.length"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
 
         <div class="button_add_container center_flex">
             <button 
