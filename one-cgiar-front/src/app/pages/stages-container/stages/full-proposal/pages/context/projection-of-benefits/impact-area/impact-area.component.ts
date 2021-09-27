@@ -79,7 +79,6 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
 
       if (resp) {
-
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
         this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
         this.reloadDepthScale();
@@ -149,7 +148,7 @@ export class ImpactAreaComponent implements OnInit {
 
   getIndicatorMetaData(indicatorId){
     if (indicatorId) {
-      let item = this.indicatorsList.find(resp => resp.indicatorId == indicatorId);
+      let item = this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
 
       this.indicatorMetaData.targetUnit = '';
       this.indicatorMetaData.value = '';
@@ -232,6 +231,7 @@ export class ImpactAreaComponent implements OnInit {
     body.dimensions = this.dimensionsList;
     console.log(body);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
       this.pobImpactAreaForm.valid?
       this._interactionsService.successMessage('Projection of benfits - Impact area has been saved'):
