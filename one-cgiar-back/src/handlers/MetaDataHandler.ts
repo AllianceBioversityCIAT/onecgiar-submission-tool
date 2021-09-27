@@ -1,10 +1,5 @@
-import { getRepository } from 'typeorm';
 import { BaseError } from "./BaseError";
 import { InitiativeStageHandler } from "./InitiativeStageController";
-import { InitiativesByStages } from '../entity/InititativesByStages';
-import { Stages } from '../entity/Stages';
-
-
 
 export class MetaDataHandler extends InitiativeStageHandler {
 
@@ -462,6 +457,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      //Validations Sections
+
       let validationFinancialResourcesSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -493,6 +490,56 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var financialResources = await this.queryRunner.query(validationFinancialResourcesSQL);
 
       financialResources[0].validation = parseInt(financialResources[0].validation);
+
+        //Validations subSections
+
+        let validationBudgetSQL = (`
+        
+        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT LENGTH(detailed_budget) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(detailed_budget,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+        OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "budget"
+                        AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
+                      WHERE initvStgId = ini.id
+                        AND active = 1)
+                        AND section = "budget"
+                        AND active = 1 ) IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='financial-resources'
+        AND subsec.description = 'budget'
+        `)
+
+
+        var budget = await this.queryRunner.query(validationBudgetSQL);
+
+        budget[0].validation = parseInt(budget[0].validation);
+
+        financialResources.map(pol => {
+          pol['subSections'] = [
+            budget.find(bu => {
+  
+              return (bu.sectionId = pol.sectionId)
+  
+            })
+          ]
+      
+        }
+        )
+
 
       return financialResources[0]
 
