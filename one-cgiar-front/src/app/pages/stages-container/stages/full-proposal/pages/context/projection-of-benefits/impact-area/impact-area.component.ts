@@ -21,14 +21,12 @@ export class ImpactAreaComponent implements OnInit {
   depthScalesList = []
   //
 
-  dimensionsList:any = [
-    {
-      id: 1,
-      descriptionID:1,
-      breadth_value:30000,
-      active:true
-     }
-  ];
+  dimensionsList:any = [];
+
+  originalIndicatorId=null;
+  dimensionsListByIndicatorID:any = [];
+
+
   currentIaId:number;
 
 
@@ -75,30 +73,16 @@ export class ImpactAreaComponent implements OnInit {
 
   ngOnInit(): void {
     
-    // console.log(this.pobImpactAreaForm.value);
-    // this.getPobProbabilities();
- 
+
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
-      // console.log("impactAreaIndicator changed");
-      // console.log(resp);
 
       if (resp) {
-
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
         this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
-        // if (this.pobImpactAreaForm.value.depthScaleId) {
-        //   console.log(this.depthScalesList);
-        //   console.log(this.pobImpactAreaForm.value.depthScaleId);
-        //   console.log(this.depthScalesList.find(item=>{item.depthScaleId == this.pobImpactAreaForm.value.depthScaleId}));
-        //   // this.pobImpactAreaForm.controls['depthScaleName'].setValue();
-
-        // }
-        console.log("depthDescriptionsList");
-        console.log(this.depthDescriptionsList);
-        // console.log(this.depthScalesList);
         this.reloadDepthScale();
         this.reloadDimensions();
         this.getIndicatorMetaData(resp);
+        this.toggleDimensionList(resp)
       }
 
 
@@ -106,20 +90,16 @@ export class ImpactAreaComponent implements OnInit {
 
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.cleanForm();
-      // console.log("pobColorselected");
-      // console.log(routeResp.pobIaID);
       this.pobColorselected(3, 1, 8, routeResp.pobIaID);
       this.getProjectedBenefitLists(routeResp.pobIaID);
 
       this.pobImpactAreaForm.controls['impactAreaId'].setValue(Number(routeResp.pobIaID));
       this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-        console.log(resp.response.projectionBenefitsByImpact);
 
         if (resp.response.projectionBenefitsByImpact) {
           this.updateForm(resp.response.projectionBenefitsByImpact);
         }
         this.reloadForm();
-        console.log(this.pobImpactAreaForm.value);
       })
 
 
@@ -167,7 +147,7 @@ export class ImpactAreaComponent implements OnInit {
 
   getIndicatorMetaData(indicatorId){
     if (indicatorId) {
-      let item = this.indicatorsList.find(resp => resp.indicatorId == indicatorId);
+      let item = this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
 
       this.indicatorMetaData.targetUnit = '';
       this.indicatorMetaData.value = '';
@@ -200,8 +180,7 @@ export class ImpactAreaComponent implements OnInit {
         }, 300);
      
       }
-      
-      console.log(this.dimensionsList);
+
     });
   }
 
@@ -210,6 +189,13 @@ export class ImpactAreaComponent implements OnInit {
     item['name'] = "";
     item['id'] = null;
     this.dimensionsList.push(item);
+  }
+
+  toggleDimensionList(indicatorId){
+    this.dimensionsList = [];
+    if(indicatorId == this.originalIndicatorId){
+      this.dimensionsList = this.dimensionsListByIndicatorID;
+    }
   }
 
   updateForm(resp){
@@ -223,8 +209,11 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
     this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active == null ? false : resp.impact_area_active);
+
     this.dimensionsList = resp.dimensions;
-    console.log(this.dimensionsList);
+    //Aux
+    this.dimensionsListByIndicatorID = resp.dimensions;
+    this.originalIndicatorId = resp.impactAreaIndicator
   }
 
   cleanForm(){
@@ -253,7 +242,6 @@ export class ImpactAreaComponent implements OnInit {
     console.log(body);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
-      console.log(resp.response.projectionBenefits.upsertedPjectionBenefits);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
       this.pobImpactAreaForm.valid?
       this._interactionsService.successMessage('Projection of benfits - Impact area has been saved'):
