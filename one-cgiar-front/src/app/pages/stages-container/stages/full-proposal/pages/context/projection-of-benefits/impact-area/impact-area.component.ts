@@ -21,14 +21,12 @@ export class ImpactAreaComponent implements OnInit {
   depthScalesList = []
   //
 
-  dimensionsList:any = [
-    {
-      id: 1,
-      descriptionID:1,
-      breadth_value:30000,
-      active:true
-     }
-  ];
+  dimensionsList:any = [];
+
+  originalIndicatorId=null;
+  dimensionsListByIndicatorID:any = [];
+
+
   currentIaId:number;
 
 
@@ -84,6 +82,7 @@ export class ImpactAreaComponent implements OnInit {
         this.reloadDepthScale();
         this.reloadDimensions();
         this.getIndicatorMetaData(resp);
+        this.toggleDimensionList(resp)
       }
 
 
@@ -192,6 +191,13 @@ export class ImpactAreaComponent implements OnInit {
     this.dimensionsList.push(item);
   }
 
+  toggleDimensionList(indicatorId){
+    this.dimensionsList = [];
+    if(indicatorId == this.originalIndicatorId){
+      this.dimensionsList = this.dimensionsListByIndicatorID;
+    }
+  }
+
   updateForm(resp){
     // console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id);
@@ -203,7 +209,11 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
     this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active == null ? false : resp.impact_area_active);
+
     this.dimensionsList = resp.dimensions;
+    //Aux
+    this.dimensionsListByIndicatorID = resp.dimensions;
+    this.originalIndicatorId = resp.impactAreaIndicator
   }
 
   cleanForm(){
