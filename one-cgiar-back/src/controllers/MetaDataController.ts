@@ -113,19 +113,23 @@ export async function getValidations(req: Request, res: Response) {
 
         let policyCompliance = await metaData.validationPolicyCompliance();
 
-        // Get impact strategies
+        // Get validations impact strategies
 
         let impactStrategies = await metaData.validationImpactStrategies();
 
-        // Get Work packages
+        // Get validations Work packages
 
         let workPackages = await metaData.validationWorkPackages();
+
+         // Get validations Context
+
+         let conext = await metaData.validationContext();
 
         /*******************************************/
 
         res.json(new ResponseHandler('Green Checks:Menu', {
             generalInformation, innovationPackages, melia, managePlan, humanResources,
-            financialResources, policyCompliance, impactStrategies,workPackages
+            financialResources, policyCompliance, impactStrategies,workPackages,conext
         }));
 
     } catch (error) {

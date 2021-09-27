@@ -509,6 +509,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      //Validations for sections
       let validationPolicyComplianceSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -534,6 +535,67 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var policyCompliance = await this.queryRunner.query(validationPolicyComplianceSQL);
 
       policyCompliance[0].validation = parseInt(policyCompliance[0].validation);
+
+      //Validations for subSections
+
+      let validationResearchGovSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+      OR (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+     JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+      AND sec.description='policy-compliance-and-oversight'
+      AND subsec.description = 'research-governance';`),
+        validationOpenFairSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN    (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+        OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+        OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
+        OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
+        OR (SELECT LENGTH(open_fair_data_details) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(open_fair_data_details,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+     JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+      AND sec.description='policy-compliance-and-oversight'
+      AND subsec.description = 'open-and-fair-data-assets'; `)
+
+      var researchGov = await this.queryRunner.query(validationResearchGovSQL);
+      var openFair = await this.queryRunner.query(validationOpenFairSQL);
+
+      researchGov[0].validation = parseInt(researchGov[0].validation);
+      openFair[0].validation = parseInt(openFair[0].validation);
+
+      policyCompliance.map(pol => {
+        pol['subSections'] = [
+          researchGov.find(re => {
+
+            return (re.sectionId = pol.sectionId)
+
+          }),
+          openFair.find(op => {
+
+            return (op.sectionId = pol.sectionId)
+
+          })
+
+        ]
+    
+      }
+      )
 
       return policyCompliance[0]
 
@@ -591,15 +653,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.description='impact-statements';
           `
         )
-  
+
         var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);
-  
+
         impactStrategies[0].validation = parseInt(impactStrategies[0].validation)
 
-        multi = multi *  impactStrategies[0].validation;
+        multi = multi * impactStrategies[0].validation;
 
         impactStrategies[0].validation = multi;
-        
+
       }
 
       return impactStrategies[0]
@@ -623,13 +685,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
 
-      // 5 impact strategies
+      // Get Work packages per initiative
       for (let index = 0; index < allWorkPackages.length; index++) {
 
         const wpId = allWorkPackages[index].id;
-
-        console.log(wpId);
-        
 
         var multi = 1;
 
@@ -656,25 +715,20 @@ export class MetaDataHandler extends InitiativeStageHandler {
            END AS validation
          FROM initiatives_by_stages ini
          JOIN sections_meta sec
-        WHERE ini.id = 35
+        WHERE ini.id = ${this.initvStgId_}
           AND sec.stageId= ini.stageId
           AND sec.description='work-package-research-plans-and-tocs';
           `
         )
-  
+
         var workPackage = await this.queryRunner.query(validationWPSQL);
-  
+
         workPackage[0].validation = parseInt(workPackage[0].validation)
 
-        multi = multi *  workPackage[0].validation;
-
-        console.log(multi);
-        
+        multi = multi * workPackage[0].validation;
 
         workPackage[0].validation = multi;
 
-        console.log(workPackage);
-        
       }
 
       return workPackage[0]
@@ -682,6 +736,136 @@ export class MetaDataHandler extends InitiativeStageHandler {
     } catch (error) {
 
       throw new BaseError('Get validations Work packages', 400, error.message, false)
+
+    }
+
+  }
+
+
+  async validationContext() {
+
+    var generalValidations;
+
+    try {
+
+      let validationContextPSQL = (
+        `
+        SELECT sec.id as sectionId,sec.description, 
+        CASE
+      WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(challenge_statement) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_statement,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
+		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(smart_objectives) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(smart_objectives,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 250
+		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
+		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(key_learnings) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(key_learnings,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 250
+		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
+		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(priority_setting) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(priority_setting,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 250
+	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
+		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(comparative_advantage) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(comparative_advantage,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+	    OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
+		OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(participatory_design) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
+    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
+    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
+    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.description='context';
+        `
+      )
+
+      var validationContext = await this.queryRunner.query(validationContextPSQL);
+
+      validationContext[0].validation = parseInt(validationContext[0].validation)
+
+      generalValidations = validationContext[0].validation;
+
+      let getAllCitationsSQL = (`
+     SELECT title,link,col_name
+       FROM citations
+      WHERE table_name = 'context'
+        AND initvStgId = ${this.initvStgId_}
+        AND active = 1
+     ORDER BY col_name;
+      `)
+
+      var allCitations = await this.queryRunner.query(getAllCitationsSQL);
+
+      var multi = generalValidations;
+
+      for (let index = 0; index < allCitations.length; index++) {
+
+        const col_name = allCitations[index].col_name;
+        const title = allCitations[index].title;
+        const link = allCitations[index].link;
+        var validCitation;
+
+        if (col_name == 'key_learnings') {
+
+          if (title !== '' && link !== '') {
+            validCitation = 1;
+          } else {
+            validCitation = 0;
+          }
+
+        } else if (col_name == 'priority_setting') {
+
+          if (title !== '' && link !== '') {
+            validCitation = 1;
+          } else {
+            validCitation = 0;
+          }
+
+        } else if (col_name == 'participatory_design') {
+
+          if (title !== '' && link !== '') {
+            validCitation = 1;
+          } else {
+            validCitation = 0;
+          }
+
+        } else if (col_name == 'comparative_advantage') {
+
+          if (title !== '' && link !== '') {
+            validCitation = 1;
+          } else {
+            validCitation = 0;
+          }
+
+        } else {
+
+          validCitation = 0;
+
+        }
+
+        multi = multi * validCitation;
+
+        validationContext[0].validation = multi;
+
+      }
+
+      return validationContext[0]
+
+    } catch (error) {
+
+      throw new BaseError('Get validations Context', 400, error.message, false)
 
     }
 
