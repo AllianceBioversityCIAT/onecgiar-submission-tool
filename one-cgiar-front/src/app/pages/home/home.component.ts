@@ -46,8 +46,9 @@ export class HomeComponent implements OnInit {
           }
         })
         this.showTable = true;
-        this.spinnerService.hide();
-      });
+        
+      },err=>{console.log(err);},
+      ()=>{this.spinnerService.hide();});
 
   }
 

@@ -153,6 +153,10 @@ export class GeneralInformationComponent implements OnInit {
     },
     err=>{
       console.log(err);
+    },
+    ()=>{
+      this.spinnerService.hide('general-information');
+
     })
 
 
@@ -162,11 +166,10 @@ export class GeneralInformationComponent implements OnInit {
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
-      this.spinnerService.hide('general-information');
       this.showFormActionArea = true;
     },
     err=>{
-      this.spinnerService.hide('general-information');
+      console.log(err);
       this.showFormActionArea = true;
     })
 
