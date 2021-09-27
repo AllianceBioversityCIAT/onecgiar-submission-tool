@@ -550,57 +550,142 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
-      let validationImpactStrategiesSQL = (
-        `
-        SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
-        OR (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
-          OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
-          OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
-        OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
-          OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
-        OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
-          OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
-        OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL
-          OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 150
-          OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = 35 AND p.active = 1)  IS NULL
-          OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = 35 AND p.active = 1)   = ''
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='impact-statements';
-        `
-      )
+      // 5 impact strategies
+      for (let index = 1; index < 6; index++) {
 
-      var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);
+        var multi = 1;
 
-      impactStrategies[0].validation = parseInt(impactStrategies[0].validation);
+        let validationImpactStrategiesSQL = (
+          `
+          SELECT sec.id as sectionId,sec.description, 
+          CASE
+        WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+          OR (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+            OR (SELECT LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
+            OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
+            OR (SELECT LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+          OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
+            OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+            OR (SELECT LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+          OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
+            OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+            OR (SELECT LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) > 150
+          OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
+            OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) = ''
+            OR (SELECT LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =${index})  IS NULL
+            OR (SELECT p.type_id FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id = ${index})   = ''
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+        WHERE ini.id = ${this.initvStgId_}
+          AND sec.stageId= ini.stageId
+          AND sec.description='impact-statements';
+          `
+        )
+  
+        var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);
+  
+        impactStrategies[0].validation = parseInt(impactStrategies[0].validation)
+
+        multi = multi *  impactStrategies[0].validation;
+
+        impactStrategies[0].validation = multi;
+        
+      }
 
       return impactStrategies[0]
 
     } catch (error) {
 
-      throw new BaseError('Get validations policy compliance', 400, error.message, false)
+      throw new BaseError('Get validations impact strategies', 400, error.message, false)
 
     }
 
   }
 
+
+  async validationWorkPackages() {
+
+    try {
+
+      let getAllWpSQL = (`
+      SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
+      `)
+
+      var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
+
+      // 5 impact strategies
+      for (let index = 0; index < allWorkPackages.length; index++) {
+
+        const wpId = allWorkPackages[index].id;
+
+        console.log(wpId);
+        
+
+        var multi = 1;
+
+        let validationWPSQL = (
+          `
+          SELECT sec.id as sectionId,sec.description, 
+          CASE
+        WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
+          OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+          OR (SELECT LENGTH(acronym) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(acronym,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT LENGTH(name) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(name,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
+		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT LENGTH(pathway_content) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(pathway_content,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
+	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
+		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+        WHERE ini.id = 35
+          AND sec.stageId= ini.stageId
+          AND sec.description='work-package-research-plans-and-tocs';
+          `
+        )
+  
+        var workPackage = await this.queryRunner.query(validationWPSQL);
+  
+        workPackage[0].validation = parseInt(workPackage[0].validation)
+
+        multi = multi *  workPackage[0].validation;
+
+        console.log(multi);
+        
+
+        workPackage[0].validation = multi;
+
+        console.log(workPackage);
+        
+      }
+
+      return workPackage[0]
+
+    } catch (error) {
+
+      throw new BaseError('Get validations Work packages', 400, error.message, false)
+
+    }
+
+  }
 
   /**
   * VALIDATIONS (GREEN CHECKS)
