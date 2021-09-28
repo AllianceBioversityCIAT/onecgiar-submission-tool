@@ -167,15 +167,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                         OR name = ''
                         OR pathway_content IS NULL
                         OR pathway_content = '',
-                        true,
-                        false
+                        false,
+                        true
                     ) AS validateWP,
                     IF (
                         ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
-                        AND 
+                        OR 
                         (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
-                        true,
-                        false
+                        false,
+                        true
                     ) AS validateGeographicScope
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id}
