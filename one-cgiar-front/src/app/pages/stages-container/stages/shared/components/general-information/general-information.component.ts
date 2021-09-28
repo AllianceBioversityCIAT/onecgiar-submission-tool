@@ -195,6 +195,7 @@ export class GeneralInformationComponent implements OnInit {
     body.regions=this.geographicScope.regions;
     body.countries=this.geographicScope.countries;
     console.log(this.geographicScope);
+    console.log(body);
     // console.log(this.summaryForm.value);
     // console.log(this._initiativesService.initiative.id);
     // console.log(this.stageName=='proposal'?3:2);
@@ -203,7 +204,6 @@ export class GeneralInformationComponent implements OnInit {
     console.log(body);
     this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       console.log(generalResp);
-      this.spinnerService.hide('general-information');
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
       //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
       // })
@@ -214,7 +214,11 @@ export class GeneralInformationComponent implements OnInit {
       this._dataControlService.validateMenu$.emit();
     },error => {
     // console.log(error, this.errorService.getServerMessage(error))
-    this.spinnerService.hide('general-information');
+    console.log(error);
+    },
+    ()=>{
+      this.spinnerService.hide('general-information');
+
     });
     // console.log('%cregions','background: #222; color: #84c3fd');
     // console.log(this.geographicScope.regions);
