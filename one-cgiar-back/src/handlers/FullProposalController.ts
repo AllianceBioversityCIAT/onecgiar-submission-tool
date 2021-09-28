@@ -166,17 +166,17 @@ export class ProposalHandler extends InitiativeStageHandler {
                         name IS NULL
                         OR name = ''
                         OR pathway_content IS NULL
-                        OR pathway_content = '',
+                        OR pathway_content = ''
+                        OR acronym IS NULL
+                        OR acronym = ''
+                        OR (LENGTH(acronym) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(acronym,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 3
+                        OR (LENGTH(name) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(name,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 30
+                        OR (LENGTH(pathway_content) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(pathway_content,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 100
+                        OR ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR   (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
                         false,
                         true
-                    ) AS validateWP,
-                    IF (
-                        ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
-                        OR 
-                        (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
-                        false,
-                        true
-                    ) AS validateGeographicScope
+                    ) AS validateWP
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id}
                     AND wp.active = 1                    
