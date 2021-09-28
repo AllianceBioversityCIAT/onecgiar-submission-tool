@@ -10,7 +10,7 @@ src/config/*
 /docs/DB/DB.sql
 /.env
 /logs
-public
+public/uploads
 
 # nyc test coverage
 .nyc_output
