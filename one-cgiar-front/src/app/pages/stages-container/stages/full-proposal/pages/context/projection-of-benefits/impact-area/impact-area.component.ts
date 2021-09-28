@@ -222,7 +222,7 @@ export class ImpactAreaComponent implements OnInit {
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
     this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(null);
     this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(null);
-    this.pobImpactAreaForm.controls['impactAreaId'].setValue(null);
+    // this.pobImpactAreaForm.controls['impactAreaId'].setValue(null);
     // this.pobImpactAreaForm.controls['impactAreaName'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(null);
