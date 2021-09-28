@@ -30,6 +30,7 @@ export class ImpactAreaIsComponent implements OnInit {
       research_questions:new FormControl(null),
       component_work_package:new FormControl(null),
       performance_results:new FormControl(null),
+      human_capacity:new FormControl(null),
       impact_area_id:new FormControl(null),
       partners:new FormControl([]),
     });
@@ -90,6 +91,8 @@ export class ImpactAreaIsComponent implements OnInit {
     this.sectionForm.controls['research_questions'].setValue(resp.research_questions);
     this.sectionForm.controls['component_work_package'].setValue(resp.component_work_package);
     this.sectionForm.controls['performance_results'].setValue(resp.performance_results);
+    this.sectionForm.controls['human_capacity'].setValue(resp.human_capacity);
+    
   }
 
   
@@ -137,6 +140,7 @@ export class ImpactAreaIsComponent implements OnInit {
     this.sectionForm.controls['research_questions'].setValue(null);
     this.sectionForm.controls['component_work_package'].setValue(null);
     this.sectionForm.controls['performance_results'].setValue(null);
+    this.sectionForm.controls['human_capacity'].setValue(null);
     this.sectionForm.controls['id'].setValue(null);
   }
 
