@@ -56,6 +56,7 @@ import { ProjectionTimeFrameComponent } from './shared/components/concept/projec
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 // import {InputTextModule} from 'primeng/inputtext';
+import { TawkToModule } from './pages/stages-container/stages/shared/components/tawk-to/tawk-to.module';
 
 @NgModule({
   declarations: [
@@ -112,6 +113,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     NgxSpinnerModule,
     CustomFormsModule,
     IbdAngularComponentsModule,
+    TawkToModule
     // InputTextModule
   ],
   providers: [
