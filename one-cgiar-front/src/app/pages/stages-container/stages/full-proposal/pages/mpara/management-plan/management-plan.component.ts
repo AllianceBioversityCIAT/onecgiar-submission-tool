@@ -63,8 +63,6 @@ export class ManagementPlanComponent implements OnInit {
       this.managementPlanForm.valid?
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
-      this._dataControlService.validateMenu$.emit();
-
     })
 
     

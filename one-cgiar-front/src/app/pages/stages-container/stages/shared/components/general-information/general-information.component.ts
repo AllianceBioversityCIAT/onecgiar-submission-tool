@@ -211,7 +211,6 @@ export class GeneralInformationComponent implements OnInit {
       this.summaryForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
-      this._dataControlService.validateMenu$.emit();
     },error => {
     // console.log(error, this.errorService.getServerMessage(error))
     console.log(error);

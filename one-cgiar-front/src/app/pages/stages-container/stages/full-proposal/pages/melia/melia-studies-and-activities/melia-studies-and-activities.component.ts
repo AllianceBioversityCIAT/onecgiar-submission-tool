@@ -77,8 +77,6 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       this._interactionsService.successMessage('Melia studies and activities has been saved'):
       this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')
       this.getMelia();
-      this._dataControlService.validateMenu$.emit();
-
     })
 
     

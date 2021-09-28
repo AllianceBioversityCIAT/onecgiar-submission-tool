@@ -89,7 +89,6 @@ export class BudgetComponent implements OnInit {
       this._interactionsService.successMessage('Financial Resources has been saved'):
       this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
       this.getFinancialResources();
-      this._dataControlService.validateMenu$.emit();
     })
 
     

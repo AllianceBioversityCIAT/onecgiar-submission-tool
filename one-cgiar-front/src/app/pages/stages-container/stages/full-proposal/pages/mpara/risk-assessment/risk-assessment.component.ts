@@ -80,7 +80,6 @@ export class RiskAssessmentComponent implements OnInit {
       this.filesSavedList.length || this.filesList.length?
       this._interactionsService.successMessage('Risk assessment plan has been saved'):
       this._interactionsService.warningMessage('Risk assessment plan has been saved, but there are incomplete fields')
-      this._dataControlService.validateMenu$.emit();
     })
 
   }

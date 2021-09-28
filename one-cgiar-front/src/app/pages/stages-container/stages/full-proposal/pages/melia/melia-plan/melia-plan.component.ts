@@ -63,7 +63,6 @@ export class MeliaPlanComponent implements OnInit {
       this.secionForm.valid?
       this._interactionsService.successMessage('Melia plan has been saved'):
       this._interactionsService.warningMessage('Melia plan has been saved, but there are incomplete fields')
-      this._dataControlService.validateMenu$.emit();
     })
 
     

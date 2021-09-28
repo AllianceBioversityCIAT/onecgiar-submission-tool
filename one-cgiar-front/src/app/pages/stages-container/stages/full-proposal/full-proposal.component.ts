@@ -27,7 +27,6 @@ export class FullProposalComponent implements OnInit {
       // console.log("validateMenu$");
       this.validateAllSections();
     })
-    this._dataControlService.validateMenu$.emit();
     this._dataControlService.loadMenu$.emit('full-proposal');
     
   }

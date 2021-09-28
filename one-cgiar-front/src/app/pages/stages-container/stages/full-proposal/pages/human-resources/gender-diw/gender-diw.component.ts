@@ -63,8 +63,6 @@ export class GenderDiwComponent implements OnInit {
       this.secionForm.valid?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources  has been saved, but there are incomplete fields');
-      this._dataControlService.validateMenu$.emit();
-
     })
 
     

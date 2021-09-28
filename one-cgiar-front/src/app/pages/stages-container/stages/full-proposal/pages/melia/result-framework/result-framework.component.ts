@@ -80,8 +80,6 @@ export class ResultFrameworkComponent implements OnInit {
       this._interactionsService.successMessage('Result Framework has been saved'):
       this._interactionsService.warningMessage('Result Framework has been saved, but there are incomplete fields')
       this.getMelia();
-      this._dataControlService.validateMenu$.emit();
-
     })
 
     

@@ -45,7 +45,6 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
       this.secionForm.valid?
       this._interactionsService.successMessage('Innovation Packages and Scaling Readiness Plan has been saved'):
       this._interactionsService.warningMessage('Innovation Packages and Scaling Readiness Plan has been saved, but there are incomplete fields')
-      this._dataControlService.validateMenu$.emit();
     })
   }
 
