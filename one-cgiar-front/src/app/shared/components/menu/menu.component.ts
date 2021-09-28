@@ -48,9 +48,10 @@ export class MenuComponent implements OnInit {
       }
     );
 
-    this.getMenu();
+    
 
     this._dataControlService.menuChange$.subscribe(() => {
+      this.getMenu();
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
@@ -177,6 +178,7 @@ export class MenuComponent implements OnInit {
 
 
         }
+        // this._dataControlService.validateMenu$.emit();
       });
   }
 
