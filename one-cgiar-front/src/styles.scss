@@ -124,7 +124,7 @@ button {
 
 .background-color-primary{
   // #37474F
-  background-color: #013243 !important;
+  background-color: var(--ibdc-secondary-color) !important;
 }
 
 .background-color-primary-2{
@@ -132,7 +132,7 @@ button {
 }
 
 .background-color-primary-3{
-  background-color: #014d66 !important;
+  background-color: var(--ibdc-secondary-color)!important;
 }
 //secondary
 .color-secondary{
