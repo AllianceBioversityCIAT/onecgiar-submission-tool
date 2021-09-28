@@ -185,6 +185,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
             var workPackages = await this.queryRunner.query(WPquery);
+            workPackages[0].validateWP = parseInt(workPackages[0].validateWP)
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
