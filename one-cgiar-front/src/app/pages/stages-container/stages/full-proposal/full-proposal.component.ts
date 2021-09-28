@@ -27,7 +27,7 @@ export class FullProposalComponent implements OnInit {
       console.log("validateMenu$");
       this.validateAllSections();
     })
-    this._dataControlService.validateMenu$.emit();
+
     this._dataControlService.loadMenu$.emit('full-proposal');
     
   }
@@ -39,10 +39,10 @@ export class FullProposalComponent implements OnInit {
         let sectionId = resp.response[key].sectionId; 
         let ValidateGI = resp.response[key].validation;
 
-        let result = this._dataControlService.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
+        let result = this._dataControlService?.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
 
-        if (resp.response[key].subSections) resp.response[key].subSections
+        if (resp.response[key].subSections) resp?.response[key].subSections
           .map(item=>result.subsections
           .find(subSeItem=>subSeItem.subSectionId == item.subSectionId).fieldsCompleted = item.validation);
         
