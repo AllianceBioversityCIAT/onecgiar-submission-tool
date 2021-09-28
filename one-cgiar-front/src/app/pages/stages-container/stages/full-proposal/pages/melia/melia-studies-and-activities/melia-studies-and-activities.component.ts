@@ -31,13 +31,13 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   getMelia(){
     this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let melia = resp.response.meliaData;
       this.filesSavedList = melia?.files?melia.files:[];
       this.data.id = melia?.id;
-      console.log(melia);
-      console.log(this.filesSavedList);
+      // console.log(melia);
+      // console.log(this.filesSavedList);
     },
     err=>{console.log(err);}
     ,()=>{
@@ -72,7 +72,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     formData.append('data', JSON.stringify(this.data));
     this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
-      console.log(resp);
+      // console.log(resp);
       this.filesSavedList.length || this.filesList.length?
       this._interactionsService.successMessage('Melia studies and activities has been saved'):
       this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')

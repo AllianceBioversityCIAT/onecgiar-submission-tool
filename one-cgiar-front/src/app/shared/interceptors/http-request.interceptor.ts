@@ -25,6 +25,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     // add authorization header with jwt token if available
     // console.log(request.url);
     if (request.method == 'PATCH') {
+      this._dataControlService.validateMenu$.emit();
     }
 
     if (request.url.indexOf('/apiClarisa/') != -1 || request.url.indexOf('clarisa.cgiar.org') != -1){

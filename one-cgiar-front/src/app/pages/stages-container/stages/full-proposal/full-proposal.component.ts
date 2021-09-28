@@ -18,15 +18,16 @@ export class FullProposalComponent implements OnInit {
   ngOnInit(): void {
 
     this._initiativesService.getInitvStgId(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      console.log(resp.response);
+      // console.log(resp.response);
       this._initiativesService.initvStgId = resp.response;
       this.getRolefromInitiativeById();
     })
     
     this._dataControlService.validateMenu$.subscribe(resp=>{
-      // console.log("validateMenu$");
+      console.log("validateMenu$");
       this.validateAllSections();
     })
+    this._dataControlService.validateMenu$.emit();
     this._dataControlService.loadMenu$.emit('full-proposal');
     
   }
@@ -53,7 +54,7 @@ export class FullProposalComponent implements OnInit {
 
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
-      console.log(resp.response);
+      // console.log(resp.response);
 
       let rol = resp.response.roles
       let firstRol =  rol[0]?.roleId
