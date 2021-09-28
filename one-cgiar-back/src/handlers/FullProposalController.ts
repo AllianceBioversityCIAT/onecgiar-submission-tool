@@ -185,7 +185,15 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
             var workPackages = await this.queryRunner.query(WPquery);
-            workPackages[0].validateWP = parseInt(workPackages[0].validateWP)
+
+            workPackages.map(wp => {
+
+                wp.validateWP = parseInt(wp.validateWP)
+            }
+
+            )
+
+
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
@@ -667,7 +675,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     if (newDimensions.id !== null) {
 
-                        var savedDimensions:any = await dimensionsRepo.findOne(newDimensions.id);
+                        var savedDimensions: any = await dimensionsRepo.findOne(newDimensions.id);
 
                         dimensionsRepo.merge(
                             savedDimensions,
