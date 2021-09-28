@@ -1061,8 +1061,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           })
 
-        
-
       }
       )
       
