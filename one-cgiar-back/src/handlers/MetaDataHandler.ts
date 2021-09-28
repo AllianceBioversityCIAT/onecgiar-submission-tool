@@ -406,6 +406,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      // Validate sections
+
       let validationHumanResourcesSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -441,6 +443,106 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var humanResources = await this.queryRunner.query(validationHumanResourcesSQL);
 
       humanResources[0].validation = parseInt(humanResources[0].validation);
+
+
+      // Validate subSections
+
+      let validationInitiativeSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      CASE
+    WHEN  (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
+                    WHERE initvStgId = ini.id
+                      AND active = 1)
+                      AND section = "initiative_team"
+                      AND active = 1 ) = ''
+        OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
+                    WHERE initvStgId = ini.id
+                      AND active = 1)
+                      AND section = "initiative_team"
+                      AND active = 1 ) IS NULL
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+    AND sec.id = subsec.sectionId
+      AND sec.description='human-resources'
+      AND subsec.description = 'initiative-team'`),
+        genderSQL = (`
+      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      CASE
+    WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT LENGTH(gender_diversity_inclusion) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(gender_diversity_inclusion,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+    AND sec.id = subsec.sectionId
+      AND sec.description='human-resources'
+      AND subsec.description = 'gender-diw';
+      `),
+        capacitySQL = (`
+      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      CASE
+    WHEN (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT LENGTH(capacity_development) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(capacity_development,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+    AND sec.id = subsec.sectionId
+      AND sec.description='human-resources'
+      AND subsec.description = 'capacity-development';       
+      `)
+
+
+      var initiativeTeam = await this.queryRunner.query(validationInitiativeSQL);
+      var gender = await this.queryRunner.query(genderSQL);
+      var capacity = await this.queryRunner.query(capacitySQL);
+
+      initiativeTeam[0].validation = parseInt(initiativeTeam[0].validation);
+      gender[0].validation = parseInt(gender[0].validation);
+      capacity[0].validation = parseInt(capacity[0].validation);
+
+
+      humanResources.map(hr => {
+        hr['subSections'] = [
+          initiativeTeam.find(ini => {
+
+            return (ini.sectionId = hr.sectionId)
+
+          }),
+
+          gender.find(gen => {
+
+            return (gen.sectionId = hr.sectionId)
+
+          }),
+
+          capacity.find(cap => {
+
+            return (cap.sectionId = hr.sectionId)
+
+          })
+
+        ]
+
+      }
+      )
 
       return humanResources[0]
 
@@ -491,9 +593,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       financialResources[0].validation = parseInt(financialResources[0].validation);
 
-        //Validations subSections
+      //Validations subSections
 
-        let validationBudgetSQL = (`
+      let validationBudgetSQL = (`
         
         SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
@@ -524,21 +626,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
         `)
 
 
-        var budget = await this.queryRunner.query(validationBudgetSQL);
+      var budget = await this.queryRunner.query(validationBudgetSQL);
 
-        budget[0].validation = parseInt(budget[0].validation);
+      budget[0].validation = parseInt(budget[0].validation);
 
-        financialResources.map(pol => {
-          pol['subSections'] = [
-            budget.find(bu => {
-  
-              return (bu.sectionId = pol.sectionId)
-  
-            })
-          ]
-      
-        }
-        )
+      financialResources.map(fin => {
+        fin['subSections'] = [
+          budget.find(bu => {
+
+            return (bu.sectionId = fin.sectionId)
+
+          })
+        ]
+
+      }
+      )
 
 
       return financialResources[0]
@@ -640,7 +742,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
           })
 
         ]
-    
+
       }
       )
 
