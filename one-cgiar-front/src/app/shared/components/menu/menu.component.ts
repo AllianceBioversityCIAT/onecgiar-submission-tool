@@ -29,6 +29,7 @@ export class MenuComponent implements OnInit {
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   currentStageName = '';
+  impacAreasList = []
 
   // stageUrl;
   constructor(
@@ -48,8 +49,6 @@ export class MenuComponent implements OnInit {
       }
     );
 
-    
-
     this._dataControlService.menuChange$.subscribe(() => {
       this.getMenu();
       // this.getAllIWorkPackages();
@@ -57,9 +56,28 @@ export class MenuComponent implements OnInit {
     });
 
     this._dataControlService.menuChange$.emit();
+
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
     });
+
+    this.getImpacAreasList();
+
+  }
+
+  getImpacAreasList(){
+    console.log("getImpacAreasList");
+    this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+      // console.log(impacAreas.response.impactAreasRequested);
+      this.impacAreasList = impacAreas.response.impactAreasRequested;
+      
+    },(err) => {
+      console.log(err);
+
+    },()=>{
+      console.log("call");
+          this._dataControlService.validateMenu$.emit();
+    })
   }
 
   sortAlphabetically(list) {
@@ -108,75 +126,52 @@ export class MenuComponent implements OnInit {
                 this._dataControlService.wpMaped = true;
               });
 
-          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-            // console.log(impacAreas.response.impactAreasRequested);
 
-            let pobList = impacAreas.response.impactAreasRequested;
-            let impactStatementsList = impacAreas.response.impactAreasRequested;
 
-            pobList.map(item=>{
-              item.showName = item.name;
-              item.frontRoute = '/projection-of-benefits/impact-area/';
-              item.subSectionName='impact-area';
-              item.sort = 'id';
+
+            let pobList = [];
+            let impactStatementsList = [];
+
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/projection-of-benefits/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              pobList.push(body)
+
             })
             this.mapDataInMenu(3, 1, 8, pobList);
+           
 
-            impactStatementsList.map(item=>{
-              item.showName = item.name;
-              item.frontRoute = 'impact-areas/impact-area/';
-              item.subSectionName='impact-area';
-              item.sort = 'id';
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+             
+              // body = item;
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = 'impact-areas/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              impactStatementsList.push(body)
             })
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
             this._dataControlService.pobMaped = true;
-          },(err) => {
-            console.log(err);
-            this._dataControlService.pobMaped = true;
-          })
-
-
-
-
-          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-
-            impacAreas.response.impactAreasRequested.map(item=>{
-              item.showName = item.name;
-              item.frontRoute = '/projection-of-benefits/impact-area/';
-              item.subSectionName='impact-area';
-              item.sort = 'id';
-            })
-
-            this.mapDataInMenu(3, 1, 8,  impacAreas.response.impactAreasRequested);
-
-            this._dataControlService.pobMaped = true;
-          },(err) => {
-            console.log(err);
-            this._dataControlService.pobMaped = true;
-          })
-
-
-
-
-          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-
-            impacAreas.response.impactAreasRequested.map(item=>{
-              item.showName = item.name;
-              item.frontRoute = '/impact-areas/impact-area/';
-              item.subSectionName='impact-area';
-              item.sort = 'id';
-            })
-
-            this.mapDataInMenu(3, 7, 16, impacAreas.response.impactAreasRequested);
-
-            this._dataControlService.impactStatementsMaped = true;
-          },(err) => {
-            console.log(err);
-            this._dataControlService.impactStatementsMaped = true;
-          })
-
 
         }
         // this._dataControlService.validateMenu$.emit();
