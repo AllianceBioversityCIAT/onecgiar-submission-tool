@@ -10,10 +10,6 @@ const routes: Routes = [
       {
         path: 'work-packages',
         loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
-      },
-      {
-        path: 'work-package/:wpID',
-        loadChildren: () => import('./fp-work-package/fp-work-package.module').then(mod => mod.FpWorkPackageModule),
       }
     ]
   }

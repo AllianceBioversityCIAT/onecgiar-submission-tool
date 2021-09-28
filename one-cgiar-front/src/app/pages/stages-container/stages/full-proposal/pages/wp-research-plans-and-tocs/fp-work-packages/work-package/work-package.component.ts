@@ -11,7 +11,7 @@ import { InteractionsService } from '../../../../../../../../shared/services/int
   styleUrls: ['./work-package.component.scss']
 })
 export class WorkPackageComponent implements OnInit {
-
+  firstTab = true;
   showForm = false;
   workPackageForm: FormGroup;
   geographicScope = {
