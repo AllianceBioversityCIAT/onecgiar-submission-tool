@@ -960,6 +960,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationImpactStrategies() {
 
+    var dataSubsections = [];
+
     try {
 
       // 5 impact strategies
@@ -1014,6 +1016,56 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       }
 
+      //Validate SubSections
+      let validateImpactSubsectionSQL=(`SELECT sec.id as sectionId,imp.impact_area_id,
+      CASE
+     WHEN (imp.challenge_priorization) IS NULL
+      OR (challenge_priorization) = ''
+  OR (LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR (research_questions) IS NULL
+  OR (research_questions) = ''
+  OR (LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR (component_work_package) IS NULL
+  OR (component_work_package) = ''
+  OR (LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (performance_results) IS NULL
+  OR (performance_results) = ''
+  OR (LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (human_capacity) IS NULL
+  OR (human_capacity) = ''
+  OR (LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id)  IS NULL
+  OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id )   = ''
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+     JOIN impact_strategies imp
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND ini.id = imp.initvStgId
+      AND sec.description='impact-statements'`)
+
+      var validateImpactSubsections = await this.queryRunner.query(validateImpactSubsectionSQL);
+
+      validateImpactSubsections.map(imp=>{
+        imp.validation = parseInt(imp.validation)
+      })
+
+      impactStrategies.map(imps => {
+        imps['subSections'] = 
+          validateImpactSubsections.filter(imp => {
+
+            return (imp.sectionId = imp.sectionId)
+
+          })
+
+        
+
+      }
+      )
+      
       return impactStrategies[0]
 
     } catch (error) {
