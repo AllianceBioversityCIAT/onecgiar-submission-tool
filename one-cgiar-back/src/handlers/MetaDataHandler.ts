@@ -291,6 +291,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      // Validate Sections
       let validationMeliaSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -333,6 +334,106 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       validationMelia[0].validation = parseInt(validationMelia[0].validation);
 
+      // Validate subSections
+
+      let validateResultFrmwkSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN(SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                    WHERE initvStgId = ini.id
+                      AND active = 1)
+                      AND section = "result_framework"
+                      AND active = 1 ) = ''
+        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                    WHERE initvStgId = ini.id
+                      AND active = 1)
+                      AND section = "result_framework"
+                      AND active = 1 ) IS NULL
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+  AND sec.id = subsec.sectionId
+      AND sec.description='melia'
+    AND subsec.description = 'result-framework';`),
+        validateMeliaPlanSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT LENGTH(melia_plan) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(melia_plan,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+  AND sec.id = subsec.sectionId
+      AND sec.description='melia'
+    AND subsec.description = 'melia-plan';`),
+        validateStudiesSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                       WHERE initvStgId = ini.id
+                         AND active = 1)
+                         AND section = "melia"
+                         AND active = 1 ) = ''
+      OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                       WHERE initvStgId = ini.id
+                         AND active = 1)
+                         AND section = "melia"
+                         AND active = 1 ) IS NULL
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+  AND sec.id = subsec.sectionId
+      AND sec.description='melia'
+    AND subsec.description = 'melia-studies-and-activities';`)
+
+      var validationResultFramework = await this.queryRunner.query(validateResultFrmwkSQL);
+      var validationMeliaPlan = await this.queryRunner.query(validateMeliaPlanSQL);
+      var validationStudies = await this.queryRunner.query(validateStudiesSQL);
+
+      validationResultFramework[0].validation = parseInt(validationResultFramework[0].validation);
+      validationMeliaPlan[0].validation = parseInt(validationMeliaPlan[0].validation);
+      validationStudies[0].validation = parseInt(validationStudies[0].validation);
+
+      validationMelia.map(me => {
+        me['subSections'] = [
+          validationResultFramework.find(rf => {
+
+            return (rf.sectionId = me.sectionId)
+
+          }),
+
+          validationMeliaPlan.find(mep => {
+
+            return (mep.sectionId = me.sectionId)
+
+          }),
+
+          validationStudies.find(st => {
+
+            return (st.sectionId = me.sectionId)
+
+          })
+
+        ]
+
+      }
+      )
+
+
       return validationMelia[0]
 
     } catch (error) {
@@ -349,6 +450,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      //Validate Sections
       let validationManagementPlanSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -390,6 +492,105 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var managementPlan = await this.queryRunner.query(validationManagementPlanSQL);
 
       managementPlan[0].validation = parseInt(managementPlan[0].validation);
+
+      //Validate subSections
+
+      let validationManagePlanSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      CASE
+    WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT LENGTH(management_plan) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(management_plan,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+     JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+  AND sec.id = subsec.sectionId
+      AND sec.description='mpara'
+      AND subsec.description = 'management-plan';`),
+        validationRiskAssessmentSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+          CASE
+        WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                           WHERE initvStgId = ini.id
+                             AND active = 1)
+                             AND section = "risk_assessment"
+                             AND active = 1 ) = ''
+          OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                           WHERE initvStgId = ini.id
+                             AND active = 1)
+                             AND section = "risk_assessment"
+                             AND active = 1 ) IS NULL
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+         JOIN subsections_meta subsec
+        WHERE ini.id = ${this.initvStgId_}
+          AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='mpara'
+          AND subsec.description = 'risk-assessment';`),
+        validationGantt = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+          CASE
+        WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                        WHERE initvStgId = ini.id
+                          AND active = 1)
+                          AND section = "management_gantt"
+                          AND active = 1 ) = ''
+            OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                        WHERE initvStgId = ini.id
+                          AND active = 1)
+                          AND section = "management_gantt"
+                          AND active = 1 ) IS NULL
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+         JOIN subsections_meta subsec
+        WHERE ini.id = ${this.initvStgId_}
+          AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='mpara'
+          AND subsec.description = 'smpg-table';`)
+
+      var managePlan = await this.queryRunner.query(validationManagePlanSQL);
+      var riskAssessment = await this.queryRunner.query(validationRiskAssessmentSQL);
+      var gantt = await this.queryRunner.query(validationGantt);
+
+      managePlan[0].validation = parseInt(managePlan[0].validation);
+      riskAssessment[0].validation = parseInt(riskAssessment[0].validation);
+      gantt[0].validation = parseInt(gantt[0].validation);
+
+      managementPlan.map(mp => {
+        mp['subSections'] = [
+          managePlan.find(mpn => {
+
+            return (mpn.sectionId = mp.sectionId)
+
+          }),
+
+          riskAssessment.find(ris => {
+
+            return (ris.sectionId = mp.sectionId)
+
+          }),
+
+          gantt.find(ga => {
+
+            return (ga.sectionId = mp.sectionId)
+
+          })
+
+        ]
+
+      }
+      )
 
       return managementPlan[0]
 
