@@ -56,8 +56,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 // import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 // import {InputTextModule} from 'primeng/inputtext';
-import { TawkToModule } from './pages/stages-container/stages/shared/components/tawk-to/tawk-to.module';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -112,8 +110,7 @@ import { TawkToModule } from './pages/stages-container/stages/shared/components/
     MatPaginatorModule,
     NgxSpinnerModule,
     CustomFormsModule,
-    IbdAngularComponentsModule,
-    TawkToModule
+    IbdAngularComponentsModule
     // InputTextModule
   ],
   providers: [
