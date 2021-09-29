@@ -239,7 +239,8 @@ export class ImpactAreaComponent implements OnInit {
   saveForm(){
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
-    console.log(body);
+    console.log(this.pobImpactAreaForm.value);
+    console.log(this.pobImpactAreaForm.valid);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);

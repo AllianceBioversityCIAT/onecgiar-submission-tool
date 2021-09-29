@@ -16,6 +16,7 @@ export class InitiativesService {
   initvRoleId: number;
   initiative={
     id:null,
+    official_code:null,
     roleId:4,
     readonly: true,
     stageId:null
@@ -74,12 +75,10 @@ export class InitiativesService {
 
   // Query to get an initiative by ID
   getInitiativeById(id: number): Observable<any> {
-    console.log('numero de la funcion')
-    return this.getQuery('/initiatives/own')
-      .pipe(map((data: any) => {
-        console.log('getInitiativeById', data);
-        return data.data.find(resp => resp.initvStgId == id);
-      }));
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
+      const allInitiatives = res.response.initiatives;
+      return allInitiatives.find(resp => resp.id == id);
+    }));
   }
 
 
