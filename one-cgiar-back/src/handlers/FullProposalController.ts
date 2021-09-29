@@ -172,8 +172,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                         OR (LENGTH(acronym) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(acronym,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 3
                         OR (LENGTH(name) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(name,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 30
                         OR (LENGTH(pathway_content) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(pathway_content,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 100
-                        OR ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
-                        OR   (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
                         false,
                         true
                     ) AS validateWP
