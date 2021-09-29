@@ -1019,7 +1019,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       //Validate SubSections
       let validateImpactSubsectionSQL = (`
-      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton
+      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,${impactStrategies[0].validation} as validation
      FROM initiatives_by_stages ini
      JOIN sections_meta sec
      JOIN subsections_meta subsec
@@ -1064,6 +1064,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var validateImpactSubsections = await this.queryRunner.query(validateImpactSubsectionSQL);
       var valiDinamicList = await this.queryRunner.query(validateDinamicListSQL);
 
+      validateImpactSubsections[0].validation = parseInt(validateImpactSubsections[0].validation)
       valiDinamicList.map(imp => {
         imp.validation = parseInt(imp.validation)
       })
