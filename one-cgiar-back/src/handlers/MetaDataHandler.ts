@@ -1078,12 +1078,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
       })
 
       impactStrategies.map(imps => {
-        imps['subSections'] =
+        imps['subSections'] =[
           validateImpactSubsections.find(imp => {
 
             return (imp.sectionId = imp.sectionId)
 
           })
+
+        ]
 
       }
       )
