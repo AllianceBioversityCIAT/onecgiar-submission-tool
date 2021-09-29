@@ -16,6 +16,9 @@ export class PartnersRequestComponent implements OnInit {
   countriesList=[];
   conceptInfo:any;
   @Output() back = new EventEmitter();
+  loaded={
+    institutionTypes:false
+  }
   showForm = false;
   categoryList = [
     {
@@ -53,25 +56,26 @@ export class PartnersRequestComponent implements OnInit {
   ngOnInit(): void {
       this.setFormValue();
       this.getInstitutionsTypes();
-      this.getInitiativeName();
+      // this.getInitiativeName();
   }
 
 
   getInstitutionsTypes(){
     this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
       console.log('%cgetInstitutionsTypes','background: #222; color: #ffff00');
-      console.log(resp.response?.institutionsTypes);
-      this.institutionTypes = resp.response?.institutionsTypes;
+      console.log(resp.response.regions);
+      this.institutionTypes = resp.response?.regions;
+      this.loaded.institutionTypes = true;
     })
   }
 
-  getInitiativeName(){
-    this._conceptService.getConcept(this._initiativesService.initvStgId).subscribe(resp=>{
-      console.log(resp);
-      this.conceptInfo = resp;
-      this.partnersRequestForm.get("externalUserComments").setValue(this.setComment());
-    })
-  }
+  // getInitiativeName(){
+  //   this._conceptService.getConcept(this._initiativesService.initvStgId).subscribe(resp=>{
+  //     console.log(resp);
+  //     this.conceptInfo = resp;
+  //     this.partnersRequestForm.get("externalUserComments").setValue(this.setComment());
+  //   })
+  // }
   
   setFormValue(){
     let userData:any= JSON.parse(localStorage.getItem('user')) ;

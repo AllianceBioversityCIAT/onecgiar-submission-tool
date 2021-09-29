@@ -12,6 +12,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   @Input() institutionsTypes:any;
   @Input() institutionsTypesSavedList:any;
 
+  display: boolean = false;
   button_changing = [
     {
       name:'Scaling',
@@ -32,12 +33,16 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.institutions);
+    // console.log(this.institutions);
     this.institutions.map(item=>{
       item.type_id = 1000;
       item.id = null;
       item.tag_id = 0;
     })
+  }
+
+  showDialog() {
+      this.display = true;
   }
 
   changeTagId(item,value){

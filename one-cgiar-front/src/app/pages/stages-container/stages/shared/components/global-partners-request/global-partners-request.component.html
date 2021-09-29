@@ -2,6 +2,12 @@
     <section-sub-title name="Partners"></section-sub-title>
     <div class="row">
         <div class="col-12">
+            <a (click)="showDialog()" class="partner_request_text">can't find an institution, create a request</a>
+            <p-dialog header="Title" [(visible)]="display" [modal]="true" >
+                <app-partners-request></app-partners-request>
+            </p-dialog>
+        </div>
+        <div class="col-12">
             <div class="local_container">
                 <ibdc-select-multiple [options]="{
                     inputTitle:'Select partners',

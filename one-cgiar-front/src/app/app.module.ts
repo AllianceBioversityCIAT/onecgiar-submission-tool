@@ -50,7 +50,6 @@ import { CustomFormsModule } from './shared/components/custom-forms/custom-forms
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
-import { PartnersRequestComponent } from './shared/components/partners-request/partners-request.component';
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
@@ -92,7 +91,6 @@ import { TawkToModule } from './pages/stages-container/stages/shared/components/
     DevTagComponent,
     DevPanelComponent,
     ChangePasswordComponent,
-    PartnersRequestComponent,
     ProjectionTimeFrameComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

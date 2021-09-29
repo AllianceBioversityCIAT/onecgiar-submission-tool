@@ -66,17 +66,17 @@ export class MenuComponent implements OnInit {
   }
 
   getImpacAreasList(){
-    console.log("getImpacAreasList");
+    // console.log("getImpacAreasList");
     this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
       
       // console.log(impacAreas.response.impactAreasRequested);
       this.impacAreasList = impacAreas.response.impactAreasRequested;
-      console.log(this.impacAreasList);
+      // console.log(this.impacAreasList);
     },(err) => {
       console.log(err);
 
     },()=>{
-      console.log("call");
+      // console.log("call");
           this._dataControlService.menuChange$.emit();
           // this._dataControlService.validateMenu$.emit();
     })
@@ -113,7 +113,7 @@ export class MenuComponent implements OnInit {
         if (userMenuResp.response.stages.length > 1) {
 
           this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-                console.log(wpsResp);
+                // console.log(wpsResp);
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
                   wpResp.frontRoute = '/work-packages/work-package/';
@@ -172,10 +172,10 @@ export class MenuComponent implements OnInit {
             })
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
-
+            this._dataControlService.impactStatementsMaped = true;
             this._dataControlService.pobMaped = true;
-            console.log(pobList);
-            console.log(impactStatementsList);
+            // console.log(pobList);
+            // console.log(impactStatementsList);
             this._dataControlService.validateMenu$.emit();
         }
        
