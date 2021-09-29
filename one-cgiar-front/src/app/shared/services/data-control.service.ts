@@ -32,6 +32,9 @@ export class DataControlService {
   validateMenu$= new EventEmitter<any>();
   countriesAndRegionsloaded$ = new EventEmitter<any>();
   loadMenu$= new EventEmitter<any>();
+
+  fileSteps= '<strong style="margin-right: 25px;">Steps:</strong><ul style="margin-top: 7px;"><li>Download template</li><li>Choose File</li><li>Save</li></ul>'
+
   
   constructor() { }
 }
