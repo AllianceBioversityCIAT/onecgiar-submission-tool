@@ -114,7 +114,7 @@ export class MenuComponent implements OnInit {
         if (userMenuResp.response.stages.length > 1) {
 
           this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-                // console.log(wpsResp);
+                console.log(wpsResp);
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
                   wpResp.frontRoute = '/work-packages/work-package/';

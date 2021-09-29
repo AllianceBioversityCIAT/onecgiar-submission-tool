@@ -34,7 +34,7 @@
                                       <div class="point"></div>
                                       <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
                                     </div>
-                                    <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
+                                    <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
 
                                 </div>
 
