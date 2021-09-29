@@ -10,6 +10,10 @@ const routes: Routes = [
       {
         path: 'work-packages',
         loadChildren: () => import('./fp-work-packages/fp-work-packages.module').then(mod => mod.FpWorkPackagesModule),
+      },
+      {
+        path: 'full-initiative-toc',
+        loadChildren: () => import('./full-initiative-toc/full-initiative-toc.module').then(mod => mod.FullInitiativeTocModule),
       }
     ]
   }
