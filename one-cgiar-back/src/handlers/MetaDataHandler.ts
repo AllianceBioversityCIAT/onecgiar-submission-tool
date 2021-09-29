@@ -969,6 +969,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
         var multi = 1;
 
+        // Validate Sections
         let validationImpactStrategiesSQL = (
           `
           SELECT sec.id as sectionId,sec.description, 
@@ -1017,7 +1018,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
       }
 
       //Validate SubSections
-      let validateImpactSubsectionSQL = (`SELECT sec.id as sectionId,imp.impact_area_id,
+      let validateImpactSubsectionSQL = (`
+      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+     JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+      AND sec.description='impact-statements'
+      AND subsec.description = 'impact-areas';`),
+        validateDinamicListSQL = (`SELECT sec.id as sectionId,imp.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton,
       CASE
      WHEN (imp.challenge_priorization) IS NULL
       OR (challenge_priorization) = ''
@@ -1042,20 +1053,32 @@ export class MetaDataHandler extends InitiativeStageHandler {
      FROM initiatives_by_stages ini
      JOIN sections_meta sec
      JOIN impact_strategies imp
+	JOIN subsections_meta subsec
     WHERE ini.id = ${this.initvStgId_}
       AND sec.stageId= ini.stageId
       AND ini.id = imp.initvStgId
-      AND sec.description='impact-statements'`)
+	  AND sec.id = subsec.sectionId
+      AND sec.description='impact-statements'
+      AND subsec.description = 'impact-areas'`)
 
       var validateImpactSubsections = await this.queryRunner.query(validateImpactSubsectionSQL);
+      var valiDinamicList = await this.queryRunner.query(validateDinamicListSQL);
 
-      validateImpactSubsections.map(imp => {
+      valiDinamicList.map(imp => {
         imp.validation = parseInt(imp.validation)
+      })
+
+      validateImpactSubsections.map(sub => {
+        sub['dinamicList'] = valiDinamicList.filter(di => {
+
+          return (di.subSectionId = sub.subSectionId)
+
+        })
       })
 
       impactStrategies.map(imps => {
         imps['subSections'] =
-          validateImpactSubsections.filter(imp => {
+          validateImpactSubsections.find(imp => {
 
             return (imp.sectionId = imp.sectionId)
 
