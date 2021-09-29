@@ -1017,7 +1017,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       }
 
       //Validate SubSections
-      let validateImpactSubsectionSQL=(`SELECT sec.id as sectionId,imp.impact_area_id,
+      let validateImpactSubsectionSQL = (`SELECT sec.id as sectionId,imp.impact_area_id,
       CASE
      WHEN (imp.challenge_priorization) IS NULL
       OR (challenge_priorization) = ''
@@ -1049,12 +1049,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       var validateImpactSubsections = await this.queryRunner.query(validateImpactSubsectionSQL);
 
-      validateImpactSubsections.map(imp=>{
+      validateImpactSubsections.map(imp => {
         imp.validation = parseInt(imp.validation)
       })
 
       impactStrategies.map(imps => {
-        imps['subSections'] = 
+        imps['subSections'] =
           validateImpactSubsections.filter(imp => {
 
             return (imp.sectionId = imp.sectionId)
@@ -1063,7 +1063,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       }
       )
-      
+
       return impactStrategies[0]
 
     } catch (error) {
@@ -1148,6 +1148,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     try {
 
+      // Validate Sections
       let validationContextPSQL = (
         `
         SELECT sec.id as sectionId,sec.description, 
@@ -1197,14 +1198,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       generalValidations = validationContext[0].validation;
 
+
+      // Validate Citations
+
       let getAllCitationsSQL = (`
-     SELECT title,link,col_name
-       FROM citations
-      WHERE table_name = 'context'
-        AND initvStgId = ${this.initvStgId_}
-        AND active = 1
-     ORDER BY col_name;
-      `)
+       SELECT title,link,col_name
+         FROM citations
+        WHERE table_name = 'context'
+          AND initvStgId = ${this.initvStgId_}
+          AND active = 1
+       ORDER BY col_name;
+        `)
 
       var allCitations = await this.queryRunner.query(getAllCitationsSQL);
 
@@ -1261,6 +1265,47 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       }
 
+
+      var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
+
+
+      validationContext.map(con => {
+        con['subSections'] = [
+          challengeStatement.find(cha => {
+
+            return (cha.sectionId = con.sectionId)
+
+          }),
+          measurableObjectives.find(me => {
+
+            return (me.sectionId = con.sectionId)
+
+          }),
+          learning.find(le => {
+
+            return (le.sectionId = con.sectionId)
+
+          }),
+          prioritySetting.find(pr => {
+
+            return (pr.sectionId = con.sectionId)
+
+          }),
+          comparativeAdvantage.find(com => {
+
+            return (com.sectionId = con.sectionId)
+
+          }),
+          participatory.find(par => {
+
+            return (par.sectionId = con.sectionId)
+
+          })
+        ]
+
+      }
+      )
+
       return validationContext[0]
 
     } catch (error) {
@@ -1278,6 +1323,210 @@ export class MetaDataHandler extends InitiativeStageHandler {
   * Learning from prior evaluations and Impact Assessments (IA),Priority setting,
   * Comparative Advantage,Participatory design process,Projection of benefits
   */
+
+
+  async validationSubsectionContext(allCitations) {
+
+    var generalChallengeStatement;
+
+    try {
+
+      let challengeStatementSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+    WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
+      OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
+  OR (SELECT LENGTH(challenge_statement) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_statement,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            FROM context WHERE initvStgId = ini.id ) > 500
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+   JOIN subsections_meta subsec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+  AND sec.id = subsec.sectionId
+      AND sec.description='context'
+    AND subsec.description = 'challenge-statement';`),
+        measurableObjectivesSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(smart_objectives) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(smart_objectives,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 250
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+		AND sec.id = subsec.sectionId
+        AND sec.description='context'
+	    AND subsec.description = 'measurable-objectives';`),
+        learningSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(key_learnings) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(key_learnings,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 250
+	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+		AND sec.id = subsec.sectionId
+        AND sec.description='context'
+	    AND subsec.description = 'learning-fpe-and-ia'`),
+        prioritySettingSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(priority_setting) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(priority_setting,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+		AND sec.id = subsec.sectionId
+        AND sec.description='context'
+	    AND subsec.description = 'priority-setting'`),
+        comparativeAdvantageSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(comparative_advantage) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(comparative_advantage,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+		AND sec.id = subsec.sectionId
+        AND sec.description='context'
+	    AND subsec.description = 'comparative-advantage'`),
+        participatorySQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+      WHEN (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
+        OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
+		OR (SELECT LENGTH(participatory_design) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) > 500
+	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+	   JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+		AND sec.id = subsec.sectionId
+        AND sec.description='context'
+	    AND subsec.description = 'participatory-design-process';  `),
+        projectionBenefitsSQL = (``)
+
+
+      var challengeStatement = await this.queryRunner.query(challengeStatementSQL);
+      var measurableObjectives = await this.queryRunner.query(measurableObjectivesSQL);
+      var learning = await this.queryRunner.query(learningSQL);
+      var prioritySetting = await this.queryRunner.query(prioritySettingSQL);
+      var comparativeAdvantage = await this.queryRunner.query(comparativeAdvantageSQL);
+      var participatory = await this.queryRunner.query(participatorySQL);
+
+      challengeStatement[0].validation = parseInt(challengeStatement[0].validation)
+      measurableObjectives[0].validation = parseInt(measurableObjectives[0].validation)
+      learning[0].validation = parseInt(learning[0].validation)
+      prioritySetting[0].validation = parseInt(prioritySetting[0].validation)
+      comparativeAdvantage[0].validation = parseInt(comparativeAdvantage[0].validation)
+      participatory[0].validation = parseInt(participatory[0].validation)
+
+      if (learning[0].validation > 0) {
+
+        allCitations.map(cit => {
+
+          if (cit.col_name == 'key_learnings') {
+
+            if (cit.title !== '' && cit.link !== '') {
+              learning[0].validation = 1;
+            } else {
+              learning[0].validation = 0;
+            }
+          }
+
+        })
+
+      } else if (prioritySetting[0].validation > 0) {
+
+        allCitations.map(cit => {
+
+          if (cit.col_name == 'priority_setting') {
+
+            if (cit.title !== '' && cit.link !== '') {
+              prioritySetting[0].validation = 1;
+            } else {
+              prioritySetting[0].validation = 0;
+            }
+          }
+
+        })
+
+      } else if (comparativeAdvantage[0].validation > 0) {
+
+        allCitations.map(cit => {
+
+          if (cit.col_name == 'comparative_advantage') {
+
+            if (cit.title !== '' && cit.link !== '') {
+              comparativeAdvantage[0].validation = 1;
+            } else {
+              comparativeAdvantage[0].validation = 0;
+            }
+          }
+
+        })
+
+      } else if (participatory[0].validation > 0) {
+
+        allCitations.map(cit => {
+
+          if (cit.col_name == 'comparative_advantage') {
+
+            if (cit.title !== '' && cit.link !== '') {
+              participatory[0].validation = 1;
+            } else {
+              participatory[0].validation = 0;
+            }
+          }
+
+        })
+
+      }
+
+      return { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory }
+
+    } catch (error) {
+
+
+      throw new BaseError('Get validations Subsections Context', 400, error.message, false)
+
+    }
+
+
+  }
 
 
 }
