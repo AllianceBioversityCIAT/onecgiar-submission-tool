@@ -13,7 +13,7 @@
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}" >{{section.display_name}}</span>
                         <div class="status_icons">
-                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
+                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">verified</span>
                             <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>
 
@@ -30,9 +30,12 @@
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
                                 <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
-                                    <div class="point"></div>
-                                    <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
-                                        
+                                    <div class="dynamicListButton_texts">
+                                      <div class="point"></div>
+                                      <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                    </div>
+                                    <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
+
                                 </div>
 
                             </div>

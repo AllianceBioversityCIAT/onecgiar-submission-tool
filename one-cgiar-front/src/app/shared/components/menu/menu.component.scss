@@ -172,23 +172,30 @@
                     top:  -11px;
                     .dynamicListButton{
                         display: flex;
+                        justify-content: space-between;
                         // justify-content: center;
-                        align-items: center;
+                        // align-items: center;
                         // border: 2px solid rgb(167, 167, 167);
                       
                         margin-bottom: 10px;
                         // margin-left: 10px;
                         // padding: 0px 0px 0px 10px;
                         // position: relative;
-                        .point{
-                            margin-right: 7px;
-                            width: 9px;
-                            height: 9px;
-                            border-radius: 10px;
-                            background-color: rgb(255, 255, 255);
-                            // position: absolute;
-                            // left: 0px;
+                        .dynamicListButton_texts{
+                            display: flex;
+                            // justify-content: center;
+                            align-items: center;
+                            .point{
+                                margin-right: 7px;
+                                width: 9px;
+                                height: 9px;
+                                border-radius: 10px;
+                                background-color: rgb(255, 255, 255);
+                                // position: absolute;
+                                // left: 0px;
+                            }
                         }
+
                     }
                 }
 
