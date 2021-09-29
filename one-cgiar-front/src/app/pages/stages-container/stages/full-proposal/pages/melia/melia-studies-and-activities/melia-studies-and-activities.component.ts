@@ -22,7 +22,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    public _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {

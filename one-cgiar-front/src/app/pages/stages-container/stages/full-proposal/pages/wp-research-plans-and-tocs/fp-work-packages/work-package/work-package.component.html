@@ -49,8 +49,12 @@
     </form>
   
     <div class="row" *ngIf="!firstTab">
+      <div class="col-12">
+        <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
+        <br>
+      </div>
       <div class="col-sm-12">
-          <ibdc-simple-text [options]="{inputTitle:'The Science narrative:', value:'WP research questions, associated scientific methods and key outputs (narrative, or tabular format if preferred)'}"></ibdc-simple-text>
+          <ibdc-simple-text [options]="{inputTitle:'The Science narrative', value:'WP research questions, associated scientific methods and key outputs (narrative, or tabular format if preferred)'}"></ibdc-simple-text>
       </div>
       <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
           <img src="https://cdn.pixabay.com/photo/2017/05/14/03/45/gui-2311261_960_720.png" alt="" sizes="100%" srcset="">
