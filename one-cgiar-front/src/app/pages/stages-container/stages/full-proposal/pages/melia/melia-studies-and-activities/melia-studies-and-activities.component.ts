@@ -11,6 +11,7 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   filesList:any[]=[];
   filesSavedList = [];
+  message = '<strong style="margin-right: 25px;">Steps:</strong><ul style="margin-top: 7px;"><li>Download template</li><li>Choose File</li><li>Save</li></ul>'
   showForm = false;
   data = {
     id : null,
