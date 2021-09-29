@@ -50,12 +50,13 @@ export class MenuComponent implements OnInit {
     );
 
     this._dataControlService.menuChange$.subscribe(() => {
+      console.log("menuChange$");
       this.getMenu();
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
-   
+    this._dataControlService.menuChange$.emit();
 
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;

@@ -62,8 +62,8 @@ export class PartnersRequestComponent implements OnInit {
 
   getInstitutionsTypes(){
     this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
-      console.log('%cgetInstitutionsTypes','background: #222; color: #ffff00');
-      console.log(resp.response.regions);
+      // console.log('%cgetInstitutionsTypes','background: #222; color: #ffff00');
+      // console.log(resp.response.regions);
       this.institutionTypes = resp.response?.regions;
       this.loaded.institutionTypes = true;
     })
