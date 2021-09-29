@@ -24,7 +24,7 @@ export class ResultFrameworkComponent implements OnInit {
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
     private _dataValidatorsService:DataValidatorsService,
-    private _dataControlService:DataControlService
+    public _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {

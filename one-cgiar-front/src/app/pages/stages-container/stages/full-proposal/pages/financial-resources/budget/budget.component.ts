@@ -24,7 +24,7 @@ export class BudgetComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    public _dataControlService:DataControlService
   ) { 
     this.sectionForm = new FormGroup({
       detailed_budget: new FormControl(null),
