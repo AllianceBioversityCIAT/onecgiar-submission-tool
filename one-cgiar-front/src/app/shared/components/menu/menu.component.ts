@@ -55,7 +55,7 @@ export class MenuComponent implements OnInit {
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
-    this._dataControlService.menuChange$.emit();
+   
 
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
@@ -68,15 +68,17 @@ export class MenuComponent implements OnInit {
   getImpacAreasList(){
     console.log("getImpacAreasList");
     this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+      
       // console.log(impacAreas.response.impactAreasRequested);
       this.impacAreasList = impacAreas.response.impactAreasRequested;
-      
+      console.log(this.impacAreasList);
     },(err) => {
       console.log(err);
 
     },()=>{
       console.log("call");
-          this._dataControlService.validateMenu$.emit();
+          this._dataControlService.menuChange$.emit();
+          // this._dataControlService.validateMenu$.emit();
     })
   }
 
@@ -163,7 +165,7 @@ export class MenuComponent implements OnInit {
               // body = item;
               body = impactArea;
               body.showName = body.name;
-              body.frontRoute = 'impact-areas/impact-area/';
+              body.frontRoute = '/impact-areas/impact-area/';
               body.subSectionName='impact-area';
               body.sort = 'id';
               impactStatementsList.push(body)
@@ -172,9 +174,11 @@ export class MenuComponent implements OnInit {
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
             this._dataControlService.pobMaped = true;
-
+            console.log(pobList);
+            console.log(impactStatementsList);
+            this._dataControlService.validateMenu$.emit();
         }
-        // this._dataControlService.validateMenu$.emit();
+       
       });
   }
 
