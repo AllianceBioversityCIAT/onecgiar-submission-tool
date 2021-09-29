@@ -53,6 +53,7 @@ import { ChangePasswordComponent } from './shared/components/login/change-passwo
 import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
 import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 // import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 // import {InputTextModule} from 'primeng/inputtext';
 import { TawkToModule } from './pages/stages-container/stages/shared/components/tawk-to/tawk-to.module';
@@ -92,6 +93,7 @@ import { TawkToModule } from './pages/stages-container/stages/shared/components/
     DevPanelComponent,
     ChangePasswordComponent,
     ProjectionTimeFrameComponent,
+    TawkToComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
