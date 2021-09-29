@@ -80,7 +80,7 @@ export class ImpactAreaIsComponent implements OnInit {
     this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
       
       this.institutionsTypes = resp.response.regions;
-      console.log(this.institutionsTypes);
+      // console.log(this.institutionsTypes);
     })
   }
 
@@ -110,8 +110,12 @@ export class ImpactAreaIsComponent implements OnInit {
         
         // select current wp
         if (pobIaID != -1) {
-          allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
-          let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
+          console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
+          if (allImpactAreas.find((IA) => IA.id == pobIaID)) {
+            allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
+            let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
+          }
+
           // this.pobImpactAreaForm.controls['impact_area_name'].setValue(sectionFinded.showName);
         }
 
@@ -119,9 +123,22 @@ export class ImpactAreaIsComponent implements OnInit {
 
   saveSection(){
     let body = this.sectionForm.value;
-    body.partners = this.savedList;
+    
     console.log(this.sectionForm.value);
     console.log(this.savedList);
+    console.log(this.institutionsTypesSavedList);
+    this.institutionsTypesSavedList.map(item=>{
+      
+      // item.institutionType = item.name;
+      item.id = null;
+      item.impact_strategies_id = this.sectionForm.value.id;
+      item.institutionTypeId = item.code ;
+      item.name = null;
+      item.code = null;
+      this.savedList.push(item)
+    })
+    body.partners = this.savedList;
+    console.log(body);
     this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);

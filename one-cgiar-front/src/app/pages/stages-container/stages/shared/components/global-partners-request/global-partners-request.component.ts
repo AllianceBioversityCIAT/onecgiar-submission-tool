@@ -33,12 +33,25 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.mapInstitutionsTypes();
     // console.log(this.institutions);
     this.institutions.map(item=>{
-      item.type_id = 1000;
+      // item.type_id = 1000;
       item.id = null;
       item.tag_id = 0;
     })
+  }
+
+  mapInstitutionsTypes(){
+    // console.log(this.institutions);
+    this.institutionsTypes.map(item=>{
+      item.institutionType = item.name;
+      // item.
+      // impact_strategies_id
+      // institutionType
+      // institutionTypeId
+    })
+    // console.log(this.institutionsTypes);
   }
 
   showDialog() {
@@ -72,12 +85,12 @@ export class GlobalPartnersRequestComponent implements OnInit {
 }
 
   onSelectOption(option:any){
-    console.log(this.savedList);
-    console.log(option);
+    // console.log(this.savedList);
+    // console.log(option);
     // encontrar en lista de guardados la opcion seleccionada
     let itemFinded:any = this.savedList.find((savedItem:any)=>savedItem.code == option.code);
     let itemFindedIndex = this.savedList.findIndex((savedItem:any)=>savedItem.code== option.code);
-    console.log(itemFinded);
+    // console.log(itemFinded);
     // toggle de seleccion (quitar / poner)
     // Eliminado logico o eliminar de elementos de un array que no están en la bd
     option.selected = false;
@@ -95,7 +108,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
         
       }
     
-    console.log(option);
+    // console.log(option);
   }
 
 }
