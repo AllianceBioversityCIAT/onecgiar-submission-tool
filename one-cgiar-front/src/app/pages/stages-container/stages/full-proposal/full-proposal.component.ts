@@ -44,9 +44,21 @@ export class FullProposalComponent implements OnInit {
         let subSectionsToMap = resp.response[key].subSections;
         if (subSectionsToMap) 
         subSectionsToMap.map(item=>{
-          if ( result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId)) {
-            result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId).fieldsCompleted = item.validation
-     
+
+          let menuSubsections= result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId);
+          if (menuSubsections ) {
+            menuSubsections.fieldsCompleted = item.validation
+          }
+
+          if (item.hasOwnProperty('dinamicList')) {
+            item.dinamicList.map(resp=>{
+              console.log(resp);
+              console.log(menuSubsections);
+              if ( menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id)) {
+                menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
+              }
+              
+            })
           }
           
         });
