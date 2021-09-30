@@ -39,7 +39,7 @@ export class CreateUsersComponent implements OnInit {
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
     body.roles=[4];
-    body.initiativeId = this._initiativesSvc.initvStgId;
+    body.initiativeId = this._initiativesSvc.initiative.id;
     this._initiativesSvc.createUser(body).subscribe(resp=>{
       console.log("******************** Create user ********************");
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
