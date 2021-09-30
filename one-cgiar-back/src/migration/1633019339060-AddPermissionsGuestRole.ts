@@ -69,6 +69,34 @@ export class AddPermissionsGuestRole1633019339060 implements MigrationInterface 
                 action: 'update:Any',
                 attributes: '*',
                 roles: [guest]
+            },
+            {
+                name: 'read.melia.guest',
+                resource: 'melia',
+                action: 'read:Any',
+                attributes: '*',
+                roles: [guest]
+            },
+            {
+                name: 'update.melia.guest',
+                resource: 'melia',
+                action: 'update:Any',
+                attributes: '*',
+                roles: [guest]
+            },
+            {
+                name: 'read.strategies.guest',
+                resource: 'strategies',
+                action: 'read:Any',
+                attributes: '*',
+                roles: [guest]
+            },
+            {
+                name: 'update.strategies.guest',
+                resource: 'strategies',
+                action: 'update:Any',
+                attributes: '*',
+                roles: [guest]
             }, {
                 name: 'update.packages.guest',
                 resource: 'packages',
