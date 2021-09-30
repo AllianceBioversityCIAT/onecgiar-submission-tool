@@ -9,7 +9,7 @@ import { ResponseHandler } from '../handlers/Response';
 import { WorkPackages } from '../entity/WorkPackages';
 import { ProjectionBenefits } from '../entity/ProjectionBenefits';
 import { Dimensions } from '../entity/Dimensions';
-import { toInteger } from 'lodash';
+
 
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
@@ -153,6 +153,24 @@ export async function getWorkPackage(req: Request, res: Response) {
     }
 
 
+
+}
+
+
+export async function getAllWorkPackages(req: Request, res: Response) {
+
+    try {
+
+        // create new full proposal object
+        const fullPposal = new ProposalHandler();
+
+        // get ALL workpackage from porposal
+        const workpackage = await fullPposal.requestAllWorkPackages();
+
+        res.json(new ResponseHandler('Full Proposal: All Work Package.', { workpackage }));
+    } catch (error) {
+        return res.status(error.httpCode).json(error);
+    }
 
 }
 
@@ -316,8 +334,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // projection benefits section data
-    const { projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name,
-        notes, depth_scale_id, probability_id, impact_area_active, active, dimensions } = req.body;
+    const { projectionBenefitsId, impactAreaId, impactAreaName, impactAreaIndicator, impactAreaIndicatorName,
+        notes, depthScaleId, probabilityID, impact_area_active, active, dimensions } = req.body;
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -336,8 +354,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name, notes,
-            depth_scale_id, probability_id, impact_area_active, active, dimensions);
+        const projectionBenefits = await fullPposal.upsertProjectionBenefits(projectionBenefitsId, impactAreaId, impactAreaName, impactAreaIndicator, impactAreaIndicatorName,
+            notes, depthScaleId, probabilityID, impact_area_active, active, dimensions);
 
         res.json(new ResponseHandler('Full Proposal: Patch Projection of benefits.', { projectionBenefits }));
 
@@ -435,7 +453,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
     const { initiativeId } = req.params;
 
     // impact strategies section data
-    const { impact_strategies_id, active, challenge_priorization, research_questions,
+    const { id, active, challenge_priorization, research_questions,
         component_work_package, performance_results, human_capacity, impact_area_id,
         impact_area_name, partners } = req.body;
 
@@ -456,7 +474,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const impactStrategies = await fullPposal.upsertImpactStrategies(impact_strategies_id, active, challenge_priorization, research_questions,
+        const impactStrategies = await fullPposal.upsertImpactStrategies(id, active, challenge_priorization, research_questions,
             component_work_package, performance_results, human_capacity, impact_area_id,
             impact_area_name, partners);
 
@@ -508,12 +526,18 @@ export async function getImpactStrategies(req: Request, res: Response) {
 }
 
 
+/**
+ * PATCH Melia and files
+ * @param req 
+ * @param res {melia}
+ * @returns melia
+ */
 export async function patchMeliaAndFiles(req: Request, res: Response) {
 
-    const { initiativeId } = req.params;
+    const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { meliaId, melia_plan, meliaActive, section, updateFiles } = JSON.parse(req.body.data);
+    const { id, melia_plan, active, section, updateFiles } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -527,7 +551,6 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
         // get intiative by stage : proposal
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
         // if not intitiative by stage, throw error
         if (initvStg == null) {
             throw new BaseError('Patch Patch melia: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
@@ -535,7 +558,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(meliaId, melia_plan, meliaActive, section, files, updateFiles);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 
@@ -546,11 +569,16 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET Melia and files data
+ * @param req 
+ * @param res {meliaData}
+ * @returns meliaData
+ */
 export async function getMeliaAndFiles(req: Request, res: Response) {
 
 
-    const { initiativeId,sectionName } = req.params;
+    const { initiativeId, sectionName } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
@@ -571,6 +599,398 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
         const meliaData = await fullPposal.requestMeliaFiles(sectionName);
 
         res.json(new ResponseHandler('Full Proposal: melia and files.', { meliaData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+/**
+ * PATCH manage plan risk and files
+ * @param req 
+ * @param res {managePlanRisk}
+ * @returns managePlanRisk
+ */
+export async function patchManagePlanAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, ubication } = req.params;
+
+    //melia section data
+    const { id, management_plan, active, section, updateFiles } = JSON.parse(req.body.data);
+
+    //melia section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch management plan and risk: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const managePlanRisk = await fullPposal.upsertManagePlanAndFiles(initiativeId, ubication, stage, id, management_plan, active, section, files, updateFiles);
+
+        res.json(new ResponseHandler('Full Proposal: Patch management plan and risk.', { managePlanRisk, files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * GET manage plan risk and files data
+ * @param req 
+ * @param res {managePlanData}
+ * @returns managePlanData
+ */
+export async function getManagePlanAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read manage plan risk and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const managePlanData = await fullPposal.requestManagePlanFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal: manage plan risk  and files.', { managePlanData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+
+/**
+ * PATCH Human Resources and Files
+ * @param req 
+ * @param res {humanResources}
+ * @returns humanResources
+ */
+export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, ubication } = req.params;
+
+    //melia section data
+    const { id, gender_diversity_inclusion, capacity_development, active, section, updateFiles } = JSON.parse(req.body.data);
+
+    //melia section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch Patch human resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const humanResources = await fullPposal.upsertHumanResourcesAndFiles(initiativeId, ubication, stage, id, gender_diversity_inclusion, capacity_development,
+            active, section, files, updateFiles);
+
+        res.json(new ResponseHandler('Full Proposal: Patch human resources.', { humanResources, files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * GET Human Resources Data
+ * @param req 
+ * @param res {humanResourcesData}
+ * @returns humanResourcesData
+ */
+export async function getHumanResources(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read human resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const humanResourcesData = await fullPposal.requestHumanResourcesFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal:human resources and files.', { humanResourcesData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+/**
+ * PATCH Financial Resources and Files
+ * @param req 
+ * @param res {financialResources}
+ * @returns financialResources
+ */
+export async function patchFinancialResourcesAndFiles(req: Request, res: Response) {
+
+    const { initiativeId, ubication } = req.params;
+
+    //financial resources section data
+    const { id, detailed_budget, active, section, updateFiles } = JSON.parse(req.body.data);
+
+    //financial resources  section files
+    const files = req['files'];
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch financial resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
+            active, section, files, updateFiles);
+
+        res.json(new ResponseHandler('Full Proposal: Patch financial resources.', { financialResources, files }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * GET Financial Resources
+ * @param req 
+ * @param res {financialResourcesData}
+ * @returns financialResourcesData
+ */
+export async function getFinancialResources(req: Request, res: Response) {
+
+    const { initiativeId, sectionName } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read financial resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const financialResourcesData = await fullPposal.requestFinancialResourcesFiles(sectionName);
+
+        res.json(new ResponseHandler('Full Proposal:financial resources and files.', { financialResourcesData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+
+
+export async function patchPolicyComplianceOversight(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+    //Policy compliance Oversight section data
+    const { id, research_governance_policy, open_fair_data_policy, open_fair_data_details, active } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const policyComplianceOversight = await fullPposal.upsertPolicyComplianceOversight(id, research_governance_policy,
+            open_fair_data_policy, open_fair_data_details, active);
+
+        res.json(new ResponseHandler('Full Proposal: Patch policy compliance oversight.', { policyComplianceOversight }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getPolicyComplianceOversight(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const policyComplianceData = await fullPposal.requestPolicyComplianceOversight();
+
+        res.json(new ResponseHandler('Full Proposal:policy compliance oversight', { policyComplianceData }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}
+
+
+export async function patchInnovationPackages(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+
+    //Policy compliance Oversight section data
+    const { id, key_principles, active } = req.body;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Patch policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const innovationPackages = await fullPposal.upsertInnovationPackages(id, key_principles, active);
+
+        res.json(new ResponseHandler('Full Proposal: Innovation Packages.', { innovationPackages }));
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function getInnovationPackages(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const innovationPackagesData = await fullPposal.requestInnovationPackages();
+
+        res.json(new ResponseHandler('Full Proposal:Innovation Packages', { innovationPackagesData }));
 
 
     } catch (error) {

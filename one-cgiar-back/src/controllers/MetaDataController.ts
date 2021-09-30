@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { MetaDataHandler } from '../handlers/MetaDataHandler';
 import { ResponseHandler } from '../handlers/Response';
+import { getRepository } from 'typeorm';
+import { InitiativesByStages } from '../entity/InititativesByStages';
+import { Stages } from '../entity/Stages';
+import { BaseError } from '../handlers/BaseError';
 
 /**
  * METADATA
@@ -62,19 +66,71 @@ export async function getValidations(req: Request, res: Response) {
     // get initiative by stage id from client
     const { initiativeId, stageId } = req.params;
 
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
     try {
 
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { id: stageId } });
+
+        // get intiative by stage
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null || initvStg == undefined) {
+            throw new BaseError('Validations: Error', 400, `Validations not found in stage: ${stage.description}`, false);
+        }
+
+
         // create new Meta Data object
-        const metaData = new MetaDataHandler();
+        const metaData = new MetaDataHandler(initvStg.id.toString());
 
         // Get validations for general information
-        let validationGI = await metaData.validationGI(initiativeId, stageId);
+        let generalInformation = await metaData.validationGI();
 
-        // Convert boolean ('0' and '1' to number)
-        validationGI[0].ValidateGI = parseInt(validationGI[0].ValidateGI);
+        // Get validations for general information
 
-        res.json(new ResponseHandler('Validations General Information:Menu', { validationGI }));
+        let innovationPackages = await metaData.validationInnovationPackages();
 
+        // Get validations for MELIA
+
+        let melia = await metaData.validationMelia();
+
+        // Get validations for Manage Plan
+
+        let managePlan = await metaData.validationManagementPlan();
+
+        // Get validations human resources
+
+        let humanResources = await metaData.validationHumanResources();
+
+        // Get validations financial resources
+
+        let financialResources = await metaData.validationFinancialResources();
+
+        // Get validations financial resources
+
+        let policyCompliance = await metaData.validationPolicyCompliance();
+
+        // Get validations impact strategies
+
+        let impactStrategies = await metaData.validationImpactStrategies();
+
+        // Get validations Work packages
+
+        let workPackages = await metaData.validationWorkPackages();
+
+         // Get validations Context
+
+         let conext = await metaData.validationContext();
+
+        /*******************************************/
+
+        res.json(new ResponseHandler('Green Checks:Menu', {
+            generalInformation, innovationPackages, melia, managePlan, humanResources,
+            financialResources, policyCompliance, impactStrategies,workPackages,conext
+        }));
 
     } catch (error) {
 

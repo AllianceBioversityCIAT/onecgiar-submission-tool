@@ -10,18 +10,25 @@ import { Observable } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { InteractionsService } from '../services/interactions.service';
 import { environment } from '../../../environments/environment';
+import { DataControlService } from '../services/data-control.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
 
   constructor(
     private authSvc: AuthService,
-    private _interactions: InteractionsService
+    private _interactions: InteractionsService,
+    private _dataControlService:DataControlService
     ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
     // console.log(request.url);
+    if (request.method == 'PATCH') {
+      this._dataControlService.validateMenu$.emit();
+      this._dataControlService.menuChange$.emit();
+    }
+
     if (request.url.indexOf('/apiClarisa/') != -1 || request.url.indexOf('clarisa.cgiar.org') != -1){
       return next.handle(this.setHeadersClarisa(request));
     }else{

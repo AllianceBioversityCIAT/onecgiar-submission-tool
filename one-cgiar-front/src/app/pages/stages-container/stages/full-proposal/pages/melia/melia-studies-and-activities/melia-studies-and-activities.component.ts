@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -12,7 +13,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   filesSavedList = [];
   showForm = false;
   data = {
-    meliaId : null,
+    id : null,
     // melia_plan : "algo no tan implicito",
     active : true,
     section : "melia",
@@ -20,7 +21,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   };
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
@@ -29,13 +31,13 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   getMelia(){
     this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let melia = resp.response.meliaData;
       this.filesSavedList = melia?.files?melia.files:[];
-      this.data.meliaId = melia?.id;
-      console.log(melia);
-      console.log(this.filesSavedList);
+      this.data.id = melia?.id;
+      // console.log(melia);
+      // console.log(this.filesSavedList);
     },
     err=>{console.log(err);}
     ,()=>{
@@ -65,12 +67,12 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       } 
     }
 
-    this.data.meliaId = this.data.meliaId == undefined ? null : this.data.meliaId;
+    this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
-      console.log(resp);
+      // console.log(resp);
       this.filesSavedList.length || this.filesList.length?
       this._interactionsService.successMessage('Melia studies and activities has been saved'):
       this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')

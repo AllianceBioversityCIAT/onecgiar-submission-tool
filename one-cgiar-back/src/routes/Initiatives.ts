@@ -34,6 +34,7 @@ const router = Router();
  *                 "initvStgId": 35,
  *                 "id": 2,
  *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
+ *                 "oficial_code":"INIT-2"
  *                 "status": "Editing",
  *                 "action_area_id": "1",
  *                 "action_area_description": "Systems Transformation",
@@ -132,6 +133,8 @@ router.post("/", [checkJwt, checkRole('initiatives', 'createOwn')], initiatives.
  */
 
 router.get("/:initiativeId([0-9]+)/users/", [checkJwt], checkRole('initiatives', 'readOwn'), initiatives.getUsersByInitiative);
+
+router.get("/get-initvStgId/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], initiatives.getInitvStgId);
 
 
 
@@ -621,8 +624,7 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
  */
 router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
 
-//get projected probabilities
-router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProbabilities);
+
 
 
 /**
@@ -632,9 +634,6 @@ router.get("/projected-probabilities/", [checkJwt], initiatives.getProjectedProb
 
 // replicate to next stage
 router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
-
-
-
 
 /**
  * 
@@ -660,6 +659,10 @@ router.post("/institutions/institution-requests", [checkJwt], clarisa.requestCla
 router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 //get Impact areas inticators
 router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
+//get Impact areas inticators
+router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefits);
+//get projected probabilities
+router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
 
 
 export default router;

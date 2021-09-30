@@ -8,7 +8,7 @@ const mkdirp = require('mkdirp')
 
 // const pth = require('path').resolve(process.cwd(), '../');
 import pth from 'path';
-const parentD = `${pth}/uploads/`;
+const parentD = `./public/uploads`;
 
 
 
@@ -18,6 +18,8 @@ export const createFolder = async (dir: string) => {
             await mkdirp(dir)
             // shell.mkdir('-p', dir+'/');
         }
+
+        return dir
     } catch (error) {
         console.log(error)
     }
@@ -48,11 +50,13 @@ export const startMulter = async (parentpath?: string) => {
 
 
 var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './public/uploads')
+    destination: async (req, file, cb) => {
+        const { initiativeId, ubication, stageId } = req.params;
+        let finalPath = await createFolder(parentD + '/INIT-' + initiativeId + '/' + ubication + '/' + 'stage-' + stageId);
+        cb(null, finalPath)
     },
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + pth.extname(file.originalname))
+        cb(null, Date.now() + '-' + file.originalname)
     }
 });
 

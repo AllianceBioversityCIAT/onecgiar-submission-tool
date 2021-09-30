@@ -16,6 +16,7 @@ export class InitiativeHandler {
         initvStg.id AS initvStgId,
         initiative.id AS id,
         initiative.name AS name,
+        initiative.official_code,
         IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
@@ -80,7 +81,7 @@ export class InitiativeHandler {
                 users.email AS email,
                 (SELECT description FROM roles WHERE id = initvUsr.roleId) AS role_name,
                 (SELECT acronym FROM roles WHERE id = initvUsr.roleId) AS role_acronym,
-                roleId
+                roleId,users.id as userId
             FROM
                 initiatives_by_users initvUsr
             LEFT JOIN users users ON users.id = initvUsr.userId

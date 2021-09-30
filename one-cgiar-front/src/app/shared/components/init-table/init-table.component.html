@@ -20,16 +20,16 @@
         <table mat-table [dataSource]="dataSource" matSort>
 
             <!-- ID Column -->
-            <ng-container matColumnDef="id" >
+            <ng-container matColumnDef="official_code" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                <td mat-cell *matCellDef="let row" style="min-width: 100px;"> {{row.official_code}} </td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="initiativeName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Initiative Name </th>
                 <td mat-cell *matCellDef="let row" class="inititiative_title" (click)="initiativesSvc.initvStgId = row.initvStgId">
-                    {{row.name}}
+                    <a class="initiative_link" routerLink="/initiatives/{{row.description ==  'Stage 2: Concept' ? row.initvStgId : row.id}}/stages/{{parseStageLink(row.description)}}">{{row.name}}</a>
                 </td>
             </ng-container>
 

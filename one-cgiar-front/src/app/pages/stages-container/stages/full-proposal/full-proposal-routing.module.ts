@@ -22,6 +22,14 @@ const routes: Routes = [
         loadChildren: () => import('./pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
       },
       {
+        path: 'innovation-packages-and-srp',
+        loadChildren: () => import('./pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
+      },
+      {
+        path: 'impact-statements',
+        loadChildren: () => import('./pages/impact-statements/impact-statements.module').then(mod => mod.ImpactStatementsModule),
+      },
+      {
         path: 'context',
         loadChildren: () => import('./pages/context/context.module').then(mod => mod.ContextModule),
       },
@@ -44,6 +52,10 @@ const routes: Routes = [
       {
         path: 'financial-resources',
         loadChildren: () => import('./pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+      },
+      {
+        path: 'policy-compliance-and-oversight',
+        loadChildren: () => import('./pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
       },
     ]
   }

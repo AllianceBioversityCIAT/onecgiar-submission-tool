@@ -1,0 +1,77 @@
+<div class="all">
+    <section-sub-title name="Partners"></section-sub-title>
+    <div class="row">
+        <div class="col-12">
+            <p-dialog header="Title" [(visible)]="display" [modal]="true" >
+                <app-partners-request></app-partners-request>
+            </p-dialog>
+        </div>
+        <div class="col-12">
+            <div class="local_container">
+                <ibdc-select-multiple [options]="{
+                    inputTitle:'Select partners',
+                    selectList: this.institutions,
+                    selectItemName:'acronym_name',
+                    selectItemId:'code',
+                    hideSavedList: true,
+                    frontendSearchAttribute:'acronym_name',
+                    readOnlyVariable: this._initiativesService.initiative.readonly,
+                    savedList:{
+                        list:this.savedList,
+                        selectItemId:'code',
+                        selectItemName:'acronym_name',
+                        idToSave:'id',
+                        labelName:'Institutions'
+                    }
+                   }"></ibdc-select-multiple>
+                <a (click)="showDialog()" class="partner_request_text">can't find an institution, create a request</a>
+            </div>
+           
+        </div>
+        <div class="col-12">
+            <div class="row">
+
+                <div class="col-6">
+                    <div class="all_parners_saved">
+                        <div class="partner_selected_container"*ngFor="let item of this.savedList" [hidden]="item.active === false">
+                            <div class="partner_name">{{item.name}}</div>
+                            <div class="buttons_changing">
+                                <div class="button_changing" *ngFor="let button_item of button_changing" [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" (click)="changeTagId(item,button_item.id)">
+                                    {{button_item.name}}
+                                </div>
+                            </div>
+                            <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="col-6">
+                    <ibdc-select-multiple [options]="{
+                        inputTitle:'Select institutions types',
+                        selectList: this.institutionsTypes,
+                        selectItemName:'name',
+                        selectItemId:'code',
+                        hideSavedList: true,
+                        frontendSearchAttribute:'name',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.institutionsTypesSavedList,
+                            selectItemId:'code',
+                            selectItemName:'name',
+                            idToSave:'id',
+                            labelName:'Institutions'
+                        }
+                       }"></ibdc-select-multiple>
+                    <div class="institution_types_container">
+                        <p *ngFor="let item of countDuplicates(this.savedList,'institutionType')">{{item.institutionType}} - ({{item.cont}})</p>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+        <div class="col-12">
+            <br>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
     <div  class="menu">
          <!-- stages list -->
-        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;">
+        <div  class="stage" *ngFor="let stage of this._dataControlService.userMenu;" [hidden]="stage.stageId == 2">
             <div class="stage-title" [ngClass]="{'activeSection': activeClassByRoute([stage.description])}" (click)="toggleExpand(sectionsList)">
                 <span>{{stage.description}}</span>
             </div>
@@ -13,7 +13,7 @@
                         <div class="number">{{i+1}}</div>
                         <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}" >{{section.display_name}}</span>
                         <div class="status_icons">
-                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">check_circle</span>
+                            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="section.visible">verified</span>
                             <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                         </div>
 
@@ -24,15 +24,18 @@
                             <div class="sub-section {{subSection.dynamicList?'sub-section-with-dynamicList':''}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                                 <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
-                                    <span style="margin-right: 8px; color: #d3d3d3;" class="material-icons-outlined material-icons" *ngIf="subSection.visible">check_circle</span>
+                                    <span style="margin-right: 8px;" [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="subSection.visible && (subSection.subSectionId != 12)">check_circle</span>
                                     <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                                 </div>
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
                                 <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
-                                    <div class="point"></div>
-                                    <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
-                                        
+                                    <div class="dynamicListButton_texts">
+                                      <div class="point"></div>
+                                      <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                    </div>
+                                    <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
+
                                 </div>
 
                             </div>

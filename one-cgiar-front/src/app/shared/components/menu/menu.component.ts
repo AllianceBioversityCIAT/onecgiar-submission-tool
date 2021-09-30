@@ -29,6 +29,7 @@ export class MenuComponent implements OnInit {
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   currentStageName = '';
+  impacAreasList = []
 
   // stageUrl;
   constructor(
@@ -48,17 +49,38 @@ export class MenuComponent implements OnInit {
       }
     );
 
-    this.getMenu();
-
     this._dataControlService.menuChange$.subscribe(() => {
+      console.log("menuChange$");
+      this.getMenu();
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
     this._dataControlService.menuChange$.emit();
+
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
     });
+
+    this.getImpacAreasList();
+
+  }
+
+  getImpacAreasList(){
+    // console.log("getImpacAreasList");
+    this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+      
+      // console.log(impacAreas.response.impactAreasRequested);
+      this.impacAreasList = impacAreas.response.impactAreasRequested;
+      // console.log(this.impacAreasList);
+    },(err) => {
+      console.log(err);
+
+    },()=>{
+      // console.log("call");
+          this._dataControlService.menuChange$.emit();
+          // this._dataControlService.validateMenu$.emit();
+    })
   }
 
   sortAlphabetically(list) {
@@ -92,6 +114,7 @@ export class MenuComponent implements OnInit {
         if (userMenuResp.response.stages.length > 1) {
 
           this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+                // console.log(wpsResp);
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
                   wpResp.frontRoute = '/work-packages/work-package/';
@@ -106,21 +129,69 @@ export class MenuComponent implements OnInit {
                 this._dataControlService.wpMaped = true;
               });
 
-          this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-            // console.log(impacAreas.response.impactAreasRequested);
-            impacAreas.response.impactAreasRequested.map(item=>{
-              item.showName = item.name;
-              item.frontRoute = '/projection-of-benefits/impact-area/';
-              item.subSectionName='impact-area';
-              item.sort = 'id';
+
+
+
+            let pobList = [];
+            let impactStatementsList = [];
+
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/projection-of-benefits/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              pobList.push(body)
+
             })
-            this.mapDataInMenu(3, 1, 8, impacAreas.response.impactAreasRequested);
-            this._dataControlService.pobMaped = true;
-          },(err) => {
-            console.log(err);
-            this._dataControlService.pobMaped = true;
-          })
+            this.mapDataInMenu(3, 1, 8, pobList);
+           
+
+            // var arr = [1, 2, 3, 4, 5];
+
+            // var results: number[] = await Promise.all(arr.map(async (item): Promise<number> => {
+            //     await callAsynchronousOperation(item);
+            //     return item + 1;
+            // }));
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+             
+              // body = item;
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/impact-areas/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              impactStatementsList.push(body)
+            })
+
+            this.mapDataInMenu(3, 7, 16, impactStatementsList);
+            
+            console.log(pobList);
+            if (this.impacAreasList.length) {
+              this._dataControlService.pobMaped = true;
+              this._dataControlService.impactStatementsMaped = true;
+            }
+           
+            // console.log(pobList);
+            // console.log(impactStatementsList);
+            this._dataControlService.validateMenu$.emit();
         }
+       
       });
   }
 
@@ -145,7 +216,7 @@ export class MenuComponent implements OnInit {
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-
+    // console.log(active, stage, section, isSection, subsection)
     if (active) {
       if (isSection) {
         if (!subsection.length) {

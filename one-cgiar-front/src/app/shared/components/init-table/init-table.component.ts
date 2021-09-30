@@ -22,7 +22,7 @@ export interface TableData {
 export class InitTableComponent implements AfterViewInit {
   @Input() data: any;
 
-  displayedColumns: string[] = ['id', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
+  displayedColumns: string[] = ['official_code', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
   dataSource: MatTableDataSource<TableData>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -31,7 +31,7 @@ export class InitTableComponent implements AfterViewInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   constructor(public dialog: MatDialog, public initiativesSvc: InitiativesService) {

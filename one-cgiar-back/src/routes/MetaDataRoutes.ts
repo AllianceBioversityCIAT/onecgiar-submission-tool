@@ -84,7 +84,7 @@ router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'r
  *     HTTP/1.1 200 OK
  * {
  *     "response": {
- *         "validationGI": [
+ *         "innovationPackages": [
  *             {
  *                 "sectionId": 2,
  *                 "description": "general-information",

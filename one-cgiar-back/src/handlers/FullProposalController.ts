@@ -4,10 +4,15 @@ import { Context } from "../entity/Context";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
+import { FinancialResources } from "../entity/FinancialResources";
 import { GeneralInformation } from "../entity/GeneralInformation";
+import { HumanResources } from "../entity/HumanResources";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
+import { InnovationPackages } from "../entity/InnovationPackages";
+import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
+import { PolicyComplianceOrversight } from "../entity/PolicyComplianceOversight";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
 import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
@@ -161,17 +166,17 @@ export class ProposalHandler extends InitiativeStageHandler {
                         name IS NULL
                         OR name = ''
                         OR pathway_content IS NULL
-                        OR pathway_content = '',
-                        true,
-                        false
-                    ) AS validateWP,
-                    IF (
-                        ( SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
-                        AND 
-                        (  SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
-                        true,
-                        false
-                    ) AS validateGeographicScope
+                        OR pathway_content = ''
+                        OR acronym IS NULL
+                        OR acronym = ''
+                        OR (LENGTH(acronym) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(acronym,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 3
+                        OR (LENGTH(name) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(name,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 30
+                        OR (LENGTH(pathway_content) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(pathway_content,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 100
+                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        false,
+                        true
+                    ) AS validateWP
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id}
                     AND wp.active = 1                    
@@ -180,6 +185,15 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
             var workPackages = await this.queryRunner.query(WPquery);
+
+            workPackages.map(wp => {
+
+                wp.validateWP = parseInt(wp.validateWP)
+            }
+
+            )
+
+
             const regions = await this.queryRunner.query(REquery);
             const countries = await this.queryRunner.query(COquery);
 
@@ -190,13 +204,13 @@ export class ProposalHandler extends InitiativeStageHandler {
             } else {
 
                 // Map Initiatives
-                workPackages.map(geo => {
-                    geo['regions'] = regions.filter(wp => {
-                        return (wp.wrkPkgId === geo.id)
+                workPackages.map(wp => {
+                    wp['regions'] = regions.filter(reg => {
+                        return (reg.wrkPkgId === wp.id)
                     })
 
-                    geo['countries'] = countries.filter(wp => {
-                        return (wp.wrkPkgId === geo.id)
+                    wp['countries'] = countries.filter(cou => {
+                        return (cou.wrkPkgId === wp.id)
                     })
 
                 })
@@ -266,6 +280,72 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             throw new BaseError('Get workpackage', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestAllWorkPackages() {
+
+        // const initvStgId: string = this.initvStgId_;
+        // const initvStg = await this.initvStage
+        const wpRepo = getRepository(WorkPackages);
+
+        try {
+
+            let COquery = (
+                `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE active = 1
+              GROUP BY id,country_id`
+            ),
+                REquery = (
+                    `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE active = 1
+                GROUP BY id,region_id
+                `
+                ), WPquery = (
+                    `
+                    SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+                      FROM work_packages wp
+                      JOIN initiatives_by_stages init
+                     WHERE wp.initvStgId = init.id
+                       AND wp.active = 1
+                    `
+                )
+
+            // var workPackages = await wpRepo.find({ where: { active: 1 } });
+            var workPackages = await this.queryRunner.query(WPquery);
+            const regions = await this.queryRunner.query(REquery);
+            const countries = await this.queryRunner.query(COquery);
+
+            if (workPackages == undefined || workPackages.length == 0) {
+
+                workPackages = []
+
+            } else {
+
+                // Map Initiatives
+                workPackages.map(wp => {
+                    wp['regions'] = regions.filter(reg => {
+                        return (reg.wrkPkgId === wp.id)
+                    })
+
+                    wp['countries'] = countries.filter(cou => {
+                        return (cou.wrkPkgId === wp.id)
+                    })
+
+                })
+            }
+
+            return workPackages
+
+        } catch (error) {
+
+            throw new BaseError('Get All work packages', 400, error.message, false)
 
         }
 
@@ -589,17 +669,17 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newDimensions.id = dim.id;
                     newDimensions.projectionId = upsertedPjectionBenefits.id;
-                    newDimensions.depthDescriptionId = dim.depthDescriptionId;
+                    newDimensions.depthDescriptionId = dim.descriptionID;
                     newDimensions.breadth_value = dim.breadth_value;
-                    newDimensions.active = dim.active ? dim.active : true;
+                    newDimensions.active = dim.active;
 
                     if (newDimensions.id !== null) {
 
-                        var savedDimensions = await dimensionsRepo.findOne(newDimensions.id);
+                        var savedDimensions: any = await dimensionsRepo.findOne(newDimensions.id);
 
                         dimensionsRepo.merge(
                             savedDimensions,
-                            dim
+                            newDimensions
                         );
 
                         upsertedDimensions = await dimensionsRepo.save(savedDimensions);
@@ -638,14 +718,17 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // retrieve general information
             const prjBenQuery = (` 
-            SELECT * 
+            SELECT  id,active,wrkPkgId,impact_area_indicator_id as impactAreaIndicator,
+            impact_area_id as impactAreaId, impact_area_indicator_name as impactAreaIndicatorName,
+            impact_area_name as impactAreaName,notes,created_at,updated_at,initvStgId,
+            depth_scale_id as depthScaleId,probability_id as probabilityID,impact_area_active
             FROM projection_benefits
            WHERE initvStgId = ${initvStg.id}
              AND active = 1;
             `),
                 dimensionsQuery = (
                     `
-                SELECT * 
+                SELECT id,projectionId,depthDescriptionId as descriptionID,breadth_value,active,created_at,updated_at
                 FROM dimensions
                WHERE projectionId in (SELECT id
                 FROM projection_benefits
@@ -690,7 +773,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             // retrieve general information
             const prjBenQuery = (` 
-                SELECT * 
+                SELECT  id,active,wrkPkgId,impact_area_indicator_id as impactAreaIndicator,
+                impact_area_id as impactAreaId, impact_area_indicator_name as impactAreaIndicatorName,
+                impact_area_name as impactAreaName,notes,created_at,updated_at,initvStgId,
+                depth_scale_id as depthScaleId,probability_id as probabilityID,impact_area_active
                 FROM projection_benefits
                WHERE initvStgId = ${initvStg.id}
                  AND impact_area_id = ${impactAreaId}
@@ -698,7 +784,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `),
                 dimensionsQuery = (
                     `
-                    SELECT * 
+                    SELECT id,projectionId,depthDescriptionId as descriptionID,breadth_value,active,created_at,updated_at
                     FROM dimensions
                    WHERE projectionId in (SELECT id
                     FROM projection_benefits
@@ -791,12 +877,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                     newPartners.id = par.id;
                     newPartners.impact_strategies_id = upsertedImpactStrategies.id;
-                    newPartners.institutions_id = par.institutions_id;
-                    newPartners.institutions_name = par.institutions_name;
-                    newPartners.tag_id = par.tag_id;
-                    newPartners.type_id = par.type_id;
-                    newPartners.type_name = par.type_name;
-                    newPartners.active = par.active ? par.active : true;
+                    newPartners.institutions_id = par.code;
+                    newPartners.institutions_name = par.name;
+                    newPartners.tag_id = par.tag_id ? par.tag_id : null;
+                    newPartners.type_id = par.institutionTypeId ? par.institutionTypeId : null;
+                    newPartners.type_name = par.institutionType;
+                    newPartners.active = par.active;
 
                     if (newPartners.id !== null) {
 
@@ -804,7 +890,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                         partnersRepo.merge(
                             savedPartners,
-                            par
+                            newPartners
                         );
 
                         upsertedPartners = await partnersRepo.save(savedPartners);
@@ -848,11 +934,15 @@ export class ProposalHandler extends InitiativeStageHandler {
             `),
                 partnersQuery = (
                     `
-                SELECT * 
-                FROM dimensions
-               WHERE projectionId in (SELECT id
-                FROM projection_benefits
-               WHERE initvStgId = ${initvStg.id})
+                SELECT id,impact_strategies_id,institutions_id as code,institutions_name as name,tag_id,type_id as institutionTypeId,
+                type_name as institutionType,active,created_at,updated_at
+                FROM partners
+               WHERE impact_strategies_id in (SELECT id
+                FROM impact_strategies
+               WHERE initvStgId = ${initvStg.id}
+               AND impact_area_id = ${impact_area_id}
+               AND active = 1
+               )
                  AND active = 1
                 `
                 )
@@ -868,7 +958,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return { impactStrategies };
+            return impactStrategies[0];
 
         } catch (error) {
 
@@ -879,9 +969,20 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-
-    async upsertMeliaAndFiles(meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
-
+    /**
+     * UPSERT MELIA and Files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param meliaId 
+     * @param melia_plan 
+     * @param meliaActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedMelia, upsertedFile }
+     */
+    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
 
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
@@ -903,8 +1004,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (host == 'http://localhost') {
 
                 host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-                
-            }else{
+
+            } else {
 
                 host = `${process.env.EXT_HOST}`;
             }
@@ -933,7 +1034,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 for (let index = 0; index < files.length; index++) {
                     const file = files[index];
 
-                    const urlDB = `${host}/${path}/${file.filename}`
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
                     newFiles.meliaId = upsertedMelia.id;
@@ -998,13 +1099,17 @@ export class ProposalHandler extends InitiativeStageHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Upsert Impact Strategies: Full proposal', 400, error.message, false)
+            throw new BaseError('Upsert melia: Full proposal', 400, error.message, false)
 
         }
 
     }
 
-
+    /**
+     * REQUEST MELIA
+     * @param sectionName 
+     * @returns {melia}
+     */
     async requestMeliaFiles(sectionName) {
 
         const initvStg = await this.setInitvStage();
@@ -1041,7 +1146,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             )
 
-            return melia[0] ;
+            return melia[0];
 
         } catch (error) {
 
@@ -1050,10 +1155,731 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         }
 
+    }
+
+    /**
+     * UPSERT Manage plan risk and files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param managePlanId 
+     * @param management_plan 
+     * @param managePlanActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedManagePlan, upsertedFile }
+     */
+    async upsertManagePlanAndFiles(initiativeId?, ubication?, stege?, managePlanId?, management_plan?, managePlanActive?, section?, files?, updateFiles?) {
+
+        const manageRepo = getRepository(ManagePlanRisk);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newManagePlan = new ManagePlanRisk();
+        var newFiles = new Files();
+        var upsertedManagePlan;
+        var upsertedFile;
+
+        newManagePlan.id = managePlanId;
+        newManagePlan.management_plan = management_plan;
+        newManagePlan.active = managePlanActive ? managePlanActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newManagePlan.id !== null) {
+
+                var savedManagePlan = await manageRepo.findOne(newManagePlan.id);
+
+                manageRepo.merge(
+                    savedManagePlan,
+                    newManagePlan
+                );
+
+                upsertedManagePlan = await manageRepo.save(savedManagePlan);
+
+            } else {
+
+                newManagePlan.initvStgId = initvStg.id;
+
+                upsertedManagePlan = await manageRepo.save(newManagePlan);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.manage_plan_risk_id = upsertedManagePlan.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.manage_plan_risk_id = updateFile.managePlanId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedManagePlan, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert management plan risk: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+    /**
+     * REQUEST Manage plan risk and files data 
+     * @param sectionName 
+     * @returns {managePlan}
+     */
+    async requestManagePlanFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const managePlanQuery = (` 
+            SELECT * 
+            FROM manage_plan_risk
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE manage_plan_risk_id in (SELECT id
+                    FROM manage_plan_risk
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const managePlan = await this.queryRunner.query(managePlanQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            managePlan.map(mel => {
+                mel['files'] = files.filter(f => {
+                    return (f.manage_plan_risk_id === mel.id)
+                })
+            }
+
+            )
+
+            return managePlan[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get manage plan risk and files: Full proposal', 400, error.message, false)
+
+        }
+
 
 
     }
 
+
+    /**
+     * UPSERT Human Resources and Files
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param humanResourcesId 
+     * @param gender_diversity_inclusion 
+     * @param capacity_development 
+     * @param humanResourcesActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedHumanResources, upsertedFile }
+     */
+
+    async upsertHumanResourcesAndFiles(initiativeId?, ubication?, stege?, humanResourcesId?, gender_diversity_inclusion?, capacity_development?,
+        humanResourcesActive?, section?, files?, updateFiles?) {
+
+
+        const humanResourcesRepo = getRepository(HumanResources);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newHumanResources = new HumanResources();
+        var newFiles = new Files();
+        var upsertedHumanResources;
+        var upsertedFile;
+
+        newHumanResources.id = humanResourcesId;
+        newHumanResources.gender_diversity_inclusion = gender_diversity_inclusion;
+        newHumanResources.capacity_development = capacity_development;
+        newHumanResources.active = humanResourcesActive ? humanResourcesActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newHumanResources.id !== null) {
+
+                var savedHumanResources = await humanResourcesRepo.findOne(newHumanResources.id);
+
+                humanResourcesRepo.merge(
+                    savedHumanResources,
+                    newHumanResources
+                );
+
+                upsertedHumanResources = await humanResourcesRepo.save(savedHumanResources);
+
+            } else {
+
+                newHumanResources.initvStgId = initvStg.id;
+
+                upsertedHumanResources = await humanResourcesRepo.save(newHumanResources);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.humanId = upsertedHumanResources.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.humanId = updateFile.humanResourcesId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedHumanResources, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert human Resources: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+    /**
+     * REQUEST Human Resources and files data
+     * @param sectionName 
+     * @returns {humanResources}
+     */
+    async requestHumanResourcesFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const humanResourcesQuery = (` 
+            SELECT * 
+            FROM human_resources
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE humanId in (SELECT id
+                    FROM human_resources
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const humanResources = await this.queryRunner.query(humanResourcesQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            humanResources.map(hr => {
+                hr['files'] = files.filter(f => {
+                    return (f.humanId === hr.id)
+                })
+            }
+
+            )
+
+            return humanResources[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get human resources and files: Full proposal', 400, error.message, false)
+
+        }
+
+
+
+    }
+
+    /**
+     * UPSERT Financial Resourches
+     * @param initiativeId 
+     * @param ubication 
+     * @param stege 
+     * @param financialResourcesId 
+     * @param detailed_budget 
+     * @param financialResourcesActive 
+     * @param section 
+     * @param files 
+     * @param updateFiles 
+     * @returns { upsertedFinancialResources, upsertedFile }
+     */
+    async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stege?, financialResourcesId?, detailed_budget?,
+        financialResourcesActive?, section?, files?, updateFiles?) {
+
+
+        const financialResourcesRepo = getRepository(FinancialResources);
+        const filesRepo = getRepository(Files);
+        const initvStg = await this.setInitvStage();
+        var host = `${process.env.EXT_HOST}`;
+        const path = 'uploads'
+
+        var newFinancialResources = new FinancialResources();
+        var newFiles = new Files();
+        var upsertedFinancialResources;
+        var upsertedFile;
+
+        newFinancialResources.id = financialResourcesId;
+        newFinancialResources.detailed_budget = detailed_budget;
+        newFinancialResources.active = financialResourcesActive ? financialResourcesActive : true;
+
+        try {
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
+            }
+
+            if (newFinancialResources.id !== null) {
+
+                var savedFinancialResources = await financialResourcesRepo.findOne(newFinancialResources.id);
+
+                financialResourcesRepo.merge(
+                    savedFinancialResources,
+                    newFinancialResources
+                );
+
+                upsertedFinancialResources = await financialResourcesRepo.save(savedFinancialResources);
+
+            } else {
+
+                newFinancialResources.initvStgId = initvStg.id;
+
+                upsertedFinancialResources = await financialResourcesRepo.save(newFinancialResources);
+
+            }
+
+            if (files) {
+
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    newFiles.id = null;
+                    newFiles.active = file.active ? file.active : true;
+                    newFiles.financial_resources_id = upsertedFinancialResources.id;
+                    newFiles.section = section;
+                    newFiles.url = urlDB;
+                    newFiles.name = file.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            file
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            if (updateFiles.length > 0) {
+
+                for (let index = 0; index < updateFiles.length; index++) {
+                    const updateFile = updateFiles[index];
+
+                    newFiles.id = updateFile.id;
+                    newFiles.active = updateFile.active ? updateFile.active : true;
+                    newFiles.financial_resources_id = updateFile.financialResourcesId;
+                    newFiles.section = updateFile.section;
+                    newFiles.url = updateFile.urlDB;
+                    newFiles.name = updateFile.originalname;
+
+                    if (newFiles.id !== null) {
+
+                        var savedFiles = await filesRepo.findOne(newFiles.id);
+
+                        filesRepo.merge(
+                            savedFiles,
+                            updateFile
+                        );
+
+                        upsertedFile = await filesRepo.save(savedFiles);
+
+                    } else {
+
+                        upsertedFile = await filesRepo.save(newFiles);
+                    }
+
+                }
+
+            }
+
+            return { upsertedFinancialResources, upsertedFile };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert financial Resources: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+    /**
+     * REQUEST Finanacial Resources
+     * @param sectionName 
+     * @returns {financialResources}
+     */
+    async requestFinancialResourcesFiles(sectionName) {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const financialResourcesQuery = (` 
+            SELECT * 
+            FROM financial_resources
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `),
+                filesQuery = (
+                    `
+                    SELECT * 
+                    FROM files 
+                   WHERE financial_resources_id in (SELECT id
+                    FROM financial_resources
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `
+                )
+
+            const financialResources = await this.queryRunner.query(financialResourcesQuery);
+            const files = await this.queryRunner.query(filesQuery);
+
+            financialResources.map(fr => {
+                fr['files'] = files.filter(f => {
+                    return (f.financial_resources_id === fr.id)
+                })
+            }
+
+            )
+
+            return financialResources[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async upsertPolicyComplianceOversight(policyComplianceId?, research_governance_policy?,
+        open_fair_data_policy?, open_fair_data_details?, policyComplianceActive?) {
+
+        const PolicyComplianceRepo = getRepository(PolicyComplianceOrversight);
+        const initvStg = await this.setInitvStage();
+
+        var newPolicyCompliance = new PolicyComplianceOrversight();
+        var upsertedPolicyCompliance;
+
+        newPolicyCompliance.id = policyComplianceId;
+        newPolicyCompliance.research_governance_policy = research_governance_policy;
+        newPolicyCompliance.open_fair_data_policy = open_fair_data_policy;
+        newPolicyCompliance.open_fair_data_details = open_fair_data_details;
+        newPolicyCompliance.active = policyComplianceActive ? policyComplianceActive : true;
+
+        try {
+
+            if (newPolicyCompliance.id !== null) {
+
+                var savedPolicyCompliance = await PolicyComplianceRepo.findOne(newPolicyCompliance.id);
+
+                PolicyComplianceRepo.merge(
+                    savedPolicyCompliance,
+                    newPolicyCompliance
+                );
+
+                upsertedPolicyCompliance = await PolicyComplianceRepo.save(savedPolicyCompliance);
+
+            } else {
+
+                newPolicyCompliance.initvStgId = initvStg.id;
+
+                upsertedPolicyCompliance = await PolicyComplianceRepo.save(newPolicyCompliance);
+
+            }
+
+            return { upsertedPolicyCompliance };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert policy compliance oversight: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestPolicyComplianceOversight() {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const policyComplianceQuery = (` 
+            SELECT * 
+            FROM policy_compliance_oversight
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `)
+
+            const policyCompliance = await this.queryRunner.query(policyComplianceQuery);
+
+            return policyCompliance[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get policy compliance oversight.', 400, error.message, false)
+
+        }
+
+    }
+
+
+
+    async upsertInnovationPackages(innovationPackageId?, key_principles?, innovationPackageActive?) {
+
+        const innovationPackagesRepo = getRepository(InnovationPackages);
+        const initvStg = await this.setInitvStage();
+
+        var newInnovationPackages = new InnovationPackages();
+        var upsertedInnovationPackages;
+
+        newInnovationPackages.id = innovationPackageId;
+        newInnovationPackages.key_principles = key_principles;
+        newInnovationPackages.active = innovationPackageActive ? innovationPackageActive : true;
+
+        try {
+
+            if (newInnovationPackages.id !== null) {
+
+                var savedInnovationPackages = await innovationPackagesRepo.findOne(newInnovationPackages.id);
+
+                innovationPackagesRepo.merge(
+                    savedInnovationPackages,
+                    newInnovationPackages
+                );
+
+                upsertedInnovationPackages = await innovationPackagesRepo.save(savedInnovationPackages);
+
+            } else {
+
+                newInnovationPackages.initvStgId = initvStg.id;
+
+                upsertedInnovationPackages = await innovationPackagesRepo.save(newInnovationPackages);
+
+            }
+
+            return { upsertedInnovationPackages };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Innovation Packages: Full proposal', 400, error.message, false)
+
+        }
+
+    }
+
+
+    async requestInnovationPackages() {
+
+        const initvStg = await this.setInitvStage();
+
+        try {
+            // retrieve general information
+            const innovationPackagesQuery = (` 
+            SELECT * 
+            FROM innovation_packages
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `)
+
+            const innovationPackages = await this.queryRunner.query(innovationPackagesQuery);
+
+            return innovationPackages[0];
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get InnovationPackages.', 400, error.message, false)
+
+        }
+
+    }
 
 
 }

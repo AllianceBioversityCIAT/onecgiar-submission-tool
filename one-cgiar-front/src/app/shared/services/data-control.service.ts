@@ -17,8 +17,10 @@ export class DataControlService {
   //  } 
   // }
   // Variables used in various sections
+  clarisaIsDown = false;
   wpMaped = false;
   pobMaped = false;
+  impactStatementsMaped = false;
   userMenu = [];
   WorkPackageID:number=null;
   showRegions=false;
@@ -27,7 +29,12 @@ export class DataControlService {
   // events to reload info in sections
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
+  validateMenu$= new EventEmitter<any>();
   countriesAndRegionsloaded$ = new EventEmitter<any>();
   loadMenu$= new EventEmitter<any>();
+
+  fileSteps= '<strong style="margin-right: 25px;">Steps:</strong><ul style="margin-top: 7px;"><li>Download template</li><li>Choose File</li><li>Save</li></ul>'
+
+  
   constructor() { }
 }

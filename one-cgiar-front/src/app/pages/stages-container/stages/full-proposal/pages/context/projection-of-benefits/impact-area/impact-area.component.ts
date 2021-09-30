@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-impact-area',
@@ -14,20 +15,28 @@ export class ImpactAreaComponent implements OnInit {
 
   pobImpactAreaForm: FormGroup;
   pobProbabilities = [];
-  depthDescriptions = [];
-  indicatorsList=[];
-  dimensionsList:any = [
-    {
-      id: 1,
-      depthDescriptionId:1,
-      breadth_value:30000,
-      active:true
-     }
-  ];
+  
+  // select lists
+  indicatorsList = [];
+  depthDescriptionsList:any = [];
+  depthScalesList = []
+  //
+
+  dimensionsList:any = [];
+
+  originalIndicatorId=null;
+  dimensionsListByIndicatorID:any = [];
+
+
   currentIaId:number;
+
+
   showForm = false;
-  showDepthSacale = false;
+  showDimensions = false;
   showDepthDescription = false;
+  showDepthScale = false;
+
+
   indicatorMetaData = {
       targetYear:"",
       targetUnit: "",
@@ -40,46 +49,107 @@ export class ImpactAreaComponent implements OnInit {
     public _interactionsService:InteractionsService
   ) { 
     this.pobImpactAreaForm = new FormGroup({
-      impact_area_indicator_id:new FormControl(null),
-      impact_area_indicator_name:new FormControl(null),
-      impact_area_id:new FormControl(null),
-      impact_area_name:new FormControl(null),
+      impactAreaIndicator:new FormControl(null),
+      impactAreaIndicatorName:new FormControl(null),
+      impactAreaId:new FormControl(null),
+      impactAreaName:new FormControl(null),
       projectionBenefitsId:new FormControl(null),
       notes:new FormControl(null),
-      depth_scale_id:new FormControl(null),
-      depth_scale_name:new FormControl(null),
-      probability_id:new FormControl(null),
+      depthScaleId:new FormControl(null),
+      depthScaleName:new FormControl(null),
+      probabilityID:new FormControl(null),
       impact_area_active:new FormControl(null),
-      
     });
 
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    
+   this.pobColorselected(3, 1, 8,-1)
+   this.cleanForm();
 
-  getPobProbabilities(){
-    this._initiativesService.getPobProbabilities().subscribe(resp=>{
-      this.pobProbabilities = resp.response.projectedProbabilities;
-    })
   }
 
-  getDepthDescription(impactAreaId){
-    this._initiativesService.getDepthDescription(impactAreaId).subscribe(resp=>{
-      this.depthDescriptions = resp.response.depthDescription;
-      this.depthDescriptions.map(item=>{
-        item.impactAreaId = impactAreaId;
-        item.depthDescriptionId = item.id;
-      })
-      // console.log(resp);
+  ngOnInit(): void {
+    
+
+    this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
+
+      if (resp) {
+        this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
+        this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
+        this.reloadDepthScale();
+        this.reloadDimensions();
+        this.getIndicatorMetaData(resp);
+        this.toggleDimensionList(resp)
+      }
+
+
+    })
+
+    this.activatedRoute.params.subscribe((routeResp: any) => {
+      this.pobColorselected(3, 1, 8, routeResp.pobIaID);
+      this.cleanForm();
       
-    },err=>{},
-    ()=>{
-      this.showDepthDescription = true;
+      this.getProjectedBenefitLists(routeResp.pobIaID);
+
+      this.pobImpactAreaForm.controls['impactAreaId'].setValue(Number(routeResp.pobIaID));
+      this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+
+        if (resp.response.projectionBenefitsByImpact) {
+          this.updateForm(resp.response.projectionBenefitsByImpact);
+        }
+        this.reloadForm();
+      })
+
+
+    })
+    
+
+  }
+
+    
+  getProjectedBenefitLists(impactAreaId){
+    this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
+      this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId);
+      // console.log(this.indicatorsList);
+      this.reloadForm();
     })
   }
+
+  reloadForm(){
+    this.showForm = false;
+    setTimeout(() => {
+     this.showForm = true;
+    }, 500);
+  }
+
+  reloadDimensions(){
+    this.showDimensions = false;
+    setTimeout(() => {
+     this.showDimensions = true;
+    }, 500);
+  }
+
+  reloadDepthScale(){
+    this.showDepthScale = false;
+    setTimeout(() => {
+     this.showDepthScale = true;
+    }, 500);
+    
+  }
+
+  // getPobProbabilities(){
+  //   this._initiativesService.getPobProbabilities().subscribe(resp=>{
+  //     this.pobProbabilities = resp.response.projectedProbabilities;
+  //   })
+  // }
 
   getIndicatorMetaData(indicatorId){
     if (indicatorId) {
-      let item = this.indicatorsList.find(resp => resp.indicatorId == indicatorId);
+      let item = this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
 
       this.indicatorMetaData.targetUnit = '';
       this.indicatorMetaData.value = '';
@@ -95,68 +165,12 @@ export class ImpactAreaComponent implements OnInit {
     }
   }
 
-
-  ngOnInit(): void {
-    // console.log(this.pobImpactAreaForm.value);
-    this.getPobProbabilities();
-    let borrar = false;
- 
-    this.pobImpactAreaForm.get('impact_area_indicator_id').valueChanges.subscribe(resp=>{
-      console.log("valueChanges");
-      if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
-        this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
-      }
-      this.showDepthSacale = false;
-      setTimeout(() => {
-      this.showDepthSacale = true;
-      // console.log(this.pobImpactAreaForm.value);
-      }, 500);
-
-      if (this.pobImpactAreaForm.value.impact_area_indicator_id) {
-        this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
-      }
-      
-    })
-
-    this.activatedRoute.params.subscribe((routeResp: any) => {
-      this.cleanForm();
-      this.showDepthSacale = false;
-      this.showForm = false;
-
-      this.getPobImpatAreaData(routeResp.pobIaID)
-      this.pobColorselected(3, 1, 8, routeResp.pobIaID);
-      this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
-
-      this._initiativesService.getImpactAreasIndicators().subscribe(resp => {
-
-        this.indicatorsList = this.filterIndicatorsByImpactArea(resp.response.impactAreasIndicatorsRequested, routeResp.pobIaID);
-      },
-        error => { console.log('#2 Error:', error) },
-        () => {
-          this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-            if (resp.response.projectionBenefitsByImpact) {
-              this.updateForm(resp.response.projectionBenefitsByImpact);
-              // console.log(this.pobImpactAreaForm.value.impact_area_indicator_id);
-              this.getDepthDescription(this.pobImpactAreaForm.value.impact_area_indicator_id);
-            }
-
-            this.getIndicatorMetaData(this.pobImpactAreaForm.value.impact_area_indicator_id);
-            this.showForm = true;
-          })
-        })
-
-
-    })
-    
-
-  }
-
   removeDimension(index,object,itemLink:HTMLElement){
     itemLink.classList.remove('animate__animated', 'animate__fadeInRight', 'animate__faster');
     itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
     itemLink.addEventListener('animationend', () => {
       itemLink.style.maxHeight = '0px';
-      if (object.depthDescriptionId) {
+      if (object.descriptionID) {
         object.edited = true;
         object.active = false;
         setTimeout(() => {
@@ -168,8 +182,7 @@ export class ImpactAreaComponent implements OnInit {
         }, 300);
      
       }
-      
-      console.log(this.dimensionsList);
+
     });
   }
 
@@ -180,77 +193,88 @@ export class ImpactAreaComponent implements OnInit {
     this.dimensionsList.push(item);
   }
 
+  toggleDimensionList(indicatorId){
+    this.dimensionsList = [];
+    if(indicatorId == this.originalIndicatorId){
+      this.dimensionsList = this.dimensionsListByIndicatorID;
+    }
+  }
+
   updateForm(resp){
     // console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id);
-    this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(resp.impact_area_indicator_id);
-    this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(resp.impact_area_indicator_name);
-    this.pobImpactAreaForm.controls['impact_area_id'].setValue(resp.impact_area_id);
-    // this.pobImpactAreaForm.controls['impact_area_name'].setValue(resp.impact_area_name);
+    this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(resp.impactAreaIndicator);
+    this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(resp.impactAreaIndicatorName);
+    
+    // this.pobImpactAreaForm.controls['impactAreaName'].setValue(resp.impactAreaName);
     this.pobImpactAreaForm.controls['notes'].setValue(resp.notes);
-    this.pobImpactAreaForm.controls['depth_scale_id'].setValue(resp.depth_scale_id);
-    this.pobImpactAreaForm.controls['depth_scale_name'].setValue(resp.depth_scale_name);
-    this.pobImpactAreaForm.controls['probability_id'].setValue(resp.probability_id);
+    this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
+    this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active == null ? false : resp.impact_area_active);
-    this.dimensionsList = resp.dimensions;
 
+    this.dimensionsList = resp.dimensions;
+    //Aux
+    this.dimensionsListByIndicatorID = resp.dimensions;
+    this.originalIndicatorId = resp.impactAreaIndicator
   }
 
   cleanForm(){
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(null);
-    this.pobImpactAreaForm.controls['impact_area_indicator_id'].setValue(null);
-    this.pobImpactAreaForm.controls['impact_area_indicator_name'].setValue(null);
-    this.pobImpactAreaForm.controls['impact_area_id'].setValue(null);
-    // this.pobImpactAreaForm.controls['impact_area_name'].setValue(null);
+    this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(null);
+    this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(null);
+    // this.pobImpactAreaForm.controls['impactAreaId'].setValue(null);
+    // this.pobImpactAreaForm.controls['impactAreaName'].setValue(null);
     this.pobImpactAreaForm.controls['notes'].setValue(null);
-    this.pobImpactAreaForm.controls['depth_scale_id'].setValue(null);
-    this.pobImpactAreaForm.controls['depth_scale_name'].setValue(null);
-    this.pobImpactAreaForm.controls['probability_id'].setValue(null);
+    this.pobImpactAreaForm.controls['depthScaleId'].setValue(null);
+    this.pobImpactAreaForm.controls['depthScaleName'].setValue(null);
+    this.pobImpactAreaForm.controls['probabilityID'].setValue(null);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(false);
     this.indicatorMetaData.targetUnit = '';
     this.indicatorMetaData.value = '';
     this.indicatorMetaData.targetYear = '';
     this.dimensionsList = [];
+    // this.indicatorsList = [];
+    // this.depthDescriptionsList = [];
+    // this.depthScalesList = []
   }
-
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    
-   this.pobColorselected(3, 1, 8,-1)
-   this.cleanForm();
-  }
-
- 
-
 
   saveForm(){
+
+    if (this.pobImpactAreaForm.value.impactAreaIndicator != this.originalIndicatorId && (this.dimensionsListByIndicatorID.length)) {
+      console.log("Desactovararray");
+      this.dimensionsListByIndicatorID.map(item=>{
+        item.active = false;
+        console.log(item);
+        this.dimensionsList.push(item)
+      })
+
+    }
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
     console.log(body);
+    console.log(this.pobImpactAreaForm.value.impactAreaId);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
-      // console.log(resp);
-      // console.log(resp.response.projectionBenefits.upsertedPjectionBenefits);
+      console.log(resp);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
       this.pobImpactAreaForm.valid?
       this._interactionsService.successMessage('Projection of benfits - Impact area has been saved'):
       this._interactionsService.warningMessage('Projection of benfits - Impact area has been saved, but there are incomplete fields')
+
+      this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, this.pobImpactAreaForm.value.impactAreaId).subscribe(resp => {
+        this.cleanForm();
+        if (resp.response.projectionBenefitsByImpact) {
+          this.updateForm(resp.response.projectionBenefitsByImpact);
+        }
+        this.reloadForm();
+      })
+
     })
-  }
-
-  getPobImpatAreaData(impactAreaId){
-    this.pobImpactAreaForm.controls['impact_area_id'].setValue(impactAreaId);
-  }
-
-
-  filterIndicatorsByImpactArea(indicators,impactAreaId){
-    return indicators.filter(item=>item.impactAreaId == impactAreaId)
   }
 
   pobColorselected(stageId, sectionId, subSectionId, pobIaID){
     // select all wp 
 
-
+        
         let allImpactAreas = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
         .sections.find((section) => section.sectionId == sectionId)
         .subsections.find((subSection) => subSection.subSectionId == subSectionId)
@@ -261,9 +285,10 @@ export class ImpactAreaComponent implements OnInit {
         
         // select current wp
         if (pobIaID != -1) {
+          console.log(allImpactAreas);
           allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
           let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
-          this.pobImpactAreaForm.controls['impact_area_name'].setValue(sectionFinded.showName);
+          this.pobImpactAreaForm.controls['impactAreaName'].setValue(sectionFinded.showName);
         }
 
   }

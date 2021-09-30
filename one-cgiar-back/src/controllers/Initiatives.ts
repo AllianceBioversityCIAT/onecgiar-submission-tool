@@ -15,7 +15,7 @@ import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
-import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, requestClaInstitution } from './Clarisa';
+import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, getProjectedBenefits, requestClaInstitution, requestProjectedProbabilities } from './Clarisa';
 
 import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
@@ -260,6 +260,41 @@ export const addLink = async (req: Request, res: Response) => {
         console.log(error)
         return res.status(error.httpCode).json(error);
     }
+}
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getInitvStgId(req: Request, res: Response) {
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        res.json(new ResponseHandler('Initiatives:Get initvStg.',  initvStg.id ));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
 }
 
 /**
@@ -630,7 +665,6 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
         const coLeadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
         const coordinatorRole = await rolesRepo.findOne({ where: { acronym: 'CO' } });
-
 
         if (role.acronym == 'ADM') {
             throw new APIError(
@@ -1037,33 +1071,6 @@ export async function getDepthDescription(req: Request, res: Response) {
 }
 
 
-export async function getProjectedProbabilities(req: Request, res: Response) {
-
-    const initiativeshandler = new InitiativeHandler();
-
-    try {
-
-        let projectedProbabilities = await initiativeshandler.requestProjectedProbabilities();
-
-        res.json(new ResponseHandler('Get Projected Probabilites.', { projectedProbabilities }));
-
-    } catch (error) {
-        console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
-        return res.status(error.httpCode).json(error);
-
-    }
-}
-
-
 /**
  * 
  * CLARISA getters
@@ -1166,8 +1173,6 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
     }
 }
 
-
-
 /**
  * 
  * @param req 
@@ -1231,6 +1236,31 @@ export async function requestImpactAreasIndicators(req: Request, res: Response) 
 }
 
 
+export async function requestProjectedBenefits(req: Request, res: Response) {
+
+    try {
+        const impactProjectedBenefitsRequested = await getProjectedBenefits();
+        res.json(new ResponseHandler('Requested projected benefits.', { impactProjectedBenefitsRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+export async function getProjectedProbabilities(req: Request, res: Response) {
+
+    try {
+        const probabilities = await requestProjectedProbabilities();
+        res.json(new ResponseHandler('Requested probabilities.', { probabilities }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+
 function getRepoConstStage(tableName: string) {
     switch (tableName) {
         case 'pre_concept':
@@ -1247,4 +1277,7 @@ function getRepoConstStage(tableName: string) {
             break;
     }
 }
+
+
+
 

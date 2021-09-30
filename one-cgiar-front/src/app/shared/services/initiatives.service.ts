@@ -16,6 +16,7 @@ export class InitiativesService {
   initvRoleId: number;
   initiative={
     id:null,
+    official_code:null,
     roleId:4,
     readonly: true,
     stageId:null
@@ -74,12 +75,10 @@ export class InitiativesService {
 
   // Query to get an initiative by ID
   getInitiativeById(id: number): Observable<any> {
-    console.log('numero de la funcion')
-    return this.getQuery('/initiatives/own')
-      .pipe(map((data: any) => {
-        console.log('getInitiativeById', data);
-        return data.data.find(resp => resp.initvStgId == id);
-      }));
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
+      const allInitiatives = res.response.initiatives;
+      return allInitiatives.find(resp => resp.id == id);
+    }));
   }
 
 
@@ -256,8 +255,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users by initiative
-  getUsersByInitiative(initvStgId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initvStgId}/users`);
+  getUsersByInitiative(initativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initativeId}/users`);
   }
 
   // Query to get all the users 
@@ -282,12 +281,71 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
   }
 
-  saveMelia (body:any,initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}`, body);
+  saveMelia (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${location}/${stageId}`, body);
   }
 
   getMelia (initiativeId,section:string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${section}`);
+  }
+
+  saveManagePlan (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getManagePlan (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${section}`);
+  }
+
+  saveHumanResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getHumanResources (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${section}`);
+  }
+
+  saveFinancialResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${location}/${stageId}`, body);
+  }
+
+  getFinancialResources (initiativeId,section:string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${section}`);
+  }
+
+
+  savePolicyCompliance (body:any, initiativeId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${initiativeId}`, body);
+  }
+
+  getPolicyCompliance (initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${initiativeId}`);
+  }
+
+  saveImpactStrategies (body:any, initiativeId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}`, body);
+  }
+
+  // Query to get all the users 
+  getInitvStgId(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${initiativeId}/${stageId}`);
+    // api/initiatives/get-initvStgId/2/3
+  }
+
+  getInnovationPackages (initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`);
+  }
+
+  saveInnovationPackages (body:any, initiativeId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`, body);
+  }
+
+  getProjectedBenefitLists (): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-benefits`);
+  }
+
+  getImpactStrategies (initiativeId,impactAreaId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}/${impactAreaId}`);
   }
 
   // Query to get all the users by roles
@@ -296,8 +354,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users 
-  getAllUsers(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=${filterText}`).pipe(map(resp=> {
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=`).pipe(map(resp=> {
       resp.response.users.map(user=>{
         user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
         user.is_active = true;
@@ -404,7 +462,6 @@ export class InitiativesService {
   saveWpFp(body: any,initiativeId): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
   }
-  // http://localhost:3000/api/stages-control/proposal/packages/:initiativeId([0-9]+)/:stageId([0-9]+
     // Query to create a work package
   createPartner(body: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/institutions/institution-requests`, body);
