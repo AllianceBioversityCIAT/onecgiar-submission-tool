@@ -90,11 +90,12 @@ button {
   color: #4caf50;
 }
 .ibdc_button_template_container{
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // justify-content: center;
+  // margin-left: 55px;
   .ibdc_button_template{
     border-radius: 50px;
-    background-color: var(--ibdc-secondary-color);
+    background-color: var(--ibdc-tertiary-color);
     font-weight: 500;
     color: white;
     padding: 10px 20px;
