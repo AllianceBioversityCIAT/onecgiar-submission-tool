@@ -1111,6 +1111,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
 
+      if (allWorkPackages.length > 0) {
+        
       // Get Work packages per initiative
       for (let index = 0; index < allWorkPackages.length; index++) {
 
@@ -1156,6 +1158,13 @@ export class MetaDataHandler extends InitiativeStageHandler {
         workPackage[0].validation = multi;
 
       }
+
+    }else{
+
+      workPackage = []
+
+    }
+
 
       return workPackage[0]
 

@@ -1163,7 +1163,7 @@ router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert Innovation Packages: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'updateOwn')], stagefull.patchInnovationPackages);
+router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'updateOwn')], stagefull.patchInnovationPackages);
 
 // Get innovation packages to initiative
 /**
@@ -1204,7 +1204,7 @@ router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole(
  *     HTTP/1.1 400 Not Found
  *     { message: "Get InnovationPackages.", error }
  */
-router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getInnovationPackages);
+router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'readOwn')], stagefull.getInnovationPackages);
 
 
 export default router;
