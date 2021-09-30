@@ -16,12 +16,13 @@ export const utilLogin = async (email: string, password: string) => {
     // console.log(email,password)
 
     if (!(email && password)) {
-        throw new BaseError(
-            'INVALID',
-            HttpStatusCode.BAD_REQUEST,
-            'Missing required fields: email or password.',
-            true
-        );
+        // throw new BaseError(
+        //     'INVALID',
+        //     HttpStatusCode.BAD_REQUEST,
+        //     'Missing required fields: email or password.',
+        //     true
+        // );
+        throw new BaseError('Util Login', 400,'Missing required fields: email or password.', false)
     }
     email = email.trim().toLowerCase();
     let cgiar_user = await userRepository.findOne({
@@ -41,23 +42,26 @@ export const utilLogin = async (email: string, password: string) => {
             relations: ['roles']
         });
         if (!user) {
-            throw new BaseError(
-                'NOT_FOUND',
-                HttpStatusCode.NOT_FOUND,
-                'User not found.',
-                true
-            );
+            // throw new BaseError(
+            //     'NOT_FOUND',
+            //     HttpStatusCode.NOT_FOUND,
+            //     'User not found.',
+            //     true
+            // );
+            throw new BaseError('Util Login', 400,'User not found.', false)
         }
     }
 
     // check password
     if (!cgiar_user && !user.checkPassword(password)) {
-        throw new BaseError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            'User password incorrect.',
-            true
-        );
+        // throw new BaseError(
+        //     'NOT FOUND',
+        //     HttpStatusCode.NOT_FOUND,
+        //     'User password incorrect.',
+        //     true
+        // );
+
+        throw new BaseError('Util Login', 400,'User password incorrect.', false)
     }
     user.last_login = new Date();
     user = await userRepository.save(user)
