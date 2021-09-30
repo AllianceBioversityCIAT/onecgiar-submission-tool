@@ -1291,6 +1291,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       }
 
+      var validateProjectionBenefits = await this.validationsProjectionBenefits();
+
+      validationContext[0].validation = validateProjectionBenefits.validation * validationContext[0].validation;
 
       var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
 
@@ -1339,6 +1342,72 @@ export class MetaDataHandler extends InitiativeStageHandler {
       throw new BaseError('Get validations Context', 400, error.message, false)
 
     }
+
+  }
+
+  async validationsProjectionBenefits(){
+
+    try {
+
+            // 5 impact strategies
+            for (let index = 1; index < 6; index++) {
+
+              var multi = 1;
+      
+              // Validate Sections
+              let validationProjectionBenefitsSQL = (
+                `
+                SELECT sec.id as sectionId,sec.description, 
+                CASE
+				 WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 1
+                 THEN 
+                TRUE  
+              WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 0
+              AND (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+               OR (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
+			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT LENGTH(notes) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(notes,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+                  FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 200
+			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+               THEN FALSE
+                 ELSE TRUE
+                 END AS validation
+               FROM initiatives_by_stages ini
+               JOIN sections_meta sec
+              WHERE ini.id = ${this.initvStgId_}
+                AND sec.stageId= ini.stageId
+                AND sec.description='context'
+                `
+              )
+      
+              var validationProjectionBenefits = await this.queryRunner.query(validationProjectionBenefitsSQL);
+      
+              validationProjectionBenefits[0].validation = parseInt(validationProjectionBenefits[0].validation)
+      
+              multi = multi * validationProjectionBenefits[0].validation;
+      
+              validationProjectionBenefits[0].validation = multi;
+      
+            }
+
+            return validationProjectionBenefits[0]
+
+      
+    } catch (error) {
+
+      throw new BaseError('Get validations projection benefits sections', 400, error.message, false)
+      
+    }
+
+
+
+
 
   }
 
