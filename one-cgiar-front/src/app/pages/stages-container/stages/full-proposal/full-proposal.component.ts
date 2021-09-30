@@ -52,8 +52,6 @@ export class FullProposalComponent implements OnInit {
 
           if (item.hasOwnProperty('dinamicList')) {
             item.dinamicList.map(resp=>{
-              console.log(resp);
-              console.log(menuSubsections);
               if ( menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id)) {
                 menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
               }
