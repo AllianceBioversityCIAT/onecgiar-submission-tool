@@ -19,6 +19,17 @@
   // background-color: white;
 }
 
+.initiative_link{
+  color: #4691d8;
+  font-weight: 500;
+  transition: all ease .3s;
+  &:hover{
+    color: #1f9923;
+    font-weight: 500;
+    transition: all ease .53s;
+  }
+}
+
 .chip_current_stage{
   padding: 7px 10px;
   color: white;

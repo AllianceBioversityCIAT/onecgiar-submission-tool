@@ -31,9 +31,6 @@ export class ManageAccessComponent implements OnInit {
   ngOnInit(): void {
    this.getAllRoles();
    this.getUsersByInitiative();
-   this.initiativesSvc.getAllUsers().subscribe(resp=>{
-    console.log(resp);
-  })
   }
 
   onNoClick(): void {
@@ -65,12 +62,12 @@ export class ManageAccessComponent implements OnInit {
   }
 
   getUsersByInitiative(){
-    console.log(this.initiativesSvc.initvStgId);
+    // console.log(this.initiativesSvc.initvStgId);
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initiative.id).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();
-      console.log(resp.response.users);
+      // console.log(resp.response.users);
     },err=>{},()=>{this.usersLoaded = true})
   }
 
