@@ -66,7 +66,7 @@ export class ManageAccessComponent implements OnInit {
 
   getUsersByInitiative(){
     console.log(this.initiativesSvc.initvStgId);
-    this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initvStgId).subscribe(resp=>{
+    this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initiative.id).subscribe(resp=>{
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();

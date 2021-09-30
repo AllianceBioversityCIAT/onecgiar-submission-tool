@@ -145,8 +145,8 @@ export class GeneralInformationComponent implements OnInit {
       this.geographicScope.regions = geo_data.regions;
       this.geographicScope.countries = geo_data.countries;
       this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
-      console.log('summary');
-      console.log(this.summaryForm.value);
+      // console.log('summary');
+      // console.log(this.summaryForm.value);
 
       this._initiativesService.getCLARISARegions('').subscribe(regions => {
         this.geographicScope.regions.map(mapReg => {

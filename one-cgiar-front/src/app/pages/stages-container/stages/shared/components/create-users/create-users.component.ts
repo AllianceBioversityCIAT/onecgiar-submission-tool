@@ -41,6 +41,7 @@ export class CreateUsersComponent implements OnInit {
     body.roles=[4];
     body.initiativeId = this._initiativesSvc.initvStgId;
     this._initiativesSvc.createUser(body).subscribe(resp=>{
+      console.log("******************** Create user ********************");
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
       this.firstTab.emit();
       this.showInitial = false;

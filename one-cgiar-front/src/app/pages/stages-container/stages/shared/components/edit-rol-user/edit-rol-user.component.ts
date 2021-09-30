@@ -102,15 +102,15 @@ export class EditRolUserComponent implements OnInit {
 
   assignUserToInitiative(){
     this._interactions.animateButtonSave = false;
-    console.log("assignUserToInitiative");
-    console.log(this.user);
+    // console.log("assignUserToInitiative");
+    // console.log(this.user);
     this.userRolForm.controls.userId.setValue(this.user.userId);
-    console.log(this.userRolForm.value);
+    // console.log(this.userRolForm.value);
     let body =  this.userRolForm.value;
     body.active = true;
-    console.log(this.userRolForm.value);
-    console.log(body);
-    this._initiativesService.assignUserToInitiative(body,this._initiativesService.initvStgId).subscribe(resp=>{
+    // console.log(this.userRolForm.value);
+    // console.log(body);
+    this._initiativesService.assignUserToInitiative(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this._interactions.expandWithUserId=-1;
       this.reload.emit();

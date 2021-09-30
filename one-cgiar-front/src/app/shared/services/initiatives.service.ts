@@ -255,8 +255,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users by initiative
-  getUsersByInitiative(initvStgId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initvStgId}/users`);
+  getUsersByInitiative(initativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/${initativeId}/users`);
   }
 
   // Query to get all the users 
