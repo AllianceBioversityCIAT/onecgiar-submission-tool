@@ -155,6 +155,13 @@ export class MenuComponent implements OnInit {
             this.mapDataInMenu(3, 1, 8, pobList);
            
 
+            // var arr = [1, 2, 3, 4, 5];
+
+            // var results: number[] = await Promise.all(arr.map(async (item): Promise<number> => {
+            //     await callAsynchronousOperation(item);
+            //     return item + 1;
+            // }));
+
             this.impacAreasList.map(item=>{
               let body:any = {}
               let impactArea = {}
@@ -173,8 +180,13 @@ export class MenuComponent implements OnInit {
             })
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
-            this._dataControlService.impactStatementsMaped = true;
-            this._dataControlService.pobMaped = true;
+            
+            console.log(pobList);
+            if (this.impacAreasList.length) {
+              this._dataControlService.pobMaped = true;
+              this._dataControlService.impactStatementsMaped = true;
+            }
+           
             // console.log(pobList);
             // console.log(impactStatementsList);
             this._dataControlService.validateMenu$.emit();
