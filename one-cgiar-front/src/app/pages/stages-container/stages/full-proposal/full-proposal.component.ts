@@ -41,10 +41,12 @@ export class FullProposalComponent implements OnInit {
         let result = this._dataControlService?.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
 
-        if (resp.response[key].subSections) 
-        resp?.response[key].subSections.map(item=>{
+        let subSectionsToMap = resp.response[key].subSections;
+        if (subSectionsToMap) 
+        subSectionsToMap.map(item=>{
           if ( result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId)) {
             result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId).fieldsCompleted = item.validation
+     
           }
           
         });
@@ -57,7 +59,7 @@ export class FullProposalComponent implements OnInit {
 
 
   getRolefromInitiativeById(){
-    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initvStgId).subscribe(resp=>{
+    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp=>{
       // console.log(resp.response);
 
       let rol = resp.response.roles
