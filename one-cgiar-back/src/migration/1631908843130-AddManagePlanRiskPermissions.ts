@@ -47,7 +47,33 @@ export class AddManagePlanRiskPermissions1631908843130 implements MigrationInter
                 action: 'read:Own',
                 attributes: '*',
                 roles: [IC_role]
+            }, {
+                name: 'delete.melia.initiative_owner',
+                resource: 'melia',
+                action: 'delete:Own',
+                attributes: '*',
+                roles: [IO_role]
             },
+            {
+                name: 'read.melia.initiative_coordinator',
+                resource: 'melia',
+                action: 'read:Own',
+                attributes: '*',
+                roles: [IC_role]
+            },{
+                name: 'delete.strategies.initiative_owner',
+                resource: 'strategies',
+                action: 'delete:Own',
+                attributes: '*',
+                roles: [IO_role]
+            },
+            {
+                name: 'read.strategies.initiative_coordinator',
+                resource: 'strategies',
+                action: 'read:Own',
+                attributes: '*',
+                roles: [IC_role]
+            }
         ]);
 
         let IOPermis = await perRepo.save(newPerms);

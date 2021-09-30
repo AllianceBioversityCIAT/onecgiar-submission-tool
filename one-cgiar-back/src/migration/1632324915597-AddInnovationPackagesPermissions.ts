@@ -6,11 +6,13 @@ export class AddInnovationPackagesPermissions1632324915597 implements MigrationI
 
     public async up(queryRunner: QueryRunner): Promise<void> {
 
-
         console.log('add innovation packages and scaling readiness plan permissions');
+
+        const rolesRepository = getRepository(Roles);
         const perRepo = getRepository(Permissions);
         const IO_role = await getRepository(Roles).findOne({ where: { acronym: 'SGD' } })
         const IC_role = await getRepository(Roles).findOne({ where: { acronym: 'PI' } })
+        const guest = await rolesRepository.findOne({ where: { acronym: 'GUEST' } })
 
         const newPerms = perRepo.create([
             {
@@ -48,6 +50,20 @@ export class AddInnovationPackagesPermissions1632324915597 implements MigrationI
                 attributes: '*',
                 roles: [IC_role]
             },
+            {
+                name: 'read.ip.guest',
+                resource: 'ip',
+                action: 'read:Any',
+                attributes: '*',
+                roles: [guest]
+            },
+            {
+                name: 'update.ip.guest',
+                resource: 'ip',
+                action: 'update:Any',
+                attributes: '*',
+                roles: [guest]
+            }
         ]);
 
         let IOPermis = await perRepo.save(newPerms);
