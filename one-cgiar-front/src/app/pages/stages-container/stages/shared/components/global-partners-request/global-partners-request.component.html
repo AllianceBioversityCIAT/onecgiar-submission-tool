@@ -1,52 +1,48 @@
 <div class="all">
     <section-sub-title name="Partners"></section-sub-title>
     <div class="row">
-        <div class="col-12">
-            <p-dialog header="Title" [(visible)]="display" [modal]="true" >
-                <app-partners-request></app-partners-request>
-            </p-dialog>
-        </div>
-        <div class="col-12">
-            <div class="local_container">
-                <ibdc-select-multiple [options]="{
-                    inputTitle:'Select partners',
-                    selectList: this.institutions,
-                    selectItemName:'acronym_name',
-                    selectItemId:'code',
-                    hideSavedList: true,
-                    frontendSearchAttribute:'acronym_name',
-                    readOnlyVariable: this._initiativesService.initiative.readonly,
-                    savedList:{
-                        list:this.savedList,
-                        selectItemId:'code',
+        <div class="col-6">
+
+            <div class="col-12">
+            
+                    <ibdc-select-multiple [options]="{
+                        inputTitle:'Select partners',
+                        selectList: this.institutions,
                         selectItemName:'acronym_name',
-                        idToSave:'id',
-                        labelName:'Institutions'
-                    }
-                   }"></ibdc-select-multiple>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSftv_rq3VVsy0WYHnsapxsJlEpqfUK8xisAeY05OWI2odY94g/viewform" target="_blank" class="partner_request_text">can't find an institution, create a request</a>
+                        selectItemId:'code',
+                        hideSavedList: true,
+                        frontendSearchAttribute:'acronym_name',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.savedList,
+                            selectItemId:'code',
+                            selectItemName:'acronym_name',
+                            idToSave:'id',
+                            labelName:'Institutions'
+                        }
+                       }"></ibdc-select-multiple>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSftv_rq3VVsy0WYHnsapxsJlEpqfUK8xisAeY05OWI2odY94g/viewform" target="_blank" class="partner_request_text">can't find an institution, create a request</a>
+             
+               
             </div>
-           
-        </div>
-        <div class="col-12">
-            <div class="row">
-
-                <div class="col-6">
-                    <div class="all_parners_saved">
-                        <div class="partner_selected_container"*ngFor="let item of this.savedList" [hidden]="item.active === false" [hidden]="!item.code">
-                            <div class="partner_name">{{item.name}}</div>
-                            <div class="buttons_changing">
-                                <div class="button_changing" *ngFor="let button_item of button_changing" [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" (click)="changeTagId(item,button_item.id)">
-                                    {{button_item.name}}
-                                </div>
+            <div class="col-12">
+                <div class="all_parners_saved">
+                    <div class="partner_selected_container"*ngFor="let item of this.savedList" [hidden]="item.active === false" [hidden]="!item.code">
+                        <div class="partner_name">{{item.name}}</div>
+                        <div class="buttons_changing">
+                            <div class="button_changing" *ngFor="let button_item of button_changing" [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" (click)="changeTagId(item,button_item.id)">
+                                {{button_item.name}}
                             </div>
-                            <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
                         </div>
-                        <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
-                    </div> 
-                </div>
-
-                <div class="col-6">
+                        <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
+                    </div>
+                    <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
+                </div> 
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12">
                     <ibdc-select-multiple [options]="{
                         inputTitle:'Select institutions types',
                         selectList: this.institutionsTypes,
