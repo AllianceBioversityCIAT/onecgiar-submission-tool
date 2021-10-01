@@ -90,7 +90,7 @@ const validateAD = (one_user, password) => {
                 let notFound = {
                     'name': 'SERVER_NOT_FOUND',
                     'description': `There was an internal server error: ${err.lde_message}`,
-                    'httpCode': 404
+                    'httpCode': 400
                 };
                 if (err.errno == "ENOTFOUND") {
                     notFound.name = 'SERVER_NOT_FOUND';
@@ -98,14 +98,16 @@ const validateAD = (one_user, password) => {
                 }
                 // console.log(err)
                 // console.log(typeof err)
+             
                 return reject(notFound);
             } else {
                 console.log('Authentication failed!');
                 let err = {
                     'name': 'INVALID_CREDENTIALS',
                     'description': 'The supplied credential is invalid',
-                    'httpCode': 503
+                    'httpCode': 400
                 };
+               
                 return reject(err);
             }
         })
