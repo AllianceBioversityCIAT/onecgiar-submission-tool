@@ -51,22 +51,26 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.authSvc.login(this.loginForm.value).subscribe((res) => {
         // console.log("quitar spinner");s
-        this.spinnerService.hide("login_spinner");
         if (res) {
           this.router.navigate(['/home']);
           this._interactionsService.showHeader = true;
           // console.log('login', res);
+       
         }
+        this.spinnerService.hide("login_spinner");
       },
       (err)=>{
         console.log(err.error?.description);
         console.log(err);
-        this._interactionsService.errorMessage(err.error?.description);
+        if (err.error?.description) {
+          this._interactionsService.errorMessage(err.error?.description);
+        }
+        
         // User password incorrect.
         // Not Found
         console.log("error");
         this.spinnerService.hide("login_spinner");
-      })
+      },()=>{this.spinnerService.hide("login_spinner");})
     );
   }
 
