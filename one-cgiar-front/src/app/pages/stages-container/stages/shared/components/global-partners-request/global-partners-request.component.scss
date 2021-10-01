@@ -93,6 +93,11 @@
  }
 
  .partner_request_text{
-    color: rgb(64, 164, 211);
+    color: white;
     cursor: pointer;
+    background-color: rgb(64, 164, 211);
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-size: .9rem;
+    margin-bottom: 100px;
 }

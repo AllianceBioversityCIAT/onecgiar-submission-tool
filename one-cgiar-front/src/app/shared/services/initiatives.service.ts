@@ -19,7 +19,8 @@ export class InitiativesService {
     official_code:null,
     roleId:4,
     readonly: true,
-    stageId:null
+    stageId:null,
+    name:null
   }
 
   actionAreas: [];
