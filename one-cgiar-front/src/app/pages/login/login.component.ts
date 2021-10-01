@@ -62,8 +62,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       (err)=>{
         console.log(err.error?.description);
         console.log(err);
+
         if (err.error?.description) {
-          this._interactionsService.errorMessage(err.error?.description);
+          if (err.error?.description.indexOf('80090308')>-1) {
+            this._interactionsService.errorMessage('User password incorrect.');
+          }else{
+            this._interactionsService.errorMessage(err.error?.description);
+          }
         }
         
         // User password incorrect.
