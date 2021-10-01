@@ -66,21 +66,51 @@ export class GlobalPartnersRequestComponent implements OnInit {
     var newArray = [];
     var lookupObject  = {};
 
-    for(var i in originalArray) {
+    // console.log(this.institutionsTypesSavedList);
 
+    for(var i in originalArray) {
       
       if (originalArray[i].active !== false) {
         if (!(lookupObject[originalArray[i][prop]])) lookupObject[originalArray[i][prop]] = {cont:0};
         lookupObject[originalArray[i][prop]].institutionType = originalArray[i].institutionType;
-        lookupObject[originalArray[i][prop]].cont++;
+        if (originalArray[i].code) {
+          lookupObject[originalArray[i][prop]].cont++;
+        }
       }
       
-
     }
+
+
+    for(var i in this.institutionsTypesSavedList) {
+      console.log(this.institutionsTypesSavedList);
+      if (this.institutionsTypesSavedList[i].active !== false) {
+
+        if (!lookupObject[this.institutionsTypesSavedList[i][prop]]?.cont) {
+          console.log("limpio");
+          lookupObject[this.institutionsTypesSavedList[i][prop]] = {cont:0,institutionType:this.institutionsTypesSavedList[i]?.name};
+        }
+
+
+        // if (!(lookupObject[this.institutionsTypesSavedList[i][prop]])) lookupObject[this.institutionsTypesSavedList[i][prop]] = {cont:0};
+        // lookupObject[this.institutionsTypesSavedList[i][prop]].institutionType = this.institutionsTypesSavedList[i].institutionType;
+        // if (this.institutionsTypesSavedList[i].code) {
+        //   lookupObject[this.institutionsTypesSavedList[i][prop]].cont++;
+        // }
+
+      }
+      
+    }
+
+
+
+
+
+
 
     for(i in lookupObject) {
         newArray.push(lookupObject[i]);
     }
+
      return newArray;
 }
 

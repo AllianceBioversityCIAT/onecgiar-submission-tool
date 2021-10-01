@@ -24,7 +24,7 @@
                         labelName:'Institutions'
                     }
                    }"></ibdc-select-multiple>
-                <a (click)="showDialog()" class="partner_request_text">can't find an institution, create a request</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSftv_rq3VVsy0WYHnsapxsJlEpqfUK8xisAeY05OWI2odY94g/viewform" target="_blank" class="partner_request_text">can't find an institution, create a request</a>
             </div>
            
         </div>
@@ -33,7 +33,7 @@
 
                 <div class="col-6">
                     <div class="all_parners_saved">
-                        <div class="partner_selected_container"*ngFor="let item of this.savedList" [hidden]="item.active === false">
+                        <div class="partner_selected_container"*ngFor="let item of this.savedList" [hidden]="item.active === false" [hidden]="!item.code">
                             <div class="partner_name">{{item.name}}</div>
                             <div class="buttons_changing">
                                 <div class="button_changing" *ngFor="let button_item of button_changing" [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" (click)="changeTagId(item,button_item.id)">
@@ -42,6 +42,7 @@
                             </div>
                             <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
                         </div>
+                        <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
                     </div> 
                 </div>
 
@@ -62,9 +63,11 @@
                             labelName:'Institutions'
                         }
                        }"></ibdc-select-multiple>
-                    <div class="institution_types_container">
-                        <p *ngFor="let item of countDuplicates(this.savedList,'institutionType')">{{item.institutionType}} - ({{item.cont}})</p>
+                    <div class="institution_types_container" *ngIf="countDuplicates(this.savedList,'institutionType').length">
+                        <p *ngFor="let item of countDuplicates(this.savedList,'institutionType')">{{item.institutionType}} - <span class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
                     </div>
+                    <p *ngIf="!countDuplicates(this.savedList,'institutionType').length" class="empy_list_title">No institutions types maped</p>
+
                 </div>
 
             </div>
