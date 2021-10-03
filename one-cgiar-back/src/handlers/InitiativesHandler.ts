@@ -129,6 +129,18 @@ export class InitiativeHandler {
         return projectedData;
     
     }
+
+
+    async requestInstitutions() {
+
+        const querySql = `
+        SELECT code,name,acronym,institutionTypeId,institutionType 
+        FROM clarisa_institutions
+`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
     
 
 }

@@ -287,7 +287,7 @@ export async function getInitvStgId(req: Request, res: Response) {
         if (initvStg == null) {
             throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
-        res.json(new ResponseHandler('Initiatives:Get initvStg.',  initvStg.id ));
+        res.json(new ResponseHandler('Initiatives:Get initvStg.', initvStg.id));
 
 
     } catch (error) {
@@ -1147,7 +1147,15 @@ export const getRegions = async (req: Request, res: Response) => {
 
 export const getInstitutions = async (req: Request, res: Response) => {
     try {
-        const institutions = await getClaInstitutions();
+        //Get institution from Clarisa
+        // const institutions = await getClaInstitutions();
+
+        //Get institution from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  institutions = await initiativeshandler.requestInstitutions();
         res.json(new ResponseHandler('Institutions.', { regions: institutions }));
     } catch (error) {
         console.log(error);

@@ -143,16 +143,16 @@ export class ImpactAreaIsComponent implements OnInit {
     console.log(body);
     console.log(this.institutionsTypesSavedList);
     console.log(this.institutionsTypes);
-    // this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
-    //   console.log(resp);
-    //   // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
-    //   this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
-    //   let sectionName = 'Impact strategie'
-    //   this.sectionForm.valid?
-    //   this._interactionsService.successMessage(`${sectionName} has been saved`):
-    //   this._interactionsService.warningMessage(`${sectionName} has been saved, but there are incomplete fields`)
-    // },err=>{console.log(err);},
-    // ()=>{this.getInstitutionsTypes();})
+    this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp);
+      // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
+      this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
+      let sectionName = 'Impact strategie'
+      this.sectionForm.valid?
+      this._interactionsService.successMessage(`${sectionName} has been saved`):
+      this._interactionsService.warningMessage(`${sectionName} has been saved, but there are incomplete fields`)
+    },err=>{console.log(err);},
+    ()=>{this.getInstitutionsTypes();})
   }
 
   cleanForm(){

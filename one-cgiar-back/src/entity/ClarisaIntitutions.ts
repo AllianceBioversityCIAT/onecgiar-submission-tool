@@ -23,5 +23,10 @@ export class ClarisaInstitutions extends UpdatedCreatedAt {
     @Column({ type: 'json' })
     data: JSON
 
+    @Column({ type: 'int' })
+    institutionTypeId: number
+
+    @Column({ type: 'text' })
+    institutionType: string
 
 }

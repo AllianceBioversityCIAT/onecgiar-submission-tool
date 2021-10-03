@@ -12,9 +12,20 @@ import Routes from './routes';
 import { errorHandler } from './middlewares/error-handler';
 import path from 'path';
 import { BaseError } from './handlers/BaseError';
+import { deleteInstitutions, createInstitutions } from './utils/task-clarisa';
 
 
 require('dotenv').config();
+
+var cron = require('node-cron');
+
+// Create and Delete institutions every six hours 0 */6 * * *
+cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
+
+    await deleteInstitutions()
+    await createInstitutions();
+
+});
 
 if (!process.env.PORT) {
     process.exit(1);
@@ -22,7 +33,7 @@ if (!process.env.PORT) {
 
 // get the unhandled rejection and throw it to another fallback handler we already have.
 process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
-    throw new BaseError(reason.name,503, reason.message, true);
+    throw new BaseError(reason.name, 503, reason.message, true);
 });
 
 process.on('uncaughtException', (error: Error) => {
@@ -79,7 +90,7 @@ createConnection()
         // routes
         app.use("/api", Routes);
 
-       // load front
+        // load front
         app.get('/', (req, res) => {
             res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
         });
