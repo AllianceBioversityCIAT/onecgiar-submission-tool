@@ -11,13 +11,15 @@ import { catchError, retry } from 'rxjs/operators';
 import { throwError } from 'rxjs/internal/observable/throwError';
 import { AuthService } from '../services/auth.service';
 import { DataControlService } from '../services/data-control.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   countClarisaError = 0;
   constructor(
     private authSrv: AuthService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private router:Router
     ) { }
 
   intercept(request: HttpRequest<any>,  next: HttpHandler): Observable<HttpEvent<any>> {
@@ -38,7 +40,13 @@ export class ErrorInterceptor implements HttpInterceptor {
           // impact-areas
           // refresh token
           // this.authSrv.logout();
-        } else {
+        } else if(error.status === 400){
+          if (error.error.name === "JsonWebTokenError" || error.error.description === "invalid token") {
+            this.authSrv.logout();
+            this.router.navigate(['/']);
+          }
+          console.log(error.error.name);
+        }else {
           return throwError(error);
         }
       })
