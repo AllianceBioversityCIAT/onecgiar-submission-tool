@@ -33,7 +33,7 @@ export class DataControlService {
   countriesAndRegionsloaded$ = new EventEmitter<any>();
   loadMenu$= new EventEmitter<any>();
 
-  fileSteps= '<strong style="margin-right: 25px;">Steps:</strong><ul style="margin-top: 7px;"><li>Download template</li><li>Choose File</li><li>Save</li></ul>'
+  fileSteps= '<strong style="margin-right: 25px;">Steps:</strong><ol style="margin-top: 7px;"><li>Download and Fill in the template down</li><li>Start the Uploading process, pressing the "choose file" button and selecting the filled file on step 1.</li><li>Finish the uploading process, pressing the "save" button.</li></ol>'
 
   
   constructor() { }
