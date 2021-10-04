@@ -2,7 +2,7 @@
 <form [formGroup]="sectionForm"  (ngSubmit)="saveSection()" class="general-information-form">
     <div class="section-container animate__animated animate__fadeIn">
       
-        <ibdc-alert [options]="{text: 'Please check the standard text below when submitting your Proposal.  No additional content is required.',type:'info'}"></ibdc-alert>
+        <ibdc-alert [options]="{text: 'Please mark the checkbox below when submitting your Proposal.  No additional content is required.',type:'info'}"></ibdc-alert>
         <br>
         <div class="check_box_with_text" *ngIf="showForm">
             <p-checkbox formControlName="research_governance_policy" binary="true" inputId="binary"></p-checkbox>
