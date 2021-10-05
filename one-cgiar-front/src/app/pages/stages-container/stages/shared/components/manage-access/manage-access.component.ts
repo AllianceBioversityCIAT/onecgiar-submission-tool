@@ -37,7 +37,15 @@ export class ManageAccessComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  reloadSelectRoleComp(){
+    this.showForm = false;
+    setTimeout(() => {
+    this.showForm = true;
+    }, 500);
+  }
+
   getAllRoles(){
+    
     this.initiativesSvc.getAllRoles().subscribe(roles=>{
       this.allRoles = roles.data;
       // console.log(roles.data);

@@ -11,6 +11,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 export class CreateUsersComponent implements OnInit {
   @Input() allRoles;
   @Output() firstTab = new EventEmitter();
+  @Output() realoadRoles = new EventEmitter();
   showInitial = false;
   isCgiar = false;
   rolesExample=[1];
@@ -49,6 +50,9 @@ export class CreateUsersComponent implements OnInit {
     },
     err=>{
       this.interactionsService.errorMessage(err.error.description);
+    },
+    ()=>{
+      this.realoadRoles.emit();
     });
   }
 

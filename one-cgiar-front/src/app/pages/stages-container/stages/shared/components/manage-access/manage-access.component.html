@@ -82,7 +82,7 @@
                 </ng-template>
 
 
-                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" ></app-create-users>
+                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" (realoadRoles)="reloadSelectRoleComp();getUsersByInitiative()"></app-create-users>
 
             </mat-tab>
         </mat-tab-group>
