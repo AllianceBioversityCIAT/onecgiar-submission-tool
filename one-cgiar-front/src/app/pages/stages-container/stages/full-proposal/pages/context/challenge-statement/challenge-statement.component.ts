@@ -33,7 +33,7 @@ export class ChallengeStatementComponent implements OnInit {
 
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
-      console.log(resp);
+      this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?
       this._interactionsService.successMessage('Challenge statement has been saved'):
       this._interactionsService.warningMessage('Challenge statement has been saved, but there are incomplete fields')

@@ -51,7 +51,7 @@ export class ComparativeAdvantageComponent implements OnInit {
 
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
-      console.log(resp);
+      this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid?
       this._interactionsService.successMessage('Comparative advantage has been saved'):
       this._interactionsService.warningMessage('Comparative advantage has been saved, but there are incomplete fields')
