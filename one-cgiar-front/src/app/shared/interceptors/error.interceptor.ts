@@ -41,7 +41,8 @@ export class ErrorInterceptor implements HttpInterceptor {
           // refresh token
           // this.authSrv.logout();
         } else if(error.status === 400){
-          if (error.error.name === "JsonWebTokenError" || error.error.description === "invalid token") {
+          console.log(error);
+          if (error.error.name === "JsonWebTokenError" || error.error.description === "invalid token" || error.error.description === "jwt expired" || error.error.description === "TokenExpiredError") {
             this.authSrv.logout();
             this.router.navigate(['/']);
           }
