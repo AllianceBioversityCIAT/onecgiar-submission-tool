@@ -35,6 +35,7 @@
                             </div>
 
                         </div>
+ 
                         <div class="col-sm-12" *ngIf="showForm">
                               
                                <ibdc-select-multiple [options]="{
@@ -59,6 +60,9 @@
                                 }
                                }"></ibdc-select-multiple>
 
+                        </div>
+                        <div class="col-12">
+                            <ibdc-alert [options]="{htmlText: 'Please assign role if you want to keep the users assigned to this initiative', type:'info'}"></ibdc-alert>
                         </div>
                         <div class="col-sm-12">
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>
