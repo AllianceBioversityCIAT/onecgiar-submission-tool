@@ -22,7 +22,7 @@ var cron = require('node-cron');
 // Create and Delete institutions every six hours 0 */6 * * *
 cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
 
-    await deleteInstitutions()
+    // await deleteInstitutions()
     await createInstitutions();
 
 });

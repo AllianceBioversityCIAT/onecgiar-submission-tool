@@ -1156,7 +1156,7 @@ export const getInstitutions = async (req: Request, res: Response) => {
         const initiativeshandler = new InitiativeHandler();
 
         let  institutions = await initiativeshandler.requestInstitutions();
-        res.json(new ResponseHandler('Institutions.', { regions: institutions }));
+        res.json(new ResponseHandler('Institutions.', { institutions: institutions }));
     } catch (error) {
         console.log(error);
         return res.status(error.httpCode).json(error);
@@ -1174,7 +1174,7 @@ export const getInstitutions = async (req: Request, res: Response) => {
 export const getInstitutionsTypes = async (req: Request, res: Response) => {
     try {
         const institutionsTypes = await getClaInstitutionsTypes();
-        res.json(new ResponseHandler('Institutions types.', { regions: institutionsTypes }));
+        res.json(new ResponseHandler('Institutions types.', { types: institutionsTypes }));
     } catch (error) {
         console.log(error);
         return res.status(error.httpCode).json(error);
