@@ -66,7 +66,7 @@ export const utilLogin = async (email: string, password: string) => {
     user.last_login = new Date();
     user = await userRepository.save(user)
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '60s' });
+    const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, { expiresIn: '7h' });
     const name = user.first_name + ' ' + user.last_name;
     const roles = user.roles;
     const id = user.id;
