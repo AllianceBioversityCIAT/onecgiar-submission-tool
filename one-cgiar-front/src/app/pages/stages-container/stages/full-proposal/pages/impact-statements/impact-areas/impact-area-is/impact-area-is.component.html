@@ -33,7 +33,7 @@
                     description:'Highlight dedicated human resources to achieve the Work Package components and targets for this Impact Area. Refer/link to any strategy to improve capacity via internal capacity-building or through partnership'}">
                 </ibdc-textarea>
             </div>
-            <div class="col-sm-12" *ngIf="this.institutionsLoaded">
+            <div class="col-sm-12" *ngIf="this.institutionsLoaded && this.typesLoaded">
                 <app-global-partners-request 
                 [institutions]="this.institutionsList" 
                 [savedList]="this.savedList" 

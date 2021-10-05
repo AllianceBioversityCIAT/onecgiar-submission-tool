@@ -13,6 +13,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class ImpactAreaIsComponent implements OnInit {
   showForm = true;
   institutionsLoaded = false;
+  typesLoaded = false;
   sectionForm: FormGroup;
   institutionsList = [];
   institutionsTypes = [];
@@ -78,9 +79,11 @@ export class ImpactAreaIsComponent implements OnInit {
 
   getInstitutionsTypes(){
     this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
-      console.log("getInstitutionsTypes");
-      this.institutionsTypes = resp.response.regions;
+      // console.log("getInstitutionsTypes");
+      // console.log(resp);
+      this.institutionsTypes = resp.response.types;
       // console.log(this.institutionsTypes);
+      this.typesLoaded = true;
     })
   }
 
@@ -110,7 +113,7 @@ export class ImpactAreaIsComponent implements OnInit {
         
         // select current wp
         if (pobIaID != -1) {
-          console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
+          // console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
           if (allImpactAreas.find((IA) => IA.id == pobIaID)) {
             allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
             let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)

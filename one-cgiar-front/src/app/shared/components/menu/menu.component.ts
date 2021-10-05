@@ -52,7 +52,7 @@ export class MenuComponent implements OnInit {
     );
 
     this.localMenuChangesubscribtion$  = this._dataControlService.menuChange$.subscribe(() => {
-      console.log("menuChange$");
+      // console.log("menuChange$");
       this.getMenu();
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
@@ -190,7 +190,7 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
-            console.log(pobList);
+            // console.log(pobList);
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;
               this._dataControlService.impactStatementsMaped = true;
