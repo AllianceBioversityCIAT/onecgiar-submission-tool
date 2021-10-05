@@ -43,7 +43,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   mapInstitutionsTypes(){
-    // console.log(this.institutions);
+    // console.log(this.institutionsTypes);
     this.institutionsTypes.map(item=>{
       item.institutionType = item.name;
       // item.
@@ -86,7 +86,6 @@ export class GlobalPartnersRequestComponent implements OnInit {
       if (this.institutionsTypesSavedList[i].active !== false) {
 
         if (!lookupObject[this.institutionsTypesSavedList[i][prop]]?.cont) {
-          console.log("limpio");
           lookupObject[this.institutionsTypesSavedList[i][prop]] = {cont:0,institutionType:this.institutionsTypesSavedList[i]?.name};
         }
 
