@@ -68,7 +68,7 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
-      budget_value: new FormControl(0),
+      budget_value: new FormControl(0, [Validators.required,Validators.min(1)]),
       table_name: new FormControl("general_information"),
       col_name: new FormControl("budget"),
       active: new FormControl(true),
