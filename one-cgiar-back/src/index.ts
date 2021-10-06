@@ -12,7 +12,7 @@ import Routes from './routes';
 import { errorHandler } from './middlewares/error-handler';
 import path from 'path';
 import { BaseError } from './handlers/BaseError';
-import { deleteInstitutions, createInstitutions } from './utils/task-clarisa';
+import * as taskClarisa from './utils/task-clarisa';
 
 
 require('dotenv').config();
@@ -21,9 +21,9 @@ var cron = require('node-cron');
 
 // Create and Delete institutions every six hours 0 */6 * * *
 cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
-
-    // await deleteInstitutions()
-    await createInstitutions();
+   
+    await taskClarisa.createImpactAreas();
+    await taskClarisa.createInstitutions();
 
 });
 
