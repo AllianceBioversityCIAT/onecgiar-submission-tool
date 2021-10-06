@@ -27,8 +27,8 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          if (error.url.indexOf('impact-areas')>-1) {
+        if (error?.status === 404) {
+          if (error?.url?.indexOf('impact-areas')>-1) {
             this.countClarisaError++;
           }
 
@@ -40,16 +40,19 @@ export class ErrorInterceptor implements HttpInterceptor {
           // impact-areas
           // refresh token
           // this.authSrv.logout();
-        } else if(error.status === 400){
+        } 
+
+        if(error?.status === 400){
           console.log(error);
-          if (error.error.name === "JsonWebTokenError" || error.error.description === "invalid token" || error.error.description === "jwt expired" || error.error.description === "TokenExpiredError") {
+          if (error?.error?.name === "JsonWebTokenError" || error?.error?.description === "invalid token" || error?.error?.description === "jwt expired" || error?.error?.description === "TokenExpiredError") {
             this.authSrv.logout();
             this.router.navigate(['/']);
           }
-          console.log(error.error.name);
-        }else {
-          return throwError(error);
+          console.log(error?.error?.name);
         }
+
+        return throwError(error);
+        
       })
     );
   }

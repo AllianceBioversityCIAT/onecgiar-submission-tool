@@ -57,9 +57,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           // console.log('login', res);
        
         }
-        this.spinnerService.hide("login_spinner");
-      },
-      (err)=>{
+        // this.spinnerService.hide("login_spinner");
+      },err=>{
         console.log(err.error?.description);
         console.log(err);
 
