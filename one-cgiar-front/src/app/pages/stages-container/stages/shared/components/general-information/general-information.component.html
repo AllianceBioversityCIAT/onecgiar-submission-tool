@@ -1,8 +1,7 @@
 <section-title name="General information"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <ibdc-alert [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'alert'}"></ibdc-alert>
-    <ibdc-alert *ngIf="summaryForm.status == 'INVALID'" class="animate__animated animate__bounceIn"  [options]="{htmlText: this._dataControlService.incompleteFieldsText, type:'warning'}"></ibdc-alert>
+    <app-section-alerts-pack [sectionForm]="summaryForm"></app-section-alerts-pack>
     <br>
     <div class="sekeletons_load" *ngIf="!showForm">
         <app-general-information-skeleton></app-general-information-skeleton>

@@ -3,6 +3,9 @@
     <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
+            <div class="col-12">
+                <app-section-alerts-pack [sectionForm]="contextForm"></app-section-alerts-pack>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
                     [options]="{inputTitle:'Learning from prior evaluations and Impact Assessments (IA)',readOnlyVariable: _initiativesService.initiative.readonly, editText:true, form:contextForm, formControlName:'key_learnings', maxWords:250,

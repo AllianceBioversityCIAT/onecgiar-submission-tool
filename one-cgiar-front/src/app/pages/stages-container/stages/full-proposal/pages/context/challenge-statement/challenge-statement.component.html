@@ -4,9 +4,7 @@
 
         <div class="row">
             <div class="col-12">
-                <ibdc-alert *ngIf="challengeStatementForm.status == 'INVALID'" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'alert'}"></ibdc-alert>
-                <ibdc-alert *ngIf="challengeStatementForm.status == 'INVALID'" class="animate__animated animate__bounceIn"  [options]="{htmlText: this._dataControlService.incompleteFieldsText, type:'warning'}"></ibdc-alert>
-                <ibdc-alert *ngIf="challengeStatementForm.status == 'VALID'" class="animate__animated animate__bounceIn"  [options]="{text: 'This section is complete', type:'success'}"></ibdc-alert>
+               <app-section-alerts-pack [sectionForm]="challengeStatementForm"></app-section-alerts-pack>
             </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"

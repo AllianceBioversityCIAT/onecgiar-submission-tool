@@ -4,15 +4,19 @@ import { SectionTitleComponent } from './section-title/section-title.component';
 import { SectionSubTitleComponent } from './section-sub-title/section-sub-title.component';
 import { UnderConstructionPageComponent } from '../utils/under-construction-page/under-construction-page.component';
 import { SectionBreadcrumbComponent } from './section-breadcrumb/section-breadcrumb.component';
-import {BreadcrumbModule} from 'primeng/breadcrumb';
-import {MenuItem} from 'primeng/api';
+import { SectionAlertsPackComponent } from './section-alerts-pack/section-alerts-pack.component';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+
 const mycomponents = [
   SectionTitleComponent,
   SectionSubTitleComponent,
   UnderConstructionPageComponent,
-  SectionBreadcrumbComponent
+  SectionBreadcrumbComponent,
+  SectionAlertsPackComponent
 ];
 const myModules = [
+  IbdAngularComponentsModule
 ];
 
 
