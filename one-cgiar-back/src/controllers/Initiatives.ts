@@ -1221,7 +1221,20 @@ export const requestInstitution = async (req: Request, res: Response) => {
 export async function requestImpactAreas(req: Request, res: Response) {
 
     try {
-        const impactAreasRequested = await getImpactAreas();
+
+        //Get impact areas from Clarisa
+
+        // const impactAreasRequested = await getImpactAreas();
+
+
+        //Get impact areas from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  impactAreasRequested = await initiativeshandler.requestImpactAreas();
+
+
         res.json(new ResponseHandler('Requested Impact areas.', { impactAreasRequested }));
     } catch (error) {
         console.log(error);

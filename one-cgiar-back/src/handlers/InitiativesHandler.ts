@@ -141,6 +141,18 @@ export class InitiativeHandler {
         return institutions;
 
     }
+
+
+    async requestImpactAreas() {
+
+        const querySql = `
+        SELECT id,name,description
+        FROM clarisa_impact_areas
+`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
     
 
 }
