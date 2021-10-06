@@ -14,7 +14,7 @@ export async function deleteImpactAreas() {
         const clarisaImpactAreasRepo = getRepository(ClarisaImpactAreas);
         const clarisaImpactAreas = new ClarisaImpactAreas();
         const r = await clarisaImpactAreasRepo.delete(clarisaImpactAreas);
-        console.log('1.delete clarisa impact areas');
+        console.log('2.delete clarisa impact areas');
 
     } catch (error) {
 
@@ -27,7 +27,7 @@ export async function deleteImpactAreas() {
 
 export async function createImpactAreas() {
 
-    console.log('2.start create impact areas');
+    console.log('1.start create impact areas');
 
     try {
 
@@ -81,7 +81,7 @@ export async function deleteInstitutions() {
         const clarisaRepo = getRepository(ClarisaInstitutions);
         const clarisaInstitutions = new ClarisaInstitutions();
         const r = await clarisaRepo.delete(clarisaInstitutions);
-        console.log('4.delete institutions');
+        console.log('5.delete institutions');
 
     } catch (error) {
 
@@ -93,7 +93,7 @@ export async function deleteInstitutions() {
 
 export async function createInstitutions() {
 
-    console.log('start create institutions');
+    console.log('4.start create institutions');
 
     try {
 
@@ -127,7 +127,7 @@ export async function createInstitutions() {
 
             const r = await clarisaRepo.save(institutionsArray);
 
-            console.log('5.end create institutions');
+            console.log('6.end create institutions');
 
         } else {
             console.log('Issues with Clarisa');
