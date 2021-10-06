@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { SharedModule } from '../../shared/modules/shared-module.module'
 import { StagesMenuRoutingModule } from './stages-menu-routing.module';
 import { StagesMenuComponent } from './stages-menu.component';
 import { MaterialModule } from '@app/material.module';

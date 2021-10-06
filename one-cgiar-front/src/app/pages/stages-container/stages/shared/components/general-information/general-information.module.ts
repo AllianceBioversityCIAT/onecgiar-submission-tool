@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GeneralInformationComponent } from './general-information.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { CustomFormsModule } from '../../../../../../shared/components/custom-forms/custom-forms.module';
 import { MaterialModule } from '../../../../../../material.module';
