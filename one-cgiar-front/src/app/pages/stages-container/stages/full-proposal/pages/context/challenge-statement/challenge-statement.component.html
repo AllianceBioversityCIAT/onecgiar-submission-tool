@@ -3,6 +3,11 @@
     <form [formGroup]="challengeStatementForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
+            <div class="col-12">
+                <ibdc-alert *ngIf="challengeStatementForm.status == 'INVALID'" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'alert'}"></ibdc-alert>
+                <ibdc-alert *ngIf="challengeStatementForm.status == 'INVALID'" class="animate__animated animate__bounceIn"  [options]="{htmlText: this._dataControlService.incompleteFieldsText, type:'warning'}"></ibdc-alert>
+                <ibdc-alert *ngIf="challengeStatementForm.status == 'VALID'" class="animate__animated animate__bounceIn"  [options]="{text: 'This section is complete', type:'success'}"></ibdc-alert>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
                     [options]="{inputTitle:'Challenge statement',readOnlyVariable: _initiativesService.initiative.readonly, editText:true, form:challengeStatementForm, formControlName:'challenge_statement', maxWords:500,
