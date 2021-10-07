@@ -75,7 +75,7 @@ export class InitiativeTeamComponent implements OnInit {
     this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources',3).subscribe(resp=>{
       console.log("saveHumanResources");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources and activities has been saved, but there are incomplete fields')
       this.getHumanResources();

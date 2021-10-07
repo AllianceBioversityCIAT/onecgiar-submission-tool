@@ -87,7 +87,7 @@ export class BudgetComponent implements OnInit {
     this._initiativesService.saveFinancialResources(formData,this._initiativesService.initiative.id,'10.financial-resources',3).subscribe(resp=>{
       console.log("saveFinancialResources");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this.sectionForm.valid && this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Financial Resources has been saved'):
       this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
       this.getFinancialResources();
