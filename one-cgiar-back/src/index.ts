@@ -66,27 +66,16 @@ createConnection()
             res.setHeader(
                 "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
             );
-            res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
+            res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); 
             next();
         });
 
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
-
-        // if connection timed out go next()
-        // app.use(function (req, res, next) {
-        //     res.setTimeout(12000, async function () {
-        //         console.log('Request has timed out.');
-        //         // await connection.close();
-        //         next()
-        //     });
-        //     // next();
-
-        // });
+        
 
         console.log(path.resolve('./uploads'))
         // public files
         app.use(express.static('public'))
-        // app.use('/public', express.static(path.resolve('./uploads')));
 
         // routes
         app.use("/api", Routes);
