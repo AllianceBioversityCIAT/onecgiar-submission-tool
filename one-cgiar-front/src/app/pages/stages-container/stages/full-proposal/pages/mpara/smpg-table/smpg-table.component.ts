@@ -78,7 +78,7 @@ export class SmpgTableComponent implements OnInit {
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Summary management plan Gantt table has been saved'):
       this._interactionsService.warningMessage('Summary management plan Gantt table, but there are incomplete fields')
     })
