@@ -5,9 +5,8 @@
 
     <div class="row">
         <div class="col-12">
-
+            <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
             <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
-
         </div>
         <div class="col-12">
             <br>

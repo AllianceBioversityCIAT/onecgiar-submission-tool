@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
@@ -26,7 +26,7 @@ export class GenderDiwComponent implements OnInit {
     private _dataControlService:DataControlService
   ) { 
     this.secionForm = new FormGroup({
-      example: new FormControl(null),
+      example: new FormControl(null,Validators.required),
     });
   }
 
