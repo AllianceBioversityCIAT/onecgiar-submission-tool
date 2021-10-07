@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-smpg-table',
@@ -22,7 +23,8 @@ export class SmpgTableComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    public _dataValidatorsService:DataValidatorsService
   ) { 
   }
 
