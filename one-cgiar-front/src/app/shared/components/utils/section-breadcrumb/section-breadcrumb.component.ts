@@ -71,8 +71,8 @@ export class SectionBreadcrumbComponent implements OnInit {
           }
 
           if (this.sectionsArray[5]) {
-            getDynamicItemName = getSubSectionName.dynamicList.find(item=>item.id == this.sectionsArray[5]);
-            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getDynamicItemName.name});
+            getDynamicItemName = getSubSectionName?.dynamicList?.find(item=>item.id == this.sectionsArray[5]);
+            if (getDynamicItemName)this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getDynamicItemName.name});
           }
 
   }

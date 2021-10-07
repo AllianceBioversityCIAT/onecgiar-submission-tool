@@ -20,6 +20,7 @@ export class ImpactAreaIsComponent implements OnInit {
   institutionsTypes = [];
   institutionsTypesSavedList = [];
   savedList = [];
+  iaID;
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -48,9 +49,10 @@ export class ImpactAreaIsComponent implements OnInit {
       this.cleanForm();
       // this.showDepthSacale = false;
       this.showForm = false;
+      this.iaID = routeResp.iaID
 
       // this.getPobImpatAreaData(routeResp.pobIaID)
-      this.pobColorselected(3, 7, 16, routeResp.iaID);
+      // this.pobColorselected(3, 7, 16, routeResp.iaID);
       this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
 
       this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
@@ -66,6 +68,13 @@ export class ImpactAreaIsComponent implements OnInit {
       })
 
     })
+  }
+
+  ngDoCheck(): void {
+    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+    //Add 'implements DoCheck' to the class.
+    // console.log(this.iaID);
+    this.pobColorselected(3, 7, 16, this.iaID);
   }
 
   // customValidation(frm: FormGroup){
