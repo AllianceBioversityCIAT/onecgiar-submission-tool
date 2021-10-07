@@ -44,7 +44,6 @@ export class ResultFrameworkComponent implements OnInit {
     err=>{console.log(err);}
     ,()=>{
       this.showForm = true;
-      this.validateSection();
     })
   }
   saveSection(){
@@ -84,48 +83,5 @@ export class ResultFrameworkComponent implements OnInit {
 
     
   }
-
-  validateSection(){
-    let ej1 = [
-      {
-        id:7,
-        rata:'Perro'
-      },
-      {
-        id:4,
-        rata:'Perro'
-      },
-      {
-        id:1,
-        rata:'Perro'
-      },
-      {
-        id:2,
-        rata:'Perro'
-      }
-    ]
-
-    let ej2 = [
-      {
-        id:4,
-        rata:'Perro'
-      },
-      {
-        id:7,
-        rata:'Perro'
-      },
-      {
-        id:1,
-        rata:'Perro'
-      },
-      {
-        id:2,
-        rata:'Perro'
-      }
-    ]
-    this._dataValidatorsService.validateArray(ej1,ej2,'id')
-  }
-
-
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
@@ -19,7 +19,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   ) {
     this.secionForm = new FormGroup({
       id: new FormControl(null),
-      key_principles: new FormControl(null),
+      key_principles: new FormControl(null,Validators.required),
     });
    }
 

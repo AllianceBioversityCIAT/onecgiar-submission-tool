@@ -7,12 +7,14 @@ import { DataControlService } from '../../../services/data-control.service';
   styleUrls: ['./section-alerts-pack.component.scss']
 })
 export class SectionAlertsPackComponent implements OnInit {
-  @Input( ) sectionForm;
+  @Input() sectionForm;
+  @Input() extraValidation;
   constructor(
     public _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
+    if (this.extraValidation == undefined) this.extraValidation = true;
   }
 
 }
