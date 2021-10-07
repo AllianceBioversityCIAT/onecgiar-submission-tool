@@ -23,6 +23,7 @@ var cron = require('node-cron');
 cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
    
     await taskClarisa.createImpactAreas();
+    await taskClarisa.createActionAreas();
     await taskClarisa.createInstitutions();
 
 });

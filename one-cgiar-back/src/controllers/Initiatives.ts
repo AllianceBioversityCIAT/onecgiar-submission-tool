@@ -1086,7 +1086,19 @@ export async function getDepthDescription(req: Request, res: Response) {
 
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
-        const actionAreas = await getClaActionAreas();
+
+        //Ger Action Areas from CLARISA
+        // const actionAreas = await getClaActionAreas();
+
+
+       //Get Action Areas from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  actionAreas = await initiativeshandler.requestActionAreas();
+
+
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
         console.log(error);

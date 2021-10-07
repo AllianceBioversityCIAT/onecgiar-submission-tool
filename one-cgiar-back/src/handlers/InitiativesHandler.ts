@@ -127,7 +127,7 @@ export class InitiativeHandler {
     `;
         const projectedData = await this.queryRunner.query(querySql);
         return projectedData;
-    
+
     }
 
 
@@ -147,13 +147,23 @@ export class InitiativeHandler {
 
         const querySql = `
         SELECT id,name,description
-        FROM clarisa_impact_areas
-`;
+        FROM clarisa_impact_areas`;
         const institutions = await this.queryRunner.query(querySql);
         return institutions;
 
     }
-    
+
+    async requestActionAreas() {
+
+        const querySql = `
+        SELECT id,name,description
+        FROM clarisa_action_areas`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
+
+
 
 }
 

@@ -2,6 +2,7 @@ import { getRepository } from "typeorm";
 import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
 import * as clarisa from '../controllers/Clarisa';
 import { ClarisaImpactAreas } from "../entity/ClarisaImpactAreas";
+import { ClarisaActionAreas } from "../entity/ClarisaActionAreas";
 
 
 
@@ -72,6 +73,73 @@ export async function createImpactAreas() {
 
 }
 
+
+/**CLARISA ACTION AREAS*/
+
+export async function deleteActionAreas() {
+
+    try {
+
+        const clarisaActionAreasRepo = getRepository(ClarisaActionAreas);
+        const clarisaActiontAreas = new ClarisaImpactAreas();
+        const r = await clarisaActionAreasRepo.delete(clarisaActiontAreas);
+        console.log('5.delete clarisa action areas');
+
+    } catch (error) {
+
+        console.log('deleteActionAreas', error);
+
+    }
+
+}
+
+export async function createActionAreas() {
+
+    console.log('4.start create action areas');
+
+    try {
+
+        const clarisaActionAreasRepo = getRepository(ClarisaActionAreas);
+        const actionAreas = await clarisa.getClaActionAreas();
+
+        if (actionAreas.length > 0) {
+
+            await deleteActionAreas();
+
+            let actionAreasArray: ClarisaActionAreas[] = [];
+            let idTable = 0;
+
+            for (let index = 0; index < actionAreas.length; index++) {
+                const element = actionAreas[index];
+                idTable = idTable + 1;
+                let cla = clarisaActionAreasRepo.create({
+                    id: idTable,
+                    name: element.name,
+                    description: element.name,
+                
+                });
+                actionAreasArray.push(cla)
+
+            }
+
+            const r = await clarisaActionAreasRepo.save(actionAreasArray);
+
+            console.log('6.end create action areas');
+
+        } else {
+            console.log('Issues with Clarisa');
+
+        }
+
+    } catch (error) {
+
+        console.log('createActionAreas', error);
+
+    }
+
+}
+
+
 /**CLARISA INSTITUTIONS*/
 
 export async function deleteInstitutions() {
@@ -81,7 +149,7 @@ export async function deleteInstitutions() {
         const clarisaRepo = getRepository(ClarisaInstitutions);
         const clarisaInstitutions = new ClarisaInstitutions();
         const r = await clarisaRepo.delete(clarisaInstitutions);
-        console.log('5.delete institutions');
+        console.log('8.delete institutions');
 
     } catch (error) {
 
@@ -93,7 +161,7 @@ export async function deleteInstitutions() {
 
 export async function createInstitutions() {
 
-    console.log('4.start create institutions');
+    console.log('7.start create institutions');
 
     try {
 
@@ -127,7 +195,7 @@ export async function createInstitutions() {
 
             const r = await clarisaRepo.save(institutionsArray);
 
-            console.log('6.end create institutions');
+            console.log('9.end create institutions');
 
         } else {
             console.log('Issues with Clarisa');
@@ -139,7 +207,6 @@ export async function createInstitutions() {
         console.log('createInstitutions', error);
 
     }
-
 
 }
 
