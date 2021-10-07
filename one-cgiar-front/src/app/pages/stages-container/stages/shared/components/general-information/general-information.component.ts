@@ -197,6 +197,8 @@ export class GeneralInformationComponent implements OnInit {
 
   upsertGeneralInfo() {
 
+    console.log(this.summaryForm);
+
     this.spinnerService.show('general-information');
 
     this.geographicScope.regions.map(newRegId => {

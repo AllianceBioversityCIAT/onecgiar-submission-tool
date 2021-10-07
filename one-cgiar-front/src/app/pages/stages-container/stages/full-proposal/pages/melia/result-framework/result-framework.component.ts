@@ -23,7 +23,7 @@ export class ResultFrameworkComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService,
+    public _dataValidatorsService:DataValidatorsService,
     public _dataControlService:DataControlService
   ) { }
 
@@ -44,7 +44,6 @@ export class ResultFrameworkComponent implements OnInit {
     err=>{console.log(err);}
     ,()=>{
       this.showForm = true;
-      this.validateSection();
     })
   }
   saveSection(){
@@ -76,7 +75,7 @@ export class ResultFrameworkComponent implements OnInit {
     this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Result Framework has been saved'):
       this._interactionsService.warningMessage('Result Framework has been saved, but there are incomplete fields')
       this.getMelia();
@@ -84,48 +83,5 @@ export class ResultFrameworkComponent implements OnInit {
 
     
   }
-
-  validateSection(){
-    let ej1 = [
-      {
-        id:7,
-        rata:'Perro'
-      },
-      {
-        id:4,
-        rata:'Perro'
-      },
-      {
-        id:1,
-        rata:'Perro'
-      },
-      {
-        id:2,
-        rata:'Perro'
-      }
-    ]
-
-    let ej2 = [
-      {
-        id:4,
-        rata:'Perro'
-      },
-      {
-        id:7,
-        rata:'Perro'
-      },
-      {
-        id:1,
-        rata:'Perro'
-      },
-      {
-        id:2,
-        rata:'Perro'
-      }
-    ]
-    this._dataValidatorsService.validateArray(ej1,ej2,'id')
-  }
-
-
 
 }

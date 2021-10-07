@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-risk-assessment',
@@ -23,7 +24,8 @@ export class RiskAssessmentComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    public _dataValidatorsService:DataValidatorsService
   ) { 
   }
 
@@ -77,7 +79,7 @@ export class RiskAssessmentComponent implements OnInit {
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Risk assessment plan has been saved'):
       this._interactionsService.warningMessage('Risk assessment plan has been saved, but there are incomplete fields')
     })

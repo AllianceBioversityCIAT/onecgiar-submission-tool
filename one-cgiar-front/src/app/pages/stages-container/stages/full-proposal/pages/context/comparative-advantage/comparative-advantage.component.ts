@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -22,7 +22,7 @@ export class ComparativeAdvantageComponent implements OnInit {
     private _interactionsService:InteractionsService
   ) { 
     this.contextForm = new FormGroup({
-      comparative_advantage: new FormControl(null),
+      comparative_advantage: new FormControl(null, Validators.required),
       contextId:new FormControl(null),
     });
   }

@@ -5,6 +5,9 @@
     <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
+            <div class="col-12">
+                <app-section-alerts-pack [sectionForm]="contextForm"></app-section-alerts-pack>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showform"
                     [options]="{inputTitle:'Priority Setting',readOnlyVariable: _initiativesService.initiative.readonly,editText:true, form:contextForm,editText:true, formControlName:'priority_setting', maxWords:500,

@@ -3,7 +3,8 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DataValidatorsService } from '../../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-impact-area-is',
@@ -23,18 +24,20 @@ export class ImpactAreaIsComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
-    public _interactionsService:InteractionsService
+    public _interactionsService:InteractionsService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.sectionForm = new FormGroup({
       id:new FormControl(null),
-      challenge_priorization:new FormControl(null),
-      research_questions:new FormControl(null),
-      component_work_package:new FormControl(null),
-      performance_results:new FormControl(null),
-      human_capacity:new FormControl(null),
+      challenge_priorization:new FormControl(null, Validators.required),
+      research_questions:new FormControl(null, Validators.required),
+      component_work_package:new FormControl(null, Validators.required),
+      performance_results:new FormControl(null, Validators.required),
+      human_capacity:new FormControl(null, Validators.required),
       impact_area_id:new FormControl(null),
-      partners:new FormControl([]),
-    });
+    }, 
+    // this.customValidation
+    );
   }
 
   ngOnInit(): void {
@@ -56,11 +59,22 @@ export class ImpactAreaIsComponent implements OnInit {
           this.updateForm(resp.response.impactStrategies);
           this.savedList = resp.response.impactStrategies.partners;
         }
-      },err=>{console.log(err);},
-      ()=>{this.showForm = true;})
+      },err=>{console.log(err);this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)},
+      ()=>{
+        this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
+        this.showForm = true;
+      })
 
     })
   }
+
+  // customValidation(frm: FormGroup){
+  //   console.log("hola");
+  //   console.log(this.casa);
+  //   // this._DataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
+  //   console.log(this.savedList);
+  //   return null;
+  // }
  
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
@@ -151,7 +165,7 @@ export class ImpactAreaIsComponent implements OnInit {
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
       this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
       let sectionName = 'Impact strategie'
-      this.sectionForm.valid?
+      this.sectionForm.valid && this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code')?
       this._interactionsService.successMessage(`${sectionName} has been saved`):
       this._interactionsService.warningMessage(`${sectionName} has been saved, but there are incomplete fields`)
     },err=>{console.log(err);},

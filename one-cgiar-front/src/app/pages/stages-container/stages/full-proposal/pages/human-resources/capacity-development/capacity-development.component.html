@@ -2,6 +2,9 @@
 <form  (ngSubmit)="saveSection()" class="general-information-form">
     <div class="section-container animate__animated animate__fadeIn" >
         <div class="row" *ngIf="showForm">
+            <div class="col-12">
+                <app-section-alerts-pack [sectionForm]="secionForm"></app-section-alerts-pack>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea
                     [options]="{inputTitle:'Capacity development',readOnlyVariable: false, form:secionForm,editText:true, formControlName:'example', maxWords:250,

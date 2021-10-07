@@ -3,6 +3,9 @@
     <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
+            <div class="col-12">
+                <app-section-alerts-pack [sectionForm]="contextForm"></app-section-alerts-pack>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
                     [options]="{inputTitle:'Comparative advantage', form:contextForm,readOnlyVariable: _initiativesService.initiative.readonly, editText:true, formControlName:'comparative_advantage',maxWords:250,

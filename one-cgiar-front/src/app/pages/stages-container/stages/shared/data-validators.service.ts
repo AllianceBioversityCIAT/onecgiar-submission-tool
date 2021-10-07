@@ -7,31 +7,130 @@ export class DataValidatorsService {
 
   constructor() { }
 
-  validateArray(currentArray,auxArray,sortBy){
-    let oneDiference:boolean = false;
+  validateIfArrayHasActiveFalse(array:any){
 
-    currentArray.sort(function(a, b) {
-      return a[sortBy] - b[sortBy];
-    });
+    if (!array.length) {
+      return false;
+    }else{
 
-    auxArray.sort(function(a, b) {
-      return a[sortBy] - b[sortBy];
-    });
+      for (const item of array) {
 
-    let currentArrayKeys = Object.keys(currentArray[0]);
-    let auxArrayKeys = Object.keys(auxArray[0]);
+          if (!item.hasOwnProperty('active')) {
+            return true
+          }else{
+            if (item.active == true) {
+              return true;
+            }
+          }
 
-    console.log(currentArrayKeys);
-    console.log(auxArrayKeys);
+      }
 
-    console.log(currentArray);
-    console.log(auxArray);
-    for (let index = 0; index < currentArray.length; index++) {
-      // const element = array[index];
+      return false;
+
+    }
+
+  }
+
+  validateIfArrayHasActiveFalseEstrict(array:any,atribute){
+
+    if (!array.length) {
+      return false;
+    }else{
+
+      for (const item of array) {
+
+        if (item[atribute]) {
+          if (!item.hasOwnProperty('active')) {
+            return true
+          }else{
+            if (item.active == true) {
+              return true;
+            }
+          }
+        }
+
+      }
+
+      return false;
+
+    }
+
+  }
+
+  validateFilesArray(arrayTosave:any,arraySaved){
+    console.log("------------------");
+    console.log(arrayTosave);
+    console.log(arraySaved);
+    let one = false;
+    let two:boolean;
+    if (arrayTosave.length) {
+      one = true
+    }else{
+      one = false
     }
 
 
+    if (!arraySaved.length) {
+      two = false;
+    }else{
+
+      for (const item of arraySaved) {
+
+          if (!item.hasOwnProperty('show')) {
+            two =  true;
+            break;
+          }else{
+            if (item.show == true) {
+              two =  true;
+              break;
+            }
+          }
+
+      }
+
+      if (two != true) {
+        two =  false;
+      }
+     
+
+    }
+    console.log(one);
+    console.log(two);
+
+    return (one || two);
+
   }
+
+    
+// // no encuentra active true entonces solo false
+// Return false
+
+
+  // validateArray(currentArray,auxArray,sortBy){
+  //   let oneDiference:boolean = false;
+
+  //   currentArray.sort(function(a, b) {
+  //     return a[sortBy] - b[sortBy];
+  //   });
+
+  //   auxArray.sort(function(a, b) {
+  //     return a[sortBy] - b[sortBy];
+  //   });
+
+  //   let currentArrayKeys = Object.keys(currentArray[0]);
+  //   let auxArrayKeys = Object.keys(auxArray[0]);
+
+  //   console.log(currentArrayKeys);
+  //   console.log(auxArrayKeys);
+
+  //   console.log(currentArray);
+  //   console.log(auxArray);
+  //   for (let index = 0; index < currentArray.length; index++) {
+  //     // const element = array[index];
+  //   }
+
+
+  // }
 
 
 
