@@ -46,7 +46,8 @@ export class AuthService {
       .post<ServerResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
         map((srvRes: ServerResponse) => {
-          this.saveLocalStorage(srvRes);
+          this.saveLocalStorage(srvRes.response);
+          this.setLoggedUserTawkTo(srvRes)
           this.user.next(srvRes.response);
           return srvRes.response;
         }),
@@ -55,6 +56,7 @@ export class AuthService {
 
   logout(): void {
     // localStorage.removeItem('user');
+    this.logOutTawtkTo();
     localStorage.clear()
     this.user.next(null);
     this.router.navigate(['/']);
@@ -70,7 +72,7 @@ export class AuthService {
       } else {
         this.user.next(user);
       }
-    }else{
+    } else {
       this.logout();
     }
   }
@@ -78,17 +80,40 @@ export class AuthService {
   private saveLocalStorage(response: ServerResponse): void {
     localStorage.setItem('user', JSON.stringify(response.response));
   }
-  
+
   changePassword(body: any): Observable<ServerResponse> {
     return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, body);
   }
 
-  // saveGeneralInformation(): void {
-  //   console.log('formulario guardado', this.generalInformationForm);
-  // }
+  private setLoggedUserTawkTo(user) {
+    if (window.hasOwnProperty('Tawk_API')) {
+      if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
+      console.log(user)
+      window['Tawk_API'].setAttributes({
+        name: user.name,
+        email: user.email
+      }, function (error) {
+        console.log(error)
+      });
+    }
+  }
+  
+  private logOutTawtkTo() {
+    console.log(window.hasOwnProperty('Tawk_API'))
+    if (window.hasOwnProperty('Tawk_API')) {
+      try {
+        window['Tawk_API'].endChat();
+      } catch (error) {
+        console.log(error)
+      }
+      // if (window['Tawk_API'].isChatMaximized()) {
+      // }
+      window['Tawk_API'].visitor = {
+        name: null,
+        email: null
+      };
+    }
+  }
 
-  // submitForm(): void {
-  //   console.log('formulario sometido', this.generalInformationForm);
-  // }
 
 }

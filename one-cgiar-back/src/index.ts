@@ -22,7 +22,7 @@ if (!process.env.PORT) {
 
 // get the unhandled rejection and throw it to another fallback handler we already have.
 process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
-    throw new BaseError(reason.name,503, reason.message, true);
+    throw new BaseError(reason.name, 503, reason.message, true);
 });
 
 process.on('uncaughtException', (error: Error) => {
@@ -54,32 +54,21 @@ createConnection()
             res.setHeader(
                 "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
             );
-            res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
+            res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); 
             next();
         });
 
         app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
-
-        // if connection timed out go next()
-        // app.use(function (req, res, next) {
-        //     res.setTimeout(12000, async function () {
-        //         console.log('Request has timed out.');
-        //         // await connection.close();
-        //         next()
-        //     });
-        //     // next();
-
-        // });
+        
 
         console.log(path.resolve('./uploads'))
         // public files
         app.use(express.static('public'))
-        // app.use('/public', express.static(path.resolve('./uploads')));
 
         // routes
         app.use("/api", Routes);
 
-       // load front
+        // load front
         app.get('/', (req, res) => {
             res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
         });
