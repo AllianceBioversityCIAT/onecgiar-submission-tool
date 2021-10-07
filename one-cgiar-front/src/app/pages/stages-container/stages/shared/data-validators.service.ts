@@ -57,6 +57,50 @@ export class DataValidatorsService {
 
   }
 
+  validateFilesArray(arrayTosave:any,arraySaved){
+    console.log("------------------");
+    console.log(arrayTosave);
+    console.log(arraySaved);
+    let one = false;
+    let two:boolean;
+    if (arrayTosave.length) {
+      one = true
+    }else{
+      one = false
+    }
+
+
+    if (!arraySaved.length) {
+      two = false;
+    }else{
+
+      for (const item of arraySaved) {
+
+          if (!item.hasOwnProperty('show')) {
+            two =  true;
+            break;
+          }else{
+            if (item.show == true) {
+              two =  true;
+              break;
+            }
+          }
+
+      }
+
+      if (two != true) {
+        two =  false;
+      }
+     
+
+    }
+    console.log(one);
+    console.log(two);
+
+    return (one || two);
+
+  }
+
     
 // // no encuentra active true entonces solo false
 // Return false

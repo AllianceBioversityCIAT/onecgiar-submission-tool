@@ -23,7 +23,7 @@ export class ResultFrameworkComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService,
+    public _dataValidatorsService:DataValidatorsService,
     public _dataControlService:DataControlService
   ) { }
 
@@ -75,7 +75,7 @@ export class ResultFrameworkComponent implements OnInit {
     this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Result Framework has been saved'):
       this._interactionsService.warningMessage('Result Framework has been saved, but there are incomplete fields')
       this.getMelia();
