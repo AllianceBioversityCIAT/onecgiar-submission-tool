@@ -30,10 +30,10 @@ export class ChallengeStatementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
-    console.log(this.challengeStatementForm.value);
   }
 
   upserInfo(){
+    console.log(this.challengeStatementForm);
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?

@@ -30,7 +30,7 @@
             </div>
             <div class="card-container">
                 <div class="initiative-identification ibdc_bg_secondary_color" style="position: relative; z-index: 10;">
-                    <app-section-breadcrumb [sectionsList]="sectionsList"></app-section-breadcrumb>
+                    <app-section-breadcrumb *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;" [sectionsList]="sectionsList"></app-section-breadcrumb>              
                     <!-- <div>
                         
                         <span style="margin:0px 5px;" *ngIf="this._dataControlService.breadcrumbItemTwo"> / </span>
