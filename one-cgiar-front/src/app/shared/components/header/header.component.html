@@ -10,18 +10,3 @@
 </mat-toolbar>
 
 <app-tawk-to *ngIf="_interactionsService.showHeader"></app-tawk-to>
-
-<!-- <mat-toolbar color="primary">
-  <ng-container *ngIf="isAdmin === 'admin'">
-    <button mat-icon-button (click)="onToggleSidenav()">
-      <mat-icon>menu</mat-icon>
-    </button>
-  </ng-container>
-  <span>One CGIAR Submission Tool</span>
-  <span class="spacer"></span>
-  <a *ngIf="!isLogged; else viewLogout" mat-button routerLink="/login">Login</a>
-</mat-toolbar>
-
-<ng-template #viewLogout>
-  <a *ngIf="isLogged" mat-button (click)="onLogout()">Logout</a>
-</ng-template> -->

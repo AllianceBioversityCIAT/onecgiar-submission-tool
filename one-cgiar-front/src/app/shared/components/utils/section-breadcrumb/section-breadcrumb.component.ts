@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationStart, Router,Event as NavigationEvent } from '@angular/router';
+import { DataControlService } from '../../../services/data-control.service';
 
 interface SectionList {
   routeName:string
   url:string
+  name:string
 }
 @Component({
   selector: 'app-section-breadcrumb',
@@ -15,47 +17,64 @@ export class SectionBreadcrumbComponent implements OnInit {
   sectionsArray:any;
   sectionsList:SectionList[];
   constructor(
-    private router:Router
+    private router:Router,
+    private _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
     this.sectionsArray =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     this.mapList();
+    console.log(this.sectionsList);
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
         this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');
         this.mapList();
       }
     })
-    // this.sectionsList = this.sectionsList ? this.sectionsList : [{routeName:'test1 ',url:'null'},{routeName:'test2 ',url:'null'},{routeName:'test3 ',url:'null'}]
 
     
-    // this.router.events.subscribe(resp=>{
-    //   let baseUrl = this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/'));
-    //   console.log(baseUrl);
-    //   console.log(baseUrl.split('/'));
-    //   baseUrl.split('/').map((resp,index)=>{
-    //     if (index>0) {
-    //       this.sectionsList.push({routeName:resp,url:'null'}); 
-    //     }
-        
-    //   })
-    //   console.log(this.sectionsList);
-    // })
-    
-    // let stageParam = stage.toLowerCase().split(' ').join('-');  
-  
-    // console.log(stageParam);
+  }
+
+  toFirstMayus(text){
+    let mayus = text.substring(0, 1).toUpperCase();
+    let resto = text.substring(1, text.length).toLowerCase();
+    mayus.concat(resto.toString());
+    return mayus.concat(resto.toString())
   }
 
   mapList(){
     this.sectionsList = [];
-    this.sectionsArray.map((resp,index)=>{
-      if (index>0) {
-        this.sectionsList.push({routeName:resp,url:'null'});
-      }
-    
-    })
+
+        
+          let stageName = this.sectionsArray[1].split('-');
+          stageName = this.toFirstMayus(stageName[0])+' '+this.toFirstMayus(stageName[1]);
+
+          let getSectionName;
+          let getSubSectionName;
+          let getDynamicItemName;
+
+
+          this.sectionsList.push({routeName:this.sectionsArray[1],url:'null',name:stageName});
+
+          if (this.sectionsArray[2]) {
+            getSectionName  = this._dataControlService.userMenu[1].sections.find(item=>item.description == this.sectionsArray[2]);
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSectionName.display_name});
+          }
+
+          if (this.sectionsArray[3]) {
+            getSubSectionName = getSectionName.subsections.find(item=>item.description == this.sectionsArray[3]);
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSubSectionName.display_name});
+          }
+
+          if (this.sectionsArray[4]) {
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:this.sectionsArray[4]});
+          }
+
+          if (this.sectionsArray[5]) {
+            getDynamicItemName = getSubSectionName?.dynamicList?.find(item=>item.id == this.sectionsArray[5]);
+            if (getDynamicItemName)this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getDynamicItemName.name});
+          }
+
   }
 
 }

@@ -3,7 +3,8 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DataValidatorsService } from '../../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-impact-area-is',
@@ -13,27 +14,31 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class ImpactAreaIsComponent implements OnInit {
   showForm = true;
   institutionsLoaded = false;
+  typesLoaded = false;
   sectionForm: FormGroup;
   institutionsList = [];
   institutionsTypes = [];
   institutionsTypesSavedList = [];
   savedList = [];
+  iaID;
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
-    public _interactionsService:InteractionsService
+    public _interactionsService:InteractionsService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.sectionForm = new FormGroup({
       id:new FormControl(null),
-      challenge_priorization:new FormControl(null),
-      research_questions:new FormControl(null),
-      component_work_package:new FormControl(null),
-      performance_results:new FormControl(null),
-      human_capacity:new FormControl(null),
+      challenge_priorization:new FormControl(null, Validators.required),
+      research_questions:new FormControl(null, Validators.required),
+      component_work_package:new FormControl(null, Validators.required),
+      performance_results:new FormControl(null, Validators.required),
+      human_capacity:new FormControl(null, Validators.required),
       impact_area_id:new FormControl(null),
-      partners:new FormControl([]),
-    });
+    }, 
+    // this.customValidation
+    );
   }
 
   ngOnInit(): void {
@@ -44,9 +49,10 @@ export class ImpactAreaIsComponent implements OnInit {
       this.cleanForm();
       // this.showDepthSacale = false;
       this.showForm = false;
+      this.iaID = routeResp.iaID
 
       // this.getPobImpatAreaData(routeResp.pobIaID)
-      this.pobColorselected(3, 7, 16, routeResp.iaID);
+      // this.pobColorselected(3, 7, 16, routeResp.iaID);
       this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
 
       this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
@@ -55,11 +61,29 @@ export class ImpactAreaIsComponent implements OnInit {
           this.updateForm(resp.response.impactStrategies);
           this.savedList = resp.response.impactStrategies.partners;
         }
-      },err=>{console.log(err);},
-      ()=>{this.showForm = true;})
+      },err=>{console.log(err);this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)},
+      ()=>{
+        this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
+        this.showForm = true;
+      })
 
     })
   }
+
+  ngDoCheck(): void {
+    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+    //Add 'implements DoCheck' to the class.
+    // console.log(this.iaID);
+    this.pobColorselected(3, 7, 16, this.iaID);
+  }
+
+  // customValidation(frm: FormGroup){
+  //   console.log("hola");
+  //   console.log(this.casa);
+  //   // this._DataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
+  //   console.log(this.savedList);
+  //   return null;
+  // }
  
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
@@ -78,9 +102,11 @@ export class ImpactAreaIsComponent implements OnInit {
 
   getInstitutionsTypes(){
     this._initiativesService.getInstitutionsTypes().subscribe(resp=>{
-      
-      this.institutionsTypes = resp.response.regions;
+      // console.log("getInstitutionsTypes");
+      // console.log(resp);
+      this.institutionsTypes = resp.response.types;
       // console.log(this.institutionsTypes);
+      this.typesLoaded = true;
     })
   }
 
@@ -110,7 +136,7 @@ export class ImpactAreaIsComponent implements OnInit {
         
         // select current wp
         if (pobIaID != -1) {
-          console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
+          // console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
           if (allImpactAreas.find((IA) => IA.id == pobIaID)) {
             allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
             let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
@@ -126,28 +152,33 @@ export class ImpactAreaIsComponent implements OnInit {
     
     console.log(this.sectionForm.value);
     console.log(this.savedList);
-    console.log(this.institutionsTypesSavedList);
+    
     this.institutionsTypesSavedList.map(item=>{
-      
+      console.log(item);
+      let itBody:any={}
+      itBody.institutionType = item.institutionType
       // item.institutionType = item.name;
-      item.id = null;
-      item.impact_strategies_id = this.sectionForm.value.id;
-      item.institutionTypeId = item.code ;
-      item.name = null;
-      item.code = null;
-      this.savedList.push(item)
+      itBody.id = null;
+      itBody.impact_strategies_id = this.sectionForm.value.id;
+      itBody.institutionTypeId = item.code ;
+      itBody.name = null;
+      itBody.code = null;
+      this.savedList.push(itBody)
     })
     body.partners = this.savedList;
     console.log(body);
+    console.log(this.institutionsTypesSavedList);
+    console.log(this.institutionsTypes);
     this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
       this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);
       let sectionName = 'Impact strategie'
-      this.sectionForm.valid?
+      this.sectionForm.valid && this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code')?
       this._interactionsService.successMessage(`${sectionName} has been saved`):
       this._interactionsService.warningMessage(`${sectionName} has been saved, but there are incomplete fields`)
-    })
+    },err=>{console.log(err);},
+    ()=>{this.getInstitutionsTypes();})
   }
 
   cleanForm(){

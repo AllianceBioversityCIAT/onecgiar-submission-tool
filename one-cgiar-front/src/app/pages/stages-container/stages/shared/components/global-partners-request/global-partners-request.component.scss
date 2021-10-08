@@ -13,6 +13,23 @@
     }
  }
 
+.cont_color{
+    font-weight: 500;
+    color: var(--ibdc-tertiary-color);;
+}
+
+.cont_extra_color{
+    font-weight: 500;
+    color: var(--ibdc-secondary-color);;
+}
+
+.empy_list_title{
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--ibdc-tertiary-color);;
+    text-align: center;
+}
+
  .all_parners_saved{
      max-height: 600px !important;
      padding: 10px;
@@ -51,6 +68,15 @@
      }
  }
 
+.institution_types_container{
+    // border: 1px solid rgb(105, 105, 105);
+    width: auto;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 6px #97979729, 0 3px 6px #97979729;
+
+}
+
  .button_changing_active{
     background-color: var(--ibdc-secondary-color);
     border: 1.5px solid var(--ibdc-secondary-color);
@@ -67,6 +93,11 @@
  }
 
  .partner_request_text{
-    color: rgb(64, 164, 211);
+    color: white;
     cursor: pointer;
+    background-color: rgb(64, 164, 211);
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-size: .9rem;
+    margin-bottom: 100px;
 }

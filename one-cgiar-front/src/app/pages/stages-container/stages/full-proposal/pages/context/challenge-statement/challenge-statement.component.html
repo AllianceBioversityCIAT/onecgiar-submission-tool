@@ -3,6 +3,9 @@
     <form [formGroup]="challengeStatementForm" (ngSubmit)="upserInfo()" class="general-information-form">
 
         <div class="row">
+            <div class="col-12">
+               <app-section-alerts-pack [sectionForm]="challengeStatementForm"></app-section-alerts-pack>
+            </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
                     [options]="{inputTitle:'Challenge statement',readOnlyVariable: _initiativesService.initiative.readonly, editText:true, form:challengeStatementForm, formControlName:'challenge_statement', maxWords:500,

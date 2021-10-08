@@ -19,7 +19,8 @@ export class InitiativesService {
     official_code:null,
     roleId:4,
     readonly: true,
-    stageId:null
+    stageId:null,
+    name:null
   }
 
   actionAreas: [];
@@ -145,10 +146,10 @@ export class InitiativesService {
   // Query to get CLARISA Countries By filter
   getCLARISAInstitutions(filterText: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
-      resp.response.regions.map(institution => {
+      resp.response.institutions.map(institution => {
         institution.acronym_name = `${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
       })
-      return  resp.response.regions;
+      return  resp.response.institutions;
     }));;
   }
   

@@ -287,7 +287,7 @@ export async function getInitvStgId(req: Request, res: Response) {
         if (initvStg == null) {
             throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
         }
-        res.json(new ResponseHandler('Initiatives:Get initvStg.',  initvStg.id ));
+        res.json(new ResponseHandler('Initiatives:Get initvStg.', initvStg.id));
 
 
     } catch (error) {
@@ -969,7 +969,19 @@ export async function getDepthDescription(req: Request, res: Response) {
 
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
-        const actionAreas = await getClaActionAreas();
+
+        //Ger Action Areas from CLARISA
+        // const actionAreas = await getClaActionAreas();
+
+
+       //Get Action Areas from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  actionAreas = await initiativeshandler.requestActionAreas();
+
+
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
         console.log(error);
@@ -1030,8 +1042,16 @@ export const getRegions = async (req: Request, res: Response) => {
 
 export const getInstitutions = async (req: Request, res: Response) => {
     try {
-        const institutions = await getClaInstitutions();
-        res.json(new ResponseHandler('Institutions.', { regions: institutions }));
+        //Get institution from Clarisa
+        // const institutions = await getClaInstitutions();
+
+        //Get institution from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  institutions = await initiativeshandler.requestInstitutions();
+        res.json(new ResponseHandler('Institutions.', { institutions: institutions }));
     } catch (error) {
         console.log(error);
         return res.status(error.httpCode).json(error);
@@ -1049,7 +1069,7 @@ export const getInstitutions = async (req: Request, res: Response) => {
 export const getInstitutionsTypes = async (req: Request, res: Response) => {
     try {
         const institutionsTypes = await getClaInstitutionsTypes();
-        res.json(new ResponseHandler('Institutions types.', { regions: institutionsTypes }));
+        res.json(new ResponseHandler('Institutions types.', { types: institutionsTypes }));
     } catch (error) {
         console.log(error);
         return res.status(error.httpCode).json(error);
@@ -1096,7 +1116,20 @@ export const requestInstitution = async (req: Request, res: Response) => {
 export async function requestImpactAreas(req: Request, res: Response) {
 
     try {
-        const impactAreasRequested = await getImpactAreas();
+
+        //Get impact areas from Clarisa
+
+        // const impactAreasRequested = await getImpactAreas();
+
+
+        //Get impact areas from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let  impactAreasRequested = await initiativeshandler.requestImpactAreas();
+
+
         res.json(new ResponseHandler('Requested Impact areas.', { impactAreasRequested }));
     } catch (error) {
         console.log(error);

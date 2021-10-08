@@ -41,6 +41,8 @@ export class MenuComponent implements OnInit {
     public _dataControlService: DataControlService
   ) {}
 
+  localMenuChangesubscribtion$;
+
   ngOnInit(): void {
     let loadMenu$ = this._dataControlService.loadMenu$.subscribe(
       (stageName) => {
@@ -49,8 +51,8 @@ export class MenuComponent implements OnInit {
       }
     );
 
-    this._dataControlService.menuChange$.subscribe(() => {
-      console.log("menuChange$");
+    this.localMenuChangesubscribtion$  = this._dataControlService.menuChange$.subscribe(() => {
+      // console.log("menuChange$");
       this.getMenu();
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
@@ -64,6 +66,13 @@ export class MenuComponent implements OnInit {
 
     this.getImpacAreasList();
 
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    console.log("ngOnDestroy");
+    this.localMenuChangesubscribtion$.unsubscribe();
   }
 
   getImpacAreasList(){
@@ -181,7 +190,7 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
-            console.log(pobList);
+            // console.log(pobList);
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;
               this._dataControlService.impactStatementsMaped = true;
