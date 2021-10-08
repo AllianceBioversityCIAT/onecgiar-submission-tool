@@ -315,36 +315,158 @@ export async function getLink(req: Request, res: Response) {
 
     try {
 
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add link: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
 
-        const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-            initvSQL,
-            { userId },
-            {}
-        );
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const getLinks = await initiative.getLink(table_name, col_name, active);
+
+        res.json(new ResponseHandler('Initiatives:Get link.', { getLinks }));
 
 
-        initiatives = await queryRunner.connection.query(query, parameters);
-        
-        let initiativesIds = initiatives.map(init => init.initvStgId);
-        
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+/**
+ * 
+ * @param req params:{ value:number, table_name: string, col_name: string, budgetId?: string }
+ * @param res 
+ */
+export async function addBudget(req: Request, res: Response) {
+
+    const { value, table_name, col_name, budgetId, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Add Budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const addedBudget = await initiative.addBudget(value, table_name, col_name, budgetId, active);
+
+        res.json(new ResponseHandler('Initiatives:Add Budget.', { addedBudget }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getBudget(req: Request, res: Response) {
+
+    const { table_name, col_name, active } = req.body;
+
+    // get initiative by stage id from client
+    const { initiativeId, stageId } = req.params;
+
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        const stage = await stageRepo.findOne(stageId);
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Get budget: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        const initiative = new InitiativeStageHandler(initvStg.id + '');
+
+        const getBudget = await initiative.getBudget(table_name, col_name, active);
+
+        res.json(new ResponseHandler('Initiatives:Get budget.', { getBudget }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+
+export async function removeBudget(req: Request, res: Response) {
+
+    const { budgetId } = req.params;
+
+    try {
+
+        const initiative = new InitiativeStageHandler();
+
+        const removeBudget = await initiative.removeBudget(budgetId);
+
+        res.json(new ResponseHandler('Initiatives:Remove budget.', { removeBudget }));
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * All Initiatives 
+ * @param req 
+ * @param res 
+ */
+export async function getInitiatives(req: Request, res: Response) {
+
+    try {
+        // const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
+        //     initvSQL,
+        //     { userId },
+        //     {}
+        // );
+
+
+        // let initvs:Initiatives = new Initiatives();
+        // initvs = await queryRunner.connection.query(query, parameters);
+        // initiatives = await queryRunner.query(initvSQL);
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        // Get active initiatives and detail
+        let initiatives = await initiativeshandler.getAllInitiatives();
+
         if (initiatives.length == 0)
 
             res.json(new ResponseHandler('All Initiatives.', { initiatives: [] }));
 
         else {
 
-            });
-
-  
-            initiatives.forEach(initiative => {
-                initiative['concept'] = concepts.find(c => { return (c.initvStg.id === initiative.initvStgId) ? c.initvStg : null });
-                
-            });
-            
-            /**
-             * more stages to be added
-             */
-            // res.status(200).json({ data: initiatives, msg: 'All Initiatives' });
             res.json(new ResponseHandler('All Initiatives.', { initiatives }));
 
         }
@@ -724,7 +846,7 @@ export const getStage = async (req: Request, res: Response) => {
 export const getStageMeta = async (req: Request, res: Response) => {
 
     // get stage id from params
-    const { initiativeId } = req.params;
+    const { initiativeId } = req.params
     const stageMetaRepo = getRepository(StagesMeta);
     const initvStgRepo = getRepository(InitiativesByStages);
 
@@ -733,14 +855,9 @@ export const getStageMeta = async (req: Request, res: Response) => {
         const initvStg = await initvStgRepo.findOne({ where: { id: initiativeId }, relations: ['stage'] });
         let stagesMeta = await stageMetaRepo.find({ where: { stage: initvStg.stage }, order: { order: 'ASC' } });
 
-        console.log(initvStg.stage.description);
         const stgDesc = initvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
-        console.log(stgDesc);
-        
         const validatedSections = await validatedSection(initvStg.id, stgDesc);
-
-        res.json(new ResponseHandler('Stages meta.', { stagesMeta , validatedSections }));
-
+        res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
         error = new BaseError('Get stages meta - sections.', error.status || 400, error.message, false);
