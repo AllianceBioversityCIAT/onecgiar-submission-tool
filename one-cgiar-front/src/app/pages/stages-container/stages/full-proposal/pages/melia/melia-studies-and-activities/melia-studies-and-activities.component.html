@@ -1,0 +1,41 @@
+<section-title name="Melia studies and activities" ></section-title>
+
+
+
+
+<div class="section-container animate__animated animate__fadeIn">
+
+    <div class="row">
+
+        <div class="col-12">
+            <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
+        </div>
+
+        
+
+        <div class="col-12">
+            <br>
+            <div class="ibdc_button_template_container">
+                <a href="https://initiativestest.ciat.cgiar.org/templates/Section 6.3 - (MELIA) studies and activities - Submission Tool Template_20210924.xlsx" target="_blank" class="ibdc_button_template">
+                    Download template
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <br>
+    
+    <form (ngSubmit)="saveSection()">
+
+        <ibdc-upload-files *ngIf="showForm" [options]="{
+            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
+        </ibdc-upload-files>
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </form>
+
+
+</div>

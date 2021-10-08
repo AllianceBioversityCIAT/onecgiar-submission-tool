@@ -14,6 +14,8 @@ const parentD = `${pth}/uploads/`;
 
 export class InsertPreConceptLeadCoLead1620664266932 implements MigrationInterface {
 
+    name = "InsertPreConceptLeadCoLead1620664266932";
+
     public async up(queryRunner: QueryRunner): Promise<void> {
 
         const fileName = '20210430_initiatives_transformed_v1.1.xlsx';

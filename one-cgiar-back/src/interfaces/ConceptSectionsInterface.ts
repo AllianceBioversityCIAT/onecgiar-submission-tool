@@ -1,7 +1,7 @@
 export interface ConceptSections {
     general_information: any;
     narratives: any;
-    toc: any;
+    initial_theory_of_change: any;
     work_packages: any;
     key_partners: any;
 }

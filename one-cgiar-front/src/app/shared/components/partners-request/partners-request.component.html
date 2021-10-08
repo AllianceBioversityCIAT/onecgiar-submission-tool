@@ -1,37 +1,40 @@
 <div class="container">
     <div class="row" *ngIf="showForm">
         <div class="col-4">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'acronym',inputTitle:'Acronym',required:false}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
         <div class="col-8">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'name',inputTitle:'Name'}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
-        <!-- <div class="col-12">
-            <custom-textarea  
-            [options]="{form:partnersRequestForm,formControlName:'acronym_cgiar_entity',inputTitle:'Acronym of cgiar entity'}">
-            </custom-textarea>
-        </div> -->
+
         <div class="col-6">
-            
-            <custom-select [options]="
+
+            <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Type',
-             form:partnersRequestForm,
+             form: partnersRequestForm,
              formControlId:'institutionTypeCode',
-             selectList:this.institutionTypes,
              selectItemName:'name',
-             selectItemId:'code'
+             selectItemId:'code',
+             frontendSearchAttribute:'name',
+             readOnlyVariable: this._initiativesService.initiative.readonly,
+             service:{
+                 serviceTS:this._initiativesService,
+                 functionName:'getInstitutionsTypes',
+                 objectName: ['response','regions']
+             }
             }">
-            ></custom-select>
+            ></ibdc-select>
+            
         </div>
         <div class="col-12">
                         
-            <custom-select [options]="
+            <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Headquarter country',
@@ -39,72 +42,38 @@
              formControlId:'hqCountryIso',
              selectItemName:'name',
              selectItemId:'isoAlpha2',
-             attributeNameToSearch:'name',
+             frontendSearchAttribute:'name',
              service:{
                  serviceTS:this._initiativesService,
                  functionName:'getCLARISACountries',
-                 objectName:'countries',
-                 frontendSearchAttribute:'name'
+                 objectName: ['response','countries']
              }
             }">
-            ></custom-select>
+            ></ibdc-select>
 
-            <!-- <custom-multiple-choice [options]="{
-                required:true,
-                inputTitle:'Headquarter country',
-                selectedList:this.countriesSelectedList,
-                selectItemName:'name',
-                selectItemId:'code',
-                selectedItemId:'code',
-                service:{
-                    serviceTS:this._initiativesService,
-                    functionName:'getCLARISACountries',
-                    objectName:'countries',
-                    frontendSearchAttribute:'name'
-                }
-               }"></custom-multiple-choice> -->
-
-
-            <!-- <custom-textarea  
-            [options]="{form:partnersRequestForm,formControlName:'hqCountryIso',inputTitle:'Headquarter country'}">
-            </custom-textarea> -->
         </div>
         <div class="col-12">
-            <custom-textarea  
+            <ibdc-textarea  
             [options]="{form:partnersRequestForm,formControlName:'websiteLink',inputTitle:'Website',required:false}">
-            </custom-textarea>
+            </ibdc-textarea>
         </div>
-        <!-- <div class="user_cont">
-            <h3 class="user_data_title background-color-primary">User information</h3>
-            <div class="user_shadow row">
-                <div class="col-6">
-                    <custom-textarea  
-                    [options]="{form:partnersRequestForm,formControlName:'externalUserMail',inputTitle:'User Mail',required:false, readonly:true}">
-                    </custom-textarea>
-                </div>
-                <div class="col-6">
-                    <custom-textarea  
-                    [options]="{form:partnersRequestForm,formControlName:'externalUserName',inputTitle:'User Name',required:false, readonly:true}">
-                    </custom-textarea>
-                </div>
-                <div class="col-12">
-                    <custom-textarea  
-                    [options]="{form:partnersRequestForm,formControlName:'externalUserComments',inputTitle:'User comments',required:false}">
-                    </custom-textarea>
-                </div>
-                <br><br>
-            </div>
-        </div> -->
+
         <div class="col-12">
             <br>
             <br>
             <br>
-        <div mat-dialog-actions align="end" class="dialog-actions" >
-            <button mat-raised-button color="primary" class="animate__animated animate__fadeIn" (click)="backAddNewKeyPartner()">back</button>
-            <button mat-raised-button color="accent"  class="animate__animated animate__fadeIn" (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Request</button>
+        <div align="end" class="dialog-actions" >
+            <button (click)="backAddNewKeyPartner()" pButton type="button" label="Primary" class="animate__animated animate__fadeIn">back</button>
+            <button 
+            (click)="onCreatePartner()"  
+            [disabled]="partnersRequestForm.invalid" 
+            pButton type="button" label="Request" class="p-button-success animate__animated animate__fadeIn"></button>
+
+            <!-- <button  (click)="backAddNewKeyPartner()">back</button>
+            <button (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Request</button> -->
         </div>   
         <br>     
         </div>
     </div>
 </div>
-<ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='partners-request'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
+<!-- <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='partners-request'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner> -->

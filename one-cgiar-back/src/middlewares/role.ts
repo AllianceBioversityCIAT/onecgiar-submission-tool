@@ -14,16 +14,17 @@ export const checkRole = (entityName: string, permissionActions: string) => {
             let user = await userRepository.findOne(userId, { relations: ['roles'] });
             let rolesAcronyms = user.roles.map(role => role.acronym);
             const permission = accessCtrl.can(rolesAcronyms)[permissionActions](entityName);
+            
             if (permission.granted) {
                 next();
             } else {
-                res.status(401).json({ msg: 'No authorized' });
+                res.status(400).json({ msg: 'No authorized' });
             }
 
         } catch (error) {
             console.log('check role permissions');
             console.log(error);
-            return res.status(401).json({ msg: 'No authorized' });
+            return res.status(400).json({ msg: 'No authorized' });
         }
     }
 }

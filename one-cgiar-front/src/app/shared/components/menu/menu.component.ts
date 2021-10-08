@@ -7,20 +7,30 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
-
-
+import { trigger, state, style, animate, transition} from '@angular/animations';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  animations: [
+    trigger('expandable', [
+      state('expand', style({ height: '*' })),
+      state('collapse', style({ height: '0' })),
+      transition('collapse => expand', animate('.3s ease-in')),
+      transition('expand => collapse', animate('.3s ease-out')),
+    ]),
+  ],
 })
 export class MenuComponent implements OnInit {
+  state = 'inactive';
   stages: any[];
   stages_meta: [];
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
-  workPackagesList: any = [];
-  currentStageName='';
+  currentStageName = '';
+  impacAreasList = []
+
   // stageUrl;
   constructor(
     public _requests: RequestsService,
@@ -29,116 +39,234 @@ export class MenuComponent implements OnInit {
     public stgMenuSvc: StagesMenuService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-   let loadMenu$ = this._dataControlService.loadMenu$.subscribe(stageName=>{
-     console.log('%cstageName: '+stageName,'background: #222; color: #84c3fd');
-      console.log("load menu with iniid: "+this.initiativesSvc.initvStgId);
-      // stageName == 'concept' ? this.getStages() : this.simulateFullProposal();
-      this.currentStageName = stageName;
-      this.getStages();
-      loadMenu$.unsubscribe();
-    })
+    let loadMenu$ = this._dataControlService.loadMenu$.subscribe(
+      (stageName) => {
+        this.currentStageName = stageName;
+        loadMenu$.unsubscribe();
+      }
+    );
 
     this._dataControlService.menuChange$.subscribe(() => {
-      this.getAllIWorkPackages();
+      console.log("menuChange$");
+      this.getMenu();
+      // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
-    })
+    });
 
     this._dataControlService.menuChange$.emit();
-    this.stgMenuSvc.menu.subscribe(
-      menu => {
-        this.subMenusFormValidation = menu;
-      }
-    )
+
+    this.stgMenuSvc.menu.subscribe((menu) => {
+      this.subMenusFormValidation = menu;
+    });
+
+    this.getImpacAreasList();
+
   }
 
-  simulateFullProposal(){
-    console.log('%cto push','background: #222; color: #84c3fd');
-    let body=[
-      {
-        title:'General Information ',
-        route:'general-information'
-      },
-      {
-        title: "Context",
-        route:'context',
-        subSections:[
-          {
-            title:'Challenge statement',
-            route:'challenge-statement'
-          },
-          {
-            title:'Comparative Advantage',
-            route:'comparative-advantage'
-          }
-        ]
-      },
-      {
-        title: "Governance, Strategies and Plans"
-      },
-      {
-        title: "Work Packages "
-      },
-      {
-        title: "Innovation Module"
-      },
-      {
-        title: "Theory of change"
-      },
-      {
-        title: "MELIAs"
-      },
-      {
-        title: "Human and Financial Resources"
+  getImpacAreasList(){
+    // console.log("getImpacAreasList");
+    this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
+      
+      // console.log(impacAreas.response.impactAreasRequested);
+      this.impacAreasList = impacAreas.response.impactAreasRequested;
+      // console.log(this.impacAreasList);
+    },(err) => {
+      console.log(err);
+
+    },()=>{
+      // console.log("call");
+          this._dataControlService.menuChange$.emit();
+          // this._dataControlService.validateMenu$.emit();
+    })
+  }
+
+  sortAlphabetically(list) {
+    list.sort(function (a, b) {
+      if (a[list.sort] < b[list.sort]) {
+        return -1;
       }
-    ]
-    this.stages[2].grouped=body;
-    console.log(this.stages[2]);
-    if (this.currentStageName != 'concept') {
-      this.stages[1].active = false;
-      this.stages[2].active = true;
+      if (a[list.sort]> b[list.sort]) {
+        return 1;
+      }
+      return 0;
+    });
+    return list;
+  }
+
+  mapDataInMenu(stageId, sectionId, subSectionId, list) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .subsections.find(
+        (subSection) => subSection.subSectionId == subSectionId
+      ).dynamicList = list);
+    // console.log(sectionFinded);
+  }
+
+  getMenu() {
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
+        this._dataControlService.userMenu = userMenuResp.response.stages;
+        // console.log(this._dataControlService.userMenu);
+        // console.log(userMenuResp.response.stages.length);
+        if (userMenuResp.response.stages.length > 1) {
+
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+                // console.log(wpsResp);
+                wpsResp.response.workpackage.map((wpResp) => {
+                  wpResp.subSectionName = 'work-package';
+                  wpResp.frontRoute = '/work-packages/work-package/';
+                  wpResp.sort = 'showName';
+                  wpResp.showName = wpResp.acronym;
+                });
+                this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
+                this._dataControlService.wpMaped = true;
+                // console.log(this._dataControlService.userMenu);
+              },(err) => {
+                console.log(err);
+                this._dataControlService.wpMaped = true;
+              });
+
+
+
+
+            let pobList = [];
+            let impactStatementsList = [];
+
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/projection-of-benefits/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              pobList.push(body)
+
+            })
+            this.mapDataInMenu(3, 1, 8, pobList);
+           
+
+            // var arr = [1, 2, 3, 4, 5];
+
+            // var results: number[] = await Promise.all(arr.map(async (item): Promise<number> => {
+            //     await callAsynchronousOperation(item);
+            //     return item + 1;
+            // }));
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+             
+              // body = item;
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/impact-areas/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              impactStatementsList.push(body)
+            })
+
+            this.mapDataInMenu(3, 7, 16, impactStatementsList);
+            
+            console.log(pobList);
+            if (this.impacAreasList.length) {
+              this._dataControlService.pobMaped = true;
+              this._dataControlService.impactStatementsMaped = true;
+            }
+           
+            // console.log(pobList);
+            // console.log(impactStatementsList);
+            this._dataControlService.validateMenu$.emit();
+        }
+       
+      });
+  }
+
+  activeClassByRoute(route: []) {
+    let correct = 0;
+
+    let baseUrl = this.router.routerState.snapshot.url;
+    route.map((resp: string) => {
+      correct =
+        baseUrl.indexOf(resp.toLowerCase().split(' ').join('-')) > -1
+          ? correct + 1
+          : correct;
+    });
+    // if (stage) {
+
+    return correct == route.length ? true : false;
+    // }else{
+    //   return baseUrl.indexOf(route)>-1?true:false
+    // }
+  }
+
+  menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');
+    // console.log(active, stage, section, isSection, subsection)
+    if (active) {
+      if (isSection) {
+        if (!subsection.length) {
+          this.router.navigate([baseUrl, stageParam, section]);
+        }
+      } else {
+        if (subsection) {
+          this.router.navigate([baseUrl, stageParam, section, subsection]);
+        }
+      }
+    } else {
+      this.router.navigate([baseUrl, stageParam, 'under-construction-page']);
     }
+  }
+
+  dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');
+    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
+    this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
+    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+  }
+
+  toggleExpand(subSectionsList: HTMLElement) {
+    subSectionsList.classList.toggle('expandIbd');
+    subSectionsList.classList.toggle('collapseIbd');
+    // console.log('toggleExpand');
   }
 
   goToWp(id) {
     let currentUrl = this.router.url;
-    this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package`, { skipLocationChange: true }).then(() => {
-      this.router.navigate([`/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package/` + id]);
-    });
-  }
-
-
-
-  getStages() {
-    this.initiativesSvc.getStages()
-      .subscribe(
-        res => {
-          // console.log(res);
-          res.stages.map(stage => {
-            stage.groups = [];
-            res.stagesMeta.forEach(meta => {
-              if (meta.stage_name == stage.description)
-                stage.groups.push(meta)
-            });
-            // stage.grouped = this.utilsHandler.groupData(stage.groups)
-            stage.grouped = this.utilsHandler.groupByProp(stage.groups, 'group_by');
-            // stage.grouped = stage.grouped
-          })
-          this.stages = res.stages;
-          console.log(this.stages)
-          this.simulateFullProposal();
-        }
+    this.router
+      .navigateByUrl(
+        `/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package`,
+        { skipLocationChange: true }
       )
-
+      .then(() => {
+        this.router.navigate([
+          `/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package/` +
+            id,
+        ]);
+      });
   }
 
   parseStageUrl(meta: any, section: string) {
     const snapshot = this.router.routerState.snapshot;
-    const baseUrl = snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
+    const baseUrl =
+      snapshot.url.substring(0, snapshot.url.indexOf('stages/')) + 'stages/';
     const stage = meta.description.toLowerCase().split(' ').join('-');
-    return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`
+    return `${baseUrl}${stage}/${section.toLowerCase().split(' ').join('-')}`;
   }
 
   navigateTo(meta: any, section: string) {
@@ -147,7 +275,6 @@ export class MenuComponent implements OnInit {
     // }else{
     //   this._interactionsService.openSnackBarPosition('Section under construction','Ok')
     // }
-
   }
 
   validateSubMenuForm(stageName: any, subMenu: string) {
@@ -155,49 +282,5 @@ export class MenuComponent implements OnInit {
     subMenu = subMenu.toLowerCase().split(' ').join('_');
     // console.log(stageName, subMenu, this.subMenusFormValidation)
     return this.subMenusFormValidation[stageName][subMenu];
-  }
-
-  validate_under_construction(section) {
-    console.log('%c'+section,'background: #222; color: #84c3fd');
-    switch (section) {
-      case 'General Information ':
-        return true
-      case "Context":
-        return true
-      case 'Challenge statement':
-        return true
-      case 'Comparative Advantage':
-        return true
-      case "Governance, Strategies and Plans":
-        return true
-      case "Work Packages ":
-        return true
-      case "Innovation Module":
-        return true
-      case "Theory of change":
-        return true
-      case "MELIAs":
-        return true
-      case "Human and Financial Resources":
-        return true
-      default:
-        return false
-    }
-  }
-
-  getAllIWorkPackages() {
-    // this.spinnerService.show('work-packages');
-    this.initiativesSvc.getAllIWorkPackages(this.initiativesSvc.initvStgId).subscribe(resp => {
-      //  console.log("getAllIWorkPackages");
-      this.workPackagesList = resp.response.workPackages;
-      // console.log( this.workPackagesList);
-    },
-      err => {
-        // this.spinnerService.hide('work-packages');
-      },
-      () => {
-        // this.spinnerService.hide('work-packages');
-      })
-    // this.validateWorkPackages();
   }
 }

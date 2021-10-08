@@ -3,7 +3,7 @@
     <mat-icon (click)="removeContribution()">delete</mat-icon>
 </div>
 
-<custom-select [options]="
+<ibdc-select [options]="
 {
  required:true,
  inputTitle:'Indicate a common impact indicators attributable to CGIAR',
@@ -14,9 +14,9 @@
  selectItemName:'indicatorStatement',
  selectItemId:'indicatorId'
 }">
-></custom-select>
+></ibdc-select>
 
-<table>
+<!-- <table>
     <tr>
         <th></th>
         <th *ngFor="let item of contribution.timeFrames">{{item.year}}</th>
@@ -29,7 +29,7 @@
         <td>High scenario</td>
         <td *ngFor="let item of contribution.timeFrames">{{item.high_scenario}}</td>
     </tr>
-</table>
+</table> -->
 <br>
 <div class="set-data-container">
     <div>
@@ -40,13 +40,13 @@
 
 </div>
 
-<custom-textarea  
+<ibdc-textarea  
 [options]="{form:this.poBenefitsForm,formControlName:'notes',inputTitle:'Add any notes on methodology and sources here'}">
-</custom-textarea>
+</ibdc-textarea>
 
 <div class="set-data-container">
     <div>
-        <save-button></save-button>
+        <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
     </div>
 
 </div>

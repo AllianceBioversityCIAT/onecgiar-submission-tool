@@ -1,0 +1,100 @@
+<h1 mat-dialog-title class="background-color-primary-3"> {{tabNumber==0?'Manage access to the this initiative':'Manage access general'}}
+    <mat-icon aria-hidden="false" aria-label="Example home icon" class="botton_close" mat-dialog-close>cancel</mat-icon>
+</h1>
+<div class="dialog_cont">
+
+    <div class="custom-container-dialog">
+
+        <mat-tab-group [(selectedIndex)]="tabNumber">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon style="margin-right: 8px;" class="tab-icon">person_add</mat-icon>
+                    Assign coordinators
+                </ng-template>
+
+
+                <!-- <br> -->
+                <div class="custom-container-dialog">
+                    <br>
+                    <div class="row" style="margin: 0px 50px;">
+                        <div class="col-sm-6" *ngIf="false">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Add users</mat-label>
+                                <p class="description_text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi perferendis quaerat dolores ut qui repellat vero modi alias iusto!</p>
+                                <input matInput placeholder="Search users" animate__fadeInLeft>
+                            </mat-form-field>
+                            <div class="scroll_container">
+                                <mat-card class="no_selected_users pointer" *ngFor="let user of allUsers">
+                                    <div class="row">
+                                        <span class="title_card col-sm-6"> <strong>{{user.first_name}}
+                                                {{user.last_name}}</strong></span>
+                                        <span class="title_card col-sm-6">{{user.email}}</span>
+                                    </div>
+                                    <mat-icon class="person_add">person_add</mat-icon>
+                                </mat-card>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12" *ngIf="showForm">
+                              
+                               <ibdc-select-multiple [options]="{
+                                required:false,
+                                inputTitle:'Please select the users who yo should access to this initiative',
+                                selectItemName:'firstN_lastN_email',
+                                selectItemId:'userId',
+                                frontendSearchAttribute:'firstN_lastN_email',
+                                readOnlyVariable: this.initiativesSvc.initiative.readonly,
+                                hideSavedList: true,
+                                savedList:{
+                                    list:this.selectedUsers,
+                                    selectItemId:'userId',
+                                    selectItemName:'firstN_lastN_email',
+                                    idToSave:'id',
+                                    labelName:'regions'
+                                },
+                                service:{
+                                    serviceTS:this.initiativesSvc,
+                                    functionName:'getAllUsers',
+                                    objectName:['response','users']
+                                }
+                               }"></ibdc-select-multiple>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <h2 class="color-secondary">Users with editing access to this initiative.</h2>
+                            <div class="scroll_container">
+
+                                <mat-accordion class="example-headers-align" *ngIf="rolesLoaded && usersLoaded">
+                                    <app-edit-rol-user *ngFor="let user of selectedUsers" [user]="user" [roles]="allRoles" [activeWithUserId]="4"  initiativeId (reload)="getUsersByInitiative()"></app-edit-rol-user>
+                                </mat-accordion>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon style="margin-right: 8px;" class="tab-icon">add_circle_outline</mat-icon>
+                    Register users
+                </ng-template>
+
+
+                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" ></app-create-users>
+
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+</div>
+
+
+<!-- 
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="addCoordinator()"><mat-icon>person_add</mat-icon><strong>Add coordinator</strong></button>
+  <button mat-button><mat-icon>add_circle_outline</mat-icon><strong>Create coordinator</strong></button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Close</button>
+</div>
+ -->

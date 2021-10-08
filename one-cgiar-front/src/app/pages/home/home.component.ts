@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   public user: any = null;
   public data: any = [];
   public role: string = null;
-
+  showTable = false;
   constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
 
   ngOnInit(): void {    

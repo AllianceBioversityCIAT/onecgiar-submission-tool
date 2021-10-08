@@ -20,6 +20,22 @@ export class Files extends UpdatedCreatedAt {
     @IsNotEmpty()
     name: string
 
+    @Column({type: 'int'})
+    meliaId: number;
+
+    @Column({type: 'int'})
+    manage_plan_risk_id: number;
+
+    @Column({type: 'int'})
+    humanId: number;
+
+    @Column({type: 'int'})
+    financial_resources_id: number;
+
+    @Column({length: '200'})
+    section: string;
+
+
     @ManyToOne(() => TOCs, tocs => tocs.id)
     public tocs!: TOCs;
 

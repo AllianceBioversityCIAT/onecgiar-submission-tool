@@ -1,21 +1,21 @@
 import { Router } from 'express'
-import { getAllRoles, createRole, editRole, deleteRole, createPermission, getAllPermissions } from '../controllers/Roles'
+import * as roles from '../controllers/Roles'
 import { checkJwt } from '../middlewares/jwt'
 import { checkRole } from '../middlewares/role'
 
 const router = Router()
 
 // create role
-router.post("/", [checkJwt, checkRole('roles', 'createAny')], createRole);
+router.post("/", [checkJwt, checkRole('roles', 'createAny')], roles.createRole);
 
 // get roles
-router.get("/", getAllRoles);
+router.get("/", roles.getAllRoles);
 
 // edit role
-router.put("/:id([0-9]+)", [checkJwt, checkRole('roles', 'updateAny')], editRole);
+router.put("/:id([0-9]+)", [checkJwt, checkRole('roles', 'updateAny')], roles.editRole);
 
 // delete role
-router.delete("/:id([0-9]+)", [checkJwt, checkRole('roles', 'deleteAny')], deleteRole);
+router.delete("/:id([0-9]+)", [checkJwt, checkRole('roles', 'deleteAny')], roles.deleteRole);
 
 /***
  * 
@@ -25,9 +25,9 @@ router.delete("/:id([0-9]+)", [checkJwt, checkRole('roles', 'deleteAny')], delet
 
 
 // create permission
-router.post("/permissions", [checkJwt, checkRole('roles', 'createAny')], createPermission);
+router.post("/permissions", [checkJwt, checkRole('roles', 'createAny')], roles.createPermission);
 
 // get permission
-router.get("/permissions", [checkJwt], getAllPermissions);
+router.get("/permissions", [checkJwt], roles.getAllPermissions);
 
 export default router;

@@ -14,7 +14,7 @@ export class GeneralInformationWorkPackageComponent implements OnInit {
   showform = false;
   workPackageData;
   constructor(
-    private _initiativesService:InitiativesService,
+    public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
     private _dataControlService:DataControlService
   ) { 

@@ -2,24 +2,28 @@
     <br>
     <div class="animate__animated form animate__fadeIn form_animation" *ngIf="showform">
         
-        <custom-textarea  
-        [options]="{form:workPackageForm,formControlName:'acronym',inputTitle:'Short name'}">
-        </custom-textarea>
+        <ibdc-textarea  
+        [options]="{form:workPackageForm,formControlName:'acronym',inputTitle:'Short name',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
+        </ibdc-textarea>
 
-        <custom-textarea  
-        [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name'}">
-        </custom-textarea>
+        <ibdc-textarea  
+        [options]="{form:workPackageForm,maxWords:50,formControlName:'name',inputTitle:'Name',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
+        </ibdc-textarea>
 
-        <custom-textarea  
-        [options]="{form:workPackageForm,maxWords:500,formControlName:'pathwayContent',inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
-        </custom-textarea>
+        <ibdc-textarea  
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'pathwayContent',
+        readOnlyVariable: this._initiativesService.initiative.readonly,inputTitle:'Ensure both science/research and innovation/impact pathway content'}">
+        </ibdc-textarea>
 
-        <custom-textarea  
-        [options]="{form:workPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results'}">
-        </custom-textarea>    
+        <ibdc-textarea  
+        [options]="{form:workPackageForm,maxWords:500,formControlName:'results',inputTitle:'Results',
+        readOnlyVariable: this._initiativesService.initiative.readonly}">
+        </ibdc-textarea>    
     </div>
     <br>
     <div class="narratives-save">
-        <save-button></save-button>
+        <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
     </div>
 </form>

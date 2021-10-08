@@ -1,0 +1,19 @@
+<section-title name="Innovation Packages and Scaling Readiness Plan" ></section-title>
+<form  (ngSubmit)="saveSection()" class="general-information-form">
+    <div class="section-container animate__animated animate__fadeIn" >
+        <div class="row" *ngIf="showForm">
+            <div class="col-sm-12" >
+                <ibdc-textarea
+                    [options]="{inputTitle:'Articulated key principles of Innovation Packages and Scaling Readiness',readOnlyVariable: false, form:secionForm,editText:true, formControlName:'key_principles', maxWords:250,
+                    description:'Provide narrative that covers:1. How key principles of the Innovation Packages and Scaling Readiness approach will be integrated into the Initiative between 2022-2024, and how this is expected to add value to the Initiative, 2. Indicate the dedicated capacity and budget to embed key principles of the Innovation Package and Scaling Readiness approach into the Initiative between 2022-2024, and associated Management Plan and MELIA activities, over the course of the Initiative.'}">
+                </ibdc-textarea>
+            </div>
+
+        </div>
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        </div>
+    </div>
+    
+    
+</form>

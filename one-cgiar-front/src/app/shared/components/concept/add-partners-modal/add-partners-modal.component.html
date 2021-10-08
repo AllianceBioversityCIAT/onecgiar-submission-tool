@@ -1,7 +1,7 @@
-<h2 class="background-color-primary animate__animated animate__faster animate__fadeInDown" *ngIf="modalOpacity"  mat-dialog-title>Add new key partner
+<h2 class="ibdc_bg_secondary_color animate__animated animate__faster animate__fadeInDown" *ngIf="modalOpacity"  mat-dialog-title>Add new key partner
     <mat-icon aria-hidden="false" aria-label="Example home icon" class="botton_close" mat-dialog-close>cancel</mat-icon>
 </h2>
-<h2 class="background-color-primary animate__animated animate__faster animate__fadeInDown" *ngIf="!modalOpacity"  mat-dialog-title>Partners request
+<h2 class="ibdc_bg_secondary_color animate__animated animate__faster animate__fadeInDown" *ngIf="!modalOpacity"  mat-dialog-title>Partners request
     <mat-icon aria-hidden="false" aria-label="Example home icon" class="botton_close" mat-dialog-close>cancel</mat-icon>
 </h2>
 
@@ -10,11 +10,10 @@
          <div class="modal-container-1 animate__animated animate__fadeIn" *ngIf="modalOpacity" style.opacity="{{modalOpacity?'1':'0'}}">
 <div class="container">
     <span style="position: relative;">
-        <custom-select 
+        <ibdc-select
         [options]="
         {
          required:true,
-         readonly:false,
          inputTitle:'Select key partner',
          form:keyPartnersForm,
          formControlId:'key_partner_id',
@@ -26,18 +25,17 @@
          service:{
             serviceTS:this._initiativesService,
             functionName:'getCLARISAInstitutions',
-            objectName:'institutions',
             frontendSearchAttribute:'acronym_name'
         }
         }">
-        ></custom-select>
+        ></ibdc-select>
     </span>
 
     <p class="add-partner-text" (click)="requestPartner()">If you do not find the key partner as part of the drop-down list, please request to
         add it by clicking here.</p>
 
-    <custom-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
-    inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></custom-textarea>
+    <ibdc-textarea [options]="{required:true, readonly:false, form:keyPartnersForm, formControlName:'description',
+    inputTitle:'Describe how the partner fits within the overall Theory of Change',maxWords:250}"></ibdc-textarea>
 
         <br><br><br><br>
 </div>

@@ -27,6 +27,9 @@ export class WorkPackages extends UpdatedCreatedAt {
     @Column('tinyint')
     is_global: boolean
 
+    @Column({type:"int"})
+    initvStgId:number
+
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()
     initvStg!: InitiativesByStages;
