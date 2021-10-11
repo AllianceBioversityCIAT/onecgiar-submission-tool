@@ -21,11 +21,21 @@ var cron = require('node-cron');
 
 // Create and Delete institutions every six hours 0 */6 * * *
 cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
-   
-    await taskClarisa.createImpactAreas();
-    await taskClarisa.createActionAreas();
-    await taskClarisa.createInstitutions();
 
+    try {
+
+        await taskClarisa.createImpactAreas();
+        await taskClarisa.createActionAreas();
+        await taskClarisa.createInstitutions();
+        await taskClarisa.createInstitutionsTypes();
+        
+    } catch (error) {
+
+        console.log('Data management from CLARISA',error);
+        
+        
+    }
+   
 });
 
 if (!process.env.PORT) {

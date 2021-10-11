@@ -164,6 +164,18 @@ export class InitiativeHandler {
     }
 
 
+    async requestInstitutionsTypes() {
+
+        const querySql = `
+        SELECT id as code,name
+        FROM clarisa_institutions_types
+`;
+        const institutionsTypes = await this.queryRunner.query(querySql);
+        return institutionsTypes;
+
+    }
+
+
 
 }
 

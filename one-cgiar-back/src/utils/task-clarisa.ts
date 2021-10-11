@@ -3,6 +3,7 @@ import { ClarisaInstitutions } from "../entity/ClarisaIntitutions";
 import * as clarisa from '../controllers/Clarisa';
 import { ClarisaImpactAreas } from "../entity/ClarisaImpactAreas";
 import { ClarisaActionAreas } from "../entity/ClarisaActionAreas";
+import { ClarisaInstitutionsTypes } from "../entity/ClarisaInstitutionsTypes";
 
 
 
@@ -210,3 +211,65 @@ export async function createInstitutions() {
 
 }
 
+/**CLARISA INSTITUTIONS TYPES*/
+
+export async function deleteInstitutionsTypes() {
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaInstitutionsTypes);
+        const clarisaInstitutionsTypes = new ClarisaInstitutionsTypes();
+        const r = await clarisaRepo.delete(clarisaInstitutionsTypes);
+        console.log('11.delete institutions types');
+
+    } catch (error) {
+
+        console.log('deleteInstitutionsTypes', error);
+
+    }
+
+}
+
+export async function createInstitutionsTypes() {
+
+    console.log('10.start create institutions types');
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaInstitutionsTypes);
+        const institutionsTypes = await clarisa.getClaInstitutionsTypes();
+
+        if (institutionsTypes.length > 0) {
+
+            await deleteInstitutionsTypes();
+
+            let institutionsArray: ClarisaInstitutionsTypes[] = [];
+            let idTable = 0;
+
+            for (let index = 0; index < institutionsTypes.length; index++) {
+                const element = institutionsTypes[index];
+                idTable = idTable + 1;
+                let cla = clarisaRepo.create({
+                    id: idTable,
+                    name: element.name
+                });
+                institutionsArray.push(cla)
+
+            }
+
+            const r = await clarisaRepo.save(institutionsArray);
+
+            console.log('12.end create institutions types');
+
+        } else {
+            console.log('Issues with Clarisa');
+
+        }
+
+    } catch (error) {
+
+        console.log('createInstitutionsTypes', error);
+
+    }
+
+}
