@@ -132,6 +132,7 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 14px 28px rgba(34, 34, 34, 0.25), 0 10px 10px rgba(49, 49, 49, 0.22);
+    min-height: calc(100vh - 240px);
 }
 
 .initiative-identification {
