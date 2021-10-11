@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OpenAndFairDataAssetsRoutingModule } from './open-and-fair-data-assets-routing.module';
@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OpenAndFairDataAssetsModule { }
