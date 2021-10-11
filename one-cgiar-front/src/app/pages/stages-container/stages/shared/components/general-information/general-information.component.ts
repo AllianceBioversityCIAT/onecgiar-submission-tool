@@ -168,7 +168,6 @@ export class GeneralInformationComponent implements OnInit {
       })
 
       this.showForm = true;
-
     },
       err => {
         console.log(err);
@@ -223,11 +222,10 @@ export class GeneralInformationComponent implements OnInit {
 
     if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
     console.log(body);
-    this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
-      console.log(generalResp.response.generalInformation);
-      this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformationId);
-      this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
 
+    this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
+      this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
+      this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
       //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
       // })
