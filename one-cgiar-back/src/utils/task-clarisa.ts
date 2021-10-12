@@ -250,7 +250,7 @@ export async function createInstitutionsTypes() {
                 const element = institutionsTypes[index];
                 idTable = idTable + 1;
                 let cla = clarisaRepo.create({
-                    id: idTable,
+                    id: element.code,
                     name: element.name
                 });
                 institutionsArray.push(cla)
