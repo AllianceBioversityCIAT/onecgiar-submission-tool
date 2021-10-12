@@ -60,7 +60,8 @@
                             selectItemId:'code',
                             selectItemName:'name',
                             idToSave:'id',
-                            labelName:'Institutions'
+                            labelName:'Institutions',
+                            listToDisableElements: getInstitutionsTypesDisableList()
                         }
                        }"></ibdc-select-multiple>
                     <div class="institution_types_container" *ngIf="countDuplicates(this.savedList).length">

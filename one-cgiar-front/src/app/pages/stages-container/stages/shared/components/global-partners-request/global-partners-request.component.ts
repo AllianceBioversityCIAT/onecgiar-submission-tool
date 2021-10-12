@@ -11,7 +11,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   @Input() savedList:any;
   @Input() institutionsTypes:any;
   @Input() institutionsTypesSavedList:any;
-
+  @Input() institutionsTypesDisableList:any;
   display: boolean = false;
   button_changing = [
     {
@@ -33,8 +33,14 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this.savedList);
-    // console.log(this.institutionsTypesSavedList);
+    console.log(this.institutions);
+    console.log(this.institutionsTypes);
+    console.log("savedList");
+    console.log(this.savedList);
+    console.log("institutionsTypesSavedList");
+    console.log(this.institutionsTypesSavedList);
+    console.log("institutionsTypesDisableList");
+    console.log(this.institutionsTypesDisableList);
     this.mapInstitutionsTypes();
     // console.log(this.institutions);
     this.institutions.map(item=>{
@@ -42,6 +48,22 @@ export class GlobalPartnersRequestComponent implements OnInit {
       item.id = null;
       item.tag_id = 0;
     })
+  }
+
+  getInstitutionsTypesDisableList(){
+    let institutionsTypesDisableList=[];
+    console.log(this.savedList);
+    this.savedList.map(item=>{
+    if (item.code) {
+      let body = {
+        name:item.institutionType,
+        code:item.institutionTypeId,
+        id:item.id
+      }
+      institutionsTypesDisableList.push(body);
+    }
+  });
+  return institutionsTypesDisableList;
   }
 
   mapInstitutionsTypes(){

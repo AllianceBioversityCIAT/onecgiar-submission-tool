@@ -19,6 +19,7 @@ export class ImpactAreaIsComponent implements OnInit {
   institutionsList = [];
   institutionsTypes = [];
   institutionsTypesSavedList = [];
+  institutionsTypesDisableList = [];
   savedList = [];
   iaID;
   constructor(
@@ -59,7 +60,7 @@ export class ImpactAreaIsComponent implements OnInit {
         // console.log(resp);
         if (resp.response.impactStrategies) {
           this.updateForm(resp.response.impactStrategies);
-        
+          console.log(resp.response.impactStrategies.partners);
           resp.response.impactStrategies.partners.map(item=>{
 
             if (item.code) {
