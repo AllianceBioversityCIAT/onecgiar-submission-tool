@@ -1091,12 +1091,12 @@ export const getActionAreas = async (req: Request, res: Response) => {
         // const actionAreas = await getClaActionAreas();
 
 
-       //Get Action Areas from submission
+        //Get Action Areas from submission
 
         // create new Meta Data object
         const initiativeshandler = new InitiativeHandler();
 
-        let  actionAreas = await initiativeshandler.requestActionAreas();
+        let actionAreas = await initiativeshandler.requestActionAreas();
 
 
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
@@ -1167,7 +1167,7 @@ export const getInstitutions = async (req: Request, res: Response) => {
         // create new Meta Data object
         const initiativeshandler = new InitiativeHandler();
 
-        let  institutions = await initiativeshandler.requestInstitutions();
+        let institutions = await initiativeshandler.requestInstitutions();
         res.json(new ResponseHandler('Institutions.', { institutions: institutions }));
     } catch (error) {
         console.log(error);
@@ -1185,7 +1185,17 @@ export const getInstitutions = async (req: Request, res: Response) => {
 
 export const getInstitutionsTypes = async (req: Request, res: Response) => {
     try {
-        const institutionsTypes = await getClaInstitutionsTypes();
+        //Get institution types from Clarisa
+        // const institutionsTypes = await getClaInstitutionsTypes();
+
+        //Get institution types from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let institutionsTypes = await initiativeshandler.requestInstitutionsTypes();
+
+
         res.json(new ResponseHandler('Institutions types.', { types: institutionsTypes }));
     } catch (error) {
         console.log(error);
@@ -1244,7 +1254,7 @@ export async function requestImpactAreas(req: Request, res: Response) {
         // create new Meta Data object
         const initiativeshandler = new InitiativeHandler();
 
-        let  impactAreasRequested = await initiativeshandler.requestImpactAreas();
+        let impactAreasRequested = await initiativeshandler.requestImpactAreas();
 
 
         res.json(new ResponseHandler('Requested Impact areas.', { impactAreasRequested }));
