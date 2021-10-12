@@ -33,6 +33,8 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // console.log(this.savedList);
+    // console.log(this.institutionsTypesSavedList);
     this.mapInstitutionsTypes();
     // console.log(this.institutions);
     this.institutions.map(item=>{
@@ -62,55 +64,46 @@ export class GlobalPartnersRequestComponent implements OnInit {
     item.tag_id = value;
   }
 
-  countDuplicates(originalArray, prop) {
+  countDuplicates(originalArray) {
     var newArray = [];
     var lookupObject  = {};
 
     // console.log(this.institutionsTypesSavedList);
-
+    // savedLists
     for(var i in originalArray) {
       
       if (originalArray[i].active !== false) {
-        if (!(lookupObject[originalArray[i][prop]])) lookupObject[originalArray[i][prop]] = {cont:0};
-        lookupObject[originalArray[i][prop]].institutionType = originalArray[i].institutionType;
+        if (!(lookupObject[originalArray[i]['institutionType']])) lookupObject[originalArray[i]['institutionType']] = {cont:0};
+        lookupObject[originalArray[i]['institutionType']].institutionType = originalArray[i].institutionType;
+        lookupObject[originalArray[i]['institutionType']].name = originalArray[i].institutionType;
+        // lookupObject[originalArray[i][prop]].id = originalArray[i].id;
+        // lookupObject[originalArray[i][prop]].institutionTypeId = originalArray[i].institutionTypeId
         if (originalArray[i].code) {
-          lookupObject[originalArray[i][prop]].cont++;
+          lookupObject[originalArray[i]['institutionType']].cont++;
         }
       }
       
     }
 
-
+    // localList int types
     for(var i in this.institutionsTypesSavedList) {
-      console.log(this.institutionsTypesSavedList);
       if (this.institutionsTypesSavedList[i].active !== false) {
 
-        if (!lookupObject[this.institutionsTypesSavedList[i][prop]]?.cont) {
-          lookupObject[this.institutionsTypesSavedList[i][prop]] = {cont:0,institutionType:this.institutionsTypesSavedList[i]?.name};
+        if (!lookupObject[this.institutionsTypesSavedList[i]['name']]?.cont) {
+          lookupObject[this.institutionsTypesSavedList[i]['name']] = {cont:0,name:this.institutionsTypesSavedList[i]?.name, code:this.institutionsTypesSavedList[i]?.code};
         }
-
-
-        // if (!(lookupObject[this.institutionsTypesSavedList[i][prop]])) lookupObject[this.institutionsTypesSavedList[i][prop]] = {cont:0};
-        // lookupObject[this.institutionsTypesSavedList[i][prop]].institutionType = this.institutionsTypesSavedList[i].institutionType;
-        // if (this.institutionsTypesSavedList[i].code) {
-        //   lookupObject[this.institutionsTypesSavedList[i][prop]].cont++;
-        // }
-
+        lookupObject[this.institutionsTypesSavedList[i]['name']].manual = true;
       }
       
     }
-
-
-
-
-
 
 
     for(i in lookupObject) {
         newArray.push(lookupObject[i]);
     }
-
+    // console.log(lookupObject);
      return newArray;
+     
 }
 
   onSelectOption(option:any){
@@ -138,6 +131,32 @@ export class GlobalPartnersRequestComponent implements OnInit {
       }
     
     // console.log(option);
+  }
+
+  onDeleteInstitutionType(option){
+    // console.log("_______________________________");
+    // console.log(option);
+    // console.log(this.institutionsTypesSavedList);
+    let itemFinded:any = this.institutionsTypesSavedList.find((savedItem:any)=>savedItem.code == option.code);
+    let itemFindedIndex = this.institutionsTypesSavedList.findIndex((savedItem:any)=>savedItem.code == option.code);
+    option.selected = false;
+    // console.log(itemFinded);
+    // console.log(itemFindedIndex);
+    // console.log(this.institutionsTypes);
+    let finisd = this.institutionsTypes.find((savedItem:any)=>savedItem.code == option.code).selected = false;
+    // console.log(finisd);
+
+    if (itemFinded) {
+      if (itemFinded.id) {
+        itemFinded.active = false;
+      }else{
+        this.institutionsTypesSavedList.splice(itemFindedIndex, 1);
+      }
+    }
+
+    // console.log(this.savedList);
+    // console.log(this.institutionsTypesSavedList);
+
   }
 
 }

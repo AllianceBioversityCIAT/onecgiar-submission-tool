@@ -59,7 +59,22 @@ export class ImpactAreaIsComponent implements OnInit {
         // console.log(resp);
         if (resp.response.impactStrategies) {
           this.updateForm(resp.response.impactStrategies);
-          this.savedList = resp.response.impactStrategies.partners;
+        
+          resp.response.impactStrategies.partners.map(item=>{
+
+            if (item.code) {
+              this.savedList.push(item);
+            }else{
+              let body = {
+                name:item.institutionType,
+                code:item.institutionTypeId,
+                id:item.id
+              }
+              this.institutionsTypesSavedList.push(body);
+            }
+            
+          })
+         
         }
       },err=>{console.log(err);this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)},
       ()=>{
@@ -156,9 +171,10 @@ export class ImpactAreaIsComponent implements OnInit {
     this.institutionsTypesSavedList.map(item=>{
       console.log(item);
       let itBody:any={}
-      itBody.institutionType = item.institutionType
+      itBody.institutionType = item.name
       // item.institutionType = item.name;
-      itBody.id = null;
+      itBody.id = item.id?item.id:null;
+      itBody.active = item.active === false?false:true;
       itBody.impact_strategies_id = this.sectionForm.value.id;
       itBody.institutionTypeId = item.code ;
       itBody.name = null;
@@ -167,8 +183,6 @@ export class ImpactAreaIsComponent implements OnInit {
     })
     body.partners = this.savedList;
     console.log(body);
-    console.log(this.institutionsTypesSavedList);
-    console.log(this.institutionsTypes);
     this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
