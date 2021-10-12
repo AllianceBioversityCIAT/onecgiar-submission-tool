@@ -16,12 +16,13 @@ export const utilLogin = async (email: string, password: string) => {
     // console.log(email,password)
 
     if (!(email && password)) {
-        throw new BaseError(
-            'INVALID',
-            HttpStatusCode.BAD_REQUEST,
-            'Missing required fields: email or password.',
-            true
-        );
+        // throw new BaseError(
+        //     'INVALID',
+        //     HttpStatusCode.BAD_REQUEST,
+        //     'Missing required fields: email or password.',
+        //     true
+        // );
+        throw new BaseError('Util Login', 400,'Missing required fields: email or password.', false)
     }
     email = email.trim().toLowerCase();
     let cgiar_user = await userRepository.findOne({
@@ -41,23 +42,26 @@ export const utilLogin = async (email: string, password: string) => {
             relations: ['roles']
         });
         if (!user) {
-            throw new BaseError(
-                'NOT_FOUND',
-                HttpStatusCode.NOT_FOUND,
-                'User not found.',
-                true
-            );
+            // throw new BaseError(
+            //     'NOT_FOUND',
+            //     HttpStatusCode.NOT_FOUND,
+            //     'User not found.',
+            //     true
+            // );
+            throw new BaseError('Util Login', 400,'User not found.', false)
         }
     }
 
     // check password
     if (!cgiar_user && !user.checkPassword(password)) {
-        throw new BaseError(
-            'NOT FOUND',
-            HttpStatusCode.NOT_FOUND,
-            'User password incorrect.',
-            true
-        );
+        // throw new BaseError(
+        //     'NOT FOUND',
+        //     HttpStatusCode.NOT_FOUND,
+        //     'User password incorrect.',
+        //     true
+        // );
+
+        throw new BaseError('Util Login', 400,'User password incorrect.', false)
     }
     user.last_login = new Date();
     user = await userRepository.save(user)
@@ -86,7 +90,7 @@ const validateAD = (one_user, password) => {
                 let notFound = {
                     'name': 'SERVER_NOT_FOUND',
                     'description': `There was an internal server error: ${err.lde_message}`,
-                    'httpCode': 404
+                    'httpCode': 400
                 };
                 if (err.errno == "ENOTFOUND") {
                     notFound.name = 'SERVER_NOT_FOUND';
@@ -94,14 +98,16 @@ const validateAD = (one_user, password) => {
                 }
                 // console.log(err)
                 // console.log(typeof err)
+             
                 return reject(notFound);
             } else {
                 console.log('Authentication failed!');
                 let err = {
                     'name': 'INVALID_CREDENTIALS',
                     'description': 'The supplied credential is invalid',
-                    'httpCode': 503
+                    'httpCode': 400
                 };
+               
                 return reject(err);
             }
         })

@@ -68,7 +68,7 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
-      budget_value: new FormControl(0),
+      budget_value: new FormControl(0, [Validators.required,Validators.min(1)]),
       table_name: new FormControl("general_information"),
       col_name: new FormControl("budget"),
       active: new FormControl(true),
@@ -168,7 +168,6 @@ export class GeneralInformationComponent implements OnInit {
       })
 
       this.showForm = true;
-
     },
       err => {
         console.log(err);
@@ -197,6 +196,8 @@ export class GeneralInformationComponent implements OnInit {
 
   upsertGeneralInfo() {
 
+    console.log(this.summaryForm);
+
     this.spinnerService.show('general-information');
 
     this.geographicScope.regions.map(newRegId => {
@@ -221,8 +222,10 @@ export class GeneralInformationComponent implements OnInit {
 
     if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
     console.log(body);
+
     this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
-      console.log(generalResp);
+      this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
+      this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
       // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
       //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
       // })

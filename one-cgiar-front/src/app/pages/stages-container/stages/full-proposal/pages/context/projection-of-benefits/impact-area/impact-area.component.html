@@ -137,7 +137,7 @@
     </div>
 
     <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+        <ibdc-save-button [options]="{readOnlyVariable: false,remember:true, minutesToRemember:5}"></ibdc-save-button>
     </div>
 </form>
 </div>

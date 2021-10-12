@@ -635,6 +635,18 @@ router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiative
 // replicate to next stage
 router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
 
+//get institutions from submission
+router.get("/institutions", [checkJwt], initiatives.getInstitutions);
+
+//get action areas from submission
+router.get("/areas", [checkJwt], initiatives.getActionAreas);
+
+//get impact areas from submission
+router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
+
+// get institutions types from submission
+router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
+
 /**
  * 
  * CLARISA
@@ -642,21 +654,21 @@ router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.rep
  */
 
 //get Action areas
-router.get("/areas", [checkJwt], initiatives.getActionAreas);
+// router.get("/areas", [checkJwt], initiatives.getActionAreas);
 //get countries
 router.get("/countries", [checkJwt], initiatives.getCountries);
 //get regions
 router.get("/regions", [checkJwt], initiatives.getRegions);
-//get institutions
-router.get("/institutions", [checkJwt], initiatives.getInstitutions);
+//get institutions from clarisa
+// router.get("/institutions", [checkJwt], initiatives.getInstitutions);
 // get institutions types
-router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
+// router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 // get crps
 router.get("/cgiar-entities", [checkJwt], clarisa.getClaCRPs);
 //request institutions
 router.post("/institutions/institution-requests", [checkJwt], clarisa.requestClaInstitution);
 //get Impact areas
-router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
+// router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 //get Impact areas inticators
 router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAreasIndicators);
 //get Impact areas inticators

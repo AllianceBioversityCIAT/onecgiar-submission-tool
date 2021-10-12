@@ -14,6 +14,7 @@ export class WorkPackageComponent implements OnInit {
   firstTab = true;
   showForm = false;
   workPackageForm: FormGroup;
+  wpID;
   geographicScope = {
     regions: [],
     countries: []
@@ -33,6 +34,16 @@ export class WorkPackageComponent implements OnInit {
     });
 
 
+  }
+
+  ngDoCheck(): void {
+    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+    //Add 'implements DoCheck' to the class.
+    // console.log(this.iaID);
+    if (this.wpID) {
+      this.wpColorselected(3, 5, 12, this.wpID);
+    }
+    
   }
 
   wpColorselected(stageId, sectionId, subSectionId, wpId){
@@ -62,7 +73,9 @@ export class WorkPackageComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((routeResp: any) => {
       // Add activeSection = true if is the current wp open
-      this.wpColorselected(3, 5, 12,routeResp.wpID);
+      // this.wpColorselected(3, 5, 12,routeResp.wpID);
+      this.wpID = routeResp.wpID
+
       // console.log(this._dataControlService.userMenu);
       this._initiativesService.getWpFpByInititative(routeResp.wpID).subscribe(resp => {
         let directResp = resp.response.workpackage;

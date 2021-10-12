@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
 
 @Component({
   selector: 'app-initiative-team',
@@ -22,7 +23,8 @@ export class InitiativeTeamComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    public _dataValidatorsService:DataValidatorsService
   ) { }
 
   ngOnInit(): void {
@@ -73,7 +75,7 @@ export class InitiativeTeamComponent implements OnInit {
     this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources',3).subscribe(resp=>{
       console.log("saveHumanResources");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources and activities has been saved, but there are incomplete fields')
       this.getHumanResources();

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
 
 @Component({
   selector: 'app-budget',
@@ -24,10 +25,11 @@ export class BudgetComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    public _dataValidatorsService:DataValidatorsService
   ) { 
     this.sectionForm = new FormGroup({
-      detailed_budget: new FormControl(null),
+      detailed_budget: new FormControl(null, Validators.required),
     });
   }
 
@@ -85,7 +87,7 @@ export class BudgetComponent implements OnInit {
     this._initiativesService.saveFinancialResources(formData,this._initiativesService.initiative.id,'10.financial-resources',3).subscribe(resp=>{
       console.log("saveFinancialResources");
       console.log(resp);
-      this.filesSavedList.length || this.filesList.length?
+      this.sectionForm.valid && this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
       this._interactionsService.successMessage('Financial Resources has been saved'):
       this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
       this.getFinancialResources();

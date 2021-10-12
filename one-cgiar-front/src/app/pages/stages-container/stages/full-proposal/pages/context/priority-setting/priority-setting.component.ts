@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -23,7 +23,7 @@ export class PrioritySettingComponent implements OnInit {
     private _interactionsService:InteractionsService
   ) { 
     this.contextForm = new FormGroup({
-      priority_setting: new FormControl(null),
+      priority_setting: new FormControl(null, Validators.required),
       contextId:new FormControl(null),
     });
   }
@@ -51,7 +51,7 @@ export class PrioritySettingComponent implements OnInit {
 
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
-      // console.log(resp);
+      this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid?
       this._interactionsService.successMessage('Priority setting has been saved'):
       this._interactionsService.warningMessage('Priority setting has been saved, but there are incomplete fields')

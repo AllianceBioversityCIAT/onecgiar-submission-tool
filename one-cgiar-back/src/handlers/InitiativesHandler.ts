@@ -127,9 +127,55 @@ export class InitiativeHandler {
     `;
         const projectedData = await this.queryRunner.query(querySql);
         return projectedData;
-    
+
     }
-    
+
+
+    async requestInstitutions() {
+
+        const querySql = `
+        SELECT code,name,acronym,institutionTypeId,institutionType 
+        FROM clarisa_institutions
+`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
+
+
+    async requestImpactAreas() {
+
+        const querySql = `
+        SELECT id,name,description
+        FROM clarisa_impact_areas`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
+
+    async requestActionAreas() {
+
+        const querySql = `
+        SELECT id,name,description
+        FROM clarisa_action_areas`;
+        const institutions = await this.queryRunner.query(querySql);
+        return institutions;
+
+    }
+
+
+    async requestInstitutionsTypes() {
+
+        const querySql = `
+        SELECT id as code,name
+        FROM clarisa_institutions_types
+`;
+        const institutionsTypes = await this.queryRunner.query(querySql);
+        return institutionsTypes;
+
+    }
+
+
 
 }
 

@@ -35,11 +35,12 @@
                             </div>
 
                         </div>
+ 
                         <div class="col-sm-12" *ngIf="showForm">
                               
                                <ibdc-select-multiple [options]="{
                                 required:false,
-                                inputTitle:'Please select the users who yo should access to this initiative',
+                                inputTitle:'Please select users to enable access to this initiative and assign each users a role',
                                 selectItemName:'firstN_lastN_email',
                                 selectItemId:'userId',
                                 frontendSearchAttribute:'firstN_lastN_email',
@@ -59,6 +60,9 @@
                                 }
                                }"></ibdc-select-multiple>
 
+                        </div>
+                        <div class="col-12">
+                            <ibdc-alert [options]="{htmlText: 'Please assign role if you want to keep the users assigned to this initiative', type:'info'}"></ibdc-alert>
                         </div>
                         <div class="col-sm-12">
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>
@@ -82,7 +86,7 @@
                 </ng-template>
 
 
-                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" ></app-create-users>
+                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" (realoadRoles)="reloadSelectRoleComp();getUsersByInitiative()"></app-create-users>
 
             </mat-tab>
         </mat-tab-group>

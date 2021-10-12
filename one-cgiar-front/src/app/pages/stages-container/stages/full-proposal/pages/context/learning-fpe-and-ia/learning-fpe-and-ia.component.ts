@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -23,7 +23,7 @@ export class LearningFpeAndIaComponent implements OnInit {
     private _interactionsService:InteractionsService
   ) { 
     this.contextForm = new FormGroup({
-      key_learnings: new FormControl(null),
+      key_learnings: new FormControl(null, Validators.required),
       contextId:new FormControl(null),
     });
   }
@@ -52,6 +52,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   upserInfo(){
     //save narrative
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+      this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
       this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')

@@ -25,16 +25,16 @@ export const login = async (req: Request, res: Response) => {
         const { token, name, roles, id } = await utilLogin(email, password);
         res.json(new ResponseHandler('User logged.', { token, email, name, roles, id }));
     } catch (error) {
-        console.log(error);
-        let e = error;
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
+        // console.log(error);
+        // let e = error;
+        // if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+        //     e = new APIError(
+        //         'Bad Request',
+        //         HttpStatusCode.BAD_REQUEST,
+        //         true,
+        //         error.message
+        //     );
+        // }
         return res.status(error.httpCode).json(error);
     }
 

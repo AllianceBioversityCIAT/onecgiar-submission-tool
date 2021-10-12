@@ -13,6 +13,23 @@
     }
  }
 
+.cont_color{
+    font-weight: 500;
+    color: var(--ibdc-tertiary-color);;
+}
+
+.cont_extra_color{
+    font-weight: 500;
+    color: var(--ibdc-secondary-color);;
+}
+
+.empy_list_title{
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--ibdc-tertiary-color);;
+    text-align: center;
+}
+
  .all_parners_saved{
      max-height: 600px !important;
      padding: 10px;
@@ -27,8 +44,21 @@
         border-radius: 7px;
         background-color: aliceblue;
          .partner_name{
+            color: rgb(75, 75, 75);
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+         }
+         .partner_type{
+             color: rgb(134, 134, 134);
+             font-size: .9em;
+             font-style: italic;
+             margin-bottom: 10px;
+         }
+         .institutionTypeLabel{
+            margin-right: 5px;
+            font-size: .9em;
+            color: rgb(119, 118, 118);
+            font-weight: 600;
          }
          .buttons_changing{
             //  width: 50%;
@@ -39,17 +69,40 @@
                 cursor: pointer;
             }
          }
-         .close_icon{
-             position: absolute;
-             top: 0;
-             right: 0;
-             cursor: pointer;
-             margin: 10px;
-             color: rgb(201, 67, 67);
-         }
+
 
      }
  }
+ 
+
+.institution_types_container{
+    // border: 1px solid rgb(105, 105, 105);
+    // width: auto;
+    max-height: 600px !important;
+    padding: 10px;
+    box-shadow: 0 3px 6px #97979729, 0 3px 6px #97979729;
+
+}
+
+.type_item{
+    position: relative;
+    margin-top: 10px;
+    width: 100%;
+    box-shadow: 0 3px 6px #96969629, 0 3px 6px #96969629;
+    padding: 20px;
+    border-radius: 7px;
+    background-color: aliceblue;
+    overflow: hidden;
+}
+
+.close_icon{
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    margin: 10px;
+    color: rgb(201, 67, 67);
+}
 
  .button_changing_active{
     background-color: var(--ibdc-secondary-color);
@@ -67,6 +120,11 @@
  }
 
  .partner_request_text{
-    color: rgb(64, 164, 211);
+    color: white;
     cursor: pointer;
+    background-color: rgb(64, 164, 211);
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-size: .9rem;
+    margin-bottom: 100px;
 }

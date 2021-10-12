@@ -4,6 +4,7 @@ import { FullProposalService } from '@app/shared/services/full-proposal.service'
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 
 @Component({
@@ -18,22 +19,23 @@ export class ChallengeStatementComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService
   ) { 
     this.challengeStatementForm = new FormGroup({
-      challenge_statement: new FormControl(null),
+      challenge_statement: new FormControl(null, Validators.required),
       contextId:new FormControl(null),
     });
   }
 
   ngOnInit(): void {
     this.getContext();
-    console.log(this.challengeStatementForm.value);
   }
 
   upserInfo(){
+    console.log(this.challengeStatementForm);
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
-      console.log(resp);
+      this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?
       this._interactionsService.successMessage('Challenge statement has been saved'):
       this._interactionsService.warningMessage('Challenge statement has been saved, but there are incomplete fields')
