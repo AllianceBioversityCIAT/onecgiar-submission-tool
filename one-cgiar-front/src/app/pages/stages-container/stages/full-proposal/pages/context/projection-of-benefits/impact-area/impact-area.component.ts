@@ -15,7 +15,7 @@ export class ImpactAreaComponent implements OnInit {
 
   pobImpactAreaForm: FormGroup;
   pobProbabilities = [];
-  
+  pobIaID:any;
   // select lists
   indicatorsList = [];
   depthDescriptionsList:any = [];
@@ -63,6 +63,11 @@ export class ImpactAreaComponent implements OnInit {
 
   }
 
+  
+  ngDoCheck(): void {
+    this.pobColorselected(3, 1, 8, this.pobIaID);
+  }
+
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
@@ -90,7 +95,7 @@ export class ImpactAreaComponent implements OnInit {
     })
 
     this.activatedRoute.params.subscribe((routeResp: any) => {
-      this.pobColorselected(3, 1, 8, routeResp.pobIaID);
+      this.pobIaID = routeResp.pobIaID
       this.cleanForm();
       
       this.getProjectedBenefitLists(routeResp.pobIaID);
