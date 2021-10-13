@@ -1190,27 +1190,33 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(challenge_statement) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_statement,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(smart_objectives) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(smart_objectives,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(key_learnings) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(key_learnings,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(priority_setting) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(priority_setting,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(comparative_advantage) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(comparative_advantage,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	    OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(participatory_design) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(participatory_design) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
     OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
     OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
@@ -1439,7 +1445,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
       OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-  OR (SELECT LENGTH(challenge_statement) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_statement,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+  OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
             FROM context WHERE initvStgId = ini.id ) > 500
      THEN FALSE
        ELSE TRUE
@@ -1456,7 +1463,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(smart_objectives) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(smart_objectives,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
        THEN FALSE
          ELSE TRUE
@@ -1473,7 +1481,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(key_learnings) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(key_learnings,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
        THEN FALSE
@@ -1491,7 +1500,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(priority_setting) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(priority_setting,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
        THEN FALSE
@@ -1509,7 +1519,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(comparative_advantage) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(comparative_advantage,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
        THEN FALSE
@@ -1527,7 +1538,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(participatory_design) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) 
+    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
        THEN FALSE
