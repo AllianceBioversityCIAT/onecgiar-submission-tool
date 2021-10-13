@@ -19,3 +19,41 @@
     }
     
 }
+
+.top_bar{
+    background-color: var(--ibdc-secondary-color);
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: white;
+}
+
+.custom-dialog-actions{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    button{
+        margin-left: 10px;
+    }
+}
+
+.close_icon{
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.create_button_disabled{
+    background-color: #8f8f8f7e !important;
+    border: 1px solid #afafaf7e !important;
+    transition: all ease .3s;
+}
+
+.create_button{
+    background-color: var(--ibdc-secondary-color) !important;
+    border: 1px solid var(--ibdc-secondary-color) !important;
+    transition: all ease .3s;
+}

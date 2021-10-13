@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { PartnersRequestComponent } from '../../../../../../shared/components/partners-request/partners-request.component';
 @Component({
   selector: 'app-global-partners-request',
   templateUrl: './global-partners-request.component.html',
@@ -29,18 +31,19 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ]
 
   constructor(
-    public _initiativesService : InitiativesService
+    public _initiativesService : InitiativesService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    console.log(this.institutions);
-    console.log(this.institutionsTypes);
-    console.log("savedList");
-    console.log(this.savedList);
-    console.log("institutionsTypesSavedList");
-    console.log(this.institutionsTypesSavedList);
-    console.log("institutionsTypesDisableList");
-    console.log(this.institutionsTypesDisableList);
+    // console.log(this.institutions);
+    // console.log(this.institutionsTypes);
+    // console.log("savedList");
+    // console.log(this.savedList);
+    // console.log("institutionsTypesSavedList");
+    // console.log(this.institutionsTypesSavedList);
+    // console.log("institutionsTypesDisableList");
+    // console.log(this.institutionsTypesDisableList);
     this.mapInstitutionsTypes();
     // console.log(this.institutions);
     this.institutions.map(item=>{
@@ -48,11 +51,13 @@ export class GlobalPartnersRequestComponent implements OnInit {
       item.id = null;
       item.tag_id = 0;
     })
+    // this.openDialog()
   }
 
   getInstitutionsTypesDisableList(){
+    // console.log("change");
     let institutionsTypesDisableList=[];
-    console.log(this.savedList);
+    // console.log(this.savedList);
     this.savedList.map(item=>{
     if (item.code) {
       let body = {
@@ -64,6 +69,18 @@ export class GlobalPartnersRequestComponent implements OnInit {
     }
   });
   return institutionsTypesDisableList;
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(PartnersRequestComponent, {
+      width: '100%',
+      height: '90%',
+      panelClass: 'custom-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("");
+    });
   }
 
   mapInstitutionsTypes(){

@@ -147,7 +147,7 @@ export class InitiativesService {
   getCLARISAInstitutions(filterText: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
       resp.response.institutions.map(institution => {
-        institution.acronym_name = `${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
+        institution.acronym_name = `(Id: ${institution.code ? institution.code: ' '})   ${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
       })
       return  resp.response.institutions;
     }));;

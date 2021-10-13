@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DataValidatorsService } from '../../../../../shared/data-validators.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-impact-area-is',
@@ -27,7 +28,7 @@ export class ImpactAreaIsComponent implements OnInit {
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
     public _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
   ) { 
     this.sectionForm = new FormGroup({
       id:new FormControl(null),
@@ -55,9 +56,9 @@ export class ImpactAreaIsComponent implements OnInit {
       // this.getPobImpatAreaData(routeResp.pobIaID)
       // this.pobColorselected(3, 7, 16, routeResp.iaID);
       this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
-
+      
       this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
-        // console.log(resp);
+        this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
         if (resp.response.impactStrategies) {
           this.updateForm(resp.response.impactStrategies);
           console.log(resp.response.impactStrategies.partners);
