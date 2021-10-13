@@ -1,79 +1,97 @@
-<div class="container">
-    <div class="row" *ngIf="showForm">
-        <div class="col-4">
-            <ibdc-textarea  
-            [options]="{form:partnersRequestForm,formControlName:'acronym',inputTitle:'Acronym',required:false}">
-            </ibdc-textarea>
-        </div>
-        <div class="col-8">
-            <ibdc-textarea  
-            [options]="{form:partnersRequestForm,formControlName:'name',inputTitle:'Name'}">
-            </ibdc-textarea>
-        </div>
-
-        <div class="col-6">
-
-            <ibdc-select [options]="
-            {
-             required:true,
-             inputTitle:'Type',
-             form: partnersRequestForm,
-             formControlId:'institutionTypeCode',
-             selectItemName:'name',
-             selectItemId:'code',
-             frontendSearchAttribute:'name',
-             readOnlyVariable: this._initiativesService.initiative.readonly,
-             service:{
-                 serviceTS:this._initiativesService,
-                 functionName:'getInstitutionsTypes',
-                 objectName: ['response','regions']
-             }
-            }">
-            ></ibdc-select>
-            
-        </div>
-        <div class="col-12">
-                        
-            <ibdc-select [options]="
-            {
-             required:true,
-             inputTitle:'Headquarter country',
-             form:partnersRequestForm,
-             formControlId:'hqCountryIso',
-             selectItemName:'name',
-             selectItemId:'isoAlpha2',
-             frontendSearchAttribute:'name',
-             service:{
-                 serviceTS:this._initiativesService,
-                 functionName:'getCLARISACountries',
-                 objectName: ['response','countries']
-             }
-            }">
-            ></ibdc-select>
-
-        </div>
-        <div class="col-12">
-            <ibdc-textarea  
-            [options]="{form:partnersRequestForm,formControlName:'websiteLink',inputTitle:'Website',required:false}">
-            </ibdc-textarea>
-        </div>
-
-        <div class="col-12">
-            <br>
-            <br>
-            <br>
-        <div align="end" class="dialog-actions" >
-            <button (click)="backAddNewKeyPartner()" pButton type="button" label="Primary" class="animate__animated animate__fadeIn">back</button>
-            <button 
-            (click)="onCreatePartner()"  
-            [disabled]="partnersRequestForm.invalid" 
-            pButton type="button" label="Request" class="p-button-success animate__animated animate__fadeIn"></button>
-
-            <!-- <button  (click)="backAddNewKeyPartner()">back</button>
-            <button (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Request</button> -->
-        </div>   
-        <br>     
+<div class="top_bar">
+    <span class="material-icons close_icon" (click)="backAddNewKeyPartner()">
+        cancel
+    </span>
+</div>
+<section-title name="Partners Request"></section-title>
+<br>
+<div class="section-container">
+    <div class="container">
+        <div class="row" *ngIf="showForm">
+            <div class="col-12">
+                <ibdc-alert *ngIf="partnersRequestForm.invalid" class="animate__animated animate__bounceIn"  [options]="{text: 'To send the partner request, all fields must be completed. ', type:'warning'}"></ibdc-alert> 
+                <ibdc-alert *ngIf="!partnersRequestForm.invalid" class="animate__animated animate__bounceIn"  [options]="{text: 'All fields are completed', type:'success'}"></ibdc-alert> 
+                <br>
+            </div>
+            <div class="col-4">
+                <ibdc-textarea  
+                [options]="{form:partnersRequestForm,formControlName:'acronym',inputTitle:'Acronym',required:false,initialParagraphs:1}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-8">
+                <ibdc-textarea  
+                [options]="{form:partnersRequestForm,formControlName:'name',inputTitle:'Name',initialParagraphs:1}">
+                </ibdc-textarea>
+            </div>
+    
+            <div class="col-6">
+    
+                <ibdc-select [options]="
+                {
+                 required:true,
+                 inputTitle:'Type',
+                 form: partnersRequestForm,
+                 formControlId:'institutionTypeCode',
+                 selectItemName:'name',
+                 selectItemId:'code',
+                 frontendSearchAttribute:'name',
+                 readOnlyVariable: this._initiativesService.initiative.readonly,
+                 service:{
+                     serviceTS:this._initiativesService,
+                     functionName:'getInstitutionsTypes',
+                     objectName: ['response','types']
+                 }
+                }">
+                ></ibdc-select>
+                
+            </div>
+            <div class="col-12">
+                            
+                <ibdc-select [options]="
+                {
+                 required:true,
+                 inputTitle:'Headquarter country',
+                 form:partnersRequestForm,
+                 formControlId:'hqCountryIso',
+                 selectItemName:'name',
+                 selectItemId:'isoAlpha2',
+                 frontendSearchAttribute:'name',
+                 service:{
+                     serviceTS:this._initiativesService,
+                     functionName:'getCLARISACountries',
+                     objectName: ['response','countries']
+                 }
+                }">
+                ></ibdc-select>
+    
+            </div>
+            <div class="col-12">
+                <ibdc-textarea  
+                [options]="{form:partnersRequestForm,formControlName:'websiteLink',inputTitle:'Website',required:false,initialParagraphs:1}">
+                </ibdc-textarea>
+            </div>
+            <div class="col-12">
+                <ibdc-alert *ngIf="!getWebValidation()" class="animate__animated animate__bounceIn"  [options]="{text: 'Please check - the website has an incorrect format', type:'danger'}"></ibdc-alert> 
+            </div>
+            <div class="col-12">
+                <br>
+                <br>
+                <br>
+            <div class="custom-dialog-actions" >
+                <button  mat-dialog-close  (click)="backAddNewKeyPartner()" pButton type="button" label="Cancel" class="animate__animated animate__fadeIn"></button>
+                <button 
+                (click)="onCreatePartner()"  
+                [disabled]="partnersRequestForm.invalid" 
+                pButton type="button" label="Request" class="{{partnersRequestForm.invalid?'create_button_disabled':'create_button'}} animate__animated animate__fadeIn"></button>
+    
+                <!-- <button  (click)="backAddNewKeyPartner()">back</button>
+                <button (click)="onCreatePartner()"  [disabled]="partnersRequestForm.invalid">Request</button> -->
+                <!-- <button (click)="onCreatePartner()"></button>s -->
+            </div>   
+            <br>     
+            </div>
         </div>
     </div>
 </div>
+
 <!-- <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='partners-request'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner> -->

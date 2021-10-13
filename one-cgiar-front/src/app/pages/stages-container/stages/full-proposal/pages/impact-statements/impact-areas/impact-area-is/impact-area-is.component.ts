@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DataValidatorsService } from '../../../../../shared/data-validators.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-impact-area-is',
@@ -27,7 +28,7 @@ export class ImpactAreaIsComponent implements OnInit {
     public _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
     public _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
   ) { 
     this.sectionForm = new FormGroup({
       id:new FormControl(null),

@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../services/initiatives.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { ConceptService } from '../../services/concept.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-partners-request',
@@ -38,13 +39,14 @@ export class PartnersRequestComponent implements OnInit {
     public _initiativesService:InitiativesService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _conceptService:ConceptService
+    private _conceptService:ConceptService,
+    private dialogRef: MatDialogRef<PartnersRequestComponent>
   ) { 
     this.partnersRequestForm = new FormGroup({
 
       name: new FormControl(null, Validators.required),
-      acronym: new FormControl(null, Validators.required),
-      websiteLink: new FormControl(null, Validators.required),
+      acronym: new FormControl(null),
+      websiteLink: new FormControl(null, Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/)),
       institutionTypeCode: new FormControl(null, Validators.required),
       hqCountryIso: new FormControl(null, Validators.required),
       externalUserMail: new FormControl(null),
@@ -54,6 +56,7 @@ export class PartnersRequestComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
       this.setFormValue();
       this.getInstitutionsTypes();
       // this.getInitiativeName();
@@ -88,9 +91,14 @@ export class PartnersRequestComponent implements OnInit {
     this.partnersRequestForm.get("hqCountryIso").setValue("");
     this.partnersRequestForm.get("externalUserMail").setValue(userData.email);
     this.partnersRequestForm.get("externalUserName").setValue(userData.name);
-  
+    this.partnersRequestForm.get("externalUserComments").setValue(`${this._initiativesService.initiative.official_code} - ${this._initiativesService.initiative.name}`);
+    console.log( this.partnersRequestForm.controls["websiteLink"].valid);
+    console.log(this.partnersRequestForm.get("websiteLink").valid);
   }
 
+  getWebValidation(){
+  return this.partnersRequestForm.get("websiteLink").valid
+  }
   setComment(){
     let userData:any= JSON.parse(localStorage.getItem('user')) ;
     let commentArray = [
@@ -110,20 +118,25 @@ export class PartnersRequestComponent implements OnInit {
   onCreatePartner(){
     // console.log('%conCreatePartner','background: #222; color: #ffff00');
     console.log(this.partnersRequestForm.value);
+    console.log(this._initiativesService.initiative);
     // this.spinnerService.show('partners-request');
 
-    // this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
-    //   console.log(resp);
-    // this._interactionsService.successMessage('Partner has been requested');
-    // this.spinnerService.hide('partners-request');
-    // },err=>{
-    //   console.log(err);
-    //   this.spinnerService.hide('partners-request');
-    // })
+    this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
+      console.log(resp);
+    this._interactionsService.successMessage(`Partner "${this.partnersRequestForm.value.name}" has been requested`);
+    this.spinnerService.hide('partners-request');
+    this.backAddNewKeyPartner();
+    },err=>{
+      console.log(err);
+      this.spinnerService.hide('partners-request');
+    },()=>{
+
+    })
 
   }
 
   backAddNewKeyPartner(){
+    this.dialogRef.close()
     this.back.emit();
   }
 
