@@ -51,7 +51,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
       item.id = null;
       item.tag_id = 0;
     })
-    this.openDialog()
+    // this.openDialog()
   }
 
   getInstitutionsTypesDisableList(){
