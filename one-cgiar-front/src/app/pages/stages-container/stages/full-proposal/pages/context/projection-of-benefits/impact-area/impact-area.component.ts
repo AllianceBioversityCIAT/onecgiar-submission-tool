@@ -25,7 +25,7 @@ export class ImpactAreaComponent implements OnInit {
   dimensionsList:any = [];
 
   originalIndicatorId=null;
-  dimensionsListByIndicatorID:any = [];
+  // dimensionsListByIndicatorID:any = [];
 
 
   currentIaId:number;
@@ -118,6 +118,7 @@ export class ImpactAreaComponent implements OnInit {
     
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
+      console.log("getProjectedBenefitLists");
       console.log(resp);
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
       this.reloadForm();
@@ -200,13 +201,14 @@ export class ImpactAreaComponent implements OnInit {
 
   toggleDimensionList(indicatorId){
     this.dimensionsList = [];
-    if(indicatorId == this.originalIndicatorId){
-      this.dimensionsList = this.dimensionsListByIndicatorID;
-    }
+    // if(indicatorId == this.originalIndicatorId){
+    //   this.dimensionsList = this.dimensionsListByIndicatorID;
+    // }
   }
 
   updateForm(resp){
-    // console.log(resp);
+    console.log("updateForm");
+    console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id);
     this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(resp.impactAreaIndicator);
     this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(resp.impactAreaIndicatorName);
@@ -219,8 +221,10 @@ export class ImpactAreaComponent implements OnInit {
 
     this.dimensionsList = resp.dimensions;
     //Aux
-    this.dimensionsListByIndicatorID = resp.dimensions;
+    // this.dimensionsListByIndicatorID = resp.dimensions;
     this.originalIndicatorId = resp.impactAreaIndicator
+    console.log("form");
+    console.log(this.pobImpactAreaForm.value);
   }
 
   cleanForm(){
@@ -245,20 +249,21 @@ export class ImpactAreaComponent implements OnInit {
 
   saveForm(){
 
-    if (this.pobImpactAreaForm.value.impactAreaIndicator != this.originalIndicatorId && (this.dimensionsListByIndicatorID.length)) {
-      console.log("Desactovararray");
-      this.dimensionsListByIndicatorID.map(item=>{
-        item.active = false;
-        console.log(item);
-        this.dimensionsList.push(item)
-      })
+    // if (this.pobImpactAreaForm.value.impactAreaIndicator != this.originalIndicatorId && (this.dimensionsListByIndicatorID.length)) {
+    //   // console.log("Desactovararray");
+    //   this.dimensionsListByIndicatorID.map(item=>{
+    //     item.active = false;
+    //     // console.log(item);
+    //     this.dimensionsList.push(item)
+    //   })
 
-    }
+    // }
     let body = this.pobImpactAreaForm.value;
     body.dimensions = this.dimensionsList;
-    console.log(body);
-    console.log(this.pobImpactAreaForm.value.impactAreaId);
+    // console.log(body);
+    // console.log(this.pobImpactAreaForm.value.impactAreaId);
     this._initiativesService.patchPOBenefitsFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log("patchPOBenefitsFp");
       console.log(resp);
       this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.response.projectionBenefits.upsertedPjectionBenefits.id);
       this.pobImpactAreaForm.valid?
@@ -266,11 +271,15 @@ export class ImpactAreaComponent implements OnInit {
       this._interactionsService.warningMessage('Projection of benfits - Impact area has been saved, but there are incomplete fields')
 
       this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, this.pobImpactAreaForm.value.impactAreaId).subscribe(resp => {
+        console.log("patchPOBenefitsFp getPOBenefitsFpByImpactArea");
+        console.log(resp);
         this.cleanForm();
         if (resp.response.projectionBenefitsByImpact) {
           this.updateForm(resp.response.projectionBenefitsByImpact);
         }
         this.reloadForm();
+        console.log("form");
+        console.log(this.pobImpactAreaForm.value);
       })
 
     })
