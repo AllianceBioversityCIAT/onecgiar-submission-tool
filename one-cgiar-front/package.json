@@ -12,7 +12,7 @@
     "dev": "concurrently \"npm run server\" \"npm run start\"",
     "docker:build": "docker build -t onecgiarfront .",
     "docker:run": "docker run --name onecgiarclient -d -p 3300:80 onecgiarfront",
-    "update:ibdc": "npm i ./ibdc/ibd-angular-components-2.0.2.tgz"
+    "update:ibdc": "npm i ./ibdc/ibd-angular-components-2.0.5.tgz"
   },
   "private": true,
   "dependencies": {
