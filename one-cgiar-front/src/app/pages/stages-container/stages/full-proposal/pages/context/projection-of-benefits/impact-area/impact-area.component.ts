@@ -290,7 +290,7 @@ export class ImpactAreaComponent implements OnInit {
         
         // select current wp
         if (pobIaID != -1) {
-          console.log(allImpactAreas);
+          // console.log(allImpactAreas);
           allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
           let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
           this.pobImpactAreaForm.controls['impactAreaName'].setValue(sectionFinded.showName);
