@@ -1229,15 +1229,15 @@ export const getCRP = async (req: Request, res: Response) => {
  * @returns 
  */
 
-export const requestInstitution = async (req: Request, res: Response) => {
-    try {
-        const institutionRequested = await requestClaInstitution(req.body);
-        res.json(new ResponseHandler('Requested institution.', { institutionRequested }));
-    } catch (error) {
-        console.log(error);
-        return res.status(error.httpCode).json(error);
-    }
-}
+// export const requestInstitution = async (req: Request, res: Response) => {
+//     try {
+//         const institutionRequested = await requestClaInstitution(req.body);
+//         res.json(new ResponseHandler('Requested institution.', { institutionRequested }));
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(error.httpCode).json(error);
+//     }
+// }
 
 
 export async function requestImpactAreas(req: Request, res: Response) {
