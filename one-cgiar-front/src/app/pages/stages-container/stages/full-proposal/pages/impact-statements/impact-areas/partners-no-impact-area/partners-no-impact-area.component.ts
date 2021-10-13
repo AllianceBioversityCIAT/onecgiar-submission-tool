@@ -44,9 +44,8 @@ export class PartnersNoImpactAreaComponent implements OnInit {
 
   getImpactStrategies(){
     this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, 0).subscribe(resp=>{
-      console.log(resp);
-      this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
       if (resp.response.impactStrategies) {
+        this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
         console.log(resp.response.impactStrategies.partners);
         resp.response.impactStrategies.partners.map(item=>{
 
