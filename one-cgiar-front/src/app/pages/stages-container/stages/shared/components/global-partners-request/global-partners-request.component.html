@@ -5,7 +5,7 @@
 
             <div class="col-12">
 
-                <ibdc-select-multiple [options]="{
+                <ibdc-select-multiple (unselect)="onSelectOption($event)" [options]="{
                             inputTitle:'Select partners',
                             selectList: this.institutions,
                             selectItemName:'acronym_name',

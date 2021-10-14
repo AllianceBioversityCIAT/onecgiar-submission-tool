@@ -59,7 +59,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
     let institutionsTypesDisableList=[];
     // console.log(this.savedList);
     this.savedList.map(item=>{
-    if (item.code) {
+    if (item.code && item.active !== false) {
       let body = {
         name:item.institutionType,
         code:item.institutionTypeId,
@@ -147,7 +147,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 
   onSelectOption(option:any){
     // console.log(this.savedList);
-    // console.log(option);
+    console.log(option);
     // encontrar en lista de guardados la opcion seleccionada
     let itemFinded:any = this.savedList.find((savedItem:any)=>savedItem.code == option.code);
     let itemFindedIndex = this.savedList.findIndex((savedItem:any)=>savedItem.code== option.code);
@@ -156,6 +156,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // Eliminado logico o eliminar de elementos de un array que no están en la bd
     option.selected = false;
     this.institutions.find((savedItem:any)=>savedItem.code == option.code).selected = false;
+    this.institutionsTypes.find((savedItem:any)=>savedItem.code == itemFinded.institutionTypeId).disabled = false
       //formas de borrar
       if (itemFinded) {
         // si tiene id de la bd pero de guardado
@@ -168,7 +169,6 @@ export class GlobalPartnersRequestComponent implements OnInit {
         }
         
       }
-    
     // console.log(option);
   }
 
