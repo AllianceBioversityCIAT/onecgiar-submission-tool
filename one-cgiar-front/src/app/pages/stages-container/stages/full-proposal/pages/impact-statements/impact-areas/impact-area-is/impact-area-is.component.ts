@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DataValidatorsService } from '../../../../../shared/data-validators.service';
@@ -29,6 +29,7 @@ export class ImpactAreaIsComponent implements OnInit {
     public activatedRoute:ActivatedRoute,
     public _interactionsService:InteractionsService,
     private _dataValidatorsService:DataValidatorsService,
+    private router:Router
   ) { 
     this.sectionForm = new FormGroup({
       id:new FormControl(null),
@@ -43,48 +44,64 @@ export class ImpactAreaIsComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  reloadComponent(){
+    let currentRoute = this.router.routerState.snapshot.url;
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/impact-statements/impact-areas`])
+    setTimeout(() => {
+      this.router.navigate([currentRoute])
+    }, 10);
+    
+    console.log("Reload");
+  }
 
+
+  ngOnInit(): void {
+    let reload = false;
     this.getCLARISAInstitutions();
     this.getInstitutionsTypes();
     this.activatedRoute.params.subscribe((routeResp: any) => {
-      this.cleanForm();
-      // this.showDepthSacale = false;
-      this.showForm = false;
-      this.iaID = routeResp.iaID
-
-      // this.getPobImpatAreaData(routeResp.pobIaID)
-      // this.pobColorselected(3, 7, 16, routeResp.iaID);
-      this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
-      
-      this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
+      if (reload){
+        this.reloadComponent();
+      }else{
+        this.cleanForm();
+        // this.showDepthSacale = false;
+        this.showForm = false;
+        this.iaID = routeResp.iaID
+  
+        // this.getPobImpatAreaData(routeResp.pobIaID)
+        // this.pobColorselected(3, 7, 16, routeResp.iaID);
+        this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
         
-        if (resp.response.impactStrategies) {
-          this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
-          this.updateForm(resp.response.impactStrategies);
-          console.log(resp.response.impactStrategies.partners);
-          resp.response.impactStrategies.partners.map(item=>{
-
-            if (item.code) {
-              this.savedList.push(item);
-            }else{
-              let body = {
-                name:item.institutionType,
-                code:item.institutionTypeId,
-                id:item.id
+        this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
+          
+          if (resp.response.impactStrategies) {
+            this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
+            this.updateForm(resp.response.impactStrategies);
+            console.log(resp.response.impactStrategies.partners);
+            resp.response.impactStrategies.partners.map(item=>{
+  
+              if (item.code) {
+                this.savedList.push(item);
+              }else{
+                let body = {
+                  name:item.institutionType,
+                  code:item.institutionTypeId,
+                  id:item.id
+                }
+                this.institutionsTypesSavedList.push(body);
               }
-              this.institutionsTypesSavedList.push(body);
-            }
-            
-          })
-         
-        }
-      },err=>{console.log(err);this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)},
-      ()=>{
-        this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
-        this.showForm = true;
-      })
+              
+            })
+           
+          }
+        },err=>{console.log(err);this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)},
+        ()=>{
+          this._dataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
+          this.showForm = true;
+        })
+      }
 
+      reload = true;
     })
   }
 
