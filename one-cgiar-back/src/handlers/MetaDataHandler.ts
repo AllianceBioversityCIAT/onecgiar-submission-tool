@@ -212,7 +212,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
      CASE
       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
 		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
-        OR (SELECT LENGTH(NAME) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(NAME,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
         FROM general_information WHERE initvStgId = ini.id) > 50
 	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
@@ -260,7 +261,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM innovation_packages WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
        THEN FALSE
          ELSE TRUE
@@ -298,7 +300,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
+         - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
                       WHERE initvStgId = ini.id
@@ -363,7 +366,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+      - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
       FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
      THEN FALSE
        ELSE TRUE
@@ -457,7 +461,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
         OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
                       WHERE initvStgId = ini.id
@@ -499,7 +504,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
+       - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
       FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
      THEN FALSE
        ELSE TRUE
@@ -615,11 +621,13 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')))
+         - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(capacity_development) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(capacity_development,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
                       WHERE initvStgId = ini.id
@@ -676,7 +684,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+      - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
       FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
      THEN FALSE
        ELSE TRUE
@@ -695,7 +704,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+      OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','')))
+       - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
       FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
      THEN FALSE
        ELSE TRUE
@@ -768,7 +778,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
                       WHERE initvStgId = ini.id
@@ -802,7 +813,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
                       WHERE initvStgId = ini.id
@@ -870,7 +882,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
           OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
           OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
           OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+          - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
           FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
        THEN FALSE
          ELSE TRUE
@@ -909,7 +922,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
         OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
         OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-        OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','')) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
      THEN FALSE
        ELSE TRUE
@@ -976,23 +990,28 @@ export class MetaDataHandler extends InitiativeStageHandler {
           CASE
         WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
           OR (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
             OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
-            OR (SELECT LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')))
+            - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
           OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
           OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) > 150
           OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) = ''
-            OR (SELECT LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+            OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
             OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =${index})  IS NULL
             OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id = ${index})   = ''
@@ -1032,19 +1051,24 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
      WHEN (imp.challenge_priorization) IS NULL
       OR (challenge_priorization) = ''
-  OR (LENGTH(challenge_priorization) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(challenge_priorization,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
   OR (research_questions) IS NULL
   OR (research_questions) = ''
-  OR (LENGTH(research_questions) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(research_questions,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
   OR (component_work_package) IS NULL
   OR (component_work_package) = ''
-  OR (LENGTH(component_work_package) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(component_work_package,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
   OR (performance_results) IS NULL
   OR (performance_results) = ''
-  OR (LENGTH(performance_results) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(performance_results,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
   OR (human_capacity) IS NULL
   OR (human_capacity) = ''
-  OR (LENGTH(human_capacity) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(human_capacity,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','')) 
+  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
   OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id)  IS NULL
   OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id )   = ''
      THEN FALSE
@@ -1126,15 +1150,18 @@ export class MetaDataHandler extends InitiativeStageHandler {
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
           OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-          OR (SELECT LENGTH(acronym) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(acronym,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+          - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT LENGTH(name) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(name,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
 		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT LENGTH(pathway_content) - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(pathway_content,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
 	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
 		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
@@ -1190,33 +1217,33 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	    OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(participatory_design) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(participatory_design,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
     OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
     OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
@@ -1445,8 +1472,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
       OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-  OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+  OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+  - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
             FROM context WHERE initvStgId = ini.id ) > 500
      THEN FALSE
        ELSE TRUE
@@ -1463,8 +1490,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
        THEN FALSE
          ELSE TRUE
@@ -1481,8 +1508,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
        THEN FALSE
@@ -1500,8 +1527,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')))
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
        THEN FALSE
@@ -1519,8 +1546,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
        THEN FALSE
@@ -1538,8 +1565,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) 
-    - LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+		OR (SELECT (LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+    - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
 	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
        THEN FALSE
