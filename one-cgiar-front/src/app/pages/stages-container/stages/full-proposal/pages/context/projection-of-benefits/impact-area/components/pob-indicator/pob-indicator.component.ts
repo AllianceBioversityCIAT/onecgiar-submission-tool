@@ -37,6 +37,16 @@ export class PobIndicatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.showDepthScale = true;
+    this.pobImpactAreaForm.valueChanges.subscribe(resp=>{
+      Object.keys(this.pobImpactAreaForm.value).map(keyName=>{
+        this.indicatorsListPOBSavediItem[keyName] = this.pobImpactAreaForm.value[keyName];
+      })
+      this.indicatorsListPOBSavediItem.dimensions = this.dimensionsList;
+      
+      console.log(Object.keys(this.pobImpactAreaForm.value));
+      console.log(this.pobImpactAreaForm.value);
+      console.log("pobImpactAreaForm change");
+    })
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
       console.log("change");
       if (resp) {

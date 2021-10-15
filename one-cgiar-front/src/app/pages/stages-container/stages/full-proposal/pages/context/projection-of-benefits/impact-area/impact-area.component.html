@@ -6,7 +6,7 @@
 
    
             <div  *ngIf="indicatorsListLoaded">
-                <div *ngFor="let item of IndicatorsListPOBSavedList;let i=index">
+                <div *ngFor="let item of IndicatorsListPOBSavedList; let i=index">
                     <app-pob-indicator 
                     [indicatorsListPOBSavediItem]="item" 
                     [indicatorsList]="indicatorsList" 

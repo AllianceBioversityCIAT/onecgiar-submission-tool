@@ -60,16 +60,16 @@ export class ImpactAreaComponent implements OnInit {
         this.reloadComponent();
       }else{
         console.log('%c '+this.pobIaID, 'background: #222; color: #00ffff');
-        // this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-
-        //   if (resp.response.projectionBenefitsByImpact) {
-        //     // this.updateForm(resp.response.projectionBenefitsByImpact,routeResp.pobIaID);
-        //     // console.log(this.pobImpactAreaForm.value.impactAreaIndicatorName);
-        //   }else{
-        //     console.log('%c Not created', 'background: #222; color: #bada55');
-        //   }
+        this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+          console.log(resp);
+          if (resp.response.projectionBenefitsByImpact) {
+            // this.updateForm(resp.response.projectionBenefitsByImpact,routeResp.pobIaID);
+            // console.log(this.pobImpactAreaForm.value.impactAreaIndicatorName);
+          }else{
+            console.log('%c Not created', 'background: #222; color: #bada55');
+          }
   
-        // })
+        })
       }
       
 
@@ -87,10 +87,10 @@ export class ImpactAreaComponent implements OnInit {
 
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
-      console.log("getProjectedBenefitLists");
-      console.log(resp);
+      // console.log("getProjectedBenefitLists");
+      // console.log(resp);
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
-      console.log(this.indicatorsList);
+      // console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     
   }
