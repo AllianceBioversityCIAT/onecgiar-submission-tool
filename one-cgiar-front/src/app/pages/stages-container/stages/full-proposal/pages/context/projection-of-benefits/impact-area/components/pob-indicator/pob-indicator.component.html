@@ -43,16 +43,20 @@
             ></ibdc-select>
         </div>
     </div>
+    <hr *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
     <!-- showDimensions && this.pobImpactAreaForm.value.depthScaleId !== 4 -->
-    <div class="second_form custom_card"   *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
+    <div class="second_form"   *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
+        <br>
         <app-pob-dimension
         [dimensionsList]="dimensionsList"
         [depthDescriptionsList]="depthDescriptionsList"
         [indicatorsList]="indicatorsList"
         [indicatorsListPOBSavediItem]="indicatorsListPOBSavediItem"
         ></app-pob-dimension>
+        <br>
     </div>
-    <div class="third_form custom_card" >
+    <hr>
+    <div class="third_form " >
         <app-pob-narrative [pobImpactAreaForm]="pobImpactAreaForm"></app-pob-narrative>
     </div>
 </div>
