@@ -115,10 +115,14 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
+  partnersNotRelatedRoute(){
+    return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
+  }
+
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
         this._dataControlService.userMenu = userMenuResp.response.stages;
-        console.log(this._dataControlService.userMenu);
+        // console.log(this._dataControlService.userMenu);
         // console.log(userMenuResp.response.stages.length);
         if (userMenuResp.response.stages.length > 1) {
 

@@ -29,17 +29,25 @@
                                 </div>
                             </div>
                             <div class="dynamicList" *ngIf="subSection.dynamicList">
+
                                 <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
                                     <div class="dynamicListButton_texts">
                                       <div class="point"></div>
                                       <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
                                     </div>
                                     <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
-
                                 </div>
-                                <div *ngIf="subSection.subSectionId === 16" routerLink="/initiatives/2/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area" class="not_impact_areas"><p>Not impact areas</p> </div>
+                                <div style="border-top: 1px solid white; width: 90%; margin-bottom: 5px;"></div>
+                                <div class="dynamicListButton" [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">
+                                    <div class="dynamicListButton_texts" *ngIf="subSection.subSectionId === 16">
+                                        <div class="point"></div>
+                                        <span>{{'Partners not related to any Impact Area'||'(Unnamed)'}}</span>
+                                    </div>
+                                    <!-- <span style="margin-right: 8px;" [style.color]="true?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span> -->
+                                </div>
+                                <!-- <div *ngIf="subSection.subSectionId === 16" routerLink="/initiatives/2/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area" class="not_impact_areas"><p>Partners not related to any Impact Area</p> </div> -->
 
-                            </div>
+                            
                         </div>
 
                     </div>
