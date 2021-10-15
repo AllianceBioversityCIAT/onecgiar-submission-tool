@@ -73,7 +73,7 @@ export class ImpactAreaIsComponent implements OnInit {
         this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
         
         this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
-          
+          console.log(resp);
           if (resp.response.impactStrategies) {
             this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
             this.updateForm(resp.response.impactStrategies);
@@ -185,8 +185,8 @@ export class ImpactAreaIsComponent implements OnInit {
   saveSection(){
     let body = this.sectionForm.value;
     
-    console.log(this.sectionForm.value);
-    console.log(this.savedList);
+    // console.log(this.sectionForm.value);
+    // console.log(this.savedList);
     
     this.institutionsTypesSavedList.map(item=>{
       console.log(item);

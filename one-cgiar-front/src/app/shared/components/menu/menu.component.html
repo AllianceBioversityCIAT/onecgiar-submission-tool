@@ -37,7 +37,7 @@
                                     </div>
                                     <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
                                 </div>
-                                <div style="border-top: 1px solid white; width: 90%; margin-bottom: 5px;"></div>
+                                <div *ngIf="subSection.subSectionId === 16" style="border-top: 1px solid white; width: 90%; margin-bottom: 5px;"></div>
                                 <div class="dynamicListButton" [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">
                                     <div class="dynamicListButton_texts" *ngIf="subSection.subSectionId === 16">
                                         <div class="point"></div>

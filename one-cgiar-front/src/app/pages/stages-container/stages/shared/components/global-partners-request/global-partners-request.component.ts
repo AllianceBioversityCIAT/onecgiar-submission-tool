@@ -49,7 +49,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
     this.institutions.map(item=>{
       // item.type_id = 1000;
       item.id = null;
-      item.tag_id = 0;
+      item.tag_id = '0,0,0';
     })
     // this.openDialog()
   }
@@ -99,8 +99,49 @@ export class GlobalPartnersRequestComponent implements OnInit {
       this.display = true;
   }
 
+  getActiveTag(item,i){
+    if (item.code) {
+      if (String(item.tag_id).length == 1) {
+        let localValue = item.tag_id;
+        item.tag_id = '0,0,0';
+        let localArray = item.tag_id.split(',')
+        localArray[Number(localValue)-1] = localValue;
+        item.tag_id = localArray.join(',');
+      }
+
+      if (item.tag_id.split(',')[i]!='0') {
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+  }
+
   changeTagId(item,value){
-    item.tag_id = value;
+
+    if (!item.tag_id) {
+      item.tag_id = '0,0,0'
+    }
+
+    if (String(item.tag_id).length == 1) {
+      let localValue = item.tag_id;
+      item.tag_id = '0,0,0';
+      let localArray = item.tag_id.split(',')
+      localArray[Number(localValue)-1] = localValue;
+      item.tag_id = localArray.join(',');
+    }
+
+
+       let array = item.tag_id.split(',')
+      if (array[Number(value)-1] == value) {
+        array[Number(value)-1] = 0;
+      }else{
+        array[Number(value)-1] = value;
+      }
+      
+      item.tag_id = array.join(',');
+    
   }
 
   countDuplicates(originalArray) {

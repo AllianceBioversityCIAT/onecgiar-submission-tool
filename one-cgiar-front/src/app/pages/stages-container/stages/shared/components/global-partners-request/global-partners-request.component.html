@@ -20,7 +20,7 @@
                                 idToSave:'id',
                                 labelName:'Institutions'
                             }
-                           }"></ibdc-select-multiple>
+                }"></ibdc-select-multiple>
                 <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
                     are looking for, request to have it added to the list.</a>
 
@@ -37,8 +37,9 @@
                         <p><span class="institutionTypeLabel">Institution type:</span><span
                                 class="partner_type">{{item.institutionType}}</span></p>
                         <div class="buttons_changing">
-                            <div class="button_changing" *ngFor="let button_item of button_changing"
-                                [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}"
+                            <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
+                            <div class="button_changing {{getActiveTag(item,i)?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
+                              
                                 (click)="changeTagId(item,button_item.id)">
                                 {{button_item.name}}
                             </div>
