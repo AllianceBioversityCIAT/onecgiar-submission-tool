@@ -1333,9 +1333,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       }
 
-      var validateProjectionBenefits = await this.validationsProjectionBenefits();
+      // var validateProjectionBenefits = await this.validationsProjectionBenefits();
 
-      validationContext[0].validation = validateProjectionBenefits.validation * validationContext[0].validation;
+      // validationContext[0].validation = validateProjectionBenefits.validation * validationContext[0].validation;
 
       var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
 
