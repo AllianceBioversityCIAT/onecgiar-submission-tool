@@ -1,0 +1,14 @@
+.iconRemove{
+    display: flex;
+    justify-content: left;
+    align-items: center; 
+    color: rgb(238, 71, 71);
+    cursor: pointer;
+}
+
+.targetUnit{
+    border-radius: 1px solid red;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}

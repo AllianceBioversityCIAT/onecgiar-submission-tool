@@ -1,0 +1,42 @@
+<div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
+    <div class="col-xl-5">
+        <ibdc-select-ngmodel [options]="
+        {
+         required:true,
+         inputTitle:'Depth description',
+         item: item,   
+         itemName:'description',
+         selectList: this.depthDescriptionsList,
+         itemId:'descriptionID',
+         frontendSearchAttribute:'description',
+         readOnlyVariable: this._initiativesService.initiative.readonly
+        }"></ibdc-select-ngmodel>
+    </div>
+    <div class="col-xl-4">
+        <ibdc-input-ngmodel
+            [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
+            ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
+        </ibdc-input-ngmodel>
+    </div>
+    <div class="col-xl-2 targetUnit">
+        <strong class="ibdc_secondary_color">{{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator).targetUnit}}</strong>
+    </div>
+    <div class="col-xl-1 iconRemove">
+        <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">
+            delete
+        </span>
+    </div>
+
+</div>
+
+<h3 style="text-align: center;" *ngIf="!this.dimensionsList.length"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
+
+<div class="button_add_container center_flex">
+    <button 
+    pButton pRipple 
+    type="button" label="Add dimension" 
+    class="p-button-success save-button"     
+    icon="pi pi-plus" iconPos="right" 
+    (click)="addDimension()" 
+    ></button>
+</div>

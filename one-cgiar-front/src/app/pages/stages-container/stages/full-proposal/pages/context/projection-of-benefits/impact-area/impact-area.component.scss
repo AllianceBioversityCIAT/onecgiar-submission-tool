@@ -16,41 +16,7 @@
     padding: 20px;
 }
 
-.center_metadata{
-    display: flex;
-    align-items: center;
-    // justify-content: center;
-    padding-left: 50px;
-    
-    .metada_data_box{
-
-        .metadata-title{
-            font-weight: 700;
-            color: var(--ibdc-tertiary-color);
-        }
-    }
-}
-
 .ibc-select-ngmodel{
     background: transparent;
     border: none;
-}
-
-.targetUnit{
-    border-radius: 1px solid red;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-}
-
-.iconRemove{
-    display: flex;
-    justify-content: left;
-    align-items: center; 
-    color: rgb(238, 71, 71);
-    cursor: pointer;
-}
-
-.dimension{
-    // border: 1px solid black;
 }

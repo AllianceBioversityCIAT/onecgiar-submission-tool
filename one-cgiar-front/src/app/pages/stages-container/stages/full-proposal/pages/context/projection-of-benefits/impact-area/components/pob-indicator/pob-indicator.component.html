@@ -1,0 +1,60 @@
+<div class="custom_card">
+    <div class="top_bar">
+    </div>
+    <span class="icon_delete_indicator  material-icons material-icons-outlined">
+        delete
+    </span>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            <ibdc-select-ngmodel-no-repeat [options]="
+            {
+             required:true,
+             inputTitle:'Indicator '+(index+1),
+             item: getIndicatorItem(indicatorsListPOBSavediItem),   
+             itemName:'impactAreaIndicatorName',
+             selectList: this.indicatorsList,
+             itemId:'impactAreaIndicator',
+             frontendSearchAttribute:'impactAreaIndicatorName',
+             readOnlyVariable: this._initiativesService.initiative.readonly
+            }"></ibdc-select-ngmodel-no-repeat>
+        </div>
+        <div class="col-6 center_metadata">
+            <div class="metada_data_box">
+                <p><span class="metadata-title">Target  year:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetYear || 'not available'}}</p>
+                <p><span class="metadata-title">Unit:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetUnit || 'not available'}}</p>
+                <p><span class="metadata-title">Target value:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.value || 'not available'}}</p>
+            </div>
+        </div>
+        <div class="col-12" *ngIf="showDepthScale && this.pobImpactAreaForm.value.impactAreaIndicator">
+            <ibdc-select [options]="
+            {
+             required:true,
+             inputTitle:'Choose a depth scale',
+             form:pobImpactAreaForm,
+             formControlId:'depthScaleId',
+             formControlName:'depthScaleName',
+             selectItemName:'depthScaleName',
+             selectItemId:'depthScaleId',
+             frontendSearchAttribute:'depthScaleName',
+             readOnlyVariable: this._initiativesService.initiative.readonly,
+             selectList: this.depthScalesList
+            }">
+            ></ibdc-select>
+        </div>
+    </div>
+    <!-- showDimensions && this.pobImpactAreaForm.value.depthScaleId !== 4 -->
+    <div class="second_form custom_card"   *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
+        <app-pob-dimension
+        [dimensionsList]="dimensionsList"
+        [depthDescriptionsList]="depthDescriptionsList"
+        [indicatorsList]="indicatorsList"
+        [indicatorsListPOBSavediItem]="indicatorsListPOBSavediItem"
+        ></app-pob-dimension>
+    </div>
+    <div class="third_form custom_card" >
+        <app-pob-narrative [pobImpactAreaForm]="pobImpactAreaForm"></app-pob-narrative>
+    </div>
+</div>
+<br>
+

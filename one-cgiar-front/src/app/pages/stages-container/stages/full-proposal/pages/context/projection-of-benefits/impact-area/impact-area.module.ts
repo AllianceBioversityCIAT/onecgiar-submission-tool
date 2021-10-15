@@ -9,22 +9,25 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 import {ButtonModule} from 'primeng/button';
+import { PobIndicatorComponent } from './components/pob-indicator/pob-indicator.component';
+import { PobDimensionComponent } from './components/pob-dimension/pob-dimension.component';
+import { PobNarrativeComponent } from './components/pob-narrative/pob-narrative.component';
 
 //7:00 pm
 
 
 @NgModule({
-  declarations: [ImpactAreaComponent],
+  declarations: [ImpactAreaComponent, PobIndicatorComponent, PobDimensionComponent, PobNarrativeComponent],
   imports: [
     CommonModule,
     ImpactAreaRoutingModule,
     CheckboxModule,
-    FormsModule,
     IbdAngularComponentsModule,
     UtilsModule,
-    FormsModule,
+    ButtonModule,
     ReactiveFormsModule,
-    ButtonModule
+    FormsModule
+    
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
   
