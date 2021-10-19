@@ -100,6 +100,8 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   getActiveTag(item,i){
+
+    if (!item.tag_id)item.tag_id = '0,0,0';
     if (item.code) {
       if (String(item.tag_id).length == 1) {
         let localValue = item.tag_id;
@@ -120,9 +122,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 
   changeTagId(item,value){
 
-    if (!item.tag_id) {
-      item.tag_id = '0,0,0'
-    }
+    if (!item.tag_id)item.tag_id = '0,0,0';
 
     if (String(item.tag_id).length == 1) {
       let localValue = item.tag_id;
