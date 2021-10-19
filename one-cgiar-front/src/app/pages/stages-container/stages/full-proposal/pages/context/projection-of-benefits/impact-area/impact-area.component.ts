@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 })
 export class ImpactAreaComponent implements OnInit {
   
-  IndicatorsListPOBSavedList:any = [
+  indicatorsListPOBSavedList:any = [
     // {
     //     "impactAreaIndicatorName": "#people benefiting from relevant CGIAR innovations",
     //     "impactAreaIndicator": 9
@@ -61,7 +61,8 @@ export class ImpactAreaComponent implements OnInit {
       }else{
         console.log('%c '+this.pobIaID, 'background: #222; color: #00ffff');
         this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-          console.log(resp);
+          console.log(resp.response.projectionBenefitsByImpact);
+          this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
           if (resp.response.projectionBenefitsByImpact) {
             // this.updateForm(resp.response.projectionBenefitsByImpact,routeResp.pobIaID);
             // console.log(this.pobImpactAreaForm.value.impactAreaIndicatorName);
@@ -78,11 +79,24 @@ export class ImpactAreaComponent implements OnInit {
     })
   }
 
+  
 
 
   saveForm(){
     console.log("saveForm");
-    console.log(this.IndicatorsListPOBSavedList);
+    console.log(this.indicatorsListPOBSavedList);
+    // console.log(this.indicatorsListPOBSavedList[0]);
+    // console.log(this.indicatorsListPOBSavedList);
+    this.indicatorsListPOBSavedList.map(item=>{
+      console.log(item);
+      this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
+        console.log(resp);
+      },err=>(console.log(err),()=>{}))
+    })
+
+
+
+    // this.reloadComponent()
   }
 
   getProjectedBenefitLists(impactAreaId){
@@ -96,11 +110,15 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   addIndicator(){
-    if (this.IndicatorsListPOBSavedList.length < this.indicatorsList.length) {
+    if (this.indicatorsListPOBSavedList.length < this.indicatorsList.length) {
       let item = new Object();
       item['impactAreaIndicatorName'] = "";
       item['impactAreaIndicator'] = null;
-      this.IndicatorsListPOBSavedList.push(item);
+      // impact areas
+      item['impactAreaName'] = "";
+      item['impactAreaId'] = this.pobIaID;
+      item['impact_area_active'] = true; 
+      this.indicatorsListPOBSavedList.push(item);
     }
   }
 
