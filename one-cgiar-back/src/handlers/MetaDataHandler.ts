@@ -1269,76 +1269,77 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       // Validate Citations
 
-      let getAllCitationsSQL = (`
-       SELECT title,link,col_name
-         FROM citations
-        WHERE table_name = 'context'
-          AND initvStgId = ${this.initvStgId_}
-          AND active = 1
-       ORDER BY col_name;
-        `)
+      // let getAllCitationsSQL = (`
+      //  SELECT title,link,col_name
+      //    FROM citations
+      //   WHERE table_name = 'context'
+      //     AND initvStgId = ${this.initvStgId_}
+      //     AND active = 1
+      //  ORDER BY col_name;
+      //   `)
 
-      var allCitations = await this.queryRunner.query(getAllCitationsSQL);
+      // var allCitations = await this.queryRunner.query(getAllCitationsSQL);
 
-      var multi = generalValidations;
+      // var multi = generalValidations;
 
-      for (let index = 0; index < allCitations.length; index++) {
+      // for (let index = 0; index < allCitations.length; index++) {
 
-        const col_name = allCitations[index].col_name;
-        const title = allCitations[index].title;
-        const link = allCitations[index].link;
-        var validCitation;
+      //   const col_name = allCitations[index].col_name;
+      //   const title = allCitations[index].title;
+      //   const link = allCitations[index].link;
+      //   var validCitation;
 
-        if (col_name == 'key_learnings') {
+      //   if (col_name == 'key_learnings') {
 
-          if (title !== '' && link !== '') {
-            validCitation = 1;
-          } else {
-            validCitation = 0;
-          }
+      //     if (title !== '' && link !== '') {
+      //       validCitation = 1;
+      //     } else {
+      //       validCitation = 0;
+      //     }
 
-        } else if (col_name == 'priority_setting') {
+      //   } else if (col_name == 'priority_setting') {
 
-          if (title !== '' && link !== '') {
-            validCitation = 1;
-          } else {
-            validCitation = 0;
-          }
+      //     if (title !== '' && link !== '') {
+      //       validCitation = 1;
+      //     } else {
+      //       validCitation = 0;
+      //     }
 
-        } else if (col_name == 'participatory_design') {
+      //   } else if (col_name == 'participatory_design') {
 
-          if (title !== '' && link !== '') {
-            validCitation = 1;
-          } else {
-            validCitation = 0;
-          }
+      //     if (title !== '' && link !== '') {
+      //       validCitation = 1;
+      //     } else {
+      //       validCitation = 0;
+      //     }
 
-        } else if (col_name == 'comparative_advantage') {
+      //   } else if (col_name == 'comparative_advantage') {
 
-          if (title !== '' && link !== '') {
-            validCitation = 1;
-          } else {
-            validCitation = 0;
-          }
+      //     if (title !== '' && link !== '') {
+      //       validCitation = 1;
+      //     } else {
+      //       validCitation = 0;
+      //     }
 
-        } else {
+      //   } else {
 
-          validCitation = 0;
+      //     validCitation = 0;
 
-        }
+      //   }
 
-        multi = multi * validCitation;
+      //   multi = multi * validCitation;
 
-        validationContext[0].validation = multi;
+      //   validationContext[0].validation = multi;
 
-      }
+      // }
 
       // var validateProjectionBenefits = await this.validationsProjectionBenefits();
 
       // validationContext[0].validation = validateProjectionBenefits.validation * validationContext[0].validation;
 
-      var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
+      // var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
 
+      var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext();
 
       validationContext.map(con => {
         con['subSections'] = [
@@ -1462,7 +1463,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
   */
 
 
-  async validationSubsectionContext(allCitations) {
+  async validationSubsectionContext(allCitations?) {
 
     var generalChallengeStatement;
 
@@ -1597,67 +1598,67 @@ export class MetaDataHandler extends InitiativeStageHandler {
       comparativeAdvantage[0].validation = parseInt(comparativeAdvantage[0].validation)
       participatory[0].validation = parseInt(participatory[0].validation)
 
-      if (learning[0].validation > 0) {
+      // if (learning[0].validation > 0) {
 
-        allCitations.map(cit => {
+      //   allCitations.map(cit => {
 
-          if (cit.col_name == 'key_learnings') {
+      //     if (cit.col_name == 'key_learnings') {
 
-            if (cit.title !== '' && cit.link !== '') {
-              learning[0].validation = 1;
-            } else {
-              learning[0].validation = 0;
-            }
-          }
+      //       if (cit.title !== '' && cit.link !== '') {
+      //         learning[0].validation = 1;
+      //       } else {
+      //         learning[0].validation = 0;
+      //       }
+      //     }
 
-        })
+      //   })
 
-      } else if (prioritySetting[0].validation > 0) {
+      // } else if (prioritySetting[0].validation > 0) {
 
-        allCitations.map(cit => {
+      //   allCitations.map(cit => {
 
-          if (cit.col_name == 'priority_setting') {
+      //     if (cit.col_name == 'priority_setting') {
 
-            if (cit.title !== '' && cit.link !== '') {
-              prioritySetting[0].validation = 1;
-            } else {
-              prioritySetting[0].validation = 0;
-            }
-          }
+      //       if (cit.title !== '' && cit.link !== '') {
+      //         prioritySetting[0].validation = 1;
+      //       } else {
+      //         prioritySetting[0].validation = 0;
+      //       }
+      //     }
 
-        })
+      //   })
 
-      } else if (comparativeAdvantage[0].validation > 0) {
+      // } else if (comparativeAdvantage[0].validation > 0) {
 
-        allCitations.map(cit => {
+      //   allCitations.map(cit => {
 
-          if (cit.col_name == 'comparative_advantage') {
+      //     if (cit.col_name == 'comparative_advantage') {
 
-            if (cit.title !== '' && cit.link !== '') {
-              comparativeAdvantage[0].validation = 1;
-            } else {
-              comparativeAdvantage[0].validation = 0;
-            }
-          }
+      //       if (cit.title !== '' && cit.link !== '') {
+      //         comparativeAdvantage[0].validation = 1;
+      //       } else {
+      //         comparativeAdvantage[0].validation = 0;
+      //       }
+      //     }
 
-        })
+      //   })
 
-      } else if (participatory[0].validation > 0) {
+      // } else if (participatory[0].validation > 0) {
 
-        allCitations.map(cit => {
+      //   allCitations.map(cit => {
 
-          if (cit.col_name == 'comparative_advantage') {
+      //     if (cit.col_name == 'comparative_advantage') {
 
-            if (cit.title !== '' && cit.link !== '') {
-              participatory[0].validation = 1;
-            } else {
-              participatory[0].validation = 0;
-            }
-          }
+      //       if (cit.title !== '' && cit.link !== '') {
+      //         participatory[0].validation = 1;
+      //       } else {
+      //         participatory[0].validation = 0;
+      //       }
+      //     }
 
-        })
+      //   })
 
-      }
+      // }
 
       return { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory }
 
