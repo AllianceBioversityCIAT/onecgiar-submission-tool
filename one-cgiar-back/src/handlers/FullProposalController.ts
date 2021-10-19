@@ -642,7 +642,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newWorkProjectionBenefits.probability_id = probability_id;
         newWorkProjectionBenefits.impact_area_active = impact_area_active;
         newWorkProjectionBenefits.wrkPkg = null;
-        newWorkProjectionBenefits.active = active ? active : true;
+        newWorkProjectionBenefits.active = active;
 
         try {
 
