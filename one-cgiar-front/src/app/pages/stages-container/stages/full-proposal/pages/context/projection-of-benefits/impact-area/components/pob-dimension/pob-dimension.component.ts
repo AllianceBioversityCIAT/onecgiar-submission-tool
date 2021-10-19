@@ -28,7 +28,10 @@ export class PobDimensionComponent implements OnInit {
   }
 
   getIndicatorMetaData(indicatorId){
-    return this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
+    if (indicatorId) {
+      return this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
+    }
+    return null;
   }
 
   removeDimension(index,object,itemLink:HTMLElement){

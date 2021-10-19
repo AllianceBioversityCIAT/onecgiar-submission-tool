@@ -67,6 +67,11 @@ export class PobIndicatorComponent implements OnInit {
 
     })
   }
+  getIndicatorName(impactAreaIndicatorId){
+    console.log(impactAreaIndicatorId);
+    console.log(this.indicatorsList);
+    return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
+  }
   beforeindicator = null;
   getIndicatorItem(indicatorsListPOBSavediItem){
     if (indicatorsListPOBSavediItem.impactAreaIndicator != this.beforeindicator) {

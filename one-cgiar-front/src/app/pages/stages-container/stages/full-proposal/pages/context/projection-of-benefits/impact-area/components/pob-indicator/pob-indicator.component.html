@@ -1,5 +1,6 @@
 <div class="custom_card" #indicatorBlock>
     <div class="top_bar">
+        {{getIndicatorName(indicatorsListPOBSavediItem?.impactAreaIndicator) || ''}}
     </div>
     <span (click)="removeindicatorBlock(index,indicatorsListPOBSavediItem,indicatorBlock)" class="icon_delete_indicator  material-icons material-icons-outlined">
         delete

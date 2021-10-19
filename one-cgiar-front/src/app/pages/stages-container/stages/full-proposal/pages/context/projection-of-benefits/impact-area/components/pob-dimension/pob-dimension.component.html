@@ -19,7 +19,7 @@
         </ibdc-input-ngmodel>
     </div>
     <div class="col-xl-2 targetUnit">
-        <strong class="ibdc_secondary_color">{{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator).targetUnit}}</strong>
+        <strong class="ibdc_secondary_color">{{getIndicatorMetaData(indicatorsListPOBSavediItem?.impactAreaIndicator)?.targetUnit}}</strong>
     </div>
     <div class="col-xl-1 iconRemove">
         <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">

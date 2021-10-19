@@ -27,7 +27,10 @@
                     ></button>
                 </div>
           
-     
+                <div class="sekeletons_load" *ngIf="!indicatorsListLoaded">
+                    <app-general-information-skeleton></app-general-information-skeleton>
+                </div>
+
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:5}"></ibdc-save-button>

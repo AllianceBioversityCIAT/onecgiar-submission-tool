@@ -12,6 +12,7 @@ import {ButtonModule} from 'primeng/button';
 import { PobIndicatorComponent } from './components/pob-indicator/pob-indicator.component';
 import { PobDimensionComponent } from './components/pob-dimension/pob-dimension.component';
 import { PobNarrativeComponent } from './components/pob-narrative/pob-narrative.component';
+import { SkeletonsModule } from '../../../../../../../../shared/components/skeletons/skeletons.module';
 
 //7:00 pm
 
@@ -26,7 +27,8 @@ import { PobNarrativeComponent } from './components/pob-narrative/pob-narrative.
     UtilsModule,
     ButtonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SkeletonsModule
     
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
