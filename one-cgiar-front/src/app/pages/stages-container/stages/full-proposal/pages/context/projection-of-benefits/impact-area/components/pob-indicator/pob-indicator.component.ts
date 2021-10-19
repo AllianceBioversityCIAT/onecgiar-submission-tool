@@ -11,6 +11,7 @@ export class PobIndicatorComponent implements OnInit {
   @Input() indicatorsListPOBSavediItem;
   @Input() indicatorsList;
   @Input() index;
+  @Input() indicatorsListPOBSavedList;
   pobImpactAreaForm: FormGroup;
   dimensionsList:any = [];
   depthScalesList:any = [];
@@ -93,6 +94,38 @@ export class PobIndicatorComponent implements OnInit {
 
   getIndicatorMetaData(indicatorId){
     return this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
+  }
+
+  removeindicatorBlock(index,object,itemLink:HTMLElement){
+    itemLink.classList.remove('animate__animated', 'animate__fadeInRight', 'animate__faster');
+    itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
+    itemLink.addEventListener('animationend', () => {
+      itemLink.style.maxHeight = '0px';
+      if (object.projectionBenefitsId) {
+        object.edited = true;
+        object.active = false;
+        this.unselectInpactAreaIndicatorInDropDown(object.impactAreaIndicator);
+        setTimeout(() => {
+          itemLink.style.display = 'none';
+        }, 300);
+      }else{
+        this.unselectInpactAreaIndicatorInDropDown(object.impactAreaIndicator);
+        setTimeout(() => {
+          this.indicatorsListPOBSavedList.splice(index,1);
+        }, 300);
+     
+      }
+
+    });
+  }
+
+  unselectInpactAreaIndicatorInDropDown(impactAreaIndicator){
+    if (impactAreaIndicator) {
+      if (this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicator)) {
+        this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicator).selected = false
+      }
+    }
+
   }
 
   updateForm(resp){

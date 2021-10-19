@@ -87,16 +87,24 @@ export class ImpactAreaComponent implements OnInit {
     console.log(this.indicatorsListPOBSavedList);
     // console.log(this.indicatorsListPOBSavedList[0]);
     // console.log(this.indicatorsListPOBSavedList);
+    let cont = 0;
+    console.log(this.indicatorsListPOBSavedList.length);
     this.indicatorsListPOBSavedList.map(item=>{
+
       console.log(item);
       this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
         console.log(resp);
+        cont++
+        if (cont == this.indicatorsListPOBSavedList.length) {
+          this.reloadComponent()
+        }
       },err=>(console.log(err),()=>{}))
+
     })
 
 
 
-    // this.reloadComponent()
+    // 
   }
 
   getProjectedBenefitLists(impactAreaId){
