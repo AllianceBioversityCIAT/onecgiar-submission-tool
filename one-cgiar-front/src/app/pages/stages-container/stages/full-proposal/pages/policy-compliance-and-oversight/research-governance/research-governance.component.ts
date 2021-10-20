@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { DataControlService } from '@app/shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
@@ -13,7 +14,8 @@ export class ResearchGovernanceComponent implements OnInit {
   showForm = true;
   constructor(
    public _initiativesService:InitiativesService,
-   private _interactionsService:InteractionsService
+   private _interactionsService:InteractionsService,
+   private _dataControlService:DataControlService
   ) {
     this.sectionForm = new FormGroup({
       research_governance_policy:new FormControl(null),
