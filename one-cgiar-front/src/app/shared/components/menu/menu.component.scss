@@ -1,4 +1,15 @@
-
+.not_impact_areas{
+    // text-align: center;
+    display: flex;
+    justify-content: center;
+    p{
+        background-color: #ffffffef;
+        padding: 4px 15px;
+        width: auto;
+        border-radius: 20px;
+        color: rgb(56, 56, 56);
+    }   
+}
 .mat-expansion-indicator{
     color: white !important;
 }

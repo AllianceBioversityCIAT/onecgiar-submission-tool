@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { PartnersRequestComponent } from '../../../../../../shared/components/partners-request/partners-request.component';
 @Component({
   selector: 'app-global-partners-request',
   templateUrl: './global-partners-request.component.html',
@@ -11,7 +13,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   @Input() savedList:any;
   @Input() institutionsTypes:any;
   @Input() institutionsTypesSavedList:any;
-
+  @Input() institutionsTypesDisableList:any;
   display: boolean = false;
   button_changing = [
     {
@@ -29,19 +31,56 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ]
 
   constructor(
-    public _initiativesService : InitiativesService
+    public _initiativesService : InitiativesService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+    // console.log(this.institutions);
+    // console.log(this.institutionsTypes);
+    // console.log("savedList");
     // console.log(this.savedList);
+    // console.log("institutionsTypesSavedList");
     // console.log(this.institutionsTypesSavedList);
+    // console.log("institutionsTypesDisableList");
+    // console.log(this.institutionsTypesDisableList);
     this.mapInstitutionsTypes();
     // console.log(this.institutions);
     this.institutions.map(item=>{
       // item.type_id = 1000;
       item.id = null;
-      item.tag_id = 0;
+      item.tag_id = '0,0,0';
     })
+    // this.openDialog()
+  }
+
+  getInstitutionsTypesDisableList(){
+    // console.log("change");
+    let institutionsTypesDisableList=[];
+    // console.log(this.savedList);
+    this.savedList.map(item=>{
+    if (item.code && item.active !== false) {
+      let body = {
+        name:item.institutionType,
+        code:item.institutionTypeId,
+        id:item.id
+      }
+      institutionsTypesDisableList.push(body);
+    }
+  });
+  return institutionsTypesDisableList;
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(PartnersRequestComponent, {
+      width: '100%',
+      height: '90%',
+      panelClass: 'custom-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("");
+    });
   }
 
   mapInstitutionsTypes(){
@@ -60,8 +99,49 @@ export class GlobalPartnersRequestComponent implements OnInit {
       this.display = true;
   }
 
+  getActiveTag(item,i){
+
+    if (!item.tag_id)item.tag_id = '0,0,0';
+    if (item.code) {
+      if (String(item.tag_id).length == 1) {
+        let localValue = item.tag_id;
+        item.tag_id = '0,0,0';
+        let localArray = item.tag_id.split(',')
+        localArray[Number(localValue)-1] = localValue;
+        item.tag_id = localArray.join(',');
+      }
+
+      if (item.tag_id.split(',')[i]!='0') {
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+  }
+
   changeTagId(item,value){
-    item.tag_id = value;
+
+    if (!item.tag_id)item.tag_id = '0,0,0';
+
+    if (String(item.tag_id).length == 1) {
+      let localValue = item.tag_id;
+      item.tag_id = '0,0,0';
+      let localArray = item.tag_id.split(',')
+      localArray[Number(localValue)-1] = localValue;
+      item.tag_id = localArray.join(',');
+    }
+
+
+       let array = item.tag_id.split(',')
+      if (array[Number(value)-1] == value) {
+        array[Number(value)-1] = 0;
+      }else{
+        array[Number(value)-1] = value;
+      }
+      
+      item.tag_id = array.join(',');
+    
   }
 
   countDuplicates(originalArray) {
@@ -108,7 +188,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 
   onSelectOption(option:any){
     // console.log(this.savedList);
-    // console.log(option);
+    console.log(option);
     // encontrar en lista de guardados la opcion seleccionada
     let itemFinded:any = this.savedList.find((savedItem:any)=>savedItem.code == option.code);
     let itemFindedIndex = this.savedList.findIndex((savedItem:any)=>savedItem.code== option.code);
@@ -117,6 +197,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // Eliminado logico o eliminar de elementos de un array que no están en la bd
     option.selected = false;
     this.institutions.find((savedItem:any)=>savedItem.code == option.code).selected = false;
+    this.institutionsTypes.find((savedItem:any)=>savedItem.code == itemFinded.institutionTypeId).disabled = false
       //formas de borrar
       if (itemFinded) {
         // si tiene id de la bd pero de guardado
@@ -129,7 +210,6 @@ export class GlobalPartnersRequestComponent implements OnInit {
         }
         
       }
-    
     // console.log(option);
   }
 

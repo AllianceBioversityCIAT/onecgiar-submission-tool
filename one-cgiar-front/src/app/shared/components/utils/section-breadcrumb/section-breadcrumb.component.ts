@@ -24,7 +24,7 @@ export class SectionBreadcrumbComponent implements OnInit {
   ngOnInit(): void {
     this.sectionsArray =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     this.mapList();
-    console.log(this.sectionsList);
+    // console.log(this.sectionsList);
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
         this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');

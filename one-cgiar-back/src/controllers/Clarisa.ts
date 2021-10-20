@@ -3,6 +3,7 @@ import { HttpStatusCode } from "../handlers/Constants";
 import { getConnection } from "typeorm";
 import axios from 'axios';
 import { config } from 'dotenv';
+import { Request, Response } from 'express';
 
 config();
 
@@ -169,18 +170,18 @@ export const getClaCRPs = async () => {
  * @param {name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments}
  */
 // export const requestClaInstitution = async (req: Request, res: Response) => {
-export const requestClaInstitution = async (body) => {
+export async function requestClaInstitution(req: Request, res: Response) {
     try {
         const queryRunner = getConnection().createQueryBuilder();
         // institution request body
-        const { name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments } = body;
+        const { name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments } = req.body;
         // get global unit from config table
         const config = await queryRunner.connection.query(`
         SELECT value FROM sbt_config WHERE name = 'global_unit' AND type = 'clarisa' AND active = 1;
         `);
         console.log(config[0].value)
         // global unit assigned to SBT **should come from DB config table
-        const cgiarEntity = config.value;
+        const cgiarEntity = config[0].value;
         // axios request body params
         const params = {
             name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments
@@ -194,7 +195,9 @@ export const requestClaInstitution = async (body) => {
         }
 
         const requestedInst = await axios.post(clarisaHost + `${cgiarEntity}/institutions/institution-requests`, params, { headers });
-        return requestedInst.data;
+
+        res.json({ message: requestedInst.data })
+        // return response;
     } catch (error) {
         throw new APIError(
             'NOT FOUND',
@@ -205,7 +208,7 @@ export const requestClaInstitution = async (body) => {
     }
 }
 
-export async function getImpactAreas(){
+export async function getImpactAreas() {
 
     try {
         const institutionsTypes = await axios.get(clarisaHost + 'impact-areas', {
@@ -228,7 +231,7 @@ export async function getImpactAreas(){
 }
 
 
-export async function getImpactAreasIndicators(){
+export async function getImpactAreasIndicators() {
 
     try {
         const institutionsTypes = await axios.get(clarisaHost + 'impact-areas-indicators', {
@@ -251,7 +254,7 @@ export async function getImpactAreasIndicators(){
 }
 
 
-export async function getProjectedBenefits(){
+export async function getProjectedBenefits() {
 
     try {
         const institutionsTypes = await axios.get(clarisaHost + 'projectedBenefits', {
@@ -275,7 +278,7 @@ export async function getProjectedBenefits(){
 
 
 
-export async function requestProjectedProbabilities(){
+export async function requestProjectedProbabilities() {
 
     try {
         const institutionsTypes = await axios.get(clarisaHost + 'projectedBenefitsProbabilities', {

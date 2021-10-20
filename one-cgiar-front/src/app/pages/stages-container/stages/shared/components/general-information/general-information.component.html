@@ -88,6 +88,7 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6">
+                <div style="height: 20px;"></div>
                 <ibdc-input
                     [class.invalid]= "summaryForm.get('budget_value').invalid"
                     [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
@@ -109,7 +110,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:5}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
             <!-- [underConstruction] = "_dataControlService.general_information.secondLeadEmail == 'Deputy email' " -->
         </div>
     </form>
