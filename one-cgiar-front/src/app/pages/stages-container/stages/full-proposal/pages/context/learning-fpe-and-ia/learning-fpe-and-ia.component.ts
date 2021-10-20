@@ -4,6 +4,7 @@ import { FullProposalService } from '@app/shared/services/full-proposal.service'
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-learning-fpe-and-ia',
@@ -20,7 +21,8 @@ export class LearningFpeAndIaComponent implements OnInit {
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    private _dataControlService:DataControlService
   ) { 
     this.contextForm = new FormGroup({
       key_learnings: new FormControl(null, Validators.required),
