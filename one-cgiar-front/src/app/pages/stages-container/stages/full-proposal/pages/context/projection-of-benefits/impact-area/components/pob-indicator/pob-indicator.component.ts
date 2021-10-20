@@ -33,6 +33,7 @@ export class PobIndicatorComponent implements OnInit {
       depthScaleId:new FormControl(null),
       depthScaleName:new FormControl(null),
       probabilityID:new FormControl(null),
+      probabilityName:new FormControl(null),
       impact_area_active:new FormControl(true),
     });
    }
@@ -68,8 +69,8 @@ export class PobIndicatorComponent implements OnInit {
     })
   }
   getIndicatorName(impactAreaIndicatorId){
-    console.log(impactAreaIndicatorId);
-    console.log(this.indicatorsList);
+    // console.log(impactAreaIndicatorId);
+    // console.log(this.indicatorsList);
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
   beforeindicator = null;
@@ -134,8 +135,8 @@ export class PobIndicatorComponent implements OnInit {
   }
 
   updateForm(resp){
-    console.log("RESP");
-    console.log(resp);
+    // console.log("RESP");
+    // console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id?resp.id:null);
     if (this.pobImpactAreaForm.get("impactAreaIndicator").value) {
       this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(resp.impactAreaIndicator);
@@ -155,8 +156,8 @@ export class PobIndicatorComponent implements OnInit {
     //Aux
     // this.dimensionsListByIndicatorID = resp.dimensions;
     // this.originalIndicatorId = resp.impactAreaIndicator
-    console.log("form");
-    console.log(this.pobImpactAreaForm.value);
+    // console.log("form");
+    // console.log(this.pobImpactAreaForm.value);
     this.formUpdated =  true;
   }
 
