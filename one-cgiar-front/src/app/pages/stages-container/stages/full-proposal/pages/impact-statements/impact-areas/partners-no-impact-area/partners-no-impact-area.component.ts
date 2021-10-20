@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { DataValidatorsService } from '../../../../../shared/data-validators.service';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-partners-no-impact-area',
@@ -21,7 +22,8 @@ export class PartnersNoImpactAreaComponent implements OnInit {
   constructor(
    public _initiativesService: InitiativesService,
    private _dataValidatorsService: DataValidatorsService,
-   private _interactionsService:InteractionsService
+   private _interactionsService:InteractionsService,
+   public _dataControlService:DataControlService
   ) {
     this.sectionForm = new FormGroup({
       id:new FormControl(null),

@@ -22,7 +22,7 @@ export class PobContributionComponent implements OnInit {
     public _requests: RequestsService,
     public dialog: MatDialog,
     public _initiativesService:InitiativesService,
-    private _dataControlService:DataControlService,
+    public _dataControlService:DataControlService,
     private _interactionsService:InteractionsService
   ) {
     this.poBenefitsForm = new FormGroup({

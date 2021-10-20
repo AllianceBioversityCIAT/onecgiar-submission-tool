@@ -4,7 +4,7 @@ import { WorkPackageComponent } from './work-package.component';
 
 const routes: Routes = [
   {
-    path:'',
+    path:':wpID',
     component:WorkPackageComponent
   }
 ];

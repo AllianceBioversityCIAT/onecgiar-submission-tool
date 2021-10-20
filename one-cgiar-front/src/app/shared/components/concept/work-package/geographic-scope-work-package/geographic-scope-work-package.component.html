@@ -67,6 +67,6 @@
 
     <br>
     <div class="narratives-save">
-        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:5}"></ibdc-save-button>
+        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
     </div>
 </form>
