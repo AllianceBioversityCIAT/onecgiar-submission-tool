@@ -110,14 +110,15 @@ export class ImpactAreaComponent implements OnInit {
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
       // console.log("getProjectedBenefitLists");
-      // console.log(resp);
+      console.log(resp);
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
-      // console.log(this.indicatorsList);
+      console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     
   }
 
   addIndicator(){
+    console.log(this.indicatorsListPOBSavedList.length+ ' < ' +this.indicatorsList.length);
     if (this.indicatorsListPOBSavedList.length < this.indicatorsList.length) {
       let item = new Object();
       item['impactAreaIndicatorName'] = "";
