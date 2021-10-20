@@ -59,9 +59,9 @@ export class ImpactAreaComponent implements OnInit {
       if (reload){
         this.reloadComponent();
       }else{
-        console.log('%c '+this.pobIaID, 'background: #222; color: #00ffff');
+        // console.log('%c '+this.pobIaID, 'background: #222; color: #00ffff');
         this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
-          console.log(resp.response.projectionBenefitsByImpact);
+          // console.log(resp.response.projectionBenefitsByImpact);
           this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
           if (resp.response.projectionBenefitsByImpact) {
             // this.updateForm(resp.response.projectionBenefitsByImpact,routeResp.pobIaID);
@@ -84,11 +84,16 @@ export class ImpactAreaComponent implements OnInit {
 
   saveForm(){
     console.log("saveForm");
-    console.log(this.indicatorsListPOBSavedList);
+    // console.log(this.indicatorsListPOBSavedList);
+    this.indicatorsListPOBSavedList.map(item=>{
+      console.log(item.dimensions);
+      item.dimensions.map(dimesion=>dimesion.depthDescription = dimesion.description)
+    })
+    // console.log(this.indicatorsListPOBSavedList);
     // console.log(this.indicatorsListPOBSavedList[0]);
     // console.log(this.indicatorsListPOBSavedList);
     let cont = 0;
-    console.log(this.indicatorsListPOBSavedList.length);
+    // console.log(this.indicatorsListPOBSavedList.length);
     this.indicatorsListPOBSavedList.map(item=>{
 
       console.log(item);
@@ -110,9 +115,9 @@ export class ImpactAreaComponent implements OnInit {
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
       // console.log("getProjectedBenefitLists");
-      console.log(resp);
+      // console.log(resp);
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
-      console.log(this.indicatorsList);
+      // console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     
   }

@@ -622,7 +622,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      */
     async upsertProjectionBenefits(projectionBenefitsId?, impact_area_id?, impact_area_name?,
         impact_area_indicator_id?, impact_area_indicator_name?,
-        notes?, depth_scale_id?, probability_id?, impact_area_active?, active?, dimensions?) {
+        notes?, depth_scale_id?, depthScaleName?, probability_id?, probabilityName?, impact_area_active?, active?, dimensions?) {
 
         const projBeneRepo = getRepository(ProjectionBenefits);
         const dimensionsRepo = getRepository(Dimensions);
@@ -639,7 +639,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         newWorkProjectionBenefits.impact_area_indicator_name = impact_area_indicator_name;
         newWorkProjectionBenefits.notes = notes;
         newWorkProjectionBenefits.depth_scale_id = depth_scale_id;
+        newWorkProjectionBenefits.depth_scale_name = depthScaleName;
         newWorkProjectionBenefits.probability_id = probability_id;
+        newWorkProjectionBenefits.probability_name = probabilityName;
         newWorkProjectionBenefits.impact_area_active = impact_area_active;
         newWorkProjectionBenefits.wrkPkg = null;
         newWorkProjectionBenefits.active = active;
@@ -675,6 +677,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newDimensions.depthDescriptionId = dim.descriptionID;
                     newDimensions.breadth_value = dim.breadth_value;
                     newDimensions.active = dim.active;
+                    newDimensions.depth_description = dim.depthDescription;
 
                     if (newDimensions.id !== null) {
 

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-pob-indicator',
@@ -21,7 +22,8 @@ export class PobIndicatorComponent implements OnInit {
   formUpdated = false;
   // originalIndicatorId=null;
   constructor(
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    private _dataControlService:DataControlService
   ) {
     this.pobImpactAreaForm = new FormGroup({
       impactAreaIndicator:new FormControl(null),
@@ -33,11 +35,13 @@ export class PobIndicatorComponent implements OnInit {
       depthScaleId:new FormControl(null),
       depthScaleName:new FormControl(null),
       probabilityID:new FormControl(null),
+      probabilityName:new FormControl(null),
       impact_area_active:new FormControl(true),
     });
    }
 
   ngOnInit(): void {
+  
     this.showDepthScale = true;
 
     this.updateForm(this.indicatorsListPOBSavediItem);
@@ -56,6 +60,7 @@ export class PobIndicatorComponent implements OnInit {
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
       console.log("change");
       if (resp) {
+        this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.impactAreaIndicatorName);
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
         this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
         this.reloadDepthScale();
@@ -68,8 +73,8 @@ export class PobIndicatorComponent implements OnInit {
     })
   }
   getIndicatorName(impactAreaIndicatorId){
-    console.log(impactAreaIndicatorId);
-    console.log(this.indicatorsList);
+    // console.log(impactAreaIndicatorId);
+    // console.log(this.indicatorsList);
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
   beforeindicator = null;
@@ -134,8 +139,8 @@ export class PobIndicatorComponent implements OnInit {
   }
 
   updateForm(resp){
-    console.log("RESP");
-    console.log(resp);
+    // console.log("RESP");
+    // console.log(resp);
     this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id?resp.id:null);
     if (this.pobImpactAreaForm.get("impactAreaIndicator").value) {
       this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(resp.impactAreaIndicator);
@@ -145,7 +150,15 @@ export class PobIndicatorComponent implements OnInit {
     //   impactAreaId
     // }
     this.pobImpactAreaForm.controls['impactAreaId'].setValue(resp.impactAreaId);
-    this.pobImpactAreaForm.controls['impactAreaName'].setValue(resp.impactAreaName);
+    if (resp.impactAreaName) {
+      this.pobImpactAreaForm.controls['impactAreaName'].setValue(resp.impactAreaName);
+    }else{
+      this.pobImpactAreaForm.controls['impactAreaName'].setValue(this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == 3)
+      .sections.find((section) => section.sectionId == 1)
+      .subsections.find((subSection) => subSection.subSectionId == 8)
+      .dynamicList.find(impactAreas=>impactAreas.id == (resp.impactAreaId)).description);
+    }
+    
     this.pobImpactAreaForm.controls['notes'].setValue(resp.notes);
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
     this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
@@ -155,8 +168,8 @@ export class PobIndicatorComponent implements OnInit {
     //Aux
     // this.dimensionsListByIndicatorID = resp.dimensions;
     // this.originalIndicatorId = resp.impactAreaIndicator
-    console.log("form");
-    console.log(this.pobImpactAreaForm.value);
+    // console.log("form");
+    // console.log(this.pobImpactAreaForm.value);
     this.formUpdated =  true;
   }
 

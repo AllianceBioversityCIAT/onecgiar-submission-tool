@@ -45,5 +45,11 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
     @Column('tinyint')
     impact_area_active: boolean
 
+    @Column({length: '500'})
+    depth_scale_name: string
+
+    @Column({length: '500'})
+    probability_name: string
+
 
 }

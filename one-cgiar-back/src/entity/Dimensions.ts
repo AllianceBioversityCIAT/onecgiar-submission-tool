@@ -19,4 +19,7 @@ export class Dimensions extends UpdatedCreatedAt {
     @Column({ type: "tinyint" })
     active: boolean;
 
+    @Column({length: '500'})
+    depth_description: string
+
 }
