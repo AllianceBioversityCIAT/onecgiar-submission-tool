@@ -118,6 +118,7 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   addIndicator(){
+    console.log(this.indicatorsListPOBSavedList.length+ ' < ' +this.indicatorsList.length);
     if (this.indicatorsListPOBSavedList.length < this.indicatorsList.length) {
       let item = new Object();
       item['impactAreaIndicatorName'] = "";
