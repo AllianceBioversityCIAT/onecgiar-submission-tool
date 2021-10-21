@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/Initiatives';
-import { Initiatives } from '../entity/Initiatives';
+import * as toc from '../controllers/toc';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -676,5 +676,16 @@ router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefi
 //get projected probabilities
 router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
 
+
+
+/**
+ * 
+ * TOC
+ * 
+ */
+
+
+//get Toc Narrative
+router.get("/toc/narrative/:TocId", [checkJwt], toc.getTocNarrative);
 
 export default router;
