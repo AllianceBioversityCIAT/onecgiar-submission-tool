@@ -407,6 +407,10 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes`, body);
   }
 
+  getTocTxtDataByTocId(tocId){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/toc/narrative/${tocId}`);
+  }
+
 
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);

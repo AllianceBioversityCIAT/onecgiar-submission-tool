@@ -6,6 +6,8 @@ import { WpTocComponent } from './wp-toc.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { SkeletonsModule } from '@app/shared/components/skeletons/skeletons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ButtonModule} from 'primeng/button';
+import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
@@ -16,7 +18,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     IbdAngularComponentsModule,
     SkeletonsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonModule,
+    UtilsModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
