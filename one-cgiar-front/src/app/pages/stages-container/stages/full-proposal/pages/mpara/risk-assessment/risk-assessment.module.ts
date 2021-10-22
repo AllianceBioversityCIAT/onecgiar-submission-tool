@@ -7,6 +7,7 @@ import { UtilsModule } from '@app/shared/components/utils/utils.module';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CustomSteperModule } from '../../../../shared/components/custom-steper/custom-steper.module';
 
 @NgModule({
   declarations: [RiskAssessmentComponent],
@@ -16,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     UtilsModule,
     IbdAngularComponentsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CustomSteperModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

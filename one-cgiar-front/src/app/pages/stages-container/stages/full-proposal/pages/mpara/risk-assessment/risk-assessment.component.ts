@@ -11,6 +11,20 @@ import { DataValidatorsService } from '../../../../shared/data-validators.servic
   styleUrls: ['./risk-assessment.component.scss']
 })
 export class RiskAssessmentComponent implements OnInit {
+  routes= [
+    {
+      route:'A',
+      title:'Table A'
+    },   
+    {
+      route:'B',
+      title:'Table B'
+    },   
+    {
+      route:'C',
+      title:'Table C'
+    }
+  ]
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
