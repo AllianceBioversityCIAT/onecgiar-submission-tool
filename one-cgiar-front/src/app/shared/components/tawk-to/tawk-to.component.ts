@@ -46,8 +46,8 @@ export class TawkToComponent implements OnInit {
       `;
       this._renderer.appendChild(this._document.body, this.script);
       setTimeout(() => {
-        // this.openChat();
-        this.setLoggedUser()
+        this.openChat();
+        // this.setLoggedUser()
       }, 500);
     }
 
