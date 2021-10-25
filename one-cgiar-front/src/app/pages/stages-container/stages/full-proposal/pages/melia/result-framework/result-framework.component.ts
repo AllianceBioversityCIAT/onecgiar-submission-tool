@@ -34,13 +34,13 @@ export class ResultFrameworkComponent implements OnInit {
 
   getMelia(){
     this._initiativesService.getMelia(this._initiativesService.initiative.id,'result_framework').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let melia = resp.response.meliaData;
       this.filesSavedList = melia?.files?melia.files:[];
       this.data.id = melia?.id;
-      console.log(melia);
-      console.log(this.filesSavedList);
+      // console.log(melia);
+      // console.log(this.filesSavedList);
     },
     err=>{console.log(err);}
     ,()=>{
