@@ -1,1 +1,28 @@
-<p>rf-table-b works!</p>
+<div class="section-container animate__animated animate__fadeIn">
+  <div class="row">
+    <div class="col-6">
+      <ibdc-select-multiple *ngIf="indicatorsListLoaded" [options]="{
+                inputTitle:'Impact indicators that your Initiative will contribute',
+                selectList: this.indicatorsList,
+                description: 'Common impact indicators that your Initiative will contribute to and will be able to provide data towards (refer to page 5 of Guidance for MELIA for selection of appropriate indicators)',
+                selectItemName:'impactAreaIndicatorName',
+                selectItemId:'impactAreaIndicator',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: [],
+                    selectItemId:'impactAreaIndicator',
+                    selectItemName:'impactAreaIndicatorName',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+      }"></ibdc-select-multiple>
+    </div>
+    <div class="col-6" style="color: blue;">
+        Relation List
+    </div>
+
+  </div>
+
+</div>
