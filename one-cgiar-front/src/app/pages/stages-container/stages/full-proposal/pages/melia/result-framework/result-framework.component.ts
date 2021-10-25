@@ -10,23 +10,7 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
   styleUrls: ['./result-framework.component.scss']
 })
 export class ResultFrameworkComponent implements OnInit {
-  routes= [
-    {
-      route:'table-a',
-      title:'Table A',
-      complete:true
-    },   
-    {
-      route:'table-b',
-      title:'Table B',
-      complete:false
-    },   
-    {
-      route:'table-c',
-      title:'Table C',
-      complete:false
-    }
-  ]
+
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
