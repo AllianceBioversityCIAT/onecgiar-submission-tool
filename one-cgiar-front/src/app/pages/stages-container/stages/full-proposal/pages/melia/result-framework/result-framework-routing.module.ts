@@ -5,7 +5,26 @@ import { ResultFrameworkComponent } from './result-framework.component';
 const routes: Routes = [
   {
     path:'',
-    component:ResultFrameworkComponent
+    component:ResultFrameworkComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'table-a',
+        pathMatch: 'full'
+      },
+      {
+        path: 'table-a',
+        loadChildren: () => import('./rf-table-a/rf-table-a.module').then(mod => mod.RfTableAModule),
+      },
+      {
+        path: 'table-b',
+        loadChildren: () => import('./rf-table-b/rf-table-b.module').then(mod => mod.RfTableBModule),
+      },
+      {
+        path: 'table-c',
+        loadChildren: () => import('./rf-table-c/rf-table-c.module').then(mod => mod.RfTableCModule),
+      },
+    ],
   }
 ];
 

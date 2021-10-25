@@ -11,20 +11,6 @@ import { DataValidatorsService } from '../../../../shared/data-validators.servic
   styleUrls: ['./risk-assessment.component.scss']
 })
 export class RiskAssessmentComponent implements OnInit {
-  routes= [
-    {
-      route:'A',
-      title:'Table A'
-    },   
-    {
-      route:'B',
-      title:'Table B'
-    },   
-    {
-      route:'C',
-      title:'Table C'
-    }
-  ]
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
@@ -49,13 +35,13 @@ export class RiskAssessmentComponent implements OnInit {
 
   getManagePlan(){
     this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'risk_assessment').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let mpara = resp.response.managePlanData;
       this.filesSavedList = mpara?.files?mpara.files:[];
       this.data.id = mpara?.id;
-      console.log(mpara);
-      console.log(this.filesSavedList);
+      // console.log(mpara);
+      // console.log(this.filesSavedList);
     },
     err=>{console.log(err);}
     ,()=>{
