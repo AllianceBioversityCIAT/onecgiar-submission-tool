@@ -58,9 +58,9 @@ export class DataValidatorsService {
   }
 
   validateFilesArray(arrayTosave:any,arraySaved){
-    console.log("------------------");
-    console.log(arrayTosave);
-    console.log(arraySaved);
+    // console.log("------------------");
+    // console.log(arrayTosave);
+    // console.log(arraySaved);
     let one = false;
     let two:boolean;
     if (arrayTosave.length) {
@@ -94,8 +94,8 @@ export class DataValidatorsService {
      
 
     }
-    console.log(one);
-    console.log(two);
+    // console.log(one);
+    // console.log(two);
 
     return (one || two);
 
