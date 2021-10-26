@@ -22,8 +22,8 @@ export async function getTocNarrative(req: Request, res: Response) {
         res.json({ TocNarrative: narrative.data })
 
     } catch (error) {
-        console.log(error)
-        throw new BaseError('TOC : narrative', 400, error.message, true);
+        console.log(error.response.data)
+        return res.status(error.response.status).json(error.response.data);
     }
 
 }
