@@ -176,6 +176,18 @@ export class InitiativeHandler {
     }
 
 
+    async requestGlobalTargets() {
+
+        const querySql = `
+        SELECT id, impact_area_id,impact_area_name,target
+        FROM clarisa_global_targets
+`;
+        const globalTargets = await this.queryRunner.query(querySql);
+        return globalTargets;
+
+    }
+
+
 
 }
 

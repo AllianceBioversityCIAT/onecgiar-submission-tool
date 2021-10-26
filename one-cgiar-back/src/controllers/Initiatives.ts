@@ -1203,6 +1203,30 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
     }
 }
 
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+ export const getGlobalTargets = async (req: Request, res: Response) => {
+    try {
+   
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let globalTargets = await initiativeshandler.requestGlobalTargets();
+
+
+        res.json(new ResponseHandler('Global Targets.', { globalTargets: globalTargets }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
 /**
  * 
  * @param req 
@@ -1314,6 +1338,16 @@ export async function getSdgTargets(req: Request, res: Response) {
     }
 }
 
+export async function getActionAreasOutcomesIndicators(req: Request, res: Response) {
+
+    try {
+        const outcomesIndicators = await clarisa.requestActionAreasOutcomesIndicators();
+        res.json(new ResponseHandler('Requested Action Areas Outcomes Indicators.', { outcomesIndicators }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
 
 
 function getRepoConstStage(tableName: string) {

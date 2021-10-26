@@ -324,6 +324,29 @@ export async function requestSdgTargets() {
 }
 
 
+export async function requestActionAreasOutcomesIndicators() {
+
+    try {
+        const sdgTargets = await axios.get(clarisaHost + 'actionAreaOutcomeIndicators', {
+            auth: {
+                username: process.env['clarisa_user'],
+                password: process.env['clarisa_password']
+            }
+        });
+        return sdgTargets.data;
+    } catch (error) {
+        console.log(error)
+        throw new APIError(
+            'NOT FOUND',
+            HttpStatusCode.NOT_FOUND,
+            true,
+            error.message
+        );
+    }
+
+}
+
+
 
 
 

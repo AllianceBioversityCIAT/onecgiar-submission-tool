@@ -577,7 +577,7 @@ router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Depth Scale.", error }
  */
-router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthScale);
+router.get("/depth-scale/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.getDepthScale);
 
 
 // get depth description per impact indicator
@@ -622,7 +622,7 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Depth Description.", error }
  */
-router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
+router.get("/depth-description/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.getDepthDescription);
 
 
 
@@ -635,6 +635,14 @@ router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiative
 // replicate to next stage
 router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
 
+
+
+/**
+ * 
+ * CLARISA to ST
+ * 
+ */
+
 //get institutions from submission
 router.get("/institutions", [checkJwt], initiatives.getInstitutions);
 
@@ -646,6 +654,10 @@ router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 
 // get institutions types from submission
 router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
+
+// get Global targets
+router.get("/global-targets", [checkJwt], initiatives.getGlobalTargets);
+
 
 /**
  * 
@@ -677,6 +689,8 @@ router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefi
 router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
 //get SDG Targets
 router.get("/sdg-targets", [checkJwt], initiatives.getSdgTargets);
+//get Action Areas Outcomes Indicators
+router.get("/action-action/outcomes-indicators", [checkJwt], initiatives.getActionAreasOutcomesIndicators);
 
 
 /**
