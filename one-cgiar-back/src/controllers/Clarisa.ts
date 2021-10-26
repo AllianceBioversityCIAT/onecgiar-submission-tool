@@ -304,7 +304,7 @@ export async function requestProjectedProbabilities() {
 export async function requestSdgTargets() {
 
     try {
-        const sdgTargets = await axios.get(clarisaHost + 'allSDG', {
+        const sdgTargets = await axios.get(clarisaHost + 'allSDGTargets', {
             auth: {
                 username: process.env['clarisa_user'],
                 password: process.env['clarisa_password']
