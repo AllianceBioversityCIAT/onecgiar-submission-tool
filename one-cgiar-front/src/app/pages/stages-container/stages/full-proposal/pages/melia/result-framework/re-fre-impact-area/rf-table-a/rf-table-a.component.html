@@ -1,48 +1,66 @@
 <div class="section-container animate__animated animate__fadeIn">
-<div class="row">
-    <div class="col-12">
-        <div style="color: blue;">Collective Global 2030 targets:  data list</div>
-        <hr>
-    </div>
-    <div class="col-12">
-        <ibdc-select-multiple *ngIf="indicatorsListLoaded"  [options]="{
-            inputTitle:'Impact indicators that your Initiative will contribute',
-            selectList: this.indicatorsList,
-            description: 'Common impact indicators that your Initiative will contribute to and will be able to provide data towards (refer to page 5 of Guidance for MELIA for selection of appropriate indicators)',
-            selectItemName:'impactAreaIndicatorName',
-            selectItemId:'impactAreaIndicator',
-            hideSavedList: true,
-            frontendSearchAttribute:'acronym_name',
-            readOnlyVariable: this._initiativesService.initiative.readonly,
-            savedList:{
-                list: [],
-                selectItemId:'impactAreaIndicator',
-                selectItemName:'impactAreaIndicatorName',
-                idToSave:'id',
-                labelName:'Institutions'
-            }
-        }"></ibdc-select-multiple>
-    </div>
 
-    <div class="col-12">
-        <ibdc-select-multiple *ngIf="indicatorsListLoaded"  [options]="{
-            inputTitle:'Select the SDG Targets',
-            selectList: this.indicatorsList,
-            description: 'Select the SDG Targets your initiative contributes to (see for the full list of indicators here ... drop down is provided in each cell below)',
-            selectItemName:'impactAreaIndicatorName',
-            selectItemId:'impactAreaIndicator',
-            hideSavedList: true,
-            frontendSearchAttribute:'acronym_name',
-            readOnlyVariable: this._initiativesService.initiative.readonly,
-            savedList:{
-                list: [],
-                selectItemId:'impactAreaIndicator',
+    <div class="row">
+
+        <div class="col-12">
+            <ibdc-select-multiple *ngIf="sdgTargetsListIsLoaded"  [options]="{
+                inputTitle:'Collective global 2030 targets',
+                selectList: this.sdgTargetsList,
+                selectItemName:'sdgTarget',
+                selectItemId:'id',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: [],
+                    selectItemId:'id',
+                    selectItemName:'sdgTarget',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+            }"></ibdc-select-multiple>
+        </div>
+
+        <div class="col-12">
+            <ibdc-select-multiple *ngIf="indicatorsListLoaded"  [options]="{
+                inputTitle:'Impact indicators that your Initiative will contribute',
+                selectList: this.indicatorsList,
+                description: 'Common impact indicators that your Initiative will contribute to and will be able to provide data towards (refer to page 5 of Guidance for MELIA for selection of appropriate indicators)',
                 selectItemName:'impactAreaIndicatorName',
-                idToSave:'id',
-                labelName:'Institutions'
-            }
-        }"></ibdc-select-multiple>
+                selectItemId:'impactAreaIndicator',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: [],
+                    selectItemId:'impactAreaIndicator',
+                    selectItemName:'impactAreaIndicatorName',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+            }"></ibdc-select-multiple>
+        </div>
+
+        <div class="col-12">
+            <ibdc-select-multiple *ngIf="globalTargetsListIsLoaded"  [options]="{
+                inputTitle:'Select the SDG Targets',
+                selectList: globalTargetsList,
+                description: 'Select the SDG Targets your initiative contributes to (see for the full list of indicators here ... drop down is provided in each cell below)',
+                selectItemName:'target',
+                selectItemId:'id',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: [],
+                    selectItemId:'id',
+                    selectItemName:'target',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+            }"></ibdc-select-multiple>
+        </div>
+        
     </div>
-</div>
 
 </div>

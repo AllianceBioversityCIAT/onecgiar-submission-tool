@@ -9,7 +9,11 @@ import { ReFreDataControlService } from '../services/re-fre-data-control.service
 })
 export class RfTableAComponent implements OnInit {
   indicatorsList:[];
+  sdgTargetsList:[];
+  globalTargetsList:[];
   indicatorsListLoaded=false;
+  sdgTargetsListIsLoaded=false;
+  globalTargetsListIsLoaded=false;
   constructor(
     public _initiativesService:InitiativesService,
     private _reFreDataControlService:ReFreDataControlService
@@ -17,6 +21,8 @@ export class RfTableAComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProjectedBenefitLists(this._reFreDataControlService.impactAreaID);
+    this.getSdgTargets();
+    this.getGlobalTargets();
   }
 
   getProjectedBenefitLists(impactAreaId){
@@ -28,6 +34,23 @@ export class RfTableAComponent implements OnInit {
       console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     
+  }
+
+  getSdgTargets(){
+    this._initiativesService.getSdgTargets().subscribe(resp=>{
+      
+      this.sdgTargetsList = resp.response.sdgTargets;
+      this.sdgTargetsListIsLoaded = true;
+
+    })
+  }
+
+  getGlobalTargets(){
+    this._initiativesService.getGlobalTargets().subscribe(resp=>{
+      console.log(resp);
+      this.globalTargetsList = resp.response.globalTargets;
+      this.globalTargetsListIsLoaded = true;
+    })
   }
 
 }
