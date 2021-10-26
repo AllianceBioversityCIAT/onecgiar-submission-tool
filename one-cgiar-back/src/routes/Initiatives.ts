@@ -676,7 +676,7 @@ router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefi
 //get projected probabilities
 router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
 //get SDG Targets
-router.get("/sdg-targets", [checkJwt], initiatives.getProjectedProbabilities);
+router.get("/sdg-targets", [checkJwt], initiatives.getSdgTargets);
 
 
 /**
