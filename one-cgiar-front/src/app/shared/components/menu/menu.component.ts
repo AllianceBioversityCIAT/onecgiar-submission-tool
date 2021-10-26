@@ -122,7 +122,7 @@ export class MenuComponent implements OnInit {
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
         this._dataControlService.userMenu = userMenuResp.response.stages;
-        // console.log(this._dataControlService.userMenu);
+        console.log(this._dataControlService.userMenu);
         // console.log(userMenuResp.response.stages.length);
         if (userMenuResp.response.stages.length > 1) {
 
@@ -147,7 +147,7 @@ export class MenuComponent implements OnInit {
 
             let pobList = [];
             let impactStatementsList = [];
-
+            let iaListInResultFramework = [];
 
             this.impacAreasList.map(item=>{
               let body:any = {}
@@ -194,6 +194,29 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
+
+            this.impacAreasList.map(item=>{
+              let body:any = {}
+              let impactArea = {}
+              body = {}
+              Object.keys(item).map(key=>{
+                impactArea[key]=item[key];
+              })
+             
+              // body = item;
+              body = impactArea;
+              body.showName = body.name;
+              body.frontRoute = '/result-framework/impact-area/';
+              body.subSectionName='impact-area';
+              body.sort = 'id';
+              iaListInResultFramework.push(body)
+            })
+
+            this.mapDataInMenu(3, 8, 17, iaListInResultFramework);
+
+
+
+
             // console.log(pobList);
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;

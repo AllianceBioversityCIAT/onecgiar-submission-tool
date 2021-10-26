@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomSteperComponent } from './custom-steper.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -8,7 +9,8 @@ import { CustomSteperComponent } from './custom-steper.component';
   declarations: [CustomSteperComponent],
   exports: [CustomSteperComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ]
 })
 export class CustomSteperModule { }

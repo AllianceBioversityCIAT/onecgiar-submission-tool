@@ -17,8 +17,7 @@ import { CustomSteperModule } from '../../../../shared/components/custom-steper/
     UtilsModule,
     IbdAngularComponentsModule,
     FormsModule,
-    ReactiveFormsModule,
-    CustomSteperModule
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
