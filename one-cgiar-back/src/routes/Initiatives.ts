@@ -690,7 +690,7 @@ router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProba
 //get SDG Targets
 router.get("/sdg-targets", [checkJwt], initiatives.getSdgTargets);
 //get Action Areas Outcomes Indicators
-router.get("/action-action/outcomes-indicators", [checkJwt], initiatives.getActionAreasOutcomesIndicators);
+router.get("/action-areas/outcomes-indicators", [checkJwt], initiatives.getActionAreasOutcomesIndicators);
 
 
 /**
