@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-capacity-development',
@@ -19,11 +20,13 @@ export class CapacityDevelopmentComponent implements OnInit {
     section : "gender",
     updateFiles : []
   };
-
+  extraValidation = false;
+  
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.secionForm = new FormGroup({
       example: new FormControl(null,Validators.required),
@@ -32,6 +35,7 @@ export class CapacityDevelopmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getHumanResources();
+    this.formChanges();
   }
 
   getHumanResources(){
@@ -66,6 +70,14 @@ export class CapacityDevelopmentComponent implements OnInit {
     })
 
     
+  }
+
+  formChanges(){
+    this.secionForm.valueChanges.subscribe(resp=>{
+      // console.log(this.secionForm.get("example").value);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 250);
+      console.log(this.extraValidation);
+    })
   }
 
 }
