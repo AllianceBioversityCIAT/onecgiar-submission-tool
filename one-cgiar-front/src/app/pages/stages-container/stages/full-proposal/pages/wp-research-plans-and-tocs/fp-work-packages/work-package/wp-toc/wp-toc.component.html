@@ -17,17 +17,28 @@
       <button pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
     </div>
 
-    <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="linkIsgenerated">
+    <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="txtIsLoaded">
         <ibdc-simple-text [options]="{inputTitle:'The Science narrative', value:toctxtData}"></ibdc-simple-text>
     </div>
 
 
-    <div class="col-12 toc_image" style="display: flex; justify-content: center;" *ngIf="linkIsgenerated">
+    <div class="col-12 toc_image" style="display: flex; justify-content: center;" [hidden]="!imageIsLoaded" *ngIf="linkIsgenerated">
       <div class="image_container">
         <section-sub-title name="Diagram"></section-sub-title>
-        <img [src]="this.wpTocForm.value['imageUrl']+'.png'" alt="" srcset="" width="100%">
+        <img (load)="imageLoaded()" (error)="imageError()" [src]="this.wpTocForm.value['imageUrl']+'.png'" alt="" srcset="" width="100%">
       </div>
     </div>
+
+    <div class="col-12">
+      <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!txtIsLoaded" [options]="{text: 'The TOC narrative is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
+    </div>
+
+    <div class="col-12">
+      <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!imageIsLoaded" [options]="{text: 'The TOC diagram is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
+    </div>
+    
+    <p class="toc_id toc id toc-id" [hidden]="true">SmBQ1GfEjD</p>
+
     
 
     <!-- <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
