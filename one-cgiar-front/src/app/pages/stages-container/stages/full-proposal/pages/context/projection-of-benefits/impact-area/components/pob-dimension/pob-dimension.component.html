@@ -3,7 +3,7 @@
         <ibdc-select-ngmodel [options]="
         {
          required:true,
-         inputTitle:'Depth description',
+         inputTitle:'Input depth - Intensity of effect',
          item: item,   
          itemName:'description',
          selectList: this.depthDescriptionsList,
@@ -14,7 +14,7 @@
     </div>
     <div class="col-xl-4">
         <ibdc-input-ngmodel
-            [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
+            [options]="{inputTitle:'Input breadth - Numbers reached', item:item, itemName:'breadth_value'
             ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
         </ibdc-input-ngmodel>
     </div>

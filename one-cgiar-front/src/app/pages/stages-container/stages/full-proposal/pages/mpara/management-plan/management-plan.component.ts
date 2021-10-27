@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-management-plan',
@@ -10,6 +11,7 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
   styleUrls: ['./management-plan.component.scss']
 })
 export class ManagementPlanComponent implements OnInit {
+  templatesUrlBase = environment.templatesUrlBase;
   managementPlanForm: FormGroup;
   showForm = false;
   data = {

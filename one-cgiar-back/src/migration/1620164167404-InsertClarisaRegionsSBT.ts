@@ -21,11 +21,9 @@ export class InsertClarisaRegionsSBT1620164167404 implements MigrationInterface 
         for (let index = 0; index < regions.data.length; index++) {
             const element = regions.data[index];
             let cla = clarisaRepo.create({
-                parentRegionName: (element.parentRegion != null) ? element.parentRegion.name : null,
-                parentRegionCode: (element.parentRegion != null) ? element.parentRegion.um49Code : null,
-                code: element.um49Code,
+                um49Code: element.um49Code,
                 name: element.name,
-                data: element
+                parentRegion: element
             });
             regionsArray.push(cla)
 

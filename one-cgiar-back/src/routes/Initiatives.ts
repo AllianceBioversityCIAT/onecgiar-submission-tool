@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/Initiatives';
-import { Initiatives } from '../entity/Initiatives';
+import * as toc from '../controllers/Toc';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -577,7 +577,7 @@ router.delete("/delete-budget/:idBudget", [checkJwt], initiatives.removeBudget);
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Depth Scale.", error }
  */
-router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthScale);
+router.get("/depth-scale/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.getDepthScale);
 
 
 // get depth description per impact indicator
@@ -622,7 +622,7 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getD
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Depth Description.", error }
  */
-router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiatives.getDepthDescription);
+router.get("/depth-description/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.getDepthDescription);
 
 
 
@@ -634,6 +634,14 @@ router.get("/depth-description/:impactIndicatorId([0-9]+)",[checkJwt],initiative
 
 // replicate to next stage
 router.post("/replica/:currentInitiativeId([0-9]+)", [checkJwt], initiatives.replicationProcess);
+
+
+
+/**
+ * 
+ * CLARISA to ST
+ * 
+ */
 
 //get institutions from submission
 router.get("/institutions", [checkJwt], initiatives.getInstitutions);
@@ -647,6 +655,16 @@ router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
 // get institutions types from submission
 router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 
+// get Global targets
+router.get("/global-targets", [checkJwt], initiatives.getGlobalTargets);
+
+//get countries
+router.get("/countries", [checkJwt], initiatives.getCountries);
+
+//get regions
+router.get("/regions", [checkJwt], initiatives.getRegions);
+
+
 /**
  * 
  * CLARISA
@@ -656,9 +674,9 @@ router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 //get Action areas
 // router.get("/areas", [checkJwt], initiatives.getActionAreas);
 //get countries
-router.get("/countries", [checkJwt], initiatives.getCountries);
+// router.get("/countries", [checkJwt], initiatives.getCountries);
 //get regions
-router.get("/regions", [checkJwt], initiatives.getRegions);
+// router.get("/regions", [checkJwt], initiatives.getRegions);
 //get institutions from clarisa
 // router.get("/institutions", [checkJwt], initiatives.getInstitutions);
 // get institutions types
@@ -675,6 +693,20 @@ router.get("/impact-areas/inidicators", [checkJwt], initiatives.requestImpactAre
 router.get("/projected-benefits", [checkJwt], initiatives.requestProjectedBenefits);
 //get projected probabilities
 router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProbabilities);
+//get SDG Targets
+router.get("/sdg-targets", [checkJwt], initiatives.getSdgTargets);
+//get Action Areas Outcomes Indicators
+router.get("/action-areas/outcomes-indicators", [checkJwt], initiatives.getActionAreasOutcomesIndicators);
 
+
+/**
+ * 
+ * TOC
+ * 
+ */
+
+
+//get Toc Narrative
+router.get("/toc/narrative/:TocId", [checkJwt], toc.getTocNarrative);
 
 export default router;

@@ -15,7 +15,7 @@ import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../handlers/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
-import { getClaActionAreas, getClaCountries, getClaCRPs, getClaInstitutions, getClaInstitutionsTypes, getClaRegions, getImpactAreas, getImpactAreasIndicators, getProjectedBenefits, requestClaInstitution, requestProjectedProbabilities } from './Clarisa';
+import * as clarisa from './Clarisa';
 
 import _, { initial } from "lodash";
 import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
@@ -1087,7 +1087,7 @@ export async function getDepthDescription(req: Request, res: Response) {
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
 
-        //Ger Action Areas from CLARISA
+        //Get Action Areas from CLARISA
         // const actionAreas = await getClaActionAreas();
 
 
@@ -1119,12 +1119,22 @@ export const getActionAreas = async (req: Request, res: Response) => {
  * 
  * @param req 
  * @param res 
- * @returns 
+ * @returns countries
  */
 
 export const getCountries = async (req: Request, res: Response) => {
     try {
-        const countries = await getClaCountries();
+
+        //Get Countries from CLARISA
+        // const countries = await clarisa.getClaCountries();
+
+        //Get Countries from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let countries = await initiativeshandler.requestCountries();
+
         res.json(new ResponseHandler('Countries.', { countries }));
     } catch (error) {
         console.log(error);
@@ -1136,12 +1146,23 @@ export const getCountries = async (req: Request, res: Response) => {
  * 
  * @param req 
  * @param res 
- * @returns 
+ * @returns regions
  */
 
 export const getRegions = async (req: Request, res: Response) => {
     try {
-        const regions = await getClaRegions();
+
+        //Get Regions from CLARISA
+        // const regions = await clarisa.getClaRegions();
+
+        //Get Regions from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let regions = await initiativeshandler.requestRegions();
+
+
         res.json(new ResponseHandler('Regions.', { regions }));
     } catch (error) {
         console.log(error);
@@ -1203,6 +1224,30 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
     }
 }
 
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export const getGlobalTargets = async (req: Request, res: Response) => {
+    try {
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let globalTargets = await initiativeshandler.requestGlobalTargets();
+
+
+        res.json(new ResponseHandler('Global Targets.', { globalTargets: globalTargets }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
 /**
  * 
  * @param req 
@@ -1212,7 +1257,7 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
 
 export const getCRP = async (req: Request, res: Response) => {
     try {
-        const crps = await getClaCRPs();
+        const crps = await clarisa.getClaCRPs();
         res.json(new ResponseHandler('CGIAR entities.', { crps }));
     } catch (error) {
         console.log(error);
@@ -1269,7 +1314,7 @@ export async function requestImpactAreas(req: Request, res: Response) {
 export async function requestImpactAreasIndicators(req: Request, res: Response) {
 
     try {
-        const impactAreasIndicatorsRequested = await getImpactAreasIndicators();
+        const impactAreasIndicatorsRequested = await clarisa.getImpactAreasIndicators();
         res.json(new ResponseHandler('Requested Impact areas indicators.', { impactAreasIndicatorsRequested }));
     } catch (error) {
         console.log(error);
@@ -1282,7 +1327,7 @@ export async function requestImpactAreasIndicators(req: Request, res: Response) 
 export async function requestProjectedBenefits(req: Request, res: Response) {
 
     try {
-        const impactProjectedBenefitsRequested = await getProjectedBenefits();
+        const impactProjectedBenefitsRequested = await clarisa.getProjectedBenefits();
         res.json(new ResponseHandler('Requested projected benefits.', { impactProjectedBenefitsRequested }));
     } catch (error) {
         console.log(error);
@@ -1294,7 +1339,7 @@ export async function requestProjectedBenefits(req: Request, res: Response) {
 export async function getProjectedProbabilities(req: Request, res: Response) {
 
     try {
-        const probabilities = await requestProjectedProbabilities();
+        const probabilities = await clarisa.requestProjectedProbabilities();
         res.json(new ResponseHandler('Requested probabilities.', { probabilities }));
     } catch (error) {
         console.log(error);
@@ -1302,6 +1347,28 @@ export async function getProjectedProbabilities(req: Request, res: Response) {
     }
 }
 
+
+export async function getSdgTargets(req: Request, res: Response) {
+
+    try {
+        const sdgTargets = await clarisa.requestSdgTargets();
+        res.json(new ResponseHandler('Requested SDG Targets.', { sdgTargets }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+export async function getActionAreasOutcomesIndicators(req: Request, res: Response) {
+
+    try {
+        const outcomesIndicators = await clarisa.requestActionAreasOutcomesIndicators();
+        res.json(new ResponseHandler('Requested Action Areas Outcomes Indicators.', { outcomesIndicators }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+}
 
 
 function getRepoConstStage(tableName: string) {

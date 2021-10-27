@@ -3,6 +3,7 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-smpg-table',
@@ -10,6 +11,7 @@ import { DataValidatorsService } from '../../../../shared/data-validators.servic
   styleUrls: ['./smpg-table.component.scss']
 })
 export class SmpgTableComponent implements OnInit {
+  templatesUrlBase = environment.templatesUrlBase;
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;

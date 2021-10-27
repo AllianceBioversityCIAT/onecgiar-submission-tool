@@ -407,6 +407,21 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes`, body);
   }
 
+  getTocTxtDataByTocId(tocId){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/toc/narrative/${tocId}`);
+  }
+
+  getSdgTargets(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/sdg-targets`);
+  }
+
+  getGlobalTargets(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/global-targets`);
+  }
+
+  getOutcomesIndicators(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/action-areas/outcomes-indicators`);
+  }
 
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);

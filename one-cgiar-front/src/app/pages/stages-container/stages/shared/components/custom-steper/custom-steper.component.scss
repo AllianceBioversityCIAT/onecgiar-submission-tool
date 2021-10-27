@@ -1,0 +1,72 @@
+.local_container{
+    width: 100%;
+    height: 100px;
+    // border: 1px solid red;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10%;
+    
+    .line{
+        width: 100%;
+        height: 1px;
+        background-color: rgb(212, 212, 212);
+        position: absolute;
+        top: calc(50% - 13px);
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 5;
+    }
+    .title{
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        .index{
+            border-radius: 50px;
+            background-color: rgb(255, 255, 255);
+            border: 1px solid gainsboro;
+            color: rgb(146, 146, 146);
+            font-size: 15px;
+            // padding: 10px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            cursor: pointer;
+            transition: all .3s ease;
+            position: relative;
+        }
+        .check_icon{
+            position: absolute;
+            top: -13px;
+            right: -23px;
+            color: var(--ibdc-secondary-color) !important;
+        }
+        .name{
+            margin-top: 10px;
+            font-weight: 500;
+            color: rgb(146, 146, 146);
+            cursor: pointer;
+        }
+    }
+}
+
+
+.router-link-active{
+    .index{
+        background-color: var(--ibdc-tertiary-color) !important; 
+        color: white !important;
+        transition: all .3s ease;
+        font-weight: 500;
+    }
+    .name{
+        color: var(--ibdc-tertiary-color) !important; 
+    }
+    
+}

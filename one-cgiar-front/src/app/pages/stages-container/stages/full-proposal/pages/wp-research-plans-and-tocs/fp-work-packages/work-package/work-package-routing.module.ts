@@ -9,10 +9,10 @@ const routes: Routes = [
     children: [
       {
         path:'',
-        redirectTo:'wp-general-information'
+        redirectTo:'wp-general-info'
       },
       {
-        path: 'wp-general-information',
+        path: 'wp-general-info',
         loadChildren: () => import('./wp-general-information/wp-general-information.module').then(mod => mod.WpGeneralInformationModule),
       },
       {

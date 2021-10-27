@@ -8,7 +8,10 @@
     border-radius: 50%;
     z-index: 1000;
     background-color: #5cc560;
-    border-color: #5cc560
+    border-color: #5cc560;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chat-icon {
