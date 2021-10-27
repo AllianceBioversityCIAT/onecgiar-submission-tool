@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/Initiatives';
-import * as toc from '../controllers/toc';
+import * as toc from '../controllers/Toc';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
