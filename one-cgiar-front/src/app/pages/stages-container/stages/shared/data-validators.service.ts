@@ -101,6 +101,34 @@ export class DataValidatorsService {
 
   }
 
+  wordCounterIsCorrect(textTocount,maxWords) {
+    let words = 0;
+    if (textTocount) {
+      let textReplaced = textTocount.replace(/(<(\/?p)>)/gi,' ').replace(/(<([^>]+)>)/gi,'');
+      // console.log(textReplaced);
+      if (textReplaced) {
+        let textMatch = textReplaced.match(/\S+/g);
+        if (textMatch) {
+          words = textMatch.length;
+        }else{
+          return true;
+        }
+        
+        if (words > maxWords) {
+          return false;
+        }else{
+          return true;
+        }
+      }else{
+        return true;
+      }
+
+    }else{
+      return true;
+    }
+
+  }
+
     
 // // no encuentra active true entonces solo false
 // Return false
