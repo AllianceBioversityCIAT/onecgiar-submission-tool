@@ -6,6 +6,9 @@
         <br>
         <div class="row" *ngIf="this.showForm">
             <div class="col-12">
+                <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this.extraValidation"></app-section-alerts-pack>
+            </div>
+            <div class="col-12">
                 <div class="check_box_with_text">
                     <p-checkbox formControlName="open_fair_data_policy" binary="true" inputId="binary"></p-checkbox>
                     <span>Please mark the checkbox, if all the initiative researchers accept the terms of the <a href="https://cgspace.cgiar.org/bitstream/handle/10568/113623/CGIAR_OFDA_Policy_Approved_16April2021.pdf?sequence=1&isAllowed=y">Open and FAIR Data Assets Policy.</a></span>

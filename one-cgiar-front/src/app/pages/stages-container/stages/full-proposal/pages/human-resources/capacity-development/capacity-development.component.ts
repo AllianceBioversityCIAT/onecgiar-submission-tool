@@ -74,7 +74,6 @@ export class CapacityDevelopmentComponent implements OnInit {
 
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
-      // console.log(this.secionForm.get("example").value);
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 250);
       console.log(this.extraValidation);
     })
