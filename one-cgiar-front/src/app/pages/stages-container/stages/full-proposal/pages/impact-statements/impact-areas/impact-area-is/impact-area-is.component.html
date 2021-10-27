@@ -4,7 +4,7 @@
 
         <div class="row" *ngIf="showForm">
             <div class="col-12">
-                <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code')"></app-section-alerts-pack>
+                <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code') * this.extraValidation"></app-section-alerts-pack>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
