@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-budget',
@@ -15,6 +16,7 @@ export class BudgetComponent implements OnInit {
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
+  templatesUrlBase = environment.templatesUrlBase;
   data = {
     id : null,
     detailed_budget : "algo no tan implicito",

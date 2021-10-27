@@ -4,6 +4,7 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-risk-assessment',
@@ -11,6 +12,7 @@ import { DataValidatorsService } from '../../../../shared/data-validators.servic
   styleUrls: ['./risk-assessment.component.scss']
 })
 export class RiskAssessmentComponent implements OnInit {
+  templatesUrlBase = environment.templatesUrlBase;
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
