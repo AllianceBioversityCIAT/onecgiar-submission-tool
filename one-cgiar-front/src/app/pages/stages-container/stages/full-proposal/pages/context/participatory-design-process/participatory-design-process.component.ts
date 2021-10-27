@@ -24,7 +24,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService,
+    public _dataControlService:DataControlService,
     private _dataValidatorsService:DataValidatorsService
 
   ) { 

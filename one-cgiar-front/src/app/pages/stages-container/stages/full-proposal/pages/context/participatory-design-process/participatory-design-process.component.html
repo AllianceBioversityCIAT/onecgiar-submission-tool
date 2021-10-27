@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-12">
                 <ibdc-link-list [options]="{
-                    inputTitle:'Provide any additional support document(s)',
+                    inputTitle: this._dataControlService.provideDocumentText,
                     descriptions:'Add urls',
                     readOnlyVariable: _initiativesService.initiative.readonly,
                     savedList:{
