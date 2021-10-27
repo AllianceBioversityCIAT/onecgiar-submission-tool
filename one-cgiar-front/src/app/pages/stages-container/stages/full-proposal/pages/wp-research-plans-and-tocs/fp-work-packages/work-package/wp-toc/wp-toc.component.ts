@@ -16,12 +16,14 @@ export class WpTocComponent implements OnInit {
   wpTocForm: FormGroup;
   toctxtData:string;
   linkIsgenerated=false;
+  imageIsLoaded=false;
+  txtIsLoaded=false;
   constructor(
     public _initiativesService: InitiativesService,
     public http: HttpClient
   ) { 
     this.wpTocForm = new FormGroup({
-      TocId: new FormControl('SmBQ1GfEjD'),
+      TocId: new FormControl(null),
       imageUrl: new FormControl(null),
     });
   }
@@ -41,14 +43,36 @@ export class WpTocComponent implements OnInit {
 
   }
 
+  imageLoaded(){
+    console.log("loaded");
+    this.imageIsLoaded=true;
+  }
+
+  imageError(){
+    console.log("errorrer");
+    this.imageIsLoaded=false;
+  }
+
   getTocTxtDataByTocId(tocId){
+    this.toctxtData = null;
     // return this.http.get(`https://dev-toc.s3.us-east-2.amazonaws.com/toc_SmBQ1GfEjD/SmBQ1GfEjD.txt`,{ responseType: 'text'});
     // return this.http.get(`/assets/test.txt`,{ responseType: 'text'});
     // return this.http.get(`https://www.w3.org/TR/PNG/iso_8859-1.txt`,{ responseType: 'text'});
     this._initiativesService.getTocTxtDataByTocId(tocId).subscribe(resp=>{
       console.log(resp.TocNarrative);
       this.toctxtData = resp.TocNarrative;
+      if (this.toctxtData) {
+        this.txtIsLoaded = true;
+      }else{
+        this.txtIsLoaded = false;
+      }
+    },err=>{},()=>{
+      console.log("ended");
+      this.txtIsLoaded = false;
     })
+
+
+
   }
   
 }
