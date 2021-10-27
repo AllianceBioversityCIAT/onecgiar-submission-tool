@@ -1,4 +1,3 @@
-import { BaseError } from "../handlers/BaseError";
 import axios from 'axios';
 import { Request, Response } from 'express';
 

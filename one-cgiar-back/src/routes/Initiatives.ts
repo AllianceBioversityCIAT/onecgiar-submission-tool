@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/Initiatives';
-import {getTocNarrative} from '../controllers/toc';
+import * as toc from '../controllers/Toc';
 import { checkJwt } from '../middlewares/jwt';
 import { checkRole } from '../middlewares/role';
 
@@ -707,6 +707,6 @@ router.get("/action-areas/outcomes-indicators", [checkJwt], initiatives.getActio
 
 
 //get Toc Narrative
-router.get("/toc/narrative/:TocId", [checkJwt], getTocNarrative);
+router.get("/toc/narrative/:TocId", [checkJwt], toc.getTocNarrative);
 
 export default router;
