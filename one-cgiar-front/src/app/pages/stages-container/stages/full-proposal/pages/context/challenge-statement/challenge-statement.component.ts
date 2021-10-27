@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 
 @Component({
@@ -15,12 +16,14 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
 export class ChallengeStatementComponent implements OnInit {
   challengeStatementForm: FormGroup;
   showfrom = false;
+  extraValidation = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.challengeStatementForm = new FormGroup({
       challenge_statement: new FormControl(null, Validators.required),
@@ -30,6 +33,7 @@ export class ChallengeStatementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
+    this.formChanges();
   }
 
   upserInfo(){
@@ -51,6 +55,13 @@ export class ChallengeStatementComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       console.log("errorerekkasssssssssssssssdasda");
+    })
+  }
+
+  formChanges(){
+    this.challengeStatementForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 250);
     })
   }
 

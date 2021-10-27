@@ -5,6 +5,7 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -14,12 +15,14 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
 export class MeasurableObjectivesComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
+  extraValidation = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),
@@ -29,7 +32,7 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
-    // console.log(this.contextForm.value);
+    this.formChanges();
   }
 
   upserInfo(){
@@ -51,6 +54,13 @@ export class MeasurableObjectivesComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       console.log("errorerekkasssssssssssssssdasda");
+    })
+  }
+
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("smart_objectives").value, 500);
     })
   }
 
