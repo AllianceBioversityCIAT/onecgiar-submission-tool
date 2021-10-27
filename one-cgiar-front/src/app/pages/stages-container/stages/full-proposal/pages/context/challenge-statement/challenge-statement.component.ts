@@ -61,7 +61,7 @@ export class ChallengeStatementComponent implements OnInit {
   formChanges(){
     this.challengeStatementForm.valueChanges.subscribe(resp=>{
       console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 500);
     })
   }
 
