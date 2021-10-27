@@ -25,7 +25,7 @@ export class InsertClarisaCountriesSBT1620162772212 implements MigrationInterfac
                 isoAlpha2: element.isoAlpha2,
                 code: element.code,
                 name: element.name,
-                data: element
+                regionDTO: element
             });
             countriesArray.push(cla)
 

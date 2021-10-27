@@ -12,13 +12,13 @@ export class ClarisaCountries extends UpdatedCreatedAt {
     code: number
 
     @Column({ type: 'text' })
-    name: string
-
-    @Column({ type: 'text' })
     isoAlpha2: string
 
+    @Column({ type: 'text' })
+    name: string
+
     @Column({ type: 'json' })
-    data: JSON
+    regionDTO: JSON
 
 
 }

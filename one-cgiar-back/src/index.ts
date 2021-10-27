@@ -24,10 +24,7 @@ cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
 
     try {
 
-        await taskClarisa.createImpactAreas();
-        await taskClarisa.createActionAreas();
-        await taskClarisa.createInstitutions();
-        await taskClarisa.createInstitutionsTypes();
+        await taskClarisa.Main();
         
     } catch (error) {
 

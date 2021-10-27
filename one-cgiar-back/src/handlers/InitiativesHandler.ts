@@ -188,6 +188,29 @@ export class InitiativeHandler {
     }
 
 
+    async requestCountries() {
+
+        const querySql = `
+        SELECT code,isoAlpha2,name,regionDTO
+        FROM clarisa_countries`;
+        const countires = await this.queryRunner.query(querySql);
+        return countires;
+
+    }
+
+
+
+    async requestRegions() {
+
+        const querySql = `
+        SELECT name,parentRegion,um49Code
+        FROM clarisa_regions`;
+        const countires = await this.queryRunner.query(querySql);
+        return countires;
+
+    }
+
+
 
 }
 

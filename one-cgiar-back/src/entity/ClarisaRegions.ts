@@ -8,20 +8,13 @@ export class ClarisaRegions extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: 'int' })
-    code: number
-
     @Column({ type: 'text' })
     name: string
 
-    @Column({ type: 'text' })
-    parentRegionName: string
-    
-    @Column({ type: 'int' })
-    parentRegionCode: number
-    
     @Column({ type: 'json' })
-    data: JSON
+    parentRegion: JSON
 
+    @Column({ type: 'int' })
+    um49Code: number
 
 }

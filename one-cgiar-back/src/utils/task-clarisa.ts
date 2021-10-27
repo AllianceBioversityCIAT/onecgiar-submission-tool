@@ -4,6 +4,22 @@ import * as clarisa from '../controllers/Clarisa';
 import { ClarisaImpactAreas } from "../entity/ClarisaImpactAreas";
 import { ClarisaActionAreas } from "../entity/ClarisaActionAreas";
 import { ClarisaInstitutionsTypes } from "../entity/ClarisaInstitutionsTypes";
+import { ClarisaCountries } from "../entity/ClarisaCountries";
+import { ClarisaRegions } from "../entity/ClarisaRegions";
+
+
+/**MAIN FUNCTION*/
+
+export async function Main() {
+
+    await createImpactAreas();
+    await createActionAreas();
+    await createInstitutions();
+    await createInstitutionsTypes();
+    await createCountries();
+    await createRegions();
+    
+}
 
 
 
@@ -269,6 +285,143 @@ export async function createInstitutionsTypes() {
     } catch (error) {
 
         console.log('createInstitutionsTypes', error);
+
+    }
+
+}
+
+
+/**CLARISA COUNTRIES*/
+
+
+export async function deleteCountries() {
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaCountries);
+        const clarisaCountires = new ClarisaCountries();
+        const r = await clarisaRepo.delete(clarisaCountires);
+        console.log('14.delete countries');
+
+    } catch (error) {
+
+        console.log('deleteCountries', error);
+
+    }
+
+}
+
+export async function createCountries() {
+
+    console.log('13.start create countries');
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaCountries);
+        const countries = await clarisa.getClaCountries();
+
+        if (countries.length > 0) {
+
+            await deleteCountries();
+
+            let countriesArray: ClarisaCountries[] = [];
+            let idTable = 0;
+
+            for (let index = 0; index < countries.length; index++) {
+                const element = countries[index];
+                idTable = idTable + 1;
+                let cla = clarisaRepo.create({
+                    id: idTable,
+                    code: element.code,
+                    isoAlpha2:element.isoAlpha2,
+                    name: element.name,
+                    regionDTO:element.regionDTO
+                });
+                countriesArray.push(cla)
+
+            }
+
+            const r = await clarisaRepo.save(countriesArray);
+
+            console.log('15.end create countries');
+
+        } else {
+            console.log('Issues with Clarisa');
+
+        }
+
+    } catch (error) {
+
+        console.log('createCountries', error);
+
+    }
+
+}
+
+
+
+
+/**CLARISA REGIONS*/
+
+
+export async function deleteRegions() {
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaRegions);
+        const clarisaRegions = new ClarisaRegions();
+        const r = await clarisaRepo.delete(clarisaRegions);
+        console.log('17.delete Regions');
+
+    } catch (error) {
+
+        console.log('deleteRegions', error);
+
+    }
+
+}
+
+export async function createRegions() {
+
+    console.log('16.start create regions');
+
+    try {
+
+        const clarisaRepo = getRepository(ClarisaRegions);
+        const regions = await clarisa.getClaRegions();
+
+        if (regions.length > 0) {
+
+            await deleteRegions();
+
+            let regionsArray: ClarisaRegions[] = [];
+            let idTable = 0;
+
+            for (let index = 0; index < regions.length; index++) {
+                const element = regions[index];
+                idTable = idTable + 1;
+                let cla = clarisaRepo.create({
+                    id: idTable,
+                    name: element.name,
+                    parentRegion:element.parentRegion,
+                    um49Code: element.um49Code,
+                });
+                regionsArray.push(cla)
+
+            }
+
+            const r = await clarisaRepo.save(regionsArray);
+
+            console.log('18.end create regions');
+
+        } else {
+            console.log('Issues with Clarisa');
+
+        }
+
+    } catch (error) {
+
+        console.log('createRegions', error);
 
     }
 

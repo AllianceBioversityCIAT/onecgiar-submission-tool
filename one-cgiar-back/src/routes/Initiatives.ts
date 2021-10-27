@@ -658,6 +658,12 @@ router.get("/institutions/types", [checkJwt], initiatives.getInstitutionsTypes);
 // get Global targets
 router.get("/global-targets", [checkJwt], initiatives.getGlobalTargets);
 
+//get countries
+router.get("/countries", [checkJwt], initiatives.getCountries);
+
+//get regions
+router.get("/regions", [checkJwt], initiatives.getRegions);
+
 
 /**
  * 
@@ -668,9 +674,9 @@ router.get("/global-targets", [checkJwt], initiatives.getGlobalTargets);
 //get Action areas
 // router.get("/areas", [checkJwt], initiatives.getActionAreas);
 //get countries
-router.get("/countries", [checkJwt], initiatives.getCountries);
+// router.get("/countries", [checkJwt], initiatives.getCountries);
 //get regions
-router.get("/regions", [checkJwt], initiatives.getRegions);
+// router.get("/regions", [checkJwt], initiatives.getRegions);
 //get institutions from clarisa
 // router.get("/institutions", [checkJwt], initiatives.getInstitutions);
 // get institutions types

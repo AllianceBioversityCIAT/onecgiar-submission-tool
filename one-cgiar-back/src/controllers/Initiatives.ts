@@ -1087,7 +1087,7 @@ export async function getDepthDescription(req: Request, res: Response) {
 export const getActionAreas = async (req: Request, res: Response) => {
     try {
 
-        //Ger Action Areas from CLARISA
+        //Get Action Areas from CLARISA
         // const actionAreas = await getClaActionAreas();
 
 
@@ -1119,12 +1119,22 @@ export const getActionAreas = async (req: Request, res: Response) => {
  * 
  * @param req 
  * @param res 
- * @returns 
+ * @returns countries
  */
 
 export const getCountries = async (req: Request, res: Response) => {
     try {
-        const countries = await clarisa.getClaCountries();
+
+        //Get Countries from CLARISA
+        // const countries = await clarisa.getClaCountries();
+
+        //Get Countries from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let countries = await initiativeshandler.requestCountries();
+
         res.json(new ResponseHandler('Countries.', { countries }));
     } catch (error) {
         console.log(error);
@@ -1136,12 +1146,23 @@ export const getCountries = async (req: Request, res: Response) => {
  * 
  * @param req 
  * @param res 
- * @returns 
+ * @returns regions
  */
 
 export const getRegions = async (req: Request, res: Response) => {
     try {
-        const regions = await clarisa.getClaRegions();
+
+        //Get Regions from CLARISA
+        // const regions = await clarisa.getClaRegions();
+
+        //Get Regions from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let regions = await initiativeshandler.requestRegions();
+
+
         res.json(new ResponseHandler('Regions.', { regions }));
     } catch (error) {
         console.log(error);
@@ -1211,9 +1232,9 @@ export const getInstitutionsTypes = async (req: Request, res: Response) => {
  * @returns 
  */
 
- export const getGlobalTargets = async (req: Request, res: Response) => {
+export const getGlobalTargets = async (req: Request, res: Response) => {
     try {
-   
+
         // create new Meta Data object
         const initiativeshandler = new InitiativeHandler();
 
