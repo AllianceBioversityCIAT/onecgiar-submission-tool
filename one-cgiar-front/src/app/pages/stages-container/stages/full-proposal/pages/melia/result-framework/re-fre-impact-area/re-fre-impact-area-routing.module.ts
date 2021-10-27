@@ -8,6 +8,11 @@ const routes: Routes = [
     component:ReFreImpactAreaComponent,
     children: [
       {
+        path:'',
+        redirectTo:'table-a',
+        pathMatch: 'full'
+      },
+      {
         path: 'table-a',
         loadChildren: () => import('./rf-table-a/rf-table-a.module').then(mod => mod.RfTableAModule),
       },

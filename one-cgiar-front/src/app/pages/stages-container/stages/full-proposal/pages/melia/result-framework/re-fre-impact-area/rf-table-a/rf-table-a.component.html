@@ -3,10 +3,10 @@
     <div class="row">
 
         <div class="col-12">
-            <ibdc-select-multiple *ngIf="sdgTargetsListIsLoaded"  [options]="{
+            <ibdc-select-multiple *ngIf="globalTargetsListIsLoaded"  [options]="{
                 inputTitle:'Collective global 2030 targets',
-                selectList: this.sdgTargetsList,
-                selectItemName:'sdgTarget',
+                selectList: globalTargetsList,
+                selectItemName:'target',
                 selectItemId:'id',
                 hideSavedList: true,
                 frontendSearchAttribute:'acronym_name',
@@ -14,7 +14,7 @@
                 savedList:{
                     list: [],
                     selectItemId:'id',
-                    selectItemName:'sdgTarget',
+                    selectItemName:'target',
                     idToSave:'id',
                     labelName:'Institutions'
                 }
@@ -42,11 +42,12 @@
         </div>
 
         <div class="col-12">
-            <ibdc-select-multiple *ngIf="globalTargetsListIsLoaded"  [options]="{
+
+            <ibdc-select-multiple *ngIf="sdgTargetsListIsLoaded"  [options]="{
                 inputTitle:'Select the SDG Targets',
-                selectList: globalTargetsList,
+                selectList: this.sdgTargetsList,
                 description: 'Select the SDG Targets your initiative contributes to (see for the full list of indicators here ... drop down is provided in each cell below)',
-                selectItemName:'target',
+                selectItemName:'sdgTarget',
                 selectItemId:'id',
                 hideSavedList: true,
                 frontendSearchAttribute:'acronym_name',
@@ -54,7 +55,7 @@
                 savedList:{
                     list: [],
                     selectItemId:'id',
-                    selectItemName:'target',
+                    selectItemName:'sdgTarget',
                     idToSave:'id',
                     labelName:'Institutions'
                 }

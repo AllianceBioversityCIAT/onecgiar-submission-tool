@@ -22,7 +22,16 @@ export class RfTableAComponent implements OnInit {
   ngOnInit(): void {
     this.getProjectedBenefitLists(this._reFreDataControlService.impactAreaID);
     this.getSdgTargets();
-    this.getGlobalTargets();
+    this.getGlobalTargets(this._reFreDataControlService.impactAreaID);
+  }
+
+  getGlobalTargets(impactAreaId){
+    this._initiativesService.getGlobalTargets().subscribe(resp=>{
+      console.log(resp.response.globalTargets);
+      this.globalTargetsList = resp.response.globalTargets.filter(item=>item.impact_area_id == impactAreaId);
+      this.globalTargetsListIsLoaded = true;
+      console.log(this.globalTargetsList);
+    })
   }
 
   getProjectedBenefitLists(impactAreaId){
@@ -31,7 +40,7 @@ export class RfTableAComponent implements OnInit {
       // console.log(resp);
       
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
-      console.log(this.indicatorsList);
+      // console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     
   }
@@ -45,12 +54,6 @@ export class RfTableAComponent implements OnInit {
     })
   }
 
-  getGlobalTargets(){
-    this._initiativesService.getGlobalTargets().subscribe(resp=>{
-      console.log(resp);
-      this.globalTargetsList = resp.response.globalTargets;
-      this.globalTargetsListIsLoaded = true;
-    })
-  }
+
 
 }
