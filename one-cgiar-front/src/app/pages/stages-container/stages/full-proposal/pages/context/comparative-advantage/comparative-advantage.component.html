@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-12">
-                <app-section-alerts-pack [sectionForm]="contextForm"></app-section-alerts-pack>
+                <app-section-alerts-pack [sectionForm]="contextForm" [extraValidation]="this.extraValidation"></app-section-alerts-pack>
             </div>
             <div class="col-sm-12" >
                 <ibdc-textarea *ngIf="showfrom"
@@ -17,6 +17,7 @@
                     inputTitle:'Provide any additional support document(s)',
                     descriptions:'Add urls',
                     readOnlyVariable: _initiativesService.initiative.readonly,
+                    required:false,
                     savedList:{
                         list:citationsList,
                         attributeDescription:'title',
