@@ -34,6 +34,7 @@ export class WpGeneralInformationComponent implements OnInit {
       pathway_content: new FormControl(null),
       is_global: new FormControl(true),
       id: new FormControl(null),
+      active: new FormControl(true),
     });
 
 
