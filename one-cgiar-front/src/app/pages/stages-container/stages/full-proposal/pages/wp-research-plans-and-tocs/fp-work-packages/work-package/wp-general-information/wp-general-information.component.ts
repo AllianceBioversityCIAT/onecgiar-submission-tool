@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataControlService } from '@app/shared/services/data-control.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -25,7 +25,8 @@ export class WpGeneralInformationComponent implements OnInit {
     public _initiativesService: InitiativesService,
     private _dataControlService:DataControlService,
     private _interactionsService: InteractionsService,
-    private _wpDataControlService:WpDataControlService
+    private _wpDataControlService:WpDataControlService,
+    private router:Router
   ) {
     this.workPackageForm = new FormGroup({
       acronym: new FormControl(null),
@@ -33,16 +34,11 @@ export class WpGeneralInformationComponent implements OnInit {
       pathway_content: new FormControl(null),
       is_global: new FormControl(true),
       id: new FormControl(null),
+      active: new FormControl(true),
     });
 
 
   }
-
-
-
-
-
-
 
   ngOnInit(): void {
   
@@ -90,14 +86,26 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    // console.log(body);
+    console.log(body);
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       // console.log(resp);
       // console.log(this.workPackageForm.valid?true:false);
       this.workPackageForm.valid?
       this._interactionsService.successMessage('Work package has been saved'):
       this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
+      this.reloadComponent();
+
     })
+  }
+
+  reloadComponent(){
+    let currentRoute = this.router.routerState.snapshot.url;
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package`])
+    setTimeout(() => {
+      this.router.navigate([currentRoute])
+    }, 10);
+    
+    console.log("Reload");
   }
 
   updateFields(directResp,id:number){

@@ -41,10 +41,12 @@ export class GeneralInformationComponent implements OnInit {
   words: any;
   showForm = false;
   showFormActionArea = false;
-  geographicScope = {
-    regions: [],
-    countries: []
-  }
+  regionsList = [];
+  countriesList = [];
+  // geographicScope = {
+  //   regions: [],
+  //   countries: []
+  // }
 
 
   wordCounter() {
@@ -118,11 +120,9 @@ export class GeneralInformationComponent implements OnInit {
 
     this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageName == 'proposal' ? 3 : 2).subscribe(resp => {
 
-      // this.summaryForm.reset();
-      // this._dataControlService.generalInfoChange$.emit();
-      // console.log('summary');
-      // console.log(this.summaryForm.value);
-
+      console.log(resp.response.geoScope);
+      this.regionsList = resp?.response?.geoScope?.regions;
+      this.countriesList = resp?.response?.geoScope?.countries;
       // get general information leads
       let general_information_data = resp.response.generalInformation;
       this.leads.lead_name = general_information_data.first_name;
@@ -142,30 +142,30 @@ export class GeneralInformationComponent implements OnInit {
       this.summaryForm.controls['budget_value'].setValue(budget_data.value);
       // get Geo
       let geo_data = resp.response.geoScope;
-      this.geographicScope.regions = geo_data.regions;
-      this.geographicScope.countries = geo_data.countries;
+      // this.geographicScope.regions = geo_data.regions;
+      // this.geographicScope.countries = geo_data.countries;
       this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
       // console.log('summary');
       // console.log(this.summaryForm.value);
 
-      this._initiativesService.getCLARISARegions('').subscribe(regions => {
-        this.geographicScope.regions.map(mapReg => {
-          regions.response.regions.forEach(regionItem => {
-            if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
-          })
-        })
-        this._dataControlService.showRegions = true;
-      })
+      // this._initiativesService.getCLARISARegions('').subscribe(regions => {
+      //   this.geographicScope.regions.map(mapReg => {
+      //     regions.response.regions.forEach(regionItem => {
+      //       if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
+      //     })
+      //   })
+      //   this._dataControlService.showRegions = true;
+      // })
 
-      this._initiativesService.getCLARISACountries().subscribe(countries => {
-        this.geographicScope.countries.map(mapCoun => {
-          countries.response.countries.forEach(countryItem => {
-            if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
-          })
+      // this._initiativesService.getCLARISACountries().subscribe(countries => {
+      //   this.geographicScope.countries.map(mapCoun => {
+      //     countries.response.countries.forEach(countryItem => {
+      //       if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
+      //     })
 
-        })
-        this._dataControlService.showCountries = true;
-      })
+      //   })
+      //   this._dataControlService.showCountries = true;
+      // })
 
       this.showForm = true;
     },
@@ -200,21 +200,21 @@ export class GeneralInformationComponent implements OnInit {
 
     this.spinnerService.show('general-information');
 
-    this.geographicScope.regions.map(newRegId => {
-      if (newRegId.um49Code) {
-        newRegId.region_id = newRegId.um49Code;
-      }
-    })
+    // this.geographicScope.regions.map(newRegId => {
+    //   if (newRegId.um49Code) {
+    //     newRegId.region_id = newRegId.um49Code;
+    //   }
+    // })
 
-    this.geographicScope.countries.map(newCountId => {
-      if (newCountId.code) {
-        newCountId.country_id = newCountId.code;
-      }
-    })
+    // this.geographicScope.countries.map(newCountId => {
+    //   if (newCountId.code) {
+    //     newCountId.country_id = newCountId.code;
+    //   }
+    // })
     let body = this.summaryForm.value;
-    body.regions=this.geographicScope.regions;
-    body.countries=this.geographicScope.countries;
-    console.log(this.geographicScope);
+    // body.regions=this.geographicScope.regions;
+    // body.countries=this.geographicScope.countries;
+    // console.log(this.geographicScope);
     console.log(body);
     // console.log(this.summaryForm.value);
     // console.log(this._initiativesService.initiative.id);
