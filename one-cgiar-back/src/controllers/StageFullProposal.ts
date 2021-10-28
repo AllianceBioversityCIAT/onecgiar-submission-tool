@@ -189,7 +189,7 @@ export async function patchWorkPackage(req: Request, res: Response) {
     newWorkPackage.name = name;
     newWorkPackage.pathway_content = pathway_content;
     newWorkPackage.is_global = is_global;
-    newWorkPackage.active = active ? active : true;
+    newWorkPackage.active = active;
 
     try {
 
