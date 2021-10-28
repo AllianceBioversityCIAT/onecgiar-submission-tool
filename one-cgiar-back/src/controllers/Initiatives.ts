@@ -91,21 +91,25 @@ export const getSummary = async (req: Request, res: Response) => {
                 WHERE initvStgs.id = ${initvStg.id};
             `),
             COquery = (
-                `SELECT DISTINCT(country_id),initvStgId
-                FROM countries_by_initiative_by_stage 
-               WHERE initvStgId = ${initvStg.id}
-                 AND active = 1
-                 AND wrkPkgId IS NOT NULL
-              GROUP BY id,country_id`
+                ` SELECT DISTINCT(co.country_id),
+                (SELECT cc.name FROM  clarisa_countries cc WHERE cc.code = co.country_id) as name,
+               co.initvStgId
+               FROM countries_by_initiative_by_stage co
+              WHERE co.initvStgId = ${initvStg.id}
+                AND co.active = 1
+                AND co.wrkPkgId IS NOT NULL
+             GROUP BY co.id,co.country_id`
             ),
             REquery = (
                 `
-                SELECT DISTINCT (region_id),initvStgId
-                FROM regions_by_initiative_by_stage
-               WHERE initvStgId = ${initvStg.id}
-                 AND active = 1
-                 AND wrkPkgId IS NOT NULL
-              GROUP BY id,region_id
+                SELECT DISTINCT (r.region_id),
+                (SELECT cr.name FROM  clarisa_regions cr WHERE cr.um49Code = r.region_id) as name
+                ,r.initvStgId
+                  FROM regions_by_initiative_by_stage r
+                 WHERE r.initvStgId = ${initvStg.id}
+                   AND r.active = 1
+                   AND r.wrkPkgId IS NOT NULL
+                 GROUP BY r.region_id
                 `
             )
 
