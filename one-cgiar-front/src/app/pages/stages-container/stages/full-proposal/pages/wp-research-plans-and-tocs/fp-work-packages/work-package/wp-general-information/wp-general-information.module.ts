@@ -7,6 +7,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
 import { SkeletonsModule } from '@app/shared/components/skeletons/skeletons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GeographicScopeModule } from '../../../../../../shared/components/geographic-scope/geographic-scope.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     UtilsModule,
     SkeletonsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GeographicScopeModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
