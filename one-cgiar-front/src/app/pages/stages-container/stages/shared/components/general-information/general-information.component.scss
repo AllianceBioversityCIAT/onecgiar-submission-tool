@@ -5,6 +5,42 @@
 //     width: 90%;
 //     margin: 1rem auto;
 // }
+
+.blue_border{
+    position: relative;
+    box-shadow: 0 10px 20px #087b8327, 0 6px 6px #087b8328;
+    width: auto;
+    border-radius: 10px; 
+    border: solid 3px #087b8362;
+    overflow: hidden;
+    .local_container{
+        display: grid;
+        grid-template-columns: 1fr 30px 1fr;
+        padding: 25px;
+        .rule{
+            width: 5px;
+            height: 100%;
+            background-color: #c4c4c4;
+            align-self: center;
+        }
+        .data_list{
+            .list_name{
+                font-size: 1.2em;
+                font-weight: 700;
+                text-align: center;
+                color: var(--ibdc-tertiary-color);
+            }
+            .full_list{
+                .element{
+                    margin-top: 5px;
+                }
+            }
+        }
+        
+    
+    }
+ }
+
   
 .general-information-title {
     font-size: 1.4em;
