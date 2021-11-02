@@ -88,7 +88,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description,
             subsections.display_name,subsections.single_section, subsections.sectionId,subsections.active,
-            subsections.visible,subsections.order
+            subsections.visible,subsections.order,subsections.block
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId

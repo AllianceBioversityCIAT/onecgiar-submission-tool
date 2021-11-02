@@ -1007,15 +1007,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         try {
 
-            if (host == 'http://localhost') {
-
-                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-
-            } else {
-
-                host = `${process.env.EXT_HOST}`;
-            }
-
             if (newMelia.id !== null) {
 
                 var savedMelia = await meliaRepo.findOne(newMelia.id);
@@ -1033,6 +1024,22 @@ export class ProposalHandler extends InitiativeStageHandler {
 
                 upsertedMelia = await meliaRepo.save(newMelia);
 
+            }
+
+
+            /**
+             * 
+             * MELIA FILES
+             * 
+             */
+
+            if (host == 'http://localhost') {
+
+                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+
+            } else {
+
+                host = `${process.env.EXT_HOST}`;
             }
 
             if (files) {
