@@ -1,0 +1,16 @@
+.ibd_no_data_text{
+    text-align: center;
+    font-weight: 700;
+    font-size: 1em;
+    color: var(--ibdc-tertiary-color);
+    display: flex;
+    margin: 10px 15px 0px 0px;
+    justify-content: center;
+    // text-align: center;
+    .text{
+        margin-right: 7px;
+    }
+    .material-icons{
+        font-size: 1.7em;
+    }
+  }

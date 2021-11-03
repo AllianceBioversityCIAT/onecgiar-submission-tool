@@ -113,9 +113,10 @@
                                 Regions
                             </div>
                             <div class="full_list">
-                                <div class="element" *ngFor="let item of this.regionsList; let i=index">
+                                <div [hidden]="!this.regionsList.length" class="element" *ngFor="let item of this.regionsList; let i=index">
                                     {{i+1}}. {{item.name}}
                                 </div>
+                                <app-text-not-data [hidden]="this.regionsList.length" text="There are not Regions"></app-text-not-data>
                             </div>
                         </div>
                         <div class="rule"></div>
@@ -124,9 +125,10 @@
                                 Countries
                             </div>
                             <div class="full_list">
-                                <div class="element" *ngFor="let item of this.countriesList; let i=index">
+                                <div [hidden]="!this.countriesList.length" class="element" *ngFor="let item of this.countriesList; let i=index">
                                     {{i+1}}. {{item.name}}
                                 </div>
+                                <app-text-not-data [hidden]="this.countriesList.length" text="There are not Countries"></app-text-not-data>
                             </div>
                         </div>
                     </div>
