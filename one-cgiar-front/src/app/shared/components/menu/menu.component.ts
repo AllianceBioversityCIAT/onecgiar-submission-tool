@@ -157,7 +157,6 @@ export class MenuComponent implements OnInit {
 
             let pobList = [];
             let impactStatementsList = [];
-            // let iaListInResultFramework = [];
 
             this.impacAreasList.map(item=>{
               let body:any = {}
@@ -204,7 +203,20 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
-
+            // let iaListInResultFramework = [
+            //   {
+            //     showName:'10.1.1 Activity breakdown',
+            //     frontRoute : '/budget/activity-breakdown/',
+            //     subSectionName :'impact-area',
+            //     sort : 'id'
+            //   },
+            //   {
+            //     showName:'10.1.2 Geography breakdown',
+            //     frontRoute : '/budget/geography-breakdown/',
+            //     subSectionName :'impact-area',
+            //     sort : 'id'
+            //   }
+            // ];
             // this.impacAreasList.map(item=>{
             //   let body:any = {}
             //   let impactArea = {}
@@ -222,10 +234,12 @@ export class MenuComponent implements OnInit {
             //   iaListInResultFramework.push(body)
             // })
 
-            // this.mapDataInMenu(3, 8, 17, iaListInResultFramework);
+            // this.mapDataInMenu(3, 4, 27, iaListInResultFramework);
+
 
             
             // this.mapDataInMenuDynamicListSubSection(3, 8, 17, [{showName:'Hola mundo'}]);
+            // this.mapDataInMenuDynamicListSubSection(3, 4, 27, iaListInResultFramework);
             console.log(this._dataControlService.userMenu);
 
 
@@ -285,6 +299,14 @@ export class MenuComponent implements OnInit {
     let stageParam = stage.toLowerCase().split(' ').join('-');
     // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
     this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
+    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+  }
+
+  dynamicListSubSectionNavigation(stage: string, section: string, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');
+    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
+    return baseUrl+ stageParam+'/'+ section + subsection;
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 
