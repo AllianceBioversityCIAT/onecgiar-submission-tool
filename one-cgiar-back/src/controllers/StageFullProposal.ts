@@ -525,7 +525,6 @@ export async function getImpactStrategies(req: Request, res: Response) {
 
 }
 
-
 /**
  * PATCH Melia and files
  * @param req 
@@ -537,7 +536,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, melia_plan, active, section, updateFiles } = JSON.parse(req.body.data);
+    const { id, melia_plan, active, section, updateFiles,resultFramework,impactAreas } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -558,7 +557,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles,resultFramework, impactAreas);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 

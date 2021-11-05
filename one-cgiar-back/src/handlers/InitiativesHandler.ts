@@ -211,6 +211,47 @@ export class InitiativeHandler {
     }
 
 
+     /**
+     * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+     */
+      async requestPreviewPartners(){
+
+        try {
+
+            const previewPartnersQuery = `
+            SELECT p.institutions_name as partner_name,JSON_UNQUOTE(ci.data-> "$.websiteLink") as url,ci.acronym as acronym,
+                  ini.official_code as initiative_id,gi.action_area_description as action_area ,
+                  '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
+                  ci.institutionType as organization_type_clarisa,ci.institutionTypeId as clarisa_id,
+                  p.tag_id,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id, 'impact_satatements' as Source
+             FROM impact_strategies i
+             JOIN partners p
+             JOIN clarisa_institutions ci
+             JOIN initiatives_by_stages ist
+             JOIN initiatives ini
+             JOIN general_information gi
+            WHERE i.id = p.impact_strategies_id
+              AND p.institutions_id = ci.code
+              AND i.initvStgId = ist.id
+              AND ist.initiativeId = ini.id
+              AND i.initvStgId = gi.initvStgId
+              AND i.active > 0
+            ORDER BY ini.id asc     
+            `
+
+            const previewPartners = await this.queryRunner.query(previewPartnersQuery);
+            return previewPartners;
+            
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get Preview Partners: Full proposal', 400, error.message, false)
+            
+        }
+
+    }
+
+
 
 }
 

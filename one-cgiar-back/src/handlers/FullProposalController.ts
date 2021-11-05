@@ -823,7 +823,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
 
     /**
-     * 
+     * IMPACT STRATEGIES
      * @param impact_strategies_id 
      * @param active 
      * @param challenge_priorization 
@@ -988,7 +988,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @param updateFiles 
      * @returns { upsertedMelia, upsertedFile }
      */
-    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
+    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?,resultFramework?, impactAreas?) {
 
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
@@ -1168,6 +1168,18 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         }
 
+    }
+
+    async upsertResultsFrameworks(impactAreas){
+
+        console.log(impactAreas);
+        
+    }
+
+    async upsertImpactAreas(impactAreas){
+
+        console.log(impactAreas);
+        
     }
 
     /**

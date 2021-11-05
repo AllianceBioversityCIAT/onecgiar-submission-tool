@@ -625,6 +625,12 @@ router.get("/depth-scale/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.ge
 router.get("/depth-description/:impactIndicatorId([0-9]+)", [checkJwt], initiatives.getDepthDescription);
 
 
+/**
+ * PREVIEW PARTNERS
+ */
+router.get("/preview-partners/", [checkJwt], initiatives.getPreviewPartners);
+
+
 
 
 /**

@@ -1076,6 +1076,33 @@ export async function getDepthDescription(req: Request, res: Response) {
 
 
 /**
+ * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+
+export async function getPreviewPartners(req: Request, res: Response) {
+
+    const initiativeshandler = new InitiativeHandler();
+
+    try {
+
+        const previewPartners = await initiativeshandler.requestPreviewPartners();
+
+        res.json(new ResponseHandler('Full Proposal: Get Preview Partners.', { previewPartners }));
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+
+    }
+
+}
+
+
+/**
  * 
  * CLARISA getters
  * 
