@@ -20,35 +20,50 @@
                     </div>
                     <div #subSectionsList  class="sub-sections" [ngClass]="{'expandIbd': activeClassByRoute([section.description]),'collapseIbd': !activeClassByRoute([section.description])}" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <!-- sub sections list -->
-                        <div class="sub-section-container" *ngFor="let subSection of section.subsections">
-                            <div class="sub-section {{subSection.dynamicList?'sub-section-with-dynamicList':''}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
+                        <div class="sub-section-container" *ngFor="let subSection of section.subsections" [hidden]="subSection.block == true">
+                            <div class=" {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                                 <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
                                     <span style="margin-right: 8px;" [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="subSection.visible && (subSection.subSectionId != 12)">check_circle</span>
                                     <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt="" srcset="">
                                 </div>
                             </div>
-                            <div class="dynamicList" *ngIf="subSection.dynamicList">
-
-                                <div class="dynamicListButton" *ngFor="let item of sortAlphabetically(subSection.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
-                                    <div class="dynamicListButton_texts">
-                                      <div class="point"></div>
-                                      <span [ngClass]="{'activeSection': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                            <div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection">
+                                <div class="left_line"></div>
+                                <div *ngIf="subSection.dynamicList">
+                                    <div class="dynamicListButton order_first" *ngFor="let item of sortAlphabetically(subSection?.dynamicList)" (click)="dynamicListNavigation(item.id,stage.description,section.description,item.frontRoute)">
+                                        <div class="dynamicListButton_texts">
+                                          <div class="point"></div>
+                                          <span [ngClass]="{'activeSection_dynamicList': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                        </div>
+                                        <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'#469e49':'#a8a8a8'" class="material-icons-outlined material-icons">assignment_turned_in</span>
                                     </div>
-                                    <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span>
                                 </div>
-                                <div *ngIf="subSection.subSectionId === 16" style="border-top: 1px solid white; width: 90%; margin-bottom: 5px;"></div>
-                                <div class="dynamicListButton" [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">
-                                    <div class="dynamicListButton_texts" *ngIf="subSection.subSectionId === 16">
+
+                                <!-- <div *ngIf="subSection.subSectionId === 16" style="border-top: 1px solid white; width: 90%; margin-bottom: 5px;"></div> -->
+                                <div *ngIf="subSection.subSectionId === 16" class="dynamicListButton order_second" [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">
+                                    <div class="dynamicListButton_texts" >
                                         <div class="point"></div>
                                         <span>{{'Partners not related to any Impact Area'||'(Unnamed)'}}</span>
                                     </div>
                                     <!-- <span style="margin-right: 8px;" [style.color]="true?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span> -->
                                 </div>
                                 <!-- <div *ngIf="subSection.subSectionId === 16" routerLink="/initiatives/2/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area" class="not_impact_areas"><p>Partners not related to any Impact Area</p> </div> -->
+                                <div *ngIf="subSection.dynamicListSubSection">
+                                    <div *ngFor="let item of subSection.dynamicListSubSection" class="dynamicListButton order_second" [routerLink]="dynamicListSubSectionNavigation(stage.description,section.description,item.frontRoute)" routerLinkActive="activeSection">
+                                        <div class="dynamicListButton_texts" >
+                                            <div class="point"></div>
+                                            <span>{{item.showName||'(Unnamed)'}}</span>
+                                        </div>
+                                        <!-- <span style="margin-right: 8px;" [style.color]="true?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons">assignment_turned_in</span> -->
+                                    </div>
+                                </div>
 
-                            
-                        </div>
+                           
+                           
+                            </div>
+
+                            <!-- <p *ngFor="let item of subSection.dynamicListSubSection">********** {{item.showName}} **********</p> -->
 
                     </div>
                     

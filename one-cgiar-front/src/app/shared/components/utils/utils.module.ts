@@ -6,6 +6,7 @@ import { UnderConstructionPageComponent } from '../utils/under-construction-page
 import { SectionBreadcrumbComponent } from './section-breadcrumb/section-breadcrumb.component';
 import { SectionAlertsPackComponent } from './section-alerts-pack/section-alerts-pack.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { TextNotDataComponent } from './text-not-data/text-not-data.component';
 // import { IbdAngularComponentsModule } from '../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 
 const mycomponents = [
@@ -13,7 +14,8 @@ const mycomponents = [
   SectionSubTitleComponent,
   UnderConstructionPageComponent,
   SectionBreadcrumbComponent,
-  SectionAlertsPackComponent
+  SectionAlertsPackComponent,
+  TextNotDataComponent
 ];
 const myModules = [
   IbdAngularComponentsModule
