@@ -59,6 +59,16 @@
                                     </div>
                                 </div>
 
+                                <div *ngIf="subSection.previewButton"
+                                      class="dynamicListPreviewButton preview" 
+                                      [routerLink]="dynamicListSubSectionNavigation(stage.description,section.description,subSection.previewButton.frontRoute)" routerLinkActive="activeSection" >
+                                    <div class="dynamicListButton_texts" >
+                                        <div class="point"></div>
+                                        <span>{{subSection.previewButton.showName||'(Unnamed)'}}</span>
+                                    </div>
+                                    <span style="margin-right: 8px;" [style.color]="'#a8a8a8'" class="material-icons-outlined material-icons">analytics</span>
+                                </div>
+
                            
                            
                             </div>

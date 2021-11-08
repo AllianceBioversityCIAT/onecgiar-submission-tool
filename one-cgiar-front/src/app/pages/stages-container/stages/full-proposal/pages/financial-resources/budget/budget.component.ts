@@ -41,13 +41,13 @@ export class BudgetComponent implements OnInit {
 
   getFinancialResources(){
     this._initiativesService.getFinancialResources(this._initiativesService.initiative.id,'budget').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let financialResources = resp.response.financialResourcesData;
       this.filesSavedList = financialResources?.files?financialResources.files:[];
       this.data.id = financialResources?.id;
-      console.log(financialResources);
-      console.log(this.filesSavedList);
+      // console.log(financialResources);
+      // console.log(this.filesSavedList);
       this.sectionForm.controls['detailed_budget'].setValue(financialResources?.detailed_budget);
       
     },

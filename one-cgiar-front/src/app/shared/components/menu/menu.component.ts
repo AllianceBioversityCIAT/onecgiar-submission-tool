@@ -125,6 +125,16 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
+  mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .subsections.find(
+        (subSection) => subSection.subSectionId == subSectionId
+      ).previewButton = object);
+    // console.log(sectionFinded);
+  }
+
   partnersNotRelatedRoute(){
     return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
   }
@@ -238,9 +248,13 @@ export class MenuComponent implements OnInit {
 
 
             
-            // this.mapDataInMenuDynamicListSubSection(3, 8, 17, [{showName:'Hola mundo'}]);
+            // this.mapDataInMenuDynamicListSubSection(3, 7, 16, [{showName:'Preview'}]);
+            this.mapPreviewInDynamicListMenu(3, 7, 16, {
+              showName : 'Reports',
+              frontRoute : '/is-resports'
+            });
             // this.mapDataInMenuDynamicListSubSection(3, 4, 27, iaListInResultFramework);
-            console.log(this._dataControlService.userMenu);
+            // console.log(this._dataControlService.userMenu);
 
 
             // console.log(pobList);
