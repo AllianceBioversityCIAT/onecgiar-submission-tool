@@ -142,7 +142,7 @@ export class MenuComponent implements OnInit {
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
         this._dataControlService.userMenu = userMenuResp.response.stages;
-        console.log(this._dataControlService.userMenu);
+        // console.log(this._dataControlService.userMenu);
         // console.log(userMenuResp.response.stages.length);
         if (userMenuResp.response.stages.length > 1) {
 

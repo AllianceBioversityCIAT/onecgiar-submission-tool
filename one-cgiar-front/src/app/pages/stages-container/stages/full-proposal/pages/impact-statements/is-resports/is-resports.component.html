@@ -1,1 +1,56 @@
-<p>is-resports works!</p>
+<section-title name="Budget" ></section-title>
+
+<div class="section-container animate__animated animate__fadeIn">
+    <div class="card">
+        <!-- <h5>Horizontal and Vertical</h5> -->
+        <section-sub-title name="Partners preview"></section-sub-title>
+
+        <p-table [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:300px" *ngFor="let item of headerAndBodyData">{{item.headerName}}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer>
+                <tr>
+                    <td style="width:300px" *ngFor="let item of headerAndBodyData">
+                        <span *ngIf="item.attributeName != 'url'">{{customer[item.attributeName] || 'not available'}}</span>
+                        <a  *ngIf="item.attributeName == 'url'" [href]="customer[item.attributeName]">{{customer[item.attributeName] || 'not available'}}</a>
+                    </td>
+                </tr>
+            </ng-template>
+            <!-- <ng-template pTemplate="footer">
+                <tr>
+                    <td style="width:100px">Id</td>
+                    <td style="width:200px">Name</td>
+                    <td style="width:200px">Country</td>
+                    <td style="width:200px">Date</td>
+                    <td style="width:200px">Balance</td>
+                    <td style="width:200px">Company</td>
+                    <td style="width:200px">Status</td>
+                    <td style="width:200px">Activity</td>
+                    <td style="width:200px">Representative</td>
+                </tr>
+            </ng-template> -->
+        </p-table>
+    </div>
+</div>
+
+
+<!-- {
+    "partner_name": "Fundación para la Promoción e Investigación de Productos Andinos",
+    "url": "http://www.proinpa.org/VallesNorte/",
+    "acronym": "PROINPA",
+    "initiative_id": "INIT-1",
+    "action_area": "Genetic Innovation",
+    "partner_id": "",
+    "location": "",
+    "organization_type_IATI": "",
+    "network_mapping_codes": "",
+    "organization_type_clarisa": "Associations (other than regional organizations, extension, and farmer/community level)",
+    "clarisa_id": 20,
+    "tag_id": "0,0,3",
+    "hq_location_clarisa": "BO",
+    "impact_area_id": 1,
+    "Source": "impact_satatements"
+} -->
