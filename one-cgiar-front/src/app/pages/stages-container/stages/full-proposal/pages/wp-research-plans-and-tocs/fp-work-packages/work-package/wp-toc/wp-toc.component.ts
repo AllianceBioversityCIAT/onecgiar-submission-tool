@@ -36,7 +36,7 @@ export class WpTocComponent implements OnInit {
 
     console.log("get txt");
     this.getTocTxtDataByTocId(this.wpTocForm.value['TocId'])
-    this.linkIsgenerated =  true;
+    
   }
 
   saveSection(){
@@ -54,21 +54,26 @@ export class WpTocComponent implements OnInit {
   }
 
   getTocTxtDataByTocId(tocId){
+    this.linkIsgenerated =  false;
     this.toctxtData = null;
     // return this.http.get(`https://dev-toc.s3.us-east-2.amazonaws.com/toc_SmBQ1GfEjD/SmBQ1GfEjD.txt`,{ responseType: 'text'});
     // return this.http.get(`/assets/test.txt`,{ responseType: 'text'});
     // return this.http.get(`https://www.w3.org/TR/PNG/iso_8859-1.txt`,{ responseType: 'text'});
     this._initiativesService.getTocTxtDataByTocId(tocId).subscribe(resp=>{
-      console.log(resp.TocNarrative);
       this.toctxtData = resp.TocNarrative;
       if (this.toctxtData) {
         this.txtIsLoaded = true;
       }else{
         this.txtIsLoaded = false;
       }
-    },err=>{},()=>{
-      console.log("ended");
+    },err=>{
+      console.log("error");
       this.txtIsLoaded = false;
+      this.linkIsgenerated =  true;
+    },()=>{
+      console.log("ended");
+      
+      this.linkIsgenerated =  true;
     })
 
 
