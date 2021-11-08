@@ -18,15 +18,18 @@ export class GlobalPartnersRequestComponent implements OnInit {
   button_changing = [
     {
       name:'Scaling',
-      id: 1
+      id: 1,
+      attributeName: 'scaling'
     },    
     {
       name:'Demanding',
-      id: 2
+      id: 2,
+      attributeName: 'demand'
     },
     {
       name:'Innovation',
-      id: 3
+      id: 3,
+      attributeName: 'innovation'
     }
   ]
 
@@ -99,49 +102,9 @@ export class GlobalPartnersRequestComponent implements OnInit {
       this.display = true;
   }
 
-  getActiveTag(item,i){
-
-    if (!item.tag_id)item.tag_id = '0,0,0';
-    if (item.code) {
-      if (String(item.tag_id).length == 1) {
-        let localValue = item.tag_id;
-        item.tag_id = '0,0,0';
-        let localArray = item.tag_id.split(',')
-        localArray[Number(localValue)-1] = localValue;
-        item.tag_id = localArray.join(',');
-      }
-
-      if (item.tag_id.split(',')[i]!='0') {
-        return true;
-      }else{
-        return false;
-      }
-    }
-
-  }
-
-  changeTagId(item,value){
-
-    if (!item.tag_id)item.tag_id = '0,0,0';
-
-    if (String(item.tag_id).length == 1) {
-      let localValue = item.tag_id;
-      item.tag_id = '0,0,0';
-      let localArray = item.tag_id.split(',')
-      localArray[Number(localValue)-1] = localValue;
-      item.tag_id = localArray.join(',');
-    }
-
-
-       let array = item.tag_id.split(',')
-      if (array[Number(value)-1] == value) {
-        array[Number(value)-1] = 0;
-      }else{
-        array[Number(value)-1] = value;
-      }
-      
-      item.tag_id = array.join(',');
-    
+  onSelectTag(item,attributeName){
+    if ( typeof item[attributeName]  === 'undefined')item[attributeName] = true;
+    item[attributeName] = !item[attributeName] 
   }
 
   countDuplicates(originalArray) {
