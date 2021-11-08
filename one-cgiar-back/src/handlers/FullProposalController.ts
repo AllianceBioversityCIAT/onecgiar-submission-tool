@@ -889,6 +889,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                     newPartners.type_id = par.institutionTypeId ? par.institutionTypeId : null;
                     newPartners.type_name = par.institutionType;
                     newPartners.active = par.active;
+                    newPartners.demand = par.demand;
+                    newPartners.innovation = par.innovation;
+                    newPartners.scaling = par.scaling;
 
                     if (newPartners.id !== null) {
 
