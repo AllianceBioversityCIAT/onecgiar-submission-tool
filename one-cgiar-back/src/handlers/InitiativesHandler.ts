@@ -69,7 +69,7 @@ export class InitiativeHandler {
     }
 
     /**
-     * 
+     * GET USER PER INITIATIVE
      * @param initiativeId 
      * @returns users
      */
@@ -93,6 +93,9 @@ export class InitiativeHandler {
     }
 
 
+     /**
+     * GET METADATA (CLARISA) FROM SUBMISSION TOOL
+     */
 
     async requestDepthScale(impactIndicatorId) {
 

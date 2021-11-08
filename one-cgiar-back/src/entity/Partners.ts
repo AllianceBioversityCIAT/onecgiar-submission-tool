@@ -28,4 +28,13 @@ export class Partners extends UpdatedCreatedAt {
     @Column({ type: "tinyint" })
     active: boolean;
 
+    @Column({ type: "tinyint" })
+    demand: boolean;
+
+    @Column({ type: "tinyint" })
+    innovation: boolean;
+
+    @Column({ type: "tinyint" })
+    scaling: boolean;
+
 }
