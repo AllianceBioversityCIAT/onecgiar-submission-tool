@@ -943,8 +943,9 @@ export class ProposalHandler extends InitiativeStageHandler {
             `),
                 partnersQuery = (
                     `
-                SELECT id,impact_strategies_id,institutions_id as code,institutions_name as name,tag_id,type_id as institutionTypeId,
-                type_name as institutionType,active,created_at,updated_at
+                SELECT id,impact_strategies_id,institutions_id as code,
+                       institutions_name as name,tag_id,demand,innovation,scaling,type_id as institutionTypeId,
+                       type_name as institutionType,active,created_at,updated_at
                 FROM partners
                WHERE impact_strategies_id in (SELECT id
                 FROM impact_strategies
