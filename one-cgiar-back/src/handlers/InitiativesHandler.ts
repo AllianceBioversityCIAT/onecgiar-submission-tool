@@ -226,7 +226,8 @@ export class InitiativeHandler {
                   ini.official_code as initiative_id,gi.action_area_description as action_area ,
                   '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
                   ci.institutionType as organization_type_clarisa,ci.institutionTypeId as clarisa_id,
-                  p.tag_id,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id, 'impact_satatements' as Source
+                  p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id,
+                  'impact_satatements' as Source
              FROM impact_strategies i
              JOIN partners p
              JOIN clarisa_institutions ci
