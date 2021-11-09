@@ -5,6 +5,7 @@ import { IsResportsRoutingModule } from './is-resports-routing.module';
 import { IsResportsComponent } from './is-resports.component';
 import {TableModule} from 'primeng/table';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import {ButtonModule} from 'primeng/button';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
     CommonModule,
     IsResportsRoutingModule,
     TableModule,
-    UtilsModule
+    UtilsModule,
+    ButtonModule
   ]
 })
 export class IsResportsModule { }

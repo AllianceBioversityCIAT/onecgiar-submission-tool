@@ -6,14 +6,21 @@
         <section-sub-title name="Partners preview"></section-sub-title>
 
         <p-table [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex" *ngIf="!this.notArePreviewPartners">
+
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width:300px" *ngFor="let item of headerAndBodyData">{{item.headerName}}</th>
+                    <th *ngFor="let item of headerAndBodyData; let i=index" [style]="i<2?'width:300px':'width:150px'">{{item.headerName}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-customer>
                 <tr>
-                    <td style="width:300px" *ngFor="let item of headerAndBodyData">
+                    <td  *ngFor="let item of headerAndBodyData; let i=index" [style]="i<2?'width:300px':'width:150px'">
                         <span *ngIf="item.attributeName != 'url'">{{customer[item.attributeName] || 'not available'}}</span>
                         <a  *ngIf="item.attributeName == 'url'" [href]="customer[item.attributeName]">{{customer[item.attributeName] || 'not available'}}</a>
                     </td>
@@ -33,6 +40,9 @@
                 </tr>
             </ng-template> -->
         </p-table>
+        <br>
+        <app-text-not-data [hidden]="!this.notArePreviewPartners" text="There are not Partners"></app-text-not-data>
+        <br>
     </div>
 </div>
 

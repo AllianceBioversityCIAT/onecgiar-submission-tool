@@ -31,6 +31,7 @@
     "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
+    "file-saver": "^2.0.5",
     "ibd-angular-components": "file:ibdc/ibd-angular-components-2.2.2.tgz",
     "jquery": "^3.5.1",
     "lodash": "^4.17.21",
@@ -43,6 +44,7 @@
     "rxjs": "~6.5.5",
     "sweetalert2": "^10.15.1",
     "tslib": "^2.0.0",
+    "xlsx": "^0.17.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

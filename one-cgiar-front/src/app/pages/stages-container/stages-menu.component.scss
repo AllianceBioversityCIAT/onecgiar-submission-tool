@@ -1,15 +1,11 @@
-//new styles
 .capsule-header{
     width: calc(100% - 4px);
     height: 45px;
     background-color: white;
-    // border-left: solid 2px #0f7296ff;
     border-radius: 100px;
     margin-top: 30px;
     position: relative;
     left: 4px;
-    // box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-    // overflow: hidden;
     display: flex;
     justify-content: space-between;
     .inner-capsule{
@@ -53,21 +49,6 @@
     }
 
 }
-///
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .elements_container{
     width: 100%;
