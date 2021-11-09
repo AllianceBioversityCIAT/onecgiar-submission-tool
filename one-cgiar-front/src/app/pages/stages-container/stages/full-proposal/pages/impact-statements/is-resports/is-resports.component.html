@@ -5,7 +5,7 @@
         <!-- <h5>Horizontal and Vertical</h5> -->
         <section-sub-title name="Partners preview"></section-sub-title>
 
-        <p-table [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+        <p-table *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
             <ng-template pTemplate="caption">
                 <div class="p-d-flex" *ngIf="!this.notArePreviewPartners">
 
@@ -15,14 +15,24 @@
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th *ngFor="let item of headerAndBodyData; let i=index" [style]="i<2?'width:300px':'width:150px'">{{item.headerName}}</th>
+                    <th *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:200px'">{{item}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-customer>
                 <tr>
-                    <td  *ngFor="let item of headerAndBodyData; let i=index" [style]="i<2?'width:300px':'width:150px'">
-                        <span *ngIf="item.attributeName != 'url'">{{customer[item.attributeName] || 'not available'}}</span>
-                        <a  *ngIf="item.attributeName == 'url'" [href]="customer[item.attributeName]">{{customer[item.attributeName] || 'not available'}}</a>
+                    <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:150px'">
+                        <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
+                            <span >{{customer[item]?'Yes':'No'}}</span>
+                        </div>
+
+                        <div *ngIf="item ==='website'">
+                            <a  target="_blank" [href]="customer[item]">{{customer[item] || 'not available'}}</a>
+                        </div>
+
+                        <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
+                            <span >{{customer[item] || 'not available'}}</span>
+                        </div>
+                        
                     </td>
                 </tr>
             </ng-template>

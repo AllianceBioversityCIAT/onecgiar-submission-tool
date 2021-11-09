@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
-
+import { PreviewPartners } from './models/previewPartners.interface';
 @Component({
   selector: 'app-is-resports',
   templateUrl: './is-resports.component.html',
@@ -9,80 +9,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 export class IsResportsComponent implements OnInit {
   previewPartners = [];
   notArePreviewPartners = false;
-  headerAndBodyData = [
-    {
-      headerName:'Partner Name',
-      attributeName:'partner_name',
-    },
-    // {
-    //   headerName:'Full Partner Name Clarisa',
-    //   attributeName:'none'
-    // },
-    {
-      headerName:'URL',
-      attributeName:'url'
-    },
-    {
-      headerName:'Acronym Clarisa',
-      attributeName:'acronym'
-    },
-    {
-      headerName:'initiative_id',
-      attributeName:'initiative_id'
-    },
-    {
-      headerName:'Action Area Code',
-      attributeName:'action_area'
-    },
-    {
-      headerName:'Partner_ID',
-      attributeName:'partner_id'
-    },
-    {
-      headerName:'Location (Country as indicated in Initiative)',
-      attributeName:'location'
-    },
-    {
-      headerName:'Organization type IATI',
-      attributeName:'organization_type_IATI'
-    },
-    {
-      headerName:'Network Mapping Codes',
-      attributeName:'network_mapping_codes'
-    },
-    {
-      headerName:'Organization Type Clarisa',
-      attributeName:'organization_type_clarisa'
-    },
-    {
-      headerName:'Clarisa ID',
-      attributeName:'clarisa_id'
-    },
-    {
-      headerName:'Demand',
-      attributeName:'none'
-    },
-    {
-      headerName:'Innovation',
-      attributeName:'none'
-    },
-    {
-      headerName:'Scaling',
-      attributeName:'none'
-    },
-    {
-      headerName:'HQ Location Clarisa',
-      attributeName:'hq_location_clarisa'
-    },
-    {
-      headerName:'Impact Area',
-      attributeName:'impact_area_id'
-    },
-    {
-      headerName:'Source',
-      attributeName:'Source'
-    }
-  ]
+  headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'action_area',  'demand',  'innovation',  'scaling',   'website'];
   constructor(
     private _initiativesService: InitiativesService
   ) { }
@@ -93,8 +20,6 @@ export class IsResportsComponent implements OnInit {
 
   getPreviewPartnersDataByInitiativeId(){
     this._initiativesService.getPreviewPartnersDataByInitiativeId(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
-      console.log(resp.response.previewPartners);
       this.previewPartners = resp.response.previewPartners
       if (!this.previewPartners.length) this.notArePreviewPartners = true;
       console.log(this.previewPartners);
@@ -118,7 +43,9 @@ export class IsResportsComponent implements OnInit {
 
   exportExcel() {
     import("xlsx").then(xlsx => {
-      const worksheet = xlsx.utils.json_to_sheet(this.previewPartners);
+
+
+      const worksheet = xlsx.utils.json_to_sheet(this.previewPartners,{ skipHeader: true });
       var wscols = [
         {wpx:300},
         {wpx:250},
@@ -142,6 +69,7 @@ export class IsResportsComponent implements OnInit {
     worksheet['!cols'] = wscols;
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+
 
       this.saveAsExcelFile(excelBuffer, "partners");
     });
