@@ -137,8 +137,6 @@ export class IsResportsComponent implements OnInit {
         {wpx:100},
         {wpx:100},
         {wpx:150},
-        // {wpx:10},
-        // {wpx:20}
     ];
     
     worksheet['!cols'] = wscols;
