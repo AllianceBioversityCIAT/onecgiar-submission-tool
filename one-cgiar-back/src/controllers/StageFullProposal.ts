@@ -999,3 +999,37 @@ export async function getInnovationPackages(req: Request, res: Response) {
 
 
 }
+
+
+export async function getPreviewPartners(req: Request, res: Response) {
+
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read policy compliance oversight: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        const previewPartners = await fullPposal.requestPreviewPartners();
+
+        res.json(new ResponseHandler('Full Proposal:Preview Partners', { previewPartners }));
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+
+
+}

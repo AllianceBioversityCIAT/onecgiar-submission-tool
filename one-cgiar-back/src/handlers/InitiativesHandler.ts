@@ -249,7 +249,7 @@ export class InitiativeHandler {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Get Preview Partners: Full proposal', 400, error.message, false)
+            throw new BaseError('Get Preview Partners', 400, error.message, false)
             
         }
 

@@ -1207,4 +1207,16 @@ router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole(
 router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'readOwn')], stagefull.getInnovationPackages);
 
 
+
+/**
+ * PREVIEWS
+ */
+
+
+/**
+ * GET PREVIEW PARTNERS PER INITIATIVE
+ */
+ router.get("/preview-partners/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getPreviewPartners);
+
+
 export default router;
