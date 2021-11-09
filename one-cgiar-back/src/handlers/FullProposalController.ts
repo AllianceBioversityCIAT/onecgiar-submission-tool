@@ -1918,12 +1918,10 @@ export class ProposalHandler extends InitiativeStageHandler {
         try {
             // retrieve preview partners
             const previewPartnersQuery = `
-            SELECT p.institutions_name as partner_name,JSON_UNQUOTE(ci.data-> "$.websiteLink") as url,ci.acronym as acronym,
-                  ini.official_code as initiative_id,gi.action_area_description as action_area ,
-                  '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
-                  ci.institutionType as organization_type_clarisa,ci.institutionTypeId as clarisa_id,
-                  p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id,
-                  'impact_satatements' as Source
+            SELECT ci.code,ci.acronym as acronym,ci.institutionType as institution_type,
+                   JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as office_location,
+                   p.institutions_name as name,gi.action_area_description as action_area,
+                   p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data-> "$.websiteLink") as website
              FROM impact_strategies i
              JOIN partners p
              JOIN clarisa_institutions ci
