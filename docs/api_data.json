@@ -1287,7 +1287,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"validationGI\": [\n            {\n                \"sectionId\": 2,\n                \"description\": \"general-information\",\n                \"ValidateGI\": \"1\"\n            }\n        ]\n    },\n    \"title\": \"Validations General Information:Menu\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"innovationPackages\": [\n            {\n                \"sectionId\": 2,\n                \"description\": \"general-information\",\n                \"ValidateGI\": \"1\"\n            }\n        ]\n    },\n    \"title\": \"Validations General Information:Menu\"\n}",
           "type": "json"
         }
       ]
@@ -1803,6 +1803,75 @@
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{ message: \"Get policy compliance oversight.\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
+    "url": "stages-control/proposal/preview-partners/:initiativeId",
+    "title": "Previews - Request Partners per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewPartners",
+    "group": "Proposal",
+    "description": "<p>Shows Preview Partners per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewPartners\": [\n            {\n                \"partner_name\": \"Wageningen University and Research Centre\",\n                \"url\": \"http://www.wur.nl/en.htm\",\n                \"acronym\": \"WUR\",\n                \"initiative_id\": \"INIT-1\",\n                \"action_area\": \"Genetic Innovation\",\n                \"partner_id\": \"\",\n                \"location\": \"\",\n                \"organization_type_IATI\": \"\",\n                \"network_mapping_codes\": \"\",\n                \"organization_type_clarisa\": \"University\",\n                \"clarisa_id\": 36,\n                \"demand\": 0,\n                \"innovation\": 0,\n                \"scaling\": 0,\n                \"hq_location_clarisa\": \"NL\",\n                \"impact_area_id\": 2,\n                \"Source\": \"impact_satatements\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Preview Partners: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Full proposal\", error }",
           "type": "json"
         }
       ]
@@ -2363,7 +2432,7 @@
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n    \"id\": 1,\n    \"active\": true,\n    \"challenge_priorization\": \"Test challenge\",\n    \"research_questions\": \"\",\n    \"component_work_package\": \"\",\n    \"performance_results\": \"\",\n    \"human_capacity\": \"\",\n    \"impact_area_id\": 1,\n    \"impact_area_name\": \"Test impact Area\",\n    \"partners\": [\n        {\n            \"id\": null,\n            \"impact_strategies_id\": 1,\n            \"code\": 1,\n            \"name\": \"Wageningen University and Research Centre\",\n            \"tag_id\": 1,\n            \"type_id\":3,\n            \"institutionType\":\"CGIAR Center\",\n            \"active\": true\n        }\n    ]\n}",
+          "content": "{\n    \"id\": 1,\n    \"active\": true,\n    \"challenge_priorization\": \"Test challenge\",\n    \"research_questions\": \"\",\n    \"component_work_package\": \"\",\n    \"performance_results\": \"\",\n    \"human_capacity\": \"\",\n    \"impact_area_id\": 1,\n    \"impact_area_name\": \"Test impact Area\",\n    \"partners\": [\n        {\n            \"id\": null,\n            \"impact_strategies_id\": 1,\n            \"code\": 1,\n            \"name\": \"Wageningen University and Research Centre\",\n            \"tag_id\": 1,\n            \"institutionTypeId\":3,\n            \"institutionType\":\"CGIAR Center\",\n            \"active\": true\n        }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -2372,7 +2441,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"impactStrategies\": {\n            \"upsertedImpactStrategies\": {\n                \"created_at\": \"2021-09-21T21:13:33.000Z\",\n                \"updated_at\": \"2021-09-21T21:13:33.000Z\",\n                \"id\": 1,\n                \"initvStgId\": 35,\n                \"active\": true,\n                \"challenge_priorization\": \"Test challenge\",\n                \"research_questions\": \"\",\n                \"component_work_package\": \"\",\n                \"performance_results\": \"\",\n                \"human_capacity\": \"\",\n                \"impact_area_id\": 1,\n                \"impact_area_name\": \"Test impact Area\"\n            },\n            \"upsertedPartners\": {\n                \"id\": 1,\n                \"impact_strategies_id\": 1,\n                \"institutions_id\": 1,\n                \"institutions_name\": \"Wageningen University and Research Centre\",\n                \"tag_id\": 1,\n                \"type_id\": 3,\n                \"type_name\": \"CGIAR Center\",\n                \"active\": true,\n                \"updated_at\": \"2021-09-21T21:14:11.000Z\",\n                \"created_at\": \"2021-09-21T21:14:11.000Z\"\n            }\n        }\n    },\n    \"title\": \"Full Proposal: Patch Impact Strategies.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"impactStrategies\": {\n            \"upsertedImpactStrategies\": {\n                \"created_at\": \"2021-09-21T21:13:33.000Z\",\n                \"updated_at\": \"2021-09-21T21:13:33.000Z\",\n                \"id\": 1,\n                \"initvStgId\": 35,\n                \"active\": true,\n                \"challenge_priorization\": \"Test challenge\",\n                \"research_questions\": \"\",\n                \"component_work_package\": \"\",\n                \"performance_results\": \"\",\n                \"human_capacity\": \"\",\n                \"impact_area_id\": 1,\n                \"impact_area_name\": \"Test impact Area\"\n            },\n            \"upsertedPartners\": {\n                \"id\": 1,\n                \"impact_strategies_id\": 1,\n                \"institutions_id\": 1,\n                \"institutions_name\": \"Wageningen University and Research Centre\",\n                \"tag_id\": 1,\n                \"institutionTypeId\": 3,\n                \"type_name\": \"CGIAR Center\",\n                \"active\": true,\n                \"updated_at\": \"2021-09-21T21:14:11.000Z\",\n                \"created_at\": \"2021-09-21T21:14:11.000Z\"\n            }\n        }\n    },\n    \"title\": \"Full Proposal: Patch Impact Strategies.\"\n}",
           "type": "json"
         }
       ]
