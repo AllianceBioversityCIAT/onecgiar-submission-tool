@@ -122,6 +122,21 @@ export class IsResportsComponent implements OnInit {
       var wscols = [
         {wpx:300},
         {wpx:250},
+        {wpx:100},
+        {wpx:80},
+        {wpx:150},
+        {wpx:100},
+        {wpx:100},
+        {wpx:100},
+        {wpx:100},
+        {wpx:250},
+        {wpx:100},
+        {wpx:50},
+        {wpx:70},
+        {wpx:50},
+        {wpx:100},
+        {wpx:100},
+        {wpx:150},
         // {wpx:10},
         // {wpx:20}
     ];
@@ -130,7 +145,7 @@ export class IsResportsComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-      this.saveAsExcelFile(excelBuffer, "products");
+      this.saveAsExcelFile(excelBuffer, "partners");
     });
   }
 
