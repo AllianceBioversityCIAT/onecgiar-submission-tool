@@ -79,7 +79,7 @@ export async function getValidations(req: Request, res: Response) {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         // if not intitiative by stage, throw error
         if (initvStg == null || initvStg == undefined) {
-            throw new BaseError('Validations: Error', 400, `Validations not found in stage: ${stage.description}`, false);
+            throw new BaseError('Validations: Error', 400, `Validations not found in stage:`+stageId, false);
         }
 
 

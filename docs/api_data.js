@@ -1316,6 +1316,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "stages-control/proposal/preview-partners/:initiativeId",
+    "title": "Proposal - Request Partners per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewPartners",
+    "group": "Previews",
+    "description": "<p>Shows Preview Partners per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewPartners\": [\n            {\n                \"partner_name\": \"Wageningen University and Research Centre\",\n                \"url\": \"http://www.wur.nl/en.htm\",\n                \"acronym\": \"WUR\",\n                \"initiative_id\": \"INIT-1\",\n                \"action_area\": \"Genetic Innovation\",\n                \"partner_id\": \"\",\n                \"location\": \"\",\n                \"organization_type_IATI\": \"\",\n                \"network_mapping_codes\": \"\",\n                \"organization_type_clarisa\": \"University\",\n                \"clarisa_id\": 36,\n                \"demand\": 0,\n                \"innovation\": 0,\n                \"scaling\": 0,\n                \"hq_location_clarisa\": \"NL\",\n                \"impact_area_id\": 2,\n                \"Source\": \"impact_satatements\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Preview Partners: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Full proposal\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages",
     "title": "Work package - Request All work packages",
     "version": "1.0.2",
@@ -1803,75 +1872,6 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{ message: \"Get policy compliance oversight.\", error }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/routes/FullProposalRoutes.ts",
-    "groupTitle": "Proposal"
-  },
-  {
-    "type": "get",
-    "url": "stages-control/proposal/preview-partners/:initiativeId",
-    "title": "Previews - Request Partners per Initiative",
-    "version": "1.0.2",
-    "permission": [
-      {
-        "name": "admin"
-      }
-    ],
-    "name": "GetPreviewPartners",
-    "group": "Proposal",
-    "description": "<p>Shows Preview Partners per Initiative</p>",
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1",
-        "type": "json"
-      }
-    ],
-    "sampleRequest": [
-      {
-        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "auth",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewPartners\": [\n            {\n                \"partner_name\": \"Wageningen University and Research Centre\",\n                \"url\": \"http://www.wur.nl/en.htm\",\n                \"acronym\": \"WUR\",\n                \"initiative_id\": \"INIT-1\",\n                \"action_area\": \"Genetic Innovation\",\n                \"partner_id\": \"\",\n                \"location\": \"\",\n                \"organization_type_IATI\": \"\",\n                \"network_mapping_codes\": \"\",\n                \"organization_type_clarisa\": \"University\",\n                \"clarisa_id\": 36,\n                \"demand\": 0,\n                \"innovation\": 0,\n                \"scaling\": 0,\n                \"hq_location_clarisa\": \"NL\",\n                \"impact_area_id\": 2,\n                \"Source\": \"impact_satatements\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Error",
-            "description": "<p>: Get Preview Partners: Full proposal</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Full proposal\", error }",
           "type": "json"
         }
       ]

@@ -13,8 +13,16 @@ import { Dimensions } from '../entity/Dimensions';
 
 const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
+
 /**
- * 
+ * ***************************
+ * SECTIONS FOR PROPOSAL STAGE
+ * ***************************
+ */
+
+
+/**
+ * GET GENERAL INFORMATION
  * @param req initiativeId
  * @param res  { generalInformation, metadata }
  * @returns  { generalInformation, metadata }
@@ -60,49 +68,11 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
 
 
 /**
- * 
- * @param req initiativeId
- * @param res { context, metadata }
- * @returns  { context, metadata }
+ * GET ALL WORK PACKAGES
+ * @param req 
+ * @param res { workpackage }
+ * @returns 
  */
-export const getContext = async (req: Request, res: Response) => {
-    // get initiative by stage id from client
-    const { initiativeId } = req.params;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
-    try {
-
-        // get stage
-        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Read Context: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-
-        // create new full proposal object
-        const fullPposal = new ProposalHandler(initvStg.id.toString());
-
-        // get context from porposal object
-        const context = await fullPposal.getContext();
-
-        //set metadata
-        fullPposal.metaData = "Context";
-
-        // get metadata
-        let metadata = await fullPposal.metaData;
-        // and filter by section
-        // metadata = metadata.filter(meta => meta.group_by == 'Context');
-
-        res.json(new ResponseHandler('Full Proposal: Context.', { context, metadata }));
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
-    }
-}
-
-
 export async function getWorkPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -134,7 +104,12 @@ export async function getWorkPackages(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET WORK PACKAGE
+ * @param req 
+ * @param res { workpackage }
+ * @returns 
+ */
 export async function getWorkPackage(req: Request, res: Response) {
 
     const { wrkPkgId } = req.params;
@@ -156,7 +131,12 @@ export async function getWorkPackage(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET ALL WORK PACKAGES
+ * @param req 
+ * @param res { workpackages }
+ * @returns 
+ */
 export async function getAllWorkPackages(req: Request, res: Response) {
 
     try {
@@ -165,15 +145,21 @@ export async function getAllWorkPackages(req: Request, res: Response) {
         const fullPposal = new ProposalHandler();
 
         // get ALL workpackage from porposal
-        const workpackage = await fullPposal.requestAllWorkPackages();
+        const workpackages = await fullPposal.requestAllWorkPackages();
 
-        res.json(new ResponseHandler('Full Proposal: All Work Package.', { workpackage }));
+        res.json(new ResponseHandler('Full Proposal: All Work Package.', { workpackages }));
     } catch (error) {
         return res.status(error.httpCode).json(error);
     }
 
 }
 
+/**
+ * PATCH WORK PACKAGES
+ * @param req { acronym, name, pathway_content, is_global, id, regions, countries, active }
+ * @param res { workpackage, upsertedGeoScope }
+ * @returns 
+ */
 export async function patchWorkPackage(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -223,7 +209,7 @@ export async function patchWorkPackage(req: Request, res: Response) {
 }
 
 /**
- * 
+ * PATCH GENERAL INFORMATION
  * @param req initiativeId, generalInformationId, name, action_area_id, action_area_description 
  * @param res { generalInformation, metadata }
  * @returns { generalInformation, metadata }
@@ -237,13 +223,6 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
     try {
-
-        // const userInitiative = await initvUserRepo.findOne({ where: { user: userId, active: true, initiative: initiativeId } });
-
-        // if (userInitiative == null) {
-        //     throw new BaseError('General Information: Error', 400, 'User not found in initiative', false);
-        // }
-
 
         // get stage
         const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
@@ -274,7 +253,50 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
 
 
 /**
- * 
+ * GET CONTEXT
+ * @param req initiativeId
+ * @param res { context, metadata }
+ * @returns  { context, metadata }
+ */
+ export const getContext = async (req: Request, res: Response) => {
+    // get initiative by stage id from client
+    const { initiativeId } = req.params;
+    const initvStgRepo = getRepository(InitiativesByStages);
+    const stageRepo = getRepository(Stages);
+    try {
+
+        // get stage
+        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
+        // get intiative by stage : proposal
+        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
+        // if not intitiative by stage, throw error
+        if (initvStg == null) {
+            throw new BaseError('Read Context: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
+        }
+
+        // create new full proposal object
+        const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+        // get context from porposal object
+        const context = await fullPposal.getContext();
+
+        //set metadata
+        fullPposal.metaData = "Context";
+
+        // get metadata
+        let metadata = await fullPposal.metaData;
+        // and filter by section
+        // metadata = metadata.filter(meta => meta.group_by == 'Context');
+
+        res.json(new ResponseHandler('Full Proposal: Context.', { context, metadata }));
+    } catch (error) {
+        console.log(error)
+        return res.status(error.httpCode).json(error);
+    }
+}
+
+/**
+ * PATCH CONTEXT
  * @param req  contextId, challenge_statement, smart_objectives, key_learnings, priority_setting, comparative_advantage, participatory_design
  * @param res { context, metadata }
  * @returns { context, metadata }
@@ -323,7 +345,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
 
 
 /**
- * 
+ * PATCH PROJECTED BENEFITS
  * @param req projectionBenefitsId, impact_area_id, impact_area_name, impact_area_indicator_id, impact_area_indicator_name,
         notes, depth_scale_id, probability_id, impact_area_active, active, dimensions
  * @param res { projectionBenefits }
@@ -367,7 +389,7 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
 }
 
 /**
- * 
+ * GET PROJECTED ALL BENEFITS
  * @param req 
  * @param res { projectionBenefits }
  * @returns { projectionBenefits }
@@ -405,7 +427,7 @@ export async function getProjectionBenefits(req: Request, res: Response) {
 }
 
 /**
- * 
+ * GET PROJECTED BENEFITS BY IMPACT STATEMENT
  * @param req 
  * @param res 
  * @returns projectionBenefitsByImpact
@@ -443,7 +465,7 @@ export async function getProjectionBenefitsByImpact(req: Request, res: Response)
 }
 
 /**
- * 
+ * PATCH IMPACT STRATEGIES
  * @param req impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners
  * @param res { impactStrategies }
  * @returns { impactStrategies }
@@ -488,7 +510,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
 }
 
 /**
- * 
+ * GET IMPACT STRATEGIES
  * @param req 
  * @param res { impactStrategies }
  * @returns { impactStrategies }
@@ -527,7 +549,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
 
 /**
  * PATCH Melia and files
- * @param req 
+ * @param req { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas }
  * @param res {melia}
  * @returns melia
  */
@@ -536,7 +558,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, melia_plan, active, section, updateFiles,resultFramework,impactAreas } = JSON.parse(req.body.data);
+    const { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -557,7 +579,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles,resultFramework, impactAreas);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles, resultFramework, impactAreas);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 
@@ -610,7 +632,7 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
 
 /**
  * PATCH manage plan risk and files
- * @param req 
+ * @param req { id, management_plan, active, section, updateFiles }
  * @param res {managePlanRisk}
  * @returns managePlanRisk
  */
@@ -859,7 +881,12 @@ export async function getFinancialResources(req: Request, res: Response) {
 }
 
 
-
+/**
+ * PATCH Policy compliance Oversight
+ * @param req { id, research_governance_policy, open_fair_data_policy, open_fair_data_details, active }
+ * @param res { policyComplianceOversight }
+ * @returns 
+ */
 export async function patchPolicyComplianceOversight(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -896,7 +923,12 @@ export async function patchPolicyComplianceOversight(req: Request, res: Response
 
 }
 
-
+/**
+ * GET Policy compliance Oversight
+ * @param req 
+ * @param res { policyComplianceData }
+ * @returns 
+ */
 export async function getPolicyComplianceOversight(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -930,7 +962,12 @@ export async function getPolicyComplianceOversight(req: Request, res: Response) 
 
 }
 
-
+/**
+ * PATCH INNOVATION PACKAGES
+ * @param req { id, key_principles, active }
+ * @param res { innovationPackages }
+ * @returns 
+ */
 export async function patchInnovationPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -966,7 +1003,12 @@ export async function patchInnovationPackages(req: Request, res: Response) {
 
 }
 
-
+/**
+ * GET INNOVATION PACKAGES
+ * @param req 
+ * @param res { innovationPackagesData }
+ * @returns 
+ */
 export async function getInnovationPackages(req: Request, res: Response) {
 
     const { initiativeId } = req.params;
@@ -1001,6 +1043,21 @@ export async function getInnovationPackages(req: Request, res: Response) {
 }
 
 
+
+/**
+ * ****************************
+ * PREVIEWS FOR PROPOSAL STAGES
+ * ****************************
+ */
+
+
+
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 export async function getPreviewPartners(req: Request, res: Response) {
 
     const { initiativeId } = req.params;

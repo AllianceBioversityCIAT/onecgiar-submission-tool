@@ -1209,7 +1209,9 @@ router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('i
 
 
 /**
+ * 
  * PREVIEWS
+ * 
  */
 
 
@@ -1217,11 +1219,11 @@ router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('i
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} stages-control/proposal/preview-partners/:initiativeId Previews - Request Partners per Initiative
+ * @api {get} stages-control/proposal/preview-partners/:initiativeId Proposal - Request Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
- * @apiGroup Proposal
+ * @apiGroup Previews
  * 
  * @apiDescription  Shows Preview Partners per Initiative
  * 

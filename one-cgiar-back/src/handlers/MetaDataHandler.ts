@@ -442,7 +442,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     } catch (error) {
 
-      throw new BaseError('Get validations MELAI', 400, error.message, false)
+      throw new BaseError('Get validations MELIA', 400, error.message, false)
 
     }
 
