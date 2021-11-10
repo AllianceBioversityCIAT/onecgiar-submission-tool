@@ -45,25 +45,18 @@ export class IsResportsComponent implements OnInit {
     import("xlsx").then(xlsx => {
 
 
-      const worksheet = xlsx.utils.json_to_sheet(this.previewPartners,{ skipHeader: true });
+      const worksheet = xlsx.utils.json_to_sheet(this.previewPartners);
       var wscols = [
-        {wpx:300},
-        {wpx:250},
         {wpx:100},
+        {wpx:100},
+        {wpx:250},
         {wpx:80},
-        {wpx:150},
-        {wpx:100},
+        {wpx:250},
+        {wpx:200},
         {wpx:100},
         {wpx:100},
         {wpx:100},
         {wpx:250},
-        {wpx:100},
-        {wpx:50},
-        {wpx:70},
-        {wpx:50},
-        {wpx:100},
-        {wpx:100},
-        {wpx:150},
     ];
     
     worksheet['!cols'] = wscols;
