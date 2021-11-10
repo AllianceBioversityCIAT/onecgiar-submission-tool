@@ -20,7 +20,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-customer>
                 <tr>
-                    <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:150px'">
+                    <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:200px'">
                         <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
                             <span >{{customer[item]?'Yes':'No'}}</span>
                         </div>
