@@ -33,13 +33,26 @@
     justify-content: center;
 }
 
+
+@media only screen and (max-width: 1000px) {
+    .menu{
+        background-color: #000000cc;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1000px) {
+    .menu{
+        background-color: #00000063;
+    }
+}
+
 .menu{
     padding: 50px 25px;
     width: 400px;
     height: calc(100vh - 120px);
     max-height: calc(100vh - 120px);
-    overflow-y: scroll;
-    background-color: #00000063;
+    overflow-y: scroll;    
     color: white;
     // backdrop-filter: blur(3px);
 
