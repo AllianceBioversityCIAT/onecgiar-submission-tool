@@ -8,4 +8,12 @@ export class UtilsService {
   openSidebar(value: boolean): void {
     this.sidebarOpened.next(value);
   }
+
+  htmlToString(html:HTMLElement){
+    console.log(html+"");
+    console.log(html.toString());
+    console.log(html.outerHTML);
+    return html.outerHTML
+  }
+
 }

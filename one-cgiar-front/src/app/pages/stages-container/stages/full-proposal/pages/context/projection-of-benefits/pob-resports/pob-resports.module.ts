@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PobResportsRoutingModule } from './pob-resports-routing.module';
 import { PobResportsComponent } from './pob-resports.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
   imports: [
     CommonModule,
     PobResportsRoutingModule,
-    UtilsModule
+    UtilsModule,
+    ClipboardModule
   ]
 })
 export class PobResportsModule { }
