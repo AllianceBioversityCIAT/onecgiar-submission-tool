@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { PreviewPartners } from './models/previewPartners.interface';
+import { ManageExcelService } from '../../../services/manage-excel.service';
 @Component({
   selector: 'app-is-resports',
   templateUrl: './is-resports.component.html',
@@ -11,7 +12,8 @@ export class IsResportsComponent implements OnInit {
   notArePreviewPartners = false;
   headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'action_area',  'demand',  'innovation',  'scaling',   'website'];
   constructor(
-    private _initiativesService: InitiativesService
+    private _initiativesService: InitiativesService,
+    private _manageExcelService: ManageExcelService
   ) { }
 
   ngOnInit(): void {
@@ -24,21 +26,6 @@ export class IsResportsComponent implements OnInit {
       if (!this.previewPartners.length) this.notArePreviewPartners = true;
       console.log(this.previewPartners);
     })
-  }
-
-  saveAsExcelFile(buffer: any, fileName: string = "test"): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE =
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-      let EXCEL_EXTENSION = ".xlsx";
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(
-        data,
-        fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-      );
-    });
   }
 
   exportExcel() {
@@ -64,7 +51,7 @@ export class IsResportsComponent implements OnInit {
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
 
-      this.saveAsExcelFile(excelBuffer, "partners");
+      this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
     });
   }
 

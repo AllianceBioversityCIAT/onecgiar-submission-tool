@@ -1,0 +1,46 @@
+<section-title name="Pob reports" ></section-title>
+
+<div class="section-container animate__animated animate__fadeIn">
+    <style>
+        .test-container{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        </style>
+        
+        <div class="test-container">
+        <div>Nombre</div>
+        <div>Edad</div>
+        <div>Genero</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>8</div>
+        </div>
+
+        <table #tablee>
+            <tr>
+              <th>Company</th>
+              <th>Contact</th>
+              <th>Country</th>
+            </tr>
+            <tr>
+              <td>Alfreds Futterkiste</td>
+              <td>Maria Anders</td>
+              <td>Germany</td>
+            </tr>
+            <tr>
+              <td>Centro comercial Moctezuma</td>
+              <td>Francisco Chang</td>
+              <td>Mexico</td>
+            </tr>
+        </table>
+    
+        <button (click)="this._utilsService.htmlToString(tablee);" [cdkCopyToClipboard]="this._utilsService.htmlToString(tablee)">Copy to clipboard</button>
+</div>
