@@ -213,58 +213,28 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
-            // let iaListInResultFramework = [
-            //   {
-            //     showName:'10.1.1 Activity breakdown',
-            //     frontRoute : '/budget/activity-breakdown/',
-            //     subSectionName :'impact-area',
-            //     sort : 'id'
-            //   },
-            //   {
-            //     showName:'10.1.2 Geography breakdown',
-            //     frontRoute : '/budget/geography-breakdown/',
-            //     subSectionName :'impact-area',
-            //     sort : 'id'
-            //   }
-            // ];
-            // this.impacAreasList.map(item=>{
-            //   let body:any = {}
-            //   let impactArea = {}
-            //   body = {}
-            //   Object.keys(item).map(key=>{
-            //     impactArea[key]=item[key];
-            //   })
-             
-            //   // body = item;
-            //   body = impactArea;
-            //   body.showName = body.name;
-            //   body.frontRoute = '/result-framework/impact-area/';
-            //   body.subSectionName='impact-area';
-            //   body.sort = 'id';
-            //   iaListInResultFramework.push(body)
-            // })
-
-            // this.mapDataInMenu(3, 4, 27, iaListInResultFramework);
-
-
-            
-            // this.mapDataInMenuDynamicListSubSection(3, 7, 16, [{showName:'Preview'}]);
             this.mapPreviewInDynamicListMenu(3, 7, 16, {
               showName : 'Reports',
               frontRoute : '/is-resports'
             });
-            // this.mapDataInMenuDynamicListSubSection(3, 4, 27, iaListInResultFramework);
-            // console.log(this._dataControlService.userMenu);
 
+            this.mapPreviewInDynamicListMenu(3, 5, 12, {
+              showName : 'Wp Reports',
+              frontRoute : '/work-packages/wp-reports'
+            });
 
-            // console.log(pobList);
+            this.mapPreviewInDynamicListMenu(3, 1, 8, {
+              showName : 'Pob Reports',
+              frontRoute : '/work-packages/wp-reports'
+            });
+
+            console.log(this._dataControlService.userMenu);
+
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;
               this._dataControlService.impactStatementsMaped = true;
             }
            
-            // console.log(pobList);
-            // console.log(impactStatementsList);
             this._dataControlService.validateMenu$.emit();
         }
        
