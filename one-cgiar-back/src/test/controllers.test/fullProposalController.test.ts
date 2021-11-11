@@ -82,27 +82,4 @@ describe('FullProposal Controller', async () => {
     });
 
 
-    /**
-     * 
-     * PREVIEWS
-     * 
-     * */
-
-    /**Preview Partners */
-    it('GET previewPartners/ Request partners per initiative', async () => {
-
-        await chai
-            .request(app)
-            .get('/api/stages-control/proposal/preview-partners/' + initiativeId)
-            .set('auth', token)
-            .then((res) => {
-                expect(res.status).to.equal(200);
-                expect(res.body).to.have.property('response').to.be.a('object');
-                expect(res.body).to.have.property('title').to.be.equal('Full Proposal:Preview Partners');
-                expect(res).to.be.a('object')
-            });
-
-    });
-
-
 });

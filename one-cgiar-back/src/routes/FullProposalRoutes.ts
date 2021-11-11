@@ -543,21 +543,21 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                "init_wp_out_indicators": [
  *                    {
  *                        "init_wp_out_indicators_id": 1,
- *                        "result_type": "Outcome ",
- *                        "result": "WP 1  Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm ",
+ *                        "result_type": "Outcome",
+ *                        "result": "WP 1 Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm",
  *                        "is_global": true,
  *                        "active": true,
  *                        "indicators": [
  *                            {
  *                                "indicator_id": 1,
- *                                "indicator_name": "At least 80% user survey responses satisfied or very satisfied ",
- *                                "unit_messurament": "Qualitative measure of satisfaction ",
+ *                                "indicator_name": "At least 80% user survey responses satisfied or very satisfied",
+ *                                "unit_messurament": "Qualitative measure of satisfaction",
  *                                "active": true,
  *                            },
  *                            {
  *                                "indicator_id": 2,
- *                                "indicator_name": "No. of external user requests annually by CGIAR genebanks ",
- *                                "unit_messurament": "Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)  ",
+ *                                "indicator_name": "No. of external user requests annually by CGIAR genebanks",
+ *                                "unit_messurament": "Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)",
  *                                "active": true,
  *                            }
  *                        ],
@@ -592,8 +592,8 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                            {
  *                                
  *                                "id":2,
- *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR. ",
- *                                "data_collection":"Online reporting tool ",
+ *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR.",
+ *                                "data_collection":"Online reporting tool",
  *                                "frequency_data_collection":"Ongoing",
  *                                "active":true,
  * 
@@ -1336,71 +1336,6 @@ router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole(
  *     { message: "Get InnovationPackages.", error }
  */
 router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'readOwn')], stagefull.getInnovationPackages);
-
-
-
-/**
- * 
- * PREVIEWS
- * 
- */
-
-
-/**
- * GET PREVIEW PARTNERS PER INITIATIVE
- */
-/**
- * @api {get} stages-control/proposal/preview-partners/:initiativeId Proposal - Request Partners per Initiative
- * @apiVersion 1.0.2
- * @apiPermission admin
- * @apiName GetPreviewPartners
- * @apiGroup Previews
- * 
- * @apiDescription  Shows Preview Partners per Initiative
- * 
- * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1
- * 
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1
- *
- * @apiHeader {String} auth
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- * {
- *     "response": {
- *         "previewPartners": [
- *             {
- *                 "partner_name": "Wageningen University and Research Centre",
- *                 "url": "http://www.wur.nl/en.htm",
- *                 "acronym": "WUR",
- *                 "initiative_id": "INIT-1",
- *                 "action_area": "Genetic Innovation",
- *                 "partner_id": "",
- *                 "location": "",
- *                 "organization_type_IATI": "",
- *                 "network_mapping_codes": "",
- *                 "organization_type_clarisa": "University",
- *                 "clarisa_id": 36,
- *                 "demand": 0,
- *                 "innovation": 0,
- *                 "scaling": 0,
- *                 "hq_location_clarisa": "NL",
- *                 "impact_area_id": 2,
- *                 "Source": "impact_satatements"
- *             }
- *         ]
- *     },
- *     "title": "Full Proposal:Preview Partners"
- * }
- *
- * @apiError Error : Get Preview Partners: Full proposal
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     { message: "Get Preview Partners: Full proposal", error }
- */
- router.get("/preview-partners/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getPreviewPartners);
 
 
 export default router;
