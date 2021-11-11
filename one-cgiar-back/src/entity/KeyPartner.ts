@@ -1,9 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { InitiativesByStages } from './InititativesByStages';
 import { Partnerships } from './Partnerships';
-
 @Entity('key_partners')
 export class KeyPartners extends UpdatedCreatedAt {
 

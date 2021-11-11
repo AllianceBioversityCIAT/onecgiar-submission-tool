@@ -1,7 +1,6 @@
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { Context } from "../entity/Context";
-import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
 import { FinancialResources } from "../entity/FinancialResources";
@@ -14,11 +13,10 @@ import { Melia } from "../entity/melia";
 import { Partners } from "../entity/Partners";
 import { PolicyComplianceOrversight } from "../entity/PolicyComplianceOversight";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
-import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage";
 import { WorkPackages } from "../entity/WorkPackages";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
 import { BaseError } from "./BaseError";
-import { InitiativeStageHandler } from "./InitiativeStageController";
+import { InitiativeStageHandler } from "./InitiativeStageDomain";
 
 
 export class ProposalHandler extends InitiativeStageHandler {
@@ -139,7 +137,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         // const initvStgId: string = this.initvStgId_;
         const initvStg = await this.initvStage
-        const wpRepo = getRepository(WorkPackages);
 
         try {
 
@@ -159,6 +156,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `
                 ),
+                /*eslint-disable*/
                 WPquery = (
                     `
                     SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
@@ -170,7 +168,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                         OR acronym IS NULL
                         OR acronym = ''
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3 
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
                         - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 30
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
@@ -185,6 +183,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     AND wp.active = 1                    
                     `
                 )
+            /*eslint-enable*/
 
             // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
             var workPackages = await this.queryRunner.query(WPquery);
@@ -293,7 +292,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         // const initvStgId: string = this.initvStgId_;
         // const initvStg = await this.initvStage
-        const wpRepo = getRepository(WorkPackages);
 
         try {
 
@@ -585,7 +583,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             }
 
             // upserted data 
-            let upsertedInfo = await wpRepo.save(workPackage);
+            await wpRepo.save(workPackage);
 
             // retrieve general information
             const WPquery = ` 
@@ -992,7 +990,7 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @param updateFiles 
      * @returns { upsertedMelia, upsertedFile }
      */
-    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?,resultFramework?, impactAreas?) {
+    async upsertMeliaAndFiles(initiativeId?, ubication?, stege?, meliaId?, melia_plan?, meliaActive?, section?, files?, updateFiles?) {
 
         const meliaRepo = getRepository(Melia);
         const filesRepo = getRepository(Files);
@@ -1174,16 +1172,16 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     }
 
-    async upsertResultsFrameworks(impactAreas){
+    async upsertResultsFrameworks(impactAreas) {
 
         console.log(impactAreas);
-        
+
     }
 
-    async upsertImpactAreas(impactAreas){
+    async upsertImpactAreas(impactAreas) {
 
         console.log(impactAreas);
-        
+
     }
 
     /**

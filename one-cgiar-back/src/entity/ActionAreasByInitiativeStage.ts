@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { InitiativesByStages } from './InititativesByStages';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';

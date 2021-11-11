@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Unique } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
 import { Roles } from "./Roles";
@@ -24,6 +24,7 @@ export class Permissions extends UpdatedCreatedAt {
     @Column()
     name: string;
 
+    // eslint-disable-next-line
     @ManyToMany(type => Roles)
     @JoinTable({
         name: "permissions_by_roles", // table name for the junction table of this relation

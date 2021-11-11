@@ -1,4 +1,4 @@
-import { APIError, BaseError } from "../handlers/BaseError";
+import { BaseError } from "../handlers/BaseError";
 import { logger } from "../handlers/Logger";
 
 class ErrorHandler {

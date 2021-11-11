@@ -65,7 +65,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -134,7 +134,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -241,7 +241,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -310,7 +310,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -493,7 +493,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -690,7 +690,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -797,7 +797,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -914,7 +914,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -1091,7 +1091,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Initiatives"
   },
   {
@@ -1173,7 +1173,7 @@
         }
       ]
     },
-    "filename": "src/routes/Initiatives.ts",
+    "filename": "src/routes/InitiativesRoutes.ts",
     "groupTitle": "Manage_Access"
   },
   {
@@ -2578,77 +2578,8 @@
     "groupTitle": "Proposal"
   },
   {
-    "type": "get",
-    "url": "stages-control/proposal/melia/:initiativeId/:ubication/:stageId",
-    "title": "MELIA - Request MELIA",
-    "version": "1.0.2",
-    "permission": [
-      {
-        "name": "admin"
-      }
-    ],
-    "name": "PatchMELIA",
-    "group": "Proposal",
-    "description": "<p>Shows MELIA per initiativeId and section</p>",
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework",
-        "type": "json"
-      }
-    ],
-    "sampleRequest": [
-      {
-        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "auth",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"meliaData\": {\n            \"id\": 8,\n            \"initvStgId\": 44,\n            \"melia_plan\": \"test melia 14\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T20:35:13.000Z\",\n            \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n            \"files\": [\n                {\n                    \"id\": 85,\n                    \"tocsId\": null,\n                    \"url\": \"http://localhost:3000/uploads/INIT-14/6.melia/stage-3/1632256513858-depth_scale.xlsx\",\n                    \"name\": \"depth_scale.xlsx\",\n                    \"active\": 1,\n                    \"created_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"meliaId\": 8,\n                    \"manage_plan_risk_id\": null,\n                    \"humanId\": null,\n                    \"financial_resources_id\": null,\n                    \"section\": \"result_framework\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: melia and files.\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Error",
-            "description": "<p>: Get melia and files: Full proposal</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get melia and files: Full proposal\", error }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/routes/FullProposalRoutes.ts",
-    "groupTitle": "Proposal"
-  },
-  {
     "type": "patch",
-    "url": "stages-control/proposal/melia/:initiativeId/:ubication/:stageId",
+    "url": "stages-control/proposal/melia/:initiativeId/",
     "title": "MELIA - Create and update MELIA",
     "version": "1.0.0",
     "permission": [
@@ -2661,13 +2592,13 @@
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2"
       }
     ],
     "header": {
@@ -2678,7 +2609,7 @@
             "type": "String",
             "optional": false,
             "field": "auth",
-            "description": ""
+            "description": "<p>Token</p>"
           }
         ]
       }
@@ -2692,55 +2623,13 @@
             "optional": false,
             "field": "initiativeId",
             "description": "<p>Id initiative.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "id",
-            "description": "<p>identificator MELIA.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "melia_plan",
-            "description": "<p>description gender melia plan.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Boolean",
-            "optional": false,
-            "field": "active",
-            "description": "<p>status.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "section",
-            "description": "<p>section location.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "updateFiles",
-            "description": "<p>file to updtate.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "File",
-            "optional": false,
-            "field": "file",
-            "description": "<p>template  6.1 RESULT FRAMEWORK AND 6.3 MELIA.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "data: [\n{   \"id\":null,\n    \"melia_plan\": \"new plan\",\n    \"active\": true,\n    \"section\":\"result-framework\",\n    \"updateFiles\":[]\n}\n]",
+          "content": "data: [\n   {\n       \"id\": null,\n       \"melia_plan\": \"new plan\",\n       \"active\": true,\n       \"result_framework\": {\n           \"result_framework_id\":1,\n           \"active\":true,\n           \"tableA\": {\n               \"impact_area\": [\n                   {\n                       \"impact_area_id\": 1,\n                       \"impact_area_name\": \"Nutrition, health and food security\",\n                       \"active\": true,\n                       \"impact_ara_indicators\": [\n                           {\n                               \"impact_indicator_id\": 1,\n                               \"impact_indicator_name\": \"#people benefiting from relevant CGIAR innovations\",\n                               \"active\": true,\n                           },\n                           {\n                               \"impact_indicator_id\": 2,\n                               \"impact_indicator_name\": \"#people meeting minimum dietary energy requirements\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"global_targets\": [\n                           {\n                               \"global_target_id\": 1,\n                               \"global_target_name\": \"the 3 billion people who do not currently have access to safe and nutritious food.\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"sdg_targets\": [\n                           {\n                               \"sdg_target_id\": 1,\n                               \"sdg_target_code\": \"1.1\",\n                               \"sdg_target\": \"By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day\",\n                               \"active\": true,\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableB\": {\n               \"action_area\": [\n                   {\n                       \"action_area_id\": 1,\n                       \"action_area_name\": \"Systems Transformation\",\n                       \"active\": true,\n                       \"action_area_outcomes\": [\n                           {\n                               \"outcome_id\": 1,\n                               \"outocome_smo_code\": \"ST 1\",\n                               \"outcome_statement\": \"Farmers use technologies or practices that contribute to improved livelihoods, enhance environmental health and biodiversity, are apt in a context of climate change, and sustain natural resources.\",\n                               \"active\": true,\n                               \"outcomes_indicators\": [\n                                   {\n                                       \"outcome_indicator_id\": 1,\n                                       \"outocome_indicator_smo_code\": \"STi 1.1\",\n                                       \"outcome_indicator_statement\": \"Number of farmers using climate smart practices disaggregated by gender\",\n                                       \"active\": true,\n                                   }\n                               ]\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableC\": {\n               \"init_wp_out_indicators\": [\n                   {\n                       \"init_wp_out_indicators_id\": 1,\n                       \"result_type\": \"Outcome \",\n                       \"result\": \"WP 1  Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm \",\n                       \"is_global\": true,\n                       \"active\": true,\n                       \"indicators\": [\n                           {\n                               \"indicator_id\": 1,\n                               \"indicator_name\": \"At least 80% user survey responses satisfied or very satisfied \",\n                               \"unit_messurament\": \"Qualitative measure of satisfaction \",\n                               \"active\": true,\n                           },\n                           {\n                               \"indicator_id\": 2,\n                               \"indicator_name\": \"No. of external user requests annually by CGIAR genebanks \",\n                               \"unit_messurament\": \"Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)  \",\n                               \"active\": true,\n                           }\n                       ],\n                       \"geo_scope\": {\n                           \"regions\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"region_id\":14,\n                                   \"region_name\":\"Eastern Africa\"\n\n                               }\n                           ],\n                           \"countries\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"country_id\":20,\n                                   \"country_name\":\"Andorra\"\n\n                               }\n                           ]\n                       },\n                       \"data_management\":[\n                           {\n                               \"id\":1,\n                               \"data_source\":\"Genebank users\",\n                               \"data_collection\":\"User surveys\",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n                           },\n                           {\n                               \n                               \"id\":2,\n                               \"data_source\":\"Annual reports on collection status gathered by Crop Trust/CGIAR. \",\n                               \"data_collection\":\"Online reporting tool \",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n\n                           }\n                       ],\n                       \"base_line\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"base_line_value\":\"Customer satisfaction of 80% or higher\",\n                               \"base_line_year\":\"2017\"\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"base_line_value\":\"601,811 accessions\",\n                               \"base_line_year\":\"2020\"\n\n                           }\n                       ],\n                       \"target\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"target_value\":\"80% or higher\",\n                               \"target_year\":\"2024\"\n\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"target_value\":\"650,000\",\n                               \"target_year\":\"2024\"\n\n                           }\n                       ]\n                   }\n               ]\n           }\n       },\n   }\n  ]",
           "type": "json"
         }
       ]
@@ -2749,7 +2638,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"melia\": {\n            \"upsertedMelia\": {\n                \"created_at\": \"2021-09-14T19:40:41.000Z\",\n                \"updated_at\": \"2021-09-14T19:40:41.000Z\",\n                \"id\": 5,\n                \"initvStgId\": 35,\n                \"melia_plan\": \"test melia 12\",\n                \"active\": true\n            },\n            \"upsertedFile\": {\n                \"id\": 75,\n                \"active\": true,\n                \"meliaId\": 5,\n                \"section\": \"result_framework\",\n                \"url\": \"http://localhost:3000/uploads/INIT-12/6.melia/stage-3/1632255132043-depth_scale.xlsx\",\n                \"name\": \"depth_scale.xlsx\",\n                \"updated_at\": \"2021-09-21T20:12:12.000Z\",\n                \"created_at\": \"2021-09-21T20:12:12.000Z\"\n            }\n        },\n        \"files\": [\n            {\n                \"fieldname\": \"file\",\n                \"originalname\": \"depth_scale.xlsx\",\n                \"encoding\": \"7bit\",\n                \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n                \"destination\": \"./public/uploads/INIT-12/6.melia/stage-3\",\n                \"filename\": \"1632255132043-depth_scale.xlsx\",\n                \"path\": \"public\\\\uploads\\\\INIT-12\\\\6.melia\\\\stage-3\\\\1632255132043-depth_scale.xlsx\",\n                \"size\": 9192\n            }\n        ]\n    },\n    \"title\": \"Full Proposal: Patch melia.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"melia\": {\n            \"upsertedMelia\": {\n                \"created_at\": \"2021-09-14T19:40:41.000Z\",\n                \"updated_at\": \"2021-09-14T19:40:41.000Z\",\n                \"id\": 5,\n                \"initvStgId\": 35,\n                \"melia_plan\": \"test melia 12\",\n                \"active\": true\n                \"result_framework\":{}\n            }\n        }\n    },\n    \"title\": \"Full Proposal: Patch melia.\"\n}",
           "type": "json"
         }
       ]
@@ -3167,6 +3056,75 @@
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Work Package: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "get",
+    "url": "stages-control/proposal/melia/:initiativeId/:ubication/:stageId",
+    "title": "MELIA - Request MELIA",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "getMELIA",
+    "group": "Proposal",
+    "description": "<p>Shows MELIA per initiativeId and section</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"meliaData\": {\n            \"id\": 8,\n            \"initvStgId\": 44,\n            \"melia_plan\": \"test melia 14\",\n            \"active\": 1,\n            \"created_at\": \"2021-09-21T20:35:13.000Z\",\n            \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n            \"files\": [\n                {\n                    \"id\": 85,\n                    \"tocsId\": null,\n                    \"url\": \"http://localhost:3000/uploads/INIT-14/6.melia/stage-3/1632256513858-depth_scale.xlsx\",\n                    \"name\": \"depth_scale.xlsx\",\n                    \"active\": 1,\n                    \"created_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"updated_at\": \"2021-09-21T20:35:13.000Z\",\n                    \"meliaId\": 8,\n                    \"manage_plan_risk_id\": null,\n                    \"humanId\": null,\n                    \"financial_resources_id\": null,\n                    \"section\": \"result_framework\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal: melia and files.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get melia and files: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get melia and files: Full proposal\", error }",
           "type": "json"
         }
       ]

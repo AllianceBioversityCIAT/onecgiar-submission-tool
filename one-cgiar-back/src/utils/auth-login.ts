@@ -1,7 +1,6 @@
 import { getRepository } from "typeorm";
 import { Users } from "../entity/Users";
 import { BaseError } from "../handlers/BaseError";
-import { HttpStatusCode } from "../handlers/Constants";
 import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
 
