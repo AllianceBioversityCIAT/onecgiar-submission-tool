@@ -131,7 +131,7 @@
     
                     <div *ngIf="meta.title == 'Work Packages'&& this.workPackagesList.length >0">
                         <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)"  routerLinkActive="isActive background-color-primary-3" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
-                            <span  class="stage__section_title"> <strong>{{(item.acronym||'unamed')|uppercase}}</strong></span>
+                            <span  class="stage__section_title"> <strong>{{(item.acronym||'unnamed')|uppercase}}</strong></span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                                 aria-label="Verified icon">

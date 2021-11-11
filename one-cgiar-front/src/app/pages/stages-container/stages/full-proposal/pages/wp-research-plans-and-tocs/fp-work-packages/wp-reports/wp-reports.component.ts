@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ManageExcelService } from '../../../../services/manage-excel.service';
 
 @Component({
   selector: 'app-wp-reports',
@@ -7,26 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WpReportsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _manageExcelService:ManageExcelService
+  ) { }
 
   ngOnInit(): void {
     this.exportExcel();
   }
 
-  saveAsExcelFile(buffer: any, fileName: string = "test"): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE =
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-      let EXCEL_EXTENSION = ".xlsx";
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(
-        data,
-        fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-      );
-    });
-  }
+
 
   exportExcel() {
     import("xlsx").then(xlsx => {
@@ -116,7 +106,7 @@ export class WpReportsComponent implements OnInit {
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
 
-      this.saveAsExcelFile(excelBuffer, "partners");
+      this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
     });
   }
 
