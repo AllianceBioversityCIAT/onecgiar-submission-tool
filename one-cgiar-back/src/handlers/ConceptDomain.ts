@@ -1,12 +1,10 @@
-import _ from "lodash";
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { GeneralInformation } from "../entity/GeneralInformation";
-import { InitiativesByStages } from "../entity/InititativesByStages";
 import { Narratives } from "../entity/Narratives";
 import { ConceptSections } from "../interfaces/ConceptSectionsInterface";
 import { BaseError } from "./BaseError";
-import { ProposalHandler } from "./FullProposalController";
+import { ProposalHandler } from "./FullProposalDomain";
 import { ConceptValidation } from "./validation/ConceptSectionValidation";
 
 
@@ -298,7 +296,7 @@ export class ConceptHandler extends ConceptValidation {
         let narrative: Narratives;
         try {
             // get current intiative by stage
-            const initvStg = await this.initvStage;
+            await this.initvStage;
 
             // if null, create object
             if (narrativeId == null) {
@@ -312,7 +310,7 @@ export class ConceptHandler extends ConceptValidation {
             narrative.highlights = highlights;
 
             // upserted data 
-            let upsertedNarratives = await narrativesRepo.save(narrative);
+            await narrativesRepo.save(narrative);
 
             // retrieve general information
             const sqlQuery = ` 

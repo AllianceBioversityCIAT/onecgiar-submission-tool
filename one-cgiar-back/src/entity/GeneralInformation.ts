@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { InitiativesByStages } from './InititativesByStages';
 

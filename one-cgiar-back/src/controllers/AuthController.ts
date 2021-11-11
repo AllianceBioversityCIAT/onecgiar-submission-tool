@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { getRepository, QueryFailedError } from 'typeorm';
-import * as jwt from 'jsonwebtoken';
 import { validate } from 'class-validator';
 import { Users } from '../entity/Users';
 import config from '../config/config';
 import { APIError } from '../handlers/BaseError';
-import { HttpStatusCode } from '../handlers/Constants';
+import { HttpStatusCode } from '../interfaces/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { utilLogin } from '../utils/auth-login';
@@ -16,8 +15,6 @@ require('dotenv').config();
 
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
-
-const jwtSecret = process.env.jwtSecret;
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -82,9 +79,8 @@ export const changePassword = async (req: Request, res: Response) => {
         // res.json({ msg: 'Password updated' });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -106,9 +102,8 @@ export const validateCGUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Validate user.', { user: validUser }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,

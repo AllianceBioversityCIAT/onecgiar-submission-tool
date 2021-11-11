@@ -1,11 +1,8 @@
 import nodemailer from 'nodemailer';
 import { APIError } from '../handlers/BaseError';
-import { HttpStatusCode } from '../handlers/Constants';
-const hbs = require('nodemailer-express-handlebars');
+import { HttpStatusCode } from '../interfaces/Constants';
 
 require('dotenv').config();
-
-
 
 const transporter = nodemailer.createTransport({
     host: process.env.emailHost,
@@ -24,7 +21,7 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-export async function notifyByEmail(data: any) {
+export async function notifyByEmail() {
     const email = {
         from: 'Soporte Neox',
         to: 'f.elvira@cgiar.org',

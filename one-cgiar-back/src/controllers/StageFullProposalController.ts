@@ -1,17 +1,12 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { InitiativesByStages } from '../entity/InititativesByStages';
-import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
+import { InitiativeStageHandler } from '../handlers/InitiativeStageDomain';
 import { Stages } from '../entity/Stages';
 import { BaseError } from '../handlers/BaseError';
-import { ProposalHandler } from '../handlers/FullProposalController';
+import { ProposalHandler } from '../handlers/FullProposalDomain';
 import { ResponseHandler } from '../handlers/Response';
 import { WorkPackages } from '../entity/WorkPackages';
-import { ProjectionBenefits } from '../entity/ProjectionBenefits';
-import { Dimensions } from '../entity/Dimensions';
-
-
-const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
 
 
 /**
@@ -258,7 +253,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
  * @param res { context, metadata }
  * @returns  { context, metadata }
  */
- export const getContext = async (req: Request, res: Response) => {
+export const getContext = async (req: Request, res: Response) => {
     // get initiative by stage id from client
     const { initiativeId } = req.params;
     const initvStgRepo = getRepository(InitiativesByStages);
@@ -558,7 +553,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
     const { initiativeId, ubication } = req.params;
 
     //melia section data
-    const { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas } = JSON.parse(req.body.data);
+    const { id, melia_plan, active, section, updateFiles } = JSON.parse(req.body.data);
 
     //melia section files
     const files = req['files'];
@@ -579,7 +574,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles, resultFramework, impactAreas);
+        const melia = await fullPposal.upsertMeliaAndFiles(initiativeId, ubication, stage, id, melia_plan, active, section, files, updateFiles);
 
         res.json(new ResponseHandler('Full Proposal: Patch melia.', { melia, files }));
 

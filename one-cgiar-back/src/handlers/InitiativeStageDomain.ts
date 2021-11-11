@@ -1,4 +1,4 @@
-import { getConnection, getRepository, In } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { Citations } from "../entity/Citatitions";
 import { CountriesByInitiativeByStage } from "../entity/CountriesByInitiativeByStage";
 import { Initiatives } from "../entity/Initiatives";
@@ -7,8 +7,6 @@ import { RegionsByInitiativeByStage } from "../entity/RegionsByInitiativeByStage
 import { Stages } from "../entity/Stages";
 import { BaseError } from "./BaseError";
 import { BaseValidation } from "./validation/BaseValidation";
-
-import _ from "lodash";
 import { Budget } from "../entity/Budget";
 
 
@@ -480,8 +478,8 @@ export class InitiativeStageHandler extends BaseValidation {
             uniqueCountries.every(uA => uA['initvStg'] = forwardInitvStg);
 
             // and save
-            const nRegions = await this.regionsRepo.save(uniqueRegions);
-            const nCountries = await this.countriesRepo.save(uniqueCountries);
+            await this.regionsRepo.save(uniqueRegions);
+            await this.countriesRepo.save(uniqueCountries);
 
             const geoScope = await this.getGeoScope();
 

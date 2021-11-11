@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, ManyToOne } from 'typeorm'
-import { IsNotEmpty } from 'class-validator'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { Stages } from './Stages';
 import { SubSectionsMeta } from './SubSectionsMeta';
@@ -12,16 +11,16 @@ export class StagesMeta extends UpdatedCreatedAt {
 
     @Column({ length: '500' })
     stage_name: string;
-;
+    ;
     @Column({ length: '250' })
     col_name: string;
-    
+
     @Column({ length: '250' })
     table_name: string;
 
     @Column({ length: '250' })
     display_name: string;
-    
+
     @Column({ length: '250' })
     group_by: string;
 
