@@ -1,5 +1,5 @@
 import { APIError, BaseError } from "../handlers/BaseError";
-import { HttpStatusCode } from "../handlers/Constants";
+import { HttpStatusCode } from "../interfaces/Constants";
 import { getConnection } from "typeorm";
 import axios from 'axios';
 import { config } from 'dotenv';

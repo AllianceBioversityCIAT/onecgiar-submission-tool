@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as stagefull from "../controllers/StageFullProposal";
+import * as stagefull from "../controllers/StageFullProposalController";
 import { checkJwt } from "../middlewares/jwt";
 import { uploadFile } from "../middlewares/multer";
 import { checkRole } from "../middlewares/role";
@@ -454,36 +454,188 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
 
 // upsert melia and files to initiative
 /**
- * @api {patch} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Create and update MELIA
+ * @api {patch} stages-control/proposal/melia/:initiativeId/ MELIA - Create and update MELIA
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchMELIA
  * @apiGroup Proposal
  * 
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2
  * 
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/6.melia/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2
  * 
- * @apiHeader {String} auth
+ * @apiHeader {String} auth Token
  * 
  * @apiParam {Number} initiativeId Id initiative.
- * @apiParam {Number} id identificator MELIA.
- * @apiParam {String} melia_plan description gender melia plan.
- * @apiParam {Boolean} active status.
- * @apiParam {String} section section location.
- * @apiParam {Object} updateFiles file to updtate.
- * @apiParam {File} file template  6.1 RESULT FRAMEWORK AND 6.3 MELIA.
  * 
  * @apiParamExample {json} Request-Example:
  * data: [
- * {   "id":null,
- *     "melia_plan": "new plan",
- *     "active": true,
- *     "section":"result-framework",
- *     "updateFiles":[]
- * }
- * ]
+ *    {
+ *        "id": null,
+ *        "melia_plan": "new plan",
+ *        "active": true,
+ *        "result_framework": {
+ *            "result_framework_id":1,
+ *            "active":true,
+ *            "tableA": {
+ *                "impact_area": [
+ *                    {
+ *                        "impact_area_id": 1,
+ *                        "impact_area_name": "Nutrition, health and food security",
+ *                        "active": true,
+ *                        "impact_ara_indicators": [
+ *                            {
+ *                                "impact_indicator_id": 1,
+ *                                "impact_indicator_name": "#people benefiting from relevant CGIAR innovations",
+ *                                "active": true,
+ *                            },
+ *                            {
+ *                                "impact_indicator_id": 2,
+ *                                "impact_indicator_name": "#people meeting minimum dietary energy requirements",
+ *                                "active": true,
+ *                            }
+ *                        ],
+ *                        "global_targets": [
+ *                            {
+ *                                "global_target_id": 1,
+ *                                "global_target_name": "the 3 billion people who do not currently have access to safe and nutritious food.",
+ *                                "active": true,
+ *                            }
+ *                        ],
+ *                        "sdg_targets": [
+ *                            {
+ *                                "sdg_target_id": 1,
+ *                                "sdg_target_code": "1.1",
+ *                                "sdg_target": "By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day",
+ *                                "active": true,
+ *                            }
+ *                        ]
+ *                    }
+ *                ]
+ *            },
+ *            "tableB": {
+ *                "action_area": [
+ *                    {
+ *                        "action_area_id": 1,
+ *                        "action_area_name": "Systems Transformation",
+ *                        "active": true,
+ *                        "action_area_outcomes": [
+ *                            {
+ *                                "outcome_id": 1,
+ *                                "outocome_smo_code": "ST 1",
+ *                                "outcome_statement": "Farmers use technologies or practices that contribute to improved livelihoods, enhance environmental health and biodiversity, are apt in a context of climate change, and sustain natural resources.",
+ *                                "active": true,
+ *                                "outcomes_indicators": [
+ *                                    {
+ *                                        "outcome_indicator_id": 1,
+ *                                        "outocome_indicator_smo_code": "STi 1.1",
+ *                                        "outcome_indicator_statement": "Number of farmers using climate smart practices disaggregated by gender",
+ *                                        "active": true,
+ *                                    }
+ *                                ]
+ *                            }
+ *                        ]
+ *                    }
+ *                ]
+ *            },
+ *            "tableC": {
+ *                "init_wp_out_indicators": [
+ *                    {
+ *                        "init_wp_out_indicators_id": 1,
+ *                        "result_type": "Outcome ",
+ *                        "result": "WP 1  Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm ",
+ *                        "is_global": true,
+ *                        "active": true,
+ *                        "indicators": [
+ *                            {
+ *                                "indicator_id": 1,
+ *                                "indicator_name": "At least 80% user survey responses satisfied or very satisfied ",
+ *                                "unit_messurament": "Qualitative measure of satisfaction ",
+ *                                "active": true,
+ *                            },
+ *                            {
+ *                                "indicator_id": 2,
+ *                                "indicator_name": "No. of external user requests annually by CGIAR genebanks ",
+ *                                "unit_messurament": "Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)  ",
+ *                                "active": true,
+ *                            }
+ *                        ],
+ *                        "geo_scope": {
+ *                            "regions": [
+ *                                {
+ *                                    "id":1,
+ *                                    "active":true,
+ *                                    "region_id":14,
+ *                                    "region_name":"Eastern Africa"
+ * 
+ *                                }
+ *                            ],
+ *                            "countries": [
+ *                                {
+ *                                    "id":1,
+ *                                    "active":true,
+ *                                    "country_id":20,
+ *                                    "country_name":"Andorra"
+ * 
+ *                                }
+ *                            ]
+ *                        },
+ *                        "data_management":[
+ *                            {
+ *                                "id":1,
+ *                                "data_source":"Genebank users",
+ *                                "data_collection":"User surveys",
+ *                                "frequency_data_collection":"Ongoing",
+ *                                "active":true,
+ *                            },
+ *                            {
+ *                                
+ *                                "id":2,
+ *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR. ",
+ *                                "data_collection":"Online reporting tool ",
+ *                                "frequency_data_collection":"Ongoing",
+ *                                "active":true,
+ * 
+ *                            }
+ *                        ],
+ *                        "base_line":[
+ *                            {
+ *                                "id":1,
+ *                                "active":true,
+ *                                "base_line_value":"Customer satisfaction of 80% or higher",
+ *                                "base_line_year":"2017"
+ *                            },
+ *                            {
+ *                                "id":2,
+ *                                "active":true,
+ *                                "base_line_value":"601,811 accessions",
+ *                                "base_line_year":"2020"
+ * 
+ *                            }
+ *                        ],
+ *                        "target":[
+ *                            {
+ *                                "id":1,
+ *                                "active":true,
+ *                                "target_value":"80% or higher",
+ *                                "target_year":"2024"
+ * 
+ *                            },
+ *                            {
+ *                                "id":2,
+ *                                "active":true,
+ *                                "target_value":"650,000",
+ *                                "target_year":"2024"
+ * 
+ *                            }
+ *                        ]
+ *                    }
+ *                ]
+ *            }
+ *        },
+ *    }
+ *   ]
  *  
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -497,30 +649,9 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                 "initvStgId": 35,
  *                 "melia_plan": "test melia 12",
  *                 "active": true
- *             },
- *             "upsertedFile": {
- *                 "id": 75,
- *                 "active": true,
- *                 "meliaId": 5,
- *                 "section": "result_framework",
- *                 "url": "http://localhost:3000/uploads/INIT-12/6.melia/stage-3/1632255132043-depth_scale.xlsx",
- *                 "name": "depth_scale.xlsx",
- *                 "updated_at": "2021-09-21T20:12:12.000Z",
- *                 "created_at": "2021-09-21T20:12:12.000Z"
+ *                 "result_framework":{}
  *             }
- *         },
- *         "files": [
- *             {
- *                 "fieldname": "file",
- *                 "originalname": "depth_scale.xlsx",
- *                 "encoding": "7bit",
- *                 "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
- *                 "destination": "./public/uploads/INIT-12/6.melia/stage-3",
- *                 "filename": "1632255132043-depth_scale.xlsx",
- *                 "path": "public\\uploads\\INIT-12\\6.melia\\stage-3\\1632255132043-depth_scale.xlsx",
- *                 "size": 9192
- *             }
- *         ]
+ *         }
  *     },
  *     "title": "Full Proposal: Patch melia."
  * }
@@ -538,7 +669,7 @@ router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, chec
  * @api {get} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Request MELIA
  * @apiVersion 1.0.2
  * @apiPermission admin
- * @apiName PatchMELIA
+ * @apiName getMELIA
  * @apiGroup Proposal
  * 
  * @apiDescription  Shows MELIA per initiativeId and section

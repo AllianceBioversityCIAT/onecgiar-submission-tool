@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { changePassword, login, validateCGUser } from '../controllers/Auth'
+import { changePassword, login, validateCGUser } from '../controllers/AuthController'
 import { checkJwt } from '../middlewares/jwt'
 
 const router = Router();

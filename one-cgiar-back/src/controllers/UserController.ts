@@ -4,7 +4,7 @@ import { validate, ValidationError } from 'class-validator'
 import { Users } from '../entity/Users'
 import { Roles } from '../entity/Roles';
 import { BaseError } from '../handlers/BaseError';
-import { HttpStatusCode } from '../handlers/Constants';
+import { HttpStatusCode } from '../interfaces/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { InitiativesByUsers } from '../entity/InititativesByUsers';
@@ -19,9 +19,8 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
         return res.json({ data: users, msg: 'Users list' });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new BaseError(
+            new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 error.message,
@@ -50,9 +49,8 @@ export const getUsersByRoles = async (req: Request, res: Response): Promise<Resp
         return res.json({ data: users, msg: 'Users by roles list' });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new BaseError(
+            new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 error.message,
@@ -75,9 +73,8 @@ export const getUser = async (req: Request, res: Response) => {
         res.json({ data: user, msg: 'User data' });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new BaseError(
+            new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 error.message,
@@ -92,7 +89,6 @@ export const getUser = async (req: Request, res: Response) => {
 export const searchUser = async (req: Request, res: Response) => {
     const queryRunner = getConnection().createQueryBuilder();
     const { filter } = req.query;
-    const userRepository = getRepository(Users);
     const sqlQuery = `
                     SELECT
                         id as userId,
@@ -121,9 +117,8 @@ export const searchUser = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User found.', { users: filteredData }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new BaseError(
+            new BaseError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 error.message,
@@ -302,7 +297,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 };
 
-export async function removeUser(req:Request,res:Response){
+export async function removeUser(req: Request, res: Response) {
     const { id } = req.params;
     const userRepository = getRepository(Users);
 
@@ -319,10 +314,10 @@ export async function removeUser(req:Request,res:Response){
             );
         }
         user = await userRepository.delete(user);
-        
-       return res.json(new ResponseHandler('User removed.', { user }));
+
+        return res.json(new ResponseHandler('User removed.', { user }));
     } catch (error) {
         return error
     }
-};
+}
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as stageconcept from "../controllers/StageConcept";
+import * as stageconcept from "../controllers/StageConceptController";
 import { checkJwt } from "../middlewares/jwt";
 import { checkRole } from "../middlewares/role";
 

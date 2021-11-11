@@ -1,8 +1,7 @@
 import _ from "lodash";
-import { InitiativesByStages } from "../../entity/InititativesByStages";
 import { ConceptSections } from "../../interfaces/ConceptSectionsInterface";
 import { BaseError } from "../BaseError";
-import { InitiativeStageHandler } from "../InitiativeStageController";
+import { InitiativeStageHandler } from "../InitiativeStageDomain";
 
 export class ConceptValidation extends InitiativeStageHandler {
 
@@ -162,7 +161,7 @@ export class ConceptValidation extends InitiativeStageHandler {
         //  get current intititve by stage
         const currentInitvStg = await this.initvStgRepo.findOne({ where: { id: this.initvStgId_ }, relations: ['stage', 'initiative'] });
         // get complited / valid sections of stage data
-        const stageDesc = currentInitvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
+        currentInitvStg.stage.description.split(' ').join('_').toLocaleLowerCase();
         const validatedSections = await this.validateSections();
         // validate if any missing section
         const missingSctn = (element) => element == false || element == 0;

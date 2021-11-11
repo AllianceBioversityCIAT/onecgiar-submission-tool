@@ -3,13 +3,10 @@ import { getRepository } from 'typeorm'
 import { InitiativesByStages } from '../entity/InititativesByStages';
 import { Stages } from '../entity/Stages';
 import { BaseError } from '../handlers/BaseError';
-import { ConceptHandler } from '../handlers/ConceptController';
+import { ConceptHandler } from '../handlers/ConceptDomain';
 import { ResponseHandler } from '../handlers/Response';
 
-const host = `${process.env.EXT_HOST}:${process.env.PORT}`;
-
 const currentStage = 'Concept';
-
 
 /**
  * 
@@ -188,9 +185,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params: { conceptId, initvStgId, challenge, results, highlights, objectives }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
@@ -229,7 +226,7 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 //         let upsertedInfo = await concptInfoRepo.save(conceptInf);
 
 
-//         let conceptQuery = ` 
+//         let conceptQuery = `
 //         SELECT
 //             initvStgs.id AS initvStgId,
 //             stage.description AS stageDesc,
@@ -273,9 +270,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params: { initvStgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getWorkPackages = async (req: Request, res: Response) => {
 //     const { initvStgId } = req.params;
@@ -297,7 +294,7 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 //             ) AS validateGeneralInformation,
 //             IF (
 //                 ( SELECT COUNT(id) FROM countries_by_work_packages WHERE wrkPkgId = wp.id ) = 0
-//                 AND 
+//                 AND
 //                 (  SELECT COUNT(id) FROM regions_by_work_packages  WHERE wrkPkgId = wp.id  ) = 0,
 //                 'incomplete',
 //                 'complete'
@@ -307,7 +304,7 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 //                 'incomplete',
 //                 'complete'
 //             ) AS validateProjectionBenefits
-//         FROM work_packages wp 
+//         FROM work_packages wp
 //         WHERE wp.initvStgId =:initvStgId
 //         AND wp.active = 1`
 
@@ -344,9 +341,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params: { wrkPkgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getWorkPackage = async (req: Request, res: Response) => {
 //     const { wrkPkgId } = req.params;
@@ -379,9 +376,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params: { name, results, pathway_content, is_global, initvStgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const createWorkPackage = async (req: Request, res: Response) => {
 //     const { name, results, pathwayContent, isGlobal, acronym, initvStgId } = req.body;
@@ -429,9 +426,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params: { id, name, results, pathway_content, is_global }
-//  * @param res 
+//  * @param res
 //  */
 // export const updateWorkPackage = async (req: Request, res: Response) => {
 //     const { id, name, results, pathwayContent, isGlobal, active, acronym } = req.body;
@@ -478,9 +475,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params: { wrkPkgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getRegionWorkPackage = async (req: Request, res: Response) => {
 
@@ -522,9 +519,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params:  { wrkPkgId, regionId, active }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertRegionWorkPackage = async (req: Request, res: Response) => {
 //     const { wrkPkgId, regionId, active } = req.body;
@@ -586,9 +583,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params:  { wrkPkgId, countryId, active }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertCountryWorkPackage = async (req: Request, res: Response) => {
 //     const { wrkPkgId, countryId, active } = req.body;
@@ -654,9 +651,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params: { wrkPkgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
 //     const { wrkPkgId } = req.params;
@@ -691,9 +688,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params: { id, wrkPkgId, impact_area_indicator_id, impact_area_indicator_name, notes, impact_area_id, impact_area_name }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertProjectedBenefitWorkPackage = async (req: Request, res: Response) => {
 //     const { id, wrkPkgId, impact_area_indicator_id, impact_area_indicator_name, notes, impact_area_id, impact_area_name, active } = req.body;
@@ -755,9 +752,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params: { prjctBnftId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getTimeFramesProjectedBenefit = async (req: Request, res: Response) => {
 //     const { prjctBnftId } = req.params;
@@ -791,9 +788,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params: { id, prjtBenefitId, year, lowScenario, highScenario, active }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertTimeFrameProjectedBenefit = async (req: Request, res: Response) => {
 //     const { id, prjtBenefitId, year, lowScenario, highScenario, active } = req.body;
@@ -873,9 +870,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ initvStgId, narrative }
-//  * @param res 
+//  * @param res
 //  */
 // export const addTOCConcept = async (req: Request, res: Response) => {
 //     const { initvStgId, narrative } = req.body;
@@ -941,9 +938,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ tocId }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertTOCandFile = async (req: Request, res: Response) => {
 //     const { initvStgId, narrative, path } = req.body;
@@ -1009,9 +1006,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ initvStgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getTOCFiles = async (req: Request, res: Response) => {
 //     const { initvStgId } = req.params;
@@ -1049,9 +1046,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ fileId, active, url, name }
-//  * @param res 
+//  * @param res
 //  */
 // export const updateTOCFile = async (req: Request, res: Response) => {
 //     const { id, active, url, name } = req.body;
@@ -1096,9 +1093,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ initvStgId, id, comparative_advantage, key_partners }
-//  * @param res 
+//  * @param res
 //  */
 // export const upsertPartnerships = async (req: Request, res: Response) => {
 //     const { initvStgId, id, comparative_advantage, key_partners } = req.body;
@@ -1154,9 +1151,9 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
 // }
 
 // /**
-//  * 
+//  *
 //  * @param req params:{ initvStgId }
-//  * @param res 
+//  * @param res
 //  */
 // export const getPartnerships = async (req: Request, res: Response) => {
 //     const { initvStgId } = req.params;

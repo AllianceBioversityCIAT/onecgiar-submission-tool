@@ -1,6 +1,4 @@
-import { HttpStatusCode } from "./Constants";
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError'
-import { QueryFailedError } from "typeorm/error/QueryFailedError";
+import { HttpStatusCode } from "../interfaces/Constants";
 import { logger } from "./Logger";
 
 class BaseError extends Error {

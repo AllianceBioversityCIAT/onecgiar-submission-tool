@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express'
 import { getRepository } from 'typeorm';
 import { InitiativesByStages } from '../entity/InititativesByStages';
 const multer = require("multer");
@@ -7,7 +6,6 @@ const mkdirp = require('mkdirp')
 
 
 // const pth = require('path').resolve(process.cwd(), '../');
-import pth from 'path';
 const parentD = `./public/uploads`;
 
 
@@ -62,11 +60,12 @@ var storage = multer.diskStorage({
 
 export let uploadFile = multer({ storage: storage });
 
-const validateSubFolder = async (body: object) => {
+async (body: object) => {
     const initvStgRepo = getRepository(InitiativesByStages);
     let finalPath, _path;
     try {
-        if (body.hasOwnProperty('initvStgId')) {
+        // if (body.hasOwnProperty('initvStgId')) {
+            if (Object.prototype.hasOwnProperty.call(body, 'initvStgId')) {
             const initvStg = await initvStgRepo.findOne(body['initvStgId'], { relations: ['initiative', 'stage'] });
             _path = `${new Date().getFullYear()}/initiatives/${initvStg.initiative.id}/${initvStg.stage.description.split(' ').join('-').toLowerCase()}/${body['section']}/${body['id']}`;
         } else {

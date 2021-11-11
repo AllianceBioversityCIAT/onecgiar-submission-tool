@@ -3,11 +3,9 @@ import { getRepository, In, QueryFailedError } from 'typeorm'
 import { validate } from 'class-validator'
 import { Roles } from '../entity/Roles'
 import { Permissions } from '../entity/Permissions'
-import { Users } from '../entity/Users'
-import { accessCtrl } from '../middlewares/access-control'
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError'
 import { APIError } from '../handlers/BaseError'
-import { HttpStatusCode } from '../handlers/Constants'
+import { HttpStatusCode } from '../interfaces/Constants'
 
 export const getAllRoles = async (req: Request, res: Response) => {
     const rolesRepository = getRepository(Roles);
@@ -19,9 +17,8 @@ export const getAllRoles = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -68,9 +65,8 @@ export const createRole = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -105,9 +101,8 @@ export const editRole = async (req: Request, res: Response) => {
         res.status(201).json({ msg: 'Role update', data: updatedRole });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -123,17 +118,16 @@ export const deleteRole = async (req: Request, res: Response) => {
     //Get the ID from the url
     const { id } = req.params;
     const rolesRepository = getRepository(Roles);
-    let role: Roles;
+    
     try {
-        role = await rolesRepository.findOne(id);
+        await rolesRepository.findOne(id);
         rolesRepository.delete(id);
         //After all send a 204 (no content, but accepted) response
         res.status(200).json({ msg: "Role deleted" });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -188,9 +182,8 @@ export const createPermission = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -212,9 +205,8 @@ export const getAllPermissions = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,

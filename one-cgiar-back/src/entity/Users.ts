@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import { IsNotEmpty, IsEmail } from 'class-validator'
 import * as bcrypt from 'bcryptjs';
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
@@ -29,7 +29,7 @@ export class Users extends UpdatedCreatedAt {
 
     @Column({ default: false })
     is_cgiar: boolean;
-
+    // eslint-disable-next-line
     @ManyToMany(type => Roles)
     @JoinTable({
         name: "roles_by_users", // table name for the junction table of this relation
@@ -44,13 +44,13 @@ export class Users extends UpdatedCreatedAt {
     })
     roles: Roles[];
 
-    @Column({ type: 'timestamp'})
+    @Column({ type: 'timestamp' })
     last_login: Date
-    
-    @Column({ type: 'tinyint'})
+
+    @Column({ type: 'tinyint' })
     is_active: boolean
-    
-    @Column({ type: 'timestamp'})
+
+    @Column({ type: 'timestamp' })
     active_since: boolean
 
 

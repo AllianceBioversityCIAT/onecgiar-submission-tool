@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MetaDataHandler } from '../handlers/MetaDataHandler';
+import { MetaDataHandler } from '../handlers/MetaDataDomain';
 import { ResponseHandler } from '../handlers/Response';
 import { getRepository } from 'typeorm';
 import { InitiativesByStages } from '../entity/InititativesByStages';

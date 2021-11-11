@@ -1,5 +1,5 @@
 import { BaseError } from "./BaseError";
-import { InitiativeStageHandler } from "./InitiativeStageController";
+import { InitiativeStageHandler } from "./InitiativeStageDomain";
 
 export class MetaDataHandler extends InitiativeStageHandler {
 
@@ -7,7 +7,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
    * RETURN METADATA
    * STAGES,SECTIONS,SUBSECTIONS AND STAGE_META
    */
-
 
 
   public get value(): string {
@@ -205,7 +204,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
 
     try {
-
+      /* eslint-disable */
       let validationGISQL = (
         `
    SELECT sec.id as sectionId,sec.description, 
@@ -974,8 +973,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationImpactStrategies() {
 
-    var dataSubsections = [];
-
     try {
 
       // 5 impact strategies
@@ -1102,7 +1099,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       })
 
       impactStrategies.map(imps => {
-        imps['subSections'] =[
+        imps['subSections'] = [
           validateImpactSubsections.find(imp => {
 
             return (imp.sectionId = imp.sectionId)
@@ -1136,16 +1133,16 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
 
       if (allWorkPackages.length > 0) {
-        
-      // Get Work packages per initiative
-      for (let index = 0; index < allWorkPackages.length; index++) {
 
-        const wpId = allWorkPackages[index].id;
+        // Get Work packages per initiative
+        for (let index = 0; index < allWorkPackages.length; index++) {
 
-        var multi = 1;
+          const wpId = allWorkPackages[index].id;
 
-        let validationWPSQL = (
-          `
+          var multi = 1;
+
+          let validationWPSQL = (
+            `
           SELECT sec.id as sectionId,sec.description, 
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
@@ -1174,23 +1171,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.stageId= ini.stageId
           AND sec.description='work-package-research-plans-and-tocs';
           `
-        )
+          )
 
-        var workPackage = await this.queryRunner.query(validationWPSQL);
+          var workPackage = await this.queryRunner.query(validationWPSQL);
 
-        workPackage[0].validation = parseInt(workPackage[0].validation)
+          workPackage[0].validation = parseInt(workPackage[0].validation)
 
-        multi = multi * workPackage[0].validation;
+          multi = multi * workPackage[0].validation;
 
-        workPackage[0].validation = multi;
+          workPackage[0].validation = multi;
+
+        }
+
+      } else {
+
+        workPackage = []
 
       }
-
-    }else{
-
-      workPackage = []
-
-    }
 
 
       return workPackage[0]
@@ -1388,18 +1385,18 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   }
 
-  async validationsProjectionBenefits(){
+  async validationsProjectionBenefits() {
 
     try {
 
-            // 5 impact strategies
-            for (let index = 1; index < 6; index++) {
+      // 5 impact strategies
+      for (let index = 1; index < 6; index++) {
 
-              var multi = 1;
-      
-              // Validate Sections
-              let validationProjectionBenefitsSQL = (
-                `
+        var multi = 1;
+
+        // Validate Sections
+        let validationProjectionBenefitsSQL = (
+          `
                 SELECT sec.id as sectionId,sec.description, 
                 CASE
 				 WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 1
@@ -1427,25 +1424,25 @@ export class MetaDataHandler extends InitiativeStageHandler {
                 AND sec.stageId= ini.stageId
                 AND sec.description='context'
                 `
-              )
-      
-              var validationProjectionBenefits = await this.queryRunner.query(validationProjectionBenefitsSQL);
-      
-              validationProjectionBenefits[0].validation = parseInt(validationProjectionBenefits[0].validation)
-      
-              multi = multi * validationProjectionBenefits[0].validation;
-      
-              validationProjectionBenefits[0].validation = multi;
-      
-            }
+        )
 
-            return validationProjectionBenefits[0]
+        var validationProjectionBenefits = await this.queryRunner.query(validationProjectionBenefitsSQL);
 
-      
+        validationProjectionBenefits[0].validation = parseInt(validationProjectionBenefits[0].validation)
+
+        multi = multi * validationProjectionBenefits[0].validation;
+
+        validationProjectionBenefits[0].validation = multi;
+
+      }
+
+      return validationProjectionBenefits[0]
+
+
     } catch (error) {
 
       throw new BaseError('Get validations projection benefits sections', 400, error.message, false)
-      
+
     }
 
 

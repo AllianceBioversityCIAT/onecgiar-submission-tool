@@ -12,18 +12,14 @@ import { StagesMeta } from '../entity/StagesMeta';
 import { TOCs } from '../entity/TOCs';
 import { Users } from '../entity/Users';
 import { APIError, BaseError } from '../handlers/BaseError';
-import { HttpStatusCode } from '../handlers/Constants';
+import { HttpStatusCode } from '../interfaces/Constants';
 import { ResponseHandler } from '../handlers/Response';
 import { forwardStage, validatedSection } from '../utils/section-validation';
 import * as clarisa from './Clarisa';
-
-import _, { initial } from "lodash";
-import { InitiativeStageHandler } from '../handlers/InitiativeStageController';
-import { CountriesByInitiativeByStage } from '../entity/CountriesByInitiativeByStage';
-import { RegionsByInitiativeByStage } from '../entity/RegionsByInitiativeByStage';
-import { InitiativeHandler } from '../handlers/InitiativesHandler';
-import { ProposalHandler } from '../handlers/FullProposalController';
-import { ConceptHandler } from '../handlers/ConceptController';
+import { InitiativeStageHandler } from '../handlers/InitiativeStageDomain';
+import { InitiativeHandler } from '../handlers/InitiativesDomain';
+import { ProposalHandler } from '../handlers/FullProposalDomain';
+import { ConceptHandler } from '../handlers/ConceptDomain';
 
 
 require('dotenv').config();
@@ -49,8 +45,6 @@ export const getSummary = async (req: Request, res: Response) => {
 
     const queryRunner = getConnection().createQueryRunner().connection;
     const initvStgRepo = getRepository(InitiativesByStages);
-    const countriesInitvStgRepo = getRepository(CountriesByInitiativeByStage);
-    const regionsInitvStgRepo = getRepository(RegionsByInitiativeByStage);
     const stageRepo = getRepository(Stages);
 
     try {
@@ -204,7 +198,6 @@ export const upsertSummary = async (req: Request, res: Response) => {
 export const replicationProcess = async (req: Request, res: Response) => {
     const { currentInitiativeId } = req.params;
     const { replicationStageId } = req.body;
-    const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
 
     try {
@@ -217,9 +210,8 @@ export const replicationProcess = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Replication data', fordwarded));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -477,9 +469,8 @@ export async function getInitiatives(req: Request, res: Response) {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -557,9 +548,8 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -607,9 +597,8 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('User roles by Initiative.', { roles }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -633,9 +622,8 @@ export const getUsersByInitiative = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Users by Initiative.', { users }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -666,8 +654,8 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         const initiative = await initiativesRepo.findOne(initiativeId);
 
         const role = await rolesRepo.findOne(roleId);
-        const leadRole = await rolesRepo.findOne({ where: { acronym: 'SGD' } });
-        const coLeadRole = await rolesRepo.findOne({ where: { acronym: 'PI' } });
+        await rolesRepo.findOne({ where: { acronym: 'SGD' } });
+        await rolesRepo.findOne({ where: { acronym: 'PI' } });
         const coordinatorRole = await rolesRepo.findOne({ where: { acronym: 'CO' } });
 
         if (role.acronym == 'ADM') {
@@ -731,9 +719,8 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -787,10 +774,10 @@ export const createInitiative = async (req: Request, res: Response) => {
                 let sltdStage = await stageRepository.findOne(current_stage);
                 newInitStg.initiative = createdInitiative;
                 newInitStg.stage = sltdStage;
-                let result = await initiativesByStagesRepository.save(newInitStg);
+                await initiativesByStagesRepository.save(newInitStg);
             }
 
-            let createdIniByUsr = await initiativesByUsersRepository.save(initByUsr);
+            await initiativesByUsersRepository.save(initByUsr);
             res.json({ msg: 'Initiative created', data: { createdInitiative, initiative_by_stage: newInitStg } });
         }
         else
@@ -798,9 +785,8 @@ export const createInitiative = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -828,9 +814,8 @@ export const getStage = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages.', { stages, stagesMeta }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -864,8 +849,8 @@ export const getStageMeta = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Stages meta.', { stagesMeta, validatedSections }));
     } catch (error) {
         console.log(error);
-        error = new BaseError('Get stages meta - sections.', error.status || 400, error.message, false);
-        return res.status(error.httpCode).json(error);
+        const err = new BaseError('Get stages meta - sections.', error.status || 400, error.message, false);
+        return res.status(err.httpCode).json(err);
     }
 }
 
@@ -893,9 +878,8 @@ export const createStage = async (req: Request, res: Response) => {
         res.json({ msg: 'Stage created', data: createdStage });
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -955,9 +939,8 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
         }
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -970,7 +953,7 @@ export const assignStageToInitiative = async (req: Request, res: Response) => {
 }
 
 export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
-    const { url, initvStgId, narrative } = req.body;
+    const { initvStgId, narrative } = req.body;
     const initvStgRepo = getRepository(InitiativesByStages);
     const TOCsRepo = getRepository(TOCs);
 
@@ -992,9 +975,8 @@ export const assignTOCsByInitvStg = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -1027,9 +1009,8 @@ export async function getDepthScale(req: Request, res: Response) {
     } catch (error) {
 
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -1060,9 +1041,8 @@ export async function getDepthDescription(req: Request, res: Response) {
 
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -1133,9 +1113,8 @@ export const getActionAreas = async (req: Request, res: Response) => {
         res.json(new ResponseHandler('Action areas.', { actionAreas }));
     } catch (error) {
         console.log(error);
-        let e = error;
         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            e = new APIError(
+            new APIError(
                 'Bad Request',
                 HttpStatusCode.BAD_REQUEST,
                 true,
@@ -1404,15 +1383,18 @@ export async function getActionAreasOutcomesIndicators(req: Request, res: Respon
 
 function getRepoConstStage(tableName: string) {
     switch (tableName) {
-        case 'pre_concept':
+        case 'pre_concept': {
             return null;
             break;
-        case 'concept':
+        }
+        case 'concept': {
             return new Narratives();
             break;
-        case 'full_proposal':
+        }
+        case 'full_proposal': {
             return null;
             break;
+        }
 
         default:
             break;

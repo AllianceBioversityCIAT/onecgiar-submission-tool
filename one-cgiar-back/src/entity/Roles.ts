@@ -1,7 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Unique } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
-
 
 @Entity()
 @Unique(['acronym', 'name'])
@@ -20,7 +19,5 @@ export class Roles extends UpdatedCreatedAt {
     @Column()
     @IsNotEmpty({ message: 'Acronym is required' })
     description: string
-
-
 
 }
