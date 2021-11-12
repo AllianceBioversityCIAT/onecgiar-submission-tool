@@ -106,7 +106,7 @@ export class PreviewsDomain {
 
             )
 
-            return impactAreas;
+            return {"impactAreas":impactAreas};
 
         } catch (error) {
 
