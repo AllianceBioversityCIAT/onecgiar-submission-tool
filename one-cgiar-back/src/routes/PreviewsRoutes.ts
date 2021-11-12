@@ -17,7 +17,7 @@ const router = Router();
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} stages-control/proposal/preview-partners/:initiativeId Proposal - Request Partners per Initiative
+ * @api {get} previews/preview-partners/:initiativeId/stageId Proposal - Request Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
@@ -26,9 +26,9 @@ const router = Router();
  * @apiDescription  Shows Preview Partners per Initiative
  * 
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1
+ * https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
  * 
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/preview-partners/1
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
  *
  * @apiHeader {String} auth
  * 
@@ -68,5 +68,11 @@ const router = Router();
  *     { message: "Get Preview Partners: Full proposal", error }
  */
  router.get("/preview-partners/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], previewController.getPreviewPartners);
+
+ /**
+  * GET PREVIEW PROJECTED BENEFITS
+  */
+
+  router.get("/preview-projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], previewController.getPreviewProjectedBenefits);
 
 export default router;
