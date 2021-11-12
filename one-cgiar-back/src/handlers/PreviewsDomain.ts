@@ -62,7 +62,8 @@ export class PreviewsDomain {
             SELECT p.id,p.impact_area_id,p.impact_area_name
               FROM projection_benefits p
              WHERE p.initvStgId = ${initiativeId}
-               AND p.active > 0;   
+               AND p.active > 0
+             ORDER BY p.impact_area_id asc;   
             `),
                 impactIndicatorQuery = (`
                 SELECT p.id,p.impact_area_indicator_id,p.impact_area_indicator_name,
