@@ -42,7 +42,7 @@ export class PreviewsDomain {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Get Preview Partners: Full proposal', 400, error.message, false)
+            throw new BaseError('Get Preview Partners: Previews General', 400, error.message, false)
 
         }
 
@@ -66,23 +66,6 @@ export class PreviewsDomain {
              WHERE p.initvStgId = ${initiativeId}
                AND p.active > 0;   
             `),
-                impactIndicatorsQuery = (
-                    `
-                SELECT p.id,p.impact_area_indicator_id,p.impact_area_indicator_name,
-                       p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
-                  FROM projection_benefits p
-                 WHERE p.initvStgId = ${initiativeId}
-                   AND p.active > 0;
-                `
-                ),
-                depthScaleProbabilityQuery = (
-                    `
-                SELECT p.id,p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
-                  FROM projection_benefits p
-                 WHERE p.initvStgId = ${initiativeId}
-                   AND p.active > 0;
-                `
-                ),
                 dimensionsQuery = (
                     `
                 SELECT d.projectionId,d.depth_description,breadth_value
@@ -95,19 +78,7 @@ export class PreviewsDomain {
                 )
 
             const impactAreas = await this.queryRunner.query(impactAreasQuery);
-            const impactIndicators = await this.queryRunner.query(impactIndicatorsQuery);
-            const depthScaleProbability = await this.queryRunner.query(depthScaleProbabilityQuery);
             const dimensions = await this.queryRunner.query(dimensionsQuery);
-
-            // impactIndicators.map(ii=>
-
-            //     ii['dimensions']=[
-            //         dimensions.find(dim=>{
-            //             return (ii.id = dim.projectionId)
-            //         })
-            //     ]
-
-            //     )
 
             impactAreas.map(ia =>
 
@@ -124,7 +95,7 @@ export class PreviewsDomain {
         } catch (error) {
 
             console.log(error)
-            throw new BaseError('Get Preview Projected Benefits: Full proposal', 400, error.message, false)
+            throw new BaseError('Get Preview Projected Benefits: Previews General', 400, error.message, false)
 
         }
 

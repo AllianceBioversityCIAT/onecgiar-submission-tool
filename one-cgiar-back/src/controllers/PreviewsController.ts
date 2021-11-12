@@ -81,7 +81,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
 
         const previewProjectedBenefits = await previewsdomain.requestPreviewProjectedBenefits(initvStg.id.toString());
 
-        res.json(new ResponseHandler('Full Proposal:Preview Partners', { previewProjectedBenefits }));
+        res.json(new ResponseHandler('Full Proposal:Preview Projected Benefits', { previewProjectedBenefits }));
 
 
     } catch (error) {

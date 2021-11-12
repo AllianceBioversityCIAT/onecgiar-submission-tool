@@ -1317,7 +1317,7 @@
   {
     "type": "get",
     "url": "previews/preview-partners/:initiativeId/stageId",
-    "title": "Proposal - Request Partners per Initiative",
+    "title": "Previews - Request Partners per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1368,14 +1368,83 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: Get Preview Partners: Full proposal</p>"
+            "description": "<p>: Get Preview Partners: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Full proposal\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
+    "url": "previews/preview-projected-benefits/:initiativeId/stageId",
+    "title": "Previews - Request Projected benefits per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewProjectedBenefits",
+    "group": "Previews",
+    "description": "<p>Shows Preview Projected benefits per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewProjectedBenefits\": [\n            {\n                \"id\": 778,\n                \"impact_area_id\": 1,\n                \"impact_area_name\": \"Nutrition, health and food security\",\n                \"impact_area_indicator_id\": 4,\n                \"impact_area_indicator_name\": \"#cases communicable and noncommunicable diseases\",\n                \"depth_scale_id\": 2,\n                \"probability_id\": 2,\n                \"depth_scale_name\": null,\n                \"probability_name\": null,\n                \"dimensions\": [\n                    [\n                        {\n                            \"projectionId\": 778,\n                            \"depth_description\": \"Life saving\",\n                            \"breadth_value\": \"100.00\"\n                        }\n                    ]\n                ]\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Preview Projected Benefits: Previews General</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Projected Benefits: Previews General\", error }",
           "type": "json"
         }
       ]
