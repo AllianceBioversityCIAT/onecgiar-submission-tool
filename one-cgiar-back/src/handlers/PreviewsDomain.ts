@@ -49,40 +49,42 @@ export class PreviewsDomain {
     }
 
 
-     /**
-     * REQUEST PREVIEW PROJECTED BENEFITS
-     * @param initiativeId 
-     * @returns previewProjectedBenefits
-     */
-      async requestPreviewProjectedBenefits(initiativeId: string) {
+    /**
+    * REQUEST PREVIEW PROJECTED BENEFITS
+    * @param initiativeId 
+    * @returns previewProjectedBenefits
+    */
+    async requestPreviewProjectedBenefits(initiativeId: string) {
 
         try {
             // retrieve preview projected benefits
             const impactAreasQuery = (`
-            SELECT p.id,p.impact_area_id,p.impact_area_name
+            SELECT p.id,p.impact_area_id,p.impact_area_name,
+                   p.impact_area_indicator_id,p.impact_area_indicator_name,
+                   p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
               FROM projection_benefits p
              WHERE p.initvStgId = ${initiativeId}
                AND p.active > 0;   
             `),
-            impactIndicatorsQuery=(
-                `
+                impactIndicatorsQuery = (
+                    `
                 SELECT p.id,p.impact_area_indicator_id,p.impact_area_indicator_name,
                        p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
                   FROM projection_benefits p
                  WHERE p.initvStgId = ${initiativeId}
                    AND p.active > 0;
                 `
-            ),
-            depthScaleProbabilityQuery=(
-                `
+                ),
+                depthScaleProbabilityQuery = (
+                    `
                 SELECT p.id,p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
                   FROM projection_benefits p
                  WHERE p.initvStgId = ${initiativeId}
                    AND p.active > 0;
                 `
-            ),
-            dimensionsQuery = (
-                `
+                ),
+                dimensionsQuery = (
+                    `
                 SELECT d.projectionId,d.depth_description,breadth_value
                 FROM dimensions d
                WHERE d.projectionId in (SELECT p.id
@@ -90,32 +92,32 @@ export class PreviewsDomain {
               WHERE p.initvStgId = ${initiativeId})
                 AND d.active > 0
                 `
-            )
+                )
 
             const impactAreas = await this.queryRunner.query(impactAreasQuery);
             const impactIndicators = await this.queryRunner.query(impactIndicatorsQuery);
             const depthScaleProbability = await this.queryRunner.query(depthScaleProbabilityQuery);
             const dimensions = await this.queryRunner.query(dimensionsQuery);
 
-            impactIndicators.map(ii=>
-                
-                ii['dimensions']=[
-                    dimensions.find(dim=>{
-                        return (ii.id = dim.projectionId)
+            // impactIndicators.map(ii=>
+
+            //     ii['dimensions']=[
+            //         dimensions.find(dim=>{
+            //             return (ii.id = dim.projectionId)
+            //         })
+            //     ]
+
+            //     )
+
+            impactAreas.map(ia =>
+
+                ia['dimensions'] = [
+                    dimensions.filter(dim => {
+                        return (ia.id === dim.projectionId)
                     })
                 ]
 
-                )
-
-            impactAreas.map(ia=>
-                
-                ia['impactIndicatorName'] = [
-                    impactIndicators.find(ii=>{
-                        return (ia.id = ii.id)
-                    })
-                ]
-
-                )
+            )
 
             return impactAreas;
 
