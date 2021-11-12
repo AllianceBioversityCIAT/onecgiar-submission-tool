@@ -59,13 +59,18 @@ export class PreviewsDomain {
         try {
             // retrieve preview projected benefits
             const impactAreasQuery = (`
-            SELECT p.id,p.impact_area_id,p.impact_area_name,
-                   p.impact_area_indicator_id,p.impact_area_indicator_name,
-                   p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
+            SELECT p.id,p.impact_area_id,p.impact_area_name
               FROM projection_benefits p
              WHERE p.initvStgId = ${initiativeId}
                AND p.active > 0;   
             `),
+                impactIndicatorQuery = (`
+                SELECT p.id,p.impact_area_indicator_id,p.impact_area_indicator_name,
+                       p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
+                  FROM projection_benefits p
+                 WHERE p.initvStgId = ${initiativeId}
+                   AND p.active > 0;
+                `),
                 dimensionsQuery = (
                     `
                 SELECT d.projectionId,d.depth_description,breadth_value
@@ -78,13 +83,24 @@ export class PreviewsDomain {
                 )
 
             const impactAreas = await this.queryRunner.query(impactAreasQuery);
+            const impactIndicators = await this.queryRunner.query(impactIndicatorQuery);
             const dimensions = await this.queryRunner.query(dimensionsQuery);
+
+            impactIndicators.map(ii =>
+
+                ii['dimensions'] = [
+                    dimensions.filter(dim => {
+                        return (ii.id === dim.projectionId)
+                    })
+                ]
+
+            )
 
             impactAreas.map(ia =>
 
-                ia['dimensions'] = [
-                    dimensions.filter(dim => {
-                        return (ia.id === dim.projectionId)
+                ia['impactIndicators'] = [
+                    impactIndicators.filter(ii => {
+                        return (ia.id === ii.id)
                     })
                 ]
 
