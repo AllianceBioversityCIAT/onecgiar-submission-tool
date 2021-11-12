@@ -73,9 +73,9 @@ export class PreviewsDomain {
                 `),
                 dimensionsQuery = (
                     `
-                SELECT d.projectionId,d.depth_description,breadth_value
-                FROM dimensions d
-               WHERE d.projectionId in (SELECT p.id
+             SELECT d.projectionId,d.depth_description,breadth_value
+               FROM dimensions d
+              WHERE d.projectionId in (SELECT p.id
                FROM projection_benefits p
               WHERE p.initvStgId = ${initiativeId})
                 AND d.active > 0
@@ -88,25 +88,21 @@ export class PreviewsDomain {
 
             impactIndicators.map(ii =>
 
-                ii['dimensions'] = [
-                    dimensions.filter(dim => {
-                        return (ii.id === dim.projectionId)
-                    })
-                ]
-
+                ii['dimensions'] =
+                dimensions.filter(dim => {
+                    return (ii.id === dim.projectionId)
+                })
             )
 
             impactAreas.map(ia =>
 
-                ia['impactIndicators'] = [
-                    impactIndicators.filter(ii => {
-                        return (ia.id === ii.id)
-                    })
-                ]
-
+                ia['impactIndicators'] =
+                impactIndicators.find(ii => {
+                    return (ia.id === ii.id)
+                })
             )
 
-            return {"impactAreas":impactAreas};
+            return { "impactAreas": impactAreas };
 
         } catch (error) {
 
