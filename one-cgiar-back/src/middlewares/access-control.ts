@@ -1,11 +1,8 @@
-import { createQueryBuilder, getConnection, getRepository, In } from "typeorm";
-import { Permissions } from "../entity/Permissions";
+import { getConnection, getRepository } from "typeorm";
 import { Roles } from "../entity/Roles";
 import { AccessControl } from 'accesscontrol';
-import { stringify } from "querystring";
 
 export const accessCtrl = new AccessControl();
-
 
 const getPermissions = async () => {
     const rolesRepository = getRepository(Roles);
@@ -29,7 +26,7 @@ const getPermissions = async () => {
         WHERE
             per_rol.role_id IN (${rolesIds});
     `;
-    if(rolesIds.length > 0){
+    if (rolesIds.length > 0) {
         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
             permissionSQL,
             {},
@@ -37,8 +34,8 @@ const getPermissions = async () => {
         );
         let permissions = await queryRunner.connection.query(query, parameters);
         return permissions;
-    }else{
-        return[]
+    } else {
+        return []
     }
 }
 

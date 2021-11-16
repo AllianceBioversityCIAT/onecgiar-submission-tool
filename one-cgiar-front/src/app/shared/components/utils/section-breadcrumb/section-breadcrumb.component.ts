@@ -62,11 +62,11 @@ export class SectionBreadcrumbComponent implements OnInit {
           }
 
           if (this.sectionsArray[3]) {
-            getSubSectionName = getSectionName.subsections.find(item=>item.description == this.sectionsArray[3]);
-            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSubSectionName.display_name});
+            getSubSectionName = getSectionName?.subsections.find(item=>item.description == this.sectionsArray[3]);
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSubSectionName?.display_name});
           }
 
-          if (this.sectionsArray[4]) {
+    if (this.sectionsArray[4]) {
             this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:this.sectionsArray[4]});
           }
 

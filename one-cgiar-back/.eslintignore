@@ -4,3 +4,5 @@ coverage/
 docs/
 logs/
 src/migration/
+src/test/
+src/handlers/Response.ts

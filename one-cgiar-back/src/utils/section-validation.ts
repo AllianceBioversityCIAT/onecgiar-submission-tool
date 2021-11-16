@@ -1,8 +1,7 @@
-import _ from "lodash";
 import { getRepository } from "typeorm";
 import { Stages } from "../entity/Stages";
 import { BaseError } from "../handlers/BaseError";
-import { ConceptHandler } from "../handlers/ConceptController";
+import { ConceptHandler } from "../handlers/ConceptDomain";
 /**
  * 
  * @param initvStgId 
@@ -13,16 +12,18 @@ export const validatedSection = async (initvStgId: number, stageDescription: str
     let validatedSection: any;
 
     switch (stageDescription) {
-        case 'concept':
+        case 'concept': {
             // concept handler object 
             const conceptObj = new ConceptHandler(initvStgId.toString());
             const sectionsValidated = await conceptObj.validateSections();
             validatedSection = sectionsValidated;
             break;
+        }
 
-        default:
+        default: {
             throw new BaseError('validatedSection', 400, 'Stage not available', false);
-            break;
+
+        }
     }
 
     return validatedSection;
@@ -35,14 +36,14 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
     try {
 
         switch (replicationStagDsc) {
-            case 'full_proposal':
+            case 'full_proposal': {
                 const currentStage = await stagesRepo.findOne({ where: { description: 'Concept' } })
                 // concept handler object 
 
                 const conceptObj = new ConceptHandler(null, currentStage.id.toString(), currentInitiativeId);
-                const initvStg = await conceptObj.setInitvStage();
+                await conceptObj.setInitvStage();
                 const isComplete = await conceptObj.validateCompletness();
-                
+
                 // if missing concept data, throw error 
                 if (isComplete) {
                     // get full proposal data
@@ -51,6 +52,7 @@ export const forwardStage = async (replicationStagDsc: string, currentInitiative
                 } else
                     throw new BaseError('Replication Process', 404, 'Incomplete concept', false);
                 break;
+            }
 
             default:
                 break;

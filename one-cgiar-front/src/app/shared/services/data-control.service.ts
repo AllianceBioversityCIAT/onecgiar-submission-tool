@@ -38,6 +38,5 @@ export class DataControlService {
   fieldAsteriskInfo = 'The fields that are marked with a red asterisk (<strong class="alert_text_red">*</strong>) are mandatory';
   incompleteFieldsText = 'Please validate the fields marked with a red asterisk that are pending to be completed';
   provideDocumentText = 'Provide link to any additional support document(s)';
-  
   constructor() { }
 }

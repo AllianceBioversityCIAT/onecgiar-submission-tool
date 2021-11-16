@@ -22,19 +22,71 @@
     color: #85e788  !important;
 }
 
+.activeSection_dynamicList{
+    border-color: #469e49  !important;
+    color: var(--ibdc-secondary-color)  !important; 
+}
+
 .submitButtonInitiative{
     width:100%;
     display: flex;
     justify-content: center;
 }
 
+
+@media only screen and (max-width: 1000px) {
+    .menu{
+        background-color: #000000cc;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1000px) {
+    .menu{
+        background-color: #00000063;
+    }
+}
+
+
+@media only screen and (max-width: 1300px) {
+    .right_container{
+        padding: 5px 10px 0px;
+    }
+    .menu{
+        padding: 50px 10px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1300px) {
+
+    .right_container{
+        padding: 10px 40px 0px; 
+    }
+    .menu{
+        padding: 50px 15px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1550px) {
+
+    .right_container{
+        padding: 10px 40px 0px; 
+    }
+    .menu{
+        padding: 50px 25px;
+    }
+}
+
+
+
+
 .menu{
-    padding: 50px 25px;
     width: 400px;
     height: calc(100vh - 120px);
     max-height: calc(100vh - 120px);
-    overflow-y: scroll;
-    background-color: #00000063;
+    overflow-y: scroll;    
     color: white;
     // backdrop-filter: blur(3px);
 
@@ -111,99 +163,121 @@
                 transition: all ease .3s;
                 position: relative;
                 display: flex;
-                // &:hover{
+                transition: all ease .3s;
+                color: white;
+                .stage-section-title{
+                    border-bottom: 2px solid #85e788; 
+                    border-radius: 1px;
                     transition: all ease .3s;
-                    color: white;
-                    // .number{
-                        // transition: all ease .3s;
-                        // border: 2.9px #85e788  solid;
-                        // background-color: #85e788;
-                        // color: rgb(41, 41, 41);
-                    // }
-                    .stage-section-title{
-                        border-bottom: 2px solid #85e788; 
-                        border-radius: 1px;
-                        transition: all ease .3s;
-                    }
-                // }
-                // .stage-section-title{
-                //     text-decoration: none;
-                //     transition: all ease .3s;
-                //     border-bottom: 2px solid rgba(0, 0, 0, 0);
-                //     // margin-right: 100px !important;     
-                // }
+                }
                 .number{
-                    // transition: all ease .3s;
-                    // background-color: rgba(255, 255, 255, 0);
                     position: relative;
                     top: -5px;
-                    // left: -40px;
                     min-width: 30px;
                     width: 30px;
                     height: 30px;
                     border-radius: 30px;
                     border: 2.9px #85e788 solid;
-                    // display: flex;
                     text-align: center;
                     vertical-align: middle;
                     padding-top: 2px;
                     margin-right: 10px;
                     background-color: #85e788;
-                    color: rgb(41, 41, 41);
+                    color: #292929;
                 }
 
             }
 
             .sub-sections{
                 padding-top: 10px;
-                // border: solid 1px white;
-                // padding: 5px;
-                // border-radius: 10px;
                 overflow: hidden;
                 .sub-section{
                     position: relative;
                     backdrop-filter: blur(3px);
-                    background-color: #30303088;
-                    // color: rgb(104, 104, 104);
+                    background-color: #5c5c5c5d;
+                    margin-bottom: 15px;
+                    padding: 7px 7px 7px 10px;
+                    border-radius: 5px;
+                    border-bottom: 1px solid rgb(168, 168, 168);
+                    padding-right: 2.5em;
+                }
+
+                .sub-section-with-dynamicList{
+                    position: relative;
+                    backdrop-filter: blur(3px);
+                    background-color: #5c5c5c5d;
                     margin-bottom: 10px;
                     padding: 5px 5px 5px 10px;
                     border-radius: 5px;
                     border-bottom: 1px solid rgb(168, 168, 168);
                     padding-right: 2.5em;
                 }
+                
 
-                .dynamicList{
-                    // border: 0px 1px 1px 1px solid rgb(119, 119, 119);
-                    border-left: 1px solid rgb(119, 119, 119);
-                    border-right: 1px solid rgb(119, 119, 119);
-                    border-bottom: 1px solid rgb(119, 119, 119);
-                    border-radius: 0px 0px 10px 10px;
-                    padding: 15px 0px 10px 10px;
+                .dynamicList_block_container{
+                    padding: 2px 0px 10px 10px;
                     position: relative;
-                    top:  -11px;
-                    .dynamicListButton{
+                    border-radius: 0px 0px 5px 5px;
+                    .left_line{
+                        position: absolute;
+                        left: 3px;
+                        width: 6px;
+                        height: calc(100% - 23px);
+                        background-color: #7a78785d;
+                        border-radius: 5px;
+                    }
+                    .order_first{
+                        background-color: rgba(5, 77, 96, 0.49);
+                    }
+                    .order_second{
+                        background-color: rgba(163, 80, 3, 0.37);
+                    }
+                    .preview{
+                        background-color: #31c9965e;
+                    }
+                    .dynamicListPreviewButton{
                         display: flex;
                         justify-content: space-between;
-                        // justify-content: center;
-                        // align-items: center;
-                        // border: 2px solid rgb(167, 167, 167);
-                      
+                        // border: 1px solid red;
+                        
+                        border-radius: 100px;
+                        padding: 5px 0px;
+                        margin-left: 7px;
                         margin-bottom: 10px;
-                        // margin-left: 10px;
-                        // padding: 0px 0px 0px 10px;
-                        // position: relative;
+                        width: calc(100% - 7px);
+                        // margin-left: auto;
+                        box-sizing: border-box;
+                        // margin-right: auto;
                         .dynamicListButton_texts{
                             display: flex;
-                            // justify-content: center;
+                            font-weight: 500;
                             align-items: center;
                             .point{
                                 margin-right: 7px;
                                 width: 9px;
                                 height: 9px;
                                 border-radius: 10px;
-                                background-color: rgb(255, 255, 255);
-                                // position: absolute;
-                                // left: 0px;
+                            }
+                        }
+                    }
+                    .dynamicListButton{
+                        display: flex;
+                        justify-content: space-between;
+                        // border: 1px solid red;
+                        
+                        border-radius: 5px;
+                        padding: 5px 0px;
+                        margin-left: 7px;
+                        margin-bottom: 10px;
+                        .dynamicListButton_texts{
+                            display: flex;
+                            font-weight: 500;
+                            align-items: center;
+                            .point{
+                                margin-right: 7px;
+                                width: 9px;
+                                height: 9px;
+                                border-radius: 10px;
                             }
                         }
 
@@ -216,11 +290,6 @@
     }
 
 
-.sub-section-with-dynamicList{
-    border: 1px solid rgb(119, 119, 119);
-    border-radius: 10px 10px 0px 0px;
-    // padding: 10px 0px 10px 10px;
-}
 
 
 

@@ -1,19 +1,11 @@
 <div class="table-container">
 
-    <div class="searchField">
-
-        <div class="p-col-12 p-md-4" style="width: 30%;">
-            <div class="p-inputgroup">
-                <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                <input type="text" pInputText placeholder="Username" (keyup)="applyFilter($event)" placeholder="Find Initiative." #input>         
-            </div>
+        <div class="custom_search_input_container">
+            <span class="material-icons">
+                search
+            </span>
+            <input class="custom_search_input" type="text" placeholder="Username" (keyup)="applyFilter($event)" placeholder="Find Initiative." #input>         
         </div>
-
-        <!-- <mat-form-field>
-            <mat-label>Search</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Find Initiative." #input>
-        </mat-form-field> -->
-    </div>
 
 
     <div class="mat-elevation-z8 with_scroll">

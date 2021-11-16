@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit(): void {
-    console.log("get route");
+    // console.log("get route");
     this.hjService.virtualPageView('/test/example')
 
     this.isDevModeToShowTag = environment.production;

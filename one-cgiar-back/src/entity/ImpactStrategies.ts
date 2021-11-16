@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
-import { InitiativesByStages } from "./InititativesByStages";
 
 @Entity('impact_strategies')
 export class ImpactStrategies extends UpdatedCreatedAt {
@@ -8,7 +7,7 @@ export class ImpactStrategies extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type:"int"})
+    @Column({ type: "int" })
     initvStgId: number
 
     @Column('tinyint')
@@ -29,7 +28,7 @@ export class ImpactStrategies extends UpdatedCreatedAt {
     @Column({ type: "text" })
     human_capacity: string
 
-    @Column({type:"int"})
+    @Column({ type: "int" })
     impact_area_id: number
 
     @Column({ type: "text" })
