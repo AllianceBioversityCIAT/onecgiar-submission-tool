@@ -11,7 +11,7 @@ declare var $;
 export class PobResportsComponent implements OnInit {
   notArePreviewinformation = false;
   previewProjectedBenefitsListCoverted = [];
-  previewPOBListMetaData = [];
+  // previewPOBListMetaData = [];
   mergeList = [];
   headerPreview = [
     {
@@ -49,8 +49,12 @@ export class PobResportsComponent implements OnInit {
   }
 
   getKeys(customer){
-    // console.log(Object.keys(customer));
-    return Object.keys(customer);
+    let result = []
+    Object.keys(customer).map(item=>{
+      if (item == 'rowspan') return;
+      result.push(item)
+    })
+    return result;
   }
 
 
@@ -70,19 +74,23 @@ export class PobResportsComponent implements OnInit {
         if (index == 0) {
           this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description, c: impactArea?.impactIndicators?.probability_name });
         }else{
-          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description, c: '' });
+          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description });
 
         }
       })
 
       if (!impactArea?.impactIndicators?.dimensions.length) {
         i++;
-        this.previewProjectedBenefitsListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name });
+        this.previewProjectedBenefitsListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name, rowspan:1 });
       }
-      this.previewPOBListMetaData[celIndex] = {rowspan: (i - (celIndex+1)) + 1};
+      // this.previewPOBListMetaData[celIndex] = {rowspan: (i - (celIndex+1)) + 1};
+      this.previewProjectedBenefitsListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
+      console.log(this.previewProjectedBenefitsListCoverted[celIndex]);
       this.mergeList.push({ s: { r: celIndex+1, c: 2 }, e: { r: i, c: 2 } })
 
     })
+
+    console.log(this.previewProjectedBenefitsListCoverted);
 
    
   }
@@ -96,26 +104,24 @@ export class PobResportsComponent implements OnInit {
     import("xlsx").then(xlsx => {
       let result = [{ a: "Breadth", b: "Depth", c: "Probability" }];
 
+
+
+
+  
+
+
       this.previewProjectedBenefitsListCoverted.map(item=>{
-        result.push(item)
+        let body:any = {}
+ 
+        Object.keys(item).map(key=>{
+          if (key == 'rowspan') return;
+          body[key] = item[key]
+        })
+
+        result.push(body)
       })
-      // example.map((impactArea) => {
-      //   index++;
-      //   result.push({ a: impactArea.impactAreaTitle, b: '', c: '' })
-      //   merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
 
-      //   impactArea.indicators.map((indicator) => {
-
-      //     index++;
-      //     result.push({ a: indicator.impactIndicatorTitle, b: '', c: '' })
-      //     merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
-      //     indicator.dimensions.map((dimension) => {
-      //       result.push({ a: dimension.breadth, b: dimension.depth, c: dimension.probability })
-      //     })
-
-      //   })
-
-      // })
+      console.log(result);
 
       var worksheet = xlsx.utils.json_to_sheet(result, { header: ["a", "b", "c"], skipHeader: true });
 

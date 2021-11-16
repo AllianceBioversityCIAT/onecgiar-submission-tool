@@ -224,7 +224,7 @@ export class MenuComponent implements OnInit {
             // });
 
             this.mapPreviewInDynamicListMenu(3, 1, 8, {
-              showName : 'Pob Reports',
+              showName : 'Projection of benefits Reports',
               frontRoute : '/projection-of-benefits/pob-resports'
             });
 
