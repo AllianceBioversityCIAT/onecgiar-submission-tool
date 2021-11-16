@@ -1,46 +1,58 @@
 <section-title name="Pob reports" ></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <style>
-        .test-container{
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-        }
-        </style>
-        
-        <div class="test-container">
-        <div>Nombre</div>
-        <div>Edad</div>
-        <div>Genero</div>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>6</div>
-        <div>7</div>
-        <div>8</div>
-        <div>9</div>
-        <div>8</div>
-        </div>
+  <div class="card">
+      <!-- <h5>Horizontal and Vertical</h5> -->
+      <section-sub-title name="pob preview"></section-sub-title>
 
-        <table #tablee>
-            <tr>
-              <th>Company</th>
-              <th>Contact</th>
-              <th>Country</th>
-            </tr>
-            <tr>
-              <td>Alfreds Futterkiste</td>
-              <td>Maria Anders</td>
-              <td>Germany</td>
-            </tr>
-            <tr>
-              <td>Centro comercial Moctezuma</td>
-              <td>Francisco Chang</td>
-              <td>Mexico</td>
-            </tr>
-        </table>
-    
-        <button (click)="this._utilsService.htmlToString(tablee);" [cdkCopyToClipboard]="this._utilsService.htmlToString(tablee)">Copy to clipboard</button>
+      <p-table *ngIf="previewProjectedBenefitsListCoverted.length || true" [value]="previewProjectedBenefitsListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+          <ng-template pTemplate="caption">
+              <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
+
+                  <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                  <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" [cdkCopyToClipboard]="this._utilsService.htmlToString(tablee)" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <th *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-customer>
+              <tr *ngIf="getKeys(customer).length <=1">
+                <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
+                  <td colspan="3" *ngFor="let item of getKeys(customer); let i=index" [ngStyle]="{'background-color': customer[item].search('Impact Area Indicator:')<0?'rgb(201 236 247)':'#d2ffc2'}" style="text-align: center;">
+                    {{customer[item] || 'not available'}}
+                  </td>
+              </tr>
+              <tr *ngIf="!(getKeys(customer).length <=1)">
+                <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
+                  <td *ngFor="let item of getKeys(customer); let i=index" >
+                    {{customer[item] || 'not available'}}
+                  </td>
+              </tr>
+          </ng-template>
+          <!-- <ng-template pTemplate="footer">
+              <tr>
+                  <td style="width:100px">Id</td>
+                  <td style="width:200px">Name</td>
+                  <td style="width:200px">Country</td>
+                  <td style="width:200px">Date</td>
+                  <td style="width:200px">Balance</td>
+                  <td style="width:200px">Company</td>
+                  <td style="width:200px">Status</td>
+                  <td style="width:200px">Activity</td>
+                  <td style="width:200px">Representative</td>
+              </tr>
+          </ng-template> -->
+      </p-table>
+      <br>
+      <app-text-not-data [hidden]="!this.notArePreviewinformation" text="There are not Partners"></app-text-not-data>
+      <br>
+  </div>
 </div>
+
+
+       
+
+<!-- <button  [cdkCopyToClipboard]="this._utilsService.htmlToString(getTable())">Copy to clipboard</button> -->

@@ -6,6 +6,7 @@ import { IsResportsComponent } from './is-resports.component';
 import {TableModule} from 'primeng/table';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import {ButtonModule} from 'primeng/button';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import {ButtonModule} from 'primeng/button';
     IsResportsRoutingModule,
     TableModule,
     UtilsModule,
-    ButtonModule
+    ButtonModule,
+    ClipboardModule
   ]
 })
 export class IsResportsModule { }

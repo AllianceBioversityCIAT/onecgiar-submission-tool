@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { PreviewPartners } from './models/previewPartners.interface';
 import { ManageExcelService } from '../../../services/manage-excel.service';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 @Component({
   selector: 'app-is-resports',
   templateUrl: './is-resports.component.html',
@@ -13,15 +14,16 @@ export class IsResportsComponent implements OnInit {
   headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'action_area',  'demand',  'innovation',  'scaling',   'website'];
   constructor(
     private _initiativesService: InitiativesService,
-    private _manageExcelService: ManageExcelService
+    private _manageExcelService: ManageExcelService,
+    public _utilsService:UtilsService
   ) { }
 
   ngOnInit(): void {
-    this.getPreviewPartnersDataByInitiativeId();
+    this.getPreviewPartners();
   }
 
-  getPreviewPartnersDataByInitiativeId(){
-    this._initiativesService.getPreviewPartnersDataByInitiativeId(this._initiativesService.initiative.id).subscribe(resp=>{
+  getPreviewPartners(){
+    this._initiativesService.getPreviewPartners(this._initiativesService.initiative.id,3).subscribe(resp=>{
       this.previewPartners = resp.response.previewPartners
       if (!this.previewPartners.length) this.notArePreviewPartners = true;
       console.log(this.previewPartners);

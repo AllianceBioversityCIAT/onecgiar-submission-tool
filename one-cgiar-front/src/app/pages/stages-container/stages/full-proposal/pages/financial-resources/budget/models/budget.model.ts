@@ -21,7 +21,7 @@ export class BudgetModel{
     pushItem(item: List) {
         this.list.push(
             {
-                name: item.name || 'unamed',
+                name: item.name || 'unnamed',
                 total: item.total || 0,
                 valuesList: item.valuesList || []
             }

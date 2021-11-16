@@ -499,8 +499,12 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
   }
 
-  getPreviewPartnersDataByInitiativeId(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/preview-partners/${initiativeId}`);
+  getPreviewPartners(initiativeId,stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/preview-partners/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewProjectedBenefits(initiativeId,stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/preview-projected-benefits/${initiativeId}/${stageId}`);
   }
 
   getLinks(body,initiativeID,stageID){

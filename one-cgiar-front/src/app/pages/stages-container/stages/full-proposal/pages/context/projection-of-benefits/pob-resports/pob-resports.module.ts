@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { PobResportsRoutingModule } from './pob-resports-routing.module';
 import { PobResportsComponent } from './pob-resports.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -13,7 +15,9 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     CommonModule,
     PobResportsRoutingModule,
     UtilsModule,
-    ClipboardModule
+    ClipboardModule,
+    TableModule,
+    ButtonModule
   ]
 })
 export class PobResportsModule { }
