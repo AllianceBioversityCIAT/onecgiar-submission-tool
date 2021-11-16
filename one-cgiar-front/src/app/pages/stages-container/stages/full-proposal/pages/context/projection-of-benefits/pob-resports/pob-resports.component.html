@@ -4,7 +4,7 @@
     
 
   <div class="card">
-      <!-- <h5>Horizontal and Vertical</h5> -->
+
       <section-sub-title name="pob preview"></section-sub-title>
 
       <p-table *ngIf="previewProjectedBenefitsListCoverted.length || true" [value]="previewProjectedBenefitsListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
@@ -34,11 +34,7 @@
                     {{customer[item] || 'not available'}}
                   </td>
               </tr>
-              <!-- <tr *ngIf="(getKeys(customer).length >1)">
-                  <td *ngFor="let item of getKeys(customer); let i=index" [attr.rowspan]="2">
-                    {{customer[item] || 'not available'}}
-                  </td>
-              </tr> -->
+
           </ng-template>
           <!-- <ng-template pTemplate="footer">
               <tr>
@@ -54,6 +50,3 @@
 </div>
 
 
-       
-
-<!-- <button  [cdkCopyToClipboard]="this._utilsService.htmlToString(getTable())">Copy to clipboard</button> -->
