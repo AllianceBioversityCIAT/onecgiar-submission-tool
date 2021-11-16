@@ -10,7 +10,7 @@ export class UtilsService {
   }
 
   htmlToString(html:HTMLElement){
-    console.log(html);
+    // console.log(html);
     // return html.outerHTML
   }
 

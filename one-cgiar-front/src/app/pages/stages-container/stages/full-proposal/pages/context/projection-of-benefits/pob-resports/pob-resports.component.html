@@ -1,6 +1,8 @@
 <section-title name="Projection of benefits reports" ></section-title>
-
+<p-toast position="bottom-center" key="bc"></p-toast>
 <div class="section-container animate__animated animate__fadeIn">
+    
+
   <div class="card">
       <!-- <h5>Horizontal and Vertical</h5> -->
       <section-sub-title name="pob preview"></section-sub-title>
@@ -10,7 +12,7 @@
               <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
 
                   <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
-                  <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" [cdkCopyToClipboard]="this._utilsService.htmlToString(tablee)" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
+                  <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
               </div>
           </ng-template>
           <ng-template pTemplate="header">
