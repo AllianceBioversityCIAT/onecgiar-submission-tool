@@ -11,6 +11,8 @@ declare var $;
 export class PobResportsComponent implements OnInit {
   notArePreviewinformation = false;
   previewProjectedBenefitsListCoverted = [];
+  previewPOBListMetaData = [];
+  mergeList = [];
   headerPreview = [
     {
       headerName : 'Breadth',
@@ -32,13 +34,12 @@ export class PobResportsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    console.log('Impact Area:'.search('Impact Area Indicator'));
-    console.log('Impact Area Indicator:'.search('Impact Area Indicator'));
-    
+ 
     this.getPreviewProjectedBenefits();
 
   }
+
+  rarar = '2';
 
   getPreviewProjectedBenefits() {
     this._initiativesService.getPreviewProjectedBenefits(this._initiativesService.initiative.id,3).subscribe(resp => {
@@ -53,35 +54,37 @@ export class PobResportsComponent implements OnInit {
   }
 
 
-  objectsTolist(previewProjectedBenefits){
+  objectsTolist(previewProjectedBenefits) {
+    let i = 0;
     previewProjectedBenefits.map((impactArea) => {
-      console.log(impactArea);
-    //   index++;
-    //   result.push({ a: impactArea.impactAreaTitle, b: '', c: '' })
 
-    this.previewProjectedBenefitsListCoverted.push({a:'Impact Area: '+impactArea.impact_area_name})
-    this.previewProjectedBenefitsListCoverted.push({a:'Impact Area Indicator: '+impactArea.impactIndicators.impact_area_indicator_name})
+      this.previewProjectedBenefitsListCoverted.push({ a: 'Impact Area: ' + impactArea.impact_area_name });
+      i++;
+      this.mergeList.push({ s: { r: i, c: 0 }, e: { r: i, c: 2 } })
+      this.previewProjectedBenefitsListCoverted.push({ a: 'Impact Area Indicator: ' + impactArea.impactIndicators.impact_area_indicator_name });
+      i++;
+      this.mergeList.push({ s: { r: i, c: 0 }, e: { r: i, c: 2 } })
+      let celIndex = i;
+      impactArea?.impactIndicators?.dimensions?.map((dimension,index) => {
+        i++;
+        if (index == 0) {
+          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description, c: impactArea?.impactIndicators?.probability_name });
+        }else{
+          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description, c: '' });
 
-    impactArea?.impactIndicators?.dimensions?.map(dimension=>{
-      this.previewProjectedBenefitsListCoverted.push({a:dimension.breadth_value,b:dimension.depth_description,c:''})
+        }
+      })
+
+      if (!impactArea?.impactIndicators?.dimensions.length) {
+        i++;
+        this.previewProjectedBenefitsListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name });
+      }
+      this.previewPOBListMetaData[celIndex] = {rowspan: (i - (celIndex+1)) + 1};
+      this.mergeList.push({ s: { r: celIndex+1, c: 2 }, e: { r: i, c: 2 } })
+
     })
-    //   merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
 
- 
-        // this.previewProjectedBenefitsListCoverted.push({a:indicator.impact_area_indicator_name})
-
-      //     index++;
-      //     result.push({ a: indicator.impactIndicatorTitle, b: '', c: '' })
-      //     merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
-      //     indicator.dimensions.map((dimension) => {
-      //       result.push({ a: dimension.breadth, b: dimension.depth, c: dimension.probability })
-      //     })
-
-    
-
-    })
-    console.log("________________________________-______");
-    console.log(this.previewProjectedBenefitsListCoverted);
+   
   }
 
   getTable(){
@@ -91,61 +94,28 @@ export class PobResportsComponent implements OnInit {
   
   exportExcel() {
     import("xlsx").then(xlsx => {
-
-      let example = [
-
-        {
-          impactAreaTitle: 'Impact Area: Nutrition, health and food security',
-          indicators: [
-            {
-              impactIndicatorTitle: 'Impact indicator: #cases communicable and noncommunicable diseases',
-              probability: 'High certainty',
-              dimensions: [
-                {
-                  breadth: '2.8 Millions of people',
-                  depth: 'Life saving',
-                  probability: 'High certainty'
-                },
-                {
-                  breadth: '2.5 Millions of people',
-                  depth: 'Perceptible',
-                  probability: 'High certainty'
-                },
-                {
-                  breadth: '3.1 Millions of people',
-                  depth: 'Significant',
-
-                }
-              ]
-            }
-
-          ]
-        }
-
-      ]
-
-      const merge = [
-
-      ];
       let result = [{ a: "Breadth", b: "Depth", c: "Probability" }];
-      let index = 0;
-      example.map((impactArea) => {
-        index++;
-        result.push({ a: impactArea.impactAreaTitle, b: '', c: '' })
-        merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
 
-        impactArea.indicators.map((indicator) => {
-
-          index++;
-          result.push({ a: indicator.impactIndicatorTitle, b: '', c: '' })
-          merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
-          indicator.dimensions.map((dimension) => {
-            result.push({ a: dimension.breadth, b: dimension.depth, c: dimension.probability })
-          })
-
-        })
-
+      this.previewProjectedBenefitsListCoverted.map(item=>{
+        result.push(item)
       })
+      // example.map((impactArea) => {
+      //   index++;
+      //   result.push({ a: impactArea.impactAreaTitle, b: '', c: '' })
+      //   merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
+
+      //   impactArea.indicators.map((indicator) => {
+
+      //     index++;
+      //     result.push({ a: indicator.impactIndicatorTitle, b: '', c: '' })
+      //     merge.push({ s: { r: index, c: 0 }, e: { r: index, c: 2 } })
+      //     indicator.dimensions.map((dimension) => {
+      //       result.push({ a: dimension.breadth, b: dimension.depth, c: dimension.probability })
+      //     })
+
+      //   })
+
+      // })
 
       var worksheet = xlsx.utils.json_to_sheet(result, { header: ["a", "b", "c"], skipHeader: true });
 
@@ -156,7 +126,7 @@ export class PobResportsComponent implements OnInit {
       ];
 
       worksheet['!cols'] = wscols;
-      worksheet["!merges"] = merge;
+      worksheet["!merges"] = this.mergeList;
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       xlsx.utils.sheet_add_aoa(workbook, [[123]], { origin: 'A1' });
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
