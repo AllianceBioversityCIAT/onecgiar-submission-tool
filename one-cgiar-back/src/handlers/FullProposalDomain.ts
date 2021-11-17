@@ -10,9 +10,11 @@ import { ImpactStrategies } from "../entity/ImpactStrategies";
 import { InnovationPackages } from "../entity/InnovationPackages";
 import { ManagePlanRisk } from "../entity/ManagePlanRisk";
 import { Melia } from "../entity/melia";
+import { Opportunities } from "../entity/Opportunities";
 import { Partners } from "../entity/Partners";
 import { PolicyComplianceOrversight } from "../entity/PolicyComplianceOversight";
 import { ProjectionBenefits } from "../entity/ProjectionBenefits";
+import { RiskAssessment } from "../entity/RiskAssessment";
 import { WorkPackages } from "../entity/WorkPackages";
 import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
 import { BaseError } from "./BaseError";
@@ -1371,6 +1373,134 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
 
+
+    }
+
+
+    /**
+     * UPSERT RISK ASSESSMENT
+     * @param managePlanRiskId 
+     * @param riskAssessment 
+     */
+    async upsertRiskAssessment(managePlanRiskId, riskAssessment) {
+
+        const riskAssessmentRepo = getRepository(RiskAssessment);
+        const opportinitiesRepo = getRepository(Opportunities);
+
+        var newRiskAssessment = new RiskAssessment();
+        var newOpportinities = new Opportunities();
+
+        var riskSaved;
+        var opportunitiesSaved;
+        var upsertedRiskAssessment = [];
+        var upsertedOpportunities = [];
+
+        try {
+
+            if (managePlanRiskId) {
+
+                /**RISK ASSESSMENT */
+                if (riskAssessment.length > 0) {
+
+                    for (let index = 0; index < riskAssessment.length; index++) {
+
+                        const risk = riskAssessment[index];
+
+                        newRiskAssessment.id = risk.id;
+                        newRiskAssessment.risks_achieving_impact = risk.risks_achieving_impact;
+                        newRiskAssessment.description_risk = risk.description_risk;
+                        newRiskAssessment.likelihood = risk.likelihood;
+                        newRiskAssessment.impact = risk.impact;
+                        newRiskAssessment.risk_score = risk.risk_score;
+                        newRiskAssessment.active = risk.active;
+                        newRiskAssessment.manage_plan_risk_id = managePlanRiskId
+
+                        /**UPDATE RISK ASSESSMENT */
+                        if (newRiskAssessment.id !== null) {
+
+                            var savedRiskAssessment = await riskAssessmentRepo.findOne(newRiskAssessment.id);
+
+                            riskAssessmentRepo.merge(
+                                savedRiskAssessment,
+                                newRiskAssessment
+                            );
+
+                            riskSaved = await riskAssessmentRepo.save(savedRiskAssessment);
+
+                            upsertedRiskAssessment.push(riskSaved);
+
+                        }
+                        /**CREATE NEW RISK ASSESSMENT */
+                        else {
+
+                            riskSaved = await riskAssessmentRepo.save(newRiskAssessment);
+
+                            upsertedRiskAssessment.push(riskSaved);
+
+                        }
+
+                        /**
+                         * OPPORTUNITIES
+                         */
+                        if (risk.opportinities.length > 0) {
+
+                            for (let index = 0; index < risk.opportinities.length; index++) {
+                                const oppor = risk.opportinities[index];
+
+                                newOpportinities.id = oppor.id;
+                                newOpportinities.opportunities_description = oppor.opportunities_description;
+                                newOpportinities.risk_assessment_id = riskSaved.id;
+
+                                if (newOpportinities.id !== null) {
+
+                                    var savedOpportunities = await opportinitiesRepo.findOne(newOpportinities.id);
+
+                                    opportinitiesRepo.merge(
+                                        savedOpportunities,
+                                        newOpportinities
+                                    );
+
+                                    opportunitiesSaved = await opportinitiesRepo.save(savedOpportunities);
+
+                                    upsertedOpportunities.push(opportunitiesSaved);
+
+                                } else {
+
+                                    opportunitiesSaved = await opportinitiesRepo.save(newOpportinities);
+
+                                    upsertedOpportunities.push(opportunitiesSaved);
+
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+            upsertedRiskAssessment.map(risk =>
+
+                risk['opportunities'] = upsertedOpportunities.filter(op => {
+                    return (op.risk_assessment_id === risk.id)
+                })
+
+            )
+
+            return { upsertedRiskAssessment };
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Upsert Risk Assessment: Full proposal', 400, error.message, false)
+
+
+        }
 
     }
 
