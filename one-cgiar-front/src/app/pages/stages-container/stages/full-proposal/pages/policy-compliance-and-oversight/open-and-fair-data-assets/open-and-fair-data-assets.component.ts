@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DataControlService } from '@app/shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-open-and-fair-data-assets',
@@ -11,24 +13,30 @@ import { InteractionsService } from '../../../../../../../shared/services/intera
 export class OpenAndFairDataAssetsComponent implements OnInit {
   sectionForm: FormGroup;
   showForm = false;
+  extraValidation = false;
   constructor(
    public _initiativesService:InitiativesService,
-   private _interactionsService:InteractionsService
+   private _interactionsService:InteractionsService,
+   private _dataControlService:DataControlService,
+   private _dataValidatorsService:DataValidatorsService
   ) {
     this.sectionForm = new FormGroup({
       open_fair_data_policy:new FormControl(null),
-      open_fair_data_details:new FormControl(null),
+      open_fair_data_details:new FormControl(null, Validators.required),
       id:new FormControl(null),
     });
    }
 
   ngOnInit(): void {
     this.getPolicyCompliance();
+    this.formChanges();
   }
 
   saveSection(){
-    // console.log(this.sectionForm.value);
-    this._initiativesService.savePolicyCompliance(this.sectionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
+    console.log(this.sectionForm.value);
+    let body = this.sectionForm.value;
+    if (body.open_fair_data_policy !== true ) body.open_fair_data_policy = false;
+    this._initiativesService.savePolicyCompliance(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
       this.sectionForm.valid?
@@ -46,11 +54,19 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
         this.sectionForm.controls['open_fair_data_details'].setValue(response.open_fair_data_details);
         this.sectionForm.controls['id'].setValue(response.id);
       }
+      console.log(this.sectionForm.value);
 
     },err=>{
 
     },()=>{
       this.showForm = true;
+    })
+  }
+
+  formChanges(){
+    this.sectionForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("open_fair_data_details").value, 250);
     })
   }
 

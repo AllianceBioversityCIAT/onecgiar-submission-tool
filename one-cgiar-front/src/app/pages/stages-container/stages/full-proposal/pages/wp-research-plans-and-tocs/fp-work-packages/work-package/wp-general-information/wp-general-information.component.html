@@ -1,0 +1,34 @@
+<div class="section-container animate__animated animate__fadeIn" *ngIf="!showForm">
+  <app-fp-work-package-sekelton></app-fp-work-package-sekelton>
+</div>
+
+    <form  [formGroup]="workPackageForm" (ngSubmit)="updateWp()" class="general-information-form" *ngIf="showForm">
+      <div class="row">
+        <div class="col-sm-5">
+          <ibdc-textarea [options]="{inputTitle:'Short format', form:workPackageForm, formControlName:'acronym'
+                ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:3}">
+          </ibdc-textarea>
+        </div>
+        <div class="col-sm-7">
+          <ibdc-textarea [options]="{inputTitle:'Title', form:workPackageForm, formControlName:'name'
+                ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:30}">
+          </ibdc-textarea>
+        </div>
+        <div class="col-sm-12">
+          <ibdc-textarea [options]="{inputTitle:'Main focus and prioritization',editText:true, form:workPackageForm, formControlName:'pathway_content'
+                ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:2,maxWords:100}">
+          </ibdc-textarea>
+        </div>
+        <div class="col-sm-12">
+          <app-geographic-scope [localForm]="this.workPackageForm"
+            [regionsSelectedList]="this.geographicScope.regions"
+            [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
+        </div>
+      </div>
+      <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+      </div>
+    </form>
+  
+
+ 

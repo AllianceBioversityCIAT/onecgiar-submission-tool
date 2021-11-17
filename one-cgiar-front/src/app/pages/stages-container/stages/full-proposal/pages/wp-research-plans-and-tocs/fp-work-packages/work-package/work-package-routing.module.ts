@@ -4,8 +4,22 @@ import { WorkPackageComponent } from './work-package.component';
 
 const routes: Routes = [
   {
-    path:'',
-    component:WorkPackageComponent
+    path:':wpID',
+    component:WorkPackageComponent,
+    children: [
+      {
+        path:'',
+        redirectTo:'wp-general-info'
+      },
+      {
+        path: 'wp-general-info',
+        loadChildren: () => import('./wp-general-information/wp-general-information.module').then(mod => mod.WpGeneralInformationModule),
+      },
+      {
+        path: 'wp-toc',
+        loadChildren: () => import('./wp-toc/wp-toc.module').then(mod => mod.WpTocModule),
+      }
+    ]
   }
 ];
 

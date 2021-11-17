@@ -147,7 +147,7 @@ export class InitiativesService {
   getCLARISAInstitutions(filterText: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
       resp.response.institutions.map(institution => {
-        institution.acronym_name = `${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
+        institution.acronym_name = `(Id: ${institution.code ? institution.code: ' '})   ${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
       })
       return  resp.response.institutions;
     }));;
@@ -407,6 +407,21 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes`, body);
   }
 
+  getTocTxtDataByTocId(tocId){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/toc/narrative/${tocId}`);
+  }
+
+  getSdgTargets(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/sdg-targets`);
+  }
+
+  getGlobalTargets(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/global-targets`);
+  }
+
+  getOutcomesIndicators(){
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/action-areas/outcomes-indicators`);
+  }
 
   getGreenCheckStatus(initiativeId){
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
@@ -478,6 +493,18 @@ export class InitiativesService {
 
   getMenu(initiativeId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
+  }
+
+  getPreviewPartnersData(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
+  }
+
+  getPreviewPartners(initiativeId,stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/preview-partners/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewProjectedBenefits(initiativeId,stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/preview-projected-benefits/${initiativeId}/${stageId}`);
   }
 
   getLinks(body,initiativeID,stageID){

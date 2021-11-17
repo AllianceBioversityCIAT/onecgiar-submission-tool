@@ -58,9 +58,9 @@ export class DataValidatorsService {
   }
 
   validateFilesArray(arrayTosave:any,arraySaved){
-    console.log("------------------");
-    console.log(arrayTosave);
-    console.log(arraySaved);
+    // console.log("------------------");
+    // console.log(arrayTosave);
+    // console.log(arraySaved);
     let one = false;
     let two:boolean;
     if (arrayTosave.length) {
@@ -94,10 +94,38 @@ export class DataValidatorsService {
      
 
     }
-    console.log(one);
-    console.log(two);
+    // console.log(one);
+    // console.log(two);
 
     return (one || two);
+
+  }
+
+  wordCounterIsCorrect(textTocount,maxWords) {
+    let words = 0;
+    if (textTocount) {
+      let textReplaced = textTocount.replace(/(<(\/?p)>)/gi,' ').replace(/(<([^>]+)>)/gi,'');
+      // console.log(textReplaced);
+      if (textReplaced) {
+        let textMatch = textReplaced.match(/\S+/g);
+        if (textMatch) {
+          words = textMatch.length;
+        }else{
+          return true;
+        }
+        
+        if (words > maxWords) {
+          return false;
+        }else{
+          return true;
+        }
+      }else{
+        return true;
+      }
+
+    }else{
+      return true;
+    }
 
   }
 

@@ -21,11 +21,18 @@ var cron = require('node-cron');
 
 // Create and Delete institutions every six hours 0 */6 * * *
 cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
-   
-    await taskClarisa.createImpactAreas();
-    await taskClarisa.createActionAreas();
-    await taskClarisa.createInstitutions();
 
+    try {
+
+        await taskClarisa.Main();
+        
+    } catch (error) {
+
+        console.log('Data management from CLARISA',error);
+        
+        
+    }
+   
 });
 
 if (!process.env.PORT) {
@@ -33,7 +40,7 @@ if (!process.env.PORT) {
 }
 
 // get the unhandled rejection and throw it to another fallback handler we already have.
-process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
+process.on('unhandledRejection', (reason: Error) => {
     throw new BaseError(reason.name, 503, reason.message, true);
 });
 
@@ -49,7 +56,7 @@ const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 const HOST = process.env.HOST;
 
 createConnection()
-    .then(async (connection) => {
+    .then(async () => {
         const app = express();
         app.use(express.urlencoded({ extended: true }));
         app.use(express.json());

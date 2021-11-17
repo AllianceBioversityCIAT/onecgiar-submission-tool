@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, ManyToOne } from 'typeorm'
-import { IsNotEmpty } from 'class-validator'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
 import { SectionsMeta } from './SectionsMeta';
 
@@ -14,10 +13,10 @@ export class SubSectionsMeta extends UpdatedCreatedAt {
 
     @Column({ length: '250' })
     description: string;
-    
+
     @Column({ length: '250' })
     display_name: string;
-    
+
     @Column('tinyint')
     active: boolean;
 

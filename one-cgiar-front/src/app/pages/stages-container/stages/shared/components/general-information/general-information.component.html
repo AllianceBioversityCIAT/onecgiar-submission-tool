@@ -17,40 +17,48 @@
                 </ibdc-textarea>
             </div>
 
-            <div class="col-sm-6" >
-                <mat-card>
-                    <div class="row icon_cont">
-                        <div class="col-sm-6">
-                            <ibdc-simple-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></ibdc-simple-text>
-                        </div>
-                        <div class="col-sm-4">
-                            <ibdc-simple-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></ibdc-simple-text>
-                        </div>
-                        <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
-                            <mat-icon >edit</mat-icon>
-                        </button>
-                        
+            <div class="col-12">
+
+                <div class="leads_grid">
+                    <div>
+                        <mat-card>
+                            <div class="lead_content_grid">
+                                <div>
+                                    <ibdc-simple-text [options]="{inputTitle:'Lead name', value:leads.lead_name||'Not available'}"></ibdc-simple-text>
+                                </div>
+                                <div>
+                                    <ibdc-simple-text [options]="{inputTitle:'Lead email', value:leads.lead_email||'Not available'}"></ibdc-simple-text>
+                                </div>
+                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon >edit</mat-icon>
+                                </button>
+                                
+                            </div>
+                        </mat-card>
+                        <br>
                     </div>
-                </mat-card>
-                <br>
-            </div>
-            <div class="col-sm-12"></div>
-            <div class="col-sm-6">
-                <mat-card>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></ibdc-simple-text>
-                        </div>
-                        <div class="col-sm-4">
-                            <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></ibdc-simple-text>
-                        </div>
-                        <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" class="floating_icon" aria-label="Example icon button with a home icon">
-                            <mat-icon >edit</mat-icon>
-                        </button>
+    
+                    <div>
+                        <mat-card>
+                            <div class="lead_content_grid">
+                                <div>
+                                    <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy name':'Co-Lead name', value:leads.co_lead_name||'Not available'}"></ibdc-simple-text>
+                                </div>
+                                <div>
+                                    <ibdc-simple-text [options]="{inputTitle:stageName=='proposal'?'Deputy email':'Co-Lead email', value:leads.co_lead_email||'Not available'}"></ibdc-simple-text>
+                                </div>
+                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon >edit</mat-icon>
+                                </button>
+                            </div>
+                        </mat-card>
+                        <br>
                     </div>
-                </mat-card>
-                <br>
+                </div>
+
             </div>
+
+     
             <div class="col-sm-12"></div>
             <!-- <div class="col-sm-12" *ngIf="showFormActionArea">
 
@@ -88,6 +96,7 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6">
+                <div style="height: 20px;"></div>
                 <ibdc-input
                     [class.invalid]= "summaryForm.get('budget_value').invalid"
                     [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
@@ -100,16 +109,47 @@
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
                 </ibdc-textarea>
             </div> -->
-            <div class="col-sm-12">
+            <!-- <div class="col-sm-12">
                 <app-geographic-scope [localForm]="this.summaryForm" [regionsSelectedList]="this.geographicScope.regions" [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
+            </div> -->
+            <div class="col-12">
+                <div class="blue_border">
+                    <section-sub-title name="Geographic scope summary"></section-sub-title>
+                    <div class="local_container">
+                        <div class="data_list">
+                            <div class="list_name">
+                                Regions
+                            </div>
+                            <div class="full_list">
+                                <div [hidden]="!this.regionsList.length" class="element" *ngFor="let item of this.regionsList; let i=index">
+                                    {{i+1}}. {{item.name}}
+                                </div>
+                                <app-text-not-data [hidden]="this.regionsList.length" text="There are not Regions"></app-text-not-data>
+                            </div>
+                        </div>
+                        <div class="rule"></div>
+                        <div class="data_list">
+                            <div class="list_name">
+                                Countries
+                            </div>
+                            <div class="full_list">
+                                <div [hidden]="!this.countriesList.length" class="element" *ngFor="let item of this.countriesList; let i=index">
+                                    {{i+1}}. {{item.name}}
+                                </div>
+                                <app-text-not-data [hidden]="this.countriesList.length" text="There are not Countries"></app-text-not-data>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly}" ></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
             <!-- [underConstruction] = "_dataControlService.general_information.secondLeadEmail == 'Deputy email' " -->
         </div>
     </form>

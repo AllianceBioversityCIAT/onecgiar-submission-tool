@@ -4,7 +4,7 @@
 
         <div class="row" *ngIf="showForm">
             <div class="col-12">
-                <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code')"></app-section-alerts-pack>
+                <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code') * this.extraValidation"></app-section-alerts-pack>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
@@ -42,6 +42,7 @@
                 [savedList]="this.savedList" 
                 [institutionsTypes]="this.institutionsTypes"
                 [institutionsTypesSavedList]="this.institutionsTypesSavedList"
+                [institutionsTypesDisableList]="this.institutionsTypesDisableList"
                 ></app-global-partners-request>
             </div>
 
@@ -50,7 +51,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
         </div>
 
     </form>

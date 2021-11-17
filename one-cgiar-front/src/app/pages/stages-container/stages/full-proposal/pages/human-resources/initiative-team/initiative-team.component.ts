@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-initiative-team',
@@ -10,7 +11,7 @@ import { DataValidatorsService } from '@app/pages/stages-container/stages/shared
   styleUrls: ['./initiative-team.component.scss']
 })
 export class InitiativeTeamComponent implements OnInit {
-
+  templatesUrlBase = environment.templatesUrlBase;
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;

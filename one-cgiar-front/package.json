@@ -11,7 +11,8 @@
     "server": "cd API && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run start\"",
     "docker:build": "docker build -t onecgiarfront .",
-    "docker:run": "docker run --name onecgiarclient -d -p 3300:80 onecgiarfront"
+    "docker:run": "docker run --name onecgiarclient -d -p 3300:80 onecgiarfront",
+    "update:ibdc": "npm i ./ibdc/ibd-angular-components-2.2.3.tgz"
   },
   "private": true,
   "dependencies": {
@@ -30,9 +31,11 @@
     "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
-    "ibd-angular-components": "^1.7.0",
+    "file-saver": "^2.0.5",
+    "ibd-angular-components": "file:ibdc/ibd-angular-components-2.2.3.tgz",
     "jquery": "^3.5.1",
     "lodash": "^4.17.21",
+    "ngx-hotjar": "^11.0.0",
     "ngx-quill": "^13.0.1",
     "ngx-spinner": "^10.0.1",
     "primeicons": "^4.1.0",
@@ -41,6 +44,7 @@
     "rxjs": "~6.5.5",
     "sweetalert2": "^10.15.1",
     "tslib": "^2.0.0",
+    "xlsx": "^0.17.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

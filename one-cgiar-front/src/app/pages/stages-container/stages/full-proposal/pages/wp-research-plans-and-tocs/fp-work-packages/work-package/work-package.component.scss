@@ -15,9 +15,9 @@
 
 .tab{
     .selected{
-        background-color: var(--ibdc-secondary-color);
-        border-bottom: 3px solid var(--ibdc-tertiary-color);
-        transition: all ease .3s;
+        background-color: var(--ibdc-secondary-color) !important;
+        border-bottom: 3px solid var(--ibdc-tertiary-color) !important;
+        transition: all ease .3s !important;
     }
     .notSelected{
         background-color: rgb(179, 179, 179);

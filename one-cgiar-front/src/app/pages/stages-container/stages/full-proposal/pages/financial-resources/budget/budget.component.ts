@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-budget',
@@ -15,6 +16,7 @@ export class BudgetComponent implements OnInit {
   filesList:any[]=[];
   filesSavedList = [];
   showForm = false;
+  templatesUrlBase = environment.templatesUrlBase;
   data = {
     id : null,
     detailed_budget : "algo no tan implicito",
@@ -39,13 +41,13 @@ export class BudgetComponent implements OnInit {
 
   getFinancialResources(){
     this._initiativesService.getFinancialResources(this._initiativesService.initiative.id,'budget').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let financialResources = resp.response.financialResourcesData;
       this.filesSavedList = financialResources?.files?financialResources.files:[];
       this.data.id = financialResources?.id;
-      console.log(financialResources);
-      console.log(this.filesSavedList);
+      // console.log(financialResources);
+      // console.log(this.filesSavedList);
       this.sectionForm.controls['detailed_budget'].setValue(financialResources?.detailed_budget);
       
     },

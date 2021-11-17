@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
+import { DataControlService } from '@app/shared/services/data-control.service';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
@@ -15,12 +17,16 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
-  citationsList=[]
+  citationsList=[];
+  extraValidation = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
+
   ) { 
     this.contextForm = new FormGroup({
       participatory_design: new FormControl(null, Validators.required),
@@ -31,6 +37,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   ngOnInit(): void {
     this.getContext();
     this.getLinks();
+    this.formChanges();
   }
 
   getLinks(){
@@ -75,6 +82,13 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       console.log("errorerekkasssssssssssssssdasda");
+    })
+  }
+
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
   }
 

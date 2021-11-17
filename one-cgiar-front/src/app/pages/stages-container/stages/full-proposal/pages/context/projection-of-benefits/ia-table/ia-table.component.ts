@@ -14,11 +14,11 @@ export class IaTableComponent implements OnInit {
   ngOnInit(): void {
 
     this._initiativesService.getPOBenefitsFp(this._initiativesService.initiative.id).subscribe(respPOB=>{
-      console.log(respPOB.response.projectionBenefits);
+      // console.log(respPOB.response.projectionBenefits);
      
       this._initiativesService.getImpactAreas().subscribe(respImpactAreas=>{
         this.impactAreas = respImpactAreas.response.impactAreasRequested;
-        console.log(this.impactAreas);
+        // console.log(this.impactAreas);
       })
       
     },err=>{

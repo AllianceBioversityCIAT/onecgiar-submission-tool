@@ -25,6 +25,7 @@
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
     "dependencies": {
+        "@types/supertest": "^2.0.11",
         "accesscontrol": "^2.2.1",
         "activedirectory": "^0.7.2",
         "axios": "^0.21.1",
@@ -47,6 +48,7 @@
         "nodemailer": "^6.6.0",
         "nodemailer-express-handlebars": "^4.0.0",
         "reflect-metadata": "^0.1.13",
+        "supertest": "^6.1.6",
         "typeorm": "^0.2.29",
         "winston": "^3.3.3"
     },

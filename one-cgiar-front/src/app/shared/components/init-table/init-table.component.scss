@@ -1,5 +1,34 @@
+.custom_search_input_container{
+  position: relative;
+  .material-icons{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 5px;
+    color: gray;
+  }
+  .custom_search_input{
+    outline: none;
+    border-radius: 10px;
+    padding: 5px 0px 5px 40px;
+    border: none;
+    transition: all ease .3s;
+    width: 200px;
+    // &:hover{
+    //   width: 500px;
+    //   transition: all ease .3s;
+    // }
+    &:focus{
+      width: 500px;
+      transition: all ease .3s;
+    }
+  }
+  margin-bottom: 10px;
+}
+
 .table-container {
-  margin: 50px 0px;
+  margin: 20px 0px 100px 0px;
   padding: 20px 150px;
 }
 .chip_stage{

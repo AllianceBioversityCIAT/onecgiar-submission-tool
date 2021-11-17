@@ -1,0 +1,33 @@
+<section-title name="Activity breakdown" ></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+
+    <div class="custom_table_container">
+
+        <div class="table_header">
+            <div class="table_title" *ngFor="let item of this.fixedData.headerNames">{{item}}</div>
+        </div>
+        <div class="table_content" *ngFor="let tableDataItem of this.fixedData.list; let i=index">
+            <div class="table_item"><div class="name">{{tableDataItem.name}}</div></div>
+            <div class="table_item" *ngFor="let item of [1,1,1]; let j=index">
+                <div *ngIf="this.tableDataItem.valuesList[j]">
+                    <input [(ngModel)]="this.tableDataItem.valuesList[j].value" name="value" placeholder="Value" class="field" type="text">
+                </div>
+                <div *ngIf="!this.tableDataItem.valuesList[j]">
+                    <input style="border: 2px solid #d5d5d5; background-color: #e7e7e7;" disabled value="Not avaible" name="value" placeholder="Value" class="field" type="text">
+                </div>
+            </div>
+            <!-- <div class="table_item"><input [(ngModel)]="this.tableDataItem.valuesList[1].value" placeholder="Value" class="field" type="text"></div>
+            <div class="table_item "><input placeholder="Value" class="field" type="text"></div> -->
+            <div class="table_item center_flex"><div class="total">{{tableDataItem.total}}</div></div>
+        </div>
+        <div class="table_total">
+            <!-- Lorem ipsum dolor sit amet.
+            colum -->
+        </div>
+    </div>
+
+</div>
+
+<form (ngSubmit)="onSave()">
+    <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
+</form>

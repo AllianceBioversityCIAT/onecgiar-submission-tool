@@ -1,0 +1,27 @@
+<div class="section-container animate__animated animate__fadeIn">
+  <div class="row">
+    <div class="col-6">
+      <ibdc-select-multiple *ngIf="outcomesIndicatorsIsLoaded" [options]="{
+                inputTitle:'Action Area outcomes indicators',
+                selectList: this.outcomesIndicatorsList,
+                selectItemName:'outcomeIndicatorStatement',
+                selectItemId:'outcomeIndicatorId',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: [],
+                    selectItemId:'outcomeIndicatorId',
+                    selectItemName:'outcomeIndicatorStatement',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+      }"></ibdc-select-multiple>
+    </div>
+    <div class="col-6" style="color: blue;">
+        Relation List
+    </div>
+
+  </div>
+
+</div>

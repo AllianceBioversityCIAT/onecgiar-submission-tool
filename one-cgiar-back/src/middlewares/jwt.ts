@@ -31,8 +31,8 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
         jwtPayload = <any>jwt.verify(token_, jwtSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
-        error = new BaseError(error.name, 400, error.message, false);
-        return res.status(error.httpCode).json(error);
+        const err = new BaseError(error.name, 400, error.message, false);
+        return res.status(err.httpCode).json(err);
     }
     const { userId, first_name, last_name } = jwtPayload;
 

@@ -12,8 +12,12 @@ const routes: Routes = [
         loadChildren: () => import('./wps-table/wps-table.module').then(mod => mod.WpsTableModule),
       },
       {
-        path: 'work-package/:wpID',
+        path: 'work-package',
         loadChildren: () => import('./work-package/work-package.module').then(mod => mod.WorkPackageModule),
+      },
+      {
+        path: 'wp-reports',
+        loadChildren: () => import('./wp-reports/wp-reports.module').then(mod => mod.WpReportsModule),
       }
     ]
   }

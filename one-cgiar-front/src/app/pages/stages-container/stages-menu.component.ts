@@ -81,6 +81,10 @@ export class StagesMenuComponent implements OnInit {
     // console.log("GUARDANDO", generalInformationForm.value);
   }
 
+  toggleMenu(menu:HTMLElement){
+    menu.classList.toggle('showMenu');
+  }
+
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();

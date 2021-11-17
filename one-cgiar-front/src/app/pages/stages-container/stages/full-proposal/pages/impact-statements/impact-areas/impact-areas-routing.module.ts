@@ -14,6 +14,10 @@ const routes: Routes = [
       {
         path: 'impact-area/:iaID',
         loadChildren: () => import('./impact-area-is/impact-area-is.module').then(mod => mod.ImpactAreaIsModule),
+      },
+      {
+        path: 'partners-no-impact-area',
+        loadChildren: () => import('./partners-no-impact-area/partners-no-impact-area.module').then(mod => mod.PartnersNoImpactAreaModule),
       }
     ],
   }

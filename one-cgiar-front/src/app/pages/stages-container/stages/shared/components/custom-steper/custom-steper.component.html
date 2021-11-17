@@ -1,0 +1,12 @@
+<div class="local_container">
+    <div class="line"></div>
+    <div class="title" *ngFor="let item of this.options.routes; let i=index" [routerLink]="[item.route]" routerLinkActive="router-link-active" >
+        <div class="index">
+            <span class="material-icons check_icon" *ngIf="item.complete">task_alt</span>
+            {{i+1}}
+        </div>
+        <div class="name">
+            {{item.title}}
+        </div>
+    </div>
+</div>

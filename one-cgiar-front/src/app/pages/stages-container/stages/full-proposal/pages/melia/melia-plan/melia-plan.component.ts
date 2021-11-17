@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-melia-plan',
@@ -19,11 +20,13 @@ export class MeliaPlanComponent implements OnInit {
     section : "melia",
     updateFiles : []
   };
+  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.secionForm = new FormGroup({
       example: new FormControl(null, Validators.required),
@@ -32,6 +35,7 @@ export class MeliaPlanComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMelia();
+    this.formChanges();
   }
 
   getMelia(){
@@ -66,6 +70,13 @@ export class MeliaPlanComponent implements OnInit {
     })
 
     
+  }
+
+  formChanges(){
+    this.secionForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 500);
+    })
   }
 
 }

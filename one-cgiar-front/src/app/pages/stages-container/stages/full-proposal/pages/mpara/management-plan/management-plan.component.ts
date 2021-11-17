@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { environment } from '../../../../../../../../environments/environment';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-management-plan',
@@ -10,8 +12,10 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
   styleUrls: ['./management-plan.component.scss']
 })
 export class ManagementPlanComponent implements OnInit {
+  templatesUrlBase = environment.templatesUrlBase;
   managementPlanForm: FormGroup;
   showForm = false;
+  extraValidation = false;
   data = {
     id : null,
     management_plan : "",
@@ -23,7 +27,8 @@ export class ManagementPlanComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService
+    private _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
   ) { 
     this.managementPlanForm = new FormGroup({
       example: new FormControl(null, Validators.required),
@@ -32,6 +37,7 @@ export class ManagementPlanComponent implements OnInit {
 
   ngOnInit(): void {
     this.getManagePlan();
+    this.formChanges();
   }
 
   getManagePlan(){
@@ -68,7 +74,11 @@ export class ManagementPlanComponent implements OnInit {
     
   }
 
-
-
+  formChanges(){
+    this.managementPlanForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.managementPlanForm.get("example").value, 250);
+    })
+  }
 
 }

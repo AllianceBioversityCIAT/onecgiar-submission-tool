@@ -1,143 +1,42 @@
-<section-title name="Impact area" ></section-title>
+<section-title name="Projection of benefits - Impact area" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-
-    <form [formGroup]="pobImpactAreaForm" (ngSubmit)="saveForm()" *ngIf="this.showForm">
-
-    <div class="check_box_with_text">
-        <p-checkbox formControlName="impact_area_active" binary="true" inputId="binary"></p-checkbox>
-        <span>Please select this check-box if your initiative does not address this Impact Area.</span>
-    </div>
-
-    <div class="forms_container" *ngIf="!this.pobImpactAreaForm.get('impact_area_active').value">
-    <div class="first_form custom_card" >
-        <div class="row">
-            <div class="col-6">
-                <div class="row">
-                    <div class="col-12">
-                        
+    <!-- <div class="top_bar"></div> -->
+    <form (ngSubmit)="saveForm()">
 
 
-                        <ibdc-select [options]="
-                        {
-                         required:true,
-                         inputTitle:'Choose a breadth indicator',
-                         form:pobImpactAreaForm,
-                         formControlId:'impactAreaIndicator',
-                         formControlName:'impactAreaIndicatorName',
-                         selectItemName:'impactAreaIndicatorName',
-                         selectItemId:'impactAreaIndicator',
-                         frontendSearchAttribute:'impactAreaIndicatorName',
-                         readOnlyVariable: this._initiativesService.initiative.readonly,
-                         selectList: this.indicatorsList
-                        }">
-                        ></ibdc-select>
-                    </div>
-                    <div class="col-12" *ngIf="showDepthScale">
-                        <ibdc-select [options]="
-                        {
-                         required:true,
-                         inputTitle:'Choose a depth scale',
-                         form:pobImpactAreaForm,
-                         formControlId:'depthScaleId',
-                         formControlName:'depthScaleName',
-                         selectItemName:'depthScaleName',
-                         selectItemId:'depthScaleId',
-                         frontendSearchAttribute:'depthScaleName',
-                         readOnlyVariable: this._initiativesService.initiative.readonly,
-                         selectList: this.depthScalesList
-                        }">
-                        ></ibdc-select>
-                    </div>
+   
+            <div  *ngIf="indicatorsListLoaded">
+                <div *ngFor="let item of indicatorsListPOBSavedList; let i=index" [hidden]="item.impact_area_active === false">
+                    <app-pob-indicator 
+                    [indicatorsListPOBSavediItem]="item" 
+                    [indicatorsList]="indicatorsList" 
+                    [index]="i"
+                    [indicatorsListPOBSavedList]="indicatorsListPOBSavedList"
+                    ></app-pob-indicator>
                 </div>
             </div>
-            <div class="col-6 center_metadata">
-                <div class="metada_data_box">
-                    <p><span class="metadata-title">Target  year:</span> {{this.indicatorMetaData.targetYear || 'not available'}}</p>
-                    <p><span class="metadata-title">Unit:</span> {{this.indicatorMetaData.targetUnit || 'not available'}}</p>
-                    <p><span class="metadata-title">Target value:</span> {{this.indicatorMetaData.value || 'not available'}}</p>
+          
+                <br>
+                <div class="button_add_container center_flex" [hidden]="!indicatorsListLoaded">
+                    <button 
+                    pButton pRipple 
+                    type="button" label="Add Indicator" 
+                    class="p-button-success save-button"     
+                    icon="pi pi-plus" iconPos="right" 
+                    (click)="addIndicator()" 
+                    ></button>
                 </div>
-            </div>
+          
+                <div class="sekeletons_load" *ngIf="!indicatorsListLoaded">
+                    <app-general-information-skeleton></app-general-information-skeleton>
+                </div>
+
+
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
         </div>
-    </div>
-
-    <div class="second_form custom_card"  *ngIf="showDimensions && this.pobImpactAreaForm.value.depthScaleId !== 4">
-        <div class="row dimension" #itemLink *ngFor="let item of this.dimensionsList; let i = index">
-            <div class="col-xl-5">
-                <ibdc-select-ngmodel [options]="
-                {
-                 required:true,
-                 inputTitle:'Depth description',
-                 item: item,   
-                 itemName:'description',
-                 selectList: this.depthDescriptionsList,
-                 itemId:'descriptionID',
-                 frontendSearchAttribute:'description',
-                 readOnlyVariable: this._initiativesService.initiative.readonly
-                }"></ibdc-select-ngmodel>
-            </div>
-            <div class="col-xl-4">
-                <ibdc-input-ngmodel
-                    [options]="{inputTitle:'Breadth - Numbers reached', item:item, itemName:'breadth_value'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
-                </ibdc-input-ngmodel>
-            </div>
-            <div class="col-xl-2 targetUnit">
-                <strong class="ibdc_secondary_color">{{this.indicatorMetaData.targetUnit}}</strong>
-            </div>
-            <div class="col-xl-1 iconRemove">
-                <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">
-                    delete
-                </span>
-            </div>
-
-        </div>
-
-        <h3 style="text-align: center;" *ngIf="!this.dimensionsList.length"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
-
-        <div class="button_add_container center_flex">
-            <button 
-            pButton pRipple 
-            type="button" label="Add dimension" 
-            class="p-button-success save-button"     
-            icon="pi pi-plus" iconPos="right" 
-            (click)="addDimension()" 
-            ></button>
-        </div>
-    </div>
-
-    <div class="third_form custom_card" >
-        <div class="row">
-            <div class="col-6">
-                <ibdc-select [options]="
-                {
-                 required:true,
-                 inputTitle:'Probability',
-                 form:pobImpactAreaForm,
-                 formControlId:'probabilityID',
-                 selectItemName:'probabilityName',
-                 selectItemId:'probabilityID',
-                 frontendSearchAttribute:'probabilityName',
-                 readOnlyVariable: this._initiativesService.initiative.readonly,
-                 service:{
-                     serviceTS:this._initiativesService,
-                     functionName:'getPobProbabilities',
-                     objectName: ['response','probabilities']
-                 }
-                }">
-                ></ibdc-select>
-            </div>
-            <div class="col-12">
-                <ibdc-textarea 
-                [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: false, form:pobImpactAreaForm,editText:true, formControlName:'notes', maxWords:200,
-                description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
-            </ibdc-textarea>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
-    </div>
+    <!-- <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button [options]="{readOnlyVariable: false,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    </div> -->
 </form>
 </div>

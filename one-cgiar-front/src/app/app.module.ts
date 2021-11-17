@@ -56,7 +56,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 // import {InputTextModule} from 'primeng/inputtext';
 import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
-
+import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -106,6 +107,8 @@ import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
     FormsModule,
     SweetAlert2Module.forRoot(),
     QuillModule.forRoot(),
+    NgxHotjarModule.forRoot(environment.hotjar),
+    NgxHotjarRouterModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,

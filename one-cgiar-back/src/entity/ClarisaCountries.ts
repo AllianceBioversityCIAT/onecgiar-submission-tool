@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt"
 
 
@@ -12,13 +12,13 @@ export class ClarisaCountries extends UpdatedCreatedAt {
     code: number
 
     @Column({ type: 'text' })
-    name: string
-
-    @Column({ type: 'text' })
     isoAlpha2: string
 
+    @Column({ type: 'text' })
+    name: string
+
     @Column({ type: 'json' })
-    data: JSON
+    regionDTO: JSON
 
 
 }

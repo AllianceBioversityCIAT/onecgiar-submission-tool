@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DataControlService } from '@app/shared/services/data-control.service';
 import { FullProposalService } from '@app/shared/services/full-proposal.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-comparative-advantage',
@@ -14,12 +16,17 @@ export class ComparativeAdvantageComponent implements OnInit {
   contextForm: FormGroup;
   showfrom = false;
   citationColAndTable={table_name: "context", col_name: "comparative_advantage", active: true}
-  citationsList=[]
+  citationsList=[];
+  extraValidation = false;
+
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService,
+    private _dataValidatorsService:DataValidatorsService
+
   ) { 
     this.contextForm = new FormGroup({
       comparative_advantage: new FormControl(null, Validators.required),
@@ -30,6 +37,7 @@ export class ComparativeAdvantageComponent implements OnInit {
   ngOnInit(): void {
     this.getContext();
     this.getLinks();
+    this.formChanges();
   }
 
   getLinks(){
@@ -77,5 +85,13 @@ export class ComparativeAdvantageComponent implements OnInit {
       console.log("errorerekkasssssssssssssssdasda");
     })
   }
+
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("comparative_advantage").value, 250);
+    })
+  }
+
 
 }

@@ -2,13 +2,12 @@
 <div class="elements_container">
     <div class="platform_backgorund"></div>
    
-        <div class="left_menu">
+        <div class="left_menu" #menu>
             <app-menu></app-menu>
-            <div class="button-container">
-                <!-- <button type="submit" 
-                    mat-raised-button class="submit-button" [disabled]="true">
-                    Submit
-                </button> -->
+            <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
+                <span class="open_menu_icon material-icons">
+                    menu
+                </span>
             </div>
         </div>
         <div class="right_container">

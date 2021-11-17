@@ -115,6 +115,30 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
+  mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .subsections.find(
+        (subSection) => subSection.subSectionId == subSectionId
+      ).dynamicListSubSection = list);
+    // console.log(sectionFinded);
+  }
+
+  mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .subsections.find(
+        (subSection) => subSection.subSectionId == subSectionId
+      ).previewButton = object);
+    // console.log(sectionFinded);
+  }
+
+  partnersNotRelatedRoute(){
+    return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
+  }
+
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
         this._dataControlService.userMenu = userMenuResp.response.stages;
@@ -143,7 +167,6 @@ export class MenuComponent implements OnInit {
 
             let pobList = [];
             let impactStatementsList = [];
-
 
             this.impacAreasList.map(item=>{
               let body:any = {}
@@ -190,14 +213,28 @@ export class MenuComponent implements OnInit {
 
             this.mapDataInMenu(3, 7, 16, impactStatementsList);
             
-            // console.log(pobList);
+            this.mapPreviewInDynamicListMenu(3, 7, 16, {
+              showName : 'Reports',
+              frontRoute : '/is-resports'
+            });
+
+            // this.mapPreviewInDynamicListMenu(3, 5, 12, {
+            //   showName : 'Wp Reports',
+            //   frontRoute : '/work-packages/wp-reports'
+            // });
+
+            this.mapPreviewInDynamicListMenu(3, 1, 8, {
+              showName : 'Projection of benefits Reports',
+              frontRoute : '/projection-of-benefits/pob-resports'
+            });
+
+            // console.log(this._dataControlService.userMenu);
+
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;
               this._dataControlService.impactStatementsMaped = true;
             }
            
-            // console.log(pobList);
-            // console.log(impactStatementsList);
             this._dataControlService.validateMenu$.emit();
         }
        
@@ -246,6 +283,14 @@ export class MenuComponent implements OnInit {
     let stageParam = stage.toLowerCase().split(' ').join('-');
     // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
     this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
+    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+  }
+
+  dynamicListSubSectionNavigation(stage: string, section: string, subsection?: string | []) {
+    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
+    let stageParam = stage.toLowerCase().split(' ').join('-');
+    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
+    return baseUrl+ stageParam+'/'+ section + subsection;
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 

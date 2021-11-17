@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-6">
+        <ibdc-select [options]="
+        {
+         required:true,
+         inputTitle:'Probability',
+         form:pobImpactAreaForm,
+         formControlId:'probabilityID',
+         formControlName:'probabilityName',
+         selectItemName:'probabilityName',
+         selectItemId:'probabilityID',
+         frontendSearchAttribute:'probabilityName',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         service:{
+             serviceTS:this._initiativesService,
+             functionName:'getPobProbabilities',
+             objectName: ['response','probabilities']
+         }
+        }">
+        ></ibdc-select>
+    </div>
+    <div class="col-12">
+        <ibdc-textarea 
+        [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: false, form:pobImpactAreaForm,editText:true, formControlName:'notes', maxWords:200,
+        description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
+    </ibdc-textarea>
+    </div>
+</div>

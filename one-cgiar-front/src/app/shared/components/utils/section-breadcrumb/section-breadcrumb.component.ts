@@ -24,7 +24,7 @@ export class SectionBreadcrumbComponent implements OnInit {
   ngOnInit(): void {
     this.sectionsArray =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     this.mapList();
-    console.log(this.sectionsList);
+    // console.log(this.sectionsList);
     this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart) {
         this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');
@@ -62,17 +62,17 @@ export class SectionBreadcrumbComponent implements OnInit {
           }
 
           if (this.sectionsArray[3]) {
-            getSubSectionName = getSectionName.subsections.find(item=>item.description == this.sectionsArray[3]);
-            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSubSectionName.display_name});
+            getSubSectionName = getSectionName?.subsections.find(item=>item.description == this.sectionsArray[3]);
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSubSectionName?.display_name});
           }
 
-          if (this.sectionsArray[4]) {
+    if (this.sectionsArray[4]) {
             this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:this.sectionsArray[4]});
           }
 
           if (this.sectionsArray[5]) {
-            getDynamicItemName = getSubSectionName.dynamicList.find(item=>item.id == this.sectionsArray[5]);
-            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getDynamicItemName.name});
+            getDynamicItemName = getSubSectionName?.dynamicList?.find(item=>item.id == this.sectionsArray[5]);
+            if (getDynamicItemName)this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getDynamicItemName.name});
           }
 
   }
