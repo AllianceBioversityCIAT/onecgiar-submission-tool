@@ -1574,17 +1574,17 @@ export class ProposalHandler extends InitiativeStageHandler {
      * UPSERT Financial Resourches
      * @param initiativeId 
      * @param ubication 
-     * @param stege 
+     * @param stage 
      * @param financialResourcesId 
-     * @param detailed_budget 
+     * @param budget_value 
      * @param financialResourcesActive 
      * @param section 
      * @param files 
      * @param updateFiles 
      * @returns { upsertedFinancialResources, upsertedFile }
      */
-    async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stege?, financialResourcesId?, detailed_budget?,
-        financialResourcesActive?, section?, files?, updateFiles?) {
+    async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stage?, financialResourcesId?, budget_value?,
+        financialResourcesActive?, section?, files?, updateFiles?, financial_type?, financial_type_id?, table_name?, col_name?, ) {
 
 
         const financialResourcesRepo = getRepository(FinancialResources);
@@ -1599,9 +1599,15 @@ export class ProposalHandler extends InitiativeStageHandler {
         var upsertedFile;
 
         newFinancialResources.id = financialResourcesId;
-        newFinancialResources.detailed_budget = detailed_budget;
+        newFinancialResources.value = budget_value;
         newFinancialResources.active = financialResourcesActive ? financialResourcesActive : true;
 
+        /** multiple resources type for budget */
+        newFinancialResources.col_name = col_name;
+        newFinancialResources.table_name = table_name;
+        newFinancialResources.financial_type = financial_type;
+        newFinancialResources.financial_type_id = financial_type_id;
+        
         try {
 
             if (host == 'http://localhost') {
@@ -1626,7 +1632,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             } else {
 
-                newFinancialResources.initvStgId = initvStg.id;
+                newFinancialResources.initvStg = initvStg.id;
 
                 upsertedFinancialResources = await financialResourcesRepo.save(newFinancialResources);
 
@@ -1637,7 +1643,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 for (let index = 0; index < files.length; index++) {
                     const file = files[index];
 
-                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stege.id}/${file.filename}`
+                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`
                     newFiles.id = null;
                     newFiles.active = file.active ? file.active : true;
                     newFiles.financial_resources_id = upsertedFinancialResources.id;

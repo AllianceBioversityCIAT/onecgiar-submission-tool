@@ -8,14 +8,26 @@ export class FinancialResources extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type: 'int'})
-    initvStgId: number;
+    @Column({type: 'decimal'})
+    value: number;
 
     @Column({ type: "text" })
-    detailed_budget: string;
+    financial_type: string;
+
+    @Column({type: 'int'})
+    financial_type_id: number;
 
     @Column({ type: "tinyint" })
     active: boolean;
+    
+    @Column({ type: "datetime" })
+    year: Date;
+
+    @Column({ type: "text" })
+    col_name: string;
+    
+    @Column({ type: "text" })
+    table_name: string;
 
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()
