@@ -2823,13 +2823,20 @@ define({ "api": [
             "optional": false,
             "field": "file",
             "description": "<p>template Manage Plan</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "riskAssessment",
+            "description": "<p>Risk Assessment.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "data: [\n{   \"id\":null,\n    \"management_plan\": \"new plan\",\n    \"active\": true,\n    \"section\":\"management_plan\",\n    \"updateFiles\":[]\n}\n]",
+          "content": "{\n   \"id\": null,\n   \"management_plan\": \"new plan\",\n   \"active\": true,\n   \"section\": \"management_plan\",\n   \"updateFiles\": [],\n   \"riskassessment\": [\n       {\n           \"id\": null,\n           \"risks_achieving_impact\": \"TEST TEST TEST\",\n           \"description_risk\": \"TEST TEST\",\n           \"likelihood\": 5,\n           \"impact\": 1,\n           \"risk_score\": 4,\n           \"active\": true,\n           \"manage_plan_risk_id\": null,\n           \"opportinities\": [\n               {\n                   \"id\": null,\n                   \"opportunities_description\": \"TEST\",\n                   \"risk_assessment_id\": null\n               }\n           ]\n       }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -2838,7 +2845,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "  HTTP/1.1 200 OK\n {\n\"response\": {\n    \"managePlanRisk\": {\n        \"upsertedManagePlan\": {\n            \"id\": 1,\n            \"management_plan\": \"new plan\",\n            \"active\": true,\n            \"initvStgId\": 35,\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        },\n        \"upsertedFile\": {\n            \"id\": 73,\n            \"active\": true,\n            \"manage_plan_risk_id\": 1,\n            \"section\": \"management_plan\",\n            \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n            \"name\": \"Book1.xlsx\",\n            \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n            \"created_at\": \"2021-09-20T20:03:51.000Z\"\n        }\n    },\n    \"files\": [\n        {\n            \"fieldname\": \"file\",\n            \"originalname\": \"Book1.xlsx\",\n            \"encoding\": \"7bit\",\n            \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n            \"destination\": \"./public/uploads/INIT-2/7.manage-plan/stage-3\",\n            \"filename\": \"1632168231799-Book1.xlsx\",\n            \"path\": \"public\\\\uploads\\\\INIT-2\\\\7.manage-plan\\\\stage-3\\\\1632168231799-Book1.xlsx\",\n            \"size\": 22386\n        }\n    ]\n},\n\"title\": \"Full Proposal: Patch management plan and risk.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n   {\n  \"response\": {\n      \"managePlanRisk\": {\n          \"upsertedManagePlan\": {\n              \"id\": 1,\n              \"management_plan\": \"new plan\",\n              \"active\": true,\n              \"initvStgId\": 35,\n              \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n              \"created_at\": \"2021-09-20T20:03:51.000Z\"\n          },\n          \"upsertedFile\": {\n              \"id\": 73,\n              \"active\": true,\n              \"manage_plan_risk_id\": 1,\n              \"section\": \"management_plan\",\n              \"url\": \"http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx\",\n              \"name\": \"Book1.xlsx\",\n              \"updated_at\": \"2021-09-20T20:03:51.000Z\",\n              \"created_at\": \"2021-09-20T20:03:51.000Z\"\n          }\n      },\n\"riskAssessment\": {\n          \"upsertedRiskAssessment\": [\n              {\n                  \"id\": 5,\n                  \"risks_achieving_impact\": \"TEST TEST TEST\",\n                  \"description_risk\": \"TEST TEST\",\n                  \"likelihood\": 5,\n                  \"impact\": 1,\n                  \"risk_score\": 4,\n                  \"active\": true,\n                  \"manage_plan_risk_id\": 16,\n                  \"updated_at\": \"2021-11-17T21:20:19.000Z\",\n                  \"created_at\": \"2021-11-17T21:20:19.000Z\",\n                  \"opportunities\": [\n                      {\n                          \"id\": 3,\n                          \"opportunities_description\": \"TEST\",\n                          \"risk_assessment_id\": 5,\n                          \"updated_at\": \"2021-11-17T21:20:19.000Z\",\n                          \"created_at\": \"2021-11-17T21:20:19.000Z\"\n                      }\n                  ]\n              }\n          ]\n      },\n      \"files\": [\n          {\n              \"fieldname\": \"file\",\n              \"originalname\": \"Book1.xlsx\",\n              \"encoding\": \"7bit\",\n              \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n              \"destination\": \"./public/uploads/INIT-2/7.manage-plan/stage-3\",\n              \"filename\": \"1632168231799-Book1.xlsx\",\n              \"path\": \"public\\\\uploads\\\\INIT-2\\\\7.manage-plan\\\\stage-3\\\\1632168231799-Book1.xlsx\",\n              \"size\": 22386\n          }\n      ]\n  },\n  \"title\": \"Full Proposal: Patch management plan and risk.\"\n  }",
           "type": "json"
         }
       ]

@@ -745,16 +745,35 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  * @apiParam {String} section section location.
  * @apiParam {Object} updateFiles file to updtate.
  * @apiParam {File} file template Manage Plan
+ * @apiParam {Object} riskAssessment Risk Assessment.
  * 
  * @apiParamExample {json} Request-Example:
- * data: [
- * {   "id":null,
- *     "management_plan": "new plan",
- *     "active": true,
- *     "section":"management_plan",
- *     "updateFiles":[]
+ * {
+ *    "id": null,
+ *    "management_plan": "new plan",
+ *    "active": true,
+ *    "section": "management_plan",
+ *    "updateFiles": [],
+ *    "riskassessment": [
+ *        {
+ *            "id": null,
+ *            "risks_achieving_impact": "TEST TEST TEST",
+ *            "description_risk": "TEST TEST",
+ *            "likelihood": 5,
+ *            "impact": 1,
+ *            "risk_score": 4,
+ *            "active": true,
+ *            "manage_plan_risk_id": null,
+ *            "opportinities": [
+ *                {
+ *                    "id": null,
+ *                    "opportunities_description": "TEST",
+ *                    "risk_assessment_id": null
+ *                }
+ *            ]
+ *        }
+ *    ]
  * }
- * ]
  *  
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -779,6 +798,31 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  *               "updated_at": "2021-09-20T20:03:51.000Z",
  *               "created_at": "2021-09-20T20:03:51.000Z"
  *           }
+ *       },
+ * "riskAssessment": {
+ *           "upsertedRiskAssessment": [
+ *               {
+ *                   "id": 5,
+ *                   "risks_achieving_impact": "TEST TEST TEST",
+ *                   "description_risk": "TEST TEST",
+ *                   "likelihood": 5,
+ *                   "impact": 1,
+ *                   "risk_score": 4,
+ *                   "active": true,
+ *                   "manage_plan_risk_id": 16,
+ *                   "updated_at": "2021-11-17T21:20:19.000Z",
+ *                   "created_at": "2021-11-17T21:20:19.000Z",
+ *                   "opportunities": [
+ *                       {
+ *                           "id": 3,
+ *                           "opportunities_description": "TEST",
+ *                           "risk_assessment_id": 5,
+ *                           "updated_at": "2021-11-17T21:20:19.000Z",
+ *                           "created_at": "2021-11-17T21:20:19.000Z"
+ *                       }
+ *                   ]
+ *               }
+ *           ]
  *       },
  *       "files": [
  *           {

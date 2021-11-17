@@ -1380,7 +1380,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     /**
      * UPSERT RISK ASSESSMENT
      * @param managePlanRiskId 
-     * @param riskAssessment 
+     * @param riskAssessment
+     * @returns {upsertedRiskAssessment} 
      */
     async upsertRiskAssessment(managePlanRiskId, riskAssessment) {
 
