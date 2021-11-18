@@ -87,7 +87,7 @@ describe('FullProposal Controller', async () => {
      */
 
     /**GET RISK ASSESSMENT */
-    it('GET /manage-plan/initiativeId/sectionName/ Request Risk Assessment ', async () => {
+    it('GET /manage-plan/initiativeId/sectionName/ Request Manage plan and risk ', async () => {
 
         await chai
             .request(app)
