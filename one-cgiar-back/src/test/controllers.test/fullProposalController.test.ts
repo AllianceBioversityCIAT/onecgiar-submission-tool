@@ -62,6 +62,7 @@ describe('FullProposal Controller', async () => {
 
     const initiativeId = 2;
     const stageId = 3;
+    var managePlanRiskId;
 
 
     /**Workpackage*/
@@ -86,17 +87,64 @@ describe('FullProposal Controller', async () => {
      * MANAGE PLAN AND RISK
      */
 
-    /**GET RISK ASSESSMENT */
+    /**
+     * GET MANAGE PLAN
+     * GET RISK ASSESSMENT
+     *  */
     it('GET /manage-plan/initiativeId/sectionName/ Request Manage plan and risk ', async () => {
 
         await chai
             .request(app)
-            .get('/api/stages-control/proposal/manage-plan/'+12+'/management_plan')
+            .get('/api/stages-control/proposal/manage-plan/' + initiativeId + '/management_plan')
             .set('auth', token)
             .then((res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.have.property('response').to.be.a('object');
                 expect(res.body).to.have.property('title').to.be.equal('Full Proposal: GET manage plan risk  and files.');
+                expect(res).to.be.a('object')
+                managePlanRiskId = parseInt(res.body.response.managePlanData.id); 
+            });
+
+    });
+
+    /**
+     * PATCH MANAGE PLAN
+     * PATCH RISK ASSESSMENT
+     *  */
+    it('PATCH /manage-plan/initiativeId/sectionName/ Update Manage plan and risk', async () => {
+
+        await chai
+            .request(app)
+            .patch('/api/stages-control/proposal/manage-plan/' + initiativeId + '/7.manage-plan/' + stageId)
+            .set('auth', token)
+            .set('content-type', 'application/json')
+            .send({
+                id: managePlanRiskId,
+                management_plan: "new plan",
+                active: 1,
+                section: "management_plan",
+                updateFiles: [],
+                riskassessment: [
+                    {
+                        id: null,
+                        risks_achieving_impact: "TEST TEST TEST",
+                        description_risk: "TEST TEST",
+                        likelihood: 5,
+                        impact: 1,
+                        risk_score: 4,
+                        active: 1,
+                        manage_plan_risk_id: null,
+                        opportinities: [
+
+                        ]
+                    }
+                ]
+            }
+            )
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('Full Proposal: Patch management plan and risk.');
                 expect(res).to.be.a('object')
             });
 
