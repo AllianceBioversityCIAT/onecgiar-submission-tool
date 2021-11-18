@@ -670,6 +670,9 @@ router.get("/countries", [checkJwt], initiatives.getCountries);
 //get regions
 router.get("/regions", [checkJwt], initiatives.getRegions);
 
+//Get Risks
+router.get("/risks", [checkJwt], initiatives.GetRisks);
+
 
 /**
  * 
@@ -703,6 +706,7 @@ router.get("/projected-probabilities", [checkJwt], initiatives.getProjectedProba
 router.get("/sdg-targets", [checkJwt], initiatives.getSdgTargets);
 //get Action Areas Outcomes Indicators
 router.get("/action-areas/outcomes-indicators", [checkJwt], initiatives.getActionAreasOutcomesIndicators);
+
 
 
 /**

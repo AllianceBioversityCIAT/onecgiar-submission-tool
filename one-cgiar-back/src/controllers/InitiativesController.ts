@@ -1208,7 +1208,7 @@ export const getInstitutions = async (req: Request, res: Response) => {
 
 
 /**
- * 
+ * GET INSTITUTIONS TYPES
  * @param req 
  * @param res 
  * @returns 
@@ -1216,8 +1216,6 @@ export const getInstitutions = async (req: Request, res: Response) => {
 
 export const getInstitutionsTypes = async (req: Request, res: Response) => {
     try {
-        //Get institution types from Clarisa
-        // const institutionsTypes = await getClaInstitutionsTypes();
 
         //Get institution types from submission
 
@@ -1278,31 +1276,14 @@ export const getCRP = async (req: Request, res: Response) => {
 
 
 /**
- * 
+ * REQUEST IMPACT AREAS FROM ST
  * @param req 
  * @param res 
  * @returns 
  */
-
-// export const requestInstitution = async (req: Request, res: Response) => {
-//     try {
-//         const institutionRequested = await requestClaInstitution(req.body);
-//         res.json(new ResponseHandler('Requested institution.', { institutionRequested }));
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(error.httpCode).json(error);
-//     }
-// }
-
-
 export async function requestImpactAreas(req: Request, res: Response) {
 
     try {
-
-        //Get impact areas from Clarisa
-
-        // const impactAreasRequested = await getImpactAreas();
-
 
         //Get impact areas from submission
 
@@ -1313,6 +1294,31 @@ export async function requestImpactAreas(req: Request, res: Response) {
 
 
         res.json(new ResponseHandler('Requested Impact areas.', { impactAreasRequested }));
+    } catch (error) {
+        console.log(error);
+        return res.status(error.httpCode).json(error);
+    }
+
+}
+
+/**
+ * REQUEST RISKS FROM ST
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function GetRisks(req: Request, res: Response) {
+
+    try {
+
+        //Get impact areas from submission
+
+        // create new Meta Data object
+        const initiativeshandler = new InitiativeHandler();
+
+        let risks = await initiativeshandler.requestRisks();
+
+        res.json(new ResponseHandler('Requested Risks.', { risks }));
     } catch (error) {
         console.log(error);
         return res.status(error.httpCode).json(error);
@@ -1379,6 +1385,7 @@ export async function getActionAreasOutcomesIndicators(req: Request, res: Respon
         return res.status(error.httpCode).json(error);
     }
 }
+
 
 
 function getRepoConstStage(tableName: string) {

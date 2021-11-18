@@ -93,9 +93,9 @@ export class InitiativeHandler {
     }
 
 
-     /**
-     * GET METADATA (CLARISA) FROM SUBMISSION TOOL
-     */
+    /**
+    * GET METADATA (CLARISA) FROM SUBMISSION TOOL
+    */
 
     async requestDepthScale(impactIndicatorId) {
 
@@ -214,10 +214,10 @@ export class InitiativeHandler {
     }
 
 
-     /**
-     * PREVIEW PARTNERS FOR IMPACT STRATEGIES
-     */
-      async requestPreviewPartners(){
+    /**
+    * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+    */
+    async requestPreviewPartners() {
 
         try {
 
@@ -245,17 +245,35 @@ export class InitiativeHandler {
 
             const previewPartners = await this.queryRunner.query(previewPartnersQuery);
             return previewPartners;
-            
+
         } catch (error) {
 
             console.log(error)
             throw new BaseError('Get Preview Partners', 400, error.message, false)
-            
+
         }
 
     }
 
 
+    async requestRisks() {
+
+        try {
+
+            const querySql = `
+            SELECT id,generic_risks
+              FROM clarisa_risks;`;
+            const risks = await this.queryRunner.query(querySql);
+            return risks;
+
+        } catch (error) {
+
+            console.log(error)
+            throw new BaseError('Get Risks', 400, error.message, false)
+
+        }
+
+    }
 
 }
 
