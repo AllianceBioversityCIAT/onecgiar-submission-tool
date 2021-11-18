@@ -82,4 +82,25 @@ describe('FullProposal Controller', async () => {
     });
 
 
+    /**
+     * MANAGE PLAN AND RISK
+     */
+
+    /**GET RISK ASSESSMENT */
+    it('GET /manage-plan/initiativeId/sectionName/ Request Risk Assessment ', async () => {
+
+        await chai
+            .request(app)
+            .get('/api/stages-control/proposal/manage-plan/'+12+'/management_plan')
+            .set('auth', token)
+            .then((res) => {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.have.property('response').to.be.a('object');
+                expect(res.body).to.have.property('title').to.be.equal('Full Proposal: GET manage plan risk  and files.');
+                expect(res).to.be.a('object')
+            });
+
+    });
+
+
 });

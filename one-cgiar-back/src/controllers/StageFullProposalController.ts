@@ -697,7 +697,7 @@ export async function getManagePlanAndFiles(req: Request, res: Response) {
 
         const managePlanData = await fullPposal.requestManagePlanFiles(sectionName);
 
-        res.json(new ResponseHandler('Full Proposal: manage plan risk  and files.', { managePlanData }));
+        res.json(new ResponseHandler('Full Proposal: GET manage plan risk  and files.', { managePlanData }));
 
 
     } catch (error) {

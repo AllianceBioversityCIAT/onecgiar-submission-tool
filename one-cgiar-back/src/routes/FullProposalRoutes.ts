@@ -901,7 +901,7 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
  *           ]
  *       }
  *   },
- *   "title": "Full Proposal: manage plan risk  and files."
+ *   "title": "Full Proposal: GET manage plan risk  and files."
  *  }
  *
  * @apiError Error : Get manage plan risk and files: Full proposal
