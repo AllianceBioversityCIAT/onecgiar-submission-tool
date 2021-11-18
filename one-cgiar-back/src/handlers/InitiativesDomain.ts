@@ -261,7 +261,7 @@ export class InitiativeHandler {
         try {
 
             const querySql = `
-            SELECT id,generic_risks
+            SELECT id,generic_risks,created_at,updated_at
               FROM clarisa_risks;`;
             const risks = await this.queryRunner.query(querySql);
             return risks;
