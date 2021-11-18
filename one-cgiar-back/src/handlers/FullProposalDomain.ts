@@ -1350,14 +1350,58 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND section = "${sectionName}"
                      AND active = 1
                 `
+                ),
+                riskAssessmentQuery = (
+                    `
+                SELECT id,risks_achieving_impact,
+                       description_risk,likelihood,impact,
+                       risk_score,manage_plan_risk_id,active
+                 FROM risk_assessment
+                WHERE manage_plan_risk_id in (
+                SELECT id
+	              FROM manage_plan_risk
+                 WHERE initvStgId = ${initvStg.id}
+                   AND active = 1
+                     )
+                    `
+                ),
+                opportinitiesQuery = (
+                    `
+                    SELECT id,opportunities_description,
+                           risk_assessment_id,active
+                    FROM opportunities
+                   WHERE risk_assessment_id in (
+                   SELECT id
+                     FROM risk_assessment
+                    WHERE manage_plan_risk_id in (
+                   SELECT id
+	                 FROM manage_plan_risk
+                    WHERE initvStgId = ${initvStg.id}
+                      AND active = 1
+                     )
+                    );
+                    
+                    `
                 )
 
             const managePlan = await this.queryRunner.query(managePlanQuery);
             const files = await this.queryRunner.query(filesQuery);
+            const risk = await this.queryRunner.query(riskAssessmentQuery);
+            const opportinities = await this.queryRunner.query(opportinitiesQuery);
+
+            risk.map(ri => {
+                ri['opportinities'] = [opportinities.filter(op => {
+                    return (op.risk_assessment_id === ri.id)
+                })
+                ]
+            })
 
             managePlan.map(mel => {
                 mel['files'] = files.filter(f => {
                     return (f.manage_plan_risk_id === mel.id)
+                })
+                mel['risk_assessment'] = risk.filter(ri => {
+                    return (ri.manage_plan_risk_id === mel.id)
                 })
             }
 

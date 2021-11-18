@@ -868,34 +868,41 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
- *     "response": {
- *         "managePlanData": {
- *             "id": 1,
- *             "initvStgId": 35,
- *             "management_plan": "new plan",
- *             "active": 1,
- *             "created_at": "2021-09-20T20:03:51.000Z",
- *             "updated_at": "2021-09-20T20:03:51.000Z",
- *             "files": [
- *                 {
- *                     "id": 73,
- *                     "tocsId": null,
- *                     "url": "http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx",
- *                     "name": "Book1.xlsx",
- *                     "active": 1,
- *                     "created_at": "2021-09-20T20:03:51.000Z",
- *                     "updated_at": "2021-09-20T20:03:51.000Z",
- *                     "meliaId": null,
- *                     "manage_plan_risk_id": 1,
- *                     "humanId": null,
- *                     "financial_resources_id": null,
- *                     "section": "management_plan"
- *                 }
- *             ]
- *         }
- *     },
- *     "title": "Full Proposal: manage plan risk  and files."
- * }
+ *   "response": {
+ *       "managePlanData": {
+ *           "id": 15,
+ *           "initvStgId": 44,
+ *           "management_plan": "new plan",
+ *           "active": 1,
+ *           "created_at": "2021-11-17T21:15:38.000Z",
+ *           "updated_at": "2021-11-17T21:15:38.000Z",
+ *           "files": [],
+ *           "risk_assessment": [
+ *               {
+ *                   "id": 4,
+ *                   "risks_achieving_impact": "TEST TEST TEST",
+ *                   "description_risk": "TEST TEST",
+ *                   "likelihood": 5,
+ *                   "impact": 1,
+ *                   "risk_score": 4,
+ *                   "manage_plan_risk_id": 15,
+ *                   "active": 1,
+ *                   "opportinities": [
+ *                       [
+ *                           {
+ *                               "id": 2,
+ *                               "opportunities_description": "TEST",
+ *                               "risk_assessment_id": 4,
+ *                               "active": 1
+ *                           }
+ *                       ]
+ *                   ]
+ *               }
+ *           ]
+ *       }
+ *   },
+ *   "title": "Full Proposal: manage plan risk  and files."
+ *  }
  *
  * @apiError Error : Get manage plan risk and files: Full proposal
  *
