@@ -6,28 +6,8 @@ import loaders from './loaders';
 import { errorHandler } from './middlewares/error-handler';
 import path from 'path';
 import { BaseError } from './handlers/BaseError';
-import * as taskClarisa from './utils/task-clarisa';
-
 
 require('dotenv').config();
-
-var cron = require('node-cron');
-
-// Create and Delete institutions every six hours 0 */6 * * *
-cron.schedule(process.env.COPY_INSTITUTIONS, async () => {
-
-    try {
-
-        await taskClarisa.Main();
-        
-    } catch (error) {
-
-        console.log('Data management from CLARISA',error);
-        
-        
-    }
-   
-});
 
 if (!process.env.PORT) {
     process.exit(1);
@@ -53,7 +33,6 @@ createConnection()
     .then(async () => {
         const app = express();
       
-
         await loaders({ expressApp: app });
 
         app.listen(PORT, `${HOST}`, () => {
