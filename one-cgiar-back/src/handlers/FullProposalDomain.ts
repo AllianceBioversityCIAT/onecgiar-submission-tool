@@ -1401,7 +1401,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 mel['files'] = files.filter(f => {
                     return (f.manage_plan_risk_id === mel.id)
                 })
-                mel['risk_assessment'] = risk.filter(ri => {
+                mel['riskassessment'] = risk.filter(ri => {
                     return (ri.manage_plan_risk_id === mel.id)
                 })
             }
