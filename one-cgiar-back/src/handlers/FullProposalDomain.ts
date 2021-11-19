@@ -1391,10 +1391,9 @@ export class ProposalHandler extends InitiativeStageHandler {
             const opportinities = await this.queryRunner.query(opportinitiesQuery);
 
             risk.map(ri => {
-                ri['opportinities'] = [opportinities.filter(op => {
+                ri['opportinities'] = opportinities.filter(op => {
                     return (op.risk_assessment_id === ri.id)
                 })
-                ]
             })
 
             managePlan.map(mel => {
