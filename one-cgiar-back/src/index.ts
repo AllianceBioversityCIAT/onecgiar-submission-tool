@@ -1,14 +1,8 @@
 import 'reflect-metadata';
 import express from 'express';
 // import bodyParser from "body-parser";
-import cors from 'cors';
-import helmet from 'helmet';
 import { createConnection } from 'typeorm';
-import { startAccsCtrl } from './middlewares/access-control';
-import { startMulter } from './middlewares/multer';
-
-
-import Routes from './routes';
+import loaders from './loaders';
 import { errorHandler } from './middlewares/error-handler';
 import path from 'path';
 import { BaseError } from './handlers/BaseError';
@@ -58,44 +52,9 @@ const HOST = process.env.HOST;
 createConnection()
     .then(async () => {
         const app = express();
-        app.use(express.urlencoded({ extended: true }));
-        app.use(express.json());
-        // middlewares
-        startAccsCtrl();
-        startMulter(parentDir);
+      
 
-        app.use(cors());
-        app.use(helmet(
-            { frameguard: false }
-        ));
-
-        app.use(function (req, res, next) {
-            res.setHeader(
-                "Content-Security-Policy", "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
-            );
-            res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); 
-            next();
-        });
-
-        app.use(express.static(parentDir + '/one-cgiar-front/dist/submission-tool'));
-        
-
-        console.log(path.resolve('./uploads'))
-        // public files
-        app.use(express.static('public'))
-
-        // routes
-        app.use("/api", Routes);
-
-        // load front
-        app.get('/', (req, res) => {
-            res.sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html")
-        });
-
-        app.all('*', (req: any, res: any) => {
-            console.log(`[TRACE] Server 200 request: ${req.originalUrl}`);
-            res.status(200).sendFile(parentDir + "/one-cgiar-front/dist/submission-tool/index.html");
-        });
+        await loaders({ expressApp: app });
 
         app.listen(PORT, `${HOST}`, () => {
             console.log(path.join(parentDir, 'uploads'))
