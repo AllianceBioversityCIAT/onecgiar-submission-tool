@@ -1246,6 +1246,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
             }
 
+            files = (typeof files === 'undefined') ? [] : files;
             if (files) {
 
                 for (let index = 0; index < files.length; index++) {
@@ -1278,7 +1279,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 }
 
             }
-
+            updateFiles = (typeof updateFiles === 'undefined') ? [] : updateFiles;
             if (updateFiles.length > 0) {
 
                 for (let index = 0; index < updateFiles.length; index++) {
@@ -1429,6 +1430,8 @@ export class ProposalHandler extends InitiativeStageHandler {
      */
     async upsertRiskAssessment(managePlanRiskId, riskAssessment) {
 
+        riskAssessment = (typeof riskAssessment === 'undefined') ? [] : riskAssessment;
+
         const riskAssessmentRepo = getRepository(RiskAssessment);
         const opportinitiesRepo = getRepository(Opportunities);
 
@@ -1487,6 +1490,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                         /**
                          * OPPORTUNITIES
                          */
+                        risk.opportinities = (typeof risk.opportinities === 'undefined') ? [] : risk.opportinities;
                         if (risk.opportinities.length > 0) {
 
                             for (let index = 0; index < risk.opportinities.length; index++) {
