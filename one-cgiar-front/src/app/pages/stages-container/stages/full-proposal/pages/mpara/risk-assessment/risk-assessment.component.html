@@ -5,20 +5,21 @@
     <form (ngSubmit)="saveSection()" *ngIf="showForm">
 
 
-        <div class="progress_information">
+        <!-- <div class="progress_information">
             select top 5 risk - narratives
             <hr>
-        </div>
+        </div> -->
 
-        <div [ngSwitch]="stepNumber" >
+        <div [ngSwitch]="stepNumber">
 
 
-                    <div class="step_one" *ngSwitchCase="1">
-                        <div class="row">
-                            <div class="col-8">
-                        <ibdc-select-multiple *ngIf="riskListIsLoaded" [options]="{
+            <div class="step_one" *ngSwitchCase="1">
+                <div class="row">
+                    <div class="col-8">
+                        <ibdc-select-multiple *ngIf="riskListIsLoaded"
+                            [hidden]="this.managementPlan?.riskassessment?.length > 4" [options]="{
                         hideSavedList: true,
-                        inputTitle:'Select regions',
+                        inputTitle:'Select top 5 risks',
                         selectList: this.risksList,
                         selectItemName:'risks_achieving_impact',
                         selectItemId:'idBd',
@@ -34,20 +35,27 @@
                        }"></ibdc-select-multiple>
                     </div>
                     <div class="col-8">
-                        <h1>Confirm top 5</h1>
-                        <div class="item_top_five" [hidden]="!item.selected" *ngFor="let item of this.managementPlan?.riskassessment; let i=index"><strong class="ibdc_secondary_color">Top {{i+1}} </strong> - {{item.generic_risks}}</div>
+                        <div class="ibdc_basic_title" *ngIf="this.managementPlan?.riskassessment.length">Confirm top 5</div>
+                        <div class="item_top_five" [hidden]="!item.selected"
+                            *ngFor="let item of this.managementPlan?.riskassessment; let i=index">
+                            <div class="ibdc_basic_description"><strong class="ibdc_secondary_color">Top {{i+1}} </strong> - {{item.generic_risks}}</div>
+                            <div class="icon_container" (click)="removeElementOfTopFiveInStepOne(item)">
+                                <span class="material-icons">delete</span>
+                                <div class="delete_text">Delete</div>
+                            </div>
+                        </div>
                         <!-- <button pButton type="button" label="Confirm"></button> -->
-    
-                    </div>
-                    </div>
 
-                        <h1>Please save to confirm</h1>
+                    </div>
+                </div>
+                <ibdc-alert *ngIf="this.managementPlan?.riskassessment?.length > 4" [options]="{htmlText: 'Please save to confirm top 5', type:'info'}"></ibdc-alert>
 
             </div>
 
             <div class="step_two" *ngSwitchCase="2">
                 <div *ngFor="let riskAssessment of this.managementPlan?.riskassessment" style="margin-top: 40px;">
-                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [all]="this.managementPlan" ></app-risk-assessment-item>
+                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [all]="this.managementPlan">
+                    </app-risk-assessment-item>
                 </div>
             </div>
             <div *ngSwitchDefault>
@@ -62,16 +70,6 @@
 
     </form>
 </div>
-
-
-
-
-
-
-
-
-
-
 
 <!-- <div class="section-container animate__animated animate__fadeIn">
     <div class="row">

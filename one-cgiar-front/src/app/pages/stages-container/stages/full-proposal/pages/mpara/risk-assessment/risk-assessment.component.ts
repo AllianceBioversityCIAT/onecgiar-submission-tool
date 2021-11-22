@@ -68,6 +68,11 @@ export class RiskAssessmentComponent implements OnInit {
     this.getRisksList();
   }
 
+  removeElementOfTopFiveInStepOne(item){
+    item.selected = false;
+    console.log("removeElementOfTopFiveInStepOne");
+  }
+
   getRisksList(){
     this._initiativesService.getRisksList().subscribe(resp=>{
       let response:Risk[] = resp.response.risks;
