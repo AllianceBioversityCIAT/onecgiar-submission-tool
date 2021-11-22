@@ -139,7 +139,7 @@ router.get(
  * @api {get} previews/preview-geographic-scope/:initiativeId/stageId Previews - Request Geographic Scope per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
- * @apiName GetPreviewProjectedBenefits
+ * @apiName GetPreviewGeographic Scope
  * @apiGroup Previews
  *
  * @apiDescription  Shows Preview Geographic Scope per Initiative
