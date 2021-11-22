@@ -55,9 +55,8 @@ export class RiskAssessmentItemComponent implements OnInit {
     this.riskAssessment.likelihood = this.riskAssessmentForm.get("likelihood").value || 0;
     this.riskAssessment.impact = this.riskAssessmentForm.get("impact").value || 0;
     this.riskAssessment.risk_score = this.riskAssessmentForm.get("risk_score").value || 0;
-
-    console.log(this.riskAssessment);
-    console.log(this.all);
+    // console.log(this.riskAssessment);
+    // console.log(this.all);
   }
 
 }

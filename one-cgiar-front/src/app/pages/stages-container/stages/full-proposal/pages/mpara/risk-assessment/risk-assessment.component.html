@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-8">
                         <h1>Confirm top 5</h1>
-                        <div class="item_top_five" *ngFor="let item of this.managementPlan?.riskassessment; let i=index"><strong class="ibdc_secondary_color">Top {{i+1}} </strong> - {{item.generic_risks}}</div>
+                        <div class="item_top_five" [hidden]="!item.selected" *ngFor="let item of this.managementPlan?.riskassessment; let i=index"><strong class="ibdc_secondary_color">Top {{i+1}} </strong> - {{item.generic_risks}}</div>
                         <!-- <button pButton type="button" label="Confirm"></button> -->
     
                     </div>
