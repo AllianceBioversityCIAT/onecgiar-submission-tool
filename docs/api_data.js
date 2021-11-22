@@ -286,7 +286,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"oficial_code\":\"INIT-2\"\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\t\t\t\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"oficial_code\":\"INIT-2\"\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
           "type": "json"
         }
       ]
@@ -407,7 +407,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": " {\n\"value\": 2352, \n\"table_name\": \"context\", \n\"col_name\": \"priority_setting\", \n\"citationId\": null,\n\"active\":true\n}",
+          "content": " {\n\"value\": 2352,\n\"table_name\": \"context\",\n\"col_name\": \"priority_setting\",\n\"citationId\": null,\n\"active\":true\n}",
           "type": "json"
         }
       ]
@@ -597,7 +597,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": " {\n\"title\": \"test4\", \n\"link\": \"test4\", \n\"table_name\": \"context\", \n\"col_name\": \"priority_setting\", \n\"citationId\": null,\n\"active\":true\n}",
+          "content": " {\n\"title\": \"test4\",\n\"link\": \"test4\",\n\"table_name\": \"context\",\n\"col_name\": \"priority_setting\",\n\"citationId\": null,\n\"active\":true\n}",
           "type": "json"
         }
       ]
@@ -881,7 +881,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n\"table_name\": \"general-information\", \n\"col_name\": \"budget\", \n\"active\":true\n}",
+          "content": "{\n\"table_name\": \"general-information\",\n\"col_name\": \"budget\",\n\"active\":true\n}",
           "type": "json"
         }
       ]
@@ -998,7 +998,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n\"table_name\": \"context\", \n\"col_name\": \"priority_setting\", \n\"active\":true\n}",
+          "content": "{\n\"table_name\": \"context\",\n\"col_name\": \"priority_setting\",\n\"active\":true\n}",
           "type": "json"
         }
       ]
@@ -1149,7 +1149,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"users\": [\n            {\n                \"userId\": 41,\n                \"first_name\": \"First Name\",\n                \"last_name\": \"Last Name\",\n                \"email\": \"e.mail@mail.org\",\n                \"role_name\": \"Science Group Directors/Designated (SGD) / Initiative Design Team\",\n                \"role_acronym\": \"SGD\",\n                \"roleId\": 1\n            },\n             ...\n\t\t\t\n\t\t\t     ]\n    },\n    \"title\": \"Users by Initiative\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"users\": [\n            {\n                \"userId\": 41,\n                \"first_name\": \"First Name\",\n                \"last_name\": \"Last Name\",\n                \"email\": \"e.mail@mail.org\",\n                \"role_name\": \"Science Group Directors/Designated (SGD) / Initiative Design Team\",\n                \"role_acronym\": \"SGD\",\n                \"roleId\": 1\n            },\n             ...\n\n\t\t\t     ]\n    },\n    \"title\": \"Users by Initiative\"\n}",
           "type": "json"
         }
       ]
@@ -1454,6 +1454,75 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "previews/preview-geographic-scope/:initiativeId/stageId",
+    "title": "Previews - Request Geographic Scope per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewProjectedBenefits",
+    "group": "Previews",
+    "description": "<p>Shows Preview Geographic Scope per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"previewGeographicScope\": {\n          \"GeoScope\": {\n              \"regions\": [\n                  {\n                      \"region_id\": 2,\n                      \"name\": \"Africa\",\n                      \"initvStgId\": 34\n                  }\n              ],\n              \"countries\": [\n                  {\n                      \"country_id\": 4,\n                      \"name\": \"Afghanistan\",\n                      \"initvStgId\": 34\n                  }\n              ]\n          }\n      }\n  },\n  \"title\": \"Previews:Preview Geographic Scope\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: ERROR Get Preview Geographic Scope: Previews General</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Geographic Scope: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
     "url": "stages-control/proposal/packages",
     "title": "Work package - Request All work packages",
     "version": "1.0.2",
@@ -1507,7 +1576,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"created_at\": \"2021-05-21T19:14:34.000Z\",\n                \"updated_at\": \"2021-05-21T19:14:34.000Z\",\n                \"id\": 41,\n                \"active\": 1,\n                \"name\": \"Market intelligence\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": \"CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.\",\n                \"pathway_content\": \"Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).\",\n                \"is_global\": null\n            }\n\t\t\t\n\t\t\t     ]\n    },\n    \"title\": \"Full Proposal: All Work Package.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"created_at\": \"2021-05-21T19:14:34.000Z\",\n                \"updated_at\": \"2021-05-21T19:14:34.000Z\",\n                \"id\": 41,\n                \"active\": 1,\n                \"name\": \"Market intelligence\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": \"CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.\",\n                \"pathway_content\": \"Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).\",\n                \"is_global\": null\n            }\n\n\t\t\t     ]\n    },\n    \"title\": \"Full Proposal: All Work Package.\"\n}",
           "type": "json"
         }
       ]
@@ -1852,7 +1921,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"managePlanData\": {\n          \"id\": 15,\n          \"initvStgId\": 44,\n          \"management_plan\": \"new plan\",\n          \"active\": 1,\n          \"created_at\": \"2021-11-17T21:15:38.000Z\",\n          \"updated_at\": \"2021-11-17T21:15:38.000Z\",\n          \"files\": [],\n          \"risk_assessment\": [\n              {\n                  \"id\": 4,\n                  \"risks_achieving_impact\": \"TEST TEST TEST\",\n                  \"description_risk\": \"TEST TEST\",\n                  \"likelihood\": 5,\n                  \"impact\": 1,\n                  \"risk_score\": 4,\n                  \"manage_plan_risk_id\": 15,\n                  \"active\": 1,\n                  \"opportinities\": [\n                      [\n                          {\n                              \"id\": 2,\n                              \"opportunities_description\": \"TEST\",\n                              \"risk_assessment_id\": 4,\n                              \"active\": 1\n                          }\n                      ]\n                  ]\n              }\n          ]\n      }\n  },\n  \"title\": \"Full Proposal: manage plan risk  and files.\"\n }",
+          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"managePlanData\": {\n          \"id\": 15,\n          \"initvStgId\": 44,\n          \"management_plan\": \"new plan\",\n          \"active\": 1,\n          \"created_at\": \"2021-11-17T21:15:38.000Z\",\n          \"updated_at\": \"2021-11-17T21:15:38.000Z\",\n          \"files\": [],\n          \"risk_assessment\": [\n              {\n                  \"id\": 4,\n                  \"risks_achieving_impact\": \"TEST TEST TEST\",\n                  \"description_risk\": \"TEST TEST\",\n                  \"likelihood\": 5,\n                  \"impact\": 1,\n                  \"risk_score\": 4,\n                  \"manage_plan_risk_id\": 15,\n                  \"active\": 1,\n                  \"opportinities\": [\n                      [\n                          {\n                              \"id\": 2,\n                              \"opportunities_description\": \"TEST\",\n                              \"risk_assessment_id\": 4,\n                              \"active\": 1\n                          }\n                      ]\n                  ]\n              }\n          ]\n      }\n  },\n  \"title\": \"Full Proposal: GET manage plan risk  and files.\"\n }",
           "type": "json"
         }
       ]
@@ -2003,7 +2072,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"created_at\": \"2021-05-21T19:14:34.000Z\",\n                \"updated_at\": \"2021-05-21T19:14:34.000Z\",\n                \"id\": 41,\n                \"active\": 1,\n                \"name\": \"Market intelligence\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": \"CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.\",\n                \"pathway_content\": \"Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).\",\n                \"is_global\": null\n            }\n\t\t\t\n\t\t\t     ]\n    },\n    \"title\": \"Full Proposal: Workpackage.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"created_at\": \"2021-05-21T19:14:34.000Z\",\n                \"updated_at\": \"2021-05-21T19:14:34.000Z\",\n                \"id\": 41,\n                \"active\": 1,\n                \"name\": \"Market intelligence\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": \"CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.\",\n                \"pathway_content\": \"Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).\",\n                \"is_global\": null\n            }\n\n\t\t\t     ]\n    },\n    \"title\": \"Full Proposal: Workpackage.\"\n}",
           "type": "json"
         }
       ]
@@ -2698,7 +2767,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "data: [\n   {\n       \"id\": null,\n       \"melia_plan\": \"new plan\",\n       \"active\": true,\n       \"result_framework\": {\n           \"result_framework_id\":1,\n           \"active\":true,\n           \"tableA\": {\n               \"impact_area\": [\n                   {\n                       \"impact_area_id\": 1,\n                       \"impact_area_name\": \"Nutrition, health and food security\",\n                       \"active\": true,\n                       \"impact_ara_indicators\": [\n                           {\n                               \"impact_indicator_id\": 1,\n                               \"impact_indicator_name\": \"#people benefiting from relevant CGIAR innovations\",\n                               \"active\": true,\n                           },\n                           {\n                               \"impact_indicator_id\": 2,\n                               \"impact_indicator_name\": \"#people meeting minimum dietary energy requirements\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"global_targets\": [\n                           {\n                               \"global_target_id\": 1,\n                               \"global_target_name\": \"the 3 billion people who do not currently have access to safe and nutritious food.\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"sdg_targets\": [\n                           {\n                               \"sdg_target_id\": 1,\n                               \"sdg_target_code\": \"1.1\",\n                               \"sdg_target\": \"By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day\",\n                               \"active\": true,\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableB\": {\n               \"action_area\": [\n                   {\n                       \"action_area_id\": 1,\n                       \"action_area_name\": \"Systems Transformation\",\n                       \"active\": true,\n                       \"action_area_outcomes\": [\n                           {\n                               \"outcome_id\": 1,\n                               \"outocome_smo_code\": \"ST 1\",\n                               \"outcome_statement\": \"Farmers use technologies or practices that contribute to improved livelihoods, enhance environmental health and biodiversity, are apt in a context of climate change, and sustain natural resources.\",\n                               \"active\": true,\n                               \"outcomes_indicators\": [\n                                   {\n                                       \"outcome_indicator_id\": 1,\n                                       \"outocome_indicator_smo_code\": \"STi 1.1\",\n                                       \"outcome_indicator_statement\": \"Number of farmers using climate smart practices disaggregated by gender\",\n                                       \"active\": true,\n                                   }\n                               ]\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableC\": {\n               \"init_wp_out_indicators\": [\n                   {\n                       \"init_wp_out_indicators_id\": 1,\n                       \"result_type\": \"Outcome\",\n                       \"result\": \"WP 1 Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm\",\n                       \"is_global\": true,\n                       \"active\": true,\n                       \"indicators\": [\n                           {\n                               \"indicator_id\": 1,\n                               \"indicator_name\": \"At least 80% user survey responses satisfied or very satisfied\",\n                               \"unit_messurament\": \"Qualitative measure of satisfaction\",\n                               \"active\": true,\n                           },\n                           {\n                               \"indicator_id\": 2,\n                               \"indicator_name\": \"No. of external user requests annually by CGIAR genebanks\",\n                               \"unit_messurament\": \"Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"geo_scope\": {\n                           \"regions\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"region_id\":14,\n                                   \"region_name\":\"Eastern Africa\"\n\n                               }\n                           ],\n                           \"countries\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"country_id\":20,\n                                   \"country_name\":\"Andorra\"\n\n                               }\n                           ]\n                       },\n                       \"data_management\":[\n                           {\n                               \"id\":1,\n                               \"data_source\":\"Genebank users\",\n                               \"data_collection\":\"User surveys\",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n                           },\n                           {\n                               \n                               \"id\":2,\n                               \"data_source\":\"Annual reports on collection status gathered by Crop Trust/CGIAR.\",\n                               \"data_collection\":\"Online reporting tool\",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n\n                           }\n                       ],\n                       \"base_line\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"base_line_value\":\"Customer satisfaction of 80% or higher\",\n                               \"base_line_year\":\"2017\"\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"base_line_value\":\"601,811 accessions\",\n                               \"base_line_year\":\"2020\"\n\n                           }\n                       ],\n                       \"target\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"target_value\":\"80% or higher\",\n                               \"target_year\":\"2024\"\n\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"target_value\":\"650,000\",\n                               \"target_year\":\"2024\"\n\n                           }\n                       ]\n                   }\n               ]\n           }\n       },\n   }\n  ]",
+          "content": "data: [\n   {\n       \"id\": null,\n       \"melia_plan\": \"new plan\",\n       \"active\": true,\n       \"result_framework\": {\n           \"result_framework_id\":1,\n           \"active\":true,\n           \"tableA\": {\n               \"impact_area\": [\n                   {\n                       \"impact_area_id\": 1,\n                       \"impact_area_name\": \"Nutrition, health and food security\",\n                       \"active\": true,\n                       \"impact_ara_indicators\": [\n                           {\n                               \"impact_indicator_id\": 1,\n                               \"impact_indicator_name\": \"#people benefiting from relevant CGIAR innovations\",\n                               \"active\": true,\n                           },\n                           {\n                               \"impact_indicator_id\": 2,\n                               \"impact_indicator_name\": \"#people meeting minimum dietary energy requirements\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"global_targets\": [\n                           {\n                               \"global_target_id\": 1,\n                               \"global_target_name\": \"the 3 billion people who do not currently have access to safe and nutritious food.\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"sdg_targets\": [\n                           {\n                               \"sdg_target_id\": 1,\n                               \"sdg_target_code\": \"1.1\",\n                               \"sdg_target\": \"By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day\",\n                               \"active\": true,\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableB\": {\n               \"action_area\": [\n                   {\n                       \"action_area_id\": 1,\n                       \"action_area_name\": \"Systems Transformation\",\n                       \"active\": true,\n                       \"action_area_outcomes\": [\n                           {\n                               \"outcome_id\": 1,\n                               \"outocome_smo_code\": \"ST 1\",\n                               \"outcome_statement\": \"Farmers use technologies or practices that contribute to improved livelihoods, enhance environmental health and biodiversity, are apt in a context of climate change, and sustain natural resources.\",\n                               \"active\": true,\n                               \"outcomes_indicators\": [\n                                   {\n                                       \"outcome_indicator_id\": 1,\n                                       \"outocome_indicator_smo_code\": \"STi 1.1\",\n                                       \"outcome_indicator_statement\": \"Number of farmers using climate smart practices disaggregated by gender\",\n                                       \"active\": true,\n                                   }\n                               ]\n                           }\n                       ]\n                   }\n               ]\n           },\n           \"tableC\": {\n               \"init_wp_out_indicators\": [\n                   {\n                       \"init_wp_out_indicators_id\": 1,\n                       \"result_type\": \"Outcome\",\n                       \"result\": \"WP 1 Intermediate Outcome 1.1. Diverse users satisfactorily accessing disease-free, viable, documented germplasm\",\n                       \"is_global\": true,\n                       \"active\": true,\n                       \"indicators\": [\n                           {\n                               \"indicator_id\": 1,\n                               \"indicator_name\": \"At least 80% user survey responses satisfied or very satisfied\",\n                               \"unit_messurament\": \"Qualitative measure of satisfaction\",\n                               \"active\": true,\n                           },\n                           {\n                               \"indicator_id\": 2,\n                               \"indicator_name\": \"No. of external user requests annually by CGIAR genebanks\",\n                               \"unit_messurament\": \"Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)\",\n                               \"active\": true,\n                           }\n                       ],\n                       \"geo_scope\": {\n                           \"regions\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"region_id\":14,\n                                   \"region_name\":\"Eastern Africa\"\n\n                               }\n                           ],\n                           \"countries\": [\n                               {\n                                   \"id\":1,\n                                   \"active\":true,\n                                   \"country_id\":20,\n                                   \"country_name\":\"Andorra\"\n\n                               }\n                           ]\n                       },\n                       \"data_management\":[\n                           {\n                               \"id\":1,\n                               \"data_source\":\"Genebank users\",\n                               \"data_collection\":\"User surveys\",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n                           },\n                           {\n\n                               \"id\":2,\n                               \"data_source\":\"Annual reports on collection status gathered by Crop Trust/CGIAR.\",\n                               \"data_collection\":\"Online reporting tool\",\n                               \"frequency_data_collection\":\"Ongoing\",\n                               \"active\":true,\n\n                           }\n                       ],\n                       \"base_line\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"base_line_value\":\"Customer satisfaction of 80% or higher\",\n                               \"base_line_year\":\"2017\"\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"base_line_value\":\"601,811 accessions\",\n                               \"base_line_year\":\"2020\"\n\n                           }\n                       ],\n                       \"target\":[\n                           {\n                               \"id\":1,\n                               \"active\":true,\n                               \"target_value\":\"80% or higher\",\n                               \"target_year\":\"2024\"\n\n                           },\n                           {\n                               \"id\":2,\n                               \"active\":true,\n                               \"target_value\":\"650,000\",\n                               \"target_year\":\"2024\"\n\n                           }\n                       ]\n                   }\n               ]\n           }\n       },\n   }\n  ]",
           "type": "json"
         }
       ]
