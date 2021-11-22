@@ -34,10 +34,12 @@
         </div>
         
         <div class="col-12">
-            <h3>Opportunities</h3>
-            <div *ngFor="let item of this.riskAssessment.opportinities">
-                <p>{{item}}</p>
+            <div class="ibdc_basic_title">Opportunities</div>
+            <div *ngFor="let opportunity of this.riskAssessment.opportinities">
+                <app-opportunity-item [opportunity]="opportunity" ></app-opportunity-item>
             </div>
+            <button pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
+
         </div>
         
     </div>

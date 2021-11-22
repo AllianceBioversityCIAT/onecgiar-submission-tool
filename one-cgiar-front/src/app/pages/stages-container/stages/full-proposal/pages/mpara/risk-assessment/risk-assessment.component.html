@@ -62,7 +62,7 @@
 
             </div>
         </div>
-        <div class="justify_content_end" [hidden]="!this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected')" *ngIf="!_initiativesService.initiative.readonly">
+        <div class="justify_content_end" [hidden]="(!this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button
                 [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
             </ibdc-save-button>

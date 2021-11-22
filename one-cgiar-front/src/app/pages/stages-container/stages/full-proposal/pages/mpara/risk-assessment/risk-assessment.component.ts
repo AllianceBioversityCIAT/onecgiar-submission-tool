@@ -118,7 +118,7 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   saveSection() {
-
+    console.log(this.managementPlan);
     if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
 
     let formData = new FormData();

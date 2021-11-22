@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Riskassessment } from '../../models/riskassessment.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
+import { Opportunity } from '../../models/opportunity.interface';
 
 @Component({
   selector: 'app-risk-assessment-item',
@@ -35,6 +36,15 @@ export class RiskAssessmentItemComponent implements OnInit {
       // console.log("chnge");
       this.updateForm();
     })
+  }
+
+  AddOpportunity(){
+    let body:Opportunity={
+      id:null,
+      risk_assessment_id:null,
+      opportunities_description:null,
+    }
+    this.riskAssessment.opportinities.push(body);
   }
 
   getCurrentData(){

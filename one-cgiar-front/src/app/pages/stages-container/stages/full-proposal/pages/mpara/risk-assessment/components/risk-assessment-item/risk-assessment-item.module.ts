@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RiskAssessmentItemComponent } from './risk-assessment-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import {ButtonModule} from 'primeng/button';
+import { OpportunityItemModule } from '../opportunity-item/opportunity-item.module';
 
 
 
@@ -15,7 +17,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    ButtonModule,
+    OpportunityItemModule
   ]
 
 })
