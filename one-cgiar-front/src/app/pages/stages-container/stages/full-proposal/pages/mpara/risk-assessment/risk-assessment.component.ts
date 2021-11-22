@@ -70,7 +70,6 @@ export class RiskAssessmentComponent implements OnInit {
 
   removeElementOfTopFiveInStepOne(item){
     item.selected = false;
-    console.log("removeElementOfTopFiveInStepOne");
   }
 
   getRisksList(){
