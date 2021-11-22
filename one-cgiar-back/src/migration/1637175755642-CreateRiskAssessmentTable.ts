@@ -1,11 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateRiskAssessmentTable1637175755642 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create risk assessment table')
-        await queryRunner.query(`
+export class CreateRiskAssessmentTable1637175755642
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create risk assessment table');
+    await queryRunner.query(`
         CREATE TABLE risk_assessment (
             id int(11) NOT NULL AUTO_INCREMENT,
             risks_achieving_impact TEXT DEFAULT NULL,
@@ -23,10 +23,7 @@ export class CreateRiskAssessmentTable1637175755642 implements MigrationInterfac
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

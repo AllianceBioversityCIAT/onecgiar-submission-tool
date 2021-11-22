@@ -1,17 +1,15 @@
-import { Router } from "express";
-import { checkJwt } from "../middlewares/jwt";
-import { checkRole } from "../middlewares/role";
-import * as previewController from "../controllers/PreviewsController";
+import {Router} from 'express';
+import {checkJwt} from '../middlewares/jwt';
+import {checkRole} from '../middlewares/role';
+import * as previewController from '../controllers/PreviewsController';
 
 const router = Router();
 
-
 /**
- * 
+ *
  * PREVIEWS
- * 
+ *
  */
-
 
 /**
  * GET PREVIEW PARTNERS PER INITIATIVE
@@ -22,16 +20,16 @@ const router = Router();
  * @apiPermission admin
  * @apiName GetPreviewPartners
  * @apiGroup Previews
- * 
+ *
  * @apiDescription  Shows Preview Partners per Initiative
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -67,27 +65,31 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Preview Partners: Previews General", error }
  */
- router.get("/preview-partners/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], previewController.getPreviewPartners);
+router.get(
+  '/preview-partners/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'readOwn')],
+  previewController.getPreviewPartners
+);
 
- /**
-  * GET PREVIEW PROJECTED BENEFITS
-  */
- /**
+/**
+ * GET PREVIEW PROJECTED BENEFITS
+ */
+/**
  * @api {get} previews/preview-projected-benefits/:initiativeId/stageId Previews - Request Projected benefits per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewProjectedBenefits
  * @apiGroup Previews
- * 
+ *
  * @apiDescription  Shows Preview Projected benefits per Initiative
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -124,6 +126,10 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Preview Projected Benefits: Previews General", error }
  */
-  router.get("/preview-projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], previewController.getPreviewProjectedBenefits);
+router.get(
+  '/preview-projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'readOwn')],
+  previewController.getPreviewProjectedBenefits
+);
 
 export default router;

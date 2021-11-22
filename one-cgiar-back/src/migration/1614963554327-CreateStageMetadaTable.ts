@@ -1,11 +1,10 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateStageMetadaTable1614963554327 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('Add stages_meta');
-        let order_col = '`order` int(11) NOT NULL DEFAULT 0,'
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add stages_meta');
+    let order_col = '`order` int(11) NOT NULL DEFAULT 0,';
+    await queryRunner.query(`
             CREATE TABLE stages_meta (
                 id int(11) NOT NULL AUTO_INCREMENT,
                 ${order_col}               
@@ -24,9 +23,7 @@ export class CreateStageMetadaTable1614963554327 implements MigrationInterface {
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

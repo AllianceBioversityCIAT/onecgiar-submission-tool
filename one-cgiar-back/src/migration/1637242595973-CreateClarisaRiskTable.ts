@@ -1,11 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateClarisaRiskTable1637242595973 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('Add clarisa risks');
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add clarisa risks');
+    await queryRunner.query(`
             CREATE TABLE clarisa_risks (
                 id int(11) NOT NULL,
                 generic_risks TEXT DEFAULT NULL,
@@ -14,9 +12,7 @@ export class CreateClarisaRiskTable1637242595973 implements MigrationInterface {
                 PRIMARY KEY (id)               
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

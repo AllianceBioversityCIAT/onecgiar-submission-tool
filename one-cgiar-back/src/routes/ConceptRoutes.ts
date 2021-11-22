@@ -1,25 +1,37 @@
-import { Router } from "express";
-import * as stageconcept from "../controllers/StageConceptController";
-import { checkJwt } from "../middlewares/jwt";
-import { checkRole } from "../middlewares/role";
-
+import {Router} from 'express';
+import * as stageconcept from '../controllers/StageConceptController';
+import {checkJwt} from '../middlewares/jwt';
+import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
-
 // get concept general information
-router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], stageconcept.getGeneralInformation);
+router.get(
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stageconcept.getGeneralInformation
+);
 
 // update concept general information
-router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], stageconcept.upsertConceptGeneralInformation);
+router.patch(
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.upsertConceptGeneralInformation
+);
 
 // get concept narratives
-router.get("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'readOwn')], stageconcept.getConceptNarratives);
+router.get(
+  '/:initiativeId([0-9]+)/narratives',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stageconcept.getConceptNarratives
+);
 
 // update initiatives concept narratives
-router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiatives', 'updateOwn')], stageconcept.upsertConceptNarratives);
-
-
+router.patch(
+  '/:initiativeId([0-9]+)/narratives',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.upsertConceptNarratives
+);
 
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
@@ -33,8 +45,6 @@ router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiati
 // // update work package
 // router.patch("/packages", [checkJwt, checkRole('packages', 'createOwn')], updateWorkPackage);
 
-
-
 // // get regions to work packages
 // router.get("/packages/geo-scope/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getRegionWorkPackage);
 
@@ -43,8 +53,6 @@ router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiati
 
 // // add / remove countries to work packages
 // router.patch("/packages/countries", [checkJwt, checkRole('packages', 'createOwn')], upsertCountryWorkPackage);
-
-
 
 // // get regions to work packages
 // router.get("/packages/benefits/:wrkPkgId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getProjectedBenefitWorkPackage);
@@ -57,8 +65,6 @@ router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiati
 
 // // get regions to work packages
 // router.get("/packages/benefits/timeframes/:prjctBnftId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], getTimeFramesProjectedBenefit);
-
-
 
 // // upsert TOC to initiative
 // router.patch("/tocs/", [checkJwt, checkRole('tocs', 'createOwn'), uploadFile.any()], upsertTOCandFile);
@@ -74,16 +80,10 @@ router.patch("/:initiativeId([0-9]+)/narratives", [checkJwt, checkRole('initiati
 // // // update file in TOC
 // router.put("/tocs/files/", [checkJwt, checkRole('tocs', 'updateOwn')], updateTOCFile);
 
-
-
 // // upsert partnerships
 // router.patch("/partnership/", [checkJwt, checkRole('partnerships', 'updateOwn')], upsertPartnerships);
 
 // // get partnerships
 // router.get("/:initvStgId([0-9]+)/partnership/", [checkJwt, checkRole('partnerships', 'readOwn')], getPartnerships);
-
-
-
-
 
 export default router;

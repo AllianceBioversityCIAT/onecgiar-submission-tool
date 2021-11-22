@@ -1,10 +1,9 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateCitationsTable1626274944166 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('create citations table')
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create citations table');
+    await queryRunner.query(`
         CREATE TABLE citations (
             id int(11) NOT NULL AUTO_INCREMENT,
             initvStgId int(11) NOT NULL,
@@ -19,9 +18,7 @@ export class CreateCitationsTable1626274944166 implements MigrationInterface {
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateSbtImpactAreasTable1635860361755 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create sbt impact areas table')
-        await queryRunner.query(`
+export class CreateSbtImpactAreasTable1635860361755
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create sbt impact areas table');
+    await queryRunner.query(`
         CREATE TABLE sbt_impact_areas (
             id int(11) NOT NULL AUTO_INCREMENT,
             impact_area_id int(11) NOT NULL,
@@ -20,11 +20,7 @@ export class CreateSbtImpactAreasTable1635860361755 implements MigrationInterfac
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

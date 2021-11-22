@@ -1,11 +1,13 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreatePartnershipsTable1613662373833 implements MigrationInterface {
-    name = 'CreatePartnershipsTable1613662373833'
+export class CreatePartnershipsTable1613662373833
+  implements MigrationInterface
+{
+  name = 'CreatePartnershipsTable1613662373833';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('Add parterships');
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add parterships');
+    await queryRunner.query(`
             CREATE TABLE partnerships (
                 id int(11) NOT NULL AUTO_INCREMENT,
                 initvStgId int(11) DEFAULT NULL,
@@ -18,8 +20,7 @@ export class CreatePartnershipsTable1613662373833 implements MigrationInterface 
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

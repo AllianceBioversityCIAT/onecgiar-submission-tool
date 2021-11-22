@@ -1,12 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateTOCTables1612543534607 implements MigrationInterface {
-    name = 'CreateTOCTables1612543534607'
+  name = 'CreateTOCTables1612543534607';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create tocs table');
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create tocs table');
+    await queryRunner.query(`
             CREATE TABLE tocs (
                 id int(11) NOT NULL AUTO_INCREMENT,
                 initvStgId int(11) DEFAULT NULL,
@@ -19,8 +18,8 @@ export class CreateTOCTables1612543534607 implements MigrationInterface {
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
-        console.log('create files table');
-        await queryRunner.query(`
+    console.log('create files table');
+    await queryRunner.query(`
             CREATE TABLE files (
                 id int(11) NOT NULL AUTO_INCREMENT,
                 tocsId int(11) DEFAULT NULL,
@@ -35,11 +34,7 @@ export class CreateTOCTables1612543534607 implements MigrationInterface {
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

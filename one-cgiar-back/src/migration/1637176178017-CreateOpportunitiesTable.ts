@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateOpportunitiesTable1637176178017 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create Opportunities table')
-        await queryRunner.query(`
+export class CreateOpportunitiesTable1637176178017
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create Opportunities table');
+    await queryRunner.query(`
         CREATE TABLE opportunities (
             id int(11) NOT NULL AUTO_INCREMENT,
             opportunities_description TEXT DEFAULT NULL,
@@ -19,11 +19,7 @@ export class CreateOpportunitiesTable1637176178017 implements MigrationInterface
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

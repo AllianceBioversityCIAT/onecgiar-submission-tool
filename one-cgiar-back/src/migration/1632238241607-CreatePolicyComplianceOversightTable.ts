@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreatePolicyComplianceOversightTable1632238241607 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create policy compliance oversight table')
-        await queryRunner.query(`
+export class CreatePolicyComplianceOversightTable1632238241607
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create policy compliance oversight table');
+    await queryRunner.query(`
         CREATE TABLE policy_compliance_oversight (
             id int(11) NOT NULL AUTO_INCREMENT,
             initvStgId int(11) NOT NULL,
@@ -22,10 +22,7 @@ export class CreatePolicyComplianceOversightTable1632238241607 implements Migrat
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

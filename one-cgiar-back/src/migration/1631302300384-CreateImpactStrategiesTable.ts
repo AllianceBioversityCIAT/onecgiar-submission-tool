@@ -1,12 +1,12 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateImpactStrategiesTable1631302300384 implements MigrationInterface {
+export class CreateImpactStrategiesTable1631302300384
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create impact strategies table');
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create impact strategies table')
-        
-        await queryRunner.query(`
+    await queryRunner.query(`
         CREATE TABLE impact_strategies (
             id int(11) NOT NULL AUTO_INCREMENT,
             initvStgId int(11) NOT NULL,
@@ -24,10 +24,7 @@ export class CreateImpactStrategiesTable1631302300384 implements MigrationInterf
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

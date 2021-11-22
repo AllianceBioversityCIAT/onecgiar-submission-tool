@@ -1,10 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateGeneralInformationTable1624984603803 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('create general_information table')
-        await queryRunner.query(`
+export class CreateGeneralInformationTable1624984603803
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create general_information table');
+    await queryRunner.query(`
         CREATE TABLE general_information (
             id int(11) NOT NULL AUTO_INCREMENT,
             name TEXT DEFAULT NULL,
@@ -20,9 +21,7 @@ export class CreateGeneralInformationTable1624984603803 implements MigrationInte
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

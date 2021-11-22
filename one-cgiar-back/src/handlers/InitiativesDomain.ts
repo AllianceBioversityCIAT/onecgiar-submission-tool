@@ -1,17 +1,14 @@
-import { getConnection } from "typeorm";
-import { BaseError } from "./BaseError";
-
+import {getConnection} from 'typeorm';
+import {BaseError} from './BaseError';
 
 export class InitiativeHandler {
+  public queryRunner = getConnection().createQueryRunner().connection;
 
-    public queryRunner = getConnection().createQueryRunner().connection;
-
-    /** Get all initiatives for main table */
-    async getAllInitiatives() {
-
-        let allInitiatives,
-            stagesInitiatives,
-            initvActiveSQL = (` 
+  /** Get all initiatives for main table */
+  async getAllInitiatives() {
+    let allInitiatives,
+      stagesInitiatives,
+      initvActiveSQL = ` 
         SELECT
         initvStg.id AS initvStgId,
         initiative.id AS id,
@@ -31,8 +28,8 @@ export class InitiativeHandler {
         ON stage.id = initvStg.stageId
         WHERE  initvStg.active = 1
         ORDER BY id
-        `),
-            initvDetailSQL = (`
+        `,
+      initvDetailSQL = `
         SELECT
         initiative.id AS id,
         initvStg.id AS initvStgId,
@@ -44,37 +41,32 @@ export class InitiativeHandler {
         ON initvStg.initiativeId = initiative.id
         LEFT JOIN stages stage 
         ON stage.id = initvStg.stageId
-        `)
+        `;
 
-        try {
+    try {
+      allInitiatives = await this.queryRunner.query(initvActiveSQL);
+      stagesInitiatives = await this.queryRunner.query(initvDetailSQL);
 
-            allInitiatives = await this.queryRunner.query(initvActiveSQL);
-            stagesInitiatives = await this.queryRunner.query(initvDetailSQL);
+      // Map Initiatives
+      allInitiatives.map((active) => {
+        active['stages'] = stagesInitiatives.filter((detail) => {
+          return detail.id === active.id;
+        });
+      });
 
-            // Map Initiatives
-            allInitiatives.map(active => {
-                active['stages'] = stagesInitiatives.filter(detail => {
-                    return (detail.id === active.id)
-                })
-            })
-
-            return allInitiatives
-
-        } catch (error) {
-
-            throw new BaseError('Get Inititives', 400, error.message, false)
-
-        }
-
+      return allInitiatives;
+    } catch (error) {
+      throw new BaseError('Get Inititives', 400, error.message, false);
     }
+  }
 
-    /**
-     * GET USER PER INITIATIVE
-     * @param initiativeId 
-     * @returns users
-     */
-    async getUsersByInitiative(initiativeId: string | number) {
-        const querySql = `
+  /**
+   * GET USER PER INITIATIVE
+   * @param initiativeId
+   * @returns users
+   */
+  async getUsersByInitiative(initiativeId: string | number) {
+    const querySql = `
             SELECT
                 users.first_name AS first_name,
                 users.last_name AS last_name,
@@ -88,140 +80,108 @@ export class InitiativeHandler {
             WHERE
                 initiativeId = ${initiativeId};
     `;
-        const users = await this.queryRunner.query(querySql);
-        return users;
-    }
+    const users = await this.queryRunner.query(querySql);
+    return users;
+  }
 
+  /**
+   * GET METADATA (CLARISA) FROM SUBMISSION TOOL
+   */
 
-    /**
-    * GET METADATA (CLARISA) FROM SUBMISSION TOOL
-    */
-
-    async requestDepthScale(impactIndicatorId) {
-
-        const querySql = `
+  async requestDepthScale(impactIndicatorId) {
+    const querySql = `
         SELECT * 
         FROM depth_scales
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
-        const depthScaleData = await this.queryRunner.query(querySql);
-        return depthScaleData;
+    const depthScaleData = await this.queryRunner.query(querySql);
+    return depthScaleData;
+  }
 
-    }
-
-    async requestDepthDescription(impactIndicatorId) {
-
-        const querySql = `
+  async requestDepthDescription(impactIndicatorId) {
+    const querySql = `
         SELECT * 
         FROM  depth_descriptions
        WHERE impactIndicatorId =${impactIndicatorId}
 `;
-        const depthDescriptionData = await this.queryRunner.query(querySql);
-        return depthDescriptionData;
+    const depthDescriptionData = await this.queryRunner.query(querySql);
+    return depthDescriptionData;
+  }
 
-    }
-
-
-    async requestProjectedProbabilities() {
-
-        const querySql = `
+  async requestProjectedProbabilities() {
+    const querySql = `
         SELECT * 
         FROM  projected_probabilities
     `;
-        const projectedData = await this.queryRunner.query(querySql);
-        return projectedData;
+    const projectedData = await this.queryRunner.query(querySql);
+    return projectedData;
+  }
 
-    }
-
-
-    async requestInstitutions() {
-
-        const querySql = `
+  async requestInstitutions() {
+    const querySql = `
         SELECT code,name,acronym,institutionTypeId,institutionType 
         FROM clarisa_institutions
 `;
-        const institutions = await this.queryRunner.query(querySql);
-        return institutions;
+    const institutions = await this.queryRunner.query(querySql);
+    return institutions;
+  }
 
-    }
-
-
-    async requestImpactAreas() {
-
-        const querySql = `
+  async requestImpactAreas() {
+    const querySql = `
         SELECT id,name,description
         FROM clarisa_impact_areas`;
-        const institutions = await this.queryRunner.query(querySql);
-        return institutions;
+    const institutions = await this.queryRunner.query(querySql);
+    return institutions;
+  }
 
-    }
-
-    async requestActionAreas() {
-
-        const querySql = `
+  async requestActionAreas() {
+    const querySql = `
         SELECT id,name,description
         FROM clarisa_action_areas`;
-        const institutions = await this.queryRunner.query(querySql);
-        return institutions;
+    const institutions = await this.queryRunner.query(querySql);
+    return institutions;
+  }
 
-    }
-
-
-    async requestInstitutionsTypes() {
-
-        const querySql = `
+  async requestInstitutionsTypes() {
+    const querySql = `
         SELECT id as code,name
         FROM clarisa_institutions_types
 `;
-        const institutionsTypes = await this.queryRunner.query(querySql);
-        return institutionsTypes;
+    const institutionsTypes = await this.queryRunner.query(querySql);
+    return institutionsTypes;
+  }
 
-    }
-
-
-    async requestGlobalTargets() {
-
-        const querySql = `
+  async requestGlobalTargets() {
+    const querySql = `
         SELECT id, impact_area_id,impact_area_name,target
         FROM clarisa_global_targets
 `;
-        const globalTargets = await this.queryRunner.query(querySql);
-        return globalTargets;
+    const globalTargets = await this.queryRunner.query(querySql);
+    return globalTargets;
+  }
 
-    }
-
-
-    async requestCountries() {
-
-        const querySql = `
+  async requestCountries() {
+    const querySql = `
         SELECT code,isoAlpha2,name,regionDTO
         FROM clarisa_countries`;
-        const countires = await this.queryRunner.query(querySql);
-        return countires;
+    const countires = await this.queryRunner.query(querySql);
+    return countires;
+  }
 
-    }
-
-
-
-    async requestRegions() {
-
-        const querySql = `
+  async requestRegions() {
+    const querySql = `
         SELECT name,parentRegion,um49Code
         FROM clarisa_regions`;
-        const countires = await this.queryRunner.query(querySql);
-        return countires;
+    const countires = await this.queryRunner.query(querySql);
+    return countires;
+  }
 
-    }
-
-
-    /**
-    * PREVIEW PARTNERS FOR IMPACT STRATEGIES
-    */
-    async requestPreviewPartners() {
-
-        try {
-
-            const previewPartnersQuery = `
+  /**
+   * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+   */
+  async requestPreviewPartners() {
+    try {
+      const previewPartnersQuery = `
             SELECT p.institutions_name as partner_name,JSON_UNQUOTE(ci.data-> "$.websiteLink") as url,ci.acronym as acronym,
                   ini.official_code as initiative_id,gi.action_area_description as action_area ,
                   '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
@@ -241,40 +201,28 @@ export class InitiativeHandler {
               AND i.initvStgId = gi.initvStgId
               AND i.active > 0
             ORDER BY ini.id asc     
-            `
+            `;
 
-            const previewPartners = await this.queryRunner.query(previewPartnersQuery);
-            return previewPartners;
-
-        } catch (error) {
-
-            console.log(error)
-            throw new BaseError('Get Preview Partners', 400, error.message, false)
-
-        }
-
+      const previewPartners = await this.queryRunner.query(
+        previewPartnersQuery
+      );
+      return previewPartners;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Preview Partners', 400, error.message, false);
     }
+  }
 
-
-    async requestRisks() {
-
-        try {
-
-            const querySql = `
+  async requestRisks() {
+    try {
+      const querySql = `
             SELECT id,generic_risks,created_at,updated_at
               FROM clarisa_risks;`;
-            const risks = await this.queryRunner.query(querySql);
-            return risks;
-
-        } catch (error) {
-
-            console.log(error)
-            throw new BaseError('Get Risks', 400, error.message, false)
-
-        }
-
+      const risks = await this.queryRunner.query(querySql);
+      return risks;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Risks', 400, error.message, false);
     }
-
+  }
 }
-
-
