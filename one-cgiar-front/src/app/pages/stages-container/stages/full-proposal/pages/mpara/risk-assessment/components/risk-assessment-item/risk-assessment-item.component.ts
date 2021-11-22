@@ -11,7 +11,9 @@ import { Opportunity } from '../../models/opportunity.interface';
 })
 export class RiskAssessmentItemComponent implements OnInit {
   @Input() riskAssessment:Riskassessment;
-  @Input() all:any;
+  @Input() managementPlan:any;
+  @Input() risksList:any;
+  riskTitleEditableIsActive = false;
   riskAssessmentForm:FormGroup;
   constructor(
     public _initiativesService:InitiativesService
@@ -20,6 +22,7 @@ export class RiskAssessmentItemComponent implements OnInit {
       id:new FormControl(null),
       risks_achieving_impact:new FormControl( null),
       description_risk:new FormControl( null),
+      idBd:new FormControl( null),
       likelihood:new FormControl(null),
       impact:new FormControl(null),
       risk_score:new FormControl( null),
@@ -36,6 +39,11 @@ export class RiskAssessmentItemComponent implements OnInit {
       // console.log("chnge");
       this.updateForm();
     })
+  }
+
+  activeRiskTitleEditable(){
+    console.log("activeRiskTitleEditable");
+    this.riskTitleEditableIsActive = true;
   }
 
   AddOpportunity(){

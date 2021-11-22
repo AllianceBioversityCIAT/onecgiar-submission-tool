@@ -82,6 +82,8 @@ export class RiskAssessmentComponent implements OnInit {
       })
       this.risksList = response;
       this.riskListIsLoaded = true;
+      console.log(response);
+
     })
   }
 

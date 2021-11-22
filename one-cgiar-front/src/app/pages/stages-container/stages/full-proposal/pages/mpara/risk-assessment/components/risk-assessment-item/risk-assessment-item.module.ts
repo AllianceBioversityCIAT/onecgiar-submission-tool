@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import {ButtonModule} from 'primeng/button';
 import { OpportunityItemModule } from '../opportunity-item/opportunity-item.module';
+import { ButtonEditOrDeleteModule } from '../../../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
 
 
 
@@ -19,7 +20,8 @@ import { OpportunityItemModule } from '../opportunity-item/opportunity-item.modu
     ReactiveFormsModule,
     IbdAngularComponentsModule,
     ButtonModule,
-    OpportunityItemModule
+    OpportunityItemModule,
+    ButtonEditOrDeleteModule
   ]
 
 })

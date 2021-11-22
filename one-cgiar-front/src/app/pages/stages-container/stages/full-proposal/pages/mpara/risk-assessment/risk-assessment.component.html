@@ -54,7 +54,7 @@
 
             <div class="step_two" *ngSwitchCase="2">
                 <div *ngFor="let riskAssessment of this.managementPlan?.riskassessment" style="margin-top: 40px;">
-                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [all]="this.managementPlan">
+                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [managementPlan]="this.managementPlan" [risksList]="this.risksList">
                     </app-risk-assessment-item>
                 </div>
             </div>
@@ -62,7 +62,7 @@
 
             </div>
         </div>
-        <div class="justify_content_end" [hidden]="(!this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
+        <div class="justify_content_end" [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button
                 [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
             </ibdc-save-button>

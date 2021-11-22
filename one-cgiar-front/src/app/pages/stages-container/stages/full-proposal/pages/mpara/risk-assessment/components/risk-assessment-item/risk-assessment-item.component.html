@@ -1,5 +1,65 @@
 <div class="custom_card">
-    {{this.riskAssessment.risks_achieving_impact}}
+    <div class="risk_header">
+        <div class="risk_name" *ngIf="!riskTitleEditableIsActive">{{this.riskAssessment.risks_achieving_impact}}</div>
+        <div class="edit_button" *ngIf="!riskTitleEditableIsActive">
+            <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
+        </div>
+
+        <ibdc-select *ngIf="riskTitleEditableIsActive" [options]="
+        {
+         required:true,
+         inputTitle:'Select Risk',
+         form:riskAssessmentForm,
+         formControlId:'idBd',
+         selectItemId:'idBd',
+         formControlName:'risks_achieving_impact',
+         selectItemName:'risks_achieving_impact',
+         frontendSearchAttribute:'risks_achieving_impact',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.risksList
+        }">
+        ></ibdc-select>
+
+
+<!-- 
+        <ibdc-select [options]="
+        {
+         required:true,
+         inputTitle:'Choose a depth scale',
+         form:pobImpactAreaForm,
+         formControlId:'depthScaleId',
+         formControlName:'depthScaleName',
+         selectItemName:'depthScaleName',
+         selectItemId:'depthScaleId',
+         frontendSearchAttribute:'depthScaleName',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.depthScalesList
+        }">
+        ></ibdc-select> -->
+
+
+
+
+
+        <!-- <ibdc-select-multiple *ngIf="true"
+        [hidden]="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{
+            hideSavedList: true,
+            inputTitle:'Select top 5 risks',
+            selectList: this.risksList,
+            selectItemName:'risks_achieving_impact',
+            selectItemId:'idBd',
+            frontendSearchAttribute:'risks_achieving_impact',
+            readOnlyVariable: this._initiativesService.initiative.readonly,
+            savedList:{
+                list:this.managementPlan.riskassessment,
+                selectItemId:'idBd',
+                selectItemName:'risks_achieving_impact',
+                idToSave:'idBd',
+                labelName:'regions'
+            }
+         }"></ibdc-select-multiple> -->
+
+    </div>
     <hr>
     <div class="row">
         <div class="col-12">
