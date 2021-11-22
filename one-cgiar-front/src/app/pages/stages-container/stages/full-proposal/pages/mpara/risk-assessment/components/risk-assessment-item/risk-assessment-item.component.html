@@ -1,0 +1,44 @@
+<div class="custom_card">
+    {{this.riskAssessment.risks_achieving_impact}}
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <ibdc-textarea
+            [options]="{inputTitle:'Detailed description', form:riskAssessmentForm, formControlName:'description_risk'
+            ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:100}">
+            </ibdc-textarea>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-input
+            [options]="{inputTitle:'Likelihood', form:riskAssessmentForm, formControlName:'likelihood',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0}">
+            </ibdc-input>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-input
+            [options]="{inputTitle:'Consequence (impact)', form:riskAssessmentForm, formControlName:'impact',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0}">
+            </ibdc-input>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-input
+            [options]="{inputTitle:'Risk Score', form:riskAssessmentForm, formControlName:'risk_score',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0}">
+            </ibdc-input>
+        </div>
+        <div class="col-6"></div>
+        <div class="col-12">
+            <br>
+            <hr>
+            <br>
+        </div>
+        
+        <div class="col-12">
+            <h3>Opportunities</h3>
+            <div *ngFor="let item of this.riskAssessment.opportinities">
+                <p>{{item}}</p>
+            </div>
+        </div>
+        
+    </div>
+</div>

@@ -1,6 +1,79 @@
 <section-title name="Risk assessment"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
+
+    <form (ngSubmit)="saveSection()" *ngIf="showForm">
+
+
+        <div class="progress_information">
+            select top 5 risk - narratives
+            <hr>
+        </div>
+
+        <div [ngSwitch]="stepNumber" >
+
+
+                    <div class="step_one" *ngSwitchCase="1">
+                        <div class="row">
+                            <div class="col-8">
+                        <ibdc-select-multiple *ngIf="riskListIsLoaded" [options]="{
+                        hideSavedList: true,
+                        inputTitle:'Select regions',
+                        selectList: this.risksList,
+                        selectItemName:'risks_achieving_impact',
+                        selectItemId:'idBd',
+                        frontendSearchAttribute:'risks_achieving_impact',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.managementPlan.riskassessment,
+                            selectItemId:'idBd',
+                            selectItemName:'risks_achieving_impact',
+                            idToSave:'idBd',
+                            labelName:'regions'
+                        }
+                       }"></ibdc-select-multiple>
+                    </div>
+                    <div class="col-8">
+                        <h1>Confirm top 5</h1>
+                        <div class="item_top_five" *ngFor="let item of this.managementPlan?.riskassessment; let i=index"><strong class="ibdc_secondary_color">Top {{i+1}} </strong> - {{item.generic_risks}}</div>
+                        <!-- <button pButton type="button" label="Confirm"></button> -->
+    
+                    </div>
+                    </div>
+
+                        <h1>Please save to confirm</h1>
+
+            </div>
+
+            <div class="step_two" *ngSwitchCase="2">
+                <div *ngFor="let riskAssessment of this.managementPlan?.riskassessment" style="margin-top: 40px;">
+                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [all]="this.managementPlan" ></app-risk-assessment-item>
+                </div>
+            </div>
+            <div *ngSwitchDefault>
+
+            </div>
+        </div>
+        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button
+                [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+            </ibdc-save-button>
+        </div>
+
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="section-container animate__animated animate__fadeIn">
     <div class="row">
         <div class="col-12">
             <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
@@ -31,4 +104,4 @@
         </div>
     </form>
 
-</div>
+</div> -->
