@@ -4,7 +4,7 @@ import {Request, Response} from 'express';
 const tocHost = 'https://dev-toc.s3.us-east-2.amazonaws.com/toc_';
 
 /**
- *
+ *GET TOC NARRATIVE
  * @returns toc narrative
  */
 
