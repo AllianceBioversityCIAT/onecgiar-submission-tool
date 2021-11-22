@@ -49,7 +49,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
     );
 
     res.json(
-      new ResponseHandler('Full Proposal:Preview Partners', {previewPartners})
+      new ResponseHandler('Previews:Preview Partners', {previewPartners})
     );
   } catch (error) {
     console.log(error);
@@ -95,8 +95,56 @@ export async function getPreviewProjectedBenefits(req: Request, res: Response) {
       );
 
     res.json(
-      new ResponseHandler('Full Proposal:Preview Projected Benefits', {
+      new ResponseHandler('Previews:Preview Projected Benefits', {
         previewProjectedBenefits
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET PREVIEW FOR GEOGRAPHIC SCOPE
+ * @param req { initiativeId, stageId }
+ * @param res { previewGeographicScope }
+ * @returns {Regions, Countries}
+ */
+export async function getPreviewGeographicScope(req: Request, res: Response) {
+  const {initiativeId, stageId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {id: stageId}});
+
+    // get intiative by stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    // if not intitiative by stage, throw error
+    if (initvStg == null || initvStg == undefined) {
+      throw new BaseError(
+        'Previews: Error',
+        400,
+        `Previews not found in stage:` + stageId,
+        false
+      );
+    }
+
+    // create new full proposal object
+    const previewsdomain = new PreviewsDomain();
+
+    const previewGeographicScope =
+      await previewsdomain.requestPreviewGeographicScope(
+        initvStg.id.toString()
+      );
+
+    res.json(
+      new ResponseHandler('Previews:Preview Geographic Scope', {
+        previewGeographicScope
       })
     );
   } catch (error) {

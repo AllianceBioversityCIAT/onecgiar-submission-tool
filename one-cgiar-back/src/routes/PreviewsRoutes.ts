@@ -128,8 +128,65 @@ router.get(
  */
 router.get(
   '/preview-projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('strategies', 'readOwn')],
+  [checkJwt, checkRole('benefits', 'readOwn')],
   previewController.getPreviewProjectedBenefits
+);
+
+/**
+ * GET PREVIEW GEOGRAPHIC SCOPE
+ */
+/**
+ * @api {get} previews/preview-geographic-scope/:initiativeId/stageId Previews - Request Geographic Scope per Initiative
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetPreviewProjectedBenefits
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows Preview Geographic Scope per Initiative
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3
+ *
+ * @apiHeader {String} auth
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *   "response": {
+ *       "previewGeographicScope": {
+ *           "GeoScope": {
+ *               "regions": [
+ *                   {
+ *                       "region_id": 2,
+ *                       "name": "Africa",
+ *                       "initvStgId": 34
+ *                   }
+ *               ],
+ *               "countries": [
+ *                   {
+ *                       "country_id": 4,
+ *                       "name": "Afghanistan",
+ *                       "initvStgId": 34
+ *                   }
+ *               ]
+ *           }
+ *       }
+ *   },
+ *   "title": "Previews:Preview Geographic Scope"
+ * }
+ *
+ * @apiError Error : ERROR Get Preview Geographic Scope: Previews General
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "ERROR Get Preview Geographic Scope: Previews General", error }
+ */
+router.get(
+  '/preview-geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  previewController.getPreviewGeographicScope
 );
 
 export default router;

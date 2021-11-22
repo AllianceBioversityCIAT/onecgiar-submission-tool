@@ -44,7 +44,7 @@ describe('Previews Controller', async () => {
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Full Proposal:Preview Partners');
+          .to.be.equal('Previews:Preview Partners');
         expect(res).to.be.a('object');
       });
   });
@@ -65,8 +65,33 @@ describe('Previews Controller', async () => {
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Full Proposal:Preview Projected Benefits');
+          .to.be.equal('Previews:Preview Projected Benefits');
         expect(res).to.be.a('object');
       });
   });
+
+    /**Preview Geographic Scope */
+    it('GET previewGeographicScope/ Request geographic scope per initiative', async () => {
+      await chai
+        .request(app)
+        .get(
+          '/api/previews/preview-geographic-scope/' +
+            initiativeId +
+            '/' +
+            stageId
+        )
+        .set('auth', token)
+        .then((res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('response').to.be.a('object');
+          expect(res.body)
+            .to.have.property('title')
+            .to.be.equal('Previews:Preview Geographic Scope');
+          expect(res).to.be.a('object');
+        });
+    });
+
+
+
+
 });

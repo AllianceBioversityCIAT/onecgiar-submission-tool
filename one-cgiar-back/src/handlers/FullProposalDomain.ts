@@ -1351,7 +1351,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
               upsertedRiskAssessment.push(riskSaved);
             } else {
-            /**CREATE NEW RISK ASSESSMENT */
+              /**CREATE NEW RISK ASSESSMENT */
               riskSaved = await riskAssessmentRepo.save(newRiskAssessment);
 
               upsertedRiskAssessment.push(riskSaved);
