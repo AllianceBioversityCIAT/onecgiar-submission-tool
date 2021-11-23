@@ -157,4 +157,75 @@ export class PreviewsDomain {
       );
     }
   }
+
+  /**
+   * REQUEST PREVIEW RISK ASSESSMENT
+   * @param initiativeId
+   * @returns GeoScope
+   */
+  async requestPreviewRiskAssessment(initiativeId: string) {
+    try {
+      // retrieve preview Geographic Scope (Regions and countries)
+      const managePlanQuery = ` 
+      SELECT id,initvStgId
+      FROM manage_plan_risk
+     WHERE initvStgId = ${initiativeId}
+       AND active = 1;
+      `,
+        riskAssessmentQuery = `
+          SELECT id,risks_achieving_impact,
+                 description_risk,likelihood,impact,
+                 risk_score,manage_plan_risk_id,active
+           FROM risk_assessment
+          WHERE manage_plan_risk_id in (
+          SELECT id
+          FROM manage_plan_risk
+           WHERE initvStgId =${initiativeId}
+             AND active = 1
+               )
+              `,
+        opportinitiesQuery = `
+              SELECT id,opportunities_description,
+                     risk_assessment_id,active
+              FROM opportunities
+             WHERE risk_assessment_id in (
+             SELECT id
+               FROM risk_assessment
+              WHERE manage_plan_risk_id in (
+             SELECT id
+             FROM manage_plan_risk
+              WHERE initvStgId = ${initiativeId}
+                AND active = 1
+               )
+              );
+              
+              `;
+
+      const managePlan = await this.queryRunner.query(managePlanQuery);
+      const risk = await this.queryRunner.query(riskAssessmentQuery);
+      const opportinities = await this.queryRunner.query(opportinitiesQuery);
+
+      risk.map((ri) => {
+        ri['opportinities'] = opportinities.filter((op) => {
+          return op.risk_assessment_id === ri.id;
+        });
+      });
+
+      managePlan.map((mel) => {
+        mel['riskassessment'] = risk.filter((ri) => {
+          return ri.manage_plan_risk_id === mel.id;
+        });
+      });
+
+      return {managePlan: managePlan[0]};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Risk Assessment: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

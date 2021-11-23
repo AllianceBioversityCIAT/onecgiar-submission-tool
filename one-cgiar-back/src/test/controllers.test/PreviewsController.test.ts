@@ -70,28 +70,39 @@ describe('Previews Controller', async () => {
       });
   });
 
-    /**Preview Geographic Scope */
-    it('GET previewGeographicScope/ Request geographic scope per initiative', async () => {
-      await chai
-        .request(app)
-        .get(
-          '/api/previews/preview-geographic-scope/' +
-            initiativeId +
-            '/' +
-            stageId
-        )
-        .set('auth', token)
-        .then((res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body).to.have.property('response').to.be.a('object');
-          expect(res.body)
-            .to.have.property('title')
-            .to.be.equal('Previews:Preview Geographic Scope');
-          expect(res).to.be.a('object');
-        });
-    });
+  /**Preview Geographic Scope */
+  it('GET previewGeographicScope/ Request geographic scope per initiative', async () => {
+    await chai
+      .request(app)
+      .get(
+        '/api/previews/preview-geographic-scope/' + initiativeId + '/' + stageId
+      )
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Previews:Preview Geographic Scope');
+        expect(res).to.be.a('object');
+      });
+  });
 
-
-
-
+  /**Preview Risk Assessment */
+  it('GET previewRiskAssessment/ Request risk assessment per initiative', async () => {
+    await chai
+      .request(app)
+      .get(
+        '/api/previews/preview-risk-assessment/' + initiativeId + '/' + stageId
+      )
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Previews:Preview Risk Assessment');
+        expect(res).to.be.a('object');
+      });
+  });
 });

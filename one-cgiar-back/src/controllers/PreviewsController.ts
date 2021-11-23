@@ -152,3 +152,49 @@ export async function getPreviewGeographicScope(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
+
+/**
+ * GET PREVIEW FOR RISK ASSESSMENT
+ * @param req { initiativeId, stageId }
+ * @param res { previewRiskAssessment }
+ * @returns previewRiskAssessment
+ */
+export async function getPreviewRiskAssessment(req: Request, res: Response) {
+  const {initiativeId, stageId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {id: stageId}});
+
+    // get intiative by stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    // if not intitiative by stage, throw error
+    if (initvStg == null || initvStg == undefined) {
+      throw new BaseError(
+        'Previews: Error',
+        400,
+        `Previews not found in stage:` + stageId,
+        false
+      );
+    }
+
+    // create new full proposal object
+    const previewsdomain = new PreviewsDomain();
+
+    const previewRiskAssessment =
+      await previewsdomain.requestPreviewRiskAssessment(initvStg.id.toString());
+
+    res.json(
+      new ResponseHandler('Previews:Preview Risk Assessment', {
+        previewRiskAssessment
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
