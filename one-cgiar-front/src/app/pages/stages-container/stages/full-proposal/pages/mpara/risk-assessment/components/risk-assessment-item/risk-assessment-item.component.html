@@ -71,19 +71,18 @@
         <div class="col-6 margin-top-15">
             <ibdc-input
             [options]="{inputTitle:'Likelihood', form:riskAssessmentForm, formControlName:'likelihood',
-            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0,iconText:'pin',description:'should be rate from 1 to 5'}">
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
             </ibdc-input>
         </div>
         <div class="col-6 margin-top-15">
             <ibdc-input
             [options]="{inputTitle:'Consequence (impact)', form:riskAssessmentForm, formControlName:'impact',
-            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0,iconText:'pin',description:'should be rate from 1 to 5'}">
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
             </ibdc-input>
         </div>
         <div class="col-6 margin-top-15">
-            <div>
-                <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
-            </div>
+            <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
+
             <!-- <ibdc-input
             [options]="{inputTitle:'Risk Score', form:riskAssessmentForm, formControlName:'risk_score',
             readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0,iconText:'pin',description:'a'}">
