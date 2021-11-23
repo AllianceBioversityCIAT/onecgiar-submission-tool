@@ -218,10 +218,10 @@ export class MenuComponent implements OnInit {
               frontRoute : '/is-resports'
             });
 
-            // this.mapPreviewInDynamicListMenu(3, 5, 12, {
-            //   showName : 'Wp Reports',
-            //   frontRoute : '/work-packages/wp-reports'
-            // });
+            this.mapPreviewInDynamicListMenu(3, 5, 12, {
+              showName : 'Wp Reports',
+              frontRoute : '/work-packages/wp-reports'
+            });
 
             this.mapPreviewInDynamicListMenu(3, 1, 8, {
               showName : 'Projection of benefits Reports',

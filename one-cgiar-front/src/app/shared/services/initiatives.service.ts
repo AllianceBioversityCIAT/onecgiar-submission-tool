@@ -504,6 +504,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
   }
 
+  getPreviewGeographicScopeData(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/preview-geographic-scope/${initiativeId}/${stageId}`);
+  }
+
   getPreviewPartners(initiativeId, stageId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/previews/preview-partners/${initiativeId}/${stageId}`);
   }
