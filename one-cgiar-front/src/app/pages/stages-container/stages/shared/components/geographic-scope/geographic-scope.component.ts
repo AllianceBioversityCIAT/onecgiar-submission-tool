@@ -30,7 +30,7 @@ export class GeographicScopeComponent implements OnInit {
   }
   
   setIsGlobal(value){
-    this.localForm.controls['is_global'].setValue(value);
+    this.localForm.controls['is_global'].setValue(value || false);
     // console.log(this.localForm.value.is_global);
   }
 
