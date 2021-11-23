@@ -1324,7 +1324,7 @@ define({ "api": [
         "name": "admin"
       }
     ],
-    "name": "GetPreviewGeographic_Scope",
+    "name": "GetPreviewGeographicScope",
     "group": "Previews",
     "description": "<p>Shows Preview Geographic Scope per Initiative</p>",
     "examples": [
@@ -1514,6 +1514,75 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Projected Benefits: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
+    "url": "previews/preview-risk-assessment/:initiativeId/stageId",
+    "title": "Previews - Request Risk Assessment per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewRiskAssessment",
+    "group": "Previews",
+    "description": "<p>Shows Preview Risk Assessment per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"previewRiskAssessment\": {\n          \"managePlan\": {\n              \"id\": 5,\n              \"initvStgId\": 33,\n              \"riskassessment\": [\n                  {\n                      \"id\": 20,\n                      \"risks_achieving_impact\": \"TEST \",\n                      \"description_risk\": \"TEST TEST\",\n                      \"likelihood\": 5,\n                      \"impact\": 1,\n                      \"risk_score\": 4,\n                      \"manage_plan_risk_id\": 5,\n                      \"active\": 1,\n                      \"opportinities\": [\n                          {\n                              \"id\": 4,\n                              \"opportunities_description\": \"TEST\",\n                              \"risk_assessment_id\": 20,\n                              \"active\": 1\n                          }\n                      ]\n                  },\n                  {\n                      \"id\": 21,\n                      \"risks_achieving_impact\": \"TEST TEST TEST\",\n                      \"description_risk\": \"TEST TEST\",\n                      \"likelihood\": 5,\n                      \"impact\": 1,\n                      \"risk_score\": 4,\n                      \"manage_plan_risk_id\": 5,\n                      \"active\": 1,\n                      \"opportinities\": []\n                  }\n              ]\n          }\n      }\n  },\n  \"title\": \"Previews:Preview Risk Assessment\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: ERROR Get Preview Risk Assessment: Previews General</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Risk Assessment: Previews General\", error }",
           "type": "json"
         }
       ]
