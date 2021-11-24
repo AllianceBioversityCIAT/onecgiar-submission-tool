@@ -35,31 +35,31 @@ export class WpReportsComponent implements OnInit {
     })
   }
 
-  exportExcel() {
-    import("xlsx").then(xlsx => {
+  // exportExcel() {
+  //   import("xlsx").then(xlsx => {
 
 
-      const worksheet = xlsx.utils.json_to_sheet(this.geoScope.regions);
-      var wscols = [
-        {wpx:100},
-        {wpx:100},
-        {wpx:250},
-        {wpx:80},
-        {wpx:250},
-        {wpx:200},
-        {wpx:100},
-        {wpx:100},
-        {wpx:100},
-        {wpx:250},
-    ];
+  //     const worksheet = xlsx.utils.json_to_sheet(this.geoScope.regions);
+  //     var wscols = [
+  //       {wpx:100},
+  //       {wpx:100},
+  //       {wpx:250},
+  //       {wpx:80},
+  //       {wpx:250},
+  //       {wpx:200},
+  //       {wpx:100},
+  //       {wpx:100},
+  //       {wpx:100},
+  //       {wpx:250},
+  //   ];
     
-    worksheet['!cols'] = wscols;
-      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //   worksheet['!cols'] = wscols;
+  //     const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  //     const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
 
-      this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
-    });
-  }
+  //     this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
+  //   });
+  // }
 
 }

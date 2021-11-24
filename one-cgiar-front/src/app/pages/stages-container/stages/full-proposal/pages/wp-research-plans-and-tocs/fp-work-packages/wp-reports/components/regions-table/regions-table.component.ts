@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Region } from '../../models/regionModel.interface';
+import { ManageExcelService } from '../../../../../../services/manage-excel.service';
 
 @Component({
   selector: 'app-regions-table',
@@ -10,10 +11,16 @@ export class RegionsTableComponent implements OnInit {
   @Input() regions:Region[]=[];
   headerPreviewPartners = ['region_id', 'name', 'initvStgId'];
 
-  constructor() { }
+  constructor(
+    private _manageExcelService:ManageExcelService
+  ) { }
 
   ngOnInit(): void {
-    console.log(this.regions);
+    // console.log(this.regions);
+  }
+
+  exportBasicExcel(){
+    this._manageExcelService.exportBasicExcel(this.regions,'Countries preview',[{wpx:90},{wpx:200},{wpx:90}])
   }
 
 }
