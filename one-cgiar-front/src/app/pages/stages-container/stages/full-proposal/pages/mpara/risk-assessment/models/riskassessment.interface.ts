@@ -8,5 +8,7 @@ export interface Riskassessment{
     risk_score?: number,
     active: boolean,
     manage_plan_risk_id?: number,
+    selected?:boolean,
+    idx?:number;
     opportinities?: Opportunity []
 }

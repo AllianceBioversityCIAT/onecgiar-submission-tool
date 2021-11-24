@@ -138,5 +138,15 @@ export class RiskAssessmentComponent implements OnInit {
 
   }
 
+  addIdxToSelected(riskassessment: Riskassessment[]) {
+    let index = 0;
+    riskassessment.map((item: Riskassessment) => {
+      if (item.selected === false) return;
+      index++;
+      item.idx = index
+    })
+    return riskassessment;
+  }
+
 
 }
