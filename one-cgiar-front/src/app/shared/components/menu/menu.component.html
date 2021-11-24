@@ -21,7 +21,7 @@
                     <div #subSectionsList  class="sub-sections" [ngClass]="{'expandIbd': activeClassByRoute([section.description]),'collapseIbd': !activeClassByRoute([section.description])}" [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
                         <!-- sub sections list -->
                         <div class="sub-section-container" *ngFor="let subSection of section.subsections" [hidden]="subSection.block == true">
-                            <div class=" {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"  (click)="menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
+                            <div class=" {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"  (click)="subSection.dynamicList?'':menuNavigation(subSection.active,stage.description,section.description,false,subSection.description)">
                                 <span class="subsection-title" [ngClass]="{'activeSection': activeClassByRoute([subSection.description])}">{{subSection.display_name}}</span>
                                 <div class="status_icons">
                                     <span style="margin-right: 8px;" [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'" class="material-icons-outlined material-icons" *ngIf="subSection.visible && (subSection.subSectionId != 12)">check_circle</span>
