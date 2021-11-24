@@ -435,6 +435,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
             END AS VALIDATION
            FROM risk_assessment  
            WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+           OR (SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+           (SELECT ri.id,
+              CASE
+      WHEN op.opportunities_description IS NULL
+                OR op.opportunities_description = ''
+                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+           THEN FALSE
+           ELSE TRUE
+            END AS VALIDATION
+           FROM opportunities op
+        RIGHT JOIN risk_assessment ri
+       ON op.risk_assessment_id = ri.id
+     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -478,11 +493,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
    (SELECT risks_achieving_impact,
         CASE 
         WHEN risks_achieving_impact IS NULL
-          OR risks_achieving_impact = ''
-          OR description_risk IS NULL
+    OR risks_achieving_impact = ''
+    OR description_risk IS NULL
           OR description_risk = ''
-          OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+    OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
           OR likelihood IS NULL
           OR likelihood = ''
           OR impact IS NULL
@@ -494,13 +509,28 @@ export class MetaDataHandler extends InitiativeStageHandler {
           END AS VALIDATION
          FROM risk_assessment  
          WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+  OR (SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+           (SELECT ri.id,
+              CASE
+      WHEN op.opportunities_description IS NULL
+                OR op.opportunities_description = ''
+                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+           THEN FALSE
+           ELSE TRUE
+            END AS VALIDATION
+           FROM opportunities op
+        RIGHT JOIN risk_assessment ri
+       ON op.risk_assessment_id = ri.id
+     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
        THEN FALSE
          ELSE TRUE
          END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
        JOIN subsections_meta subsec
-      WHERE ini.id = ${this.initvStgId_}
+      WHERE ini.id =  ${this.initvStgId_}
         AND sec.stageId= ini.stageId
     AND sec.id = subsec.sectionId
         AND sec.description='mpara'
