@@ -109,9 +109,11 @@ export class RiskAssessmentComponent implements OnInit {
   getManagePlan() {
     this._initiativesService.getManagePlan(this._initiativesService.initiative.id, 'risk_assessment').subscribe(resp => {
       let response: managementPlan = resp.response.managePlanData;
-      this.steperValidation(response);
+      console.log(response);
+      this.steperValidation(response?.riskassessment?.length);
+      console.log(response?.riskassessment?.length);
       if (response) this.managementPlan = response;
-      if (!response) this.managementPlan.riskassessment = []
+      if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
     },
       err => { console.log(err); }
       , () => {
