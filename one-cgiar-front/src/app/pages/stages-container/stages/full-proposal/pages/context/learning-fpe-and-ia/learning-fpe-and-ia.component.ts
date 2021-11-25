@@ -81,13 +81,13 @@ export class LearningFpeAndIaComponent implements OnInit {
       this.showform = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log(err);
+      //console.log(err);
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value, 250);
     })
   }

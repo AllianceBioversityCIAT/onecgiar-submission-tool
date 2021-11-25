@@ -78,7 +78,7 @@ export class PobIndicatorComponent implements OnInit {
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
   beforeindicator = null;
-  getIndicatorItem(indicatorsListPOBSavediItem){
+  getIndicatorItem(indicatorsListPOBSavediItem) {
     if (indicatorsListPOBSavediItem.impactAreaIndicator != this.beforeindicator) {
       this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(indicatorsListPOBSavediItem.impactAreaIndicator);
     }
@@ -86,27 +86,27 @@ export class PobIndicatorComponent implements OnInit {
     return this.indicatorsListPOBSavediItem
   }
 
-  reloadDimensions(){
+  reloadDimensions() {
     this.showDimensions = false;
     setTimeout(() => {
-     this.showDimensions = true;
+      this.showDimensions = true;
     }, 500);
   }
 
-  reloadDepthScale(){
+  reloadDepthScale() {
     this.showDepthScale = false;
     setTimeout(() => {
-     this.showDepthScale = true;
+      this.showDepthScale = true;
     }, 500);
-    
+
   }
 
 
-  getIndicatorMetaData(indicatorId){
-    return this.indicatorsList.find(item=>item.impactAreaIndicator == indicatorId);
+  getIndicatorMetaData(indicatorId) {
+    return this.indicatorsList.find(item => item.impactAreaIndicator == indicatorId);
   }
 
-  removeindicatorBlock(index,object,itemLink:HTMLElement){
+  removeindicatorBlock(index, object, itemLink: HTMLElement) {
     itemLink.classList.remove('animate__animated', 'animate__fadeInRight', 'animate__faster');
     itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
     itemLink.addEventListener('animationend', () => {
@@ -118,30 +118,30 @@ export class PobIndicatorComponent implements OnInit {
         setTimeout(() => {
           itemLink.style.display = 'none';
         }, 300);
-      }else{
+      } else {
         this.unselectInpactAreaIndicatorInDropDown(object.impactAreaIndicator);
         setTimeout(() => {
-          this.indicatorsListPOBSavedList.splice(index,1);
+          this.indicatorsListPOBSavedList.splice(index, 1);
         }, 300);
-     
+
       }
 
     });
   }
 
-  unselectInpactAreaIndicatorInDropDown(impactAreaIndicator){
+  unselectInpactAreaIndicatorInDropDown(impactAreaIndicator) {
     if (impactAreaIndicator) {
-      if (this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicator)) {
-        this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicator).selected = false
+      if (this.indicatorsList.find(item => item.impactAreaIndicator == impactAreaIndicator)) {
+        this.indicatorsList.find(item => item.impactAreaIndicator == impactAreaIndicator).selected = false
       }
     }
 
   }
 
-  updateForm(resp){
+  updateForm(resp) {
     // console.log("RESP");
     // console.log(resp);
-    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id?resp.id:null);
+    this.pobImpactAreaForm.controls['projectionBenefitsId'].setValue(resp.id ? resp.id : null);
     if (this.pobImpactAreaForm.get("impactAreaIndicator").value) {
       this.pobImpactAreaForm.controls['impactAreaIndicator'].setValue(resp.impactAreaIndicator);
     }
@@ -152,25 +152,26 @@ export class PobIndicatorComponent implements OnInit {
     this.pobImpactAreaForm.controls['impactAreaId'].setValue(resp.impactAreaId);
     if (resp.impactAreaName) {
       this.pobImpactAreaForm.controls['impactAreaName'].setValue(resp.impactAreaName);
-    }else{
+    } else {
       this.pobImpactAreaForm.controls['impactAreaName'].setValue(this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == 3)
-      .sections.find((section) => section.sectionId == 1)
-      .subsections.find((subSection) => subSection.subSectionId == 8)
-      .dynamicList.find(impactAreas=>impactAreas.id == (resp.impactAreaId)).description);
+        .sections.find((section) => section.sectionId == 1)
+        .subsections.find((subSection) => subSection.subSectionId == 8)
+        .dynamicList.find(impactAreas => impactAreas.id == (resp.impactAreaId)).description);
     }
-    
+
     this.pobImpactAreaForm.controls['notes'].setValue(resp.notes);
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
     this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
-    this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active !== false ?resp.impact_area_active: false);
+    this.pobImpactAreaForm.controls['probabilityName'].setValue(resp.probabilityName);
+    this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active !== false ? resp.impact_area_active : false);
 
-    this.dimensionsList = resp.dimensions?resp.dimensions:[];
+    this.dimensionsList = resp.dimensions ? resp.dimensions : [];
     //Aux
     // this.dimensionsListByIndicatorID = resp.dimensions;
     // this.originalIndicatorId = resp.impactAreaIndicator
     // console.log("form");
     // console.log(this.pobImpactAreaForm.value);
-    this.formUpdated =  true;
+    this.formUpdated = true;
   }
 
 }

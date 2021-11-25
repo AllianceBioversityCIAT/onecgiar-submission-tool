@@ -39,10 +39,10 @@ export class GenderDiwComponent implements OnInit {
 
   getHumanResources(){
     this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'gender').subscribe(resp=>{
-      console.log(resp);
+      //console.log(resp);
       let respData = resp.response.humanResourcesData;
       this.data.id = respData?.id;
-      console.log(respData);
+      //console.log(respData);
       this.secionForm.controls['example'].setValue(respData?.gender_diversity_inclusion);
     },
     err=>{console.log(err);}
@@ -60,8 +60,8 @@ export class GenderDiwComponent implements OnInit {
 
     formData.append('data', JSON.stringify(this.data));
     this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources',3).subscribe(resp=>{
-      console.log("Human resources");
-      console.log(resp);
+      //console.log("Human resources");
+      //console.log(resp);
       this.getHumanResources();
       this.secionForm.valid?
       this._interactionsService.successMessage('Human resources has been saved'):

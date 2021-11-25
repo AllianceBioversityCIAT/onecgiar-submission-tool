@@ -1,42 +1,32 @@
-<section-title name="Projection of benefits - Impact area" ></section-title>
+<section-title name="Projection of benefits - Impact area"></section-title>
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <div class="top_bar"></div> -->
     <form (ngSubmit)="saveForm()">
 
-
-   
-            <div  *ngIf="indicatorsListLoaded">
-                <div *ngFor="let item of indicatorsListPOBSavedList; let i=index" [hidden]="item.impact_area_active === false">
-                    <app-pob-indicator 
-                    [indicatorsListPOBSavediItem]="item" 
-                    [indicatorsList]="indicatorsList" 
-                    [index]="i"
-                    [indicatorsListPOBSavedList]="indicatorsListPOBSavedList"
-                    ></app-pob-indicator>
-                </div>
+        <div *ngIf="indicatorsListLoaded">
+            <div *ngFor="let item of indicatorsListPOBSavedList; let i=index"
+                [hidden]="item.impact_area_active === false">
+                <app-pob-indicator [indicatorsListPOBSavediItem]="item" [indicatorsList]="indicatorsList" [index]="i"
+                    [indicatorsListPOBSavedList]="indicatorsListPOBSavedList"></app-pob-indicator>
             </div>
-          
-                <br>
-                <div class="button_add_container center_flex" [hidden]="!indicatorsListLoaded">
-                    <button 
-                    pButton pRipple 
-                    type="button" label="Add Indicator" 
-                    class="p-button-success save-button"     
-                    icon="pi pi-plus" iconPos="right" 
-                    (click)="addIndicator()" 
-                    ></button>
-                </div>
-          
-                <div class="sekeletons_load" *ngIf="!indicatorsListLoaded">
-                    <app-general-information-skeleton></app-general-information-skeleton>
-                </div>
+        </div>
+
+        <br>
+        <div class="button_add_container center_flex" [hidden]="!indicatorsListLoaded">
+            <button pButton pRipple type="button" label="Add Indicator" class="p-button-success save-button"
+                icon="pi pi-plus" iconPos="right" (click)="addIndicator()"></button>
+        </div>
+
+        <div class="sekeletons_load" *ngIf="!indicatorsListLoaded">
+            <app-general-information-skeleton></app-general-information-skeleton>
+        </div>
 
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+            <ibdc-save-button
+                [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:this._dataControlService.minutesToRemeberSave}">
+            </ibdc-save-button>
         </div>
-    <!-- <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button [options]="{readOnlyVariable: false,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
-    </div> -->
-</form>
+        
+    </form>
 </div>
