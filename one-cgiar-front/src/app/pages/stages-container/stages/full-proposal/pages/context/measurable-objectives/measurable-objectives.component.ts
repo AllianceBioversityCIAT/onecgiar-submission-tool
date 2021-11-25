@@ -53,13 +53,13 @@ export class MeasurableObjectivesComponent implements OnInit {
       this.showform = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      //console.log("errorerekkasssssssssssssssdasda");
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("smart_objectives").value, 250);
     })
   }

@@ -29,7 +29,7 @@ export class ActivityBreakdownComponent implements OnInit {
   onSave(){
     // this.fixedData.list[0].value = 'as';
 
-    console.log(this.fixedData);
+    //console.log(this.fixedData);
   }
 
 }

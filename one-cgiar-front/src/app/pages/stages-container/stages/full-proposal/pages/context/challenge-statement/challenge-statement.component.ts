@@ -37,7 +37,7 @@ export class ChallengeStatementComponent implements OnInit {
   }
 
   upserInfo(){
-    console.log(this.challengeStatementForm);
+    //console.log(this.challengeStatementForm);
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?
@@ -54,13 +54,12 @@ export class ChallengeStatementComponent implements OnInit {
       this.showfrom = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      //console.log("errorerekkasssssssssssssssdasda");
     })
   }
 
   formChanges(){
     this.challengeStatementForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 500);
     })
   }

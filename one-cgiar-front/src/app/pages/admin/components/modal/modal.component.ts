@@ -38,12 +38,12 @@ export class ModalComponent implements OnInit {
     const formValue = this.userForm.baseForm.value;
     if (this.actionTODO === Action.NEW) {
       this.userSvc.new(formValue).subscribe((res) => {
-        console.log('New ', res);
+        //console.log('New ', res);
       });
     } else {
       const userId = this.data?.user?.id;
       this.userSvc.update(userId, formValue).subscribe((res) => {
-        console.log('Update', res);
+        //console.log('Update', res);
       });
     }
   }

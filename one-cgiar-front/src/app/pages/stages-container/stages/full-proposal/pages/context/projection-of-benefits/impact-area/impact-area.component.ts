@@ -48,7 +48,7 @@ export class ImpactAreaComponent implements OnInit {
       this.router.navigate([currentRoute])
     }, 10);
     
-    console.log("Reload");
+    //console.log("Reload");
   }
 
   detectRoute(){
@@ -67,7 +67,7 @@ export class ImpactAreaComponent implements OnInit {
             // this.updateForm(resp.response.projectionBenefitsByImpact,routeResp.pobIaID);
             // console.log(this.pobImpactAreaForm.value.impactAreaIndicatorName);
           }else{
-            console.log('%c Not created', 'background: #222; color: #bada55');
+            //console.log('%c Not created', 'background: #222; color: #bada55');
           }
   
         })
@@ -83,7 +83,7 @@ export class ImpactAreaComponent implements OnInit {
 
 
   saveForm(){
-    console.log("saveForm");
+    //console.log("saveForm");
     // console.log(this.indicatorsListPOBSavedList);
     this.indicatorsListPOBSavedList.map(item=>{
       console.log(item.dimensions);
@@ -96,9 +96,9 @@ export class ImpactAreaComponent implements OnInit {
     // console.log(this.indicatorsListPOBSavedList.length);
     this.indicatorsListPOBSavedList.map(item=>{
 
-      console.log(item);
+      //console.log(item);
       this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
-        console.log(resp);
+        //console.log(resp);
         cont++
         if (cont == this.indicatorsListPOBSavedList.length) {
           this.reloadComponent()
@@ -123,7 +123,7 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   addIndicator(){
-    console.log(this.indicatorsListPOBSavedList.length+ ' < ' +this.indicatorsList.length);
+    //console.log(this.indicatorsListPOBSavedList.length+ ' < ' +this.indicatorsList.length);
     if (this.indicatorsListPOBSavedList.length < this.indicatorsList.length) {
       let item = new Object();
       item['impactAreaIndicatorName'] = "";

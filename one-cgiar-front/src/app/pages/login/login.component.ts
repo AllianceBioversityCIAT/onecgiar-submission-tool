@@ -59,8 +59,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
         // this.spinnerService.hide("login_spinner");
       },err=>{
-        console.log(err.error?.description);
-        console.log(err);
+        //console.log(err.error?.description);
+        //console.log(err);
 
         if (err.error?.description) {
           if (err.error?.description.indexOf('80090308')>-1) {
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         
         // User password incorrect.
         // Not Found
-        console.log("error");
+        //console.log("error");
         this.spinnerService.hide("login_spinner");
       },()=>{this.spinnerService.hide("login_spinner");})
     );

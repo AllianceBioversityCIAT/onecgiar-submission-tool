@@ -14,7 +14,7 @@ export class FullProposalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("ngOnInit");
+    //console.log("ngOnInit");
 
     
   }
