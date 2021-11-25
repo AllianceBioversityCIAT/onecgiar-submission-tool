@@ -48,7 +48,7 @@
                                        
                                         <div class="dynamicListButton_texts">
                                           <div class="point"></div>
-                                          <span [ngClass]="{'activeSection_dynamicList': item.activeSection}">{{item.showName||'(Unnamed)'}}</span>
+                                          <span>{{item.showName||'(Unnamed)'}}</span>
                                         </div>
                                         <span style="margin-right: 8px;" [style.color]="item.fieldsCompleted || item.validateWP?'#469e49':'#a8a8a8'" class="material-icons-outlined material-icons">assignment_turned_in</span>
                                     </div>
@@ -96,6 +96,11 @@
         </div>
 
     </div>
+
+
+
+
+
 
 
     <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
@@ -186,30 +191,5 @@
                   </mat-expansion-panel>
             </mat-accordion>
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           
-
-
-
-
-
-
-
-
-
-
         </mat-expansion-panel>
     </mat-accordion>
