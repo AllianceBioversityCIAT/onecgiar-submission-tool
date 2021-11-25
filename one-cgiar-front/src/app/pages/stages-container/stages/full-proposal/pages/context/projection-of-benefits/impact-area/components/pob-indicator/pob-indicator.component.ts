@@ -162,6 +162,7 @@ export class PobIndicatorComponent implements OnInit {
     this.pobImpactAreaForm.controls['notes'].setValue(resp.notes);
     this.pobImpactAreaForm.controls['depthScaleId'].setValue(resp.depthScaleId);
     this.pobImpactAreaForm.controls['probabilityID'].setValue(resp.probabilityID);
+    this.pobImpactAreaForm.controls['probabilityName'].setValue(resp.probabilityName);
     this.pobImpactAreaForm.controls['impact_area_active'].setValue(resp.impact_area_active !== false ?resp.impact_area_active: false);
 
     this.dimensionsList = resp.dimensions?resp.dimensions:[];
