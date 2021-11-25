@@ -11,7 +11,8 @@
                     <div 
                     class="number-and-title-container noActiveSection" 
                     routerLinkActive="activeSection"
-                    [routerLink]="'full-proposal/'+section.description"
+                    [routerLink]="section.subsections.length?'full-proposal/'+section.description+'/'+section?.subsections[0]?.description:'full-proposal/'+section.description"
+                    [class.disabled]="true"
                     (click)="toggleExpand(subSectionsList);">
                     
                         <div class="number">{{i+1}}</div>
