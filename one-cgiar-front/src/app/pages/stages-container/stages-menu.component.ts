@@ -36,7 +36,6 @@ export class StagesMenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
       this._dataControlService.generalInfoChange$.emit();
     });
   }
@@ -48,15 +47,13 @@ export class StagesMenuComponent implements OnInit {
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-        // console.log("NavigationStart "+testi++);
-        // console.log(event);
+
         this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo = event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })
     this._interactionsService.collapseHeader = true;
     this.activatedRoute.params.subscribe(resp => {
-      // this.initiativesSvc.initvStgId = resp['id'];
       this.initiativesSvc.initiative.id = resp['id'];
       this.initiativesSvc.getInitiativeById(resp['id']).subscribe((success) => {
         this.initiativesSvc.initiative.name = success.name;
@@ -66,26 +63,15 @@ export class StagesMenuComponent implements OnInit {
           console.log(error);
         },
       )
-      // this.initiativesSvc.getInitvStgId()
-      // this.initiativesSvc.getAllInitiatives().subscribe(initiativeResp=>{
-      //   this.initiativesSvc.initvStgId = initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId;
-      // })
-      // console.log("initiative id menu : "+this.initiativesSvc.initiative.id);
-      // this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
-      // this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
-      //   console.log(resp);
-      //   this.stageMenu.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
-      // })
+
     });
 
     this._initiativesService.getInitvStgId(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      //console.log(resp.response);
       this._initiativesService.initvStgId = resp.response;
       this.getRolefromInitiativeById();
     })
     
     this._dataControlService.validateMenu$.subscribe(resp=>{
-      // console.log("validateMenu$");
       this.validateAllSections();
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
@@ -109,15 +95,12 @@ export class StagesMenuComponent implements OnInit {
 
   getRolefromInitiativeById(){
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp=>{
-      //console.log(resp.response);
 
       let rol = resp.response.roles
       let firstRol =  rol[0]?.roleId
 
       if (rol.length) {
-        //console.log(firstRol);
         this._initiativesService.initiative.readonly = ( firstRol === 1|| firstRol === 2|| firstRol === 3|| firstRol === 5||this.user?.roles[0].id === 1)?false:true;
-        //console.log(this._initiativesService.initiative.readonly);
       }else{
         this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1)?false:true;
       }
