@@ -72,7 +72,7 @@ export class StagesMenuComponent implements OnInit {
     })
     
     this._dataControlService.validateMenu$.subscribe(resp=>{
-      // this.validateAllSections();
+      this.validateAllSections();
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 

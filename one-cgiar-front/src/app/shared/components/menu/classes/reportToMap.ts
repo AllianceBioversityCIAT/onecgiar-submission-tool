@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-export class ImpactAreas{
+export class ReportToMap{
     impactAreas:any = [];
     // data for routing
 

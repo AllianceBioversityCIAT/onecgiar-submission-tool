@@ -9,7 +9,7 @@ import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
-import { ImpactAreas } from './classes/impactAreas.class';
+import { ListToMap } from './classes/listToMap';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -149,7 +149,7 @@ export class MenuComponent implements OnInit {
       if (userMenuResp.response.stages.length > 1) {
 
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-          let wpss = new ImpactAreas( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
           this._dataControlService.wpMaped = true;
           // console.log(this._dataControlService.userMenu);
@@ -159,10 +159,10 @@ export class MenuComponent implements OnInit {
         });
 
 
-        let pobList =  new ImpactAreas(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
+        let pobList =  new ListToMap(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
 
-        let impactStatementsList = new ImpactAreas(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
