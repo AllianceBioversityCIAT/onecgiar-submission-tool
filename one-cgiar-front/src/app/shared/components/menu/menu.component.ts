@@ -9,6 +9,7 @@ import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
+import { ImpactAreas } from './classes/impactAreas.class';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -80,6 +81,7 @@ export class MenuComponent implements OnInit {
     this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
 
       // console.log(impacAreas.response.impactAreasRequested);
+
       this.impacAreasList = impacAreas.response.impactAreasRequested;
       // console.log(this.impacAreasList);
     }, (err) => {
@@ -147,14 +149,8 @@ export class MenuComponent implements OnInit {
       if (userMenuResp.response.stages.length > 1) {
 
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-          // console.log(wpsResp);
-          wpsResp.response.workpackage.map((wpResp) => {
-            wpResp.subSectionName = 'work-package';
-            wpResp.frontRoute = '/work-packages/work-package/';
-            wpResp.sort = 'showName';
-            wpResp.showName = wpResp.acronym;
-          });
-          this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
+          let wpss = new ImpactAreas( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          this.mapDataInMenu(3, 5, 12, wpss);
           this._dataControlService.wpMaped = true;
           // console.log(this._dataControlService.userMenu);
         }, (err) => {
@@ -163,54 +159,10 @@ export class MenuComponent implements OnInit {
         });
 
 
-
-
-        let pobList = [];
-        let impactStatementsList = [];
-
-        this.impacAreasList.map(item => {
-          let body: any = {}
-          let impactArea = {}
-          body = {}
-          Object.keys(item).map(key => {
-            impactArea[key] = item[key];
-          })
-
-          body = impactArea;
-          body.showName = body.name;
-          body.frontRoute = '/projection-of-benefits/impact-area/';
-          body.subSectionName = 'impact-area';
-          body.sort = 'id';
-          pobList.push(body)
-
-        })
+        let pobList =  new ImpactAreas(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
 
-
-        // var arr = [1, 2, 3, 4, 5];
-
-        // var results: number[] = await Promise.all(arr.map(async (item): Promise<number> => {
-        //     await callAsynchronousOperation(item);
-        //     return item + 1;
-        // }));
-
-        this.impacAreasList.map(item => {
-          let body: any = {}
-          let impactArea = {}
-          body = {}
-          Object.keys(item).map(key => {
-            impactArea[key] = item[key];
-          })
-
-          // body = item;
-          body = impactArea;
-          body.showName = body.name;
-          body.frontRoute = '/impact-areas/impact-area/';
-          body.subSectionName = 'impact-area';
-          body.sort = 'id';
-          impactStatementsList.push(body)
-        })
-
+        let impactStatementsList = new ImpactAreas(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
