@@ -1,4 +1,4 @@
-<section-title name="Activity breakdown" ></section-title>
+<section-title name="Activity breakdown"></section-title>
 <div class="section-container animate__animated animate__fadeIn">
 
     <div class="custom_table_container">
@@ -7,27 +7,62 @@
             <div class="table_title" *ngFor="let item of this.fixedData.headerNames">{{item}}</div>
         </div>
         <div class="table_content" *ngFor="let tableDataItem of this.fixedData.list; let i=index">
-            <div class="table_item"><div class="name">{{tableDataItem.name}}</div></div>
-            <div class="table_item" *ngFor="let item of [1,1,1]; let j=index">
-                <div *ngIf="this.tableDataItem.valuesList[j]">
-                    <input [(ngModel)]="this.tableDataItem.valuesList[j].value" name="value" placeholder="Value" class="field" type="text">
-                </div>
-                <div *ngIf="!this.tableDataItem.valuesList[j]">
-                    <input style="border: 2px solid #d5d5d5; background-color: #e7e7e7;" disabled value="Not avaible" name="value" placeholder="Value" class="field" type="text">
+            <div class="table_item">
+                <div class="name">{{tableDataItem.name}}</div>
+            </div>
+            <!-- <div class="table_item">
+                <ibdc-select [options]="
+                    {
+                     required:true,
+                     inputTitle:'Choose a depth scale',
+                     form:pobImpactAreaForm,
+                     formControlId:'depthScaleId',
+                     formControlName:'depthScaleName',
+                     selectItemName:'depthScaleName',
+                     selectItemId:'depthScaleId',
+                     frontendSearchAttribute:'depthScaleName',
+                     readOnlyVariable: false,
+                     selectList: this.depthScalesList
+                    }">
+                    ></ibdc-select>
+            </div> -->
+            <div class="table_item" *ngFor="let item of fixedData.years; let j=index">
+                <div>
+                    <!-- <input [ngModel]="item.value | currency" (ngModelChange)="item.value=$event"name="value" placeholder="Value" class="field"
+                        type="text"> -->
+                    <input [ngModel]="tableDataItem.valuesList[item] " (ngModelChange)="tableDataItem.valuesList[item]= $event" name="value" placeholder="Value" class="field"
+                        type="text">
+                    <!-- <input [ngModel]="getCellValue(item, tableDataItem) | currency" (ngModelChange)="getTotal(tableDataItem, item, $event)" name="value" placeholder="Value" class="field"
+                        type="text"> -->
                 </div>
             </div>
-            <!-- <div class="table_item"><input [(ngModel)]="this.tableDataItem.valuesList[1].value" placeholder="Value" class="field" type="text"></div>
-            <div class="table_item "><input placeholder="Value" class="field" type="text"></div> -->
-            <div class="table_item center_flex"><div class="total">{{tableDataItem.total}}</div></div>
+            <div class="table_item center_flex">
+                <div class="total">{{getTotal(tableDataItem) }}</div>
+            </div>
+            <button mat-button color="warn">
+                <span class="icon_delete_indicator material-icons material-icons-outlined"> delete </span>
+            </button>
         </div>
         <div class="table_total">
             <!-- Lorem ipsum dolor sit amet.
             colum -->
         </div>
+        <div [hidden]="fixedData.list.length == COLUMNS.length" class="button_add_container center_flex">
+            <button (click)="addActivity()" type="submit" label="Save" iconpos="right" ng-reflect-label="Save"
+                ng-reflect-icon-pos="right" class="p-button-success p-button p-component ng-star-inserted"
+                ng-reflect-icon="pi pi-plus">
+                <span class="p-button-icon p-button-icon-right pi pi-plus" aria-hidden="true">
+                </span>
+                <span class="p-button-label">Add Activity</span>
+            </button>
+        </div>
+
     </div>
 
 </div>
 
 <form (ngSubmit)="onSave()">
-    <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
+    <ibdc-save-button
+        [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}">
+    </ibdc-save-button>
 </form>
