@@ -1,37 +1,37 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import * as stagefull from '../controllers/StageFullProposalController';
-import { checkJwt } from '../middlewares/jwt';
-import { uploadFile } from '../middlewares/multer';
-import { checkRole } from '../middlewares/role';
+import {checkJwt} from '../middlewares/jwt';
+import {uploadFile} from '../middlewares/multer';
+import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
 // get initiative general information
 router.get(
-    '/:initiativeId([0-9]+)/general-information',
-    [checkJwt, checkRole('initiatives', 'readOwn')],
-    stagefull.getGeneralInformation
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getGeneralInformation
 );
 
 // upsert initiative general information
 router.patch(
-    '/:initiativeId([0-9]+)/general-information',
-    [checkJwt, checkRole('initiatives', 'updateOwn')],
-    stagefull.upsertGeneralInformation
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.upsertGeneralInformation
 );
 
 // get initiative context
 router.get(
-    '/:initiativeId([0-9]+)/context',
-    [checkJwt, checkRole('initiatives', 'readOwn')],
-    stagefull.getContext
+  '/:initiativeId([0-9]+)/context',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getContext
 );
 
 // upsert initiative context
 router.patch(
-    '/:initiativeId([0-9]+)/context',
-    [checkJwt, checkRole('initiatives', 'updateOwn')],
-    stagefull.upsertContext
+  '/:initiativeId([0-9]+)/context',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.upsertContext
 );
 
 // read work packages list
@@ -83,9 +83,9 @@ router.patch(
  *     { message: "Get workpackage:", error }
  */
 router.get(
-    '/packages/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('packages', 'readOwn')],
-    stagefull.getWorkPackages
+  '/packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stagefull.getWorkPackages
 );
 
 // read work package for id
@@ -152,9 +152,9 @@ router.get(
  *     { message: "Get workpackage id:", error }
  */
 router.get(
-    '/package/:wrkPkgId([0-9]+)',
-    [checkJwt, checkRole('packages', 'readOwn')],
-    stagefull.getWorkPackage
+  '/package/:wrkPkgId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stagefull.getWorkPackage
 );
 
 // read all work package
@@ -305,30 +305,30 @@ router.get('/packages', stagefull.getAllWorkPackages);
  *     {"name": "Work Package: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/packages/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('packages', 'updateOwn')],
-    stagefull.patchWorkPackage
+  '/packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('packages', 'updateOwn')],
+  stagefull.patchWorkPackage
 );
 
 // upsert projection benefits to initiative
 router.patch(
-    '/projection-benefits/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('benefits', 'updateOwn')],
-    stagefull.patchProjectionBenefits
+  '/projection-benefits/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'updateOwn')],
+  stagefull.patchProjectionBenefits
 );
 
 // get all projection benefits
 router.get(
-    '/projection-benefits/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('benefits', 'readOwn')],
-    stagefull.getProjectionBenefits
+  '/projection-benefits/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefits
 );
 
 // get projection benefits per impact area
 router.get(
-    '/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)',
-    [checkJwt, checkRole('benefits', 'readOwn')],
-    stagefull.getProjectionBenefitsByImpact
+  '/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefitsByImpact
 );
 
 // upsert impact strategies to initiative
@@ -426,9 +426,9 @@ router.get(
  *     {"name": "Upsert Impact Strategies: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/impact-strategies/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('strategies', 'updateOwn')],
-    stagefull.patchImpactStrategies
+  '/impact-strategies/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'updateOwn')],
+  stagefull.patchImpactStrategies
 );
 
 // get impact strategies to initiative
@@ -495,9 +495,9 @@ router.patch(
  *     { message: "Get Impact Strategies: Full proposal.", error }
  */
 router.get(
-    '/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)',
-    [checkJwt, checkRole('strategies', 'readOwn')],
-    stagefull.getImpactStrategies
+  '/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'readOwn')],
+  stagefull.getImpactStrategies
 );
 
 // upsert melia and files to initiative
@@ -711,9 +711,9 @@ router.get(
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
-    [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
-    stagefull.patchMeliaAndFiles
+  '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
+  stagefull.patchMeliaAndFiles
 );
 
 // Get melia and files to initiative
@@ -772,9 +772,9 @@ router.patch(
  *     { message: "Get melia and files: Full proposal", error }
  */
 router.get(
-    '/melia/:initiativeId([0-9]+)/:sectionName',
-    [checkJwt, checkRole('melia', 'readOwn')],
-    stagefull.getMeliaAndFiles
+  '/melia/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('melia', 'readOwn')],
+  stagefull.getMeliaAndFiles
 );
 
 // upsert management plan risk and files to initiative
@@ -903,9 +903,9 @@ router.get(
  *     {"name": "Upsert management plan risk: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId',
-    [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()],
-    stagefull.patchManagePlanAndFiles
+  '/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()],
+  stagefull.patchManagePlanAndFiles
 );
 
 // Get management plan risk and files to initiative
@@ -971,9 +971,9 @@ router.patch(
  *     { message: "Get manage plan risk and files: Full proposal", error }
  */
 router.get(
-    '/manage-plan/:initiativeId([0-9]+)/:sectionName',
-    [checkJwt, checkRole('mpr', 'readOwn')],
-    stagefull.getManagePlanAndFiles
+  '/manage-plan/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('mpr', 'readOwn')],
+  stagefull.getManagePlanAndFiles
 );
 
 // upsert human resources and files to initiative
@@ -1059,9 +1059,9 @@ router.get(
  *     {"name": "Upsert human Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/human-resources/:initiativeId([0-9]+)/:ubication/:stageId',
-    [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()],
-    stagefull.patchHumanResourcesAndFiles
+  '/human-resources/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()],
+  stagefull.patchHumanResourcesAndFiles
 );
 
 // Get human resources and files to initiative
@@ -1121,9 +1121,9 @@ router.patch(
  *     { message: "Get human resources and files: Full proposal", error }
  */
 router.get(
-    '/human-resources/:initiativeId([0-9]+)/:sectionName',
-    [checkJwt, checkRole('hr', 'readOwn')],
-    stagefull.getHumanResources
+  '/human-resources/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('hr', 'readOwn')],
+  stagefull.getHumanResources
 );
 
 // upsert financial resources and files to initiative
@@ -1207,7 +1207,11 @@ router.get(
  */
 
 // router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResources);
-router.patch("/financial-resources/:initiativeId([0-9]+/)", [checkJwt, checkRole('fr', 'updateOwn')], stagefull.patchFinancialResources);
+router.patch(
+  '/financial-resources/:initiativeId([0-9]+/)',
+  [checkJwt, checkRole('fr', 'updateOwn')],
+  stagefull.patchFinancialResources
+);
 // Get financial resources and files to initiative
 /**
  * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources
@@ -1263,7 +1267,11 @@ router.patch("/financial-resources/:initiativeId([0-9]+/)", [checkJwt, checkRole
  *     HTTP/1.1 400 Not Found
  *     { message: "Get financial resources and files: Full proposal.", error }
  */
-router.get( '/financial-resources/:initiativeId([0-9]+)/:sectionName',[checkJwt, checkRole('fr', 'readOwn')],stagefull.getFinancialResources);
+router.get(
+  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('fr', 'readOwn')],
+  stagefull.getFinancialResources
+);
 
 // upsert policy compliance oversight to initiative
 /**
@@ -1323,9 +1331,9 @@ router.get( '/financial-resources/:initiativeId([0-9]+)/:sectionName',[checkJwt,
  *     {"name": "Upsert policy compliance oversight: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/policy-compliance/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('pco', 'updateOwn')],
-    stagefull.patchPolicyComplianceOversight
+  '/policy-compliance/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('pco', 'updateOwn')],
+  stagefull.patchPolicyComplianceOversight
 );
 
 // Get policy compliance oversight to initiative
@@ -1370,9 +1378,9 @@ router.patch(
  *     { message: "Get policy compliance oversight.", error }
  */
 router.get(
-    '/policy-compliance/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('pco', 'readOwn')],
-    stagefull.getPolicyComplianceOversight
+  '/policy-compliance/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('pco', 'readOwn')],
+  stagefull.getPolicyComplianceOversight
 );
 
 // upsert innovation packages to initiative
@@ -1427,9 +1435,9 @@ router.get(
  *     {"name": "Upsert Innovation Packages: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-    '/innovation-packages/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('ip', 'updateOwn')],
-    stagefull.patchInnovationPackages
+  '/innovation-packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('ip', 'updateOwn')],
+  stagefull.patchInnovationPackages
 );
 
 // Get innovation packages to initiative
@@ -1472,9 +1480,9 @@ router.patch(
  *     { message: "Get InnovationPackages.", error }
  */
 router.get(
-    '/innovation-packages/:initiativeId([0-9]+)',
-    [checkJwt, checkRole('ip', 'readOwn')],
-    stagefull.getInnovationPackages
+  '/innovation-packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('ip', 'readOwn')],
+  stagefull.getInnovationPackages
 );
 
 export default router;

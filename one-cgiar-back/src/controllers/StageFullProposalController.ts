@@ -1068,44 +1068,58 @@ export async function getHumanResources(req: Request, res: Response) {
  * @returns financialResources
  */
 export async function patchFinancialResources(req: Request, res: Response) {
+  const {initiativeId, section} = req.params;
 
-    const { initiativeId, section } = req.params;
+  //financial resources section data
+  const fResources = req.body;
+  // console.log(req.body);
 
-    //financial resources section data
-    const  fResources  = req.body;
-    // console.log(req.body);
+  //financial resources  section files
+  // const files = req['files'];
 
-    //financial resources  section files
-    // const files = req['files'];
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
 
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
 
-    try {
-
-        // get stage
-        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Patch financial resources: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-        // create new full proposal object
-        const fullPposal = new ProposalHandler(initvStg.id.toString());
-
-        const financialResources = await fullPposal.upsertFinancialResources(fResources, initvStg, section);
-        // const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
-        //     active, section, files, updateFiles);
-        
-        res.json(new ResponseHandler('Full Proposal: Patch financial resources.', { financialResources }));
-
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Patch financial resources: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
     }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const financialResources = await fullPposal.upsertFinancialResources(
+      fResources,
+      initvStg,
+      section
+    );
+    // const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
+    //     active, section, files, updateFiles);
+
+    res.json(
+      new ResponseHandler('Full Proposal: Patch financial resources.', {
+        financialResources
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
   }
+}
 //     // create new full proposal object
 //     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
@@ -1141,49 +1155,60 @@ export async function patchFinancialResources(req: Request, res: Response) {
  * @returns financialResourcesData
  */
 export async function getFinancialResources(req: Request, res: Response) {
+  const {initiativeId, sectionName} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
 
-    const { initiativeId, sectionName } = req.params;
-    const initvStgRepo = getRepository(InitiativesByStages);
-    const stageRepo = getRepository(Stages);
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
 
-    try {
-
-        // get stage
-        const stage = await stageRepo.findOne({ where: { description: 'Full Proposal' } });
-        // get intiative by stage : proposal
-        const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
-
-        // if not intitiative by stage, throw error
-        if (initvStg == null) {
-            throw new BaseError('Read financial resources and files: Error', 400, `Initiative not found in stage: ${stage.description}`, false);
-        }
-        // create new full proposal object
-        const fullPposal = new ProposalHandler(initvStg.id.toString());
-
-        const financialResourcesData = await fullPposal.requestFinancialResources(sectionName);
-
-        res.json(new ResponseHandler('Full Proposal:financial resources and files.', { financialResourcesData }));
-
-
-    } catch (error) {
-        console.log(error)
-        return res.status(error.httpCode).json(error);
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read financial resources and files: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
     }
     // create new full proposal object
-//     const fullPposal = new ProposalHandler(initvStg.id.toString());
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-//     const financialResourcesData =
-//       await fullPposal.requestFinancialResourcesFiles(sectionName);
+    const financialResourcesData = await fullPposal.requestFinancialResources(
+      sectionName
+    );
 
-//     res.json(
-//       new ResponseHandler('Full Proposal:financial resources and files.', {
-//         financialResourcesData
-//       })
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(error.httpCode).json(error);
-//   }
+    res.json(
+      new ResponseHandler('Full Proposal:financial resources and files.', {
+        financialResourcesData
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+  // create new full proposal object
+  //     const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+  //     const financialResourcesData =
+  //       await fullPposal.requestFinancialResourcesFiles(sectionName);
+
+  //     res.json(
+  //       new ResponseHandler('Full Proposal:financial resources and files.', {
+  //         financialResourcesData
+  //       })
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(error.httpCode).json(error);
+  //   }
 }
 
 /**
