@@ -1,12 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToOne,
-  JoinColumn
-} from 'typeorm';
-import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
-import {InitiativesByStages} from './InititativesByStages';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
+import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
+import { InitiativesByStages } from "./InititativesByStages";
 
 @Entity('financial_resources')
 export class FinancialResources extends UpdatedCreatedAt {
@@ -16,13 +10,22 @@ export class FinancialResources extends UpdatedCreatedAt {
   @Column({type: 'int'})
   initvStgId: number;
 
-  @Column({type: 'text'})
-  detailed_budget: string;
+    @Column({ type: "text" })
+    financial_type: string;
 
-  @Column({type: 'tinyint'})
-  active: boolean;
+    @Column({type: 'int'})
+    financial_type_id: number;
 
-  @OneToOne(() => InitiativesByStages)
-  @JoinColumn()
-  initvStg!: InitiativesByStages;
+    @Column({ type: "tinyint" })
+    active: boolean;
+
+    @Column({ type: "text" })
+    col_name: string;
+    
+    @Column({ type: "text" })
+    table_name: string;
+
+    @ManyToOne(() => InitiativesByStages)
+    @JoinColumn()
+    initvStg!: InitiativesByStages;
 }

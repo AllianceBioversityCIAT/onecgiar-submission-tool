@@ -748,10 +748,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
       let validationFinancialResourcesSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
-      WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      WHEN (SELECT value FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT value FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
                       WHERE initvStgId = ini.id
@@ -786,10 +786,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
         
         SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
-      WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(detailed_budget,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      WHEN (SELECT value FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+        OR (SELECT value FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
         OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
                       WHERE initvStgId = ini.id

@@ -15,7 +15,7 @@ export class AlterFinancialResourcesTable1637165586022 implements MigrationInter
         `);
         
         await queryRunner.query(`
-            ALTER TABLE financial_resources ADD COLUMN year datetime DEFAULT NULL
+            ALTER TABLE financial_resources ADD COLUMN year text DEFAULT NULL
         `);
 
         await queryRunner.query(`
@@ -28,6 +28,10 @@ export class AlterFinancialResourcesTable1637165586022 implements MigrationInter
 
         await queryRunner.query(`
             ALTER TABLE financial_resources ADD COLUMN col_name text DEFAULT NULL
+        `);
+
+        await queryRunner.query(`
+            ALTER TABLE financial_resources DROP INDEX initiative_id
         `);
     }
 
