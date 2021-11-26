@@ -1,27 +1,26 @@
-import _ from "lodash";
-import { getRepository } from "typeorm";
-import { getClaActionAreas } from "../controllers/Clarisa";
-import { Context } from "../entity/Context";
-import { Dimensions } from "../entity/Dimensions";
-import { Files } from "../entity/Files";
-import { FinancialResources } from "../entity/FinancialResources";
-import { FinancialResourcesYears } from "../entity/FinancialResourcesYears";
-import { GeneralInformation } from "../entity/GeneralInformation";
-import { HumanResources } from "../entity/HumanResources";
-import { ImpactStrategies } from "../entity/ImpactStrategies";
-import { InnovationPackages } from "../entity/InnovationPackages";
-import { ManagePlanRisk } from "../entity/ManagePlanRisk";
-import { Melia } from "../entity/melia";
-import { Opportunities } from "../entity/Opportunities";
-import { Partners } from "../entity/Partners";
-import { PolicyComplianceOrversight } from "../entity/PolicyComplianceOversight";
-import { ProjectionBenefits } from "../entity/ProjectionBenefits";
-import { RiskAssessment } from "../entity/RiskAssessment";
-import { WorkPackages } from "../entity/WorkPackages";
-import { ProposalSections } from "../interfaces/FullProposalSectionsInterface";
-import { BaseError } from "./BaseError";
-import { InitiativeStageHandler } from "./InitiativeStageDomain";
-
+import _ from 'lodash';
+import {getRepository} from 'typeorm';
+import {getClaActionAreas} from '../controllers/Clarisa';
+import {Context} from '../entity/Context';
+import {Dimensions} from '../entity/Dimensions';
+import {Files} from '../entity/Files';
+import {FinancialResources} from '../entity/FinancialResources';
+import {FinancialResourcesYears} from '../entity/FinancialResourcesYears';
+import {GeneralInformation} from '../entity/GeneralInformation';
+import {HumanResources} from '../entity/HumanResources';
+import {ImpactStrategies} from '../entity/ImpactStrategies';
+import {InnovationPackages} from '../entity/InnovationPackages';
+import {ManagePlanRisk} from '../entity/ManagePlanRisk';
+import {Melia} from '../entity/melia';
+import {Opportunities} from '../entity/Opportunities';
+import {Partners} from '../entity/Partners';
+import {PolicyComplianceOrversight} from '../entity/PolicyComplianceOversight';
+import {ProjectionBenefits} from '../entity/ProjectionBenefits';
+import {RiskAssessment} from '../entity/RiskAssessment';
+import {WorkPackages} from '../entity/WorkPackages';
+import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1597,65 +1596,63 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  
-    /**
-     * UPSERT Financial Resourches
-     * @param initiativeId 
-     * @param ubication 
-     * @param stage 
-     * @param financialResourcesId 
-     * @param budget_value 
-     * @param financialResourcesActive 
-     * @param section 
-     * @param files 
-     * @param updateFiles 
-     * @returns { upsertedFinancialResources, upsertedFile }
-     */
-    async upsertFinancialResources(upsertArray?, initvStg?, sectionName?) {
-        const financialResourcesRepo = getRepository(FinancialResources);
+  /**
+   * UPSERT Financial Resourches
+   * @param initiativeId
+   * @param ubication
+   * @param stage
+   * @param financialResourcesId
+   * @param budget_value
+   * @param financialResourcesActive
+   * @param section
+   * @param files
+   * @param updateFiles
+   * @returns { upsertedFinancialResources, upsertedFile }
+   */
+  async upsertFinancialResources(upsertArray?, initvStg?, sectionName?) {
+    const financialResourcesRepo = getRepository(FinancialResources);
 
+    try {
+      let financialRs = [],
+        yearsArr = [];
+      upsertArray.forEach((upsEle, i) => {
+        const fResource = new FinancialResources();
+        fResource.active = upsEle.active;
+        fResource.col_name = upsEle.col_name;
+        fResource.table_name = upsEle.table_name;
+        fResource.id = upsEle.id;
+        fResource.financial_type_id = upsEle.financial_type_id;
+        fResource.financial_type = upsEle.financial_type;
+        fResource.initvStg = initvStg;
+        financialRs.push(fResource);
+        if (_.isEmpty(!upsEle.valuesList)) {
+          console.log(upsEle.valuesList);
+        }
+      });
+      // financialRs = await financialResourcesRepo.save(financialRs);
+      console.log('acá');
+      console.log(financialRs);
+      // for (let index = 0; index < upsertArray.length; index++) {
+      //     const fRArray = upsertArray[index];
 
-        try {
+      //     const foundWP = financialResources.find( fR => fR.financial_type_id == fRArray.financial_type_id);
+      //     let rspObj = {}
+      //     if(!foundWP){
+      //         console.log(foundWP)
+      //         // rspObj['name'] = wp.acronym;
+      //         // rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
+      //         // rspObj['valuesList'] = foundFR.values_;
+      //         // rspObj['active'] = foundFR.active;
+      //         // rspObj['table_name'] = foundFR.table_name;
+      //         // rspObj['col_name'] = foundFR.col_name;
+      //         // rspObj['years'] = foundFR.years;
+      //         // rspObj['financial_type'] = foundFR.financial_type;
+      //         // rspObj['financial_type_id'] = foundFR.financial_type_id;
+      //     }
 
-            let financialRs = [], yearsArr = [];
-            upsertArray.forEach((upsEle, i) => {
-                const fResource = new FinancialResources();
-                fResource.active = upsEle.active;
-                fResource.col_name = upsEle.col_name;
-                fResource.table_name = upsEle.table_name;
-                fResource.id = upsEle.id;
-                fResource.financial_type_id = upsEle.financial_type_id;
-                fResource.financial_type = upsEle.financial_type;
-                fResource.initvStg = initvStg;
-                financialRs.push(fResource);
-                if(_.isEmpty(!upsEle.valuesList)){
-                    console.log(upsEle.valuesList);
-                }
-            });
-            // financialRs = await financialResourcesRepo.save(financialRs);
-            console.log('acá');
-            console.log(financialRs);
-            // for (let index = 0; index < upsertArray.length; index++) {
-            //     const fRArray = upsertArray[index];
+      // }
 
-            //     const foundWP = financialResources.find( fR => fR.financial_type_id == fRArray.financial_type_id);
-            //     let rspObj = {}
-            //     if(!foundWP){
-            //         console.log(foundWP)
-            //         // rspObj['name'] = wp.acronym;
-            //         // rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
-            //         // rspObj['valuesList'] = foundFR.values_;
-            //         // rspObj['active'] = foundFR.active;
-            //         // rspObj['table_name'] = foundFR.table_name;
-            //         // rspObj['col_name'] = foundFR.col_name;
-            //         // rspObj['years'] = foundFR.years;
-            //         // rspObj['financial_type'] = foundFR.financial_type;
-            //         // rspObj['financial_type_id'] = foundFR.financial_type_id;
-            //     }
-
-            // }
-
-            const financialResourcesQuery = (` 
+      const financialResourcesQuery = ` 
             SELECT
             fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
             GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
@@ -1669,35 +1666,39 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND fRY.active = 1
             GROUP BY
                 fR.id;
-            `);
+            `;
 
-            const financialResources = await this.queryRunner.query(financialResourcesQuery);
+      const financialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
 
-            // console.log(index, rspObj);
-            return financialResources;
-
-        } catch (error) {
-            console.log(error)
-            throw new BaseError('Upsert financial Resources: Full proposal', 400, error.message, false)
-
-        }
-      
+      // console.log(index, rspObj);
+      return financialResources;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert financial Resources: Full proposal',
+        400,
+        error.message,
+        false
+      );
     }
+  }
 
-    /**
-     * REQUEST Finanacial Resources
-     * @param sectionName 
-     * @returns {financialResources}
-     */
-    async requestFinancialResources(sectionName) {
+  /**
+   * REQUEST Finanacial Resources
+   * @param sectionName
+   * @returns {financialResources}
+   */
+  async requestFinancialResources(sectionName) {
+    const initvStg = await this.setInitvStage();
+    const Activity_COLUMNS = [
+      'Crosscutting across Work Packages',
+      'Innovation packages & Scaling Readiness'
+    ];
 
-        const initvStg = await this.setInitvStage();
-        const Activity_COLUMNS = ['Crosscutting across Work Packages', 'Innovation packages & Scaling Readiness'];
-
-        try {
-
-
-            const financialResourcesQuery = (` 
+    try {
+      const financialResourcesQuery = ` 
             SELECT
             fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
             GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
@@ -1711,43 +1712,44 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND fRY.active = 1
             GROUP BY
                 fR.id;
-            `);
+            `;
 
-            const financialResources = await this.queryRunner.query(financialResourcesQuery);
-            const workpackages = await this.getWorkPackage();
-            let responseObjtArr = [];
+      const financialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+      const workpackages = await this.getWorkPackage();
+      let responseObjtArr = [];
 
-            // for (let index = 0; index < workpackages.length; index++) {
-            //     const wp = workpackages[index];
-            //     let rspObj = {}
-            //     const foundFR = financialResources.find(fr => { return fr.financial_type_id == wp.id });
-            //     if (foundFR) {
-            //         console.log(foundFR)
-            //         rspObj['name'] = wp.acronym;
-            //         rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
-            //         rspObj['valuesList'] = foundFR.values_;
-            //         rspObj['active'] = foundFR.active;
-            //         rspObj['table_name'] = foundFR.table_name;
-            //         rspObj['col_name'] = foundFR.col_name;
-            //         rspObj['years'] = foundFR.years;
-            //         rspObj['financial_type'] = foundFR.financial_type;
-            //         rspObj['financial_type_id'] = foundFR.financial_type_id;
-            //     }
-            //     console.log(index, rspObj);
-            // }
+      // for (let index = 0; index < workpackages.length; index++) {
+      //     const wp = workpackages[index];
+      //     let rspObj = {}
+      //     const foundFR = financialResources.find(fr => { return fr.financial_type_id == wp.id });
+      //     if (foundFR) {
+      //         console.log(foundFR)
+      //         rspObj['name'] = wp.acronym;
+      //         rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
+      //         rspObj['valuesList'] = foundFR.values_;
+      //         rspObj['active'] = foundFR.active;
+      //         rspObj['table_name'] = foundFR.table_name;
+      //         rspObj['col_name'] = foundFR.col_name;
+      //         rspObj['years'] = foundFR.years;
+      //         rspObj['financial_type'] = foundFR.financial_type;
+      //         rspObj['financial_type_id'] = foundFR.financial_type_id;
+      //     }
+      //     console.log(index, rspObj);
+      // }
 
-
-
-            return financialResources;
-
-        } catch (error) {
-            console.log(error)
-            throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
-
-        }
-
+      return financialResources;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get financial resources and files: Full proposal.',
+        400,
+        error.message,
+        false
+      );
     }
-  
+  }
 
   async upsertPolicyComplianceOversight(
     policyComplianceId?,

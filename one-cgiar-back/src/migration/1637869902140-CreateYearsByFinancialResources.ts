@@ -1,20 +1,20 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateYearsByFinancialResources1637869902140 implements MigrationInterface {
+export class CreateYearsByFinancialResources1637869902140
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create sbt years by financial resources table');
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('create sbt years by financial resources table')
-
-        await queryRunner.query(`
+    await queryRunner.query(`
             ALTER TABLE financial_resources DROP COLUMN value 
         `);
-        
-        await queryRunner.query(`
+
+    await queryRunner.query(`
             ALTER TABLE financial_resources DROP COLUMN year
         `);
 
-
-        await queryRunner.query(`
+    await queryRunner.query(`
         CREATE TABLE financial_resources_years (
             id int(11) NOT NULL AUTO_INCREMENT,
             value decimal(15,2) DEFAULT NULL,
@@ -29,9 +29,7 @@ export class CreateYearsByFinancialResources1637869902140 implements MigrationIn
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }
