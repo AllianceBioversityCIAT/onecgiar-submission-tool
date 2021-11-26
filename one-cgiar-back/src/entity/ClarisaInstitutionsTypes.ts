@@ -1,14 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
-import { UpdatedCreatedAt } from "./extends/UpdateCreateAt"
-
+import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 
 @Entity('clarisa_institutions_types')
 export class ClarisaInstitutionsTypes extends UpdatedCreatedAt {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
-
-    @Column({ type: 'text' })
-    name: string
-
+  @Column({type: 'text'})
+  name: string;
 }

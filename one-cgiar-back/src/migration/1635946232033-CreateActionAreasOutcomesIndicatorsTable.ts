@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateActionAreasOutcomesIndicatorsTable1635946232033 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create sbt action areas outcomes indicators table')
-        await queryRunner.query(`
+export class CreateActionAreasOutcomesIndicatorsTable1635946232033
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create sbt action areas outcomes indicators table');
+    await queryRunner.query(`
         CREATE TABLE sbt_action_areas_out_indicators (
             id int(11) NOT NULL AUTO_INCREMENT,
             outcomes_indicators_id int(11) NOT NULL,
@@ -20,9 +20,7 @@ export class CreateActionAreasOutcomesIndicatorsTable1635946232033 implements Mi
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

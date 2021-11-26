@@ -1,12 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateClarisaActionAreasTable1633613411622 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        
-        console.log('create Clarisas Action Areas table')
-        await queryRunner.query(`
+export class CreateClarisaActionAreasTable1633613411622
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create Clarisas Action Areas table');
+    await queryRunner.query(`
         CREATE TABLE clarisa_action_areas (
             id int(11) NOT NULL,
             name TEXT DEFAULT NULL,
@@ -17,11 +16,7 @@ export class CreateClarisaActionAreasTable1633613411622 implements MigrationInte
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

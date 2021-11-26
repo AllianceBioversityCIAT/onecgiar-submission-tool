@@ -1,6 +1,81 @@
 <section-title name="Risk assessment"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
+
+    <form (ngSubmit)="saveSection()" *ngIf="showForm">
+
+
+        <!-- <div class="progress_information">
+            select top 5 risk - narratives
+            <hr>
+        </div> -->
+        
+        <ibdc-alert 
+            *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') < 5 && this.stepNumber == 1" 
+            [options]="{htmlText: 'Please select all 5 risks to be able to display the save button', type:'warning'}"></ibdc-alert>
+
+        <div [ngSwitch]="stepNumber">
+
+
+            <div class="step_one" *ngSwitchCase="1">
+                <div class="row">
+                    <div class="col-8">
+                        <ibdc-select-multiple *ngIf="riskListIsLoaded"
+                            [hidden]="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{
+                        hideSavedList: true,
+                        inputTitle:'Select top 5 risks',
+                        selectList: this.risksList,
+                        selectItemName:'risks_achieving_impact',
+                        selectItemId:'idBd',
+                        frontendSearchAttribute:'risks_achieving_impact',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.managementPlan.riskassessment,
+                            selectItemId:'idBd',
+                            selectItemName:'risks_achieving_impact',
+                            idToSave:'idBd',
+                            labelName:'regions'
+                        }
+                       }"></ibdc-select-multiple>
+                    </div>
+                    <div class="col-8">
+                        <div class="ibdc_basic_title" *ngIf="this.managementPlan?.riskassessment.length">Confirm top 5</div>
+                        <div class="item_top_five" [hidden]="!item.selected"
+                            *ngFor="let item of addIdxToSelected(this.managementPlan?.riskassessment)">
+                            <div class="ibdc_basic_description"><strong class="ibdc_secondary_color">Top {{this.item.idx}} </strong> - {{item.generic_risks}}</div>
+                            <div class="icon_container" (click)="removeElementOfTopFiveInStepOne(item)">
+                                <span class="material-icons">delete</span>
+                                <div class="delete_text">Delete</div>
+                            </div>
+                        </div>
+                        <!-- <button pButton type="button" label="Confirm"></button> -->
+
+                    </div>
+                </div>
+                <ibdc-alert *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{htmlText: 'Please save to confirm top 5', type:'info'}"></ibdc-alert>
+
+            </div>
+
+            <div class="step_two" *ngSwitchCase="2">
+                <div *ngFor="let riskAssessment of this.managementPlan?.riskassessment" style="margin-top: 40px;">
+                    <app-risk-assessment-item [riskAssessment]="riskAssessment" [managementPlan]="this.managementPlan" [risksList]="this.risksList">
+                    </app-risk-assessment-item>
+                </div>
+            </div>
+            <div *ngSwitchDefault>
+
+            </div>
+        </div>
+        <div class="justify_content_end" [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
+            <ibdc-save-button
+                [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+            </ibdc-save-button>
+        </div>
+
+    </form>
+</div>
+
+<!-- <div class="section-container animate__animated animate__fadeIn">
     <div class="row">
         <div class="col-12">
             <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
@@ -31,4 +106,4 @@
         </div>
     </form>
 
-</div>
+</div> -->

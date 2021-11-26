@@ -76,19 +76,19 @@ export class ComparativeAdvantageComponent implements OnInit {
   getContext(){
     this.spinnerService.show('spinner');
     this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+      //console.log(resp);
       this.contextForm.controls['comparative_advantage'].setValue(resp?.response?.context?.comparative_advantage);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showfrom = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      //console.log("errorerekkasssssssssssssssdasda");
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("comparative_advantage").value, 250);
     })
   }

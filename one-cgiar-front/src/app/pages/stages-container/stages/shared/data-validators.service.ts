@@ -31,6 +31,18 @@ export class DataValidatorsService {
 
   }
 
+  countAtributeBooleanInArray(array:[],atribute:string){
+    let cont = 0;
+    array.map(item=>{
+      if (item[atribute] === true) {
+        cont++;
+      }
+    })
+
+    return cont;
+
+  }
+
   validateIfArrayHasActiveFalseEstrict(array:any,atribute){
 
     if (!array.length) {

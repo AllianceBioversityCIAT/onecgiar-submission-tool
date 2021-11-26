@@ -1,12 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateResultFrameworkTable1635858091903 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-
-        console.log('create results framework table')
-        await queryRunner.query(`
+export class CreateResultFrameworkTable1635858091903
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create results framework table');
+    await queryRunner.query(`
         CREATE TABLE results_framework (
             id int(11) NOT NULL AUTO_INCREMENT,
             melia_id int(11) NOT NULL,
@@ -21,11 +20,7 @@ export class CreateResultFrameworkTable1635858091903 implements MigrationInterfa
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

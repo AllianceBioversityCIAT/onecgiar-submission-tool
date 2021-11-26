@@ -1,124 +1,125 @@
-import { Request, Response } from 'express';
-import { getRepository, QueryFailedError } from 'typeorm';
-import { validate } from 'class-validator';
-import { Users } from '../entity/Users';
+import {Request, Response} from 'express';
+import {getRepository, QueryFailedError} from 'typeorm';
+import {validate} from 'class-validator';
+import {Users} from '../entity/Users';
 import config from '../config/config';
-import { APIError } from '../handlers/BaseError';
-import { HttpStatusCode } from '../interfaces/Constants';
-import { ResponseHandler } from '../handlers/Response';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { utilLogin } from '../utils/auth-login';
-
+import {APIError} from '../handlers/BaseError';
+import {HttpStatusCode} from '../interfaces/Constants';
+import {ResponseHandler} from '../handlers/Response';
+import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
+import {utilLogin} from '../utils/auth-login';
 
 require('dotenv').config();
-
 
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
 
 export const login = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    try {
-        const { token, name, roles, id } = await utilLogin(email, password);
-        res.json(new ResponseHandler('User logged.', { token, email, name, roles, id }));
-    } catch (error) {
-        // console.log(error);
-        // let e = error;
-        // if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-        //     e = new APIError(
-        //         'Bad Request',
-        //         HttpStatusCode.BAD_REQUEST,
-        //         true,
-        //         error.message
-        //     );
-        // }
-        return res.status(error.httpCode).json(error);
-    }
-
+  const {email, password} = req.body;
+  try {
+    const {token, name, roles, id} = await utilLogin(email, password);
+    res.json(
+      new ResponseHandler('User logged.', {token, email, name, roles, id})
+    );
+  } catch (error) {
+    // console.log(error);
+    // let e = error;
+    // if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
+    //     e = new APIError(
+    //         'Bad Request',
+    //         HttpStatusCode.BAD_REQUEST,
+    //         true,
+    //         error.message
+    //     );
+    // }
+    return res.status(error.httpCode).json(error);
+  }
 };
 
 export const changePassword = async (req: Request, res: Response) => {
-    // const { userId } = res.locals.jwtPayload;
-    const { email, oldPassword, newPassword } = req.body;
+  // const { userId } = res.locals.jwtPayload;
+  const {email, oldPassword, newPassword} = req.body;
 
+  const userRepository = getRepository(Users);
+  let user: Users;
 
-    const userRepository = getRepository(Users);
-    let user: Users;
-
-    try {
-        if (!(oldPassword && newPassword)) {
-            throw new APIError(
-                'BAD_REQUEST',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                'Old and new passwords are required.'
-            );
-        }
-        user = await userRepository.findOne({ where: { email } });
-        if (!user.checkPassword(oldPassword)) {
-            throw new APIError(
-                'BAD_REQUEST',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                'Old password is incorrect.'
-            );
-        }
-
-        user.password = newPassword;
-        const validationOpt = { validationError: { target: false, value: false } };
-        const errors = await validate(user, validationOpt);
-        if (errors.length > 0) {
-            return res.status(400).json(errors);
-        }
-
-        // hash password
-        user.hashPassword();
-        userRepository.save(user);
-
-        res.json(new ResponseHandler('User updated.', { user }));
-        // res.json({ msg: 'Password updated' });
-    } catch (error) {
-        console.log(error);
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
-        return res.status(error.httpCode).json(error);
+  try {
+    if (!(oldPassword && newPassword)) {
+      throw new APIError(
+        'BAD_REQUEST',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        'Old and new passwords are required.'
+      );
+    }
+    user = await userRepository.findOne({where: {email}});
+    if (!user.checkPassword(oldPassword)) {
+      throw new APIError(
+        'BAD_REQUEST',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        'Old password is incorrect.'
+      );
     }
 
+    user.password = newPassword;
+    const validationOpt = {validationError: {target: false, value: false}};
+    const errors = await validate(user, validationOpt);
+    if (errors.length > 0) {
+      return res.status(400).json(errors);
+    }
 
-}
+    // hash password
+    user.hashPassword();
+    userRepository.save(user);
+
+    res.json(new ResponseHandler('User updated.', {user}));
+    // res.json({ msg: 'Password updated' });
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
 
 export const validateCGUser = async (req: Request, res: Response) => {
-    const { email } = req.query;
+  const {email} = req.query;
 
-    try {
-        let validUser = await searchByEmail(email + '');
-        // console.log(validUser);
-        res.json(new ResponseHandler('Validate user.', { user: validUser }));
-    } catch (error) {
-        console.log(error);
-        if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-            new APIError(
-                'Bad Request',
-                HttpStatusCode.BAD_REQUEST,
-                true,
-                error.message
-            );
-        }
-        return res.status(error.httpCode).json(error);
+  try {
+    let validUser = await searchByEmail(email + '');
+    // console.log(validUser);
+    res.json(new ResponseHandler('Validate user.', {user: validUser}));
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
     }
-}
-
+    return res.status(error.httpCode).json(error);
+  }
+};
 
 /**
- * 
- * Active directory functions 
- * 
+ *
+ * Active directory functions
+ *
  */
 
 // const validateAD = (one_user, password) => {
@@ -160,37 +161,37 @@ export const validateCGUser = async (req: Request, res: Response) => {
 // }
 
 const searchByEmail = (email) => {
-    // let ad = new ActiveDirectory(config.active_directory);
-    return new Promise((resolve, reject) => {
-        ad.findUser(email, (err, user) => {
-            if (err) {
-                if (err.errno == "ENOTFOUND") {
-                    let notFound = {
-                        'name': 'SERVER_NOT_FOUND',
-                        'description': 'Domain Controller Server not found',
-                        'httpCode': 500
-                    };
-                    return reject(new APIError(notFound));
-                } else {
-                    let e = {
-                        name: 'SERVER_NOT_FOUND',
-                        description: err.lde_message,
-                        httpcode: 500
-                    }
-                    return reject(new APIError(e));
-                }
-            }
-            if (!user) {
-                return reject(new APIError({
-                    name: 'USER_NOT_FOUND',
-                    description: `User: ${email} not found`,
-                    'httpCode': 404
-                }));
-            }
-            else {
-                return resolve(JSON.stringify(user))
-            }
-        })
-    })
-}
-
+  // let ad = new ActiveDirectory(config.active_directory);
+  return new Promise((resolve, reject) => {
+    ad.findUser(email, (err, user) => {
+      if (err) {
+        if (err.errno == 'ENOTFOUND') {
+          let notFound = {
+            name: 'SERVER_NOT_FOUND',
+            description: 'Domain Controller Server not found',
+            httpCode: 500
+          };
+          return reject(new APIError(notFound));
+        } else {
+          let e = {
+            name: 'SERVER_NOT_FOUND',
+            description: err.lde_message,
+            httpcode: 500
+          };
+          return reject(new APIError(e));
+        }
+      }
+      if (!user) {
+        return reject(
+          new APIError({
+            name: 'USER_NOT_FOUND',
+            description: `User: ${email} not found`,
+            httpCode: 404
+          })
+        );
+      } else {
+        return resolve(JSON.stringify(user));
+      }
+    });
+  });
+};

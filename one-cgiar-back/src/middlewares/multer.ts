@@ -1,39 +1,34 @@
-import { getRepository } from 'typeorm';
-import { InitiativesByStages } from '../entity/InititativesByStages';
-const multer = require("multer");
+import {getRepository} from 'typeorm';
+import {InitiativesByStages} from '../entity/InititativesByStages';
+const multer = require('multer');
 const fs = require('fs');
-const mkdirp = require('mkdirp')
-
+const mkdirp = require('mkdirp');
 
 // const pth = require('path').resolve(process.cwd(), '../');
 const parentD = `./public/uploads`;
 
-
-
 export const createFolder = async (dir: string) => {
-    try {
-        if (!fs.existsSync(dir)) {
-            await mkdirp(dir)
-            // shell.mkdir('-p', dir+'/');
-        }
-
-        return dir
-    } catch (error) {
-        console.log(error)
+  try {
+    if (!fs.existsSync(dir)) {
+      await mkdirp(dir);
+      // shell.mkdir('-p', dir+'/');
     }
-}
+
+    return dir;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const startMulter = async (parentpath?: string) => {
-    try {
-        if (parentpath) {
-            await createFolder(`${parentpath}/uploads/${new Date().getFullYear()}`);
-        }
-
-    } catch (error) {
-        return error
+  try {
+    if (parentpath) {
+      await createFolder(`${parentpath}/uploads/${new Date().getFullYear()}`);
     }
-}
-
+  } catch (error) {
+    return error;
+  }
+};
 
 // const storage = multer.diskStorage({
 //     destination: async (req, file, cb) => {
@@ -46,37 +41,51 @@ export const startMulter = async (parentpath?: string) => {
 //     },
 // });
 
-
 var storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-        const { initiativeId, ubication, stageId } = req.params;
-        let finalPath = await createFolder(parentD + '/INIT-' + initiativeId + '/' + ubication + '/' + 'stage-' + stageId);
-        cb(null, finalPath)
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
+  destination: async (req, file, cb) => {
+    const {initiativeId, ubication, stageId} = req.params;
+    let finalPath = await createFolder(
+      parentD +
+        '/INIT-' +
+        initiativeId +
+        '/' +
+        ubication +
+        '/' +
+        'stage-' +
+        stageId
+    );
+    cb(null, finalPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 
-export let uploadFile = multer({ storage: storage });
+export let uploadFile = multer({storage: storage});
 
 async (body: object) => {
-    const initvStgRepo = getRepository(InitiativesByStages);
-    let finalPath, _path;
-    try {
-        // if (body.hasOwnProperty('initvStgId')) {
-            if (Object.prototype.hasOwnProperty.call(body, 'initvStgId')) {
-            const initvStg = await initvStgRepo.findOne(body['initvStgId'], { relations: ['initiative', 'stage'] });
-            _path = `${new Date().getFullYear()}/initiatives/${initvStg.initiative.id}/${initvStg.stage.description.split(' ').join('-').toLowerCase()}/${body['section']}/${body['id']}`;
-        } else {
-            _path = `default`;
-        }
-        finalPath = `${parentD}/${_path}`
-        body['path'] = _path
-        await createFolder(finalPath);
-        return { finalPath, _path };
-    } catch (error) {
-        console.log(error)
-        return error;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  let finalPath, _path;
+  try {
+    // if (body.hasOwnProperty('initvStgId')) {
+    if (Object.prototype.hasOwnProperty.call(body, 'initvStgId')) {
+      const initvStg = await initvStgRepo.findOne(body['initvStgId'], {
+        relations: ['initiative', 'stage']
+      });
+      _path = `${new Date().getFullYear()}/initiatives/${
+        initvStg.initiative.id
+      }/${initvStg.stage.description.split(' ').join('-').toLowerCase()}/${
+        body['section']
+      }/${body['id']}`;
+    } else {
+      _path = `default`;
     }
-}
+    finalPath = `${parentD}/${_path}`;
+    body['path'] = _path;
+    await createFolder(finalPath);
+    return {finalPath, _path};
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};

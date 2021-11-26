@@ -1,56 +1,44 @@
-import { BaseError } from "./BaseError";
-import { InitiativeStageHandler } from "./InitiativeStageDomain";
+import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class MetaDataHandler extends InitiativeStageHandler {
-
   /**
    * RETURN METADATA
    * STAGES,SECTIONS,SUBSECTIONS AND STAGE_META
    */
 
-
   public get value(): string {
-    return
+    return;
   }
 
-
   /**
-   * 
-   * @param initiativeId 
+   *
+   * @param initiativeId
    * @returns stages
    */
   async getStages(initiativeId: string) {
-
     try {
-
-      let stages = this.queryRunner.query(`SELECT b.id as stageId,b.description,a.active,
+      let stages = this.queryRunner
+        .query(`SELECT b.id as stageId,b.description,a.active,
         b.start_date,b.end_date
         FROM initiatives_by_stages a
         JOIN stages b
         ON a.stageId = b.id
         WHERE initiativeId =  ${initiativeId}`);
 
-      return stages
-
+      return stages;
     } catch (error) {
-
-
-      throw new BaseError('Get stages', 400, error.message, false)
-
+      throw new BaseError('Get stages', 400, error.message, false);
     }
-
   }
 
-
   /**
-   * 
-   * @param initiativeId 
+   *
+   * @param initiativeId
    * @returns sections
    */
   async getSections(initiativeId: string) {
-
     try {
-
       let sections = this.queryRunner.query(` SELECT sections.id as sectionId,
             stages.description as stage,sections.description,sections.display_name,sections.active, 
             sections.visible,sections.orderSection,
@@ -66,26 +54,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
            GROUP BY sections.id,stages.description ,sections.description
            ORDER BY sections.orderSection`);
 
-      return sections
-
+      return sections;
     } catch (error) {
-
-      throw new BaseError('Get Sections', 400, error.message, false)
-
+      throw new BaseError('Get Sections', 400, error.message, false);
     }
-
   }
 
   /**
-   * 
-   * @param initiativeId 
+   *
+   * @param initiativeId
    * @returns subsections
    */
   async getSubSectios(initiativeId: string) {
-
     try {
-
-      let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description,
+      let subsections = this.queryRunner
+        .query(` SELECT subsections.id as subSectionId,subsections.description,
             subsections.display_name,subsections.single_section, subsections.sectionId,subsections.active,
             subsections.visible,subsections.order,subsections.block
             FROM stages stages
@@ -100,28 +83,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
            GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
            ORDER BY subsections.order`);
 
-      return subsections
-
-
+      return subsections;
     } catch (error) {
-
-
-      throw new BaseError('Get Subsections', 400, error.message, false)
-
+      throw new BaseError('Get Subsections', 400, error.message, false);
     }
-
   }
 
   /**
-   * 
-   * @param sectionName 
+   *
+   * @param sectionName
    * @returns subsections by name
    */
   async getSubSectiosByName(sectionName: any) {
-
     try {
-
-      let subsections = this.queryRunner.query(` SELECT subsections.id as subSectionId,subsections.description,
+      let subsections = this.queryRunner
+        .query(` SELECT subsections.id as subSectionId,subsections.description,
             subsections.display_name as display,subsections.single_section
             FROM stages stages
             JOIN sections_meta sections
@@ -135,28 +111,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
              GROUP BY  subsections.id,  subsections.description, subsections.single_section,subsections.display_name
            ORDER BY subsections.order`);
 
-      return subsections
-
-
+      return subsections;
     } catch (error) {
-
-
-      throw new BaseError('Get Metadata', 400, error.message, false)
-
+      throw new BaseError('Get Metadata', 400, error.message, false);
     }
-
   }
 
   /**
-   * 
-   * @param sectionName 
+   *
+   * @param sectionName
    * @returns fields
    */
   async getField(sectionName: any) {
-
     try {
-
-      let fields = this.queryRunner.query(` SELECT stageMeta.display_name as field,stageMeta.order,stageMeta.subsectionId
+      let fields = this.queryRunner
+        .query(` SELECT stageMeta.display_name as field,stageMeta.order,stageMeta.subsectionId
             FROM stages stages
             JOIN sections_meta sections
               ON stages.id = sections.stageId
@@ -169,20 +138,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
            ORDER BY subsections.order
           `);
 
-      return fields
-
+      return fields;
     } catch (error) {
-
-      throw new BaseError('Get Metadata', 400, error.message, false)
-
+      throw new BaseError('Get Metadata', 400, error.message, false);
     }
-
   }
-
 
   /**
    * VALIDATIONS (GREEN CHECKS)
-   * SECTIONS: 
+   * SECTIONS:
    * 1. General Information.
    * 2. Context.
    * 3. Work Package. - validation Level WP
@@ -192,21 +156,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
    * 7. Management plan and Risk assessment.
    * 8. Policy compliance.
    * 9. Human Resurces.
-   * 10. Financial Resources. 
+   * 10. Financial Resources.
    */
-
 
   /**
    * Validation General Information (Summary Table)
    * @returns validationGI (True or False)
    */
   async validationGI() {
-
-
     try {
       /* eslint-disable */
-      let validationGISQL = (
-        `
+      let validationGISQL = `
    SELECT sec.id as sectionId,sec.description, 
      CASE
       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
@@ -232,30 +192,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
     JOIN sections_meta sec
    WHERE ini.id = ${this.initvStgId_}
      AND sec.stageId= ini.stageId
-     AND sec.description='general-information'`
-      )
+     AND sec.description='general-information'`;
 
       var validationGI = await this.queryRunner.query(validationGISQL);
 
       validationGI[0].validation = parseInt(validationGI[0].validation);
 
-      return validationGI[0]
-
+      return validationGI[0];
     } catch (error) {
-
-      throw new BaseError('Get validations GI', 400, error.message, false)
-
+      throw new BaseError('Get validations GI', 400, error.message, false);
     }
-
   }
 
-
   async validationInnovationPackages() {
-
     try {
-
-      let validationInnovationPackagesSQL = (
-        `
+      let validationInnovationPackagesSQL = `
      SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -270,31 +221,31 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='innovation-packages-and-srp';`
-      )
+        AND sec.description='innovation-packages-and-srp';`;
 
-      var innovationPackages = await this.queryRunner.query(validationInnovationPackagesSQL);
+      var innovationPackages = await this.queryRunner.query(
+        validationInnovationPackagesSQL
+      );
 
-      innovationPackages[0].validation = parseInt(innovationPackages[0].validation);
+      innovationPackages[0].validation = parseInt(
+        innovationPackages[0].validation
+      );
 
-      return innovationPackages[0]
-
+      return innovationPackages[0];
     } catch (error) {
-
-      throw new BaseError('Get validations innovations packages', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations innovations packages',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationMelia() {
-
     try {
-
       // Validate Sections
-      let validationMeliaSQL = (
-        `
+      let validationMeliaSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -329,8 +280,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='melia';`
-      )
+        AND sec.description='melia';`;
 
       var validationMelia = await this.queryRunner.query(validationMeliaSQL);
 
@@ -338,7 +288,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       // Validate subSections
 
-      let validateResultFrmwkSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      let validateResultFrmwkSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN(SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
                     WHERE initvStgId = ini.id
@@ -360,8 +310,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'result-framework';`),
-        validateMeliaPlanSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    AND subsec.description = 'result-framework';`,
+        validateMeliaPlanSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
@@ -378,8 +328,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'melia-plan';`),
-        validateStudiesSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    AND subsec.description = 'melia-plan';`,
+        validateStudiesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
                        WHERE initvStgId = ini.id
@@ -401,62 +351,53 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'melia-studies-and-activities';`)
+    AND subsec.description = 'melia-studies-and-activities';`;
 
-      var validationResultFramework = await this.queryRunner.query(validateResultFrmwkSQL);
-      var validationMeliaPlan = await this.queryRunner.query(validateMeliaPlanSQL);
+      var validationResultFramework = await this.queryRunner.query(
+        validateResultFrmwkSQL
+      );
+      var validationMeliaPlan = await this.queryRunner.query(
+        validateMeliaPlanSQL
+      );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
 
-      validationResultFramework[0].validation = parseInt(validationResultFramework[0].validation);
-      validationMeliaPlan[0].validation = parseInt(validationMeliaPlan[0].validation);
-      validationStudies[0].validation = parseInt(validationStudies[0].validation);
+      validationResultFramework[0].validation = parseInt(
+        validationResultFramework[0].validation
+      );
+      validationMeliaPlan[0].validation = parseInt(
+        validationMeliaPlan[0].validation
+      );
+      validationStudies[0].validation = parseInt(
+        validationStudies[0].validation
+      );
 
-      validationMelia.map(me => {
+      validationMelia.map((me) => {
         me['subSections'] = [
-          validationResultFramework.find(rf => {
-
-            return (rf.sectionId = me.sectionId)
-
+          validationResultFramework.find((rf) => {
+            return (rf.sectionId = me.sectionId);
           }),
 
-          validationMeliaPlan.find(mep => {
-
-            return (mep.sectionId = me.sectionId)
-
+          validationMeliaPlan.find((mep) => {
+            return (mep.sectionId = me.sectionId);
           }),
 
-          validationStudies.find(st => {
-
-            return (st.sectionId = me.sectionId)
-
+          validationStudies.find((st) => {
+            return (st.sectionId = me.sectionId);
           })
+        ];
+      });
 
-        ]
-
-      }
-      )
-
-
-      return validationMelia[0]
-
+      return validationMelia[0];
     } catch (error) {
-
-      throw new BaseError('Get validations MELIA', 400, error.message, false)
-
+      throw new BaseError('Get validations MELIA', 400, error.message, false);
     }
-
   }
 
-
   async validationManagementPlan() {
-
-
     try {
-
       //Validate Sections
-      let validationManagementPlanSQL = (
-        `
-        SELECT sec.id as sectionId,sec.description, 
+      let validationManagementPlanSQL = `
+      SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
@@ -473,16 +414,42 @@ export class MetaDataHandler extends InitiativeStageHandler {
                         AND active = 1)
                         AND section = "management_gantt"
                         AND active = 1 ) IS NULL
-        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "risk_assessment"
-                           AND active = 1 ) = ''
-        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "risk_assessment"
-                           AND active = 1 ) IS NULL
+  OR ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
+          FROM
+	   (SELECT risks_achieving_impact,
+          CASE 
+          WHEN risks_achieving_impact IS NULL
+			OR risks_achieving_impact = ''
+			OR description_risk IS NULL
+            OR description_risk = ''
+			OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+            OR likelihood IS NULL
+            OR likelihood = ''
+            OR impact IS NULL
+            OR impact = ''
+            OR risk_score IS NULL
+            OR risk_score = ''
+		  THEN FALSE
+           ELSE TRUE
+            END AS VALIDATION
+           FROM risk_assessment  
+           WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+           OR (SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+           (SELECT ri.id,
+              CASE
+      WHEN op.opportunities_description IS NULL
+                OR op.opportunities_description = ''
+                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+           THEN FALSE
+           ELSE TRUE
+            END AS VALIDATION
+           FROM opportunities op
+        RIGHT JOIN risk_assessment ri
+       ON op.risk_assessment_id = ri.id
+     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -490,16 +457,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='mpara'`
-      )
+        AND sec.description='mpara'`;
 
-      var managementPlan = await this.queryRunner.query(validationManagementPlanSQL);
+      var managementPlan = await this.queryRunner.query(
+        validationManagementPlanSQL
+      );
 
       managementPlan[0].validation = parseInt(managementPlan[0].validation);
 
       //Validate subSections
 
-      let validationManagePlanSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      let validationManagePlanSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
     WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
@@ -516,31 +484,58 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='mpara'
-      AND subsec.description = 'management-plan';`),
-        validationRiskAssessmentSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
-          CASE
-        WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                           WHERE initvStgId = ini.id
-                             AND active = 1)
-                             AND section = "risk_assessment"
-                             AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                           WHERE initvStgId = ini.id
-                             AND active = 1)
-                             AND section = "risk_assessment"
-                             AND active = 1 ) IS NULL
-         THEN FALSE
+      AND subsec.description = 'management-plan';`,
+        validationRiskAssessmentSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+        CASE
+      WHEN 
+      ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
+        FROM
+   (SELECT risks_achieving_impact,
+        CASE 
+        WHEN risks_achieving_impact IS NULL
+    OR risks_achieving_impact = ''
+    OR description_risk IS NULL
+          OR description_risk = ''
+    OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+          OR likelihood IS NULL
+          OR likelihood = ''
+          OR impact IS NULL
+          OR impact = ''
+          OR risk_score IS NULL
+          OR risk_score = ''
+    THEN FALSE
+         ELSE TRUE
+          END AS VALIDATION
+         FROM risk_assessment  
+         WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+  OR (SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+           (SELECT ri.id,
+              CASE
+      WHEN op.opportunities_description IS NULL
+                OR op.opportunities_description = ''
+                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+           THEN FALSE
            ELSE TRUE
-           END AS validation
-         FROM initiatives_by_stages ini
-         JOIN sections_meta sec
-         JOIN subsections_meta subsec
-        WHERE ini.id = ${this.initvStgId_}
-          AND sec.stageId= ini.stageId
-      AND sec.id = subsec.sectionId
-          AND sec.description='mpara'
-          AND subsec.description = 'risk-assessment';`),
-        validationGantt = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+            END AS VALIDATION
+           FROM opportunities op
+        RIGHT JOIN risk_assessment ri
+       ON op.risk_assessment_id = ri.id
+     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
+       THEN FALSE
+         ELSE TRUE
+         END AS validation
+       FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+       JOIN subsections_meta subsec
+      WHERE ini.id =  ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+    AND sec.id = subsec.sectionId
+        AND sec.description='mpara'
+        AND subsec.description = 'risk-assessment';`,
+        validationGantt = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
           CASE
         WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
                         WHERE initvStgId = ini.id
@@ -562,60 +557,50 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
           AND sec.description='mpara'
-          AND subsec.description = 'smpg-table';`)
+          AND subsec.description = 'smpg-table';`;
 
       var managePlan = await this.queryRunner.query(validationManagePlanSQL);
-      var riskAssessment = await this.queryRunner.query(validationRiskAssessmentSQL);
+      var riskAssessment = await this.queryRunner.query(
+        validationRiskAssessmentSQL
+      );
       var gantt = await this.queryRunner.query(validationGantt);
 
       managePlan[0].validation = parseInt(managePlan[0].validation);
       riskAssessment[0].validation = parseInt(riskAssessment[0].validation);
       gantt[0].validation = parseInt(gantt[0].validation);
 
-      managementPlan.map(mp => {
+      managementPlan.map((mp) => {
         mp['subSections'] = [
-          managePlan.find(mpn => {
-
-            return (mpn.sectionId = mp.sectionId)
-
+          managePlan.find((mpn) => {
+            return (mpn.sectionId = mp.sectionId);
           }),
 
-          riskAssessment.find(ris => {
-
-            return (ris.sectionId = mp.sectionId)
-
+          riskAssessment.find((ris) => {
+            return (ris.sectionId = mp.sectionId);
           }),
 
-          gantt.find(ga => {
-
-            return (ga.sectionId = mp.sectionId)
-
+          gantt.find((ga) => {
+            return (ga.sectionId = mp.sectionId);
           })
+        ];
+      });
 
-        ]
-
-      }
-      )
-
-      return managementPlan[0]
-
+      return managementPlan[0];
     } catch (error) {
-
-      throw new BaseError('Get validations management plan', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations management plan',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationHumanResources() {
-
     try {
-
       // Validate sections
 
-      let validationHumanResourcesSQL = (
-        `
+      let validationHumanResourcesSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -645,17 +630,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='human-resources'`
-      )
+        AND sec.description='human-resources'`;
 
-      var humanResources = await this.queryRunner.query(validationHumanResourcesSQL);
+      var humanResources = await this.queryRunner.query(
+        validationHumanResourcesSQL
+      );
 
       humanResources[0].validation = parseInt(humanResources[0].validation);
 
-
       // Validate subSections
 
-      let validationInitiativeSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      let validationInitiativeSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
     WHEN  (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
                     WHERE initvStgId = ini.id
@@ -677,8 +662,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
     AND sec.id = subsec.sectionId
       AND sec.description='human-resources'
-      AND subsec.description = 'initiative-team'`),
-        genderSQL = (`
+      AND subsec.description = 'initiative-team'`,
+        genderSQL = `
       SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
     WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -697,8 +682,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
     AND sec.id = subsec.sectionId
       AND sec.description='human-resources'
       AND subsec.description = 'gender-diw';
-      `),
-        capacitySQL = (`
+      `,
+        capacitySQL = `
       SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
     WHEN (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -717,10 +702,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
     AND sec.id = subsec.sectionId
       AND sec.description='human-resources'
       AND subsec.description = 'capacity-development';       
-      `)
+      `;
 
-
-      var initiativeTeam = await this.queryRunner.query(validationInitiativeSQL);
+      var initiativeTeam = await this.queryRunner.query(
+        validationInitiativeSQL
+      );
       var gender = await this.queryRunner.query(genderSQL);
       var capacity = await this.queryRunner.query(capacitySQL);
 
@@ -728,51 +714,38 @@ export class MetaDataHandler extends InitiativeStageHandler {
       gender[0].validation = parseInt(gender[0].validation);
       capacity[0].validation = parseInt(capacity[0].validation);
 
-
-      humanResources.map(hr => {
+      humanResources.map((hr) => {
         hr['subSections'] = [
-          initiativeTeam.find(ini => {
-
-            return (ini.sectionId = hr.sectionId)
-
+          initiativeTeam.find((ini) => {
+            return (ini.sectionId = hr.sectionId);
           }),
 
-          gender.find(gen => {
-
-            return (gen.sectionId = hr.sectionId)
-
+          gender.find((gen) => {
+            return (gen.sectionId = hr.sectionId);
           }),
 
-          capacity.find(cap => {
-
-            return (cap.sectionId = hr.sectionId)
-
+          capacity.find((cap) => {
+            return (cap.sectionId = hr.sectionId);
           })
+        ];
+      });
 
-        ]
-
-      }
-      )
-
-      return humanResources[0]
-
+      return humanResources[0];
     } catch (error) {
-
-      throw new BaseError('Get validations human resources', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations human resources',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationFinancialResources() {
-
     try {
-
       //Validations Sections
 
-      let validationFinancialResourcesSQL = (
-        `
+      let validationFinancialResourcesSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT detailed_budget FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
@@ -797,16 +770,19 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='financial-resources'`
-      )
+        AND sec.description='financial-resources'`;
 
-      var financialResources = await this.queryRunner.query(validationFinancialResourcesSQL);
+      var financialResources = await this.queryRunner.query(
+        validationFinancialResourcesSQL
+      );
 
-      financialResources[0].validation = parseInt(financialResources[0].validation);
+      financialResources[0].validation = parseInt(
+        financialResources[0].validation
+      );
 
       //Validations subSections
 
-      let validationBudgetSQL = (`
+      let validationBudgetSQL = `
         
         SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
@@ -835,44 +811,35 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
         AND sec.description='financial-resources'
         AND subsec.description = 'budget'
-        `)
-
+        `;
 
       var budget = await this.queryRunner.query(validationBudgetSQL);
 
       budget[0].validation = parseInt(budget[0].validation);
 
-      financialResources.map(fin => {
+      financialResources.map((fin) => {
         fin['subSections'] = [
-          budget.find(bu => {
-
-            return (bu.sectionId = fin.sectionId)
-
+          budget.find((bu) => {
+            return (bu.sectionId = fin.sectionId);
           })
-        ]
+        ];
+      });
 
-      }
-      )
-
-
-      return financialResources[0]
-
+      return financialResources[0];
     } catch (error) {
-
-      throw new BaseError('Get validations financial resources', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations financial resources',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationPolicyCompliance() {
-
     try {
-
       //Validations for sections
-      let validationPolicyComplianceSQL = (
-        `
+      let validationPolicyComplianceSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
@@ -891,16 +858,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-        AND sec.description='policy-compliance-and-oversight';`
-      )
+        AND sec.description='policy-compliance-and-oversight';`;
 
-      var policyCompliance = await this.queryRunner.query(validationPolicyComplianceSQL);
+      var policyCompliance = await this.queryRunner.query(
+        validationPolicyComplianceSQL
+      );
 
       policyCompliance[0].validation = parseInt(policyCompliance[0].validation);
 
       //Validations for subSections
 
-      let validationResearchGovSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      let validationResearchGovSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
       OR (SELECT research_governance_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
@@ -914,8 +882,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
       AND sec.description='policy-compliance-and-oversight'
-      AND subsec.description = 'research-governance';`),
-        validationOpenFairSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      AND subsec.description = 'research-governance';`,
+        validationOpenFairSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN    (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
         OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
@@ -934,7 +902,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
       AND sec.description='policy-compliance-and-oversight'
-      AND subsec.description = 'open-and-fair-data-assets'; `)
+      AND subsec.description = 'open-and-fair-data-assets'; `;
 
       var researchGov = await this.queryRunner.query(validationResearchGovSQL);
       var openFair = await this.queryRunner.query(validationOpenFairSQL);
@@ -942,47 +910,36 @@ export class MetaDataHandler extends InitiativeStageHandler {
       researchGov[0].validation = parseInt(researchGov[0].validation);
       openFair[0].validation = parseInt(openFair[0].validation);
 
-      policyCompliance.map(pol => {
+      policyCompliance.map((pol) => {
         pol['subSections'] = [
-          researchGov.find(re => {
-
-            return (re.sectionId = pol.sectionId)
-
+          researchGov.find((re) => {
+            return (re.sectionId = pol.sectionId);
           }),
-          openFair.find(op => {
-
-            return (op.sectionId = pol.sectionId)
-
+          openFair.find((op) => {
+            return (op.sectionId = pol.sectionId);
           })
+        ];
+      });
 
-        ]
-
-      }
-      )
-
-      return policyCompliance[0]
-
+      return policyCompliance[0];
     } catch (error) {
-
-      throw new BaseError('Get validations policy compliance', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations policy compliance',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationImpactStrategies() {
-
     try {
-
       // 5 impact strategies
       for (let index = 1; index < 6; index++) {
-
         var multi = 1;
 
         // Validate Sections
-        let validationImpactStrategiesSQL = (
-          `
+        let validationImpactStrategiesSQL = `
           SELECT sec.id as sectionId,sec.description, 
           CASE
         WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
@@ -1020,21 +977,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
         WHERE ini.id = ${this.initvStgId_}
           AND sec.stageId= ini.stageId
           AND sec.description='impact-statements';
-          `
-        )
+          `;
 
-        var impactStrategies = await this.queryRunner.query(validationImpactStrategiesSQL);
+        var impactStrategies = await this.queryRunner.query(
+          validationImpactStrategiesSQL
+        );
 
-        impactStrategies[0].validation = parseInt(impactStrategies[0].validation)
+        impactStrategies[0].validation = parseInt(
+          impactStrategies[0].validation
+        );
 
         multi = multi * impactStrategies[0].validation;
 
         impactStrategies[0].validation = multi;
-
       }
 
       //Validate SubSections
-      let validateImpactSubsectionSQL = (`
+      let validateImpactSubsectionSQL = `
       SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,${impactStrategies[0].validation} as validation
      FROM initiatives_by_stages ini
      JOIN sections_meta sec
@@ -1043,8 +1002,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
       AND sec.description='impact-statements'
-      AND subsec.description = 'impact-areas';`),
-        validateDinamicListSQL = (`SELECT sec.id as sectionId,imp.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton,
+      AND subsec.description = 'impact-areas';`,
+        validateDinamicListSQL = `SELECT sec.id as sectionId,imp.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton,
       CASE
      WHEN (imp.challenge_priorization) IS NULL
       OR (challenge_priorization) = ''
@@ -1080,69 +1039,63 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND ini.id = imp.initvStgId
 	  AND sec.id = subsec.sectionId
       AND sec.description='impact-statements'
-      AND subsec.description = 'impact-areas'`)
+      AND subsec.description = 'impact-areas'`;
 
-      var validateImpactSubsections = await this.queryRunner.query(validateImpactSubsectionSQL);
-      var valiDinamicList = await this.queryRunner.query(validateDinamicListSQL);
+      var validateImpactSubsections = await this.queryRunner.query(
+        validateImpactSubsectionSQL
+      );
+      var valiDinamicList = await this.queryRunner.query(
+        validateDinamicListSQL
+      );
 
-      validateImpactSubsections[0].validation = parseInt(validateImpactSubsections[0].validation)
-      valiDinamicList.map(imp => {
-        imp.validation = parseInt(imp.validation)
-      })
+      validateImpactSubsections[0].validation = parseInt(
+        validateImpactSubsections[0].validation
+      );
+      valiDinamicList.map((imp) => {
+        imp.validation = parseInt(imp.validation);
+      });
 
-      validateImpactSubsections.map(sub => {
-        sub['dinamicList'] = valiDinamicList.filter(di => {
+      validateImpactSubsections.map((sub) => {
+        sub['dinamicList'] = valiDinamicList.filter((di) => {
+          return (di.subSectionId = sub.subSectionId);
+        });
+      });
 
-          return (di.subSectionId = sub.subSectionId)
-
-        })
-      })
-
-      impactStrategies.map(imps => {
+      impactStrategies.map((imps) => {
         imps['subSections'] = [
-          validateImpactSubsections.find(imp => {
-
-            return (imp.sectionId = imp.sectionId)
-
+          validateImpactSubsections.find((imp) => {
+            return (imp.sectionId = imp.sectionId);
           })
+        ];
+      });
 
-        ]
-
-      }
-      )
-
-      return impactStrategies[0]
-
+      return impactStrategies[0];
     } catch (error) {
-
-      throw new BaseError('Get validations impact strategies', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations impact strategies',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationWorkPackages() {
-
     try {
-
-      let getAllWpSQL = (`
+      let getAllWpSQL = `
       SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
-      `)
+      `;
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
 
       if (allWorkPackages.length > 0) {
-
         // Get Work packages per initiative
         for (let index = 0; index < allWorkPackages.length; index++) {
-
           const wpId = allWorkPackages[index].id;
 
           var multi = 1;
 
-          let validationWPSQL = (
-            `
+          let validationWPSQL = `
           SELECT sec.id as sectionId,sec.description, 
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
@@ -1170,46 +1123,37 @@ export class MetaDataHandler extends InitiativeStageHandler {
         WHERE ini.id = ${this.initvStgId_}
           AND sec.stageId= ini.stageId
           AND sec.description='work-package-research-plans-and-tocs';
-          `
-          )
+          `;
 
           var workPackage = await this.queryRunner.query(validationWPSQL);
 
-          workPackage[0].validation = parseInt(workPackage[0].validation)
+          workPackage[0].validation = parseInt(workPackage[0].validation);
 
           multi = multi * workPackage[0].validation;
 
           workPackage[0].validation = multi;
-
         }
-
       } else {
-
-        workPackage = []
-
+        workPackage = [];
       }
 
-
-      return workPackage[0]
-
+      return workPackage[0];
     } catch (error) {
-
-      throw new BaseError('Get validations Work packages', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
     }
-
   }
 
-
   async validationContext() {
-
     var generalValidations;
 
     try {
-
       // Validate Sections
-      let validationContextPSQL = (
-        `
+      let validationContextSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
       WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
@@ -1254,15 +1198,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
         AND sec.description='context';
-        `
-      )
+        `;
 
-      var validationContext = await this.queryRunner.query(validationContextPSQL);
+      var validationContext = await this.queryRunner.query(
+        validationContextSQL
+      );
 
-      validationContext[0].validation = parseInt(validationContext[0].validation)
+      validationContext[0].validation = parseInt(
+        validationContext[0].validation
+      );
 
       generalValidations = validationContext[0].validation;
-
 
       // Validate Citations
 
@@ -1336,137 +1282,61 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       // var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
 
-      var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext();
+      var {
+        challengeStatement,
+        measurableObjectives,
+        learning,
+        prioritySetting,
+        comparativeAdvantage,
+        participatory,
+        projectionBenefits
+      } = await this.validationSubsectionContext();
 
-      validationContext.map(con => {
+      validationContext.map((con) => {
         con['subSections'] = [
-          challengeStatement.find(cha => {
-
-            return (cha.sectionId = con.sectionId)
-
+          challengeStatement.find((cha) => {
+            return (cha.sectionId = con.sectionId);
           }),
-          measurableObjectives.find(me => {
-
-            return (me.sectionId = con.sectionId)
-
+          measurableObjectives.find((me) => {
+            return (me.sectionId = con.sectionId);
           }),
-          learning.find(le => {
-
-            return (le.sectionId = con.sectionId)
-
+          learning.find((le) => {
+            return (le.sectionId = con.sectionId);
           }),
-          prioritySetting.find(pr => {
-
-            return (pr.sectionId = con.sectionId)
-
+          prioritySetting.find((pr) => {
+            return (pr.sectionId = con.sectionId);
           }),
-          comparativeAdvantage.find(com => {
-
-            return (com.sectionId = con.sectionId)
-
+          comparativeAdvantage.find((com) => {
+            return (com.sectionId = con.sectionId);
           }),
-          participatory.find(par => {
-
-            return (par.sectionId = con.sectionId)
-
+          participatory.find((par) => {
+            return (par.sectionId = con.sectionId);
+          }),
+          projectionBenefits.find((pb) => {
+            return (pb.sectionId = con.sectionId);
           })
-        ]
+        ];
+      });
 
-      }
-      )
-
-      return validationContext[0]
-
+      return validationContext[0];
     } catch (error) {
-
-      throw new BaseError('Get validations Context', 400, error.message, false)
-
+      throw new BaseError('Get validations Context', 400, error.message, false);
     }
-
-  }
-
-  async validationsProjectionBenefits() {
-
-    try {
-
-      // 5 impact strategies
-      for (let index = 1; index < 6; index++) {
-
-        var multi = 1;
-
-        // Validate Sections
-        let validationProjectionBenefitsSQL = (
-          `
-                SELECT sec.id as sectionId,sec.description, 
-                CASE
-				 WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 1
-                 THEN 
-                TRUE  
-              WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 0
-              AND (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
-               OR (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
-			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
-			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
-			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-			   OR (SELECT char_length(notes) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(notes,'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-                  FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 200
-			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
-			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
-			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-               THEN FALSE
-                 ELSE TRUE
-                 END AS validation
-               FROM initiatives_by_stages ini
-               JOIN sections_meta sec
-              WHERE ini.id = ${this.initvStgId_}
-                AND sec.stageId= ini.stageId
-                AND sec.description='context'
-                `
-        )
-
-        var validationProjectionBenefits = await this.queryRunner.query(validationProjectionBenefitsSQL);
-
-        validationProjectionBenefits[0].validation = parseInt(validationProjectionBenefits[0].validation)
-
-        multi = multi * validationProjectionBenefits[0].validation;
-
-        validationProjectionBenefits[0].validation = multi;
-
-      }
-
-      return validationProjectionBenefits[0]
-
-
-    } catch (error) {
-
-      throw new BaseError('Get validations projection benefits sections', 400, error.message, false)
-
-    }
-
-
-
-
-
   }
 
   /**
-  * VALIDATIONS (GREEN CHECKS)
-  * SUBSECTIONS:
-  * Context : challenge statement, Measurable three-year outcomes,
-  * Learning from prior evaluations and Impact Assessments (IA),Priority setting,
-  * Comparative Advantage,Participatory design process,Projection of benefits
-  */
-
+   * VALIDATIONS (GREEN CHECKS)
+   * SUBSECTIONS:
+   * Context : challenge statement, Measurable three-year outcomes,
+   * Learning from prior evaluations and Impact Assessments (IA),Priority setting,
+   * Comparative Advantage,Participatory design process,Projection of benefits
+   */
 
   async validationSubsectionContext(allCitations?) {
-
     var generalChallengeStatement;
 
     try {
-
-      let challengeStatementSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      let challengeStatementSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
       CASE
     WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
       OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
@@ -1483,8 +1353,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='context'
-    AND subsec.description = 'challenge-statement';`),
-        measurableObjectivesSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    AND subsec.description = 'challenge-statement';`,
+        measurableObjectivesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
@@ -1501,8 +1371,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
 		AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'measurable-objectives';`),
-        learningSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+	    AND subsec.description = 'measurable-objectives';`,
+        learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
@@ -1520,8 +1390,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
 		AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'learning-fpe-and-ia'`),
-        prioritySettingSQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+	    AND subsec.description = 'learning-fpe-and-ia'`,
+        prioritySettingSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
@@ -1539,8 +1409,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
 		AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'priority-setting'`),
-        comparativeAdvantageSQL = (` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+	    AND subsec.description = 'priority-setting'`,
+        comparativeAdvantageSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
@@ -1558,8 +1428,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
 		AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'comparative-advantage'`),
-        participatorySQL = (`SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+	    AND subsec.description = 'comparative-advantage'`,
+        participatorySQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
@@ -1577,23 +1447,35 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
 		AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'participatory-design-process';  `),
-        projectionBenefitsSQL = (``)
+	    AND subsec.description = 'participatory-design-process';  `;
 
+      let projectionBenefits = [await this.validationsProjectionBenefits()];
 
-      var challengeStatement = await this.queryRunner.query(challengeStatementSQL);
-      var measurableObjectives = await this.queryRunner.query(measurableObjectivesSQL);
+      var challengeStatement = await this.queryRunner.query(
+        challengeStatementSQL
+      );
+      var measurableObjectives = await this.queryRunner.query(
+        measurableObjectivesSQL
+      );
       var learning = await this.queryRunner.query(learningSQL);
       var prioritySetting = await this.queryRunner.query(prioritySettingSQL);
-      var comparativeAdvantage = await this.queryRunner.query(comparativeAdvantageSQL);
+      var comparativeAdvantage = await this.queryRunner.query(
+        comparativeAdvantageSQL
+      );
       var participatory = await this.queryRunner.query(participatorySQL);
 
-      challengeStatement[0].validation = parseInt(challengeStatement[0].validation)
-      measurableObjectives[0].validation = parseInt(measurableObjectives[0].validation)
-      learning[0].validation = parseInt(learning[0].validation)
-      prioritySetting[0].validation = parseInt(prioritySetting[0].validation)
-      comparativeAdvantage[0].validation = parseInt(comparativeAdvantage[0].validation)
-      participatory[0].validation = parseInt(participatory[0].validation)
+      challengeStatement[0].validation = parseInt(
+        challengeStatement[0].validation
+      );
+      measurableObjectives[0].validation = parseInt(
+        measurableObjectives[0].validation
+      );
+      learning[0].validation = parseInt(learning[0].validation);
+      prioritySetting[0].validation = parseInt(prioritySetting[0].validation);
+      comparativeAdvantage[0].validation = parseInt(
+        comparativeAdvantage[0].validation
+      );
+      participatory[0].validation = parseInt(participatory[0].validation);
 
       // if (learning[0].validation > 0) {
 
@@ -1657,17 +1539,144 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       // }
 
-      return { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory }
-
+      return {
+        challengeStatement,
+        measurableObjectives,
+        learning,
+        prioritySetting,
+        comparativeAdvantage,
+        participatory,
+        projectionBenefits
+      };
     } catch (error) {
-
-
-      throw new BaseError('Get validations Subsections Context', 400, error.message, false)
-
+      throw new BaseError(
+        'Get validations Subsections Context',
+        400,
+        error.message,
+        false
+      );
     }
-
-
   }
 
+  async validationsProjectionBenefits() {
+    try {
+      // 5 impact strategies
+      for (let index = 1; index < 6; index++) {
+        var multi = 1;
 
+        // Validate Sections
+        let validationProjectionBenefitsSQL = `
+                SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+                CASE
+				 WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 1
+                 THEN 
+                TRUE  
+              WHEN (SELECT impact_area_active FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = 0
+              AND (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+               OR (SELECT impact_area_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
+			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT impact_area_indicator_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT notes FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(notes,'<(\/?p)>',' '),'<([^>]+)>',''))     
+         - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 
+                  FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 200
+			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT depth_scale_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
+			   OR (SELECT probability_id FROM projection_benefits WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
+         OR (
+          SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+         (SELECT pb.id,
+           CASE 
+            WHEN d.breadth_value IS NULL
+              OR d.breadth_value =''
+              OR d.depthDescriptionId IS NULL
+              OR d.depthDescriptionId = ''
+           THEN FALSE
+                   ELSE TRUE
+        END AS VALIDATION
+           FROM dimensions d
+            RIGHT JOIN projection_benefits pb
+           ON d.projectionId = pb.id
+          WHERE pb.initvStgId = ini.id
+            AND pb.depth_scale_id not in (4)) AS a
+         )<>0
+               THEN FALSE
+                 ELSE TRUE
+                 END AS validation
+                 FROM initiatives_by_stages ini
+                 JOIN sections_meta sec
+               JOIN subsections_meta subsec
+                WHERE ini.id = ${this.initvStgId_}
+                  AND sec.stageId= ini.stageId
+              AND sec.id = subsec.sectionId
+                  AND sec.description='context'
+                AND subsec.description = 'projection-of-benefits'
+                `;
+
+        var validationProjectionBenefits = await this.queryRunner.query(
+          validationProjectionBenefitsSQL
+        );
+
+        validationProjectionBenefits[0].validation = parseInt(
+          validationProjectionBenefits[0].validation
+        );
+
+        multi = multi * validationProjectionBenefits[0].validation;
+
+        validationProjectionBenefits[0].validation = multi;
+      }
+
+      let validationProjectionBenefitsImpactSQL = `SELECT sec.id as sectionId,pb.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton,
+      CASE 
+       WHEN pb.impact_area_indicator_id IS NULL
+         OR pb.impact_area_indicator_id = ''
+         OR pb.impact_area_id IS NULL
+       OR pb.impact_area_id= ''
+       OR pb.notes IS NULL
+       OR pb.notes= ''
+       OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                 - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
+       OR pb.depth_scale_id IS NULL
+       OR pb.depth_scale_id= ''
+         OR pb.probability_id IS NULL
+       OR pb.probability_id= ''
+     
+      THEN FALSE
+              ELSE TRUE
+   END AS validation
+        FROM initiatives_by_stages ini
+        JOIN sections_meta sec
+        JOIN projection_benefits pb
+     JOIN subsections_meta subsec
+       WHERE ini.id = ${this.initvStgId_}
+         AND sec.stageId= ini.stageId
+         AND ini.id = pb.initvStgId
+         AND sec.id = subsec.sectionId
+         AND pb.active > 0
+         AND sec.description='context'
+         AND subsec.description = 'projection-of-benefits'`;
+
+      var validationProjectionBenefitsImpact = await this.queryRunner.query(
+        validationProjectionBenefitsImpactSQL
+      );
+
+      validationProjectionBenefits.map((pb) => {
+        pb['dinamicList'] = validationProjectionBenefitsImpact.filter((di) => {
+          return (di.subSectionId = pb.subSectionId);
+        });
+      });
+
+      return validationProjectionBenefits[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations projection benefits sections',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

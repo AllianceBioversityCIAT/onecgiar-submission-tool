@@ -207,6 +207,19 @@ button {
   color: #797979;
 }
 
+.ibdc_basic_title{
+  color: var(--ibdc-tertiary-color);
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.ibdc_basic_description{
+  color: rgb(80, 80, 80);
+  // margin-bottom: 10px;
+  font-size: 12px;
+}
+
 //ibdc colors end
 
 :root{

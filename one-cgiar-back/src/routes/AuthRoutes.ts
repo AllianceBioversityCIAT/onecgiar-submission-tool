@@ -1,6 +1,10 @@
-import { Router } from 'express'
-import { changePassword, login, validateCGUser } from '../controllers/AuthController'
-import { checkJwt } from '../middlewares/jwt'
+import {Router} from 'express';
+import {
+  changePassword,
+  login,
+  validateCGUser
+} from '../controllers/AuthController';
+import {checkJwt} from '../middlewares/jwt';
 
 const router = Router();
 
@@ -10,9 +14,7 @@ router.post('/login', login);
 // change password
 router.post('/change-password', changePassword);
 
-
 // change password
 router.get('/cgiar', [checkJwt], validateCGUser);
-
 
 export default router;

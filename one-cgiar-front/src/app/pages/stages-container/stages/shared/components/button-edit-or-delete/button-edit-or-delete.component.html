@@ -1,0 +1,8 @@
+<div class="icon_container" 
+(click)="this.action.emit();"
+[ngClass]="
+{'icon_delete_container_background_color':  this.type =='delete',
+'icon_edit_container_background_color':  this.type =='edit'}">
+    <span class="material-icons">{{this.type}}</span>
+    <div class="delete_text">{{this.type | titlecase}}</div>
+</div>

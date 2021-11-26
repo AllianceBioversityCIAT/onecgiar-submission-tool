@@ -75,20 +75,20 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-  getImpacAreasList(){
+  getImpacAreasList() {
     // console.log("getImpacAreasList");
-    this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-      
+    this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
+
       // console.log(impacAreas.response.impactAreasRequested);
       this.impacAreasList = impacAreas.response.impactAreasRequested;
       // console.log(this.impacAreasList);
-    },(err) => {
+    }, (err) => {
       console.log(err);
 
-    },()=>{
+    }, () => {
       // console.log("call");
-          this._dataControlService.menuChange$.emit();
-          // this._dataControlService.validateMenu$.emit();
+      this._dataControlService.menuChange$.emit();
+      // this._dataControlService.validateMenu$.emit();
     })
   }
 
@@ -150,7 +150,7 @@ export class MenuComponent implements OnInit {
                 // console.log(wpsResp);
                 wpsResp.response.workpackage.map((wpResp) => {
                   wpResp.subSectionName = 'work-package';
-                  wpResp.frontRoute = '/work-packages/work-package/';
+                  wpResp.frontRoute = '/work-package/';
                   wpResp.sort = 'showName';
                   wpResp.showName = wpResp.acronym;
                 });
@@ -178,7 +178,7 @@ export class MenuComponent implements OnInit {
 
               body = impactArea;
               body.showName = body.name;
-              body.frontRoute = '/projection-of-benefits/impact-area/';
+              body.frontRoute = '/impact-area/';
               body.subSectionName='impact-area';
               body.sort = 'id';
               pobList.push(body)
@@ -205,7 +205,7 @@ export class MenuComponent implements OnInit {
               // body = item;
               body = impactArea;
               body.showName = body.name;
-              body.frontRoute = '/impact-areas/impact-area/';
+              body.frontRoute = '/impact-area/';
               body.subSectionName='impact-area';
               body.sort = 'id';
               impactStatementsList.push(body)
@@ -218,17 +218,17 @@ export class MenuComponent implements OnInit {
               frontRoute : '/is-resports'
             });
 
-            // this.mapPreviewInDynamicListMenu(3, 5, 12, {
-            //   showName : 'Wp Reports',
-            //   frontRoute : '/work-packages/wp-reports'
-            // });
+            this.mapPreviewInDynamicListMenu(3, 5, 12, {
+              showName : 'Wp Reports',
+              frontRoute : '/work-packages/wp-reports'
+            });
 
             this.mapPreviewInDynamicListMenu(3, 1, 8, {
               showName : 'Projection of benefits Reports',
               frontRoute : '/projection-of-benefits/pob-resports'
             });
 
-            // console.log(this._dataControlService.userMenu);
+            console.log(this._dataControlService.userMenu);
 
             if (this.impacAreasList.length) {
               this._dataControlService.pobMaped = true;
@@ -259,33 +259,7 @@ export class MenuComponent implements OnInit {
     // }
   }
 
-  menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(active, stage, section, isSection, subsection)
-    if (active) {
-      if (isSection) {
-        if (!subsection.length) {
-          this.router.navigate([baseUrl, stageParam, section]);
-        }
-      } else {
-        if (subsection) {
-          this.router.navigate([baseUrl, stageParam, section, subsection]);
-        }
-      }
-    } else {
-      this.router.navigate([baseUrl, stageParam, 'under-construction-page']);
-    }
-  }
-
-  dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
-    this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
-    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
-  }
-
+  // dynamicListSubSectionNavigation(stage.description,section.description,item.frontRoute)
   dynamicListSubSectionNavigation(stage: string, section: string, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
