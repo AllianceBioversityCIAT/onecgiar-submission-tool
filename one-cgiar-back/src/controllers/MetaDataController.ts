@@ -79,7 +79,7 @@ export async function getValidations(req: Request, res: Response) {
         const initvStg: InitiativesByStages = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage } });
         // if not intitiative by stage, throw error
         if (initvStg == null || initvStg == undefined) {
-            throw new BaseError('Validations: Error', 400, `Validations not found in stage:`+stageId, false);
+            throw new BaseError('Validations: Error', 400, `Validations not found in stage:` + stageId, false);
         }
 
 
@@ -107,7 +107,8 @@ export async function getValidations(req: Request, res: Response) {
 
         // Get validations financial resources
 
-        let financialResources = await metaData.validationFinancialResources();
+        let financialResources = null;
+        // await metaData.validationFinancialResources();
 
         // Get validations financial resources
 
@@ -121,15 +122,15 @@ export async function getValidations(req: Request, res: Response) {
 
         let workPackages = await metaData.validationWorkPackages();
 
-         // Get validations Context
+        // Get validations Context
 
-         let conext = await metaData.validationContext();
+        let conext = await metaData.validationContext();
 
         /*******************************************/
 
         res.json(new ResponseHandler('Green Checks:Menu', {
             generalInformation, innovationPackages, melia, managePlan, humanResources,
-            financialResources, policyCompliance, impactStrategies,workPackages,conext
+            financialResources, policyCompliance, impactStrategies, workPackages, conext
         }));
 
     } catch (error) {

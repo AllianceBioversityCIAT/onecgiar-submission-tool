@@ -1082,8 +1082,9 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert financial Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
 
+// router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResources);
+router.patch("/financial-resources/:initiativeId([0-9]+/)", [checkJwt, checkRole('fr', 'updateOwn')], stagefull.patchFinancialResources);
 // Get financial resources and files to initiative
 /**
  * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources

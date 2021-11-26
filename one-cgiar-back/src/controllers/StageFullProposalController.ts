@@ -797,15 +797,16 @@ export async function getHumanResources(req: Request, res: Response) {
  * @param res {financialResources}
  * @returns financialResources
  */
-export async function patchFinancialResourcesAndFiles(req: Request, res: Response) {
+export async function patchFinancialResources(req: Request, res: Response) {
 
-    const { initiativeId, ubication } = req.params;
+    const { initiativeId, section } = req.params;
 
     //financial resources section data
-    const { id, detailed_budget, active, section, updateFiles } = JSON.parse(req.body.data);
+    const  fResources  = req.body;
+    // console.log(req.body);
 
     //financial resources  section files
-    const files = req['files'];
+    // const files = req['files'];
 
     const initvStgRepo = getRepository(InitiativesByStages);
     const stageRepo = getRepository(Stages);
@@ -824,10 +825,11 @@ export async function patchFinancialResourcesAndFiles(req: Request, res: Respons
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
-            active, section, files, updateFiles);
-
-        res.json(new ResponseHandler('Full Proposal: Patch financial resources.', { financialResources, files }));
+        const financialResources = await fullPposal.upsertFinancialResources(fResources, initvStg, section);
+        // const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
+        //     active, section, files, updateFiles);
+        
+        res.json(new ResponseHandler('Full Proposal: Patch financial resources.', { financialResources }));
 
     } catch (error) {
         console.log(error)
@@ -862,7 +864,7 @@ export async function getFinancialResources(req: Request, res: Response) {
         // create new full proposal object
         const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-        const financialResourcesData = await fullPposal.requestFinancialResourcesFiles(sectionName);
+        const financialResourcesData = await fullPposal.requestFinancialResources(sectionName);
 
         res.json(new ResponseHandler('Full Proposal:financial resources and files.', { financialResourcesData }));
 

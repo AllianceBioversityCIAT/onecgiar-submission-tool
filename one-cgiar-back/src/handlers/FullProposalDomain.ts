@@ -1,9 +1,11 @@
+import _ from "lodash";
 import { getRepository } from "typeorm";
 import { getClaActionAreas } from "../controllers/Clarisa";
 import { Context } from "../entity/Context";
 import { Dimensions } from "../entity/Dimensions";
 import { Files } from "../entity/Files";
 import { FinancialResources } from "../entity/FinancialResources";
+import { FinancialResourcesYears } from "../entity/FinancialResourcesYears";
 import { GeneralInformation } from "../entity/GeneralInformation";
 import { HumanResources } from "../entity/HumanResources";
 import { ImpactStrategies } from "../entity/ImpactStrategies";
@@ -1583,130 +1585,91 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @param updateFiles 
      * @returns { upsertedFinancialResources, upsertedFile }
      */
-    async upsertFinancialResourcesAndFiles(initiativeId?, ubication?, stage?, financialResourcesId?, budget_value?,
-        financialResourcesActive?, section?, files?, updateFiles?, financial_type?, financial_type_id?, table_name?, col_name?, ) {
-
-
+    async upsertFinancialResources(upsertArray?, initvStg?, sectionName?) {
         const financialResourcesRepo = getRepository(FinancialResources);
-        const filesRepo = getRepository(Files);
-        const initvStg = await this.setInitvStage();
-        var host = `${process.env.EXT_HOST}`;
-        const path = 'uploads'
 
-        var newFinancialResources = new FinancialResources();
-        var newFiles = new Files();
-        var upsertedFinancialResources;
-        var upsertedFile;
 
-        newFinancialResources.id = financialResourcesId;
-        newFinancialResources.value = budget_value;
-        newFinancialResources.active = financialResourcesActive ? financialResourcesActive : true;
-
-        /** multiple resources type for budget */
-        newFinancialResources.col_name = col_name;
-        newFinancialResources.table_name = table_name;
-        newFinancialResources.financial_type = financial_type;
-        newFinancialResources.financial_type_id = financial_type_id;
-        
         try {
 
-            if (host == 'http://localhost') {
 
-                host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+            // const workpackages = await this.getWorkPackage();
+            // let upsertObject = [];
 
-            } else {
+            /**
+                        * 
+                        * {
+              name: item.name || 'unnamed',
+                total: item.total || 0,
+                valuesList: { years: values_ },
+                active: item.active || true,
+                table_name: null,
+                col_name: null,
+                id: null
+                financial_type
+                financial_type_id
+           }
+                        */
 
-                host = `${process.env.EXT_HOST}`;
-            }
-
-            if (newFinancialResources.id !== null) {
-
-                var savedFinancialResources = await financialResourcesRepo.findOne(newFinancialResources.id);
-
-                financialResourcesRepo.merge(
-                    savedFinancialResources,
-                    newFinancialResources
-                );
-
-                upsertedFinancialResources = await financialResourcesRepo.save(savedFinancialResources);
-
-            } else {
-
-                newFinancialResources.initvStg = initvStg.id;
-
-                upsertedFinancialResources = await financialResourcesRepo.save(newFinancialResources);
-
-            }
-
-            if (files) {
-
-                for (let index = 0; index < files.length; index++) {
-                    const file = files[index];
-
-                    const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`
-                    newFiles.id = null;
-                    newFiles.active = file.active ? file.active : true;
-                    newFiles.financial_resources_id = upsertedFinancialResources.id;
-                    newFiles.section = section;
-                    newFiles.url = urlDB;
-                    newFiles.name = file.originalname;
-
-                    if (newFiles.id !== null) {
-
-                        var savedFiles = await filesRepo.findOne(newFiles.id);
-
-                        filesRepo.merge(
-                            savedFiles,
-                            file
-                        );
-
-                        upsertedFile = await filesRepo.save(savedFiles);
-
-                    } else {
-
-                        upsertedFile = await filesRepo.save(newFiles);
-                    }
-
+            let financialRs = [], yearsArr = [];
+            upsertArray.forEach((upsEle, i) => {
+                const fResource = new FinancialResources();
+                fResource.active = upsEle.active;
+                fResource.col_name = upsEle.col_name;
+                fResource.table_name = upsEle.table_name;
+                fResource.id = upsEle.id;
+                fResource.financial_type_id = upsEle.financial_type_id;
+                fResource.financial_type = upsEle.financial_type;
+                fResource.initvStg = initvStg;
+                financialRs.push(fResource);
+                if(_.isEmpty(!upsEle.valuesList)){
+                    console.log(upsEle.valuesList);
                 }
+            });
+            // financialRs = await financialResourcesRepo.save(financialRs);
+            console.log('acá');
+            console.log(financialRs);
+            // for (let index = 0; index < upsertArray.length; index++) {
+            //     const fRArray = upsertArray[index];
 
-            }
+            //     const foundWP = financialResources.find( fR => fR.financial_type_id == fRArray.financial_type_id);
+            //     let rspObj = {}
+            //     if(!foundWP){
+            //         console.log(foundWP)
+            //         // rspObj['name'] = wp.acronym;
+            //         // rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
+            //         // rspObj['valuesList'] = foundFR.values_;
+            //         // rspObj['active'] = foundFR.active;
+            //         // rspObj['table_name'] = foundFR.table_name;
+            //         // rspObj['col_name'] = foundFR.col_name;
+            //         // rspObj['years'] = foundFR.years;
+            //         // rspObj['financial_type'] = foundFR.financial_type;
+            //         // rspObj['financial_type_id'] = foundFR.financial_type_id;
+            //     }
 
-            if (updateFiles.length > 0) {
+            // }
 
-                for (let index = 0; index < updateFiles.length; index++) {
-                    const updateFile = updateFiles[index];
+            const financialResourcesQuery = (` 
+            SELECT
+            fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
+            GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
+            FROM
+                financial_resources fR
+            LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
+            
+            WHERE initvStgId = ${initvStg.id}
+            AND fR.financial_type = "activity_breakdown"
+            AND fR.active = 1
+            AND fRY.active = 1
+            GROUP BY
+                fR.id;
+            `);
 
-                    newFiles.id = updateFile.id;
-                    newFiles.active = updateFile.active ? updateFile.active : true;
-                    newFiles.financial_resources_id = updateFile.financialResourcesId;
-                    newFiles.section = updateFile.section;
-                    newFiles.url = updateFile.urlDB;
-                    newFiles.name = updateFile.originalname;
+            const financialResources = await this.queryRunner.query(financialResourcesQuery);
 
-                    if (newFiles.id !== null) {
-
-                        var savedFiles = await filesRepo.findOne(newFiles.id);
-
-                        filesRepo.merge(
-                            savedFiles,
-                            updateFile
-                        );
-
-                        upsertedFile = await filesRepo.save(savedFiles);
-
-                    } else {
-
-                        upsertedFile = await filesRepo.save(newFiles);
-                    }
-
-                }
-
-            }
-
-            return { upsertedFinancialResources, upsertedFile };
+            // console.log(index, rspObj);
+            return financialResources;
 
         } catch (error) {
-
             console.log(error)
             throw new BaseError('Upsert financial Resources: Full proposal', 400, error.message, false)
 
@@ -1719,46 +1682,58 @@ export class ProposalHandler extends InitiativeStageHandler {
      * @param sectionName 
      * @returns {financialResources}
      */
-    async requestFinancialResourcesFiles(sectionName) {
+    async requestFinancialResources(sectionName) {
 
         const initvStg = await this.setInitvStage();
+        const Activity_COLUMNS = ['Crosscutting across Work Packages', 'Innovation packages & Scaling Readiness'];
 
         try {
-            // retrieve general information
+
+
             const financialResourcesQuery = (` 
-            SELECT * 
-            FROM financial_resources
-           WHERE initvStgId = ${initvStg.id}
-             AND active = 1;
-            `),
-                filesQuery = (
-                    `
-                    SELECT * 
-                    FROM files 
-                   WHERE financial_resources_id in (SELECT id
-                    FROM financial_resources
-                   WHERE initvStgId = ${initvStg.id}
-                     AND active = 1)
-                     AND section = "${sectionName}"
-                     AND active = 1
-                `
-                )
+            SELECT
+            fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
+            GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
+            FROM
+                financial_resources fR
+            LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
+            
+            WHERE initvStgId = ${initvStg.id}
+            AND fR.financial_type = "activity_breakdown"
+            AND fR.active = 1
+            AND fRY.active = 1
+            GROUP BY
+                fR.id;
+            `);
 
             const financialResources = await this.queryRunner.query(financialResourcesQuery);
-            const files = await this.queryRunner.query(filesQuery);
+            const workpackages = await this.getWorkPackage();
+            let responseObjtArr = [];
 
-            financialResources.map(fr => {
-                fr['files'] = files.filter(f => {
-                    return (f.financial_resources_id === fr.id)
-                })
-            }
+            // for (let index = 0; index < workpackages.length; index++) {
+            //     const wp = workpackages[index];
+            //     let rspObj = {}
+            //     const foundFR = financialResources.find(fr => { return fr.financial_type_id == wp.id });
+            //     if (foundFR) {
+            //         console.log(foundFR)
+            //         rspObj['name'] = wp.acronym;
+            //         rspObj['total'] = foundFR.values_.reduce((partial_sum, a) => partial_sum + a, 0);
+            //         rspObj['valuesList'] = foundFR.values_;
+            //         rspObj['active'] = foundFR.active;
+            //         rspObj['table_name'] = foundFR.table_name;
+            //         rspObj['col_name'] = foundFR.col_name;
+            //         rspObj['years'] = foundFR.years;
+            //         rspObj['financial_type'] = foundFR.financial_type;
+            //         rspObj['financial_type_id'] = foundFR.financial_type_id;
+            //     }
+            //     console.log(index, rspObj);
+            // }
 
-            )
 
-            return financialResources[0];
+
+            return financialResources;
 
         } catch (error) {
-
             console.log(error)
             throw new BaseError('Get financial resources and files: Full proposal.', 400, error.message, false)
 

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
 import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
 import { InitiativesByStages } from "./InititativesByStages";
 
@@ -8,9 +8,6 @@ export class FinancialResources extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type: 'decimal'})
-    value: number;
-
     @Column({ type: "text" })
     financial_type: string;
 
@@ -19,9 +16,6 @@ export class FinancialResources extends UpdatedCreatedAt {
 
     @Column({ type: "tinyint" })
     active: boolean;
-    
-    @Column({ type: "datetime" })
-    year: Date;
 
     @Column({ type: "text" })
     col_name: string;
@@ -29,7 +23,7 @@ export class FinancialResources extends UpdatedCreatedAt {
     @Column({ type: "text" })
     table_name: string;
 
-    @OneToOne(() => InitiativesByStages)
+    @ManyToOne(() => InitiativesByStages)
     @JoinColumn()
     initvStg!: InitiativesByStages;
 }
