@@ -152,7 +152,6 @@ export class MenuComponent implements OnInit {
           let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
           this._dataControlService.wpMaped = true;
-          // console.log(this._dataControlService.userMenu);
         }, (err) => {
           console.log(err);
           this._dataControlService.wpMaped = true;
@@ -170,26 +169,21 @@ export class MenuComponent implements OnInit {
           frontRoute: '/is-resports'
         });
 
-        let iaListInResultFramework = [
-          {
+        this.mapDataInMenu(3, 4, 27, 
+          [{
             showName: '10.1.1 Activity breakdown',
             frontRoute: '/budget/activity-breakdown/',
-            // subSectionName: 'impact-area',
-            // sort: 'id'
           },
           {
             showName: '10.1.2 Geography breakdown',
             frontRoute: '/budget/geography-breakdown/',
-            // subSectionName: 'impact-area',
-            // sort: 'id'
-          }
-        ];
-        this.mapDataInMenu(3, 4, 27, iaListInResultFramework);
+          }]
+        );
 
-        // this.mapPreviewInDynamicListMenu(3, 5, 12, {
-        //   showName : 'Wp Reports',
-        //   frontRoute : '/work-packages/wp-reports'
-        // });
+        this.mapPreviewInDynamicListMenu(3, 5, 12, {
+          showName : 'Wp Reports',
+          frontRoute : '/work-packages/wp-reports'
+        });
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
           showName: 'Projection of benefits Reports',
