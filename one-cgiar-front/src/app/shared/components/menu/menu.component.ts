@@ -169,7 +169,7 @@ export class MenuComponent implements OnInit {
           frontRoute: '/is-resports'
         });
 
-        this.mapDataInMenu(3, 4, 27, 
+        this.mapDataInMenuDynamicListSubSection(3, 4, 27, 
           [{
             showName: '10.1.1 Activity breakdown',
             frontRoute: '/budget/activity-breakdown/',
