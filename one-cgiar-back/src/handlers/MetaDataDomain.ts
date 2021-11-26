@@ -1449,7 +1449,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='context'
 	    AND subsec.description = 'participatory-design-process';  `;
 
-      let projectionBenefits = [await this.validationsProjectionBenefits()];
+      //  let projectionBenefits = [await this.validationsProjectionBenefits()];
+
+      let projectionBenefits = []
 
       var challengeStatement = await this.queryRunner.query(
         challengeStatementSQL
