@@ -2,9 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToOne,
   JoinColumn,
-  OneToMany,
   ManyToOne
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';

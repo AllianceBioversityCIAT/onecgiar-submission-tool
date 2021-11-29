@@ -130,16 +130,26 @@ export class InitiativeHandler {
     const querySql = `
         SELECT id,name,description
         FROM clarisa_impact_areas`;
-    const institutions = await this.queryRunner.query(querySql);
-    return institutions;
+    const impactAreas = await this.queryRunner.query(querySql);
+    return impactAreas;
+  }
+
+  async requestImpactAreasIndicators() {
+    const querySql = `
+        SELECT id as indicatorId,indicatorStatement,
+               impactAreaId,impactAreaName,targetYear,
+               targetUnit,value,isAplicableProjectedBenefits
+        FROM clarisa_impact_areas_indicators`;
+    const impactAreasIndicators = await this.queryRunner.query(querySql);
+    return impactAreasIndicators;
   }
 
   async requestActionAreas() {
     const querySql = `
         SELECT id,name,description
         FROM clarisa_action_areas`;
-    const institutions = await this.queryRunner.query(querySql);
-    return institutions;
+    const actionAreas = await this.queryRunner.query(querySql);
+    return actionAreas;
   }
 
   async requestInstitutionsTypes() {
