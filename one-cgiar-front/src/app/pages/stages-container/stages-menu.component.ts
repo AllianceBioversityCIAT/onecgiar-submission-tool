@@ -108,40 +108,37 @@ export class StagesMenuComponent implements OnInit {
     });
   }
 
-  validateAllSections(){
-    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      Object.keys(resp.response).map(key=>{
-        let stageId = 3; 
-        let sectionId = resp.response[key].sectionId; 
-        let ValidateGI = resp.response[key].validation;
+  validateAllSections() {
 
-        let result = this._dataControlService?.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
+    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id, 3).subscribe(resp => {
+
+      Object.keys(resp.response).map(key => {
+        let stageId = 3;
+        if (!resp.response[key]) return null;
+        let sectionId = resp.response[key]?.sectionId;
+        let ValidateGI = resp.response[key]?.validation;
+        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId).sections.find(item => item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
-
         let subSectionsToMap = resp.response[key].subSections;
-        if (subSectionsToMap) 
-        subSectionsToMap.map(item=>{
+        if (!subSectionsToMap) return;
 
-          let menuSubsections= result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId);
-          if (menuSubsections ) {
-            menuSubsections.fieldsCompleted = item.validation
-          }
+        subSectionsToMap.map(item => {
+          let menuSubsections = result.subsections.find(subSeItem => subSeItem.subSectionId == item.subSectionId);
+          if (menuSubsections) menuSubsections.fieldsCompleted = item.validation;
 
-          if (item.hasOwnProperty('dinamicList')) {
-            item.dinamicList.map(resp=>{
-              if ( menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id)) {
-                menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
-              }
-              
-            })
-          }
-          
+          if (!item.hasOwnProperty('dinamicList')) return;
+          item.dinamicList.map(resp => {
+            if (!(menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id))) return false
+            menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
+          })
+
         });
-        
-        
+
+
       })
 
     })
+
   }
 
 
