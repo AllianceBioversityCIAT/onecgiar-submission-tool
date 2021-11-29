@@ -1412,7 +1412,7 @@ export async function getImpactAreas(req: Request, res: Response) {
  * REQUEST IMPACT AREAS INDICATORS FROM ST
  * @param req
  * @param res
- * @returns
+ * @returns impactAreasIndicators
  */
  export async function getImpactAreasIndicators(req: Request, res: Response) {
   try {
