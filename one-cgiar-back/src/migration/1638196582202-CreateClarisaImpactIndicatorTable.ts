@@ -16,8 +16,7 @@ export class CreateClarisaImpactIndicatorTable1638196582202
             value TEXT DEFAULT NULL,
             isAplicableProjectedBenefits BOOLEAN DEFAULT NULL,
             created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id)
+            updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);

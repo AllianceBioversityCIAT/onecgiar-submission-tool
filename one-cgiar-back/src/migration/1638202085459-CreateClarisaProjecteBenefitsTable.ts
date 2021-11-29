@@ -17,8 +17,7 @@ export class CreateClarisaProjecteBenefitsTable1638202085459 implements Migratio
                 depthScales JSON DEFAULT NULL,
                 weightingValues JSON DEFAULT NULL,
                 created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id)
+                updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
             `);

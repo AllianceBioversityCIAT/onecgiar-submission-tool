@@ -349,9 +349,8 @@ export async function createImpactAreasIndicators() {
 
       for (let index = 0; index < impactAreasIndicators.length; index++) {
         const element = impactAreasIndicators[index];
-        idTable = idTable + 1;
         let cla = clarisaImpactAreasIndicatorsRepo.create({
-          id: idTable,
+          id: element.impactAreaId,
           indicatorStatement: element.indicatorStatement,
           impactAreaId: element.impactAreaId,
           impactAreaName: element.impactAreaName,
@@ -406,9 +405,8 @@ export async function createProjectedBenefits() {
 
       for (let index = 0; index < projectedBenefits.length; index++) {
         const element = projectedBenefits[index];
-        idTable = idTable + 1;
         let cla = clarisaProjectedBenefitsRepo.create({
-          id: idTable,
+          id: element.impactAreaId,
           impactAreaName: element.impactAreaName,
           impactAreaIndicator: element.impactAreaIndicator,
           impactAreaIndicatorName: element.impactAreaIndicatorName,
