@@ -107,6 +107,14 @@ export class MenuComponent implements OnInit {
     return list;
   }
 
+  mapReportInSubSectionMenu(stageId, sectionId, object) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .previewButton = object);
+    // console.log(sectionFinded);
+  }
+
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
@@ -164,6 +172,11 @@ export class MenuComponent implements OnInit {
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
+        this.mapReportInSubSectionMenu(3,9,{
+          showName: 'Reports',
+          frontRoute: '/mpara-reports'
+        })
+
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
           showName: 'Reports',
           frontRoute: '/is-resports'
@@ -190,7 +203,7 @@ export class MenuComponent implements OnInit {
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 
-        // console.log(this._dataControlService.userMenu);
+        console.log(this._dataControlService.userMenu);
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;
