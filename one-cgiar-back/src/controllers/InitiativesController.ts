@@ -1389,7 +1389,7 @@ export const getCRP = async (req: Request, res: Response) => {
  * @param res
  * @returns
  */
-export async function requestImpactAreas(req: Request, res: Response) {
+export async function getImpactAreas(req: Request, res: Response) {
   try {
     //Get impact areas from submission
 
@@ -1400,6 +1400,31 @@ export async function requestImpactAreas(req: Request, res: Response) {
 
     res.json(
       new ResponseHandler('Requested Impact areas.', {impactAreasRequested})
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * REQUEST IMPACT AREAS INDICATORS FROM ST
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getImpactAreasIndicators(req: Request, res: Response) {
+  try {
+    //Get impact areas from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let impactAreasIndicatorsRequested = await initiativeshandler.requestImpactAreasIndicators();
+
+    res.json(
+      new ResponseHandler('Requested Impact areas Indicators.', {impactAreasIndicatorsRequested})
     );
   } catch (error) {
     console.log(error);
@@ -1429,23 +1454,6 @@ export async function GetRisks(req: Request, res: Response) {
   }
 }
 
-export async function requestImpactAreasIndicators(
-  req: Request,
-  res: Response
-) {
-  try {
-    const impactAreasIndicatorsRequested =
-      await clarisa.getImpactAreasIndicators();
-    res.json(
-      new ResponseHandler('Requested Impact areas indicators.', {
-        impactAreasIndicatorsRequested
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    return res.status(error.httpCode).json(error);
-  }
-}
 
 export async function requestProjectedBenefits(req: Request, res: Response) {
   try {

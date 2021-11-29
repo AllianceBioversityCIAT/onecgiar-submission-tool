@@ -559,7 +559,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.description='mpara'
           AND subsec.description = 'smpg-table';`;
 
-      var subManagePlan = await this.queryRunner.query(validationSubSecManagePlanSQL);
+      var subManagePlan = await this.queryRunner.query(
+        validationSubSecManagePlanSQL
+      );
       var riskAssessment = await this.queryRunner.query(
         validationRiskAssessmentSQL
       );
