@@ -1465,7 +1465,7 @@ export async function getProjectedBenefits(req: Request, res: Response) {
 
       const initiativeshandler = new InitiativeHandler();
 
-      let impactProjectedBenefitsRequested = await initiativeshandler.requesProjectedBenefits();
+      let impactProjectedBenefitsRequested = await clarisa.requestProjectedBenefits();
 
     res.json(
       new ResponseHandler('Requested projected benefits.', {
