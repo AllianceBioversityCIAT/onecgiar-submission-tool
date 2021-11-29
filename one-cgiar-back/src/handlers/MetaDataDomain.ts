@@ -467,7 +467,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       //Validate subSections
 
-      let validationManagePlanSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
+      let validationSubSecManagePlanSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
     WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
@@ -559,19 +559,19 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.description='mpara'
           AND subsec.description = 'smpg-table';`;
 
-      var managePlan = await this.queryRunner.query(validationManagePlanSQL);
+      var subManagePlan = await this.queryRunner.query(validationSubSecManagePlanSQL);
       var riskAssessment = await this.queryRunner.query(
         validationRiskAssessmentSQL
       );
       var gantt = await this.queryRunner.query(validationGantt);
 
-      managePlan[0].validation = parseInt(managePlan[0].validation);
+      subManagePlan[0].validation = parseInt(subManagePlan[0].validation);
       riskAssessment[0].validation = parseInt(riskAssessment[0].validation);
       gantt[0].validation = parseInt(gantt[0].validation);
 
       managementPlan.map((mp) => {
         mp['subSections'] = [
-          managePlan.find((mpn) => {
+          subManagePlan.find((mpn) => {
             return (mpn.sectionId = mp.sectionId);
           }),
 

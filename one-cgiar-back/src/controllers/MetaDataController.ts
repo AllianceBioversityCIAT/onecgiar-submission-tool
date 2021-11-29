@@ -93,8 +93,7 @@ export async function getValidations(req: Request, res: Response) {
 
     // Get validations for Manage Plan
 
-    let financialResources = null;
-    // await metaData.validationFinancialResources();
+    let managePlan = await metaData.validationManagementPlan();
 
     // Get validations human resources
 
@@ -127,9 +126,9 @@ export async function getValidations(req: Request, res: Response) {
         generalInformation,
         innovationPackages,
         melia,
-        // managePlan,
+        managePlan,
         humanResources,
-        financialResources,
+       // financialResources,
         policyCompliance,
         impactStrategies,
         workPackages,
