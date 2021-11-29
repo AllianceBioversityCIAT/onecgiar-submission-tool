@@ -702,7 +702,11 @@ router.get('/areas', [checkJwt], initiatives.getActionAreas);
 router.get('/impact-areas', [checkJwt], initiatives.getImpactAreas);
 
 //get impact areas Indicators from submission
-router.get('/impact-areas/inidicators', [checkJwt], initiatives.getImpactAreasIndicators);
+router.get(
+  '/impact-areas/inidicators',
+  [checkJwt],
+  initiatives.getImpactAreasIndicators
+);
 
 // get institutions types from submission
 router.get('/institutions/types', [checkJwt], initiatives.getInstitutionsTypes);
@@ -718,6 +722,13 @@ router.get('/regions', [checkJwt], initiatives.getRegions);
 
 //Get Risks
 router.get('/risks', [checkJwt], initiatives.GetRisks);
+
+//Get Projected Benefits
+router.get(
+  '/projected-benefits',
+  [checkJwt],
+  initiatives.getProjectedBenefits
+);
 
 /**
  *
@@ -752,11 +763,11 @@ router.post(
 //   initiatives.requestImpactAreasIndicators
 // );
 //get Impact areas inticators
-router.get(
-  '/projected-benefits',
-  [checkJwt],
-  initiatives.requestProjectedBenefits
-);
+// router.get(
+//   '/projected-benefits',
+//   [checkJwt],
+//   initiatives.requestProjectedBenefits
+// );
 //get projected probabilities
 router.get(
   '/projected-probabilities',

@@ -1454,11 +1454,19 @@ export async function GetRisks(req: Request, res: Response) {
   }
 }
 
-
-export async function requestProjectedBenefits(req: Request, res: Response) {
+/**
+ * REQUEST PROJECTED BENEFITS
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function getProjectedBenefits(req: Request, res: Response) {
   try {
-    const impactProjectedBenefitsRequested =
-      await clarisa.getProjectedBenefits();
+
+      const initiativeshandler = new InitiativeHandler();
+
+      let impactProjectedBenefitsRequested = await initiativeshandler.requesProjectedBenefits();
+
     res.json(
       new ResponseHandler('Requested projected benefits.', {
         impactProjectedBenefitsRequested

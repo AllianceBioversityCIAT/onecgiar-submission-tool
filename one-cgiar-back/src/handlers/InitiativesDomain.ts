@@ -235,4 +235,27 @@ export class InitiativeHandler {
       throw new BaseError('Get Risks', 400, error.message, false);
     }
   }
+
+  async requesProjectedBenefits() {
+    try {
+      const querySql = `
+            SELECT id as impactAreaId,impactAreaName,impactAreaIndicator,
+                   impactAreaIndicatorName,isApplicableProjectedBenefits,
+                   targetYear,targetUnit,value,depthScales,weightingValues
+              FROM clarisa_projected_benefits`;
+      const projectedBenefits = await this.queryRunner.query(querySql);
+
+      projectedBenefits.map((pb) => {
+        pb.depthScales = JSON.parse(JSON.parse(JSON.stringify(pb.depthScales)));
+        pb.weightingValues =  JSON.parse(
+          JSON.parse(JSON.stringify(pb.weightingValues))
+        );
+      });
+
+      return projectedBenefits;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Projected benefits', 400, error.message, false);
+    }
+  }
 }

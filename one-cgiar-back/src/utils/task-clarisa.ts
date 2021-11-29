@@ -7,6 +7,7 @@ import {ClarisaInstitutionsTypes} from '../entity/ClarisaInstitutionsTypes';
 import {ClarisaCountries} from '../entity/ClarisaCountries';
 import {ClarisaRegions} from '../entity/ClarisaRegions';
 import {ClarisaImpactAreasIndicators} from '../entity/ClarisaImpactAreasIndicators';
+import {ClarisaProjectedBenefits} from '../entity/ClarisaProjectedBenefits';
 
 /**MAIN FUNCTION*/
 
@@ -18,6 +19,7 @@ export async function Main() {
   await createCountries();
   await createRegions();
   await createImpactAreasIndicators();
+  await createProjectedBenefits();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -369,5 +371,64 @@ export async function createImpactAreasIndicators() {
     }
   } catch (error) {
     console.log('createImpactAreasIndicators', error);
+  }
+}
+
+/**CLARISA PROJECTED BENEFITS*/
+
+export async function deleteProjectedBenfits() {
+  try {
+    const clarisaProjectedBenefitsRepo = getRepository(
+      ClarisaProjectedBenefits
+    );
+    const clarisaProjectedBenefits = new ClarisaProjectedBenefits();
+    await clarisaProjectedBenefitsRepo.delete(clarisaProjectedBenefits);
+    console.log('23.delete clarisa projected benefits');
+  } catch (error) {
+    console.log('deleteProjectedBenfits', error);
+  }
+}
+
+export async function createProjectedBenefits() {
+  console.log('22.start create clarisa projected benefits');
+
+  try {
+    const clarisaProjectedBenefitsRepo = getRepository(
+      ClarisaProjectedBenefits
+    );
+    const projectedBenefits = await clarisa.requestProjectedBenefits();
+
+    if (projectedBenefits.length > 0) {
+      await deleteProjectedBenfits();
+
+      let impactAreasArray: ClarisaProjectedBenefits[] = [];
+      let idTable = 0;
+
+      for (let index = 0; index < projectedBenefits.length; index++) {
+        const element = projectedBenefits[index];
+        idTable = idTable + 1;
+        let cla = clarisaProjectedBenefitsRepo.create({
+          id: idTable,
+          impactAreaName: element.impactAreaName,
+          impactAreaIndicator: element.impactAreaIndicator,
+          impactAreaIndicatorName: element.impactAreaIndicatorName,
+          isApplicableProjectedBenefits: element.isApplicableProjectedBenefits,
+          targetYear: element.targetYear,
+          targetUnit: element.targetUnit,
+          value: element.value,
+          depthScales: element.depthScales,
+          weightingValues: element.weightingValues
+        });
+        impactAreasArray.push(cla);
+      }
+
+      await clarisaProjectedBenefitsRepo.save(impactAreasArray);
+
+      console.log('24.end create clarisa projected benefits');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createProjectedBenefits', error);
   }
 }

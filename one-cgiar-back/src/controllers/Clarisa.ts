@@ -262,9 +262,9 @@ export async function getImpactAreasIndicators() {
   }
 }
 
-export async function getProjectedBenefits() {
+export async function requestProjectedBenefits() {
   try {
-    const institutionsTypes = await axios.get(
+    const projectedBenefits = await axios.get(
       clarisaHost + 'projectedBenefits',
       {
         auth: {
@@ -273,7 +273,7 @@ export async function getProjectedBenefits() {
         }
       }
     );
-    return institutionsTypes.data;
+    return projectedBenefits.data;
   } catch (error) {
     console.log(error);
     throw new APIError(
