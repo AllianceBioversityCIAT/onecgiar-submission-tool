@@ -350,7 +350,7 @@ export async function createImpactAreasIndicators() {
       for (let index = 0; index < impactAreasIndicators.length; index++) {
         const element = impactAreasIndicators[index];
         let cla = clarisaImpactAreasIndicatorsRepo.create({
-          id: element.impactAreaId,
+          id: element.indicatorId,
           indicatorStatement: element.indicatorStatement,
           impactAreaId: element.impactAreaId,
           impactAreaName: element.impactAreaName,

@@ -245,12 +245,21 @@ export class InitiativeHandler {
               FROM clarisa_projected_benefits`;
       const projectedBenefits = await this.queryRunner.query(querySql);
 
-      projectedBenefits.map((pb) => {
-        pb.depthScales = JSON.parse(JSON.parse(JSON.stringify(pb.depthScales)));
-        pb.weightingValues =  JSON.parse(
-          JSON.parse(JSON.stringify(pb.weightingValues))
-        );
-      });
+      try {
+        projectedBenefits.map((pb) => {
+          pb.depthScales = JSON.parse(
+            JSON.parse(JSON.stringify(pb.depthScales))
+          );
+          pb.weightingValues = JSON.parse(
+            JSON.parse(JSON.stringify(pb.weightingValues))
+          );
+        });
+      } catch (error) {
+        projectedBenefits.map((pb) => {
+          pb.depthScales = pb.depthScales;
+          pb.weightingValues = pb.weightingValues;
+        });
+      }
 
       return projectedBenefits;
     } catch (error) {
