@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { MparaReportsRoutingModule } from './mpara-reports-routing.module';
 import { MparaReportsComponent } from './mpara-reports.component';
+import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -10,7 +13,10 @@ import { MparaReportsComponent } from './mpara-reports.component';
   exports:[MparaReportsComponent],
   imports: [
     CommonModule,
-    MparaReportsRoutingModule
+    MparaReportsRoutingModule,
+    UtilsModule,
+    TableModule,
+    ButtonModule
   ]
 })
 export class MparaReportsModule { }

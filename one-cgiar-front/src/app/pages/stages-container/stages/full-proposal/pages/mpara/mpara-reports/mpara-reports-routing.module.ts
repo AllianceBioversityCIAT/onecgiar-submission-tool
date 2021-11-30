@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MparaComponent } from '../mpara.component';
+import { MparaReportsComponent } from './mpara-reports.component';
 
 const routes: Routes = [
   {
     path:'',
-    component: MparaComponent
+    component: MparaReportsComponent
   }
 ];
 

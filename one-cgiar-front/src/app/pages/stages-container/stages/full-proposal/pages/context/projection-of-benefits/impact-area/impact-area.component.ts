@@ -115,7 +115,7 @@ export class ImpactAreaComponent implements OnInit {
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
       // console.log("getProjectedBenefitLists");
-      // console.log(resp);
+      console.log(resp);
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
       // console.log(this.indicatorsList);
     },err=>{},()=>this.indicatorsListLoaded =  true)

@@ -41,6 +41,8 @@ export class PobIndicatorComponent implements OnInit {
    }
 
   ngOnInit(): void {
+
+    console.log(this.indicatorsList);
   
     this.showDepthScale = true;
 
