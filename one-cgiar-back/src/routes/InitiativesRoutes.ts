@@ -724,11 +724,7 @@ router.get('/regions', [checkJwt], initiatives.getRegions);
 router.get('/risks', [checkJwt], initiatives.GetRisks);
 
 //Get Projected Benefits
-router.get(
-  '/projected-benefits',
-  [checkJwt],
-  initiatives.getProjectedBenefits
-);
+router.get('/projected-benefits', [checkJwt], initiatives.getProjectedBenefits);
 
 /**
  *

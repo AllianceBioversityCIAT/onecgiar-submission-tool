@@ -9,6 +9,7 @@ import {FinancialResourcesYears} from '../entity/FinancialResourcesYears';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {HumanResources} from '../entity/HumanResources';
 import {ImpactStrategies} from '../entity/ImpactStrategies';
+import {InitiativeTeam} from '../entity/InitiativesTeam';
 import {InnovationPackages} from '../entity/InnovationPackages';
 import {ManagePlanRisk} from '../entity/ManagePlanRisk';
 import {Melia} from '../entity/melia';
@@ -1549,6 +1550,77 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
+   * UPSERT INITIATIVE TEAM (SECTION HUMAN RESOURCES)
+   * @param humanResourcesId
+   * @param initvTeam
+   * @returns{upsertedInitiativeTeam}
+   */
+  async upsertInitiativeTeam(
+    humanResourcesId,
+    initvTeam
+  ): Promise<{upsertedInitiativeTeam: any}> {
+    initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
+
+    const initiativeTeamRepo = getRepository(InitiativeTeam);
+    const newInitiativeTeam = new InitiativeTeam();
+
+    var initiativeTeamSaved;
+    var upsertedInitiativeTeam = [];
+
+    try {
+      if (humanResourcesId) {
+        if (initvTeam.length > 0) {
+          for (let index = 0; index < initvTeam.length; index++) {
+            const initvTeamArray = initvTeam[index];
+
+            newInitiativeTeam.id = initvTeamArray.id;
+            newInitiativeTeam.category = initvTeamArray.category;
+            newInitiativeTeam.area_expertise = initvTeamArray.area_expertise;
+            newInitiativeTeam.key_accountabilities =
+              initvTeamArray.key_accountabilities;
+            newInitiativeTeam.human_resources_id = humanResourcesId;
+            newInitiativeTeam.active = initvTeamArray.active
+              ? initvTeamArray.active
+              : true;
+
+            if (newInitiativeTeam.id !== null) {
+              /**UPDATE NEW INITIATIVE TEAM */
+              var oldInitiativeTeam = await initiativeTeamRepo.findOne(
+                newInitiativeTeam.id
+              );
+
+              initiativeTeamRepo.merge(oldInitiativeTeam, newInitiativeTeam);
+
+              initiativeTeamSaved = await initiativeTeamRepo.save(
+                oldInitiativeTeam
+              );
+
+              upsertedInitiativeTeam.push(initiativeTeamSaved);
+            } else {
+              /**CREATE NEW INITIATIVE TEAM */
+              initiativeTeamSaved = await initiativeTeamRepo.save(
+                newInitiativeTeam
+              );
+
+              upsertedInitiativeTeam.push(initiativeTeamSaved);
+            }
+          }
+        }
+      }
+
+      return {upsertedInitiativeTeam};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR PATCH Initiative Team : Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
    * REQUEST Human Resources and files data
    * @param sectionName
    * @returns {humanResources}
@@ -1573,14 +1645,25 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1)
                      AND section = "${sectionName}"
                      AND active = 1
-                `;
+                `,
+        initiativeTeamQuery = `SELECT * 
+                FROM initiative_team
+              WHERE human_resources_id in ( SELECT id
+                          FROM human_resources
+                         WHERE initvStgId = ${initvStg.id}
+                           AND active = 1);`;
 
       const humanResources = await this.queryRunner.query(humanResourcesQuery);
       const files = await this.queryRunner.query(filesQuery);
+      const initiativeTeam = await this.queryRunner.query(initiativeTeamQuery);
 
       humanResources.map((hr) => {
         hr['files'] = files.filter((f) => {
           return f.humanId === hr.id;
+        });
+
+        hr['initiativeTeam'] = initiativeTeam.filter((ini) => {
+          return (ini.human_resources_id = hr.id);
         });
       });
 

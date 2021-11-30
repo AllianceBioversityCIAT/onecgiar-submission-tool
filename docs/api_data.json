@@ -1783,7 +1783,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"humanResourcesData\": {\n         \"id\": 1,\n         \"initvStgId\": 35,\n         \"gender_diversity_inclusion\": \"\",\n         \"capacity_development\": \"\",\n         \"active\": 1,\n         \"created_at\": \"2021-09-20T19:43:28.000Z\",\n         \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n         \"files\": [\n             {\n                 \"id\": 72,\n                 \"tocsId\": null,\n                 \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n                 \"name\": \"Book1.xlsx\",\n                 \"active\": 1,\n                 \"created_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"meliaId\": null,\n                 \"manage_plan_risk_id\": null,\n                 \"humanId\": 1,\n                 \"financial_resources_id\": null,\n                 \"section\": \"initiative-team\"\n             }\n         ]\n     }\n },\n \"title\": \"Full Proposal:human resources and files.\"\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"humanResourcesData\": {\n         \"id\": 1,\n         \"initvStgId\": 35,\n         \"gender_diversity_inclusion\": \"\",\n         \"capacity_development\": \"\",\n         \"active\": 1,\n         \"created_at\": \"2021-09-20T19:43:28.000Z\",\n         \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n         \"files\": [\n             {\n                 \"id\": 72,\n                 \"tocsId\": null,\n                 \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n                 \"name\": \"Book1.xlsx\",\n                 \"active\": 1,\n                 \"created_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"meliaId\": null,\n                 \"manage_plan_risk_id\": null,\n                 \"humanId\": 1,\n                 \"financial_resources_id\": null,\n                 \"section\": \"initiative-team\"\n             }\n         ],\n          \"initiativeTeam\": [\n             {\n                 \"id\": 4,\n                 \"category\": \"Research\",\n                 \"area_expertise\": \"Research leadership and management\",\n                 \"key_accountabilities\": \"Provide leadership\",\n                 \"human_resources_id\": 5,\n                 \"active\": 1,\n                 \"created_at\": \"2021-11-30T20:06:00.000Z\",\n                 \"updated_at\": \"2021-11-30T20:06:00.000Z\"\n             }\n         ]\n     }\n },\n \"title\": \"Full Proposal:human resources and files.\"\n}",
           "type": "json"
         }
       ]
@@ -2475,13 +2475,20 @@
             "optional": false,
             "field": "file",
             "description": "<p>template Human Resources</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "initvTeam",
+            "description": "<p>Initiative Team form</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "data: [\n{   \"id\":null,\n   \"gender_diversity_inclusion\": \"\",\n  \"capacity_development\": \"\",\n   \"active\": true,\n   \"section\":\"initiative-team\",\n   \"updateFiles\":[]\n}\n]",
+          "content": "data: [\n{   \"id\":null,\n   \"gender_diversity_inclusion\": \"\",\n  \"capacity_development\": \"\",\n   \"active\": true,\n   \"section\":\"initiative-team\",\n   \"updateFiles\":[],\n   \"initvTeam\":[{\n      \"id\" : null,\n      \"category\": \"Research\",\n      \"area_expertise\": \"Research leadership and management\",\n      \"key_accountabilities\":\"Provide leadership\",\n      \"active\": true\n  }]\n}\n]",
           "type": "json"
         }
       ]
@@ -2490,7 +2497,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "   HTTP/1.1 200 OK\n  {\n \"response\": {\n     \"humanResources\": {\n         \"upsertedHumanResources\": {\n             \"id\": 1,\n             \"gender_diversity_inclusion\": \"\",\n             \"capacity_development\": \"\",\n             \"active\": true,\n             \"initvStgId\": 35,\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         },\n         \"upsertedFile\": {\n             \"id\": 72,\n             \"active\": true,\n             \"humanId\": 1,\n             \"section\": \"initiative-team\",\n             \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n             \"name\": \"Book1.xlsx\",\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         }\n     },\n     \"files\": [\n         {\n             \"fieldname\": \"file\",\n             \"originalname\": \"Book1.xlsx\",\n             \"encoding\": \"7bit\",\n             \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n             \"destination\": \"./public/uploads/INIT-2/9.human-resources/stage-3\",\n             \"filename\": \"1632167008334-Book1.xlsx\",\n             \"path\": \"public\\\\uploads\\\\INIT-2\\\\9.human-resources\\\\stage-3\\\\1632167008334-Book1.xlsx\",\n             \"size\": 22386\n         }\n     ]\n },\n \"title\": \"Full Proposal: Patch human resources.\"\n}",
+          "content": "   HTTP/1.1 200 OK\n  {\n \"response\": {\n     \"humanResources\": {\n         \"upsertedHumanResources\": {\n             \"id\": 1,\n             \"gender_diversity_inclusion\": \"\",\n             \"capacity_development\": \"\",\n             \"active\": true,\n             \"initvStgId\": 35,\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         },\n         \"upsertedFile\": {\n             \"id\": 72,\n             \"active\": true,\n             \"humanId\": 1,\n             \"section\": \"initiative-team\",\n             \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n             \"name\": \"Book1.xlsx\",\n             \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n             \"created_at\": \"2021-09-20T19:43:28.000Z\"\n         }\n     },\n     \"files\": [\n         {\n             \"fieldname\": \"file\",\n             \"originalname\": \"Book1.xlsx\",\n             \"encoding\": \"7bit\",\n             \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n             \"destination\": \"./public/uploads/INIT-2/9.human-resources/stage-3\",\n             \"filename\": \"1632167008334-Book1.xlsx\",\n             \"path\": \"public\\\\uploads\\\\INIT-2\\\\9.human-resources\\\\stage-3\\\\1632167008334-Book1.xlsx\",\n             \"size\": 22386\n         }\n     ]\n },\n \"initiativeTeam\": {\n         \"upsertedInitiativeTeam\": [\n             {\n                 \"id\": 4,\n                 \"category\": \"Research\",\n                 \"area_expertise\": \"Research leadership and management\",\n                 \"key_accountabilities\": \"Provide leadership\",\n                 \"human_resources_id\": 5,\n                 \"active\": true,\n                 \"updated_at\": \"2021-11-30T20:06:00.000Z\",\n                 \"created_at\": \"2021-11-30T20:06:00.000Z\"\n             }\n         ]\n     },\n \"title\": \"Full Proposal: Patch human resources.\"\n}",
           "type": "json"
         }
       ]

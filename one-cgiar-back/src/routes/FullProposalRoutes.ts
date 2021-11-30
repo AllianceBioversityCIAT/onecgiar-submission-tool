@@ -999,6 +999,7 @@ router.get(
  * @apiParam {String} section section location.
  * @apiParam {Object} updateFiles file to updtate.
  * @apiParam {File} file template Human Resources
+ * @apiParam {Object} initvTeam Initiative Team form
  *
  * @apiParamExample {json} Request-Example:
  * data: [
@@ -1007,7 +1008,14 @@ router.get(
  *   "capacity_development": "",
  *    "active": true,
  *    "section":"initiative-team",
- *    "updateFiles":[]
+ *    "updateFiles":[],
+ *    "initvTeam":[{
+ *       "id" : null,
+ *       "category": "Research",
+ *       "area_expertise": "Research leadership and management",
+ *       "key_accountabilities":"Provide leadership",
+ *       "active": true
+ *   }]
  * }
  * ]
  *
@@ -1049,6 +1057,20 @@ router.get(
  *           }
  *       ]
  *   },
+ *   "initiativeTeam": {
+ *           "upsertedInitiativeTeam": [
+ *               {
+ *                   "id": 4,
+ *                   "category": "Research",
+ *                   "area_expertise": "Research leadership and management",
+ *                   "key_accountabilities": "Provide leadership",
+ *                   "human_resources_id": 5,
+ *                   "active": true,
+ *                   "updated_at": "2021-11-30T20:06:00.000Z",
+ *                   "created_at": "2021-11-30T20:06:00.000Z"
+ *               }
+ *           ]
+ *       },
  *   "title": "Full Proposal: Patch human resources."
  *  }
  *
@@ -1107,6 +1129,18 @@ router.patch(
  *                   "humanId": 1,
  *                   "financial_resources_id": null,
  *                   "section": "initiative-team"
+ *               }
+ *           ],
+ *            "initiativeTeam": [
+ *               {
+ *                   "id": 4,
+ *                   "category": "Research",
+ *                   "area_expertise": "Research leadership and management",
+ *                   "key_accountabilities": "Provide leadership",
+ *                   "human_resources_id": 5,
+ *                   "active": 1,
+ *                   "created_at": "2021-11-30T20:06:00.000Z",
+ *                   "updated_at": "2021-11-30T20:06:00.000Z"
  *               }
  *           ]
  *       }

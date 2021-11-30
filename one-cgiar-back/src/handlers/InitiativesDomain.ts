@@ -255,10 +255,7 @@ export class InitiativeHandler {
           );
         });
       } catch (error) {
-        projectedBenefits.map((pb) => {
-          pb.depthScales = pb.depthScales;
-          pb.weightingValues = pb.weightingValues;
-        });
+        projectedBenefits;
       }
 
       return projectedBenefits;

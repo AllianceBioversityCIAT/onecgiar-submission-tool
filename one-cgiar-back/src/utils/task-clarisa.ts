@@ -345,7 +345,6 @@ export async function createImpactAreasIndicators() {
       await deleteImpactAreasIndicators();
 
       let impactAreasArray: ClarisaImpactAreasIndicators[] = [];
-      let idTable = 0;
 
       for (let index = 0; index < impactAreasIndicators.length; index++) {
         const element = impactAreasIndicators[index];
@@ -401,7 +400,6 @@ export async function createProjectedBenefits() {
       await deleteProjectedBenfits();
 
       let impactAreasArray: ClarisaProjectedBenefits[] = [];
-      let idTable = 0;
 
       for (let index = 0; index < projectedBenefits.length; index++) {
         const element = projectedBenefits[index];

@@ -958,9 +958,9 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
     capacity_development,
     active,
     section,
-    updateFiles
-  } = JSON.parse(req.body.data);
-
+    updateFiles,
+    initvTeam
+  } = req.body.data ? JSON.parse(req.body.data) : req.body;
   //melia section files
   const files = req['files'];
 
@@ -1001,9 +1001,15 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
       updateFiles
     );
 
+    const initiativeTeam = await fullPposal.upsertInitiativeTeam(
+      humanResources.upsertedHumanResources.id,
+      initvTeam
+    );
+
     res.json(
       new ResponseHandler('Full Proposal: Patch human resources.', {
         humanResources,
+        initiativeTeam,
         files
       })
     );
