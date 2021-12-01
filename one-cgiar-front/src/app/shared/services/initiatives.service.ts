@@ -311,8 +311,8 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${section}`);
   }
 
-  saveFinancialResources (body:any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/`, body);
+  saveFinancialResources(body: any, initiativeId, section: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${section}`, body);
   }
 
   getFinancialResources(initiativeId, section: string): Observable<any> {

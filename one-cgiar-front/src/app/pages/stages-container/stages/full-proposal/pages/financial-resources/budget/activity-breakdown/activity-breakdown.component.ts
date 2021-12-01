@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BudgetModel } from '../models/budget.model';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
-import { forkJoin } from 'rxjs';
 
 import { CurrencyPipe } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-activity-breakdown',
@@ -19,6 +19,7 @@ export class ActivityBreakdownComponent implements OnInit {
 
   constructor(
     public _initiativesService: InitiativesService,
+    private spinnerService: NgxSpinnerService,
     public currencyPipe: CurrencyPipe
   ) {
     this.fixedData = new BudgetModel()
@@ -31,28 +32,27 @@ export class ActivityBreakdownComponent implements OnInit {
   }
 
   onSave() {
-
-    console.log(this.fixedData.list)
-
-    this._initiativesService.saveFinancialResources(this.fixedData.list, this._initiativesService.initiative.id).subscribe(
+    this.spinnerService.show('activity-breakdown');
+    console.log('financial resources', this.fixedData.list);
+    this._initiativesService.saveFinancialResources(this.fixedData.list, this._initiativesService.initiative.id, 'activity_breakdown').subscribe(
       res => {
-        console.log('financial resources response', res)
+        console.log('financial resources response', res);
+        this.getActivityBreakdown();
+      },
+      error => {
+        console.log(error);
+        this.spinnerService.hide('activity-breakdown');
       }
     )
-
   }
-
-  addActivity() {
-    this.fixedData.pushItem({ name: null, valuesList: [] })
-  }
-
   createMatrix() {
+    this.spinnerService.show('activity-breakdown');
     this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id).subscribe(resp => {
       this.WP = resp.response.workpackage;
       this.COLUMNS = [...this.COLUMNS, ...this.WP.map(wp => wp.acronym)];
       let initialMtrx = [
-        { name: "Crosscutting across Work Packages", active: true, col_name: 'crosscutting_wokpackages', financial_type: '', financial_type_id: '', table_name: 'financial_resources', id: '', total: 0, valuesList: {} },
-        { name: "Innovation packages & Scaling Readiness", active: true, col_name: 'innovation_packages', financial_type: '', financial_type_id: '', table_name: 'financial_resources', id: '', total: 0, valuesList: {} },
+        { name: "Crosscutting across Work Packages", active: true, col_name: 'crosscutting_wokpackages', financial_type: 'activity_breakdown', financial_type_id: null, table_name: 'financial_resources', id: null, total: 0, valuesList: {} },
+        { name: "Innovation packages & Scaling Readiness", active: true, col_name: 'innovation_packages', financial_type: 'activity_breakdown', financial_type_id: null, table_name: 'financial_resources', id: null, total: 0, valuesList: {} },
       ]
 
       this.COLUMNS.forEach(col => {
@@ -60,39 +60,40 @@ export class ActivityBreakdownComponent implements OnInit {
         if (colFound) {
         } else {
           const wp = this.WP.find(wp => wp.acronym == col);
-          initialMtrx.push({ name: col, active: true, col_name: 'id', table_name: 'work_packages', financial_type: '', financial_type_id: wp.id, id: "", total: 0, valuesList: {} })
+          initialMtrx.push({ name: col, active: true, col_name: 'id', table_name: 'work_packages', financial_type: 'activity_breakdown', financial_type_id: wp.id, id: "", total: 0, valuesList: {} })
         }
       })
       this.fixedData.list = initialMtrx;
       this.getActivityBreakdown()
-    })
-
-
-
+    },
+      error => {
+        console.log(error);
+        this.spinnerService.hide('activity-breakdown');
+      });
   }
   getActivityBreakdown() {
-    // this.createMatrix();
 
     this._initiativesService.getFinancialResources(this._initiativesService.initiative.id, "activity_breakdown").subscribe(res => {
       const financialResourcesData = res.response.financialResourcesData;
 
       financialResourcesData.forEach(fRData => {
-        const indxWP = this.fixedData.list.findIndex(fixD => fixD.financial_type_id !== "" && fixD.financial_type_id == fRData.financial_type_id);
-        const indxCross = this.fixedData.list.findIndex(fixD => fixD.financial_type_id == "" && fixD.col_name == 'crosscutting_wokpackages' && fRData.col_name == 'crosscutting_wokpackages');
-        const indxInno = this.fixedData.list.findIndex(fixD => fixD.financial_type_id == "" && fixD.col_name == 'innovation_packages' && fRData.col_name == 'innovation_packages');
+        const indxCross = this.fixedData.list.findIndex(fixD =>fixD.table_name == fRData.table_name && (fixD.col_name == 'crosscutting_wokpackages' && fRData.col_name == 'crosscutting_wokpackages' ) );
+        const indxInno = this.fixedData.list.findIndex(fixD => fixD.table_name == fRData.table_name && (fixD.col_name == 'innovation_packages' && fRData.col_name == 'innovation_packages' ));
+        const indxWP = this.fixedData.list.findIndex(fixD => fixD.financial_type_id != null  && (fixD.financial_type_id == fRData.financial_type_id));
+        
         if (indxWP != -1) {
           this.fixedData.list[indxWP].id = fRData.id;
           this.fixedData.list[indxWP].col_name = fRData.col_name;
           this.fixedData.list[indxWP].table_name = fRData.table_name;
           this.fixedData.list[indxWP].financial_type_id = fRData.financial_type_id;
           this.fixedData.list[indxWP].financial_type = fRData.financial_type;
-          const values = fRData.values_.split(';')
+          const values = fRData.values_ != null ? fRData.values_.split(';') : [];
           if (values.length == 1) {
             this.fixedData.list[indxWP].valuesList = { [fRData.years]: fRData.values_ }
           } else {
-            const years = fRData.years.split(';');
+            const years = fRData.years != null ? fRData.years.split(';') : [];
             years.forEach((year, i) => {
-              Object.assign(this.fixedData.list[indxCross].valuesList, { [year]: values[i] });
+              Object.assign(this.fixedData.list[indxWP].valuesList, { [year]: values[i] });
             });
 
           }
@@ -100,15 +101,15 @@ export class ActivityBreakdownComponent implements OnInit {
         }
         if (indxCross != -1) {
           this.fixedData.list[indxCross].id = fRData.id;
-          this.fixedData.list[indxCross].col_name = fRData.col_name;
+          this.fixedData.list[indxCross].col_name = 'crosscutting_wokpackages';
           this.fixedData.list[indxCross].table_name = fRData.table_name;
           this.fixedData.list[indxCross].financial_type_id = fRData.financial_type_id;
           this.fixedData.list[indxCross].financial_type = fRData.financial_type;
-          const values = fRData.values_.split(';')
+          const values = fRData.values_ != null ? fRData.values_.split(';') : [];
           if (values.length == 1) {
             this.fixedData.list[indxCross].valuesList = { [fRData.years]: fRData.values_ }
           } else {
-            const years = fRData.years.split(';');
+            const years = fRData.years != null ? fRData.years.split(';') : [];
             years.forEach((year, i) => {
               Object.assign(this.fixedData.list[indxCross].valuesList, { [year]: values[i] });
             });
@@ -117,15 +118,15 @@ export class ActivityBreakdownComponent implements OnInit {
         }
         if (indxInno != -1) {
           this.fixedData.list[indxInno].id = fRData.id;
-          this.fixedData.list[indxInno].col_name = fRData.col_name;
+          this.fixedData.list[indxInno].col_name = 'innovation_packages';
           this.fixedData.list[indxInno].table_name = fRData.table_name;
           this.fixedData.list[indxInno].financial_type_id = fRData.financial_type_id;
           this.fixedData.list[indxInno].financial_type = fRData.financial_type;
-          const values = fRData.values_.split(';')
+          const values = fRData.values_ != null ? fRData.values_.split(';') : [];
           if (values.length == 1) {
             this.fixedData.list[indxInno].valuesList = { [fRData.years]: fRData.values_ }
           } else {
-            const years = fRData.years.split(';');
+            const years = fRData.years != null ? fRData.years.split(';') : [];
             years.forEach((year, i) => {
               Object.assign(this.fixedData.list[indxInno].valuesList, { [year]: values[i] });
             });
@@ -134,26 +135,12 @@ export class ActivityBreakdownComponent implements OnInit {
         }
 
       });
-    });
-  }
-
-
-
-
-  getCellValue(year, valueList) {
-    if (valueList.year) {
-      const valIndex = valueList.year.findIndex(x => x == year);
-      return parseFloat(valueList.value[valIndex]).toFixed(2);
-    }
-  }
-
-  
-  getColumns() {
-
-  }
-
-  parseFloat_($event) {
-    return parseFloat($event)
+      this.spinnerService.hide('activity-breakdown');
+    },
+      error => {
+        console.log(error);
+        this.spinnerService.hide('activity-breakdown');
+      });
   }
 
   getTotal(item) {
