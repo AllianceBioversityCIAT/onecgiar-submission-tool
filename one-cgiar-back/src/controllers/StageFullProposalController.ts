@@ -1068,7 +1068,7 @@ export async function getHumanResources(req: Request, res: Response) {
  * @returns financialResources
  */
 export async function patchFinancialResources(req: Request, res: Response) {
-  const {initiativeId, section} = req.params;
+  const {initiativeId, sectionName} = req.params;
 
   //financial resources section data
   const fResources = req.body;
@@ -1105,7 +1105,7 @@ export async function patchFinancialResources(req: Request, res: Response) {
     const financialResources = await fullPposal.upsertFinancialResources(
       fResources,
       initvStg,
-      section
+      sectionName
     );
     // const financialResources = await fullPposal.upsertFinancialResourcesAndFiles(initiativeId, ubication, stage, id, detailed_budget,
     //     active, section, files, updateFiles);

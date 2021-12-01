@@ -1208,7 +1208,7 @@ router.get(
 
 // router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResources);
 router.patch(
-  '/financial-resources/:initiativeId([0-9]+/)',
+  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('fr', 'updateOwn')],
   stagefull.patchFinancialResources
 );

@@ -6,6 +6,7 @@ import { ActivityBreakdownComponent } from './activity-breakdown.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ActivityBreakdownRoutingModule,
+    NgxSpinnerModule,
     UtilsModule,
     IbdAngularComponentsModule,
     FormsModule
