@@ -8,10 +8,37 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
   styleUrls: ['./mpara-reports.component.scss']
 })
 export class MparaReportsComponent implements OnInit {
-  headerPreviewPartners = ['country_id', 'name', 'initvStgId'];
+  // headerPreview = ['risks_achieving_impact', 'description_risk', 'likelihood', 'impact', 'risk_score', 'opportunities_description'];
+  headerPreview = [
+    {
+      headerName : 'risk sachieving impact',
+      attributeName : 'a'
+    },
+    {
+      headerName : 'description_risk',
+      attributeName : 'b'
+    },
+    {
+      headerName : 'likelihood',
+      attributeName : 'c'
+    },
+    {
+      headerName : 'impact',
+      attributeName : 'd'
+    },
+    {
+      headerName : 'risk_score',
+      attributeName : 'e'
+    },
+    {
+      headerName : 'opportunities_description',
+      attributeName : 'f'
+    }
+  ];
   mergeList = [];
   riskAssessmentList = [];
   previewListCoverted = [];
+  notArePreviewinformation = true;
   constructor(
     private _manageExcelService:ManageExcelService,
     private _initiativesService:InitiativesService
@@ -22,6 +49,7 @@ export class MparaReportsComponent implements OnInit {
     this._initiativesService.getPreviewRiskAssessment(this._initiativesService.initiative.id,3).subscribe(resp=>{
       console.log(resp.response.previewRiskAssessment.managePlan.riskassessment);
       this.objectsTolist(resp.response.previewRiskAssessment.managePlan.riskassessment);
+      this.notArePreviewinformation = false;
     })
   }
 
@@ -29,21 +57,25 @@ export class MparaReportsComponent implements OnInit {
     let i = 0;
     previewList?.map((riskA) => {
       let celIndex = i;
-      this.previewListCoverted.push({ a: riskA.risks_achieving_impact, b: riskA.description_risk, c:  riskA.likelihood, d: riskA.impact, e: riskA.risk_score, f: 'f',});
+      this.previewListCoverted.push({ a: riskA.risks_achieving_impact, b: riskA.description_risk, c:  riskA.likelihood, d: riskA.impact, e: riskA.risk_score, f:  riskA?.opportinities[0].opportunities_description});
       i++;
       
-      riskA?.opportinities?.map((opportiny,index) => {
+      riskA?.opportinities?.map((opportiny, index) => {
+        if (index == 0) return;
         i++;
-          this.previewListCoverted.push({ a: '', b: '', c: '', d: '', e: '', f: opportiny?.opportunities_description || '' });
+        this.previewListCoverted.push({ b: '', c: '', d: '', e: '', f: opportiny?.opportunities_description || ''});
       })
 
       // if (!impactArea?.impactIndicators?.dimensions.length) {
       //   i++;
       //   this.previewListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name, rowspan:1 });
       // }
-    
+      console.log('celIndex ',celIndex);
+      console.log(this.previewListCoverted[celIndex]);
+      console.log(this.previewListCoverted);
+      console.log("------------------------------");
+      if (riskA?.opportinities.length >= 2) this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
       // this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
-
       this.mergeList.push(
         { s: { r: celIndex+1, c: 0 }, e: { r: i, c: 0 } },
         { s: { r: celIndex+1, c: 1 }, e: { r: i, c: 1 } },
@@ -57,6 +89,15 @@ export class MparaReportsComponent implements OnInit {
     console.log(this.previewListCoverted);
 
    
+  }
+
+  getKeys(customer){
+    let result = []
+    Object.keys(customer).map(item=>{
+      if (item == 'rowspan') return;
+      result.push(item)
+    })
+    return result;
   }
 
   exportExcel() {
