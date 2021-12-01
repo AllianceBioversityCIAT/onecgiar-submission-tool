@@ -1407,24 +1407,26 @@ export async function getImpactAreas(req: Request, res: Response) {
   }
 }
 
-
 /**
  * REQUEST IMPACT AREAS INDICATORS FROM ST
  * @param req
  * @param res
  * @returns impactAreasIndicators
  */
- export async function getImpactAreasIndicators(req: Request, res: Response) {
+export async function getImpactAreasIndicators(req: Request, res: Response) {
   try {
     //Get impact areas from submission
 
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
 
-    let impactAreasIndicatorsRequested = await initiativeshandler.requestImpactAreasIndicators();
+    let impactAreasIndicatorsRequested =
+      await initiativeshandler.requestImpactAreasIndicators();
 
     res.json(
-      new ResponseHandler('Requested Impact areas Indicators.', {impactAreasIndicatorsRequested})
+      new ResponseHandler('Requested Impact areas Indicators.', {
+        impactAreasIndicatorsRequested
+      })
     );
   } catch (error) {
     console.log(error);
@@ -1456,16 +1458,16 @@ export async function GetRisks(req: Request, res: Response) {
 
 /**
  * REQUEST PROJECTED BENEFITS
- * @param req 
- * @param res 
- * @returns 
+ * @param req
+ * @param res
+ * @returns
  */
 export async function getProjectedBenefits(req: Request, res: Response) {
   try {
+    const initiativeshandler = new InitiativeHandler();
 
-      const initiativeshandler = new InitiativeHandler();
-
-      let impactProjectedBenefitsRequested = await initiativeshandler.requesProjectedBenefits();
+    let impactProjectedBenefitsRequested =
+      await initiativeshandler.requesProjectedBenefits();
 
     res.json(
       new ResponseHandler('Requested projected benefits.', {

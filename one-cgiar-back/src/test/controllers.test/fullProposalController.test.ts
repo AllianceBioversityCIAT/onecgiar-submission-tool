@@ -54,6 +54,7 @@ describe('FullProposal Controller', async () => {
   const initiativeId = 2;
   const stageId = 3;
   var managePlanRiskId;
+  var humanResourcesId;
 
   /**Workpackage*/
 
@@ -144,4 +145,83 @@ describe('FullProposal Controller', async () => {
         expect(res).to.be.a('object');
       });
   });
+  /**
+   * ***********
+   * ***********
+   */
+
+  /**
+   * HUMAN RESOURCES
+   */
+
+  /**
+   * GET HUMAN RESOURCES
+   * GET INITIATIVE TEAM
+   *  */
+  it('GET stages-control/proposal/human-resources/ Request Human Resources ', async () => {
+    await chai
+      .request(app)
+      .get(
+        '/api/stages-control/proposal/human-resources/' +
+          initiativeId +
+          '/initiative-team'
+      )
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal:human resources and files.');
+        expect(res).to.be.a('object');
+        humanResourcesId = parseInt(res.body.response.humanResourcesData.id);
+      });
+  });
+
+  /**
+   * PATCH MANAGE PLAN
+   * PATCH RISK ASSESSMENT
+   *  */
+  it('PATCH /stages-control/proposal/human-resources/ Update Human Resources', async () => {
+    await chai
+      .request(app)
+      .patch(
+        '/api/stages-control/proposal/human-resources/' +
+          initiativeId +
+          '/9.human-resources/' +
+          stageId
+      )
+      .set('auth', token)
+      .set('content-type', 'application/json')
+      .send({
+        id: humanResourcesId,
+        gender_diversity_inclusion: 'new plan',
+        capacity_development: 'Test',
+        active: 1,
+        section: 'initiative-team',
+        updateFiles: [],
+        initvTeam: [
+          {
+            id: null,
+            category: 'TEST TEST TEST',
+            area_expertise: 'TEST TEST',
+            key_accountabilities: 'TEST TEST',
+            active: 1
+          }
+        ]
+      })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal: Patch human resources.');
+        expect(res).to.be.a('object');
+      });
+  });
+
+  /**
+   * ***********
+   * ***********
+   */
 });
