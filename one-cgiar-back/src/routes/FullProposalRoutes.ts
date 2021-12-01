@@ -1176,62 +1176,50 @@ router.get(
  * @apiHeader {String} auth
  *
  * @apiParam {Number} initiativeId Id initiative
- * @apiParam {Number} id identificator Financial Resources
- * @apiParam {String} detailed_budget description budget.
- * @apiParam {Boolean} active status.
- * @apiParam {String} section section location.
- * @apiParam {Object} updateFiles file to updtate.
- * @apiParam {File} file template Financial Resources
+ * @apiParam {String} sectionName 'activity_breakdown'| 'geographic_breakdown.
  *
  * @apiParamExample {json} Request-Example:
- * data: [
- * {   "id":null,
- *   "detailed_budget": "new detail",
- *   "active": true,
- *   "section":"budget",
- *   "updateFiles":[]
- * }
- * ]
+ * data: 
+ [
+    {
+        "name": "Work package 1",
+        "active": true,
+        "col_name": "id",
+        "financial_type": {sectionName},
+        "financial_type_id": {workpacgake.id},
+        "table_name": "work_packages",
+        "id": 25,
+        "total": 10,
+        "valuesList": {
+            "2022": "1.00",
+            "2023": "2.00",
+            "2024": "7.00"
+        }
+    }
+]
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *   {
- *   "response": {
- *       "financialResources": {
- *           "upsertedFinancialResources": {
- *               "id": 6,
- *               "detailed_budget": "new detail",
- *                "active": true,
- *                "initvStgId": 35,
- *                "updated_at": "2021-09-20T17:21:59.000Z",
- *                "created_at": "2021-09-20T17:21:59.000Z"
- *            },
- *            "upsertedFile": {
- *                "id": 71,
- *                "active": true,
- *                "financial_resources_id": 6,
- *                "section": "budget",
- *                "url": "http://localhost:3000/uploads/INIT-2/10.financial-resources/stage-3/1632158519519-Book1.xlsx",
- *                "name": "Book1.xlsx",
- *                "updated_at": "2021-09-20T17:21:59.000Z",
- *                "created_at": "2021-09-20T17:21:59.000Z"
- *            }
- *        },
- *        "files": [
- *            {
- *                "fieldname": "file",
- *                "originalname": "Book1.xlsx",
- *                "encoding": "7bit",
- *                "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
- *                "destination": "./public/uploads/INIT-2/10.financial-resources/stage-3",
- *                "filename": "1632158519519-Book1.xlsx",
- *                "path": "public\\uploads\\INIT-2\\10.financial-resources\\stage-3\\1632158519519-Book1.xlsx",
- *                "size": 22386
- *            }
- *        ]
- *    },
- *    "title": "Full Proposal: Patch financial resources"
- *}
+ * {
+    "response": {
+        "financialResourcesData": [
+            {
+                "id": 25,
+                "initvStgId": 60,
+                "financial_type": "activity_breakdown",
+                "active": 1,
+                "created_at": "2021-12-01T02:28:21.000Z",
+                "updated_at": "2021-12-01T02:28:21.000Z",
+                "financial_type_id": null,
+                "table_name": "work_packages",
+                "col_name": "id",
+                "years": "2022;2023;2024",
+                "values_": "1.00;2.00;7.00"
+            }
+        ]
+    },
+    "title": "Full Proposal:financial resources."
+}
  *
  * @apiError Error Full Proposal: Patch financial resources
  *
@@ -1240,7 +1228,6 @@ router.get(
  *     {"name": "Upsert financial Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
 
-// router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResources);
 router.patch(
   '/financial-resources/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('fr', 'updateOwn')],
@@ -1265,41 +1252,32 @@ router.patch(
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *  {
- *   "response": {
- *       "financialResourcesData": {
- *           "id": 2,
- *           "initvStgId": 35,
- *           "detailed_budget": "new detail",
- *           "active": 1,
- *           "created_at": "2021-09-20T17:06:53.000Z",
- *           "updated_at": "2021-09-20T17:06:53.000Z",
- *           "files": [
- *               {
- *                   "id": 69,
- *                   "tocsId": null,
- *                   "url": "http://localhost:3000/uploads/INIT-2/financial-resources/stage-3/1632157613540-Book1.xlsx",
- *                   "name": "Book1.xlsx",
- *                   "active": 1,
- *                   "created_at": "2021-09-20T17:06:53.000Z",
- *                   "updated_at": "2021-09-20T17:06:53.000Z",
- *                   "meliaId": null,
- *                   "manage_plan_risk_id": null,
- *                   "humanId": null,
- *                   "financial_resources_id": 2,
- *                   "section": "budget"
- *               }
- *           ]
- *       }
- *   },
- *   "title": "Full Proposal:financial resources and files."
- * }
+ * {
+    "response": {
+        "financialResourcesData": [
+            {
+                "id": 25,
+                "initvStgId": 60,
+                "financial_type": "geographic_breakdown",
+                "active": 1,
+                "created_at": "2021-12-01T02:28:21.000Z",
+                "updated_at": "2021-12-01T02:28:21.000Z",
+                "financial_type_id": null,
+                "table_name": "financial_resources",
+                "col_name": "global",
+                "years": "2022;2023;2024",
+                "values_": "1.00;2.00;7.00"
+            }
+        ]
+    },
+    "title": "Full Proposal:financial resources."
+}
  *
- * @apiError Error : Get financial resources and files: Full proposal.
+ * @apiError Error : Get financial resources: Full proposal.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
- *     { message: "Get financial resources and files: Full proposal.", error }
+ *     { message: "Get financial resources: Full proposal.", error }
  */
 router.get(
   '/financial-resources/:initiativeId([0-9]+)/:sectionName',

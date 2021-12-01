@@ -1192,7 +1192,7 @@ export async function getFinancialResources(req: Request, res: Response) {
     );
 
     res.json(
-      new ResponseHandler('Full Proposal:financial resources and files.', {
+      new ResponseHandler('Full Proposal:financial resources.', {
         financialResourcesData
       })
     );

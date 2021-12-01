@@ -9,6 +9,7 @@ import { FinancialResourcesYears } from '../entity/FinancialResourcesYears';
 import { GeneralInformation } from '../entity/GeneralInformation';
 import { HumanResources } from '../entity/HumanResources';
 import { ImpactStrategies } from '../entity/ImpactStrategies';
+import { InitiativeTeam } from '../entity/InitiativesTeam';
 import { InnovationPackages } from '../entity/InnovationPackages';
 import { ManagePlanRisk } from '../entity/ManagePlanRisk';
 import { Melia } from '../entity/melia';
