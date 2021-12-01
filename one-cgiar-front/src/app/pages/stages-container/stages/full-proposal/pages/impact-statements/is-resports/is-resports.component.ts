@@ -11,7 +11,7 @@ import { UtilsService } from '../../../../../../../shared/services/utils.service
 export class IsResportsComponent implements OnInit {
   previewPartners = [];
   notArePreviewPartners = false;
-  headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'action_area',  'demand',  'innovation',  'scaling',   'website'];
+  headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'impact_area',  'demand',  'innovation',  'scaling',   'website'];
   constructor(
     private _initiativesService: InitiativesService,
     private _manageExcelService: ManageExcelService,

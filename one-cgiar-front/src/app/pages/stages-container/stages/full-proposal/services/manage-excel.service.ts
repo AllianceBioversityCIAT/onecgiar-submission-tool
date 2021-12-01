@@ -22,4 +22,20 @@ export class ManageExcelService {
     });
   }
 
+  exportBasicExcel(list:any[],fileName:string,wscols?:any[]) {
+    import("xlsx").then(xlsx => {
+
+
+      const worksheet = xlsx.utils.json_to_sheet(list);
+      
+    
+      worksheet['!cols'] = wscols.length ? wscols : [];
+      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+
+      this.saveAsExcelFile(excelBuffer, fileName);
+    });
+  }
+
 }

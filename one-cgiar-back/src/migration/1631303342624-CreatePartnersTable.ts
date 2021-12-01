@@ -1,12 +1,10 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreatePartnersTable1631303342624 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create partners table');
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create partners table')
-
-        await queryRunner.query(`
+    await queryRunner.query(`
         CREATE TABLE partners (
             id int(11) NOT NULL AUTO_INCREMENT,
             impact_strategies_id int(11) NOT NULL,
@@ -23,10 +21,7 @@ export class CreatePartnersTable1631303342624 implements MigrationInterface {
             CONSTRAINT FK_845588899492ascfhy454_impact_strategies FOREIGN KEY (impact_strategies_id) REFERENCES impact_strategies (id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

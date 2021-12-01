@@ -1,26 +1,22 @@
-import { getRepository, MigrationInterface, QueryRunner } from "typeorm";
-import { Initiatives } from "../entity/Initiatives";
+import {getRepository, MigrationInterface, QueryRunner} from 'typeorm';
+import {Initiatives} from '../entity/Initiatives';
 
-export class AddOfficialCodePerInitiative1632151118773 implements MigrationInterface {
+export class AddOfficialCodePerInitiative1632151118773
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    const initiativeRepo = getRepository(Initiatives);
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    const initiatives = await initiativeRepo.find();
 
-        const initiativeRepo = getRepository(Initiatives)
+    for (let index = 0; index < initiatives.length; index++) {
+      const init = initiatives[index];
 
-        const initiatives = await initiativeRepo.find();
-
-        for (let index = 0; index < initiatives.length; index++) {
-            const init = initiatives[index];
-
-            init.official_code = 'INIT-'+ init.id;
-            
-        }
-
-        const asnwer = await initiativeRepo.save(initiatives);
-
+      init.official_code = 'INIT-' + init.id;
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
+    const asnwer = await initiativeRepo.save(initiatives);
+  }
 
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

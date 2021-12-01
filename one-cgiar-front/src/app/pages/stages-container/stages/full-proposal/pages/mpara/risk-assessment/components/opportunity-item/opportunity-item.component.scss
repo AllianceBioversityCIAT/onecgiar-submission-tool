@@ -1,0 +1,64 @@
+.item_top_five {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    padding: 15px 50px 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 6px #bbbbbb40, 0 3px 6px #bbbbbb40;  
+    .txt_area_container{
+        width: 70%;
+    }
+  
+    .icon_container {
+      //   margin-right: 10px;
+      //   margin-left: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 0px 0px 0px 5px;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: rgb(243, 76, 76);
+      width: 50px;
+      transition: all .3s ease;
+      overflow: hidden;
+  
+      .delete_text{
+          display: none;
+          transition: all .5s ease;
+          right: 100px;
+          position: relative;
+          opacity: 0;
+      }
+      &:hover{
+          width: 100px;
+          transition: all .2s ease;
+  
+          .delete_text{
+              display: block;
+              color: white;
+              margin: 0px 5px;
+              transition: all .5s ease;
+              opacity: 1;
+              right: 0px;
+          }
+      }
+  
+      .material-icons {
+        color: white;
+        font-size: 1.3em;
+      }
+    }
+  
+    strong {
+      font-size: 1.1em;
+    }
+  }

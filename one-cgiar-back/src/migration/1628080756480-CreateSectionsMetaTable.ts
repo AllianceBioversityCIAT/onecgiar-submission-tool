@@ -1,10 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateSectionsMetaTable1628080756480 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('Add sections_meta');
-        await queryRunner.query(`
+export class CreateSectionsMetaTable1628080756480
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add sections_meta');
+    await queryRunner.query(`
             CREATE TABLE sections_meta (
                 id int(11) NOT NULL AUTO_INCREMENT,             
                 description varchar(250) COLLATE utf8_bin DEFAULT NULL,
@@ -21,9 +22,7 @@ export class CreateSectionsMetaTable1628080756480 implements MigrationInterface 
                 
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

@@ -5,7 +5,10 @@
 </div>
 <br> -->
 <div class="custom_breadcrumb">
-    <span class="items animate__animated animate__fadeInDown" *ngFor="let section of sectionsList; let i = index">
-    <span [ngStyle]="{'color': i==0?'#ffffffa6':'white','cursor':i==0?'default':'pointer'}">{{section.name}}</span> 
-    <span *ngIf="i < sectionsList.length-1" class="material-icons">chevron_right</span></span>
+    <div class="items animate__animated animate__fadeInDown" *ngFor="let section of sectionsList; let i = index">
+        <div class="text" [ngStyle]="{'color': i==0?'#ffffffa6':'white','cursor':i==0?'default':'pointer'}">{{section.name}}</div>
+        <!-- <div class="icon"> -->
+            <span *ngIf="i < sectionsList.length-1" class="material-icons">chevron_right</span>
+        <!-- </div> -->
+    </div>
 </div>

@@ -5,23 +5,24 @@
         <!-- <h5>Horizontal and Vertical</h5> -->
         <section-sub-title name="Partners preview"></section-sub-title>
 
-        <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+        <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both"
+        sortMode="multiple"
+        >
             <ng-template pTemplate="caption">
                 <div class="p-d-flex" *ngIf="!this.notArePreviewPartners">
 
                     <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
-                    <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" [cdkCopyToClipboard]="this._utilsService.htmlToString(tablee)" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
 
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:200px'">{{item}}</th>
+                    <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-customer>
                 <tr>
-                    <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:100px':'width:200px'">
+                    <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
                         <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
                             <span >{{customer[item]?'Yes':'No'}}</span>
                         </div>
@@ -42,12 +43,6 @@
                     <td style="width:100px">Id</td>
                     <td style="width:200px">Name</td>
                     <td style="width:200px">Country</td>
-                    <td style="width:200px">Date</td>
-                    <td style="width:200px">Balance</td>
-                    <td style="width:200px">Company</td>
-                    <td style="width:200px">Status</td>
-                    <td style="width:200px">Activity</td>
-                    <td style="width:200px">Representative</td>
                 </tr>
             </ng-template> -->
         </p-table>
@@ -56,22 +51,3 @@
         <br>
     </div>
 </div>
-
-
-<!-- {
-    "partner_name": "Fundación para la Promoción e Investigación de Productos Andinos",
-    "url": "http://www.proinpa.org/VallesNorte/",
-    "acronym": "PROINPA",
-    "initiative_id": "INIT-1",
-    "action_area": "Genetic Innovation",
-    "partner_id": "",
-    "location": "",
-    "organization_type_IATI": "",
-    "network_mapping_codes": "",
-    "organization_type_clarisa": "Associations (other than regional organizations, extension, and farmer/community level)",
-    "clarisa_id": 20,
-    "tag_id": "0,0,3",
-    "hq_location_clarisa": "BO",
-    "impact_area_id": 1,
-    "Source": "impact_satatements"
-} -->

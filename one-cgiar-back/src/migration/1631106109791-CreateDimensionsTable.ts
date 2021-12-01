@@ -1,11 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateDimensionsTable1631106109791 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create dimensions table')
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create dimensions table');
+    await queryRunner.query(`
         CREATE TABLE dimensions (
             id int(11) NOT NULL AUTO_INCREMENT,
             projectionId int(11) NOT NULL,
@@ -22,10 +20,7 @@ export class CreateDimensionsTable1631106109791 implements MigrationInterface {
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

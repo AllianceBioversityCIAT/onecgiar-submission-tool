@@ -7,8 +7,9 @@ import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
-import { trigger, state, style, animate, transition} from '@angular/animations';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
+import { ListToMap } from './classes/listToMap';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -39,7 +40,7 @@ export class MenuComponent implements OnInit {
     public stgMenuSvc: StagesMenuService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService
-  ) {}
+  ) { }
 
   localMenuChangesubscribtion$;
 
@@ -51,7 +52,7 @@ export class MenuComponent implements OnInit {
       }
     );
 
-    this.localMenuChangesubscribtion$  = this._dataControlService.menuChange$.subscribe(() => {
+    this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
       // console.log("menuChange$");
       this.getMenu();
       // this.getAllIWorkPackages();
@@ -75,20 +76,21 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-  getImpacAreasList(){
+  getImpacAreasList() {
     // console.log("getImpacAreasList");
-    this.initiativesSvc.getImpactAreas().subscribe(impacAreas=>{
-      
+    this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
+
       // console.log(impacAreas.response.impactAreasRequested);
+
       this.impacAreasList = impacAreas.response.impactAreasRequested;
       // console.log(this.impacAreasList);
-    },(err) => {
+    }, (err) => {
       console.log(err);
 
-    },()=>{
+    }, () => {
       // console.log("call");
-          this._dataControlService.menuChange$.emit();
-          // this._dataControlService.validateMenu$.emit();
+      this._dataControlService.menuChange$.emit();
+      // this._dataControlService.validateMenu$.emit();
     })
   }
 
@@ -97,12 +99,20 @@ export class MenuComponent implements OnInit {
       if (a[list.sort] < b[list.sort]) {
         return -1;
       }
-      if (a[list.sort]> b[list.sort]) {
+      if (a[list.sort] > b[list.sort]) {
         return 1;
       }
       return 0;
     });
     return list;
+  }
+
+  mapReportInSubSectionMenu(stageId, sectionId, object) {
+    let sectionFinded = (this._dataControlService.userMenu
+      .find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .previewButton = object);
+    // console.log(sectionFinded);
   }
 
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
@@ -135,110 +145,75 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  partnersNotRelatedRoute(){
+  partnersNotRelatedRoute() {
     return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
   }
 
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
-        this._dataControlService.userMenu = userMenuResp.response.stages;
+      this._dataControlService.userMenu = userMenuResp.response.stages;
+      // console.log(this._dataControlService.userMenu);
+      // console.log(userMenuResp.response.stages.length);
+      if (userMenuResp.response.stages.length > 1) {
+
+        this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+          let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          this.mapDataInMenu(3, 5, 12, wpss);
+          this._dataControlService.wpMaped = true;
+        }, (err) => {
+          console.log(err);
+          this._dataControlService.wpMaped = true;
+        });
+
+
+        let pobList =  new ListToMap(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
+        this.mapDataInMenu(3, 1, 8, pobList);
+
+        let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        this.mapDataInMenu(3, 7, 16, impactStatementsList);
+
+        this.mapReportInSubSectionMenu(3,9,{
+          showName: 'Reports',
+          frontRoute: '/mpara-reports'
+        })
+
+        this.mapPreviewInDynamicListMenu(3, 7, 16, {
+          showName: 'Reports',
+          frontRoute: '/is-resports'
+        });
+
+        this.mapDataInMenuDynamicListSubSection(3, 4, 27, 
+          [{
+            showName: '10.1.1 Activity breakdown',
+            frontRoute: '/budget/activity-breakdown/',
+          },
+          {
+            showName: '10.1.2 Geography breakdown',
+            frontRoute: '/budget/geography-breakdown/',
+          }]
+        );
+
+        this.mapPreviewInDynamicListMenu(3, 5, 12, {
+          showName : 'Wp Reports',
+          frontRoute : '/work-packages/wp-reports'
+        });
+
+        this.mapPreviewInDynamicListMenu(3, 1, 8, {
+          showName: 'Projection of benefits Reports',
+          frontRoute: '/projection-of-benefits/pob-resports'
+        });
+
         // console.log(this._dataControlService.userMenu);
-        // console.log(userMenuResp.response.stages.length);
-        if (userMenuResp.response.stages.length > 1) {
 
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-                // console.log(wpsResp);
-                wpsResp.response.workpackage.map((wpResp) => {
-                  wpResp.subSectionName = 'work-package';
-                  wpResp.frontRoute = '/work-packages/work-package/';
-                  wpResp.sort = 'showName';
-                  wpResp.showName = wpResp.acronym;
-                });
-                this.mapDataInMenu(3, 5, 12, wpsResp.response.workpackage);
-                this._dataControlService.wpMaped = true;
-                // console.log(this._dataControlService.userMenu);
-              },(err) => {
-                console.log(err);
-                this._dataControlService.wpMaped = true;
-              });
-
-
-
-
-            let pobList = [];
-            let impactStatementsList = [];
-
-            this.impacAreasList.map(item=>{
-              let body:any = {}
-              let impactArea = {}
-              body = {}
-              Object.keys(item).map(key=>{
-                impactArea[key]=item[key];
-              })
-
-              body = impactArea;
-              body.showName = body.name;
-              body.frontRoute = '/projection-of-benefits/impact-area/';
-              body.subSectionName='impact-area';
-              body.sort = 'id';
-              pobList.push(body)
-
-            })
-            this.mapDataInMenu(3, 1, 8, pobList);
-           
-
-            // var arr = [1, 2, 3, 4, 5];
-
-            // var results: number[] = await Promise.all(arr.map(async (item): Promise<number> => {
-            //     await callAsynchronousOperation(item);
-            //     return item + 1;
-            // }));
-
-            this.impacAreasList.map(item=>{
-              let body:any = {}
-              let impactArea = {}
-              body = {}
-              Object.keys(item).map(key=>{
-                impactArea[key]=item[key];
-              })
-             
-              // body = item;
-              body = impactArea;
-              body.showName = body.name;
-              body.frontRoute = '/impact-areas/impact-area/';
-              body.subSectionName='impact-area';
-              body.sort = 'id';
-              impactStatementsList.push(body)
-            })
-
-            this.mapDataInMenu(3, 7, 16, impactStatementsList);
-            
-            this.mapPreviewInDynamicListMenu(3, 7, 16, {
-              showName : 'Reports',
-              frontRoute : '/is-resports'
-            });
-
-            // this.mapPreviewInDynamicListMenu(3, 5, 12, {
-            //   showName : 'Wp Reports',
-            //   frontRoute : '/work-packages/wp-reports'
-            // });
-
-            this.mapPreviewInDynamicListMenu(3, 1, 8, {
-              showName : 'Projection of benefits Reports',
-              frontRoute : '/projection-of-benefits/pob-resports'
-            });
-
-            // console.log(this._dataControlService.userMenu);
-
-            if (this.impacAreasList.length) {
-              this._dataControlService.pobMaped = true;
-              this._dataControlService.impactStatementsMaped = true;
-            }
-           
-            this._dataControlService.validateMenu$.emit();
+        if (this.impacAreasList.length) {
+          this._dataControlService.pobMaped = true;
+          this._dataControlService.impactStatementsMaped = true;
         }
-       
-      });
+
+        this._dataControlService.validateMenu$.emit();
+      }
+
+    });
   }
 
   activeClassByRoute(route: []) {
@@ -262,7 +237,6 @@ export class MenuComponent implements OnInit {
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(active, stage, section, isSection, subsection)
     if (active) {
       if (isSection) {
         if (!subsection.length) {
@@ -281,8 +255,8 @@ export class MenuComponent implements OnInit {
   dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
-    this.router.navigate([baseUrl+ stageParam+'/'+ section + subsection + itemID]);
+    itemID =  itemID == undefined ? "" : itemID;
+    this.router.navigate([baseUrl + stageParam + '/' + section + subsection + itemID]);
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 
@@ -290,7 +264,7 @@ export class MenuComponent implements OnInit {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
     let stageParam = stage.toLowerCase().split(' ').join('-');
     // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
-    return baseUrl+ stageParam+'/'+ section + subsection;
+    return baseUrl + stageParam + '/' + section + subsection;
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
   }
 
@@ -310,7 +284,7 @@ export class MenuComponent implements OnInit {
       .then(() => {
         this.router.navigate([
           `/initiatives/${this.initiativesSvc.initvStgId}/stages/concept/work-package/` +
-            id,
+          id,
         ]);
       });
   }

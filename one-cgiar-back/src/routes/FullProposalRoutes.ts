@@ -1,22 +1,38 @@
-import { Router } from "express";
-import * as stagefull from "../controllers/StageFullProposalController";
-import { checkJwt } from "../middlewares/jwt";
-import { uploadFile } from "../middlewares/multer";
-import { checkRole } from "../middlewares/role";
+import {Router} from 'express';
+import * as stagefull from '../controllers/StageFullProposalController';
+import {checkJwt} from '../middlewares/jwt';
+import {uploadFile} from '../middlewares/multer';
+import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
 // get initiative general information
-router.get("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'readOwn')], stagefull.getGeneralInformation);
+router.get(
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getGeneralInformation
+);
 
 // upsert initiative general information
-router.patch("/:initiativeId([0-9]+)/general-information", [checkJwt, checkRole('initiatives', 'updateOwn')], stagefull.upsertGeneralInformation);
+router.patch(
+  '/:initiativeId([0-9]+)/general-information',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.upsertGeneralInformation
+);
 
 // get initiative context
-router.get("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives', 'readOwn')], stagefull.getContext);
+router.get(
+  '/:initiativeId([0-9]+)/context',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getContext
+);
 
 // upsert initiative context
-router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives', 'updateOwn')], stagefull.upsertContext);
+router.patch(
+  '/:initiativeId([0-9]+)/context',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.upsertContext
+);
 
 // read work packages list
 /**
@@ -25,19 +41,19 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  * @apiPermission admin
  * @apiName GetWorkPackage
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows work packages data from initiatives
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages/2
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative
- * 
- * 
+ *
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -54,7 +70,7 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  *                 "pathway_content": "Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).",
  *                 "is_global": null
  *             }
- * 			
+ *
  * 			     ]
  *     },
  *     "title": "Full Proposal: Workpackage."
@@ -66,7 +82,11 @@ router.patch("/:initiativeId([0-9]+)/context", [checkJwt, checkRole('initiatives
  *     HTTP/1.1 400 Not Found
  *     { message: "Get workpackage:", error }
  */
-router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackages);
+router.get(
+  '/packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stagefull.getWorkPackages
+);
 
 // read work package for id
 /**
@@ -75,19 +95,19 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  * @apiPermission admin
  * @apiName GetWorkPackageId
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows work package data from initiatives
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/package/177
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} wrkPkgId Id WP
- * 
- * 
+ *
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *  {
@@ -116,7 +136,7 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  *                          "initvStgId": 35,
  *                          "wrkPkgId": 177
  *                      }
- *  
+ *
  *                  ],
  *                  "countries": []
  *              }
@@ -131,7 +151,11 @@ router.get("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', '
  *     HTTP/1.1 400 Not Found
  *     { message: "Get workpackage id:", error }
  */
-router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], stagefull.getWorkPackage);
+router.get(
+  '/package/:wrkPkgId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stagefull.getWorkPackage
+);
 
 // read all work package
 /**
@@ -140,19 +164,19 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
  * @apiPermission admin
  * @apiName GetAllWorkPackage
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows all work packages for Clarisas
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative
- * 
- * 
+ *
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -169,7 +193,7 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
  *                 "pathway_content": "Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).",
  *                 "is_global": null
  *             }
- * 			
+ *
  * 			     ]
  *     },
  *     "title": "Full Proposal: All Work Package."
@@ -181,7 +205,7 @@ router.get("/package/:wrkPkgId([0-9]+)", [checkJwt, checkRole('packages', 'readO
  *     HTTP/1.1 400 Not Found
  *     { message: "Get All work packages:", error }
  */
-router.get("/packages", stagefull.getAllWorkPackages);
+router.get('/packages', stagefull.getAllWorkPackages);
 
 // assign Work Package
 /**
@@ -280,32 +304,48 @@ router.get("/packages", stagefull.getAllWorkPackages);
  *     HTTP/1.1 400 Not Found
  *     {"name": "Work Package: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/packages/:initiativeId([0-9]+)", [checkJwt, checkRole('packages', 'updateOwn')], stagefull.patchWorkPackage);
+router.patch(
+  '/packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('packages', 'updateOwn')],
+  stagefull.patchWorkPackage
+);
 
 // upsert projection benefits to initiative
-router.patch("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'updateOwn')], stagefull.patchProjectionBenefits);
+router.patch(
+  '/projection-benefits/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'updateOwn')],
+  stagefull.patchProjectionBenefits
+);
 
 // get all projection benefits
-router.get("/projection-benefits/:initiativeId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefits);
+router.get(
+  '/projection-benefits/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefits
+);
 
 // get projection benefits per impact area
-router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [checkJwt, checkRole('benefits', 'readOwn')], stagefull.getProjectionBenefitsByImpact);
+router.get(
+  '/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefitsByImpact
+);
 
 // upsert impact strategies to initiative
 /**
- * @api {patch} stages-control/proposal/impact-strategies/:initiativeId Impact Strategies - Create and update 
+ * @api {patch} stages-control/proposal/impact-strategies/:initiativeId Impact Strategies - Create and update
  * @apiVersion 1.0.0
  * @apiPermission admin
  * @apiName PatchImpactStrategies
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative.
  * @apiParam {Number} id identificator Impact Strategiese.
  * @apiParam {String} challenge_priorization description challenge priorization.
@@ -317,7 +357,7 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  * @apiParam {String} impact_area_name impact area name.
  * @apiParam {Boolean} active status.
  * @apiParam {Object} partners partners to updtate.
- * 
+ *
  * @apiParamExample {json} Request-Example:
  * {
  *     "id": 1,
@@ -342,7 +382,7 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  *         }
  *     ]
  * }
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -378,14 +418,18 @@ router.get("/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)", [chec
  *     },
  *     "title": "Full Proposal: Patch Impact Strategies."
  * }
- *  
+ *
  * @apiError Error Upsert Impact Strategies: Full proposal
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert Impact Strategies: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('strategies', 'updateOwn')], stagefull.patchImpactStrategies);
+router.patch(
+  '/impact-strategies/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'updateOwn')],
+  stagefull.patchImpactStrategies
+);
 
 // get impact strategies to initiative
 /**
@@ -394,16 +438,16 @@ router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('s
  * @apiPermission admin
  * @apiName GetImpactStrategies
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Impact Strategies by impact area
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/impact-strategies/2/1
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -450,7 +494,11 @@ router.patch("/impact-strategies/:initiativeId([0-9]+)", [checkJwt, checkRole('s
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Impact Strategies: Full proposal.", error }
  */
-router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [checkJwt, checkRole('strategies', 'readOwn')], stagefull.getImpactStrategies);
+router.get(
+  '/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)',
+  [checkJwt, checkRole('strategies', 'readOwn')],
+  stagefull.getImpactStrategies
+);
 
 // upsert melia and files to initiative
 /**
@@ -459,16 +507,16 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  * @apiPermission admin
  * @apiName PatchMELIA
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2
- * 
+ *
  * @apiHeader {String} auth Token
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative.
- * 
+ *
  * @apiParamExample {json} Request-Example:
  * data: [
  *    {
@@ -568,7 +616,7 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                                    "active":true,
  *                                    "region_id":14,
  *                                    "region_name":"Eastern Africa"
- * 
+ *
  *                                }
  *                            ],
  *                            "countries": [
@@ -577,7 +625,7 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                                    "active":true,
  *                                    "country_id":20,
  *                                    "country_name":"Andorra"
- * 
+ *
  *                                }
  *                            ]
  *                        },
@@ -590,13 +638,13 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                                "active":true,
  *                            },
  *                            {
- *                                
+ *
  *                                "id":2,
  *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR.",
  *                                "data_collection":"Online reporting tool",
  *                                "frequency_data_collection":"Ongoing",
  *                                "active":true,
- * 
+ *
  *                            }
  *                        ],
  *                        "base_line":[
@@ -611,7 +659,7 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                                "active":true,
  *                                "base_line_value":"601,811 accessions",
  *                                "base_line_year":"2020"
- * 
+ *
  *                            }
  *                        ],
  *                        "target":[
@@ -620,14 +668,14 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *                                "active":true,
  *                                "target_value":"80% or higher",
  *                                "target_year":"2024"
- * 
+ *
  *                            },
  *                            {
  *                                "id":2,
  *                                "active":true,
  *                                "target_value":"650,000",
  *                                "target_year":"2024"
- * 
+ *
  *                            }
  *                        ]
  *                    }
@@ -636,7 +684,7 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *        },
  *    }
  *   ]
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -662,7 +710,11 @@ router.get("/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)", [ch
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()], stagefull.patchMeliaAndFiles);
+router.patch(
+  '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
+  stagefull.patchMeliaAndFiles
+);
 
 // Get melia and files to initiative
 /**
@@ -671,16 +723,16 @@ router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, chec
  * @apiPermission admin
  * @apiName getMELIA
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows MELIA per initiativeId and section
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/melia/2/result_framework
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -719,7 +771,11 @@ router.patch("/melia/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, chec
  *     HTTP/1.1 400 Not Found
  *     { message: "Get melia and files: Full proposal", error }
  */
-router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('melia', 'readOwn')], stagefull.getMeliaAndFiles);
+router.get(
+  '/melia/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('melia', 'readOwn')],
+  stagefull.getMeliaAndFiles
+);
 
 // upsert management plan risk and files to initiative
 /**
@@ -728,16 +784,16 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  * @apiPermission admin
  * @apiName PatchManagePlan
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Create and Update Melia
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/7.manage-plan/3
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative
  * @apiParam {Number} id identificator Manage Plan
  * @apiParam {String} gender_diversity_inclusion description gender diversity inclusion.
@@ -745,17 +801,36 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  * @apiParam {String} section section location.
  * @apiParam {Object} updateFiles file to updtate.
  * @apiParam {File} file template Manage Plan
- * 
+ * @apiParam {Object} riskAssessment Risk Assessment.
+ *
  * @apiParamExample {json} Request-Example:
- * data: [
- * {   "id":null,
- *     "management_plan": "new plan",
- *     "active": true,
- *     "section":"management_plan",
- *     "updateFiles":[]
+ * {
+ *    "id": null,
+ *    "management_plan": "new plan",
+ *    "active": true,
+ *    "section": "management_plan",
+ *    "updateFiles": [],
+ *    "riskassessment": [
+ *        {
+ *            "id": null,
+ *            "risks_achieving_impact": "TEST TEST TEST",
+ *            "description_risk": "TEST TEST",
+ *            "likelihood": 5,
+ *            "impact": 1,
+ *            "risk_score": 4,
+ *            "active": true,
+ *            "manage_plan_risk_id": null,
+ *            "opportinities": [
+ *                {
+ *                    "id": null,
+ *                    "opportunities_description": "TEST",
+ *                    "risk_assessment_id": null
+ *                }
+ *            ]
+ *        }
+ *    ]
  * }
- * ]
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -780,6 +855,31 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  *               "created_at": "2021-09-20T20:03:51.000Z"
  *           }
  *       },
+ * "riskAssessment": {
+ *           "upsertedRiskAssessment": [
+ *               {
+ *                   "id": 5,
+ *                   "risks_achieving_impact": "TEST TEST TEST",
+ *                   "description_risk": "TEST TEST",
+ *                   "likelihood": 5,
+ *                   "impact": 1,
+ *                   "risk_score": 4,
+ *                   "active": true,
+ *                   "manage_plan_risk_id": 16,
+ *                   "updated_at": "2021-11-17T21:20:19.000Z",
+ *                   "created_at": "2021-11-17T21:20:19.000Z",
+ *                   "opportunities": [
+ *                       {
+ *                           "id": 3,
+ *                           "opportunities_description": "TEST",
+ *                           "risk_assessment_id": 5,
+ *                           "updated_at": "2021-11-17T21:20:19.000Z",
+ *                           "created_at": "2021-11-17T21:20:19.000Z"
+ *                       }
+ *                   ]
+ *               }
+ *           ]
+ *       },
  *       "files": [
  *           {
  *               "fieldname": "file",
@@ -802,7 +902,11 @@ router.get("/melia/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('me
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert management plan risk: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()], stagefull.patchManagePlanAndFiles);
+router.patch(
+  '/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()],
+  stagefull.patchManagePlanAndFiles
+);
 
 // Get management plan risk and files to initiative
 /**
@@ -811,47 +915,54 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
  * @apiPermission admin
  * @apiName GetManagePlan
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Manage Plan and Risk
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/manage-plan/2/management-plan
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
- *     "response": {
- *         "managePlanData": {
- *             "id": 1,
- *             "initvStgId": 35,
- *             "management_plan": "new plan",
- *             "active": 1,
- *             "created_at": "2021-09-20T20:03:51.000Z",
- *             "updated_at": "2021-09-20T20:03:51.000Z",
- *             "files": [
- *                 {
- *                     "id": 73,
- *                     "tocsId": null,
- *                     "url": "http://localhost:3000/uploads/INIT-2/7.manage-plan/stage-3/1632168231799-Book1.xlsx",
- *                     "name": "Book1.xlsx",
- *                     "active": 1,
- *                     "created_at": "2021-09-20T20:03:51.000Z",
- *                     "updated_at": "2021-09-20T20:03:51.000Z",
- *                     "meliaId": null,
- *                     "manage_plan_risk_id": 1,
- *                     "humanId": null,
- *                     "financial_resources_id": null,
- *                     "section": "management_plan"
- *                 }
- *             ]
- *         }
- *     },
- *     "title": "Full Proposal: manage plan risk  and files."
- * }
+ *   "response": {
+ *       "managePlanData": {
+ *           "id": 15,
+ *           "initvStgId": 44,
+ *           "management_plan": "new plan",
+ *           "active": 1,
+ *           "created_at": "2021-11-17T21:15:38.000Z",
+ *           "updated_at": "2021-11-17T21:15:38.000Z",
+ *           "files": [],
+ *           "risk_assessment": [
+ *               {
+ *                   "id": 4,
+ *                   "risks_achieving_impact": "TEST TEST TEST",
+ *                   "description_risk": "TEST TEST",
+ *                   "likelihood": 5,
+ *                   "impact": 1,
+ *                   "risk_score": 4,
+ *                   "manage_plan_risk_id": 15,
+ *                   "active": 1,
+ *                   "opportinities": [
+ *                       [
+ *                           {
+ *                               "id": 2,
+ *                               "opportunities_description": "TEST",
+ *                               "risk_assessment_id": 4,
+ *                               "active": 1
+ *                           }
+ *                       ]
+ *                   ]
+ *               }
+ *           ]
+ *       }
+ *   },
+ *   "title": "Full Proposal: GET manage plan risk  and files."
+ *  }
  *
  * @apiError Error : Get manage plan risk and files: Full proposal
  *
@@ -859,7 +970,11 @@ router.patch("/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt
  *     HTTP/1.1 400 Not Found
  *     { message: "Get manage plan risk and files: Full proposal", error }
  */
-router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('mpr', 'readOwn')], stagefull.getManagePlanAndFiles);
+router.get(
+  '/manage-plan/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('mpr', 'readOwn')],
+  stagefull.getManagePlanAndFiles
+);
 
 // upsert human resources and files to initiative
 /**
@@ -868,14 +983,14 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  * @apiPermission admin
  * @apiName PatchHumanResources
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/9.human-resources/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/9.human-resources/3
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative
  * @apiParam {Number} id identificator Human Resources
  * @apiParam {String} gender_diversity_inclusion description gender diversity inclusion.
@@ -884,7 +999,8 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  * @apiParam {String} section section location.
  * @apiParam {Object} updateFiles file to updtate.
  * @apiParam {File} file template Human Resources
- * 
+ * @apiParam {Object} initvTeam Initiative Team form
+ *
  * @apiParamExample {json} Request-Example:
  * data: [
  * {   "id":null,
@@ -892,10 +1008,17 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  *   "capacity_development": "",
  *    "active": true,
  *    "section":"initiative-team",
- *    "updateFiles":[]
+ *    "updateFiles":[],
+ *    "initvTeam":[{
+ *       "id" : null,
+ *       "category": "Research",
+ *       "area_expertise": "Research leadership and management",
+ *       "key_accountabilities":"Provide leadership",
+ *       "active": true
+ *   }]
  * }
  * ]
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -934,6 +1057,20 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  *           }
  *       ]
  *   },
+ *   "initiativeTeam": {
+ *           "upsertedInitiativeTeam": [
+ *               {
+ *                   "id": 4,
+ *                   "category": "Research",
+ *                   "area_expertise": "Research leadership and management",
+ *                   "key_accountabilities": "Provide leadership",
+ *                   "human_resources_id": 5,
+ *                   "active": true,
+ *                   "updated_at": "2021-11-30T20:06:00.000Z",
+ *                   "created_at": "2021-11-30T20:06:00.000Z"
+ *               }
+ *           ]
+ *       },
  *   "title": "Full Proposal: Patch human resources."
  *  }
  *
@@ -943,7 +1080,11 @@ router.get("/manage-plan/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRo
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert human Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()], stagefull.patchHumanResourcesAndFiles);
+router.patch(
+  '/human-resources/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()],
+  stagefull.patchHumanResourcesAndFiles
+);
 
 // Get human resources and files to initiative
 /**
@@ -952,16 +1093,16 @@ router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [chec
  * @apiPermission admin
  * @apiName GetHumanResources
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Human Resources
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/initiative-team
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/human-resources/2/initiative-team
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *  {
@@ -989,6 +1130,18 @@ router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [chec
  *                   "financial_resources_id": null,
  *                   "section": "initiative-team"
  *               }
+ *           ],
+ *            "initiativeTeam": [
+ *               {
+ *                   "id": 4,
+ *                   "category": "Research",
+ *                   "area_expertise": "Research leadership and management",
+ *                   "key_accountabilities": "Provide leadership",
+ *                   "human_resources_id": 5,
+ *                   "active": 1,
+ *                   "created_at": "2021-11-30T20:06:00.000Z",
+ *                   "updated_at": "2021-11-30T20:06:00.000Z"
+ *               }
  *           ]
  *       }
  *   },
@@ -1001,7 +1154,11 @@ router.patch("/human-resources/:initiativeId([0-9]+)/:ubication/:stageId", [chec
  *     HTTP/1.1 400 Not Found
  *     { message: "Get human resources and files: Full proposal", error }
  */
-router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('hr', 'readOwn')], stagefull.getHumanResources);
+router.get(
+  '/human-resources/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('hr', 'readOwn')],
+  stagefull.getHumanResources
+);
 
 // upsert financial resources and files to initiative
 /**
@@ -1010,71 +1167,59 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
  * @apiPermission admin
  * @apiName PatchFinancialResources
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/10.financial-resources/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/10.financial-resources/3
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative
- * @apiParam {Number} id identificator Financial Resources
- * @apiParam {String} detailed_budget description budget.
- * @apiParam {Boolean} active status.
- * @apiParam {String} section section location.
- * @apiParam {Object} updateFiles file to updtate.
- * @apiParam {File} file template Financial Resources
- * 
+ * @apiParam {String} sectionName 'activity_breakdown'| 'geographic_breakdown.
+ *
  * @apiParamExample {json} Request-Example:
- * data: [
- * {   "id":null,
- *   "detailed_budget": "new detail",
- *   "active": true,
- *   "section":"budget",
- *   "updateFiles":[]
- * }
- * ]
- *  
+ * data: 
+ [
+    {
+        "name": "Work package 1",
+        "active": true,
+        "col_name": "id",
+        "financial_type": {sectionName},
+        "financial_type_id": {workpacgake.id},
+        "table_name": "work_packages",
+        "id": 25,
+        "total": 10,
+        "valuesList": {
+            "2022": "1.00",
+            "2023": "2.00",
+            "2024": "7.00"
+        }
+    }
+]
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *   {
- *   "response": {
- *       "financialResources": {
- *           "upsertedFinancialResources": {
- *               "id": 6,
- *               "detailed_budget": "new detail",
- *                "active": true,
- *                "initvStgId": 35,
- *                "updated_at": "2021-09-20T17:21:59.000Z",
- *                "created_at": "2021-09-20T17:21:59.000Z"
- *            },
- *            "upsertedFile": {
- *                "id": 71,
- *                "active": true,
- *                "financial_resources_id": 6,
- *                "section": "budget",
- *                "url": "http://localhost:3000/uploads/INIT-2/10.financial-resources/stage-3/1632158519519-Book1.xlsx",
- *                "name": "Book1.xlsx",
- *                "updated_at": "2021-09-20T17:21:59.000Z",
- *                "created_at": "2021-09-20T17:21:59.000Z"
- *            }
- *        },
- *        "files": [
- *            {
- *                "fieldname": "file",
- *                "originalname": "Book1.xlsx",
- *                "encoding": "7bit",
- *                "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
- *                "destination": "./public/uploads/INIT-2/10.financial-resources/stage-3",
- *                "filename": "1632158519519-Book1.xlsx",
- *                "path": "public\\uploads\\INIT-2\\10.financial-resources\\stage-3\\1632158519519-Book1.xlsx",
- *                "size": 22386
- *            }
- *        ]
- *    },
- *    "title": "Full Proposal: Patch financial resources"
- *}
+ * {
+    "response": {
+        "financialResourcesData": [
+            {
+                "id": 25,
+                "initvStgId": 60,
+                "financial_type": "activity_breakdown",
+                "active": 1,
+                "created_at": "2021-12-01T02:28:21.000Z",
+                "updated_at": "2021-12-01T02:28:21.000Z",
+                "financial_type_id": null,
+                "table_name": "work_packages",
+                "col_name": "id",
+                "years": "2022;2023;2024",
+                "values_": "1.00;2.00;7.00"
+            }
+        ]
+    },
+    "title": "Full Proposal:financial resources."
+}
  *
  * @apiError Error Full Proposal: Patch financial resources
  *
@@ -1082,8 +1227,12 @@ router.get("/human-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, che
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert financial Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [checkJwt, checkRole('fr', 'updateOwn'), uploadFile.any()], stagefull.patchFinancialResourcesAndFiles);
 
+router.patch(
+  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('fr', 'updateOwn')],
+  stagefull.patchFinancialResources
+);
 // Get financial resources and files to initiative
 /**
  * @api {get} stages-control/proposal/financial-resources/:initiativeId/:ubication/:stageId Financial Resources - Request Financial Resources
@@ -1091,55 +1240,50 @@ router.patch("/financial-resources/:initiativeId([0-9]+)/:ubication/:stageId", [
  * @apiPermission admin
  * @apiName GetFinancialResources
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Financial Resources
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/financial-resources/2/budget
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *  {
- *   "response": {
- *       "financialResourcesData": {
- *           "id": 2,
- *           "initvStgId": 35,
- *           "detailed_budget": "new detail",
- *           "active": 1,
- *           "created_at": "2021-09-20T17:06:53.000Z",
- *           "updated_at": "2021-09-20T17:06:53.000Z",
- *           "files": [
- *               {
- *                   "id": 69,
- *                   "tocsId": null,
- *                   "url": "http://localhost:3000/uploads/INIT-2/financial-resources/stage-3/1632157613540-Book1.xlsx",
- *                   "name": "Book1.xlsx",
- *                   "active": 1,
- *                   "created_at": "2021-09-20T17:06:53.000Z",
- *                   "updated_at": "2021-09-20T17:06:53.000Z",
- *                   "meliaId": null,
- *                   "manage_plan_risk_id": null,
- *                   "humanId": null,
- *                   "financial_resources_id": 2,
- *                   "section": "budget"
- *               }
- *           ]
- *       }
- *   },
- *   "title": "Full Proposal:financial resources and files."
- * }
+ * {
+    "response": {
+        "financialResourcesData": [
+            {
+                "id": 25,
+                "initvStgId": 60,
+                "financial_type": "geographic_breakdown",
+                "active": 1,
+                "created_at": "2021-12-01T02:28:21.000Z",
+                "updated_at": "2021-12-01T02:28:21.000Z",
+                "financial_type_id": null,
+                "table_name": "financial_resources",
+                "col_name": "global",
+                "years": "2022;2023;2024",
+                "values_": "1.00;2.00;7.00"
+            }
+        ]
+    },
+    "title": "Full Proposal:financial resources."
+}
  *
- * @apiError Error : Get financial resources and files: Full proposal.
+ * @apiError Error : Get financial resources: Full proposal.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
- *     { message: "Get financial resources and files: Full proposal.", error }
+ *     { message: "Get financial resources: Full proposal.", error }
  */
-router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt, checkRole('fr', 'readOwn')], stagefull.getFinancialResources);
+router.get(
+  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('fr', 'readOwn')],
+  stagefull.getFinancialResources
+);
 
 // upsert policy compliance oversight to initiative
 /**
@@ -1148,21 +1292,21 @@ router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt,
  * @apiPermission admin
  * @apiName PatchPolicyCompliance
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/2
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative.
  * @apiParam {Number} id identificator Policy Compliance.
  * @apiParam {Boolean} research_governance_policy Policy research governance.
  * @apiParam {Boolean} open_fair_data_policy Policy open fair data.
  * @apiParam {String} open_fair_data_details description Open fair data.
  * @apiParam {Boolean} active status.
- * 
+ *
  * @apiParamExample {json} Request-Example:
  *  {
  *   "id": null,
@@ -1171,7 +1315,7 @@ router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt,
  *   "open_fair_data_details": "Test 1 policy",
  *   "active": true
  *  }
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -1198,7 +1342,11 @@ router.get("/financial-resources/:initiativeId([0-9]+)/:sectionName", [checkJwt,
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert policy compliance oversight: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'updateOwn')], stagefull.patchPolicyComplianceOversight);
+router.patch(
+  '/policy-compliance/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('pco', 'updateOwn')],
+  stagefull.patchPolicyComplianceOversight
+);
 
 // Get policy compliance oversight to initiative
 /**
@@ -1207,16 +1355,16 @@ router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('p
  * @apiPermission admin
  * @apiName GetPolicyCompliance
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Policy Compliance Oversight
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/policy-compliance/10
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -1241,7 +1389,11 @@ router.patch("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('p
  *     HTTP/1.1 400 Not Found
  *     { message: "Get policy compliance oversight.", error }
  */
-router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco', 'readOwn')], stagefull.getPolicyComplianceOversight);
+router.get(
+  '/policy-compliance/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('pco', 'readOwn')],
+  stagefull.getPolicyComplianceOversight
+);
 
 // upsert innovation packages to initiative
 /**
@@ -1250,26 +1402,26 @@ router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco
  * @apiPermission admin
  * @apiName PatchInnovationPackages
  * @apiGroup Proposal
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
- * 
+ *
  * @apiHeader {String} auth
- * 
+ *
  * @apiParam {Number} initiativeId Id initiative.
  * @apiParam {Number} id identificator Policy Compliance.
  * @apiParam {String} key_principles description key principles.
  * @apiParam {Boolean} active status.
- * 
+ *
  * @apiParamExample {json} Request-Example:
  *  {
  *   "id": null,
  *   "key_principles": "Test 1 policy",
  *   "active": true
  *  }
- *  
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -1294,7 +1446,11 @@ router.get("/policy-compliance/:initiativeId([0-9]+)", [checkJwt, checkRole('pco
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert Innovation Packages: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'updateOwn')], stagefull.patchInnovationPackages);
+router.patch(
+  '/innovation-packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('ip', 'updateOwn')],
+  stagefull.patchInnovationPackages
+);
 
 // Get innovation packages to initiative
 /**
@@ -1303,16 +1459,16 @@ router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole(
  * @apiPermission admin
  * @apiName GetInnovationPackages
  * @apiGroup Proposal
- * 
+ *
  * @apiDescription  Shows Innovation Packages
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/innovation-packages/2
  *
  * @apiHeader {String} auth
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -1335,7 +1491,10 @@ router.patch("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole(
  *     HTTP/1.1 400 Not Found
  *     { message: "Get InnovationPackages.", error }
  */
-router.get("/innovation-packages/:initiativeId([0-9]+)", [checkJwt, checkRole('ip', 'readOwn')], stagefull.getInnovationPackages);
-
+router.get(
+  '/innovation-packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('ip', 'readOwn')],
+  stagefull.getInnovationPackages
+);
 
 export default router;

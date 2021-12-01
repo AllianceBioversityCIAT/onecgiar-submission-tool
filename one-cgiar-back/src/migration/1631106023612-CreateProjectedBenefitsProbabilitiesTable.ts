@@ -1,11 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateProjectedBenefitsProbabilitiesTable1631106023612 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create Projected benefits probabilities table')
-        await queryRunner.query(`
+export class CreateProjectedBenefitsProbabilitiesTable1631106023612
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create Projected benefits probabilities table');
+    await queryRunner.query(`
         CREATE TABLE projected_probabilities (
             id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(100) DEFAULT NULL,
@@ -16,9 +16,7 @@ export class CreateProjectedBenefitsProbabilitiesTable1631106023612 implements M
             PRIMARY KEY (id)           
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

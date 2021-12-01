@@ -1,10 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateConfigTable1622732013487 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('CREATE sbt_config')
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('CREATE sbt_config');
+    await queryRunner.query(`
         CREATE TABLE sbt_config (
             id int(11) NOT NULL AUTO_INCREMENT,
             name TEXT DEFAULT NULL,
@@ -20,9 +19,7 @@ export class CreateConfigTable1622732013487 implements MigrationInterface {
             PRIMARY KEY (id)               
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
     `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

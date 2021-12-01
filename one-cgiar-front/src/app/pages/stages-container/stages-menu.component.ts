@@ -13,6 +13,7 @@ import { ManageAccessComponent } from './stages/shared/components/manage-access/
   styleUrls: ['./stages-menu.component.scss']
 })
 export class StagesMenuComponent implements OnInit {
+  private user = JSON.parse(localStorage.getItem('user')) || null;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -22,7 +23,8 @@ export class StagesMenuComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
     private router: Router,
-    public _dataControlService: DataControlService
+    public _dataControlService: DataControlService,
+    private _initiativesService:InitiativesService
   ) { }
 
   openDialog(): void {
@@ -34,7 +36,6 @@ export class StagesMenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
       this._dataControlService.generalInfoChange$.emit();
     });
   }
@@ -46,15 +47,13 @@ export class StagesMenuComponent implements OnInit {
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-        // console.log("NavigationStart "+testi++);
-        // console.log(event);
+
         this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo = event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })
     this._interactionsService.collapseHeader = true;
     this.activatedRoute.params.subscribe(resp => {
-      // this.initiativesSvc.initvStgId = resp['id'];
       this.initiativesSvc.initiative.id = resp['id'];
       this.initiativesSvc.getInitiativeById(resp['id']).subscribe((success) => {
         this.initiativesSvc.initiative.name = success.name;
@@ -64,17 +63,19 @@ export class StagesMenuComponent implements OnInit {
           console.log(error);
         },
       )
-      // this.initiativesSvc.getInitvStgId()
-      // this.initiativesSvc.getAllInitiatives().subscribe(initiativeResp=>{
-      //   this.initiativesSvc.initvStgId = initiativeResp.find(initiative=>initiative.id == resp['id']).initvStgId;
-      // })
-      // console.log("initiative id menu : "+this.initiativesSvc.initiative.id);
-      // this.stageMenu.getFormStageStatus(this.initiativesSvc.initvStgId);
-      // this.initiativesSvc.getGreenCheckStatus(this.initiativesSvc.initvStgId).subscribe(resp=>{
-      //   console.log(resp);
-      //   this.stageMenu.validateAllSectionsStatus('concept',resp.response?.validatedSections,this.initiativesSvc.initvStgId);
-      // })
+
     });
+
+    this._initiativesService.getInitvStgId(this._initiativesService.initiative.id,3).subscribe(resp=>{
+      this._initiativesService.initvStgId = resp.response;
+      this.getRolefromInitiativeById();
+    })
+    
+    this._dataControlService.validateMenu$.subscribe(resp=>{
+      this.validateAllSections();
+    })
+    this._dataControlService.loadMenu$.emit('full-proposal');
+
   }
 
   onSave(generalInformationForm): void {
@@ -89,4 +90,56 @@ export class StagesMenuComponent implements OnInit {
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
   }
+
+
+
+  getRolefromInitiativeById(){
+    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp=>{
+
+      let rol = resp.response.roles
+      let firstRol =  rol[0]?.roleId
+
+      if (rol.length) {
+        this._initiativesService.initiative.readonly = ( firstRol === 1|| firstRol === 2|| firstRol === 3|| firstRol === 5||this.user?.roles[0].id === 1)?false:true;
+      }else{
+        this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1)?false:true;
+      }
+
+    });
+  }
+
+  validateAllSections() {
+
+    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id, 3).subscribe(resp => {
+
+      Object.keys(resp.response).map(key => {
+        let stageId = 3;
+        if (!resp.response[key]) return null;
+        let sectionId = resp.response[key]?.sectionId;
+        let ValidateGI = resp.response[key]?.validation;
+        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId).sections.find(item => item.sectionId == sectionId)
+        result.fieldsCompleted = ValidateGI;
+        let subSectionsToMap = resp.response[key].subSections;
+        if (!subSectionsToMap) return;
+
+        subSectionsToMap.map(item => {
+          let menuSubsections = result.subsections.find(subSeItem => subSeItem.subSectionId == item.subSectionId);
+          if (menuSubsections) menuSubsections.fieldsCompleted = item.validation;
+
+          if (!item.hasOwnProperty('dinamicList')) return;
+          item.dinamicList.map(resp => {
+            if (!(menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id))) return false
+            menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
+          })
+
+        });
+
+
+      })
+
+    })
+
+  }
+
+
 }

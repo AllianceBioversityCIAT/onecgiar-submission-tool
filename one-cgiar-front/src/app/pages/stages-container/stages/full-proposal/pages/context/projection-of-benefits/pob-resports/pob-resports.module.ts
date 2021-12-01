@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import {ToastModule} from 'primeng/toast';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ButtonModule } from 'primeng/button';
     UtilsModule,
     ClipboardModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule
   ]
 })
 export class PobResportsModule { }

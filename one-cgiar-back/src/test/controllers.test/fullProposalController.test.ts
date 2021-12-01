@@ -1,85 +1,227 @@
-import chai, { expect } from 'chai';
+import chai, {expect} from 'chai';
 import chaiHttp from 'chai-http';
 import 'mocha';
 import jwt from '../helpers/jwt-auth';
-
 
 chai.use(chaiHttp);
 
 const app = 'http://localhost:3000';
 var token: any = '';
 var user = {
-    id: '92',
-    email: 'test@hotmail.com'
+  id: '92',
+  email: 'test@hotmail.com'
 };
 
-
 before(async () => {
-    const initiativeId = 2;
-    const stageId = 3;
+  const initiativeId = 2;
+  const stageId = 3;
 
-    //Get user test
-    // await chai
-    // .request(app)
-    // .post('/api/users/')
-    // .type('form')
-    // .send({
-    //     "first_name": "test",
-    //     "last_name": "test",
-    //     "password": 'Test12345',
-    //     "is_cgiar": false,
-    //     "email": "test@hotmail.com",
-    //     "roles": [1]
-    // })
-    // .then((res) => {
-    //     user.id = res.body.response.user.id;
-    //     user.email = res.body.response.user.email;
-    // });
+  //Get user test
+  // await chai
+  // .request(app)
+  // .post('/api/users/')
+  // .type('form')
+  // .send({
+  //     "first_name": "test",
+  //     "last_name": "test",
+  //     "password": 'Test12345',
+  //     "is_cgiar": false,
+  //     "email": "test@hotmail.com",
+  //     "roles": [1]
+  // })
+  // .then((res) => {
+  //     user.id = res.body.response.user.id;
+  //     user.email = res.body.response.user.email;
+  // });
 
-    //Get token test
-    token = await jwt.createToken(user);
-
+  //Get token test
+  token = await jwt.createToken(user);
 });
 
-
-
 after(async () => {
-
-    //Remove user test
-    // await chai
-    //     .request(app)
-    //     .delete('/api/users/remove/' + user.id)
-    //     .set('auth', token)
-    //     .then((res) => {
-    //         console.log('User ' + user.id + ' was removed.');
-    //     });
-
-})
-
+  //Remove user test
+  // await chai
+  //     .request(app)
+  //     .delete('/api/users/remove/' + user.id)
+  //     .set('auth', token)
+  //     .then((res) => {
+  //         console.log('User ' + user.id + ' was removed.');
+  //     });
+});
 
 /**Start test */
 describe('FullProposal Controller', async () => {
+  const initiativeId = 2;
+  const stageId = 3;
+  var managePlanRiskId;
+  var humanResourcesId;
 
-    const initiativeId = 2;
-    const stageId = 3;
+  /**Workpackage*/
 
+  it('GET workpackage/ Request all workpackage per initiative', async () => {
+    await chai
+      .request(app)
+      .get('/api/stages-control/proposal/packages/' + initiativeId)
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal: Workpackage.');
+        expect(res).to.be.a('object');
+      });
+  });
 
-    /**Workpackage*/
+  /**
+   * MANAGE PLAN AND RISK
+   */
 
-    it('GET workpackage/ Request all workpackage per initiative', async () => {
+  /**
+   * GET MANAGE PLAN
+   * GET RISK ASSESSMENT
+   *  */
+  it('GET /manage-plan/initiativeId/sectionName/ Request Manage plan and risk ', async () => {
+    await chai
+      .request(app)
+      .get(
+        '/api/stages-control/proposal/manage-plan/' +
+          initiativeId +
+          '/management_plan'
+      )
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal: GET manage plan risk  and files.');
+        expect(res).to.be.a('object');
+        managePlanRiskId = parseInt(res.body.response.managePlanData.id);
+      });
+  });
 
-        await chai
-            .request(app)
-            .get('/api/stages-control/proposal/packages/' + initiativeId)
-            .set('auth', token)
-            .then((res) => {
-                expect(res.status).to.equal(200);
-                expect(res.body).to.have.property('response').to.be.a('object');
-                expect(res.body).to.have.property('title').to.be.equal('Full Proposal: Workpackage.');
-                expect(res).to.be.a('object')
-            });
+  /**
+   * PATCH MANAGE PLAN
+   * PATCH RISK ASSESSMENT
+   *  */
+  it('PATCH /manage-plan/initiativeId/sectionName/ Update Manage plan and risk', async () => {
+    await chai
+      .request(app)
+      .patch(
+        '/api/stages-control/proposal/manage-plan/' +
+          initiativeId +
+          '/7.manage-plan/' +
+          stageId
+      )
+      .set('auth', token)
+      .set('content-type', 'application/json')
+      .send({
+        id: managePlanRiskId,
+        management_plan: 'new plan',
+        active: 1,
+        section: 'management_plan',
+        updateFiles: [],
+        riskassessment: [
+          {
+            id: null,
+            risks_achieving_impact: 'TEST TEST TEST',
+            description_risk: 'TEST TEST',
+            likelihood: 5,
+            impact: 1,
+            risk_score: 4,
+            active: 1,
+            manage_plan_risk_id: null,
+            opportinities: []
+          }
+        ]
+      })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal: Patch management plan and risk.');
+        expect(res).to.be.a('object');
+      });
+  });
+  /**
+   * ***********
+   * ***********
+   */
 
-    });
+  /**
+   * HUMAN RESOURCES
+   */
 
+  /**
+   * GET HUMAN RESOURCES
+   * GET INITIATIVE TEAM
+   *  */
+  it('GET stages-control/proposal/human-resources/ Request Human Resources ', async () => {
+    await chai
+      .request(app)
+      .get(
+        '/api/stages-control/proposal/human-resources/' +
+          initiativeId +
+          '/initiative-team'
+      )
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal:human resources and files.');
+        expect(res).to.be.a('object');
+        humanResourcesId = parseInt(res.body.response.humanResourcesData.id);
+      });
+  });
 
+  /**
+   * PATCH MANAGE PLAN
+   * PATCH RISK ASSESSMENT
+   *  */
+  it('PATCH /stages-control/proposal/human-resources/ Update Human Resources', async () => {
+    await chai
+      .request(app)
+      .patch(
+        '/api/stages-control/proposal/human-resources/' +
+          initiativeId +
+          '/9.human-resources/' +
+          stageId
+      )
+      .set('auth', token)
+      .set('content-type', 'application/json')
+      .send({
+        id: humanResourcesId,
+        gender_diversity_inclusion: 'new plan',
+        capacity_development: 'Test',
+        active: 1,
+        section: 'initiative-team',
+        updateFiles: [],
+        initvTeam: [
+          {
+            id: null,
+            category: 'TEST TEST TEST',
+            area_expertise: 'TEST TEST',
+            key_accountabilities: 'TEST TEST',
+            active: 1
+          }
+        ]
+      })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Full Proposal: Patch human resources.');
+        expect(res).to.be.a('object');
+      });
+  });
+
+  /**
+   * ***********
+   * ***********
+   */
 });

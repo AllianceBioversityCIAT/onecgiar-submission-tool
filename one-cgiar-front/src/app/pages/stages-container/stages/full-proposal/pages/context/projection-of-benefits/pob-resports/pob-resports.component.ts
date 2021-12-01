@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '../../../../../../../../shared/services/utils.service';
 import { ManageExcelService } from '../../../../services/manage-excel.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
+import { MessageService } from 'primeng/api';
 declare var $;
 @Component({
   selector: 'app-pob-resports',
   templateUrl: './pob-resports.component.html',
-  styleUrls: ['./pob-resports.component.scss']
+  styleUrls: ['./pob-resports.component.scss'],
+  providers: [MessageService]
+
 })
 export class PobResportsComponent implements OnInit {
   notArePreviewinformation = false;
@@ -30,7 +33,8 @@ export class PobResportsComponent implements OnInit {
   constructor(
     public _utilsService:UtilsService,
     private _manageExcelService:ManageExcelService,
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +47,7 @@ export class PobResportsComponent implements OnInit {
 
   getPreviewProjectedBenefits() {
     this._initiativesService.getPreviewProjectedBenefits(this._initiativesService.initiative.id,3).subscribe(resp => {
-      console.log(resp.response.previewProjectedBenefits.impactAreas);
+      //console.log(resp.response.previewProjectedBenefits.impactAreas);
       this.objectsTolist(resp.response.previewProjectedBenefits.impactAreas);
     })
   }
@@ -85,12 +89,12 @@ export class PobResportsComponent implements OnInit {
       }
       // this.previewPOBListMetaData[celIndex] = {rowspan: (i - (celIndex+1)) + 1};
       this.previewProjectedBenefitsListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
-      console.log(this.previewProjectedBenefitsListCoverted[celIndex]);
+      //console.log(this.previewProjectedBenefitsListCoverted[celIndex]);
       this.mergeList.push({ s: { r: celIndex+1, c: 2 }, e: { r: i, c: 2 } })
 
     })
 
-    console.log(this.previewProjectedBenefitsListCoverted);
+    //console.log(this.previewProjectedBenefitsListCoverted);
 
    
   }
@@ -98,6 +102,52 @@ export class PobResportsComponent implements OnInit {
   getTable(){
     
     return document.querySelector("table");
+  }
+
+  showBottomCenter() {
+
+    //console.log("ya valió");
+    this.messageService.add({key: 'bc', severity:'success', summary: 'Copied table', detail: 'Table information was copied and saved to the clipboard'});
+}
+
+  copyTable(){
+    //console.log(this.previewProjectedBenefitsListCoverted);
+    //console.log(this.previewProjectedBenefitsListCoverted);
+
+    let header='';
+    let body = '';
+    
+    this.headerPreview.map(item=>{
+      header+= `<th>${item.headerName}</th>`
+    })
+
+    this.previewProjectedBenefitsListCoverted.map(item=>{
+      // container+= `<td>${'Example'}</td>`
+      let content = '';
+      
+      
+      let keys:any = Object.keys(item)
+      
+      //console.log(keys);
+      keys.map(key=>{
+        if (key == 'rowspan') return;
+        // [attr.colspan]="getKeys(customer).length <=1?3:1"
+        // [attr.rowspan]="(i == 2 && item =='c' && customer.rowspan)?customer.rowspan:1"
+        content += `<td ${keys.length <=1?`colspan="3"`:`colspan="1"`} ${(item.rowspan && key =='c')?`rowspan="${item.rowspan}"`:`rowspan="1"`}>${item[key]}</td>`
+        //console.log(item[key]);
+      })
+      body+= `<tr>${content}</tr>`
+    })
+
+
+    let result = 
+    `<table>
+    <tr>
+      ${header}
+    </tr>
+      ${body}
+  </table>`
+    return result;
   }
   
   exportExcel() {
@@ -121,7 +171,7 @@ export class PobResportsComponent implements OnInit {
         result.push(body)
       })
 
-      console.log(result);
+      //console.log(result);
 
       var worksheet = xlsx.utils.json_to_sheet(result, { header: ["a", "b", "c"], skipHeader: true });
 
