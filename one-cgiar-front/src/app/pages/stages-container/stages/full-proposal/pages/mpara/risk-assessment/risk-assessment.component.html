@@ -44,7 +44,7 @@
                            }"></ibdc-select-multiple>
                             </div>
                             <div class="or">
-                                <div class="text"> <div>or</div> </div>
+                                <div>or</div>
                             </div>
                             <div>
                                 <div (click)="addRiskInTopFive()" class="createMyOwn" *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') < 5 && this.stepNumber == 1">create my own "initiative team item"</div>
