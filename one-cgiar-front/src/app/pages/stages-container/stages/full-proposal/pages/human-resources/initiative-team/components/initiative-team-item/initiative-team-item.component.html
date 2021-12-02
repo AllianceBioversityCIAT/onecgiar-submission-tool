@@ -1,0 +1,25 @@
+<div class="local_container" [style.backgroundColor]="index % 2 == 0 ? 'white' : 'rgb(244 245 245)'">
+
+    <div class="row-category">
+       <ibdc-select-field
+          [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'category'"
+          [selectableList]="[{id:1,categoryName:'Research'},{id:2,categoryName:'Research support'}]"
+        ></ibdc-select-field>
+    </div>
+    <div class="row-area_expertise">
+        <ibdc-input-field [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'area_expertise'"></ibdc-input-field>
+    </div>
+    <div class="row-key_accountabilities">
+        <ibdc-input-field [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'key_accountabilities'"></ibdc-input-field>
+    </div>
+
+ 
+    <app-button-edit-or-delete type="delete" (action)="deleteCurrentInitiativeTeamItem()"></app-button-edit-or-delete>
+   
+    
+
+</div>
+
+
+
+
