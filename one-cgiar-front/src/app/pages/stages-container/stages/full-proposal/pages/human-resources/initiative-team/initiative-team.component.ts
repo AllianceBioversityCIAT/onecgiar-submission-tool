@@ -63,7 +63,7 @@ export class InitiativeTeamComponent implements OnInit {
       true?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources and activities has been saved, but there are incomplete fields')
-      // this.getHumanResources();
+      this.getHumanResources();
     })
 
   }

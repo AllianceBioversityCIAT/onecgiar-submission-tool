@@ -12,7 +12,7 @@
         
         <ibdc-alert 
             *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') < 5 && this.stepNumber == 1" 
-            [options]="{htmlText: 'Please select all 5 risks to be able to display the save button', type:'warning'}"></ibdc-alert>
+            [options]="{htmlText: 'Please select all 5 risks to be able to display the save button and be able to edit the five risks', type:'warning'}"></ibdc-alert>
 
         <div [ngSwitch]="stepNumber">
 
