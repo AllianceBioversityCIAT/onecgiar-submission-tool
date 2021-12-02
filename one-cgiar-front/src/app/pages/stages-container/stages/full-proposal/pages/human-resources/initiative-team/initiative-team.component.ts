@@ -39,7 +39,8 @@ export class InitiativeTeamComponent implements OnInit {
 
       this.initiativeTeamData = resp.response.humanResourcesData;
       console.log(this.initiativeTeamData);
-      console.log(this.initiativeTeamData.initvTeam);
+      console.log(this.initiativeTeamData?.initvTeam);
+      if (!this.initiativeTeamData) this.initiativeTeamData = {active:true,capacity_development:'',id:null,gender_diversity_inclusion:'',initvTeam:[],section:'9.human-resources',updateFiles:[]};
       this.initiativeTeamData.updateFiles = [];
       this.dataLoaded = true;
     },
