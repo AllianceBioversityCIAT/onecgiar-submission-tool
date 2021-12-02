@@ -19,30 +19,67 @@
 
             <div class="step_one" *ngSwitchCase="1">
                 <div class="row">
-                    <div class="col-8">
-                        <ibdc-select-multiple *ngIf="riskListIsLoaded"
-                            [hidden]="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{
-                        hideSavedList: true,
-                        inputTitle:'Select top 5 risks',
-                        selectList: this.risksList,
-                        selectItemName:'risks_achieving_impact',
-                        selectItemId:'idBd',
-                        frontendSearchAttribute:'risks_achieving_impact',
-                        readOnlyVariable: this._initiativesService.initiative.readonly,
-                        savedList:{
-                            list:this.managementPlan.riskassessment,
-                            selectItemId:'idBd',
+
+
+
+                    <div class="col-12">
+                        <div class="grid_selectors">
+                            <div>
+                                <ibdc-select-multiple *ngIf="riskListIsLoaded"
+                                [hidden]="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{
+                            hideSavedList: true,
+                            inputTitle:'Select top 5 risks',
+                            selectList: this.risksList,
                             selectItemName:'risks_achieving_impact',
-                            idToSave:'idBd',
-                            labelName:'regions'
-                        }
-                       }"></ibdc-select-multiple>
+                            selectItemId:'idBd',
+                            frontendSearchAttribute:'risks_achieving_impact',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list:this.managementPlan.riskassessment,
+                                selectItemId:'idBd',
+                                selectItemName:'risks_achieving_impact',
+                                idToSave:'idBd',
+                                labelName:'regions'
+                            }
+                           }"></ibdc-select-multiple>
+                            </div>
+                            <div class="or">
+                                <div class="text"> <div>or</div> </div>
+                            </div>
+                            <div>
+                                <div (click)="addRiskInTopFive()" class="createMyOwn" *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') < 5 && this.stepNumber == 1">create my own "initiative team item"</div>
+                            </div>
+                        </div>
+
+                        
+
+
+
                     </div>
                     <div class="col-8">
                         <div class="ibdc_basic_title" *ngIf="this.managementPlan?.riskassessment.length">Confirm top 5</div>
                         <div class="item_top_five" [hidden]="!item.selected"
                             *ngFor="let item of addIdxToSelected(this.managementPlan?.riskassessment)">
-                            <div class="ibdc_basic_description"><strong class="ibdc_secondary_color">Top {{this.item.idx}} </strong> - {{item.generic_risks}}</div>
+
+                            <div class="ibdc_basic_description">
+                                <strong class="ibdc_secondary_color">Top {{this.item.idx}} </strong> &nbsp;-&nbsp;
+                                <div class="readyOnlyElement" *ngIf="!item.editable">{{item.generic_risks}}</div> 
+                                <div class="editableElement" *ngIf="item.editable">
+                                  
+                                    <div class="ibdc-input-field-container">
+                                        <ibdc-input-field inputTitle="Risks achieving impact:" [rows]="1" [objectItem]="this.item"  [objectAtributteName]="'risks_achieving_impact'"></ibdc-input-field>
+                                    </div>
+                                    
+                                    <div class="ibdc-input-field-container">
+                                        <ibdc-select-field
+                                           [objectItem]="this.item"  [objectAtributteName]="'risk_theme'" inputTitle="Risk theme"
+                                           [selectableList]="[{id:1,categoryName:'Research'},{id:2,categoryName:'Research support'}]"
+                                         ></ibdc-select-field>
+                                     </div>
+
+                                </div>
+                            </div>
+
                             <div class="icon_container" (click)="removeElementOfTopFiveInStepOne(item)">
                                 <span class="material-icons">delete</span>
                                 <div class="delete_text">Delete</div>

@@ -299,6 +299,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/risks`);
   }
 
+  getRisksTheme(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/risks-theme`);
+  }
+
   getManagePlan(initiativeId, section: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${section}`);
   }

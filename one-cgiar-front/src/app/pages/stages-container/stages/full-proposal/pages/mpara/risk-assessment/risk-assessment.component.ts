@@ -18,6 +18,7 @@ import { Riskassessment } from './models/riskassessment.interface';
 export class RiskAssessmentComponent implements OnInit {
   stepNumber = 0;
   riskListIsLoaded = false;
+  riskThemesList = [];
   managementPlan: managementPlan={
     id:null,
     active: true,
@@ -66,15 +67,24 @@ export class RiskAssessmentComponent implements OnInit {
   ngOnInit(): void {
     this.getManagePlan();
     this.getRisksList();
+    this.getRisksTheme();
   }
 
   removeElementOfTopFiveInStepOne(item){
     item.selected = false;
   }
 
+  getRisksTheme(){
+    this._initiativesService.getRisksTheme().subscribe(resp=>{
+      this.riskThemesList = resp.response.risks
+      console.log(this.riskThemesList);
+    })
+  }
+
   getRisksList(){
     this._initiativesService.getRisksList().subscribe(resp=>{
       let response:Risk[] = resp.response.risks;
+      console.log(response);
       response.map((res:any)=>{
         res.risks_achieving_impact = res.generic_risks
         res.idBd = res.id;
@@ -82,9 +92,20 @@ export class RiskAssessmentComponent implements OnInit {
       })
       this.risksList = response;
       this.riskListIsLoaded = true;
-      console.log(response);
 
     })
+  }
+
+  addRiskInTopFive(){
+    this.managementPlan?.riskassessment.push({
+      active:true,
+      id:null,
+      risks_achieving_impact:'',
+      selected: true,
+      editable: true,
+      risk_theme: ''
+    })
+    console.log( this.managementPlan?.riskassessment);
   }
 
   reloadComponent(){
@@ -109,9 +130,7 @@ export class RiskAssessmentComponent implements OnInit {
   getManagePlan() {
     this._initiativesService.getManagePlan(this._initiativesService.initiative.id, 'risk_assessment').subscribe(resp => {
       let response: managementPlan = resp.response.managePlanData;
-      console.log(response);
       this.steperValidation(response?.riskassessment?.length);
-      console.log(response?.riskassessment?.length);
       if (response) this.managementPlan = response;
       if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
     },
@@ -127,6 +146,8 @@ export class RiskAssessmentComponent implements OnInit {
 
     let formData = new FormData();
     formData.append('data', JSON.stringify(this.managementPlan));
+
+    console.log(this.managementPlan);
 
     this._initiativesService.saveManagePlan(formData, this._initiativesService.initiative.id, '7.management-plan', 3).subscribe(resp => {
 
