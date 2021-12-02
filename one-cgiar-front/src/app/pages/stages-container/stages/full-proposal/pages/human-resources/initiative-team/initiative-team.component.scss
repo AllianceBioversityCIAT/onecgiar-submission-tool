@@ -1,0 +1,26 @@
+.table_edit {
+  background-color: white;
+
+  .te_header {
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: var(--ibdc-secondary-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 100px;
+    color: white;
+  }
+
+  .te_content {
+    box-sizing: border-box;
+  }
+
+  border-radius: 10px;
+  box-shadow: 0 3px 6px #ecececb6,
+  0 3px 6px #ecececb6;
+
+}
+
+.addItiativeTeamItem {
+  padding: 10px;
+}
