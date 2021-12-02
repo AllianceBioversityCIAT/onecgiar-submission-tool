@@ -1457,6 +1457,28 @@ export async function GetRisks(req: Request, res: Response) {
 }
 
 /**
+ * REQUEST RISKS THEME FROM ST
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function GetRisksTheme(req: Request, res: Response) {
+  try {
+    //Get impact areas from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let risks = await initiativeshandler.requestRisksTheme();
+
+    res.json(new ResponseHandler('Requested Risks Theme.', {risks}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
  * REQUEST PROJECTED BENEFITS
  * @param req
  * @param res

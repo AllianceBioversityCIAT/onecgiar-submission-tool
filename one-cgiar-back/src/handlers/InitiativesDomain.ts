@@ -226,13 +226,28 @@ export class InitiativeHandler {
   async requestRisks() {
     try {
       const querySql = `
-            SELECT id,generic_risks,created_at,updated_at
-              FROM clarisa_risks;`;
+      SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme 
+      FROM initiativesdb.clarisa_risks ri
+      JOIN clarisa_risk_theme th
+        ON ri.clarisa_risks_theme_id = th.id;`;
       const risks = await this.queryRunner.query(querySql);
       return risks;
     } catch (error) {
       console.log(error);
       throw new BaseError('Get Risks', 400, error.message, false);
+    }
+  }
+
+  async requestRisksTheme() {
+    try {
+      const querySql = `
+      SELECT * 
+      FROM clarisa_risk_theme;`;
+      const risks = await this.queryRunner.query(querySql);
+      return risks;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Risks Theme', 400, error.message, false);
     }
   }
 
