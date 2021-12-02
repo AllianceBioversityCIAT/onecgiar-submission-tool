@@ -43,7 +43,7 @@
                             }
                            }"></ibdc-select-multiple>
                             </div>
-                            <div class="or">
+                            <div class="or" *ngIf="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') < 5 && this.stepNumber == 1">
                                 <div>or</div>
                             </div>
                             <div>
