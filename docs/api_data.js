@@ -1714,7 +1714,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n {\n  \"response\": {\n      \"financialResourcesData\": {\n          \"id\": 2,\n          \"initvStgId\": 35,\n          \"detailed_budget\": \"new detail\",\n          \"active\": 1,\n          \"created_at\": \"2021-09-20T17:06:53.000Z\",\n          \"updated_at\": \"2021-09-20T17:06:53.000Z\",\n          \"files\": [\n              {\n                  \"id\": 69,\n                  \"tocsId\": null,\n                  \"url\": \"http://localhost:3000/uploads/INIT-2/financial-resources/stage-3/1632157613540-Book1.xlsx\",\n                  \"name\": \"Book1.xlsx\",\n                  \"active\": 1,\n                  \"created_at\": \"2021-09-20T17:06:53.000Z\",\n                  \"updated_at\": \"2021-09-20T17:06:53.000Z\",\n                  \"meliaId\": null,\n                  \"manage_plan_risk_id\": null,\n                  \"humanId\": null,\n                  \"financial_resources_id\": 2,\n                  \"section\": \"budget\"\n              }\n          ]\n      }\n  },\n  \"title\": \"Full Proposal:financial resources and files.\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"financialResourcesData\": [\n            {\n                \"id\": 25,\n                \"initvStgId\": 60,\n                \"financial_type\": \"geographic_breakdown\",\n                \"active\": 1,\n                \"created_at\": \"2021-12-01T02:28:21.000Z\",\n                \"updated_at\": \"2021-12-01T02:28:21.000Z\",\n                \"financial_type_id\": null,\n                \"table_name\": \"financial_resources\",\n                \"col_name\": \"global\",\n                \"years\": \"2022;2023;2024\",\n                \"values_\": \"1.00;2.00;7.00\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:financial resources.\"\n}",
           "type": "json"
         }
       ]
@@ -1726,14 +1726,14 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: Get financial resources and files: Full proposal.</p>"
+            "description": "<p>: Get financial resources: Full proposal.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get financial resources and files: Full proposal.\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get financial resources: Full proposal.\", error }",
           "type": "json"
         }
       ]
@@ -1783,7 +1783,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"humanResourcesData\": {\n         \"id\": 1,\n         \"initvStgId\": 35,\n         \"gender_diversity_inclusion\": \"\",\n         \"capacity_development\": \"\",\n         \"active\": 1,\n         \"created_at\": \"2021-09-20T19:43:28.000Z\",\n         \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n         \"files\": [\n             {\n                 \"id\": 72,\n                 \"tocsId\": null,\n                 \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n                 \"name\": \"Book1.xlsx\",\n                 \"active\": 1,\n                 \"created_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"meliaId\": null,\n                 \"manage_plan_risk_id\": null,\n                 \"humanId\": 1,\n                 \"financial_resources_id\": null,\n                 \"section\": \"initiative-team\"\n             }\n         ],\n          \"initiativeTeam\": [\n             {\n                 \"id\": 4,\n                 \"category\": \"Research\",\n                 \"area_expertise\": \"Research leadership and management\",\n                 \"key_accountabilities\": \"Provide leadership\",\n                 \"human_resources_id\": 5,\n                 \"active\": 1,\n                 \"created_at\": \"2021-11-30T20:06:00.000Z\",\n                 \"updated_at\": \"2021-11-30T20:06:00.000Z\"\n             }\n         ]\n     }\n },\n \"title\": \"Full Proposal:human resources and files.\"\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n \"response\": {\n     \"humanResourcesData\": {\n         \"id\": 1,\n         \"initvStgId\": 35,\n         \"gender_diversity_inclusion\": \"\",\n         \"capacity_development\": \"\",\n         \"active\": 1,\n         \"created_at\": \"2021-09-20T19:43:28.000Z\",\n         \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n         \"files\": [\n             {\n                 \"id\": 72,\n                 \"tocsId\": null,\n                 \"url\": \"http://localhost:3000/uploads/INIT-2/9.human-resources/stage-3/1632167008334-Book1.xlsx\",\n                 \"name\": \"Book1.xlsx\",\n                 \"active\": 1,\n                 \"created_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"updated_at\": \"2021-09-20T19:43:28.000Z\",\n                 \"meliaId\": null,\n                 \"manage_plan_risk_id\": null,\n                 \"humanId\": 1,\n                 \"financial_resources_id\": null,\n                 \"section\": \"initiative-team\"\n             }\n         ],\n          \"initvTeam\": [\n             {\n                 \"id\": 4,\n                 \"category\": \"Research\",\n                 \"area_expertise\": \"Research leadership and management\",\n                 \"key_accountabilities\": \"Provide leadership\",\n                 \"human_resources_id\": 5,\n                 \"active\": 1,\n                 \"created_at\": \"2021-11-30T20:06:00.000Z\",\n                 \"updated_at\": \"2021-11-30T20:06:00.000Z\"\n             }\n         ]\n     }\n },\n \"title\": \"Full Proposal:human resources and files.\"\n}",
           "type": "json"
         }
       ]
@@ -2299,52 +2299,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "id",
-            "description": "<p>identificator Financial Resources</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "detailed_budget",
-            "description": "<p>description budget.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Boolean",
-            "optional": false,
-            "field": "active",
-            "description": "<p>status.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "section",
-            "description": "<p>section location.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "updateFiles",
-            "description": "<p>file to updtate.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "File",
-            "optional": false,
-            "field": "file",
-            "description": "<p>template Financial Resources</p>"
+            "field": "sectionName",
+            "description": "<p>'activity_breakdown'| 'geographic_breakdown.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "data: [\n{   \"id\":null,\n  \"detailed_budget\": \"new detail\",\n  \"active\": true,\n  \"section\":\"budget\",\n  \"updateFiles\":[]\n}\n]",
+          "content": "data: \n [\n    {\n        \"name\": \"Work package 1\",\n        \"active\": true,\n        \"col_name\": \"id\",\n        \"financial_type\": {sectionName},\n        \"financial_type_id\": {workpacgake.id},\n        \"table_name\": \"work_packages\",\n        \"id\": 25,\n        \"total\": 10,\n        \"valuesList\": {\n            \"2022\": \"1.00\",\n            \"2023\": \"2.00\",\n            \"2024\": \"7.00\"\n        }\n    }\n]",
           "type": "json"
         }
       ]
@@ -2353,7 +2318,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n  {\n  \"response\": {\n      \"financialResources\": {\n          \"upsertedFinancialResources\": {\n              \"id\": 6,\n              \"detailed_budget\": \"new detail\",\n               \"active\": true,\n               \"initvStgId\": 35,\n               \"updated_at\": \"2021-09-20T17:21:59.000Z\",\n               \"created_at\": \"2021-09-20T17:21:59.000Z\"\n           },\n           \"upsertedFile\": {\n               \"id\": 71,\n               \"active\": true,\n               \"financial_resources_id\": 6,\n               \"section\": \"budget\",\n               \"url\": \"http://localhost:3000/uploads/INIT-2/10.financial-resources/stage-3/1632158519519-Book1.xlsx\",\n               \"name\": \"Book1.xlsx\",\n               \"updated_at\": \"2021-09-20T17:21:59.000Z\",\n               \"created_at\": \"2021-09-20T17:21:59.000Z\"\n           }\n       },\n       \"files\": [\n           {\n               \"fieldname\": \"file\",\n               \"originalname\": \"Book1.xlsx\",\n               \"encoding\": \"7bit\",\n               \"mimetype\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n               \"destination\": \"./public/uploads/INIT-2/10.financial-resources/stage-3\",\n               \"filename\": \"1632158519519-Book1.xlsx\",\n               \"path\": \"public\\\\uploads\\\\INIT-2\\\\10.financial-resources\\\\stage-3\\\\1632158519519-Book1.xlsx\",\n               \"size\": 22386\n           }\n       ]\n   },\n   \"title\": \"Full Proposal: Patch financial resources\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"financialResourcesData\": [\n            {\n                \"id\": 25,\n                \"initvStgId\": 60,\n                \"financial_type\": \"activity_breakdown\",\n                \"active\": 1,\n                \"created_at\": \"2021-12-01T02:28:21.000Z\",\n                \"updated_at\": \"2021-12-01T02:28:21.000Z\",\n                \"financial_type_id\": null,\n                \"table_name\": \"work_packages\",\n                \"col_name\": \"id\",\n                \"years\": \"2022;2023;2024\",\n                \"values_\": \"1.00;2.00;7.00\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:financial resources.\"\n}",
           "type": "json"
         }
       ]

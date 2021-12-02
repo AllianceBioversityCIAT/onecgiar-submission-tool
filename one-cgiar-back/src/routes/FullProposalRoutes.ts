@@ -1131,7 +1131,7 @@ router.patch(
  *                   "section": "initiative-team"
  *               }
  *           ],
- *            "initiativeTeam": [
+ *            "initvTeam": [
  *               {
  *                   "id": 4,
  *                   "category": "Research",

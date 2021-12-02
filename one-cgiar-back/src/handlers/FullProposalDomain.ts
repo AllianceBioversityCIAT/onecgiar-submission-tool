@@ -1461,9 +1461,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     newHumanResources.id = humanResourcesId;
     newHumanResources.gender_diversity_inclusion = gender_diversity_inclusion;
     newHumanResources.capacity_development = capacity_development;
-    newHumanResources.active = humanResourcesActive
-      ? humanResourcesActive
-      : true;
+    newHumanResources.active = humanResourcesActive;
 
     try {
       if (host == 'http://localhost') {
@@ -1579,9 +1577,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             newInitiativeTeam.key_accountabilities =
               initvTeamArray.key_accountabilities;
             newInitiativeTeam.human_resources_id = humanResourcesId;
-            newInitiativeTeam.active = initvTeamArray.active
-              ? initvTeamArray.active
-              : true;
+            newInitiativeTeam.active = initvTeamArray.active;
 
             if (newInitiativeTeam.id !== null) {
               /**UPDATE NEW INITIATIVE TEAM */
