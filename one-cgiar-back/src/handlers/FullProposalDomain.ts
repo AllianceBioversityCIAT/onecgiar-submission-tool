@@ -1651,7 +1651,8 @@ export class ProposalHandler extends InitiativeStageHandler {
               WHERE human_resources_id in ( SELECT id
                           FROM human_resources
                          WHERE initvStgId = ${initvStg.id}
-                           AND active = 1);`;
+                           AND active = 1)
+                           AND active=1;`;
 
       const humanResources = await this.queryRunner.query(humanResourcesQuery);
       const files = await this.queryRunner.query(filesQuery);
