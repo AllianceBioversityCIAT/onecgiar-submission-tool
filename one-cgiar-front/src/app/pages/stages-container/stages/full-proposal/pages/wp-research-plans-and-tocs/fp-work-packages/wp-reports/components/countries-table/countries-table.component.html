@@ -3,7 +3,7 @@
         <!-- <h5>Horizontal and Vertical</h5> -->
         <section-sub-title name="Countries table"></section-sub-title>
 
-        <p-table #tablee [value]="this.countries" [scrollable]="true"  scrollHeight="400px" scrollDirection="both"
+        <p-table #tablee [value]="this.countries" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
         sortMode="multiple"
         >
             <ng-template pTemplate="caption">
@@ -15,7 +15,7 @@
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                    <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | titlecase}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-customer>

@@ -9,7 +9,7 @@ import { ManageExcelService } from '../../../../../../services/manage-excel.serv
 })
 export class RegionsTableComponent implements OnInit {
   @Input() regions:Region[]=[];
-  headerPreviewPartners = ['region_id', 'name', 'initvStgId'];
+  headerPreviewPartners = ['um49code', 'name'];
 
   constructor(
     private _manageExcelService:ManageExcelService

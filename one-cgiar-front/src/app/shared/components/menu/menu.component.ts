@@ -194,7 +194,7 @@ export class MenuComponent implements OnInit {
         );
 
         this.mapPreviewInDynamicListMenu(3, 5, 12, {
-          showName : 'Regions and countries previews',
+          showName : 'Geographic scope preview',
           frontRoute : '/work-packages/wp-reports'
         });
 
