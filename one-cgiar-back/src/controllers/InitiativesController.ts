@@ -1469,9 +1469,9 @@ export async function GetRisks(req: Request, res: Response) {
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
 
-    let risks = await initiativeshandler.requestRisksTheme();
+    let risksTheme = await initiativeshandler.requestRisksTheme();
 
-    res.json(new ResponseHandler('Requested Risks Theme.', {risks}));
+    res.json(new ResponseHandler('Requested Risks Theme.', {risksTheme}));
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);

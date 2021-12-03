@@ -10,6 +10,9 @@ export class RiskAssessment extends UpdatedCreatedAt {
   risks_achieving_impact: string;
 
   @Column({type: 'text'})
+  risks_theme: string;
+
+  @Column({type: 'text'})
   description_risk: string;
 
   @Column({type: 'int'})

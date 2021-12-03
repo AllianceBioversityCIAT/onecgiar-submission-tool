@@ -1244,7 +1244,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1
                 `,
         riskAssessmentQuery = `
-                SELECT id,risks_achieving_impact,
+                SELECT id,risks_achieving_impact,risks_theme,
                        description_risk,likelihood,impact,
                        risk_score,manage_plan_risk_id,active
                  FROM risk_assessment
@@ -1333,6 +1333,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             const risk = riskAssessment[index];
 
             newRiskAssessment.id = risk.id;
+            newRiskAssessment.risks_theme = risk.risks_theme;
             newRiskAssessment.risks_achieving_impact =
               risk.risks_achieving_impact;
             newRiskAssessment.description_risk = risk.description_risk;
