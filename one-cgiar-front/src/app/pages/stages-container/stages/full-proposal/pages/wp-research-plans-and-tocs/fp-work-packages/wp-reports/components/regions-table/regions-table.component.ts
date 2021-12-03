@@ -16,7 +16,7 @@ export class RegionsTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this.regions);
+    console.log(this.regions);
   }
 
   exportBasicExcel(){
