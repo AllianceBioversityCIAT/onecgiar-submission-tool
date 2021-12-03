@@ -11,7 +11,7 @@ import { ManageExcelService } from '../../../../../../services/manage-excel.serv
 export class CountriesTableComponent implements OnInit {
 
   @Input() countries:Country[]=[];
-  headerPreviewPartners = ['country_id', 'name', 'initvStgId'];
+  headerPreviewPartners = ['um49code', 'isoAlpha2', 'name'];
 
 
   constructor(

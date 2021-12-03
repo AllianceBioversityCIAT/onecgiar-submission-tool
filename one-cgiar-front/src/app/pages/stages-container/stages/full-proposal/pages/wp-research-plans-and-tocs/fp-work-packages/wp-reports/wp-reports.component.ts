@@ -31,35 +31,8 @@ export class WpReportsComponent implements OnInit {
       this.geoScope.regions
       this.geoScope = resp.response.previewGeographicScope.GeoScope;
       this.showTables = true;
-      console.log(this.geoScope);
+      // console.log(this.geoScope);
     })
   }
-
-  // exportExcel() {
-  //   import("xlsx").then(xlsx => {
-
-
-  //     const worksheet = xlsx.utils.json_to_sheet(this.geoScope.regions);
-  //     var wscols = [
-  //       {wpx:100},
-  //       {wpx:100},
-  //       {wpx:250},
-  //       {wpx:80},
-  //       {wpx:250},
-  //       {wpx:200},
-  //       {wpx:100},
-  //       {wpx:100},
-  //       {wpx:100},
-  //       {wpx:250},
-  //   ];
-    
-  //   worksheet['!cols'] = wscols;
-  //     const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  //     const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-
-
-  //     this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
-  //   });
-  // }
 
 }
