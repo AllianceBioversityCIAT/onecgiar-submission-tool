@@ -13,26 +13,26 @@ export class PreviewsDomain {
     try {
       // retrieve preview partners
       const previewPartnersQuery = `
-            SELECT ci.code,ci.acronym as acronym,ci.institutionType as institution_type,
-                   JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as office_location,
-                   p.institutions_name as name,ia.name as impact_area,
-                   p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data-> "$.websiteLink") as website
-             FROM impact_strategies i
-             JOIN partners p
-             JOIN clarisa_institutions ci
-             JOIN initiatives_by_stages ist
-             JOIN initiatives ini
-             JOIN general_information gi
-             JOIN clarisa_impact_areas ia
-            WHERE i.id = p.impact_strategies_id
-              AND p.institutions_id = ci.code
-              AND i.initvStgId = ist.id
-              AND ist.initiativeId = ini.id
-              AND i.initvStgId = gi.initvStgId
-              AND i.impact_area_id = ia.id
-              AND i.initvStgId = ${initiativeId}
-              AND i.active > 0
-         ORDER BY ini.id asc     
+      SELECT ci.code,ci.acronym as acronym,ci.institutionType as institution_type,
+      JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as office_location,
+      p.institutions_name as name,ia.name as impact_area,
+      p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data-> "$.websiteLink") as website
+       FROM impact_strategies i
+       JOIN partners p
+       JOIN clarisa_institutions ci
+       JOIN initiatives_by_stages ist
+       JOIN initiatives ini
+       JOIN general_information gi
+       LEFT JOIN clarisa_impact_areas ia
+       ON i.impact_area_id = ia.id
+       WHERE i.id = p.impact_strategies_id
+        AND p.institutions_id = ci.code
+        AND i.initvStgId = ist.id
+        AND ist.initiativeId = ini.id
+        AND i.initvStgId = gi.initvStgId
+        AND i.initvStgId = ${initiativeId}
+        AND i.active > 0
+       ORDER BY ini.id asc   
             `;
 
       const previewPartners = await this.queryRunner.query(
