@@ -123,24 +123,34 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id),
-            (SELECT cc.name FROM  clarisa_countries cc WHERE cc.code = co.country_id) as name,
-            co.initvStgId
-       FROM countries_by_initiative_by_stage co
-      WHERE co.initvStgId = ${initiativeId}
-        AND co.active = 1
-        AND co.wrkPkgId IS NOT NULL
-      GROUP BY co.id,co.country_id  
+      SELECT DISTINCT(co.country_id) as um49code,ini.official_code,
+      cco.isoAlpha2,cco.name,cco.*
+        FROM countries_by_initiative_by_stage co
+       JOIN clarisa_countries cco
+       ON co.country_id = cco.code
+       JOIN initiatives_by_stages ist
+          ON co.initvStgId = ist.id
+       JOIN initiatives ini
+          ON ist.initiativeId = ini.id
+       WHERE co.initvStgId =${initiativeId}
+         AND co.active = 1
+         AND co.wrkPkgId IS NOT NULL
+       GROUP BY co.id,co.country_id  
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id),
-               (SELECT cr.name FROM  clarisa_regions cr WHERE cr.um49Code = r.region_id) as name
-               ,r.initvStgId
-          FROM regions_by_initiative_by_stage r
-         WHERE r.initvStgId = ${initiativeId}
-           AND r.active = 1
-           AND r.wrkPkgId IS NOT NULL
-         GROUP BY r.region_id
+        SELECT DISTINCT (r.region_id)as um49code,ini.official_code,
+        re.name
+        FROM regions_by_initiative_by_stage r
+        JOIN clarisa_regions re
+        ON r.region_id = re.um49Code
+        JOIN initiatives_by_stages ist
+        ON r.initvStgId = ist.id
+        JOIN initiatives ini
+        ON ist.initiativeId = ini.id
+        WHERE r.initvStgId = ${initiativeId}
+        AND r.active = 1
+        AND r.wrkPkgId IS NOT NULL
+        GROUP BY r.region_id    
               `;
 
       const regions = await this.queryRunner.query(regionsQuery);
