@@ -178,7 +178,7 @@ export class MenuComponent implements OnInit {
         })
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
-          showName: 'Reports',
+          showName: 'Partners preview',
           frontRoute: '/is-resports'
         });
 
