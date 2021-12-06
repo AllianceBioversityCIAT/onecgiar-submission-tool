@@ -173,12 +173,12 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         this.mapReportInSubSectionMenu(3,9,{
-          showName: 'Reports',
+          showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
         })
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
-          showName: 'Reports',
+          showName: 'Partners preview',
           frontRoute: '/is-resports'
         });
 
@@ -199,7 +199,7 @@ export class MenuComponent implements OnInit {
         });
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
-          showName: 'Projection of benefits Reports',
+          showName: 'Projection of benefits preview',
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 

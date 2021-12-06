@@ -1,13 +1,13 @@
-<section-title name="Reports"></section-title>
+<section-title name="Risk assessment preview"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
     <div class="card">
         <!-- <h5>Horizontal and Vertical</h5> -->
-        <section-sub-title name="Risk assessment preview"></section-sub-title>
+        <section-sub-title name="Risk assessment table"></section-sub-title>
 
-        <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+        <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both">
             <ng-template pTemplate="caption">
-                <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
+                <div class="p-d-flex" *ngIf="this.previewListCoverted?.length">
   
                     <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
                     <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
@@ -32,7 +32,7 @@
             </ng-template>
         </p-table>
         <br>
-        <app-text-not-data [hidden]="this.previewListCoverted?.length" text="There are not Partners"></app-text-not-data>
+        <app-text-not-data [hidden]="this.previewListCoverted?.length" text="There are not Risk Assessment data"></app-text-not-data>
         <br>
     </div>
 </div>

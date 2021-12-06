@@ -1,18 +1,18 @@
-<section-title name="Projection of benefits reports" ></section-title>
+<section-title name="Projection of benefits preview" ></section-title>
 <p-toast position="bottom-center" key="bc"></p-toast>
 <div class="section-container animate__animated animate__fadeIn">
     
 
   <div class="card">
 
-      <section-sub-title name="pob preview"></section-sub-title>
+      <section-sub-title name="Projection of benefits table"></section-sub-title>
 
-      <p-table *ngIf="previewProjectedBenefitsListCoverted.length || true" [value]="previewProjectedBenefitsListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+      <p-table *ngIf="previewProjectedBenefitsListCoverted.length || true"  [value]="previewProjectedBenefitsListCoverted" styleClass="p-datatable-gridlines" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
           <ng-template pTemplate="caption">
               <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
 
-                  <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
-                  <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                  <button *ngIf="this.previewProjectedBenefitsListCoverted.length" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                  <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
               </div>
           </ng-template>
           <ng-template pTemplate="header">
@@ -20,13 +20,17 @@
                   <th style="text-align: center;" *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
               </tr>
           </ng-template>
+          <!-- [ngStyle]="{
+            'background-color':  getKeys(customer).length<=1?(customer[item].search('Impact Area Indicator:')<0?'rgb(115 189 100);':'rgb(115 189 100);'):(i == 2 && item =='c' && customer.rowspan)?'rgb(239 239 239);':'white'
+           }"  -->
           <ng-template pTemplate="body" let-customer>
               <tr>
                 <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
                   <td  *ngFor="let item of getKeys(customer); let i=index" 
-                  [ngStyle]="{
-                   'background-color':  getKeys(customer).length<=1?(customer[item].search('Impact Area Indicator:')<0?'rgb(201 236 247)':'#d2ffc2'):(i == 2 && item =='c' && customer.rowspan)?'rgb(239 239 239);':'white'
-                  }" 
+          
+                  [ngClass]="{
+                      'impactAreaStyles': getKeys(customer).length<=1
+                    }"
                   style="text-align: center;"
                   [attr.colspan]="getKeys(customer).length <=1?3:1"
                   [attr.rowspan]="(i == 2 && item =='c' && customer.rowspan)?customer.rowspan:1"
@@ -44,7 +48,7 @@
           </ng-template> -->
       </p-table>
       <br>
-      <app-text-not-data [hidden]="!this.notArePreviewinformation" text="There are not Partners"></app-text-not-data>
+      <app-text-not-data [hidden]="this.previewProjectedBenefitsListCoverted.length" text="There are not Projection of benefits data"></app-text-not-data>
       <br>
   </div>
 </div>
