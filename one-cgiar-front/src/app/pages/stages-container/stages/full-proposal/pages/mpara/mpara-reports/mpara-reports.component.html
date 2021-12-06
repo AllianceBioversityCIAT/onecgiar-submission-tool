@@ -5,7 +5,7 @@
         <!-- <h5>Horizontal and Vertical</h5> -->
         <section-sub-title name="Risk assessment preview"></section-sub-title>
 
-        <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+        <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both">
             <ng-template pTemplate="caption">
                 <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
   

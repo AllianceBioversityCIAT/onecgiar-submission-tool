@@ -199,7 +199,7 @@ export class MenuComponent implements OnInit {
         });
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
-          showName: 'Projection of benefits Reports',
+          showName: 'Projection of benefits preview',
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 

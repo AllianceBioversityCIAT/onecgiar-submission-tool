@@ -5,7 +5,7 @@
         <!-- <h5>Horizontal and Vertical</h5> -->
         <section-sub-title name="Partners preview"></section-sub-title>
 
-        <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true"  scrollHeight="400px" scrollDirection="both"
+        <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
         sortMode="multiple"
         >
             <ng-template pTemplate="caption">
