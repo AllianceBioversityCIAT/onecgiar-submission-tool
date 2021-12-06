@@ -77,14 +77,14 @@ export class RiskAssessmentComponent implements OnInit {
   getRisksTheme(){
     this._initiativesService.getRisksTheme().subscribe(resp=>{
       this.riskThemesList = resp.response.risks
-      console.log(this.riskThemesList);
+      // console.log(this.riskThemesList);
     })
   }
 
   getRisksList(){
     this._initiativesService.getRisksList().subscribe(resp=>{
       let response:Risk[] = resp.response.risks;
-      console.log(response);
+      // console.log(response);
       response.map((res:any)=>{
         res.risks_achieving_impact = res.generic_risks
         res.idBd = res.id;
@@ -103,9 +103,9 @@ export class RiskAssessmentComponent implements OnInit {
       risks_achieving_impact:'',
       selected: true,
       editable: true,
-      risk_theme: ''
+      risks_theme: ''
     })
-    console.log( this.managementPlan?.riskassessment);
+    // console.log( this.managementPlan?.riskassessment);
   }
 
   reloadComponent(){
@@ -115,7 +115,7 @@ export class RiskAssessmentComponent implements OnInit {
       this.router.navigate([currentRoute])
     }, 10);
     
-    console.log("Reload");
+    // console.log("Reload");
   }
 
 
@@ -129,10 +129,12 @@ export class RiskAssessmentComponent implements OnInit {
 
   getManagePlan() {
     this._initiativesService.getManagePlan(this._initiativesService.initiative.id, 'risk_assessment').subscribe(resp => {
+      // console.log(resp)
       let response: managementPlan = resp.response.managePlanData;
       this.steperValidation(response?.riskassessment?.length);
       if (response) this.managementPlan = response;
       if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
+      // console.log(response)
     },
       err => { console.log(err); }
       , () => {
@@ -141,13 +143,12 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   saveSection() {
-    console.log(this.managementPlan);
     if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
 
     let formData = new FormData();
     formData.append('data', JSON.stringify(this.managementPlan));
 
-    console.log(this.managementPlan);
+    // console.log(this.managementPlan);
 
     this._initiativesService.saveManagePlan(formData, this._initiativesService.initiative.id, '7.management-plan', 3).subscribe(resp => {
 
