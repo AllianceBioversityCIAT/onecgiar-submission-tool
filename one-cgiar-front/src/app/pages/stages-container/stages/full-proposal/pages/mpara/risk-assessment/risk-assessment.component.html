@@ -72,7 +72,7 @@
                                     
                                     <div class="ibdc-input-field-container">
                                         <ibdc-select-field
-                                           [objectItem]="this.item"  [objectAtributteName]="'risk_theme'" inputTitle="Risk theme"
+                                           [objectItem]="this.item"  [objectAtributteName]="'risks_theme'" inputTitle="Risk theme"
                                            [selectableList]="[{id:1,categoryName:'Research'},{id:2,categoryName:'Research support'}]"
                                          ></ibdc-select-field>
                                      </div>
@@ -111,36 +111,3 @@
 
     </form>
 </div>
-
-<!-- <div class="section-container animate__animated animate__fadeIn">
-    <div class="row">
-        <div class="col-12">
-            <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
-            <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
-
-        </div>
-        <div class="col-12">
-            <br>
-            <div class="ibdc_button_template_container">
-                <a [href]="this.templatesUrlBase+'/templates/Section 7.3 - Risk assessment - Submission Tool Template.xlsx'"
-                    target="_blank" class="ibdc_button_template">
-                    Download template
-                </a>
-            </div>
-
-        </div>
-    </div>
-    <br>
-
-    <form (ngSubmit)="saveSection()">
-
-        <ibdc-upload-files *ngIf="showForm" [options]="{
-            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
-        </ibdc-upload-files>
-
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: false}"></ibdc-save-button>
-        </div>
-    </form>
-
-</div> -->

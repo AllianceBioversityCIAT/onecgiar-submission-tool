@@ -11,6 +11,6 @@ export interface Riskassessment{
     selected?:boolean,
     idx?:number;
     editable?:boolean,
-    risk_theme?:string,
+    risks_theme?:string,
     opportinities?: Opportunity []
 }
