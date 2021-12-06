@@ -98,7 +98,7 @@
         <div class="col-12">
             <div class="ibdc_basic_title">Opportunities</div>
             <div *ngFor="let opportunity of this.riskAssessment.opportinities">
-                <app-opportunity-item [opportunity]="opportunity" ></app-opportunity-item>
+                <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
             </div>
             <button pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
 

@@ -148,7 +148,7 @@ export class RiskAssessmentComponent implements OnInit {
     let formData = new FormData();
     formData.append('data', JSON.stringify(this.managementPlan));
 
-    // console.log(this.managementPlan);
+    console.log(this.managementPlan);
 
     this._initiativesService.saveManagePlan(formData, this._initiativesService.initiative.id, '7.management-plan', 3).subscribe(resp => {
 
