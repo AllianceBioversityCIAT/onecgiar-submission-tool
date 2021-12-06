@@ -1268,7 +1268,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                     WHERE initvStgId = ${initvStg.id}
                       AND active = 1
                      )
-                    );
+                    )
+                    AND active = 1;
                     
                     `;
 
