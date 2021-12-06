@@ -1376,6 +1376,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 newOpportinities.opportunities_description =
                   oppor.opportunities_description;
                 newOpportinities.risk_assessment_id = riskSaved.id;
+                newOpportinities.active = oppor.active;
 
                 if (newOpportinities.id !== null) {
                   var savedOpportunities = await opportinitiesRepo.findOne(
