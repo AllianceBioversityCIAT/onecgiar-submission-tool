@@ -183,7 +183,7 @@ export class PreviewsDomain {
        AND active = 1;
       `,
         riskAssessmentQuery = `
-          SELECT id,risks_achieving_impact,
+          SELECT id,risks_achieving_impact,risks_theme,
                  description_risk,likelihood,impact,
                  risk_score,manage_plan_risk_id,active
            FROM risk_assessment
