@@ -226,7 +226,7 @@ export class InitiativeHandler {
   async requestRisks() {
     try {
       const querySql = `
-      SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme 
+      SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme as risks_theme
       FROM initiativesdb.clarisa_risks ri
       JOIN clarisa_risk_theme th
         ON ri.clarisa_risks_theme_id = th.id;`;
