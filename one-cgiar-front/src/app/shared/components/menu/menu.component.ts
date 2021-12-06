@@ -173,7 +173,7 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         this.mapReportInSubSectionMenu(3,9,{
-          showName: 'Reports',
+          showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
         })
 
