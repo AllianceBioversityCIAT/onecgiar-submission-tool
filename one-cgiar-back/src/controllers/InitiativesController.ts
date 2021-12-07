@@ -1462,7 +1462,7 @@ export async function GetRisks(req: Request, res: Response) {
  * @param res
  * @returns
  */
- export async function GetRisksTheme(req: Request, res: Response) {
+export async function GetRisksTheme(req: Request, res: Response) {
   try {
     //Get impact areas from submission
 

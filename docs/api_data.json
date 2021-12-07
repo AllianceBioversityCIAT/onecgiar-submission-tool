@@ -1385,6 +1385,75 @@
   },
   {
     "type": "get",
+    "url": "previews/human-resources/:initiativeId/stageId",
+    "title": "Previews - Request Human Resources per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewHumanResources",
+    "group": "Previews",
+    "description": "<p>Shows Preview Human Resources per Initiative</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/human-resources/1/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/human-resources/1/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewHumanResources\": {\n            \"initiativeTeam\": [\n                {\n                    \"category\": \"Research\",\n                    \"area_expertise\": \"Research leadership and management\",\n                    \"key_accountabilities\": \"Provide leadership\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Previews:Preview Human Resources\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ERROR",
+            "description": "<p>Get Preview Human Resources: Previews General</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Human Resources: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
     "url": "previews/preview-partners/:initiativeId/stageId",
     "title": "Previews - Request Partners per Initiative",
     "version": "1.0.2",

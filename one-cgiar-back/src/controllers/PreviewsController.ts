@@ -198,3 +198,49 @@ export async function getPreviewRiskAssessment(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
+
+/**
+ * GET PREVIEW FOR HUMAN RESOURCES
+ * @param req { initiativeId, stageId }
+ * @param res { previewHumanResources }
+ * @returns previewHumanResources
+ */
+export async function getPreviewHumanResources(req: Request, res: Response) {
+  const {initiativeId, stageId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {id: stageId}});
+
+    // get intiative by stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    // if not intitiative by stage, throw error
+    if (initvStg == null || initvStg == undefined) {
+      throw new BaseError(
+        'Previews: Error',
+        400,
+        `Previews not found in stage:` + stageId,
+        false
+      );
+    }
+
+    // create new full proposal object
+    const previewsdomain = new PreviewsDomain();
+
+    const previewHumanResources =
+      await previewsdomain.requestPreviewHumanResources(initvStg.id.toString());
+
+    res.json(
+      new ResponseHandler('Previews:Preview Human Resources', {
+        previewHumanResources
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}

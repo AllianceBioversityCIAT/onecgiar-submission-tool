@@ -238,4 +238,35 @@ export class PreviewsDomain {
       );
     }
   }
+
+  /**
+   * REQUEST PREVIEW HUMAN RESOURCES
+   * @param initiativeId
+   * @returns previewHumanResources
+   */
+  async requestPreviewHumanResources(initiativeId: string) {
+    try {
+      const initiativeTeamQuery = `SELECT category, area_expertise,key_accountabilities
+        FROM initiative_team
+       WHERE human_resources_id in (
+       SELECT id
+         FROM human_resources
+        WHERE initvStgId =  ${initiativeId}
+          AND active = 1
+       )
+       AND active = 1;`;
+
+      const initiativeTeam = await this.queryRunner.query(initiativeTeamQuery);
+
+      return {initiativeTeam: initiativeTeam};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Human Resources: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }
