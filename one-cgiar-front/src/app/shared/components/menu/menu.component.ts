@@ -93,7 +93,6 @@ export class MenuComponent implements OnInit {
       // this._dataControlService.validateMenu$.emit();
     })
   }
-
   sortAlphabetically(list) {
     list.sort(function (a, b) {
       if (a[list.sort] < b[list.sort]) {
@@ -106,7 +105,6 @@ export class MenuComponent implements OnInit {
     });
     return list;
   }
-
   mapReportInSubSectionMenu(stageId, sectionId, object) {
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
@@ -216,23 +214,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  activeClassByRoute(route: []) {
-    let correct = 0;
 
-    let baseUrl = this.router.routerState.snapshot.url;
-    route.map((resp: string) => {
-      correct =
-        baseUrl.indexOf(resp.toLowerCase().split(' ').join('-')) > -1
-          ? correct + 1
-          : correct;
-    });
-    // if (stage) {
-
-    return correct == route.length ? true : false;
-    // }else{
-    //   return baseUrl.indexOf(route)>-1?true:false
-    // }
-  }
 
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
