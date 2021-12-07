@@ -1,0 +1,9 @@
+<div *ngIf="previewButton" class="sectionPreviewButton preview" routerLinkActive="activeSection"
+    [routerLink]="'full-proposal/'+section.description+'/'+section?.previewButton?.frontRoute">
+    <div class="previewButton_texts">
+        <div class="point"></div>
+        <span>{{section?.previewButton?.showName||'(Unnamed)'}}</span>
+    </div>
+    <span style="margin-right: 8px;" [style.color]="'#a8a8a8'"
+        class="material-icons-outlined material-icons">analytics</span>
+</div>
