@@ -1,7 +1,26 @@
 <!-- sections list -->
 <div class="stage-section" *ngFor="let section of this.sections; let i = index">
-    <div class="number-and-title-container noActiveSection" routerLinkActive="activeSection"
-        [routerLink]="section.subsections.length?'full-proposal/'+section.description+'/'+section?.subsections[0]?.description:'full-proposal/'+section.description"
+
+    <div *ngIf="!section.subsections.length" class="number-and-title-container noActiveSection" routerLinkActive="activeSection"
+        [routerLink]="'full-proposal/'+section.description"
+        (click)="this._menuService.toggleExpand(subSectionsList);">
+    
+        <div class="number">{{i+1}}</div>
+        <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}">{{section.display_name}}</span>
+        <div class="status_icons">
+            <span [style.color]="section.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'"
+                class="material-icons-outlined material-icons" *ngIf="section.visible">verified</span>
+            <img *ngIf="!section.visible" class="icon-under-contruction" src="/assets/images/under-construction.png" alt=""
+                srcset="">
+        </div>
+    
+    </div>
+
+
+    <!-- [routerLink]="section.subsections.length?'full-proposal/'+section.description+'/'+section?.subsections[0]?.description" routerLinkActive="activeSection" -->
+
+    <div *ngIf="section.subsections.length" class="number-and-title-container noActiveSection" 
+        
         (click)="this._menuService.toggleExpand(subSectionsList);">
 
         <div class="number">{{i+1}}</div>
@@ -14,12 +33,13 @@
         </div>
 
     </div>
+
     <div #subSectionsList class="sub-sections"
-    [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([this.section.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([this.section.description],this.router.routerState.snapshot.url)}"
-    [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
-    <!-- sub sections list -->
-    <app-menu-sub-section [stage]="stage" [section]="section"></app-menu-sub-section>
-</div>
-   
+        [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([this.section.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([this.section.description],this.router.routerState.snapshot.url)}"
+        [@expandable]="subSectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
+        <!-- sub sections list -->
+        <app-menu-sub-section [stage]="stage" [section]="section"></app-menu-sub-section>
+    </div>
+
 
 </div>
