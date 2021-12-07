@@ -1,0 +1,21 @@
+$color1: rgb(221, 221, 221);
+$color2: rgb(202, 202, 202);
+.ibd-shadow-1 {
+  box-shadow: 0 1px 3px $color1, 0 1px 2px $color2;
+}
+
+.ibd-shadow-2 {
+  box-shadow: 0 3px 6px $color1, 0 3px 6px $color2;
+}
+
+.ibd-shadow-3 {
+  box-shadow: 0 10px 20px $color1, 0 6px 6px $color2;
+}
+
+.ibd-shadow-4 {
+  box-shadow: 0 14px 28px $color1, 0 10px 10px $color2;
+}
+
+.ibd-shadow-5 {
+  box-shadow: 0 19px 38px $color1, 0 15px 12px $color2;
+}

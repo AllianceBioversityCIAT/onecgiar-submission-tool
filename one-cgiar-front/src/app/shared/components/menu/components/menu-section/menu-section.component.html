@@ -19,9 +19,7 @@
 
     <!-- [routerLink]="section.subsections.length?'full-proposal/'+section.description+'/'+section?.subsections[0]?.description" routerLinkActive="activeSection" -->
 
-    <div *ngIf="section.subsections.length" class="number-and-title-container noActiveSection" 
-        
-        (click)="this._menuService.toggleExpand(subSectionsList);">
+    <div *ngIf="section.subsections.length" class="number-and-title-container noActiveSection" (click)="this._menuService.toggleExpand(subSectionsList);">
 
         <div class="number">{{i+1}}</div>
         <span class="stage-section-title" [ngStyle]="{'margin-right':'2em'}">{{section.display_name}}</span>
