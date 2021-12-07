@@ -1,0 +1,93 @@
+.stage-section{
+    margin-left: 10px;
+    position: relative;
+    margin-bottom: 15px;
+  //   display: flex;
+  .number-and-title-container.noActiveSection{
+      color: #ffffff;
+      transition: all ease .3s;
+      position: relative;
+      display: flex;
+      &:hover{
+          transition: all ease .3s;
+          color: white;
+          .number{
+              transition: all ease .3s;
+              border: 2.9px white  solid;
+              background-color: white;
+              color: rgb(41, 41, 41);
+          }
+          .stage-section-title{
+              border-bottom: 2px solid white; 
+              border-radius: 1px;
+              transition: all ease .3s;
+          }
+      }
+      .stage-section-title{
+          text-decoration: none;
+          transition: all ease .3s;
+          border-bottom: 2px solid rgba(0, 0, 0, 0);
+          // margin-right: 100px !important;     
+      }
+      .number{
+          transition: all ease .3s;
+          background-color: rgba(255, 255, 255, 0);
+          position: relative;
+          top: -5px;
+          // left: -40px;
+          min-width: 30px;
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          border: 2.9px #ffffffa6 solid;
+          // display: flex;
+          text-align: center;
+          vertical-align: middle;
+          padding-top: 2px;
+          margin-right: 10px;
+      }
+
+  }
+
+  .number-and-title-container.activeSection{
+      color: #ffffff;
+      transition: all ease .3s;
+      position: relative;
+      display: flex;
+      transition: all ease .3s;
+      color: white;
+      .stage-section-title{
+          border-bottom: 2px solid #85e788; 
+          border-radius: 1px;
+          transition: all ease .3s;
+      }
+      .number{
+          position: relative;
+          top: -5px;
+          min-width: 30px;
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          border: 2.9px #85e788 solid;
+          text-align: center;
+          vertical-align: middle;
+          padding-top: 2px;
+          margin-right: 10px;
+          background-color: #85e788;
+          color: #292929;
+      }
+
+  }
+
+
+}  
+
+.sub-sections{
+    padding-top: 10px;
+    overflow: hidden;
+
+    
+
+ 
+
+}

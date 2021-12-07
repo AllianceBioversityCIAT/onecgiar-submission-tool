@@ -93,18 +93,7 @@ export class MenuComponent implements OnInit {
       // this._dataControlService.validateMenu$.emit();
     })
   }
-  sortAlphabetically(list) {
-    list.sort(function (a, b) {
-      if (a[list.sort] < b[list.sort]) {
-        return -1;
-      }
-      if (a[list.sort] > b[list.sort]) {
-        return 1;
-      }
-      return 0;
-    });
-    return list;
-  }
+
   mapReportInSubSectionMenu(stageId, sectionId, object) {
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
@@ -141,10 +130,6 @@ export class MenuComponent implements OnInit {
         (subSection) => subSection.subSectionId == subSectionId
       ).previewButton = object);
     // console.log(sectionFinded);
-  }
-
-  partnersNotRelatedRoute() {
-    return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
   }
 
   getMenu() {
@@ -234,27 +219,7 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    itemID =  itemID == undefined ? "" : itemID;
-    this.router.navigate([baseUrl + stageParam + '/' + section + subsection + itemID]);
-    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
-  }
 
-  dynamicListSubSectionNavigation(stage: string, section: string, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
-    return baseUrl + stageParam + '/' + section + subsection;
-    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
-  }
-
-  toggleExpand(subSectionsList: HTMLElement) {
-    subSectionsList.classList.toggle('expandIbd');
-    subSectionsList.classList.toggle('collapseIbd');
-    // console.log('toggleExpand');
-  }
 
   goToWp(id) {
     let currentUrl = this.router.url;

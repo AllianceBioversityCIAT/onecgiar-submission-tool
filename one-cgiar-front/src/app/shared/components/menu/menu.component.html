@@ -48,7 +48,7 @@
             </span>
             <mat-accordion  *ngIf="currentStageName != 'concept'">
                 <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
-                    <!-- no subesection -->
+                   
                     <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color" >
                       <mat-panel-title  class="subSections_color" >
                           <span [style.width]="'85%'">{{meta.title}}</span>
@@ -62,7 +62,7 @@
                       </button>
                       
                     </mat-expansion-panel-header>
-                    <!-- have subsections -->
+              
                     <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal/'+meta.route">
                       <mat-panel-title  class="subSections_color" >
                         <span [style.width]="'85%'">{{meta.title}}</span>

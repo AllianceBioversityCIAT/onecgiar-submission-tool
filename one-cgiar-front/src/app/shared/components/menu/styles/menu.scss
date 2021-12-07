@@ -1,0 +1,17 @@
+.activeSection{
+    border-color: #85e788  !important;
+    color: #85e788  !important;
+}
+
+.status_icons{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon-under-contruction{
+        width: 1.65em;
+    }
+}

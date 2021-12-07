@@ -18,14 +18,13 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class MenuSectionComponent implements OnInit {
   @Input() sections;
+  @Input() stage;
   constructor(
     public _menuService : MenuService,
     public router: Router
   ) { }
 
   ngOnInit(): void {
-    console.log("sectionsssssssssss")
-    console.log(this.sections)
   }
 
 }

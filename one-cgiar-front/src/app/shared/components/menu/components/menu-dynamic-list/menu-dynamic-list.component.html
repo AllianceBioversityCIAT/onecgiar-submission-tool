@@ -3,7 +3,7 @@
 <div class="left_line"></div>
 <div *ngIf="subSection.dynamicList">
     <div class="dynamicListButton order_first"
-        *ngFor="let item of sortAlphabetically(subSection?.dynamicList)"
+        *ngFor="let item of this._menuService.sortAlphabetically(subSection?.dynamicList)"
         routerLinkActive="activeSection"
         [routerLink]="'full-proposal/'+section.description+'/'+subSection.description+'/'+item.frontRoute+'/'+item.id">
 

@@ -25,4 +25,24 @@ export class MenuService {
     // }
   }
 
+  toggleExpand(subSectionsList: HTMLElement) {
+    console.log(subSectionsList)
+    subSectionsList.classList.toggle('expandIbd');
+    subSectionsList.classList.toggle('collapseIbd');
+    // console.log('toggleExpand');
+  }
+
+  sortAlphabetically(list) {
+    list.sort(function (a, b) {
+      if (a[list.sort] < b[list.sort]) {
+        return -1;
+      }
+      if (a[list.sort] > b[list.sort]) {
+        return 1;
+      }
+      return 0;
+    });
+    return list;
+  }
+
 }

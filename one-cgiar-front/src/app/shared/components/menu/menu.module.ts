@@ -8,6 +8,9 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { MenuSectionComponent } from './components/menu-section/menu-section.component';
+import { MenuSubSectionComponent } from './components/menu-sub-section/menu-sub-section.component';
+import { MenuSubSectionPreviewComponent } from './components/menu-sub-section-preview/menu-sub-section-preview.component';
+import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dynamic-list.component';
 
 
 
@@ -15,7 +18,10 @@ import { MenuSectionComponent } from './components/menu-section/menu-section.com
   declarations: [
     MenuComponent,
     MenuStageComponent,
-    MenuSectionComponent
+    MenuSectionComponent,
+    MenuSubSectionComponent,
+    MenuSubSectionPreviewComponent,
+    MenuDynamicListComponent
   ],
   exports: [MenuComponent],
   imports: [

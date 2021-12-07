@@ -1,13 +1,14 @@
 <div class="stage" *ngFor="let stage of this.userMenu;" [hidden]="stage.stageId == 2">
     <div class="stage-title" [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
-        (click)="toggleExpand(sectionsList)">
+        (click)="this._menuService.toggleExpand(sectionsList)">
         <span>{{stage.description}}</span>
     </div>
+
     <div #sectionsList class="stage-sections"
         [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
         <br>
-        <app-menu-section *ngIf="stage.sections.length" [sections]="stage.sections"></app-menu-section>
+        <app-menu-section *ngIf="stage.sections.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
     </div>
 
     <div class="submitButtonInitiative">
