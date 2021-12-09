@@ -74,13 +74,14 @@ export class PreviewsDomain {
                    AND p.active > 0;
                 `,
         dimensionsQuery = `
-             SELECT d.projectionId,d.depth_description,breadth_value
-               FROM dimensions d
-              WHERE d.projectionId in (SELECT p.id
-               FROM projection_benefits p
-              WHERE p.initvStgId = ${initiativeId})
-                AND d.active > 0
-                `;
+        SELECT d.projectionId,d.depth_description,cii.targetUnit,breadth_value
+        FROM dimensions d
+         JOIN projection_benefits pb
+         ON d.projectionId = pb.id
+        JOIN clarisa_impact_areas_indicators cii
+          ON pb.impact_area_indicator_id = cii.id
+        WHERE pb.initvStgId = ${initiativeId}
+          AND d.active > 0`;
 
       const impactAreas = await this.queryRunner.query(impactAreasQuery);
       const impactIndicators = await this.queryRunner.query(
