@@ -18,7 +18,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="text-align: center;" *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
+                        <th style="text-align: center; font-size: 1.15;" *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
                     </tr>
                 </ng-template>
                 <!-- [ngStyle]="{
@@ -32,7 +32,7 @@
                         [ngClass]="{
                             'impactAreaStyles': getKeys(customer).length<=1
                           }"
-                        [style]="getKeys(customer).length <=1?'':'text-align: center'"
+                        [style]="getKeys(customer).length <=1?' font-weight: 600;background-color: #e2efd9; color: #616161;': i==0?'':'text-align: center'"
                         [attr.colspan]="getKeys(customer).length <=1?3:1"
                         [attr.rowspan]="(i == 2 && item =='c' && customer.rowspan)?customer.rowspan:1"
                         >

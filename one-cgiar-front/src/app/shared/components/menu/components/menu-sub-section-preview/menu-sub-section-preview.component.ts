@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./menu-sub-section-preview.component.scss']
 })
 export class MenuSubSectionPreviewComponent implements OnInit {
-  @Input() previewButton;
+  @Input() section;
   constructor() { }
 
   ngOnInit(): void {

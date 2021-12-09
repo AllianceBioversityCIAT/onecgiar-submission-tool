@@ -20,10 +20,21 @@ export class CountriesTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.countries.map((item:any)=>delete item.official_code);
+    this.exampleasa();
   }
 
   exportBasicExcel(){
     this._manageExcelService.exportBasicExcel(this.countries,'Countries preview',[{wpx:90},{wpx:200},{wpx:90}])
+  }
+
+  exampleasa(){
+    // import { saveAs } from 'file-saver';
+
+    import("file-saver").then(saveAs => {
+      var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+      saveAs(blob, "hello world.txt");
+    });
+
   }
 
 }

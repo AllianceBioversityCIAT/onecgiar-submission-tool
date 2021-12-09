@@ -21,7 +21,8 @@ import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dy
     MenuSectionComponent,
     MenuSubSectionComponent,
     MenuSubSectionPreviewComponent,
-    MenuDynamicListComponent
+    MenuDynamicListComponent,
+    MenuSubSectionPreviewComponent
   ],
   exports: [MenuComponent],
   imports: [

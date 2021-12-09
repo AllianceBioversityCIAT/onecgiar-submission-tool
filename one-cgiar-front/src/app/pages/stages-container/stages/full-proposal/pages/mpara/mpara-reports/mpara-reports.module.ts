@@ -6,6 +6,7 @@ import { MparaReportsComponent } from './mpara-reports.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ButtonModule } from 'primeng/button';
     MparaReportsRoutingModule,
     UtilsModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    StagesPipesModule
   ]
 })
 export class MparaReportsModule { }
