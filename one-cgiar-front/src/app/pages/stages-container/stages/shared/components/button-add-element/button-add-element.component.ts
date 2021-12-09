@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./button-add-element.component.scss']
 })
 export class ButtonAddElementComponent implements OnInit {
-  @Input() title:string;
+  @Input() name:string = 'unnamed';
 
   
   constructor() { }

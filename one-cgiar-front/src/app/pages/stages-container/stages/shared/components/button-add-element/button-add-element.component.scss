@@ -1,0 +1,54 @@
+
+
+.add_button_container{
+
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+    .add_button_content{
+        &:hover {
+
+          background-color: #6e96fbec;
+          transition: all ease .3s;
+
+          .name {
+            padding-right: 20px;
+            padding-left: 10px;
+            transition: all ease .3s;
+          }
+
+        }
+        transition: all ease .3s;
+        background-color: #6e96fb8e;
+        // padding: 10px;
+        border-radius: 20px 5px 20px 5px;
+        display: flex;
+        justify-content: space-between;
+        overflow: hidden;
+        .name{
+            transition: all ease .3s;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            padding-right: 10px;
+        }
+        .icon_container{
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 20px 5px 20px 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                i{
+                    color: #6e95fb;
+                }
+            }
+        }
+    }
+
+}

@@ -21,6 +21,21 @@ export class MenuDynamicListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  addWorkPackage(){
+    console.log('addWorkPackage()')
+    let body = {active:true,id:null}
+    //console.log(body);
+    this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      // console.log(resp);
+      // console.log(this.workPackageForm.valid?true:false);
+      // this.workPackageForm.valid?
+      // this._interactionsService.successMessage('Work package has been saved'):
+      // this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
+      // this.reloadComponent();
+
+    })
+  }
+
   partnersNotRelatedRoute() {
     return `/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
   }
@@ -39,6 +54,14 @@ export class MenuDynamicListComponent implements OnInit {
     // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
     return baseUrl + stageParam + '/' + section + subsection;
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+  }
+
+  validateIfShowAddWp(){
+    // console.log("______")
+    // console.log(this.stage )
+    // console.log(this.section)
+    // console.log(this.subSection)
+    return (this.stage.stageId === 3 ) && (this.section.sectionId === 5) && (this.subSection.subSectionId === 12);
   }
 
 }

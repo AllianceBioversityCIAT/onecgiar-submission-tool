@@ -135,7 +135,6 @@ export class MenuComponent implements OnInit {
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
       this._dataControlService.userMenu = userMenuResp.response.stages;
-      console.log(this._dataControlService.userMenu);
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
@@ -199,7 +198,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-
+      console.log(this._dataControlService.userMenu);
     });
   }
 
