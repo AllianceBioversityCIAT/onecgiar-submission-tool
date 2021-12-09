@@ -18,7 +18,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | replaceSymbolBySpace | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-customer>
