@@ -32,7 +32,7 @@
                         [ngClass]="{
                             'impactAreaStyles': getKeys(customer).length<=1
                           }"
-                        style="text-align: center;"
+                        [style]="getKeys(customer).length <=1?'':'text-align: center'"
                         [attr.colspan]="getKeys(customer).length <=1?3:1"
                         [attr.rowspan]="(i == 2 && item =='c' && customer.rowspan)?customer.rowspan:1"
                         >

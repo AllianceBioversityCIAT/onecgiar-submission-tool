@@ -16,7 +16,7 @@ export class RegionsTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.regions);
+    this.regions.map((item:any)=>delete item.official_code);
   }
 
   exportBasicExcel(){
