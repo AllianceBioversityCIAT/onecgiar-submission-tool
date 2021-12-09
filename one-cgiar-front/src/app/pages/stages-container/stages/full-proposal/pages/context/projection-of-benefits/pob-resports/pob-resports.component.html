@@ -1,0 +1,58 @@
+<section-title name="Projection of benefits preview" ></section-title>
+<p-toast position="bottom-center" key="bc"></p-toast>
+<div class="section-container-for-previews animate__animated animate__fadeIn">
+    
+
+  <div class="card-for-preview ibd-shadow-2">
+
+      <section-sub-title name="Projection of benefits table"></section-sub-title>
+
+        <div class="card-content">
+            <p-table *ngIf="previewProjectedBenefitsListCoverted.length || true"  [value]="previewProjectedBenefitsListCoverted" styleClass="p-datatable-gridlines" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
+      
+                        <button *ngIf="this.previewProjectedBenefitsListCoverted.length" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                        <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="text-align: center; font-size: 1.15;" *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
+                    </tr>
+                </ng-template>
+                <!-- [ngStyle]="{
+                  'background-color':  getKeys(customer).length<=1?(customer[item].search('Impact Area Indicator:')<0?'rgb(115 189 100);':'rgb(115 189 100);'):(i == 2 && item =='c' && customer.rowspan)?'rgb(239 239 239);':'white'
+                 }"  -->
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                      <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
+                        <td  *ngFor="let item of getKeys(customer); let i=index" 
+                
+                        [ngClass]="{
+                            'impactAreaStyles': getKeys(customer).length<=1
+                          }"
+                        [style]="getKeys(customer).length <=1?' font-weight: 600;background-color: #e2efd9; color: #616161;': i==0?'':'text-align: center'"
+                        [attr.colspan]="getKeys(customer).length <=1?3:1"
+                        [attr.rowspan]="(i == 2 && item =='c' && customer.rowspan)?customer.rowspan:1"
+                        >
+                          {{customer[item] || 'not available'}}
+                        </td>
+                    </tr>
+      
+                </ng-template>
+                <!-- <ng-template pTemplate="footer">
+                    <tr>
+                        <td style="width:100px">Id</td>
+                        <td style="width:200px">Name</td>
+                    </tr>
+                </ng-template> -->
+            </p-table>
+            <br>
+            <app-text-not-data [hidden]="this.previewProjectedBenefitsListCoverted.length" text="There are not Projection of benefits data"></app-text-not-data>
+            <br>
+        </div>
+  </div>
+</div>
+
+

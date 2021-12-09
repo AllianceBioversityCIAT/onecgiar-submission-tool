@@ -1,0 +1,54 @@
+<div class="dynamicList_block_container"
+*ngIf="subSection.dynamicList  || subSection.dynamicListSubSection">
+<div class="left_line"></div>
+<div *ngIf="subSection.dynamicList">
+    <div class="dynamicListButton order_first"
+        *ngFor="let item of this._menuService.sortAlphabetically(subSection?.dynamicList)"
+        routerLinkActive="activeSection"
+        [routerLink]="'full-proposal/'+section.description+'/'+subSection.description+'/'+item.frontRoute+'/'+item.id">
+
+
+        <div class="dynamicListButton_texts">
+            <div class="point"></div>
+            <span>{{item.showName||'(Unnamed)'}}</span>
+        </div>
+        <span style="margin-right: 8px;"
+            [style.color]="item.fieldsCompleted || item.validateWP?'#469e49':'#a8a8a8'"
+            class="material-icons-outlined material-icons">assignment_turned_in</span>
+    </div>
+</div>
+
+<div *ngIf="subSection.subSectionId === 16" class="dynamicListButton order_second"
+    [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">
+    <div class="dynamicListButton_texts">
+        <div class="point"></div>
+        <span>{{'Partners not related to any Impact Area'||'(Unnamed)'}}</span>
+    </div>
+</div>
+
+<div *ngIf="subSection.dynamicListSubSection">
+    <div *ngFor="let item of subSection.dynamicListSubSection"
+        class="dynamicListButton order_second"
+        [routerLink]="dynamicListSubSectionNavigation(stage.description,section.description,item.frontRoute)"
+        routerLinkActive="activeSection">
+        <div class="dynamicListButton_texts">
+            <div class="point"></div>
+            <span>{{item.showName||'(Unnamed)'}}</span>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="subSection.previewButton" class="dynamicListPreviewButton preview"
+    routerLinkActive="activeSection"
+    [routerLink]="'full-proposal/'+section.description+'/'+subSection?.previewButton?.frontRoute">
+    <div class="dynamicListButton_texts">
+        <div class="point"></div>
+        <span>{{subSection.previewButton.showName||'(Unnamed)'}}</span>
+    </div>
+    <span style="margin-right: 8px;" [style.color]="'#a8a8a8'"
+        class="material-icons-outlined material-icons">analytics</span>
+</div>
+
+
+
+</div>

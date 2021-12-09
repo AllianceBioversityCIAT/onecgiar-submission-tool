@@ -5,6 +5,10 @@ import { InteractionsService } from '../../../../../../../shared/services/intera
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
 import { environment } from '../../../../../../../../environments/environment';
+import { managementPlan } from './models/management-plan.interface';
+import { Risk } from './models/risk.interface';
+import { Router } from '@angular/router';
+import { Riskassessment } from './models/riskassessment.interface';
 
 @Component({
   selector: 'app-risk-assessment',
@@ -12,80 +16,159 @@ import { environment } from '../../../../../../../../environments/environment';
   styleUrls: ['./risk-assessment.component.scss']
 })
 export class RiskAssessmentComponent implements OnInit {
-  templatesUrlBase = environment.templatesUrlBase;
-  filesList:any[]=[];
-  filesSavedList = [];
-  showForm = false;
-  data = {
-    id : null,
-    active : true,
-    section : "risk_assessment",
-    updateFiles : []
+  stepNumber = 0;
+  riskListIsLoaded = false;
+  riskThemesList = [];
+  managementPlan: managementPlan={
+    id:null,
+    active: true,
+    section: "risk_assessment",
+    updateFiles: []
   };
-
+  //   {
+//     "id": null,
+//     "management_plan": "new plan",
+//     "active": true,
+//     "section": "management_plan",
+//     "updateFiles": [],
+//     "riskassessment": [
+//         {
+//             "id": null,
+//             "risks_achieving_impact": "TEST TEST TEST",
+//             "description_risk": "TEST TEST",
+//             "likelihood": 5,
+//             "impact": 1,
+//             "risk_score": 4,
+//             "active": true,
+//             "manage_plan_risk_id": null,
+//             "opportinities": [
+//                 {
+//                     "id": null,
+//                     "opportunities_description": "s",
+//                     "risk_assessment_id": 1
+//                 }
+//             ]
+//         }
+//     ]
+// }
+  risksList:Risk[]=[];
+  showForm = false;
+  riskDataLoaded = false;
   constructor(
-    public _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService,
-    public _dataValidatorsService:DataValidatorsService
-  ) { 
+    public _initiativesService: InitiativesService,
+    private _interactionsService: InteractionsService,
+    public _dataControlService: DataControlService,
+    public _dataValidatorsService: DataValidatorsService,
+    private router:Router
+  ) {
+
   }
 
   ngOnInit(): void {
     this.getManagePlan();
+    this.getRisksList();
+    this.getRisksTheme();
   }
 
-  getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'risk_assessment').subscribe(resp=>{
-      // console.log(resp);
-      this.filesList = [];
-      let mpara = resp.response.managePlanData;
-      this.filesSavedList = mpara?.files?mpara.files:[];
-      this.data.id = mpara?.id;
-      // console.log(mpara);
-      // console.log(this.filesSavedList);
+  removeElementOfTopFiveInStepOne(item){
+    item.selected = false;
+  }
+
+  getRisksTheme(){
+    this._initiativesService.getRisksTheme().subscribe(resp=>{
+      this.riskThemesList = resp.response.risks
+      // console.log(this.riskThemesList);
+    })
+  }
+
+  getRisksList(){
+    this._initiativesService.getRisksList().subscribe(resp=>{
+      let response:Risk[] = resp.response.risks;
+      // console.log(response);
+      response.map((res:any)=>{
+        res.risks_achieving_impact = res.generic_risks
+        res.idBd = res.id;
+        res.id = null;
+      })
+      this.risksList = response;
+      this.riskListIsLoaded = true;
+
+    })
+  }
+
+  addRiskInTopFive(){
+    this.managementPlan?.riskassessment.push({
+      active:true,
+      id:null,
+      risks_achieving_impact:'',
+      selected: true,
+      editable: true,
+      risks_theme: ''
+    })
+    // console.log( this.managementPlan?.riskassessment);
+  }
+
+  reloadComponent(){
+    let currentRoute = this.router.routerState.snapshot.url;
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/mpara/management-plan`])
+    setTimeout(() => {
+      this.router.navigate([currentRoute])
+    }, 10);
+    
+    // console.log("Reload");
+  }
+
+
+
+  steperValidation(response){
+    this.stepNumber = 1;
+    if (!response) return;
+    this.stepNumber = 2;
+  }
+
+
+  getManagePlan() {
+    this._initiativesService.getManagePlan(this._initiativesService.initiative.id, 'risk_assessment').subscribe(resp => {
+      // console.log(resp)
+      let response: managementPlan = resp.response.managePlanData;
+      this.steperValidation(response?.riskassessment?.length);
+      if (response) this.managementPlan = response;
+      if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
+      // console.log(response)
     },
-    err=>{console.log(err);}
-    ,()=>{
-      this.showForm = true;
-    })
+      err => { console.log(err); }
+      , () => {
+        this.showForm = true;
+      })
   }
-  saveSection(){
 
-    const formData = new FormData();
+  saveSection() {
+    if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
 
-    if (this.filesList.length) {
-      for  (var i =  0; i <  this.filesList.length; i++)  {  
-        this.filesList[i].atributo = "si funciona"
-       formData.append("file",  this.filesList[i]);
-      } 
-    }
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(this.managementPlan));
 
-    if (this.filesSavedList.length) {
-      for  (var i =  0; i <  this.filesSavedList.length; i++)  {  
-        if (this.filesSavedList[i].show === false) {
-          let item = {
-            id: this.filesSavedList[i].id,
-            active: false
-          }
-          this.data.updateFiles.push(item);
-        }
-      } 
-    }
+    console.log(this.managementPlan);
 
+    this._initiativesService.saveManagePlan(formData, this._initiativesService.initiative.id, '7.management-plan', 3).subscribe(resp => {
 
-    this.data.id = this.data.id == undefined ? null : this.data.id;
-
-    formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'7.management-plan',3).subscribe(resp=>{
-      console.log("management-plan");
-      console.log(resp);
       this.getManagePlan();
-      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
-      this._interactionsService.successMessage('Risk assessment plan has been saved'):
-      this._interactionsService.warningMessage('Risk assessment plan has been saved, but there are incomplete fields')
+      this.managementPlan.riskassessment.length ?
+        this._interactionsService.successMessage('Risk assessment plan has been saved') :
+        this._interactionsService.warningMessage('Risk assessment plan has been saved, but there are incomplete fields')
     })
 
   }
+
+  addIdxToSelected(riskassessment: Riskassessment[]) {
+    let index = 0;
+    riskassessment.map((item: Riskassessment) => {
+      if (item.selected === false) return;
+      index++;
+      item.idx = index
+    })
+    return riskassessment;
+  }
+
 
 }

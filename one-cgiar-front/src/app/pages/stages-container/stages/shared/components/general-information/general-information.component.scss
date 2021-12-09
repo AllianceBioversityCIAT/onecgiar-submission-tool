@@ -5,7 +5,15 @@
 //     width: 90%;
 //     margin: 1rem auto;
 // }
-
+.leads_grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
+    grid-gap: 10px;
+    .lead_content_grid{
+        display: flex;
+        justify-content: space-between;
+    }
+}
 .blue_border{
     position: relative;
     box-shadow: 0 10px 20px #087b8327, 0 6px 6px #087b8328;
@@ -73,12 +81,4 @@
 
 .icon_cont{
     position: relative;
-}
-
-.floating_icon{
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 20px;
 }

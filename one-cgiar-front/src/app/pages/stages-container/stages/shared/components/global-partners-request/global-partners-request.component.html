@@ -1,7 +1,7 @@
 <div class="all">
     <section-sub-title name="Partners"></section-sub-title>
-    <div class="row">
-        <div class="col-6">
+    <div class="local_grid">
+        <div class="listOne">
 
             <div class="col-12">
 
@@ -21,8 +21,11 @@
                                 labelName:'Institutions'
                             }
                 }"></ibdc-select-multiple>
-                <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
-                    are looking for, request to have it added to the list.</a>
+                <div class="partner_request_text_container">
+                    <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
+                        are looking for, request to have it added to the list.</a>
+                </div>
+  
 
 
             </div>
@@ -38,9 +41,9 @@
                                 class="partner_type">{{item.institutionType}}</span></p>
                         <div class="buttons_changing">
                             <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
-                            <div class="button_changing {{getActiveTag(item,i)?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
+                            <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
                               
-                                (click)="changeTagId(item,button_item.id)">
+                                (click)="onSelectTag(item,button_item.attributeName)">
                                 {{button_item.name}}
                             </div>
                         </div>
@@ -50,9 +53,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="listTwo">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 ">
                     <ibdc-select-multiple [options]="{
                             inputTitle:'Select institutions types',
                             selectList: this.institutionsTypes,
@@ -87,6 +90,9 @@
             </div>
 
         </div>
+
+    </div>
+    <div class="row">
         <div class="col-12">
             <br>
         </div>

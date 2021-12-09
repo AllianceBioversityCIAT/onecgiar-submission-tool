@@ -52,12 +52,12 @@ export class ImpactAreaIsComponent implements OnInit {
       this.router.navigate([currentRoute])
     }, 10);
     
-    console.log("Reload");
+    // console.log("Reload");
   }
 
   formChanges(){
     this.sectionForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      // console.log("changes");
       
       this.extraValidation = 
            this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("challenge_priorization").value, 150) && 

@@ -58,6 +58,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
+import { CurrencyPipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +69,6 @@ import { environment } from '../environments/environment';
     NotFoundComponent,
     HomeComponent,
     InitTableComponent,
-    // StagesMenuComponent,
     GeneralInformationComponent,
     NarrativesComponent,
     GeographicScopeComponent,
@@ -76,7 +76,6 @@ import { environment } from '../environments/environment';
     FeedbackComponent,
     CountryControlComponent,
     RegionControlComponent,
-    // MenuComponent,
     NarrativesConceptComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
@@ -118,6 +117,7 @@ import { environment } from '../environments/environment';
     // InputTextModule
   ],
   providers: [
+    CurrencyPipe,
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

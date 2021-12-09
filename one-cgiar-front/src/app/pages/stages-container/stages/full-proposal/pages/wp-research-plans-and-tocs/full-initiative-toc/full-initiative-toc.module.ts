@@ -5,6 +5,8 @@ import { FullInitiativeTocRoutingModule } from './full-initiative-toc-routing.mo
 import { FullInitiativeTocComponent } from './full-initiative-toc.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -13,7 +15,10 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     FullInitiativeTocRoutingModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

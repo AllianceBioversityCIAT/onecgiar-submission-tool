@@ -17,230 +17,60 @@
     width: 100px;
     background-color: cyan;
 }
-.activeSection{
-    border-color: #85e788  !important;
-    color: #85e788  !important;
+
+@media only screen and (max-width: 1000px) {
+    .menu{
+        background-color: #000000cc;
+    }
 }
 
-.submitButtonInitiative{
-    width:100%;
-    display: flex;
-    justify-content: center;
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1000px) {
+    .menu{
+        background-color: #00000063;
+    }
 }
+
+
+@media only screen and (max-width: 1300px) {
+    .right_container{
+        padding: 5px 10px 0px;
+    }
+    .menu{
+        padding: 50px 10px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1300px) {
+
+    .right_container{
+        padding: 10px 40px 0px; 
+    }
+    .menu{
+        padding: 50px 15px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1550px) {
+
+    .right_container{
+        padding: 10px 40px 0px; 
+    }
+    .menu{
+        padding: 50px 25px;
+    }
+}
+
 
 .menu{
-    padding: 50px 25px;
     width: 400px;
     height: calc(100vh - 120px);
     max-height: calc(100vh - 120px);
-    overflow-y: scroll;
-    background-color: #00000063;
+    overflow-y: scroll;    
     color: white;
-    // backdrop-filter: blur(3px);
 
-    //new menu with animations
-    .stage{
-        cursor: pointer;
-        margin-top: 12px;
-        .stage-title{
-            // margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.3em;
-            width: 100%;
-            // background-color: #013243 ;
-            border-bottom: 1px solid white;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .stage-sections{
-            overflow: hidden;
-          .stage-section{
-              margin-left: 10px;
-              position: relative;
-              margin-bottom: 15px;
-            //   display: flex;
-            .number-and-title-container.noActiveSection{
-                color: #ffffff;
-                transition: all ease .3s;
-                position: relative;
-                display: flex;
-                &:hover{
-                    transition: all ease .3s;
-                    color: white;
-                    .number{
-                        transition: all ease .3s;
-                        border: 2.9px white  solid;
-                        background-color: white;
-                        color: rgb(41, 41, 41);
-                    }
-                    .stage-section-title{
-                        border-bottom: 2px solid white; 
-                        border-radius: 1px;
-                        transition: all ease .3s;
-                    }
-                }
-                .stage-section-title{
-                    text-decoration: none;
-                    transition: all ease .3s;
-                    border-bottom: 2px solid rgba(0, 0, 0, 0);
-                    // margin-right: 100px !important;     
-                }
-                .number{
-                    transition: all ease .3s;
-                    background-color: rgba(255, 255, 255, 0);
-                    position: relative;
-                    top: -5px;
-                    // left: -40px;
-                    min-width: 30px;
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 30px;
-                    border: 2.9px #ffffffa6 solid;
-                    // display: flex;
-                    text-align: center;
-                    vertical-align: middle;
-                    padding-top: 2px;
-                    margin-right: 10px;
-                }
-
-            }
-
-            .number-and-title-container.activeSection{
-                color: #ffffff;
-                transition: all ease .3s;
-                position: relative;
-                display: flex;
-                // &:hover{
-                    transition: all ease .3s;
-                    color: white;
-                    // .number{
-                        // transition: all ease .3s;
-                        // border: 2.9px #85e788  solid;
-                        // background-color: #85e788;
-                        // color: rgb(41, 41, 41);
-                    // }
-                    .stage-section-title{
-                        border-bottom: 2px solid #85e788; 
-                        border-radius: 1px;
-                        transition: all ease .3s;
-                    }
-                // }
-                // .stage-section-title{
-                //     text-decoration: none;
-                //     transition: all ease .3s;
-                //     border-bottom: 2px solid rgba(0, 0, 0, 0);
-                //     // margin-right: 100px !important;     
-                // }
-                .number{
-                    // transition: all ease .3s;
-                    // background-color: rgba(255, 255, 255, 0);
-                    position: relative;
-                    top: -5px;
-                    // left: -40px;
-                    min-width: 30px;
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 30px;
-                    border: 2.9px #85e788 solid;
-                    // display: flex;
-                    text-align: center;
-                    vertical-align: middle;
-                    padding-top: 2px;
-                    margin-right: 10px;
-                    background-color: #85e788;
-                    color: rgb(41, 41, 41);
-                }
-
-            }
-
-            .sub-sections{
-                padding-top: 10px;
-                // border: solid 1px white;
-                // padding: 5px;
-                // border-radius: 10px;
-                overflow: hidden;
-                .sub-section{
-                    position: relative;
-                    backdrop-filter: blur(3px);
-                    background-color: #30303088;
-                    // color: rgb(104, 104, 104);
-                    margin-bottom: 10px;
-                    padding: 5px 5px 5px 10px;
-                    border-radius: 5px;
-                    border-bottom: 1px solid rgb(168, 168, 168);
-                    padding-right: 2.5em;
-                }
-
-                .dynamicList{
-                    // border: 0px 1px 1px 1px solid rgb(119, 119, 119);
-                    border-left: 1px solid rgb(119, 119, 119);
-                    border-right: 1px solid rgb(119, 119, 119);
-                    border-bottom: 1px solid rgb(119, 119, 119);
-                    border-radius: 0px 0px 10px 10px;
-                    padding: 15px 0px 10px 10px;
-                    position: relative;
-                    top:  -11px;
-                    .dynamicListButton{
-                        display: flex;
-                        justify-content: space-between;
-                        // justify-content: center;
-                        // align-items: center;
-                        // border: 2px solid rgb(167, 167, 167);
-                      
-                        margin-bottom: 10px;
-                        // margin-left: 10px;
-                        // padding: 0px 0px 0px 10px;
-                        // position: relative;
-                        .dynamicListButton_texts{
-                            display: flex;
-                            // justify-content: center;
-                            align-items: center;
-                            .point{
-                                margin-right: 7px;
-                                width: 9px;
-                                height: 9px;
-                                border-radius: 10px;
-                                background-color: rgb(255, 255, 255);
-                                // position: absolute;
-                                // left: 0px;
-                            }
-                        }
-
-                    }
-                }
-
-            }
-          }  
-        }
-    }
-
-
-.sub-section-with-dynamicList{
-    border: 1px solid rgb(119, 119, 119);
-    border-radius: 10px 10px 0px 0px;
-    // padding: 10px 0px 10px 10px;
-}
-
-
-
-.status_icons{
-    position: absolute;
-    right: 0;
-    // top: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon-under-contruction{
-        
-        width: 1.65em;
-       
-
-        // margin-right: 20px;
-    }
-}
 
 
 
@@ -481,17 +311,3 @@ mat-list-item:focus {
     transition: all .2s ease-in-out;
 
 }
-mat-expansion-panel-header{
-    position: relative;
-}
- mat-expansion-panel-header.isActive{
-    .subSections_color{
-        color: white !important;
-        transition: all .2s ease-in-out;
-    }
-   
- }
-
- mat-accordion{
-     width: 100%;
- }

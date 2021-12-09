@@ -1,10 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateReplicationMetaTable1623180632704 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('CREATE mapping_metadata')
-        await queryRunner.query(`
+export class CreateReplicationMetaTable1623180632704
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('CREATE mapping_metadata');
+    await queryRunner.query(`
         CREATE TABLE mapping_metadata (
             id int(11) NOT NULL AUTO_INCREMENT,
             
@@ -20,9 +21,7 @@ export class CreateReplicationMetaTable1623180632704 implements MigrationInterfa
             PRIMARY KEY (id)               
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
     `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

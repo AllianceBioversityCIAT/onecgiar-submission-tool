@@ -1,0 +1,55 @@
+    
+    <div class="card-for-preview ibd-shadow-2">
+        <!-- <h5>Horizontal and Vertical</h5> -->
+        <section-sub-title name="Countries table"></section-sub-title>
+
+        <div class="card-content">
+            <p-table #tablee [value]="this.countries" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
+            sortMode="multiple"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex" *ngIf="!this.notAreCountries">
+    
+                        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportBasicExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+    
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                        <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
+                            <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
+                                <span >{{customer[item]?'Yes':'No'}}</span>
+                            </div>
+    
+                            <div *ngIf="item ==='website'">
+                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'not available'}}</a>
+                            </div>
+    
+                            <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
+                                <span >{{customer[item] || 'not available'}}</span>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+                <!-- <ng-template pTemplate="footer">
+                    <tr>
+                        <td style="width:100px">Id</td>
+                        <td style="width:200px">Name</td>
+                        <td style="width:200px">Country</td>
+                    </tr>
+                </ng-template> -->
+            </p-table>
+            <br>
+            <app-text-not-data [hidden]="this.countries?.length" text="There are not Countries data"></app-text-not-data>
+            <br>
+    
+        </div>
+
+
+    </div>

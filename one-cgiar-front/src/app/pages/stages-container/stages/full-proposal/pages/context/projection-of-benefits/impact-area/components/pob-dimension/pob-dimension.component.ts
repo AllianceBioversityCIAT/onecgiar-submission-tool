@@ -16,8 +16,8 @@ export class PobDimensionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.dimensionsList);
-    console.log(this.depthDescriptionsList);
+    //console.log(this.dimensionsList);
+    //console.log(this.depthDescriptionsList);
   }
 
   addDimension(){

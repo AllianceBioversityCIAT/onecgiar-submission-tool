@@ -41,13 +41,13 @@ export class BudgetComponent implements OnInit {
 
   getFinancialResources(){
     this._initiativesService.getFinancialResources(this._initiativesService.initiative.id,'budget').subscribe(resp=>{
-      console.log(resp);
+      // console.log(resp);
       this.filesList = [];
       let financialResources = resp.response.financialResourcesData;
       this.filesSavedList = financialResources?.files?financialResources.files:[];
       this.data.id = financialResources?.id;
-      console.log(financialResources);
-      console.log(this.filesSavedList);
+      // console.log(financialResources);
+      // console.log(this.filesSavedList);
       this.sectionForm.controls['detailed_budget'].setValue(financialResources?.detailed_budget);
       
     },
@@ -58,7 +58,7 @@ export class BudgetComponent implements OnInit {
   }
   
   saveSection(){
-    console.log("ssave section");
+    //console.log("ssave section");
 
     const formData = new FormData();
 
@@ -86,14 +86,14 @@ export class BudgetComponent implements OnInit {
     formData.append('data', JSON.stringify(this.data));
 
     formData.get('file')
-    this._initiativesService.saveFinancialResources(formData,this._initiativesService.initiative.id,'10.financial-resources',3).subscribe(resp=>{
-      console.log("saveFinancialResources");
-      console.log(resp);
-      this.sectionForm.valid && this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
-      this._interactionsService.successMessage('Financial Resources has been saved'):
-      this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
-      this.getFinancialResources();
-    })
+    // this._initiativesService.saveFinancialResources(formData,this._initiativesService.initiative.id,'10.financial-resources',3).subscribe(resp=>{
+    //   console.log("saveFinancialResources");
+    //   console.log(resp);
+    //   this.sectionForm.valid && this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
+    //   this._interactionsService.successMessage('Financial Resources has been saved'):
+    //   this._interactionsService.warningMessage('Financial Resources has been saved, but there are incomplete fields')
+    //   this.getFinancialResources();
+    // })
 
     
   }

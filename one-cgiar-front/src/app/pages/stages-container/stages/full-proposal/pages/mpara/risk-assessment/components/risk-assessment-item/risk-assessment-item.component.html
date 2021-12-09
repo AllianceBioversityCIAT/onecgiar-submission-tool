@@ -1,0 +1,108 @@
+<div class="custom_card">
+    <div class="risk_header">
+        <div class="risk_name" *ngIf="!riskTitleEditableIsActive">{{this.riskAssessment.risks_achieving_impact}}</div>
+        <div class="edit_button" *ngIf="!riskTitleEditableIsActive">
+            <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
+        </div>
+
+        <ibdc-select *ngIf="riskTitleEditableIsActive" [options]="
+        {
+         required:true,
+         inputTitle:'Select Risk',
+         form:riskAssessmentForm,
+         formControlId:'idBd',
+         selectItemId:'idBd',
+         formControlName:'risks_achieving_impact',
+         selectItemName:'risks_achieving_impact',
+         frontendSearchAttribute:'risks_achieving_impact',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.risksList
+        }">
+        ></ibdc-select>
+
+
+<!-- 
+        <ibdc-select [options]="
+        {
+         required:true,
+         inputTitle:'Choose a depth scale',
+         form:pobImpactAreaForm,
+         formControlId:'depthScaleId',
+         formControlName:'depthScaleName',
+         selectItemName:'depthScaleName',
+         selectItemId:'depthScaleId',
+         frontendSearchAttribute:'depthScaleName',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.depthScalesList
+        }">
+        ></ibdc-select> -->
+
+
+
+
+
+        <!-- <ibdc-select-multiple *ngIf="true"
+        [hidden]="this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') > 4" [options]="{
+            hideSavedList: true,
+            inputTitle:'Select top 5 risks',
+            selectList: this.risksList,
+            selectItemName:'risks_achieving_impact',
+            selectItemId:'idBd',
+            frontendSearchAttribute:'risks_achieving_impact',
+            readOnlyVariable: this._initiativesService.initiative.readonly,
+            savedList:{
+                list:this.managementPlan.riskassessment,
+                selectItemId:'idBd',
+                selectItemName:'risks_achieving_impact',
+                idToSave:'idBd',
+                labelName:'regions'
+            }
+         }"></ibdc-select-multiple> -->
+
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <ibdc-textarea
+            [options]="{inputTitle:'Detailed description', form:riskAssessmentForm, formControlName:'description_risk'
+            ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:100}">
+            </ibdc-textarea>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-input
+            [options]="{inputTitle:'Likelihood', form:riskAssessmentForm, formControlName:'likelihood',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
+            </ibdc-input>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-input
+            [options]="{inputTitle:'Consequence (impact)', form:riskAssessmentForm, formControlName:'impact',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
+            </ibdc-input>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
+
+            <!-- <ibdc-input
+            [options]="{inputTitle:'Risk Score', form:riskAssessmentForm, formControlName:'risk_score',
+            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0,iconText:'pin',description:'a'}">
+            </ibdc-input> -->
+        </div>
+        <div class="col-6"></div>
+        <div class="col-12">
+            <br>
+            <hr>
+            <br>
+        </div>
+        
+        <div class="col-12">
+            <div class="ibdc_basic_title">Opportunities</div>
+            <div *ngFor="let opportunity of this.riskAssessment.opportinities">
+                <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
+            </div>
+            <button pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
+
+        </div>
+        
+    </div>
+</div>
