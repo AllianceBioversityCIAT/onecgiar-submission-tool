@@ -19,7 +19,7 @@ export class CountriesTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.countries);
+    this.countries.map((item:any)=>delete item.official_code);
   }
 
   exportBasicExcel(){

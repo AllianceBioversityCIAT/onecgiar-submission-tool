@@ -28,7 +28,6 @@ export class WpReportsComponent implements OnInit {
 
   getPreviewPartners(){
     this._initiativesService.getPreviewGeographicScopeData(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      this.geoScope.regions
       this.geoScope = resp.response.previewGeographicScope.GeoScope;
       this.showTables = true;
       // console.log(this.geoScope);
