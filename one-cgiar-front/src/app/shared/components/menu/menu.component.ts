@@ -137,6 +137,9 @@ export class MenuComponent implements OnInit {
       this._dataControlService.userMenu = userMenuResp.response.stages;
       // console.log(this._dataControlService.userMenu);
       // console.log(userMenuResp.response.stages.length);
+      //! DELETE 
+      this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
+      //!
       if (userMenuResp.response.stages.length > 1) {
 
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
