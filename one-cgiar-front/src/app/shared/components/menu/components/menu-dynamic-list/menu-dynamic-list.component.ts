@@ -55,11 +55,7 @@ export class MenuDynamicListComponent implements OnInit {
   }
 
   validateIfShowAddWp(){
-    // console.log("______")
-    // console.log(this.stage )
-    // console.log(this.section)
-    // console.log(this.subSection)
-    return (this.stage.stageId === 3 ) && (this.section.sectionId === 5) && (this.subSection.subSectionId === 12);
+    return (this.stage.stageId === 3 ) && (this.section.sectionId === 5) && (this.subSection.subSectionId === 12) && !this._initiativesService.initiative.readonly;
   }
 
 }
