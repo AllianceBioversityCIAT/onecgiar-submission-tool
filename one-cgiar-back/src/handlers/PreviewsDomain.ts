@@ -136,7 +136,7 @@ export class PreviewsDomain {
        WHERE co.initvStgId =${initiativeId}
          AND co.active = 1
          AND co.wrkPkgId IS NOT NULL
-       GROUP BY co.id,co.country_id  
+       GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
           `,
         regionsQuery = `
         SELECT DISTINCT (r.region_id)as um49code,ini.official_code,
@@ -151,7 +151,7 @@ export class PreviewsDomain {
         WHERE r.initvStgId = ${initiativeId}
         AND r.active = 1
         AND r.wrkPkgId IS NOT NULL
-        GROUP BY r.region_id    
+        GROUP BY r.region_id,ini.official_code,re.name   
               `;
 
       const regions = await this.queryRunner.query(regionsQuery);
