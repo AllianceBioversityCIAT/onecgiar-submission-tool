@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WpDataControlService } from '../services/wp-data-control.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class WorkPackageComponent implements OnInit {
     private _wpDataControlService:WpDataControlService,
     private _dataControlService:DataControlService,
     private router:Router,
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    private _interactionsService : InteractionsService
   ){
 
   }
@@ -45,22 +47,41 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
    this.wpColorselected(3, 5, 12,-1)
   }
 
   ngDoCheck(): void {
-    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
-    //Add 'implements DoCheck' to the class.
-    // console.log(this.iaID);
-    // console.log(this._dataControlService.userMenu);
-    // console.log("--------------------");
-    // console.log(this._wpDataControlService.wpId);
-    // console.log(this._dataControlService.userMenu.length);
     if (this._wpDataControlService.wpId && this._dataControlService.userMenu.length) {
       this.wpColorselected(3, 5, 12, this._wpDataControlService.wpId);
+    } 
+  }
+
+  deleteCurrentWP() {
+
+    let body = {
+      // acronym: "Nuevo y",
+      // name: "",
+      // pathway_content: "",
+      // is_global: false,
+      id: Number(this._wpDataControlService.wpId),
+      active: false,
+      // regions: [],
+      // countries: []
     }
+
+    console.log(this._wpDataControlService.wpId)
+
+
+
+
+    console.log('addWorkPackage()')
+    // let body = {active:false,id:this._wpDataControlService.wpId}
+    console.log(body)
+    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+      console.log(resp)
+      this._interactionsService.successMessage('Work package has been removed')
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+    })
     
   }
 
@@ -79,9 +100,7 @@ export class WorkPackageComponent implements OnInit {
     // select current wp
     if (wpId != -1 && allWp) {
       let sectionFinded = allWp.find((wp) => wp.id == wpId).activeSection = true;
-      // console.log(sectionFinded);
     }
-    // console.log(allWp);
      
   }
 

@@ -17,6 +17,7 @@
 
   <div class="tabs_container">
     <router-outlet></router-outlet>
+    <app-button-edit-or-delete type="delete" (action)="deleteCurrentWP()" [confirmDeleteModal]="true"></app-button-edit-or-delete>
   </div>
   
 
