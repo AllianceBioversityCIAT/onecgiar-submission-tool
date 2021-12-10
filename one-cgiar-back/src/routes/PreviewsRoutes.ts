@@ -265,4 +265,52 @@ router.get(
   previewController.getPreviewRiskAssessment
 );
 
+/**
+ * GET HUMAN RESOURCES
+ */
+/**
+ * @api {get} previews/human-resources/:initiativeId/stageId Previews - Request Human Resources per Initiative
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetPreviewHumanResources
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows Preview Human Resources per Initiative
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/human-resources/1/3
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/human-resources/1/3
+ *
+ * @apiHeader {String} auth
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "previewHumanResources": {
+ *             "initiativeTeam": [
+ *                 {
+ *                     "category": "Research",
+ *                     "area_expertise": "Research leadership and management",
+ *                     "key_accountabilities": "Provide leadership"
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Previews:Preview Human Resources"
+ * }
+ *
+ * @apiError ERROR Get Preview Human Resources: Previews General
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "ERROR Get Preview Human Resources: Previews General", error }
+ */
+router.get(
+  '/human-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('hr', 'readOwn')],
+  previewController.getPreviewHumanResources
+);
+
 export default router;

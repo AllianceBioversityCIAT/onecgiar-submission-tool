@@ -13,26 +13,26 @@ export class PreviewsDomain {
     try {
       // retrieve preview partners
       const previewPartnersQuery = `
-            SELECT ci.code,ci.acronym as acronym,ci.institutionType as institution_type,
-                   JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as office_location,
-                   p.institutions_name as name,ia.name as impact_area,
-                   p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data-> "$.websiteLink") as website
-             FROM impact_strategies i
-             JOIN partners p
-             JOIN clarisa_institutions ci
-             JOIN initiatives_by_stages ist
-             JOIN initiatives ini
-             JOIN general_information gi
-             JOIN clarisa_impact_areas ia
-            WHERE i.id = p.impact_strategies_id
-              AND p.institutions_id = ci.code
-              AND i.initvStgId = ist.id
-              AND ist.initiativeId = ini.id
-              AND i.initvStgId = gi.initvStgId
-              AND i.impact_area_id = ia.id
-              AND i.initvStgId = ${initiativeId}
-              AND i.active > 0
-         ORDER BY ini.id asc     
+      SELECT ci.code,ci.acronym as acronym,ci.institutionType as institution_type,
+      JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as office_location,
+      p.institutions_name as name,ia.name as impact_area,
+      p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data-> "$.websiteLink") as website
+       FROM impact_strategies i
+       JOIN partners p
+       JOIN clarisa_institutions ci
+       JOIN initiatives_by_stages ist
+       JOIN initiatives ini
+       JOIN general_information gi
+       LEFT JOIN clarisa_impact_areas ia
+       ON i.impact_area_id = ia.id
+       WHERE i.id = p.impact_strategies_id
+        AND p.institutions_id = ci.code
+        AND i.initvStgId = ist.id
+        AND ist.initiativeId = ini.id
+        AND i.initvStgId = gi.initvStgId
+        AND i.initvStgId = ${initiativeId}
+        AND i.active > 0
+       ORDER BY ini.id asc   
             `;
 
       const previewPartners = await this.queryRunner.query(
@@ -74,13 +74,14 @@ export class PreviewsDomain {
                    AND p.active > 0;
                 `,
         dimensionsQuery = `
-             SELECT d.projectionId,d.depth_description,breadth_value
-               FROM dimensions d
-              WHERE d.projectionId in (SELECT p.id
-               FROM projection_benefits p
-              WHERE p.initvStgId = ${initiativeId})
-                AND d.active > 0
-                `;
+        SELECT d.projectionId,d.depth_description,cii.targetUnit,breadth_value
+        FROM dimensions d
+         JOIN projection_benefits pb
+         ON d.projectionId = pb.id
+        JOIN clarisa_impact_areas_indicators cii
+          ON pb.impact_area_indicator_id = cii.id
+        WHERE pb.initvStgId = ${initiativeId}
+          AND d.active > 0`;
 
       const impactAreas = await this.queryRunner.query(impactAreasQuery);
       const impactIndicators = await this.queryRunner.query(
@@ -123,24 +124,34 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id),
-            (SELECT cc.name FROM  clarisa_countries cc WHERE cc.code = co.country_id) as name,
-            co.initvStgId
-       FROM countries_by_initiative_by_stage co
-      WHERE co.initvStgId = ${initiativeId}
-        AND co.active = 1
-        AND co.wrkPkgId IS NOT NULL
-      GROUP BY co.id,co.country_id  
+      SELECT DISTINCT(co.country_id) as um49code,ini.official_code,
+      cco.isoAlpha2,cco.name
+        FROM countries_by_initiative_by_stage co
+       JOIN clarisa_countries cco
+       ON co.country_id = cco.code
+       JOIN initiatives_by_stages ist
+          ON co.initvStgId = ist.id
+       JOIN initiatives ini
+          ON ist.initiativeId = ini.id
+       WHERE co.initvStgId =${initiativeId}
+         AND co.active = 1
+         AND co.wrkPkgId IS NOT NULL
+       GROUP BY co.id,co.country_id  
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id),
-               (SELECT cr.name FROM  clarisa_regions cr WHERE cr.um49Code = r.region_id) as name
-               ,r.initvStgId
-          FROM regions_by_initiative_by_stage r
-         WHERE r.initvStgId = ${initiativeId}
-           AND r.active = 1
-           AND r.wrkPkgId IS NOT NULL
-         GROUP BY r.region_id
+        SELECT DISTINCT (r.region_id)as um49code,ini.official_code,
+        re.name
+        FROM regions_by_initiative_by_stage r
+        JOIN clarisa_regions re
+        ON r.region_id = re.um49Code
+        JOIN initiatives_by_stages ist
+        ON r.initvStgId = ist.id
+        JOIN initiatives ini
+        ON ist.initiativeId = ini.id
+        WHERE r.initvStgId = ${initiativeId}
+        AND r.active = 1
+        AND r.wrkPkgId IS NOT NULL
+        GROUP BY r.region_id    
               `;
 
       const regions = await this.queryRunner.query(regionsQuery);
@@ -173,7 +184,7 @@ export class PreviewsDomain {
        AND active = 1;
       `,
         riskAssessmentQuery = `
-          SELECT id,risks_achieving_impact,
+          SELECT id,risks_achieving_impact,risks_theme,
                  description_risk,likelihood,impact,
                  risk_score,manage_plan_risk_id,active
            FROM risk_assessment
@@ -222,6 +233,37 @@ export class PreviewsDomain {
       console.log(error);
       throw new BaseError(
         'ERROR Get Preview Risk Assessment: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * REQUEST PREVIEW HUMAN RESOURCES
+   * @param initiativeId
+   * @returns previewHumanResources
+   */
+  async requestPreviewHumanResources(initiativeId: string) {
+    try {
+      const initiativeTeamQuery = `SELECT category, area_expertise,key_accountabilities
+        FROM initiative_team
+       WHERE human_resources_id in (
+       SELECT id
+         FROM human_resources
+        WHERE initvStgId =  ${initiativeId}
+          AND active = 1
+       )
+       AND active = 1;`;
+
+      const initiativeTeam = await this.queryRunner.query(initiativeTeamQuery);
+
+      return {initiativeTeam: initiativeTeam};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Human Resources: Previews General',
         400,
         error.message,
         false

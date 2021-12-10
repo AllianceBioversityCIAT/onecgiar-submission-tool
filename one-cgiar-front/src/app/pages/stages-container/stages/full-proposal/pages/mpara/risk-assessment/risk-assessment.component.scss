@@ -58,3 +58,61 @@
     font-size: 1.1em;
   }
 }
+
+
+
+.ibdc_basic_description{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  strong{
+    white-space:nowrap;
+  }
+  .readyOnlyElement{
+    display: flex;
+  }
+
+  .editableElement{
+    align-items: center;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    .ibdc-input-field-container{
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0px 10px;
+    }
+  }
+}
+
+
+.grid_selectors{
+  display: grid;
+  grid-template-columns: 2fr 50px 1fr;
+  grid-gap: 10px;
+  align-items: center;
+  
+  .or{
+    font-size: 1.2em;
+    font-weight: 700;
+    color: rgb(61, 61, 61);
+    text-align: center;
+    
+    // text-align: center;
+    // justify-content: center;
+  }
+  .createMyOwn{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    margin: 10px 0px;
+    background-color: var(--ibdc-secondary-color);
+    border-radius: 100px;
+    text-align: center;
+    padding: 10px;
+  }
+}

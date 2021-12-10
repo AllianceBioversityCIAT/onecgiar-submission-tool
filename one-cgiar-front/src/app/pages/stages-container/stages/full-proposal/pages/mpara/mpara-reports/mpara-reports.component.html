@@ -1,38 +1,45 @@
-<section-title name="Reports"></section-title>
+<section-title name="Risk assessment preview"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <div class="card">
+    <div class="card-for-preview ibd-shadow-2">
         <!-- <h5>Horizontal and Vertical</h5> -->
-        <section-sub-title name="Risk assessment preview"></section-sub-title>
+        <section-sub-title name="Risk assessment table"></section-sub-title>
 
-        <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true"  scrollHeight="400px" scrollDirection="both">
-            <ng-template pTemplate="caption">
-                <div class="p-d-flex" *ngIf="!this.notArePreviewinformation">
-  
-                    <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
-                    <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="text-align: center;" *ngFor="let item of headerPreview; let i=index">{{item.headerName}}</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-customer>
-                <tr>
-                  <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
-                    <td  *ngFor="let item of getKeys(customer); let i=index"  
-                    style="text-align: center;"
-                    [attr.rowspan]="((i == 0 && item =='a') && customer.rowspan)?customer.rowspan:1"
-                    >
-                      {{customer[item] || 'not available'}}
-                    </td>
-                </tr>
-  
-            </ng-template>
-        </p-table>
-        <br>
-        <app-text-not-data [hidden]="this.previewListCoverted?.length" text="There are not Partners"></app-text-not-data>
-        <br>
+        <div class="card-content">
+
+            <p-table *ngIf="previewListCoverted.length || true" [value]="previewListCoverted" [scrollable]="true"
+                styleClass="p-datatable-gridlines" scrollHeight="400px" scrollDirection="both">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex" *ngIf="this.previewListCoverted?.length">
+
+                        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+                            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+                        <!-- <button type="button" pButton pRipple icon="pi pi-paperclip" style="margin-left: 5px;" (click)="showBottomCenter()" [cdkCopyToClipboard]="copyTable()" class="p-button-primary p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button> -->
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="text-align: center;" *ngFor="let item of headerPreview; let i=index">
+                            {{item.headerName | capitalLetter | replaceSymbolBySpace:'_'}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                        <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
+                        <td *ngFor="let item of getKeys(customer); let i=index" style="text-align: center;"
+                            [attr.rowspan]="((i == 0 && item =='a') && customer.rowspan)?customer.rowspan:1">
+                            {{customer[item] || 'not available'}}
+                        </td>
+                    </tr>
+
+                </ng-template>
+            </p-table>
+            <br>
+            <app-text-not-data [hidden]="this.previewListCoverted?.length" text="There are not Risk Assessment data">
+            </app-text-not-data>
+            <br>
+
+        </div>
+
     </div>
 </div>

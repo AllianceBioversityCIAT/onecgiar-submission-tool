@@ -47,7 +47,7 @@ export class PobResportsComponent implements OnInit {
 
   getPreviewProjectedBenefits() {
     this._initiativesService.getPreviewProjectedBenefits(this._initiativesService.initiative.id,3).subscribe(resp => {
-      //console.log(resp.response.previewProjectedBenefits.impactAreas);
+      console.log(resp.response.previewProjectedBenefits.impactAreas);
       this.objectsTolist(resp.response.previewProjectedBenefits.impactAreas);
     })
   }
@@ -76,9 +76,9 @@ export class PobResportsComponent implements OnInit {
       impactArea?.impactIndicators?.dimensions?.map((dimension,index) => {
         i++;
         if (index == 0) {
-          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description, c: impactArea?.impactIndicators?.probability_name });
+          this.previewProjectedBenefitsListCoverted.push({ a: dimension?.breadth_value +' '+ dimension?.targetUnit, b: dimension.depth_description, c: impactArea?.impactIndicators?.probability_name });
         }else{
-          this.previewProjectedBenefitsListCoverted.push({ a: dimension.breadth_value, b: dimension.depth_description });
+          this.previewProjectedBenefitsListCoverted.push({ a: dimension?.breadth_value +' '+ dimension?.targetUnit, b: dimension.depth_description });
 
         }
       })

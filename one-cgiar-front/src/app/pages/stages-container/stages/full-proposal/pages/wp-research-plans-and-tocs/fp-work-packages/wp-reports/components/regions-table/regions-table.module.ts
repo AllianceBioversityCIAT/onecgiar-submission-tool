@@ -4,6 +4,7 @@ import { RegionsTableComponent } from './regions-table.component';
 import { UtilsModule } from '../../../../../../../../../../shared/components/utils/utils.module';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { StagesPipesModule } from '../../../../../../../shared/pipes/stages-pipes.module';
 
 
 
@@ -15,6 +16,7 @@ import { ButtonModule } from 'primeng/button';
     UtilsModule,
     TableModule,
     ButtonModule,
+    StagesPipesModule
   ]
 })
 export class RegionsTableModule { }

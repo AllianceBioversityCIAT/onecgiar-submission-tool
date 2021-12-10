@@ -38,7 +38,8 @@ export class OpportunityItemComponent implements OnInit {
   }
 
   removeOpportunity(){
-    
+    this.opportunity.active = false;
+    console.log(this.opportunity);
   }
 
   updateForm(){

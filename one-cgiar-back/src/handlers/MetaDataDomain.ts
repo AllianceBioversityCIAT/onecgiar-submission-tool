@@ -603,36 +603,60 @@ export class MetaDataHandler extends InitiativeStageHandler {
       // Validate sections
 
       let validationHumanResourcesSQL = `
-        SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')))
-         - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "initiative_team"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "initiative_team"
-                        AND active = 1 ) IS NULL
-       THEN FALSE
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+    WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')))
+       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+   OR(
+        SELECT SUM(a.validation * 1) - count(a.validation)
+         FROM
+         (SELECT it.id,
+            CASE
+    WHEN it.category IS NULL
+              OR it.category = ''
+              OR it.area_expertise IS NULL
+      OR it.area_expertise = ''
+      OR it.key_accountabilities IS NULL
+      OR it.key_accountabilities = ''
+         THEN FALSE
          ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='human-resources'`;
+          END AS VALIDATION
+         FROM initiative_team it
+         WHERE it.human_resources_id in (SELECT id FROM human_resources WHERE initvStgId = ini.id AND active = 1)
+         AND it.active = 1) AS a) <> 0
+          OR(
+        SELECT SUM(a.validation * 1) - count(a.validation)
+         FROM
+         (SELECT it.id,
+            CASE
+    WHEN it.category IS NULL
+              OR it.category = ''
+              OR it.area_expertise IS NULL
+      OR it.area_expertise = ''
+      OR it.key_accountabilities IS NULL
+      OR it.key_accountabilities = ''
+         THEN FALSE
+         ELSE TRUE
+          END AS VALIDATION
+         FROM initiative_team it
+         WHERE it.human_resources_id in (SELECT id FROM human_resources WHERE initvStgId = ini.id AND active = 1)
+         AND it.active = 1) AS a) IS NULL
+     THEN FALSE
+       ELSE TRUE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='human-resources'`;
 
       var humanResources = await this.queryRunner.query(
         validationHumanResourcesSQL
@@ -644,16 +668,41 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       let validationInitiativeSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  
       CASE
-    WHEN  (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
-                    WHERE initvStgId = ini.id
-                      AND active = 1)
-                      AND section = "initiative_team"
-                      AND active = 1 ) = ''
-        OR (SELECT max(id) FROM files WHERE humanId in (SELECT id FROM human_resources
-                    WHERE initvStgId = ini.id
-                      AND active = 1)
-                      AND section = "initiative_team"
-                      AND active = 1 ) IS NULL
+    WHEN  (
+      SELECT SUM(a.validation * 1) - count(a.validation)
+       FROM
+       (SELECT it.id,
+          CASE
+  WHEN it.category IS NULL
+            OR it.category = ''
+            OR it.area_expertise IS NULL
+    OR it.area_expertise = ''
+    OR it.key_accountabilities IS NULL
+    OR it.key_accountabilities = ''
+       THEN FALSE
+       ELSE TRUE
+        END AS VALIDATION
+       FROM initiative_team it
+       WHERE it.human_resources_id in (SELECT id FROM human_resources WHERE initvStgId = ini.id AND active = 1)
+       AND it.active = 1) AS a) <> 0
+    OR(
+      SELECT SUM(a.validation * 1) - count(a.validation)
+       FROM
+       (SELECT it.id,
+          CASE
+  WHEN it.category IS NULL
+            OR it.category = ''
+            OR it.area_expertise IS NULL
+    OR it.area_expertise = ''
+    OR it.key_accountabilities IS NULL
+    OR it.key_accountabilities = ''
+       THEN FALSE
+       ELSE TRUE
+        END AS VALIDATION
+       FROM initiative_team it
+       WHERE it.human_resources_id in (SELECT id FROM human_resources WHERE initvStgId = ini.id AND active = 1)
+       AND it.active = 1
+       ) AS a) IS NULL
      THEN FALSE
        ELSE TRUE
        END AS validation

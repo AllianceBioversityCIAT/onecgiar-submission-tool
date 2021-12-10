@@ -1,0 +1,13 @@
+.local_container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 100px;
+    position: relative;
+    padding: 10px 10px;
+    div[class*="row"]{
+        color: rgb(78, 78, 78);
+    }
+}
+
+.row-area_expertise,.row-category{
+    padding-right: 15px;
+}

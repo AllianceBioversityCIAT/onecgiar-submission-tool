@@ -1,0 +1,21 @@
+.sub-section{
+    position: relative;
+    backdrop-filter: blur(3px);
+    background-color: #5c5c5c5d;
+    margin-bottom: 15px;
+    padding: 7px 7px 7px 10px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgb(168, 168, 168);
+    padding-right: 2.5em;
+}
+
+.sub-section-with-dynamicList{
+    position: relative;
+    backdrop-filter: blur(3px);
+    background-color: #5c5c5c5d;
+    margin-bottom: 10px;
+    padding: 5px 5px 5px 10px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgb(168, 168, 168);
+    padding-right: 2.5em;
+}

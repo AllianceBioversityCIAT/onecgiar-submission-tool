@@ -105,4 +105,20 @@ describe('Previews Controller', async () => {
         expect(res).to.be.a('object');
       });
   });
+
+  /**Preview Human Resources */
+  it('GET previewHumanResources/ Request Human Resources per initiative', async () => {
+    await chai
+      .request(app)
+      .get('/api/previews/human-resources/' + initiativeId + '/' + stageId)
+      .set('auth', token)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('response').to.be.a('object');
+        expect(res.body)
+          .to.have.property('title')
+          .to.be.equal('Previews:Preview Human Resources');
+        expect(res).to.be.a('object');
+      });
+  });
 });

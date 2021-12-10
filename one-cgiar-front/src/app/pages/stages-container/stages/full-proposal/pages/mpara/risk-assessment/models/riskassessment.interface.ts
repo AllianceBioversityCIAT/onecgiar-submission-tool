@@ -10,5 +10,7 @@ export interface Riskassessment{
     manage_plan_risk_id?: number,
     selected?:boolean,
     idx?:number;
+    editable?:boolean,
+    risks_theme?:string,
     opportinities?: Opportunity []
 }

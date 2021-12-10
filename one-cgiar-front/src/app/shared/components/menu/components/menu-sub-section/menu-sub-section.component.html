@@ -1,0 +1,40 @@
+
+
+
+<div class="sub-section-container" *ngFor="let subSection of this.section.subsections" [hidden]="subSection.block == true">
+
+    <div *ngIf="(!subSection?.dynamicList?.length) && (!subSection?.dynamicListSubSection?.length)" class="noActiveSection {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"
+        routerLinkActive="activeSection"
+        [routerLink]="'full-proposal/'+section.description+'/'+subSection.description">
+
+        <span class="subsection-title"
+            [ngClass]="{'activeSection': this._menuService.activeClassByRoute([subSection.description],this.router.routerState.snapshot.url)}">{{subSection.display_name}}</span>
+        <div class="status_icons">
+            <span style="margin-right: 8px;"
+                [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'"
+                class="material-icons-outlined material-icons"
+                *ngIf="subSection.visible && (subSection.subSectionId != 12)">check_circle</span>
+            <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction"
+                src="/assets/images/under-construction.png" alt="" srcset="">
+        </div>
+    </div>
+
+    <div *ngIf="subSection?.dynamicList?.length || subSection?.dynamicListSubSection?.length" class="noActiveSection {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}">
+        <span class="subsection-title"
+            [ngClass]="{'activeSection': this._menuService.activeClassByRoute([subSection.description],this.router.routerState.snapshot.url)}">{{subSection.display_name}}</span>
+        <div class="status_icons">
+            <span style="margin-right: 8px;"
+                [style.color]="subSection.fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'"
+                class="material-icons-outlined material-icons"
+                *ngIf="subSection.visible && (subSection.subSectionId != 12)">check_circle</span>
+            <img style="margin-right: 8px;" *ngIf="!subSection.visible" class="icon-under-contruction"
+                src="/assets/images/under-construction.png" alt="" srcset="">
+        </div>
+    </div>
+    <!-- LISTAS DINAMICAS -->
+    <app-menu-dynamic-list [subSection]="subSection" [section]="section" [stage]="stage"></app-menu-dynamic-list>
+
+
+
+
+</div>

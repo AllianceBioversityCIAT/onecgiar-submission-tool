@@ -94,19 +94,6 @@ export class MenuComponent implements OnInit {
     })
   }
 
-  sortAlphabetically(list) {
-    list.sort(function (a, b) {
-      if (a[list.sort] < b[list.sort]) {
-        return -1;
-      }
-      if (a[list.sort] > b[list.sort]) {
-        return 1;
-      }
-      return 0;
-    });
-    return list;
-  }
-
   mapReportInSubSectionMenu(stageId, sectionId, object) {
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
@@ -145,15 +132,14 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  partnersNotRelatedRoute() {
-    return `/initiatives/${this.initiativesSvc.initiative.id}/stages/full-proposal/impact-statements/impact-areas/partners-no-impact-area`
-  }
-
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
       this._dataControlService.userMenu = userMenuResp.response.stages;
-      // console.log(this._dataControlService.userMenu);
+      console.log(this._dataControlService.userMenu);
       // console.log(userMenuResp.response.stages.length);
+      //! DELETE 
+      this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
+      //!
       if (userMenuResp.response.stages.length > 1) {
 
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
@@ -172,13 +158,14 @@ export class MenuComponent implements OnInit {
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
+
         this.mapReportInSubSectionMenu(3,9,{
-          showName: 'Reports',
+          showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
         })
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
-          showName: 'Reports',
+          showName: 'Partners preview',
           frontRoute: '/is-resports'
         });
 
@@ -194,12 +181,12 @@ export class MenuComponent implements OnInit {
         );
 
         this.mapPreviewInDynamicListMenu(3, 5, 12, {
-          showName : 'Wp Reports',
+          showName : 'Geographic scope preview',
           frontRoute : '/work-packages/wp-reports'
         });
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
-          showName: 'Projection of benefits Reports',
+          showName: 'Projection of benefits preview',
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 
@@ -216,23 +203,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  activeClassByRoute(route: []) {
-    let correct = 0;
 
-    let baseUrl = this.router.routerState.snapshot.url;
-    route.map((resp: string) => {
-      correct =
-        baseUrl.indexOf(resp.toLowerCase().split(' ').join('-')) > -1
-          ? correct + 1
-          : correct;
-    });
-    // if (stage) {
-
-    return correct == route.length ? true : false;
-    // }else{
-    //   return baseUrl.indexOf(route)>-1?true:false
-    // }
-  }
 
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
@@ -252,27 +223,7 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  dynamicListNavigation(itemID, stage: string, section: string, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    itemID =  itemID == undefined ? "" : itemID;
-    this.router.navigate([baseUrl + stageParam + '/' + section + subsection + itemID]);
-    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
-  }
 
-  dynamicListSubSectionNavigation(stage: string, section: string, subsection?: string | []) {
-    let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
-    let stageParam = stage.toLowerCase().split(' ').join('-');
-    // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
-    return baseUrl + stageParam + '/' + section + subsection;
-    // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
-  }
-
-  toggleExpand(subSectionsList: HTMLElement) {
-    subSectionsList.classList.toggle('expandIbd');
-    subSectionsList.classList.toggle('collapseIbd');
-    // console.log('toggleExpand');
-  }
 
   goToWp(id) {
     let currentUrl = this.router.url;

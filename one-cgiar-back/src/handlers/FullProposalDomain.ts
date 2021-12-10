@@ -1,27 +1,27 @@
 import _ from 'lodash';
-import { getRepository, In } from 'typeorm';
-import { getClaActionAreas } from '../controllers/Clarisa';
-import { Context } from '../entity/Context';
-import { Dimensions } from '../entity/Dimensions';
-import { Files } from '../entity/Files';
-import { FinancialResources } from '../entity/FinancialResources';
-import { FinancialResourcesYears } from '../entity/FinancialResourcesYears';
-import { GeneralInformation } from '../entity/GeneralInformation';
-import { HumanResources } from '../entity/HumanResources';
-import { ImpactStrategies } from '../entity/ImpactStrategies';
-import { InitiativeTeam } from '../entity/InitiativesTeam';
-import { InnovationPackages } from '../entity/InnovationPackages';
-import { ManagePlanRisk } from '../entity/ManagePlanRisk';
-import { Melia } from '../entity/melia';
-import { Opportunities } from '../entity/Opportunities';
-import { Partners } from '../entity/Partners';
-import { PolicyComplianceOrversight } from '../entity/PolicyComplianceOversight';
-import { ProjectionBenefits } from '../entity/ProjectionBenefits';
-import { RiskAssessment } from '../entity/RiskAssessment';
-import { WorkPackages } from '../entity/WorkPackages';
-import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
-import { BaseError } from './BaseError';
-import { InitiativeStageHandler } from './InitiativeStageDomain';
+import {getRepository, In} from 'typeorm';
+import {getClaActionAreas} from '../controllers/Clarisa';
+import {Context} from '../entity/Context';
+import {Dimensions} from '../entity/Dimensions';
+import {Files} from '../entity/Files';
+import {FinancialResources} from '../entity/FinancialResources';
+import {FinancialResourcesYears} from '../entity/FinancialResourcesYears';
+import {GeneralInformation} from '../entity/GeneralInformation';
+import {HumanResources} from '../entity/HumanResources';
+import {ImpactStrategies} from '../entity/ImpactStrategies';
+import {InitiativeTeam} from '../entity/InitiativesTeam';
+import {InnovationPackages} from '../entity/InnovationPackages';
+import {ManagePlanRisk} from '../entity/ManagePlanRisk';
+import {Melia} from '../entity/melia';
+import {Opportunities} from '../entity/Opportunities';
+import {Partners} from '../entity/Partners';
+import {PolicyComplianceOrversight} from '../entity/PolicyComplianceOversight';
+import {ProjectionBenefits} from '../entity/ProjectionBenefits';
+import {RiskAssessment} from '../entity/RiskAssessment';
+import {WorkPackages} from '../entity/WorkPackages';
+import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -138,7 +138,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+                 WHERE initvStgId = ${
+                   initvStg.id ? initvStg.id : initvStg[0].id
+                 }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -164,8 +166,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
-          }
+                  WHERE wp.initvStgId =  ${
+                    initvStg.id ? initvStg.id : initvStg[0].id
+                  }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -220,7 +223,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `;
 
-      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
 
@@ -326,7 +329,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || { name: null };
+      ) || {name: null};
 
       // if null, create object
       if (generalInformationId == null) {
@@ -658,7 +661,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedPjectionBenefits, upsertedDimensions };
+      return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -858,7 +861,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedImpactStrategies, upsertedPartners };
+      return {upsertedImpactStrategies, upsertedPartners};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1028,7 +1031,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedMelia, upsertedFile };
+      return {upsertedMelia, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1202,7 +1205,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedManagePlan, upsertedFile };
+      return {upsertedManagePlan, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1241,7 +1244,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1
                 `,
         riskAssessmentQuery = `
-                SELECT id,risks_achieving_impact,
+                SELECT id,risks_achieving_impact,risks_theme,
                        description_risk,likelihood,impact,
                        risk_score,manage_plan_risk_id,active
                  FROM risk_assessment
@@ -1265,7 +1268,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                     WHERE initvStgId = ${initvStg.id}
                       AND active = 1
                      )
-                    );
+                    )
+                    AND active = 1;
                     
                     `;
 
@@ -1330,6 +1334,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             const risk = riskAssessment[index];
 
             newRiskAssessment.id = risk.id;
+            newRiskAssessment.risks_theme = risk.risks_theme;
             newRiskAssessment.risks_achieving_impact =
               risk.risks_achieving_impact;
             newRiskAssessment.description_risk = risk.description_risk;
@@ -1366,12 +1371,13 @@ export class ProposalHandler extends InitiativeStageHandler {
                 : risk.opportinities;
             if (risk.opportinities.length > 0) {
               for (let index = 0; index < risk.opportinities.length; index++) {
-                const oppor = risk.opportinities[index];
+                const opportunities = risk.opportinities[index];
 
-                newOpportinities.id = oppor.id;
+                newOpportinities.id = opportunities.id;
                 newOpportinities.opportunities_description =
-                  oppor.opportunities_description;
+                  opportunities.opportunities_description;
                 newOpportinities.risk_assessment_id = riskSaved.id;
+                newOpportinities.active = opportunities.active;
 
                 if (newOpportinities.id !== null) {
                   var savedOpportunities = await opportinitiesRepo.findOne(
@@ -1400,12 +1406,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-          return op.risk_assessment_id === risk.id;
-        }))
+          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+            return op.risk_assessment_id === risk.id;
+          }))
       );
 
-      return { upsertedRiskAssessment };
+      return {upsertedRiskAssessment};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1458,9 +1464,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     newHumanResources.id = humanResourcesId;
     newHumanResources.gender_diversity_inclusion = gender_diversity_inclusion;
     newHumanResources.capacity_development = capacity_development;
-    newHumanResources.active = humanResourcesActive
-      ? humanResourcesActive
-      : true;
+    newHumanResources.active = humanResourcesActive;
 
     try {
       if (host == 'http://localhost') {
@@ -1534,7 +1538,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedHumanResources, upsertedFile };
+      return {upsertedHumanResources, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1576,9 +1580,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             newInitiativeTeam.key_accountabilities =
               initvTeamArray.key_accountabilities;
             newInitiativeTeam.human_resources_id = humanResourcesId;
-            newInitiativeTeam.active = initvTeamArray.active
-              ? initvTeamArray.active
-              : true;
+            newInitiativeTeam.active = initvTeamArray.active;
 
             if (newInitiativeTeam.id !== null) {
               /**UPDATE NEW INITIATIVE TEAM */
@@ -1648,7 +1650,8 @@ export class ProposalHandler extends InitiativeStageHandler {
               WHERE human_resources_id in ( SELECT id
                           FROM human_resources
                          WHERE initvStgId = ${initvStg.id}
-                           AND active = 1);`;
+                           AND active = 1)
+                           AND active=1;`;
 
       const humanResources = await this.queryRunner.query(humanResourcesQuery);
       const files = await this.queryRunner.query(filesQuery);
@@ -1659,7 +1662,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return f.humanId === hr.id;
         });
 
-        hr['initiativeTeam'] = initiativeTeam.filter((ini) => {
+        hr['initvTeam'] = initiativeTeam.filter((ini) => {
           return (ini.human_resources_id = hr.id);
         });
       });
@@ -1690,18 +1693,16 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { upsertedFinancialResources, upsertedFile }
    */
   async upsertFinancialResources(upsertArray?, initvStg?, sectionName?) {
-
     const financialResourcesRepo = getRepository(FinancialResources);
 
     try {
-      let upsertFRArr = [], finYearArr = []
-      upsertArray.forEach((upsEle, i) => {
+      let upsertFRArr = [],
+        finYearArr = [];
+      upsertArray.forEach((upsEle) => {
         let objt = {
           id: null,
-          yearsArray: [],
+          yearsArray: []
         };
-
-
 
         // const fResource = new FinancialResources();
         // fResource.active = upsEle.active;
@@ -1718,7 +1719,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         objt.id = upsEle.id;
 
         if (!_.isEmpty(upsEle.valuesList)) {
-
           for (const key in upsEle.valuesList) {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new FinancialResourcesYears();
@@ -1730,19 +1730,19 @@ export class ProposalHandler extends InitiativeStageHandler {
             }
           }
         }
-        finYearArr.push(objt)
+        finYearArr.push(objt);
       });
 
-      const FRS = await Promise.all(upsertFRArr)
+      const FRS = await Promise.all(upsertFRArr);
 
       const upstFRArr = await financialResourcesRepo.save(FRS);
       const upsertedYears = [];
       for (let index = 0; index < upstFRArr.length; index++) {
         const fR = upstFRArr[index];
-        upsertedYears.push(this.upsertYear(fR, finYearArr[index]))
+        upsertedYears.push(this.upsertYear(fR, finYearArr[index]));
       }
 
-      const responseUpsertYear = await Promise.all(upsertedYears);
+      await Promise.all(upsertedYears);
 
       const financialResourcesQuery = ` 
             SELECT
@@ -1778,18 +1778,32 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       const financialResourcesRepo = getRepository(FinancialResources);
 
-      const existingFR = await financialResourcesRepo.findOne({ where: { initvStg, col_name: financialRSObject.col_name, table_name: financialRSObject.table_name, financial_type_id: financialRSObject.financial_type_id } });
+      const existingFR = await financialResourcesRepo.findOne({
+        where: {
+          initvStg,
+          col_name: financialRSObject.col_name,
+          table_name: financialRSObject.table_name,
+          financial_type_id: financialRSObject.financial_type_id
+        }
+      });
       let fResource = new FinancialResources();
       if (!existingFR) {
         fResource.active = financialRSObject.active;
         fResource.col_name = financialRSObject.col_name;
         fResource.table_name = financialRSObject.table_name;
-        fResource.id = financialRSObject.id == null || financialRSObject.id == '' ? null : financialRSObject.id;
-        fResource.financial_type_id = financialRSObject.financial_type_id == null || financialRSObject.financial_type_id == '' ? null : financialRSObject.financial_type_id;
+        fResource.id =
+          financialRSObject.id == null || financialRSObject.id == ''
+            ? null
+            : financialRSObject.id;
+        fResource.financial_type_id =
+          financialRSObject.financial_type_id == null ||
+          financialRSObject.financial_type_id == ''
+            ? null
+            : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
         fResource.initvStg = initvStg;
       } else {
-        fResource = existingFR
+        fResource = existingFR;
       }
       return fResource;
     } catch (error) {
@@ -1801,36 +1815,35 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
-
   }
 
   async upsertYear(financialResource, financialYearsArr) {
     const financialResourcesYearRepo = getRepository(FinancialResourcesYears);
     try {
-
       let upsertedYears = [];
       if (financialYearsArr.yearsArray.length > 0) {
-        let yearsUpsert = financialYearsArr.yearsArray.map(yU => ({ ...yU, financialResources: financialResource }));
-        const foundYears = await financialResourcesYearRepo.find(
-          {
-            where: {
-              year: In(yearsUpsert.map(y => y.year)),
-              financialResources: financialResource.id,
-            }
+        let yearsUpsert = financialYearsArr.yearsArray.map((yU) => ({
+          ...yU,
+          financialResources: financialResource
+        }));
+        const foundYears = await financialResourcesYearRepo.find({
+          where: {
+            year: In(yearsUpsert.map((y) => y.year)),
+            financialResources: financialResource.id
           }
-        );
+        });
         if (foundYears.length > 0) {
           for (let index = 0; index < foundYears.length; index++) {
             let fY = foundYears[index];
-            const yearIndx = yearsUpsert.findIndex(yU => yU.year == fY.year);
+            const yearIndx = yearsUpsert.findIndex((yU) => yU.year == fY.year);
             foundYears[index].active = yearsUpsert[yearIndx].active;
             foundYears[index].value = yearsUpsert[yearIndx].value;
-            upsertedYears.push(foundYears[index])
+            upsertedYears.push(foundYears[index]);
           }
         } else {
           for (let index = 0; index < yearsUpsert.length; index++) {
             const uY = yearsUpsert[index];
-            upsertedYears.push(uY)
+            upsertedYears.push(uY);
           }
         }
         upsertedYears = await financialResourcesYearRepo.save(upsertedYears);
@@ -1925,7 +1938,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedPolicyCompliance };
+      return {upsertedPolicyCompliance};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2004,7 +2017,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedInnovationPackages };
+      return {upsertedInnovationPackages};
     } catch (error) {
       console.log(error);
       throw new BaseError(

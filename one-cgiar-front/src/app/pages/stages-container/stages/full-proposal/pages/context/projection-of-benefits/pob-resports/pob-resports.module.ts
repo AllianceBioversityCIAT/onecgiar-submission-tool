@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PobResportsRoutingModule } from './pob-resports-routing.module';
@@ -20,6 +20,7 @@ import {ToastModule} from 'primeng/toast';
     TableModule,
     ButtonModule,
     ToastModule
-  ]
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PobResportsModule { }
