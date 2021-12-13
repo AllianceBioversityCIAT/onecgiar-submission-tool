@@ -1746,6 +1746,10 @@ END AS VALIDATION
         validationProjectionBenefitsImpactSQL
       );
 
+      validationProjectionBenefitsImpact.map((pbi) => {
+        pbi.validation = parseInt(pbi.validation);
+      });
+
       validationProjectionBenefits.map((pb) => {
         pb['dinamicList'] = validationProjectionBenefitsImpact.filter((di) => {
           return (di.subSectionId = pb.subSectionId);
