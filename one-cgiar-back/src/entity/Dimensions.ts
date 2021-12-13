@@ -12,8 +12,8 @@ export class Dimensions extends UpdatedCreatedAt {
   @Column({type: 'int'})
   depthDescriptionId: number;
 
-  @Column({type: 'double'})
-  breadth_value: number;
+  @Column({type: 'text'})
+  breadth_value: string;
 
   @Column({type: 'tinyint'})
   active: boolean;
