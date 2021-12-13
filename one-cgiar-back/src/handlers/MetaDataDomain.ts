@@ -1740,7 +1740,8 @@ END AS VALIDATION
          AND sec.id = subsec.sectionId
          AND pb.active > 0
          AND sec.description='context'
-         AND subsec.description = 'projection-of-benefits'`;
+         AND subsec.description = 'projection-of-benefits'
+         GROUP BY sec.id,pb.impact_area_id`;
 
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
