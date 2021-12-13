@@ -150,8 +150,7 @@ export class MenuComponent implements OnInit {
           this._dataControlService.wpMaped = true;
         });
 
-
-        let pobList =  new ListToMap(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
+        let pobList =  new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
 
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
@@ -198,7 +197,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-      console.log(this._dataControlService.userMenu);
+      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

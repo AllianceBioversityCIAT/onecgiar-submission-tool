@@ -1,27 +1,22 @@
 import { map } from 'rxjs/operators';
 export class ListToMap{
+    //? impact area list
     impactAreas:any = [];
-    // data for routing
-
+    //? data for routing
     frontRoute = '';
     subSectionName = '';
     sort = '';
-    //
     showNameAttributeName = '';
-
-
-    constructor(impactAreas, frontRoute : string, subSectionName : string, sort : string, showNameAttributeName : string ){
-        this.impactAreas = impactAreas;
+    //?
+    
+    constructor(impactAreas:any[], frontRoute : string, subSectionName : string, sort : string, showNameAttributeName : string ){
+        // break array instance
+        this.impactAreas = this.breakArrayInstance(impactAreas);
         this.frontRoute = frontRoute;
         this.subSectionName = subSectionName; 
         this.showNameAttributeName = showNameAttributeName;
         this.sort = sort;
         this.addAttributes();
-    }
-
-    public log(text,color){
-        console.log('%c'+text, 'background: #222; color: '+color);
-        console.log("helloo");
     }
 
     public getList(){
@@ -37,8 +32,8 @@ export class ListToMap{
         })
     }
 
-
-    
-
+    private breakArrayInstance(impactAreas){
+        return  JSON.parse(JSON.stringify(impactAreas))
+    } 
 
 }
