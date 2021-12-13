@@ -25,32 +25,7 @@ export class RiskAssessmentComponent implements OnInit {
     section: "risk_assessment",
     updateFiles: []
   };
-  //   {
-//     "id": null,
-//     "management_plan": "new plan",
-//     "active": true,
-//     "section": "management_plan",
-//     "updateFiles": [],
-//     "riskassessment": [
-//         {
-//             "id": null,
-//             "risks_achieving_impact": "TEST TEST TEST",
-//             "description_risk": "TEST TEST",
-//             "likelihood": 5,
-//             "impact": 1,
-//             "risk_score": 4,
-//             "active": true,
-//             "manage_plan_risk_id": null,
-//             "opportinities": [
-//                 {
-//                     "id": null,
-//                     "opportunities_description": "s",
-//                     "risk_assessment_id": 1
-//                 }
-//             ]
-//         }
-//     ]
-// }
+
   risksList:Risk[]=[];
   showForm = false;
   riskDataLoaded = false;
