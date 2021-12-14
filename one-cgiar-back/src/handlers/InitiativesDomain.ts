@@ -186,6 +186,14 @@ export class InitiativeHandler {
     return countires;
   }
 
+  async requestRegionsCgiar() {
+    const querySql = `
+        SELECT id,name,acronym
+        FROM clarisa_regions_cgiar`;
+    const countires = await this.queryRunner.query(querySql);
+    return countires;
+  }
+
   /**
    * PREVIEW PARTNERS FOR IMPACT STRATEGIES
    */

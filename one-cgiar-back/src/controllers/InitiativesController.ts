@@ -1292,6 +1292,31 @@ export const getRegions = async (req: Request, res: Response) => {
 };
 
 /**
+ * CLARISA REGIONS CGIAR
+ * @param req
+ * @param res
+ * @returns regions
+ */
+
+ export const getRegionsCgiar = async (req: Request, res: Response) => {
+  try {
+
+    //Get Regions from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let regions = await initiativeshandler.requestRegionsCgiar();
+
+    res.json(new ResponseHandler('Regions CGIAR.', {regions}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+
+/**
  *
  * @param req
  * @param res

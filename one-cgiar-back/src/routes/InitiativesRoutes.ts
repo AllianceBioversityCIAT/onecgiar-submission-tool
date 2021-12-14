@@ -720,6 +720,9 @@ router.get('/countries', [checkJwt], initiatives.getCountries);
 //get regions
 router.get('/regions', [checkJwt], initiatives.getRegions);
 
+//get regions CGIAR
+router.get('/regions-cgiar', [checkJwt], initiatives.getRegionsCgiar);
+
 //Get Risks
 router.get('/risks', [checkJwt], initiatives.GetRisks);
 

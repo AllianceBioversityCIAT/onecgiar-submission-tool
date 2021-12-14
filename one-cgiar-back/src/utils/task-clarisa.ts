@@ -8,6 +8,7 @@ import {ClarisaCountries} from '../entity/ClarisaCountries';
 import {ClarisaRegions} from '../entity/ClarisaRegions';
 import {ClarisaImpactAreasIndicators} from '../entity/ClarisaImpactAreasIndicators';
 import {ClarisaProjectedBenefits} from '../entity/ClarisaProjectedBenefits';
+import { ClarisaRegionsCgiar } from '../entity/ClarisaRegionsCgiar';
 
 /**MAIN FUNCTION*/
 
@@ -20,6 +21,7 @@ export async function Main() {
   await createRegions();
   await createImpactAreasIndicators();
   await createProjectedBenefits();
+  await createRegionsCgiar();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -428,3 +430,51 @@ export async function createProjectedBenefits() {
     console.log('createProjectedBenefits', error);
   }
 }
+
+/**CLARISA REGIONS CGIAR*/
+
+export async function deleteRegionsCgiar() {
+  try {
+    const clarisaRepo = getRepository(ClarisaRegionsCgiar);
+    const clarisaRegionsCgiar = new ClarisaRegionsCgiar();
+    await clarisaRepo.delete(clarisaRegionsCgiar);
+    console.log('26.delete Regions Cgiar');
+  } catch (error) {
+    console.log('deleteRegionsCgiar', error);
+  }
+}
+
+export async function createRegionsCgiar() {
+  console.log('25.start create regions Cgiar');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaRegionsCgiar);
+    const regions = await clarisa.getClaRegionsCgiar();
+
+    if (regions.length > 0) {
+      await deleteRegionsCgiar();
+
+      let regionsArray: ClarisaRegionsCgiar[] = [];
+
+      for (let index = 0; index < regions.length; index++) {
+        const element = regions[index];
+        let cla = clarisaRepo.create({
+          id: element.id,
+          name: element.name,
+          acronym: element.acronym,
+          countries: element.countries
+        });
+        regionsArray.push(cla);
+      }
+
+      await clarisaRepo.save(regionsArray);
+
+      console.log('27.end create regions Cgiar');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createRegionsCgiar', error);
+  }
+}
+
