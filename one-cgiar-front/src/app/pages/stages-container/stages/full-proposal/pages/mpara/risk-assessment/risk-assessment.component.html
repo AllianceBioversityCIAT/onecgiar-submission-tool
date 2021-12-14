@@ -56,20 +56,22 @@
 
 
                     </div>
-                    <div class="col-8">
+                    <div class="col-9">
                         <div class="ibdc_basic_title" *ngIf="this.managementPlan?.riskassessment.length">Confirm top 5</div>
-                        <div class="item_top_five" [hidden]="!item.selected"
-                            *ngFor="let item of addIdxToSelected(this.managementPlan?.riskassessment)">
+                        <div class="item_top_five" [hidden]="!item.selected" *ngFor="let item of addIdxToSelected(this.managementPlan?.riskassessment)">
+
+
+                            <div class="index_tag ibdc_green_gradient"><div class="tag">Top {{this.item.idx}} </div></div>
 
                             <div class="ibdc_basic_description">
-                                <strong class="ibdc_secondary_color">Top {{this.item.idx}} </strong> &nbsp;-&nbsp;
+                                
                                 <div class="readyOnlyElement" *ngIf="!item.editable">{{item.generic_risks}}</div> 
                                 <div class="editableElement" *ngIf="item.editable">
                                   
                                     <div class="ibdc-input-field-container">
-                                        <ibdc-input-field inputTitle="Risks achieving impact:" [rows]="1" [objectItem]="this.item"  [objectAtributteName]="'risks_achieving_impact'"></ibdc-input-field>
+                                        <ibdc-input-field inputTitle="Risks achieving impact" [rows]="1" [objectItem]="this.item"  [objectAtributteName]="'risks_achieving_impact'"></ibdc-input-field>
                                     </div>
-                                    
+                                    <br>
                                     <div class="ibdc-input-field-container">
                                         <ibdc-select-field
                                            [objectItem]="this.item"  [objectAtributteName]="'risks_theme'" inputTitle="Risk theme"
