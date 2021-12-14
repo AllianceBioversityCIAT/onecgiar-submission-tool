@@ -14,5 +14,4 @@ export class ClarisaRegionsCgiar extends UpdatedCreatedAt {
 
   @Column({type: 'json'})
   countries: JSON;
-
 }

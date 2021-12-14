@@ -8,7 +8,7 @@ import {ClarisaCountries} from '../entity/ClarisaCountries';
 import {ClarisaRegions} from '../entity/ClarisaRegions';
 import {ClarisaImpactAreasIndicators} from '../entity/ClarisaImpactAreasIndicators';
 import {ClarisaProjectedBenefits} from '../entity/ClarisaProjectedBenefits';
-import { ClarisaRegionsCgiar } from '../entity/ClarisaRegionsCgiar';
+import {ClarisaRegionsCgiar} from '../entity/ClarisaRegionsCgiar';
 
 /**MAIN FUNCTION*/
 
@@ -477,4 +477,3 @@ export async function createRegionsCgiar() {
     console.log('createRegionsCgiar', error);
   }
 }
-

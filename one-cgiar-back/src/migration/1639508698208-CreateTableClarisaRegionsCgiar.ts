@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateTableClarisaRegionsCgiar1639508698208 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('Add clarisa_region_cgiar');
-        await queryRunner.query(`
+export class CreateTableClarisaRegionsCgiar1639508698208
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add clarisa_region_cgiar');
+    await queryRunner.query(`
                 CREATE TABLE clarisa_regions_cgiar (
                     id int(11) NOT NULL,
                     name TEXT DEFAULT NULL,
@@ -16,11 +16,7 @@ export class CreateTableClarisaRegionsCgiar1639508698208 implements MigrationInt
                     PRIMARY KEY (id)               
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
             `);
+  }
 
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

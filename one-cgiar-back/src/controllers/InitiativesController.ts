@@ -1298,9 +1298,8 @@ export const getRegions = async (req: Request, res: Response) => {
  * @returns regions
  */
 
- export const getRegionsCgiar = async (req: Request, res: Response) => {
+export const getRegionsCgiar = async (req: Request, res: Response) => {
   try {
-
     //Get Regions from submission
 
     // create new Meta Data object
@@ -1314,7 +1313,6 @@ export const getRegions = async (req: Request, res: Response) => {
     return res.status(error.httpCode).json(error);
   }
 };
-
 
 /**
  *
