@@ -111,7 +111,7 @@ export class StagesMenuComponent implements OnInit {
   validateAllSections() {
 
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id, 3).subscribe(resp => {
-      console.log("%c Green check: ",  'color: #f4f814',resp.response);
+      // console.log("%c Green check: ",  'color: #f4f814',resp.response);
 
       Object.keys(resp.response).map(key => {
         let stageId = 3;
