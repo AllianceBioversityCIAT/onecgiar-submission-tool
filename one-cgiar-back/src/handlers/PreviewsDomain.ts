@@ -139,11 +139,11 @@ export class PreviewsDomain {
        GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id)as um49code,ini.official_code,
-        re.name
+        SELECT DISTINCT (r.region_id)as code,ini.official_code,
+        re.name,re.acronym
         FROM regions_by_initiative_by_stage r
-        JOIN clarisa_regions re
-        ON r.region_id = re.um49Code
+        JOIN clarisa_regions_cgiar re
+        ON r.region_id = re.id
         JOIN initiatives_by_stages ist
         ON r.initvStgId = ist.id
         JOIN initiatives ini
