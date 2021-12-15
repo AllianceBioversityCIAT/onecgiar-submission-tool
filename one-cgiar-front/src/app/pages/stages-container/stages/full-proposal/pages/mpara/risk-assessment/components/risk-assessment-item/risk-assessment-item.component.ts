@@ -14,13 +14,14 @@ export class RiskAssessmentItemComponent implements OnInit {
   @Input() managementPlan:any;
   @Input() risksList:any;
   riskTitleEditableIsActive = false;
+  selectList = null;
   riskAssessmentForm:FormGroup;
   constructor(
     public _initiativesService:InitiativesService
   ) { 
     this.riskAssessmentForm = new FormGroup({
       id:new FormControl(null),
-      risks_achieving_impact:new FormControl( null),
+      // risks_achieving_impact:new FormControl( null),
       description_risk:new FormControl( null),
       idBd:new FormControl( null),
       likelihood:new FormControl(null),
@@ -57,7 +58,7 @@ export class RiskAssessmentItemComponent implements OnInit {
 
   getCurrentData(){
     this.riskAssessmentForm.get("id").setValue(this.riskAssessment?.id)
-    this.riskAssessmentForm.get("risks_achieving_impact").setValue(this.riskAssessment?.risks_achieving_impact)
+    // this.riskAssessmentForm.get("risks_achieving_impact").setValue(this.riskAssessment?.risks_achieving_impact)
     this.riskAssessmentForm.get("description_risk").setValue(this.riskAssessment?.description_risk)
     this.riskAssessmentForm.get("likelihood").setValue(this.riskAssessment?.likelihood)
     this.riskAssessmentForm.get("impact").setValue(this.riskAssessment?.impact)
@@ -68,7 +69,7 @@ export class RiskAssessmentItemComponent implements OnInit {
 
   updateForm(){
     // this.riskAssessment = this.riskAssessmentForm.value;
-    this.riskAssessment.risks_achieving_impact = this.riskAssessmentForm.get("risks_achieving_impact").value;
+    // this.riskAssessment.risks_achieving_impact = this.riskAssessmentForm.get("risks_achieving_impact").value;
     this.riskAssessment.description_risk = this.riskAssessmentForm.get("description_risk").value;
     this.riskAssessment.likelihood = this.riskAssessmentForm.get("likelihood").value || 0;
     this.riskAssessment.impact = this.riskAssessmentForm.get("impact").value || 0;

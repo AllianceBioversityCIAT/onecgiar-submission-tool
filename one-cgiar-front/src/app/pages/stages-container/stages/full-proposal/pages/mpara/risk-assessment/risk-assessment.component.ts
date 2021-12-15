@@ -78,7 +78,8 @@ export class RiskAssessmentComponent implements OnInit {
       risks_achieving_impact:'',
       selected: true,
       editable: true,
-      risks_theme: ''
+      risks_theme: '',
+      add_by_user: true
     })
     // console.log( this.managementPlan?.riskassessment);
   }
