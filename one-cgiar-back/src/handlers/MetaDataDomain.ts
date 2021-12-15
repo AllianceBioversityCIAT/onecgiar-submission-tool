@@ -797,31 +797,34 @@ export class MetaDataHandler extends InitiativeStageHandler {
       //Validations Sections
 
       let validationFinancialResourcesSQL = `
-        SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT value FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT value FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "budget"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "budget"
-                        AND active = 1 ) IS NULL
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='financial-resources'`;
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+          WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
+            FROM(
+      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
+      FROM financial_resources_years fy
+      WHERE fy.financialResourcesId in (
+      SELECT fr.id
+      FROM financial_resources fr
+      WHERE fr.initvStgId = ini.id)
+      Group by fy.financialResourcesId) as a) IS NULL 
+            OR (SELECT SUM(a.validation * 1) - count(a.validation)
+            FROM(
+      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
+      FROM financial_resources_years fy
+      WHERE fy.financialResourcesId in (
+      SELECT fr.id
+      FROM financial_resources fr
+      WHERE fr.initvStgId = ini.id)
+      Group by fy.financialResourcesId) as a) <>0
+           THEN FALSE
+             ELSE TRUE
+             END AS validation
+           FROM initiatives_by_stages ini
+           JOIN sections_meta sec
+          WHERE ini.id = ${this.initvStgId_}
+            AND sec.stageId= ini.stageId
+            AND sec.description='financial-resources'`;
 
       var financialResources = await this.queryRunner.query(
         validationFinancialResourcesSQL
@@ -835,33 +838,36 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       let validationBudgetSQL = `
         
-        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
-        CASE
-      WHEN (SELECT value FROM financial_resources WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT value FROM financial_resources WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(value,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM financial_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "budget"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE financial_resources_id in (SELECT id FROM financial_resources
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "budget"
-                        AND active = 1 ) IS NULL
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-	   JOIN subsections_meta subsec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='financial-resources'
-        AND subsec.description = 'budget'
+      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+      CASE
+       WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
+         FROM(
+    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
+    FROM financial_resources_years fy
+    WHERE fy.financialResourcesId in (
+    SELECT fr.id
+    FROM financial_resources fr
+    WHERE fr.initvStgId = ini.id)
+    Group by fy.financialResourcesId) as a) IS NULL 
+         OR (SELECT SUM(a.validation * 1) - count(a.validation)
+         FROM(
+    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
+    FROM financial_resources_years fy
+    WHERE fy.financialResourcesId in (
+    SELECT fr.id
+    FROM financial_resources fr
+    WHERE fr.initvStgId = ini.id)
+    Group by fy.financialResourcesId) as a) <>0
+        THEN FALSE
+          ELSE TRUE
+          END AS validation
+        FROM initiatives_by_stages ini
+        JOIN sections_meta sec
+      JOIN subsections_meta subsec
+       WHERE ini.id = ${this.initvStgId_}
+         AND sec.stageId= ini.stageId
+         AND sec.description='financial-resources'
+         AND subsec.description = 'budget'
         `;
 
       var budget = await this.queryRunner.query(validationBudgetSQL);

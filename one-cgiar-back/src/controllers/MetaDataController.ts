@@ -101,7 +101,7 @@ export async function getValidations(req: Request, res: Response) {
 
     // Get validations financial resources
 
-    // let financialResources = await metaData.validationFinancialResources();
+    let financialResources = await metaData.validationFinancialResources();
 
     // Get validations financial resources
 
@@ -128,7 +128,7 @@ export async function getValidations(req: Request, res: Response) {
         melia,
         managePlan,
         humanResources,
-        // financialResources,
+        financialResources,
         policyCompliance,
         impactStrategies,
         workPackages,
