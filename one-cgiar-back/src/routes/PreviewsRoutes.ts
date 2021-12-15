@@ -15,7 +15,7 @@ const router = Router();
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} previews/preview-partners/:initiativeId/stageId Previews - Request Partners per Initiative
+ * @api {get} previews/preview-partners/:initiativeId/stageId Get Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
@@ -28,7 +28,7 @@ const router = Router();
  *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
  *
- * @apiHeader {String} auth
+ * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -75,7 +75,7 @@ router.get(
  * GET PREVIEW PROJECTED BENEFITS
  */
 /**
- * @api {get} previews/preview-projected-benefits/:initiativeId/stageId Previews - Request Projected benefits per Initiative
+ * @api {get} previews/preview-projected-benefits/:initiativeId/stageId Get Projected benefits per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewProjectedBenefits
@@ -88,7 +88,7 @@ router.get(
  *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3
  *
- * @apiHeader {String} auth
+ * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -136,7 +136,7 @@ router.get(
  * GET PREVIEW GEOGRAPHIC SCOPE
  */
 /**
- * @api {get} previews/preview-geographic-scope/:initiativeId/stageId Previews - Request Geographic Scope per Initiative
+ * @api {get} previews/preview-geographic-scope/:initiativeId/stageId Get Geographic Scope per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewGeographicScope
@@ -149,7 +149,7 @@ router.get(
  *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3
  *
- * @apiHeader {String} auth
+ * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -193,7 +193,7 @@ router.get(
  * PREVIEW RISK ASSESSMENT
  */
 /**
- * @api {get} previews/preview-risk-assessment/:initiativeId/stageId Previews - Request Risk Assessment per Initiative
+ * @api {get} previews/preview-risk-assessment/:initiativeId/stageId Get Risk Assessment per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewRiskAssessment
@@ -206,7 +206,7 @@ router.get(
  *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3
  *
- * @apiHeader {String} auth
+ * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -269,7 +269,7 @@ router.get(
  * GET HUMAN RESOURCES
  */
 /**
- * @api {get} previews/human-resources/:initiativeId/stageId Previews - Request Human Resources per Initiative
+ * @api {get} previews/human-resources/:initiativeId/stageId Get Human Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewHumanResources
@@ -282,7 +282,7 @@ router.get(
  *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/human-resources/1/3
  *
- * @apiHeader {String} auth
+ * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -311,6 +311,74 @@ router.get(
   '/human-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('hr', 'readOwn')],
   previewController.getPreviewHumanResources
+);
+
+/**
+ * GET FINANCIAL RESOURCES
+ */
+/**
+ * @api {get} previews/financial-resources/:initiativeId/stageId Get Financial Resources per Initiative
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetPreviewFinancialResources
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows Preview Financial Resources per Initiative
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/financial-resources/1/3
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/financial-resources/1/3
+ *
+ * @apiHeader {String} auth token
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *{
+    "response": {
+        "previewFinancialResources": {
+            "financialResources": [
+                {
+                    "description": "crosscutting_wokpackages",
+                    "year": "2022",
+                    "value": "1000.00"
+                },
+                {
+                    "description": "crosscutting_wokpackages",
+                    "year": "2023",
+                    "value": "1000.00"
+                },
+                {
+                    "description": "crosscutting_wokpackages",
+                    "year": "2024",
+                    "value": "1000.00"
+                },
+                {
+                    "description": "innovation_packages",
+                    "year": "2022",
+                    "value": "1000.00"
+                },
+                {
+                    "description": "work_packages",
+                    "year": null,
+                    "value": null
+                }
+            ]
+        }
+    },
+    "title": "Previews:Preview Financial Resources"
+}
+ *
+ * @apiError ERROR Get Preview Financial Resources: Previews General
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "ERROR Get Preview Financial Resources: Previews General", error }
+ */
+router.get(
+  '/financial-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('fr', 'readOwn')],
+  previewController.getPreviewFinancialResources
 );
 
 export default router;
