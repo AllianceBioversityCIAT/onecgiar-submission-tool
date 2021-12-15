@@ -1237,10 +1237,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
-    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
-    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
-    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
-    OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1260,78 +1256,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
 
       generalValidations = validationContext[0].validation;
-
-      // Validate Citations
-
-      // let getAllCitationsSQL = (`
-      //  SELECT title,link,col_name
-      //    FROM citations
-      //   WHERE table_name = 'context'
-      //     AND initvStgId = ${this.initvStgId_}
-      //     AND active = 1
-      //  ORDER BY col_name;
-      //   `)
-
-      // var allCitations = await this.queryRunner.query(getAllCitationsSQL);
-
-      // var multi = generalValidations;
-
-      // for (let index = 0; index < allCitations.length; index++) {
-
-      //   const col_name = allCitations[index].col_name;
-      //   const title = allCitations[index].title;
-      //   const link = allCitations[index].link;
-      //   var validCitation;
-
-      //   if (col_name == 'key_learnings') {
-
-      //     if (title !== '' && link !== '') {
-      //       validCitation = 1;
-      //     } else {
-      //       validCitation = 0;
-      //     }
-
-      //   } else if (col_name == 'priority_setting') {
-
-      //     if (title !== '' && link !== '') {
-      //       validCitation = 1;
-      //     } else {
-      //       validCitation = 0;
-      //     }
-
-      //   } else if (col_name == 'participatory_design') {
-
-      //     if (title !== '' && link !== '') {
-      //       validCitation = 1;
-      //     } else {
-      //       validCitation = 0;
-      //     }
-
-      //   } else if (col_name == 'comparative_advantage') {
-
-      //     if (title !== '' && link !== '') {
-      //       validCitation = 1;
-      //     } else {
-      //       validCitation = 0;
-      //     }
-
-      //   } else {
-
-      //     validCitation = 0;
-
-      //   }
-
-      //   multi = multi * validCitation;
-
-      //   validationContext[0].validation = multi;
-
-      // }
-
-      // var validateProjectionBenefits = await this.validationsProjectionBenefits();
-
-      // validationContext[0].validation = validateProjectionBenefits.validation * validationContext[0].validation;
-
-      // var { challengeStatement, measurableObjectives, learning, prioritySetting, comparativeAdvantage, participatory } = await this.validationSubsectionContext(allCitations);
 
       var {
         challengeStatement,
@@ -1430,7 +1354,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''))) 
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 250
-	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'key_learnings') IS NULL
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1449,7 +1372,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')))
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
-	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'priority_setting') IS NULL
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1468,7 +1390,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
-	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'comparative_advantage') IS NULL
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1487,7 +1408,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) > 500
-	   OR (SELECT max(id) as id FROM citations WHERE table_name = 'context' AND initvStgId = ini.id AND active = 1 AND col_name = 'participatory_design') IS NULL
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1528,68 +1448,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
       participatory[0].validation = parseInt(participatory[0].validation);
 
-      // if (learning[0].validation > 0) {
-
-      //   allCitations.map(cit => {
-
-      //     if (cit.col_name == 'key_learnings') {
-
-      //       if (cit.title !== '' && cit.link !== '') {
-      //         learning[0].validation = 1;
-      //       } else {
-      //         learning[0].validation = 0;
-      //       }
-      //     }
-
-      //   })
-
-      // } else if (prioritySetting[0].validation > 0) {
-
-      //   allCitations.map(cit => {
-
-      //     if (cit.col_name == 'priority_setting') {
-
-      //       if (cit.title !== '' && cit.link !== '') {
-      //         prioritySetting[0].validation = 1;
-      //       } else {
-      //         prioritySetting[0].validation = 0;
-      //       }
-      //     }
-
-      //   })
-
-      // } else if (comparativeAdvantage[0].validation > 0) {
-
-      //   allCitations.map(cit => {
-
-      //     if (cit.col_name == 'comparative_advantage') {
-
-      //       if (cit.title !== '' && cit.link !== '') {
-      //         comparativeAdvantage[0].validation = 1;
-      //       } else {
-      //         comparativeAdvantage[0].validation = 0;
-      //       }
-      //     }
-
-      //   })
-
-      // } else if (participatory[0].validation > 0) {
-
-      //   allCitations.map(cit => {
-
-      //     if (cit.col_name == 'comparative_advantage') {
-
-      //       if (cit.title !== '' && cit.link !== '') {
-      //         participatory[0].validation = 1;
-      //       } else {
-      //         participatory[0].validation = 0;
-      //       }
-      //     }
-
-      //   })
-
-      // }
-
       return {
         challengeStatement,
         measurableObjectives,
@@ -1621,81 +1479,81 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (
       SELECT SUM(a.validation * 1) - count(a.validation)
-FROM
-(SELECT
-CASE 
-WHEN pb.impact_area_indicator_id IS NULL
-OR pb.impact_area_indicator_id = ''
-OR pb.impact_area_id IS NULL
-OR pb.impact_area_id= ''
-OR pb.notes IS NULL
-OR pb.notes= ''
-OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
-OR pb.depth_scale_id IS NULL
-OR pb.depth_scale_id= ''
-OR pb.probability_id IS NULL
-OR pb.probability_id= ''
-THEN FALSE
-   ELSE TRUE
-END AS VALIDATION
-FROM projection_benefits pb
-WHERE pb.initvStgId = ini.id
-AND pb.impact_area_id=${index}
-)as a ) IS NULL  
-OR (
-SELECT SUM(a.validation * 1) - count(a.validation)
-FROM
-(SELECT
-CASE 
-WHEN pb.impact_area_indicator_id IS NULL
-OR pb.impact_area_indicator_id = ''
-OR pb.impact_area_id IS NULL
-OR pb.impact_area_id= ''
-OR pb.notes IS NULL
-OR pb.notes= ''
-OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
-OR pb.depth_scale_id IS NULL
-OR pb.depth_scale_id= ''
-OR pb.probability_id IS NULL
-OR pb.probability_id= ''
-THEN FALSE
-   ELSE TRUE
-END AS VALIDATION
-FROM projection_benefits pb
-WHERE pb.initvStgId = ini.id
-AND pb.impact_area_id=${index}
-)as a)<> 0     
- OR (
-  SELECT SUM(a.validation * 1) - count(a.validation)
-   FROM
- (SELECT pb.id,
-   CASE 
-    WHEN d.breadth_value IS NULL
-      OR d.breadth_value =''
-      OR d.depthDescriptionId IS NULL
-      OR d.depthDescriptionId = ''
-   THEN FALSE
+        FROM
+        (SELECT
+        CASE 
+        WHEN pb.impact_area_indicator_id IS NULL
+        OR pb.impact_area_indicator_id = ''
+        OR pb.impact_area_id IS NULL
+        OR pb.impact_area_id= ''
+        OR pb.notes IS NULL
+        OR pb.notes= ''
+        OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
+        OR pb.depth_scale_id IS NULL
+        OR pb.depth_scale_id= ''
+        OR pb.probability_id IS NULL
+        OR pb.probability_id= ''
+        THEN FALSE
            ELSE TRUE
-END AS VALIDATION
-   FROM dimensions d
-    RIGHT JOIN projection_benefits pb
-   ON d.projectionId = pb.id
-  WHERE pb.initvStgId = ini.id
-    AND pb.depth_scale_id not in (4)) AS a
- )<>0
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-         FROM initiatives_by_stages ini
-         JOIN sections_meta sec
-       JOIN subsections_meta subsec
-        WHERE ini.id = ${this.initvStgId_}
-          AND sec.stageId= ini.stageId
-      AND sec.id = subsec.sectionId
-          AND sec.description='context'
-        AND subsec.description = 'projection-of-benefits'
+        END AS VALIDATION
+        FROM projection_benefits pb
+        WHERE pb.initvStgId = ini.id
+        AND pb.impact_area_id=${index}
+        )as a ) IS NULL  
+        OR (
+        SELECT SUM(a.validation * 1) - count(a.validation)
+        FROM
+        (SELECT
+        CASE 
+        WHEN pb.impact_area_indicator_id IS NULL
+        OR pb.impact_area_indicator_id = ''
+        OR pb.impact_area_id IS NULL
+        OR pb.impact_area_id= ''
+        OR pb.notes IS NULL
+        OR pb.notes= ''
+        OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
+        OR pb.depth_scale_id IS NULL
+        OR pb.depth_scale_id= ''
+        OR pb.probability_id IS NULL
+        OR pb.probability_id= ''
+        THEN FALSE
+           ELSE TRUE
+        END AS VALIDATION
+        FROM projection_benefits pb
+        WHERE pb.initvStgId = ini.id
+        AND pb.impact_area_id=${index}
+        )as a)<> 0     
+         OR (
+          SELECT SUM(a.validation * 1) - count(a.validation)
+           FROM
+         (SELECT pb.id,
+           CASE 
+            WHEN d.breadth_value IS NULL
+              OR d.breadth_value =''
+              OR d.depthDescriptionId IS NULL
+              OR d.depthDescriptionId = ''
+           THEN FALSE
+                   ELSE TRUE
+        END AS VALIDATION
+           FROM dimensions d
+            RIGHT JOIN projection_benefits pb
+           ON d.projectionId = pb.id
+          WHERE pb.initvStgId = ini.id
+            AND pb.depth_scale_id not in (4)) AS a
+         )<>0
+               THEN FALSE
+                 ELSE TRUE
+                 END AS validation
+                 FROM initiatives_by_stages ini
+                 JOIN sections_meta sec
+               JOIN subsections_meta subsec
+                WHERE ini.id = ${this.initvStgId_}
+                  AND sec.stageId= ini.stageId
+              AND sec.id = subsec.sectionId
+                  AND sec.description='context'
+                AND subsec.description = 'projection-of-benefits'
 
 `;
 
