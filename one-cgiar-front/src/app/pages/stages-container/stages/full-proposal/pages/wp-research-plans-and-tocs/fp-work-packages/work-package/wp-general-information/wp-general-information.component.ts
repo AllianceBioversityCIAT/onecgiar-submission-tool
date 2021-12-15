@@ -56,7 +56,7 @@ export class WpGeneralInformationComponent implements OnInit {
         this._initiativesService.getCLARISARegions('').subscribe(regions=>{
           this.geographicScope.regions.map(mapReg=>{
             regions.response.regions.forEach(regionItem=>{
-              if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
+              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
           this._dataControlService.showRegions = true;
