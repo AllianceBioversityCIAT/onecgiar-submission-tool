@@ -24,7 +24,7 @@ export class RiskAssessmentItemComponent implements OnInit {
       // risks_achieving_impact:new FormControl( null),
       description_risk:new FormControl( null),
       idBd:new FormControl( null),
-      likelihood:new FormControl(null),
+      // likelihood:new FormControl(null),
       impact:new FormControl(null),
       risk_score:new FormControl( null),
       active:new FormControl(true),
@@ -60,7 +60,7 @@ export class RiskAssessmentItemComponent implements OnInit {
     this.riskAssessmentForm.get("id").setValue(this.riskAssessment?.id)
     // this.riskAssessmentForm.get("risks_achieving_impact").setValue(this.riskAssessment?.risks_achieving_impact)
     this.riskAssessmentForm.get("description_risk").setValue(this.riskAssessment?.description_risk)
-    this.riskAssessmentForm.get("likelihood").setValue(this.riskAssessment?.likelihood)
+    // this.riskAssessmentForm.get("likelihood").setValue(this.riskAssessment?.likelihood)
     this.riskAssessmentForm.get("impact").setValue(this.riskAssessment?.impact)
     this.riskAssessmentForm.get("risk_score").setValue(this.riskAssessment?.risk_score)
     this.riskAssessmentForm.get("manage_plan_risk_id").setValue(this.riskAssessment?.manage_plan_risk_id)
@@ -71,7 +71,7 @@ export class RiskAssessmentItemComponent implements OnInit {
     // this.riskAssessment = this.riskAssessmentForm.value;
     // this.riskAssessment.risks_achieving_impact = this.riskAssessmentForm.get("risks_achieving_impact").value;
     this.riskAssessment.description_risk = this.riskAssessmentForm.get("description_risk").value;
-    this.riskAssessment.likelihood = this.riskAssessmentForm.get("likelihood").value || 0;
+    // this.riskAssessment.likelihood = this.riskAssessmentForm.get("likelihood").value || 0;
     this.riskAssessment.impact = this.riskAssessmentForm.get("impact").value || 0;
     this.riskAssessment.risk_score = this.riskAssessmentForm.get("risk_score").value || 0;
     // console.log(this.riskAssessment);

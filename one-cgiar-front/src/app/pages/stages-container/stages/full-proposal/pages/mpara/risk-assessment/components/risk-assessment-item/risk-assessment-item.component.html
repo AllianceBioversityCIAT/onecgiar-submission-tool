@@ -62,30 +62,34 @@
     <hr>
     <div class="row">
         <div class="col-12">
-            <ibdc-textarea
-            [options]="{inputTitle:'Detailed description', form:riskAssessmentForm, formControlName:'description_risk'
-            ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:100}">
-            </ibdc-textarea>
+            <ibdc-text-area-field 
+            inputTitle="Detailed description" 
+            [objectItem]="this.riskAssessment"  
+            [objectAtributteName]="'description_risk'"
+            ></ibdc-text-area-field>
         </div>
         <div class="col-6 margin-top-15">
-            <ibdc-input
-            [options]="{inputTitle:'Likelihood', form:riskAssessmentForm, formControlName:'likelihood',
-            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
-            </ibdc-input>
+            <ibdc-select-field
+            [objectItem]="this.riskAssessment"
+            [readOnlyVariable]="this._initiativesService.initiative.readonly" 
+            inputDescription="should be rate from 1 to 5"  
+            objectAtributteName="likelihood" 
+            inputTitle="Likelihood"
+            [selectableList]="[{id:0,categoryName:'0'},{id:1,categoryName:'1'},{id:2,categoryName:'2'},{id:3,categoryName:'3'},{id:4,categoryName:'4'},{id:5,categoryName:'5'}]"
+          ></ibdc-select-field>
         </div>
         <div class="col-6 margin-top-15">
-            <ibdc-input
-            [options]="{inputTitle:'Consequence (impact)', form:riskAssessmentForm, formControlName:'impact',
-            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0, max:5,iconText:'pin',description:'should be rate from 1 to 5'}">
-            </ibdc-input>
+            <ibdc-select-field
+            [objectItem]="this.riskAssessment" 
+            [readOnlyVariable]="this._initiativesService.initiative.readonly" 
+            [inputDescription]="'should be rate from 1 to 5'"  
+            [objectAtributteName]="'impact'" 
+            inputTitle="Consequence (impact)"
+            [selectableList]="[{id:0,categoryName:'0'},{id:1,categoryName:'1'},{id:2,categoryName:'2'},{id:3,categoryName:'3'},{id:4,categoryName:'4'},{id:5,categoryName:'5'}]"
+          ></ibdc-select-field>
         </div>
         <div class="col-6 margin-top-15">
             <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
-
-            <!-- <ibdc-input
-            [options]="{inputTitle:'Risk Score', form:riskAssessmentForm, formControlName:'risk_score',
-            readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0,iconText:'pin',description:'a'}">
-            </ibdc-input> -->
         </div>
         <div class="col-6"></div>
         <div class="col-12">
