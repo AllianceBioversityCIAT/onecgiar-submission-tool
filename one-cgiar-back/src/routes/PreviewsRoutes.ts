@@ -378,6 +378,7 @@ router.get(
 router.get(
   '/financial-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('fr', 'readOwn')],
-  previewController.getPreviewFinancialResources);
+  previewController.getPreviewFinancialResources
+);
 
 export default router;

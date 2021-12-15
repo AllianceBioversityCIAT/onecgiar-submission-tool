@@ -251,7 +251,10 @@ export async function getPreviewHumanResources(req: Request, res: Response) {
  * @param res { previewFinancialResources }
  * @returns previewFinancialResources
  */
- export async function getPreviewFinancialResources(req: Request, res: Response) {
+export async function getPreviewFinancialResources(
+  req: Request,
+  res: Response
+) {
   const {initiativeId, stageId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -278,7 +281,9 @@ export async function getPreviewHumanResources(req: Request, res: Response) {
     const previewsdomain = new PreviewsDomain();
 
     const previewFinancialResources =
-      await previewsdomain.requestPreviewFinancialResources(initvStg.id.toString());
+      await previewsdomain.requestPreviewFinancialResources(
+        initvStg.id.toString()
+      );
 
     res.json(
       new ResponseHandler('Previews:Preview Financial Resources', {
@@ -290,4 +295,3 @@ export async function getPreviewHumanResources(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
-

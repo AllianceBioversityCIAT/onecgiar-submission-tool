@@ -271,33 +271,33 @@ export class PreviewsDomain {
     }
   }
 
-    /**
+  /**
    * REQUEST PREVIEW FINANCIAL RESOURCES
    * @param initiativeId
    * @returns previewHumanResources
    */
-     async requestPreviewFinancialResources(initiativeId: string) {
-      try {
-        const financialResourcesQuery = `  SELECT if(fr.col_name='id',fr.table_name,fr.col_name) as description,fy.year,fy.value
+  async requestPreviewFinancialResources(initiativeId: string) {
+    try {
+      const financialResourcesQuery = `  SELECT if(fr.col_name='id',fr.table_name,fr.col_name) as description,fy.year,fy.value
         FROM financial_resources fr
         LEFT JOIN financial_resources_years fy
         ON fr.id = fy.financialResourcesId
        WHERE fr.initvStgId = ${initiativeId}
        AND fr.active > 0;`;
-  
-        const finacialResources = await this.queryRunner.query(financialResourcesQuery);
-  
-        return {financialResources: finacialResources};
-      } catch (error) {
-        console.log(error);
-        throw new BaseError(
-          'ERROR Get Preview Financial Resources: Previews General',
-          400,
-          error.message,
-          false
-        );
-      }
+
+      const finacialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+
+      return {financialResources: finacialResources};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Financial Resources: Previews General',
+        400,
+        error.message,
+        false
+      );
     }
-
-
+  }
 }
