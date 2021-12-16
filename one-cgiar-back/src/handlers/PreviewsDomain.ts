@@ -124,7 +124,7 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id) as um49code,ini.official_code,
+      SELECT DISTINCT(co.country_id) as code,ini.official_code,
       cco.isoAlpha2,cco.name
         FROM countries_by_initiative_by_stage co
        JOIN clarisa_countries cco
