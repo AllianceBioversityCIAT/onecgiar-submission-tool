@@ -1421,9 +1421,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
        JOIN sections_meta sec
 	   JOIN subsections_meta subsec
       WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-		AND sec.id = subsec.sectionId
-        AND sec.description='context'
+      AND sec.stageId= ini.stageId
+		  AND sec.id = subsec.sectionId
+      AND sec.description='context'
 	    AND subsec.description = 'participatory-design-process';  `;
 
       let projectionBenefits = [await this.validationsProjectionBenefits()];
@@ -1557,9 +1557,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
                JOIN subsections_meta subsec
                 WHERE ini.id = ${this.initvStgId_}
                   AND sec.stageId= ini.stageId
-              AND sec.id = subsec.sectionId
+                  AND sec.id = subsec.sectionId
                   AND sec.description='context'
-                AND subsec.description = 'projection-of-benefits'
+                  AND subsec.description = 'projection-of-benefits'
 
 `;
 
@@ -1605,7 +1605,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
          AND pb.active > 0
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
-         GROUP BY sec.id,pb.impact_area_id`;
+         GROUP BY sec.id,pb.impact_area_id,subsec.id`;
 
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
