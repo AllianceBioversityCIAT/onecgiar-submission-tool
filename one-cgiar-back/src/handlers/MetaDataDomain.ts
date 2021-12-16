@@ -1605,7 +1605,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
          AND pb.active > 0
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
-         GROUP BY sec.id,pb.impact_area_id,subsec.id`;
+         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id`;
 
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
