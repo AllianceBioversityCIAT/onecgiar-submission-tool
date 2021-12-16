@@ -188,7 +188,7 @@ export class PobResportsComponent implements OnInit {
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
 
-      this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
+      this._manageExcelService.saveAsExcelFile(excelBuffer,`${this._initiativesService.initiative.official_code} Projection of Benefits preview`);
     });
   }
 

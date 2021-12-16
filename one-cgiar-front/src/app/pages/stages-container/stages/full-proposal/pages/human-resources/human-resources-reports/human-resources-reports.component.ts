@@ -55,8 +55,8 @@ export class HumanResourcesReportsComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-
-      this._manageExcelService.saveAsExcelFile(excelBuffer, "partners");
+      console.log(excelBuffer)
+      this._manageExcelService.saveAsExcelFile(excelBuffer, `${this._initiativesService.initiative.official_code} Human Resources preview`);
     });
   }
 

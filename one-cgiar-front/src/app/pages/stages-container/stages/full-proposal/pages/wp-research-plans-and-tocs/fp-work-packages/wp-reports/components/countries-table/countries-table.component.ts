@@ -13,7 +13,6 @@ export class CountriesTableComponent implements OnInit {
   @Input() countries:Country[]=[];
   headerPreviewPartners = ['code', 'isoAlpha2', 'name'];
   headerPreviewTitles= ['code', 'ISO Alpha2','acronym'];
-
   constructor(
     private _manageExcelService:ManageExcelService
   ) { }
