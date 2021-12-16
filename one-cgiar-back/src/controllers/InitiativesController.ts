@@ -97,7 +97,7 @@ export const getSummary = async (req: Request, res: Response) => {
              GROUP BY co.id,co.country_id`,
       REquery = `
                 SELECT DISTINCT (r.region_id),
-                (SELECT cr.name FROM  clarisa_regions cr WHERE cr.um49Code = r.region_id) as name
+                (SELECT cr.name FROM  clarisa_regions_cgiar cr WHERE cr.id = r.region_id) as name
                 ,r.initvStgId
                   FROM regions_by_initiative_by_stage r
                  WHERE r.initvStgId = ${initvStg.id}
