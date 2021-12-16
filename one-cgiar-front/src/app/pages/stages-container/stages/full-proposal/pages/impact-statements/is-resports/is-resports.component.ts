@@ -33,8 +33,14 @@ export class IsResportsComponent implements OnInit {
   exportExcel() {
     import("xlsx").then(xlsx => {
 
+      let prePart =  JSON.parse(JSON.stringify(this.previewPartners))
+      prePart.map(item=>{
+        item.demand = item?.demand?'Yes':'No';
+        item.innovation = item?.innovation?'Yes':'No';
+        item.scaling = item?.scaling?'Yes':'No';
+      });
 
-      const worksheet = xlsx.utils.json_to_sheet(this.previewPartners);
+      const worksheet = xlsx.utils.json_to_sheet(prePart);
       var wscols = [
         {wpx:100},
         {wpx:100},
