@@ -1,7 +1,7 @@
     
     <div class="card-for-preview ibd-shadow-2">
         <!-- <h5>Horizontal and Vertical</h5> -->
-        <section-sub-title  name="Regions table"></section-sub-title>
+        <section-sub-title  name="Regions ONE CGIAR table"></section-sub-title>
 
         <div class="card-content">
             <p-table #tablee [value]="this.regions" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
@@ -16,12 +16,13 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreview; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                        <!-- <span style="color: gray; font-size: .8em; font-style: italic; font-weight: 500;">(Regions ONE CGIAR)</span>  -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-customer>
                     <tr>
-                        <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
+                        <td  *ngFor="let item of headerPreview; let i=index" [style]="i<2?'width:150px':'width:200px'">
                             <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
                                 <span >{{customer[item]?'Yes':'No'}}</span>
                             </div>
