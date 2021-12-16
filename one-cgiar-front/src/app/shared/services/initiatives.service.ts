@@ -505,6 +505,12 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
   }
 
+  //? previews
+
+  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
+  }
+
   getPreviewPartnersData(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
   }
