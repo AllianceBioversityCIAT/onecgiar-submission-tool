@@ -55,7 +55,6 @@ export class StagesMenuComponent implements OnInit {
     this._interactionsService.collapseHeader = true;
     this.activatedRoute.params.subscribe(resp => {
       this.initiativesSvc.initiative.id = resp['id'];
-      console.log(resp)
       this.initiativesSvc.getInitiativeById(resp['id']).subscribe((success) => {
         this.initiativesSvc.initiative.name = success.name;
           this.initiativesSvc.initiative.official_code = success.official_code;

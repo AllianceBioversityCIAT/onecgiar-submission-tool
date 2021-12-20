@@ -193,8 +193,6 @@ export class MenuComponent implements OnInit {
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 
-        console.log(this._dataControlService.userMenu);
-
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;
           this._dataControlService.impactStatementsMaped = true;

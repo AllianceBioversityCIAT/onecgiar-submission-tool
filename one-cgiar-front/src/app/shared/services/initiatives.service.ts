@@ -129,7 +129,6 @@ export class InitiativesService {
       resp.response.regions.map(region => {
         region.region_id = region.id;
       })
-      console.log(resp)
       return resp;
     }));;
   }

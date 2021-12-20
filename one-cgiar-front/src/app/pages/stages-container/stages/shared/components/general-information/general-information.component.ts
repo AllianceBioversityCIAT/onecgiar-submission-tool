@@ -24,7 +24,6 @@ export class GeneralInformationComponent implements OnInit {
   @Input() stageName = '';
   public summaryForm: FormGroup;
   public actionAreas: any[];
-  // public usersByInitiative: [];
 
   fName = "";
   wordCount: any;
@@ -43,11 +42,6 @@ export class GeneralInformationComponent implements OnInit {
   showFormActionArea = false;
   regionsList = [];
   countriesList = [];
-  // geographicScope = {
-  //   regions: [],
-  //   countries: []
-  // }
-
 
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
@@ -142,30 +136,7 @@ export class GeneralInformationComponent implements OnInit {
       this.summaryForm.controls['budget_value'].setValue(budget_data.value);
       // get Geo
       let geo_data = resp.response.geoScope;
-      // this.geographicScope.regions = geo_data.regions;
-      // this.geographicScope.countries = geo_data.countries;
       this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
-      // console.log('summary');
-      // console.log(this.summaryForm.value);
-
-      // this._initiativesService.getCLARISARegions('').subscribe(regions => {
-      //   this.geographicScope.regions.map(mapReg => {
-      //     regions.response.regions.forEach(regionItem => {
-      //       if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
-      //     })
-      //   })
-      //   this._dataControlService.showRegions = true;
-      // })
-
-      // this._initiativesService.getCLARISACountries().subscribe(countries => {
-      //   this.geographicScope.countries.map(mapCoun => {
-      //     countries.response.countries.forEach(countryItem => {
-      //       if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
-      //     })
-
-      //   })
-      //   this._dataControlService.showCountries = true;
-      // })
 
       this.showForm = true;
     },
@@ -199,36 +170,13 @@ export class GeneralInformationComponent implements OnInit {
     console.log(this.summaryForm);
 
     this.spinnerService.show('general-information');
-
-    // this.geographicScope.regions.map(newRegId => {
-    //   if (newRegId.um49Code) {
-    //     newRegId.region_id = newRegId.um49Code;
-    //   }
-    // })
-
-    // this.geographicScope.countries.map(newCountId => {
-    //   if (newCountId.code) {
-    //     newCountId.country_id = newCountId.code;
-    //   }
-    // })
     let body = this.summaryForm.value;
-    // body.regions=this.geographicScope.regions;
-    // body.countries=this.geographicScope.countries;
-    // console.log(this.geographicScope);
-    console.log(body);
-    // console.log(this.summaryForm.value);
-    // console.log(this._initiativesService.initiative.id);
-    // console.log(this.stageName=='proposal'?3:2);
 
     if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
-    console.log(body);
-
+    console.log(body)
     this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
-      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-      // })
       this._interactionsService.successMessage('General information has been saved');
       this.summaryForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
@@ -241,10 +189,6 @@ export class GeneralInformationComponent implements OnInit {
       this.spinnerService.hide('general-information');
 
     });
-    // console.log('%cregions','background: #222; color: #84c3fd');
-    // console.log(this.geographicScope.regions);
-    // console.log('%ccountries','background: #222; color: #fd8484');
-    // console.log(this.geographicScope.countries);
   }
 
   openDialog(): void {
@@ -256,10 +200,6 @@ export class GeneralInformationComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.getSummary();
-      // let currentUrl = this.router.url;
-      // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
-      //     this.router.navigate([currentUrl]);
-      // });
     });
   }
 
@@ -283,11 +223,6 @@ export class GeneralInformationComponent implements OnInit {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         console.log(propName)
-        // switch (propName) {
-        //   case 'myFirstInputParameter': {
-        //     // this.doSomething(change.currentValue)
-        //   }
-        // }
       }
     }
   }
