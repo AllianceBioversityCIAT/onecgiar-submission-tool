@@ -161,6 +161,11 @@ export class MenuComponent implements OnInit {
           showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
         })
+ 
+        this.mapReportInSubSectionMenu(3,15,{
+          showName: 'Human Resources preview',
+          frontRoute: '/human-resources-reports'
+        })
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
           showName: 'Partners preview',
@@ -187,8 +192,6 @@ export class MenuComponent implements OnInit {
           showName: 'Projection of benefits preview',
           frontRoute: '/projection-of-benefits/pob-resports'
         });
-
-        // console.log(this._dataControlService.userMenu);
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;

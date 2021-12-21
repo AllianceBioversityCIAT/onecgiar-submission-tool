@@ -129,7 +129,6 @@ export class InitiativesService {
       resp.response.regions.map(region => {
         region.region_id = region.id;
       })
-      console.log(resp)
       return resp;
     }));;
   }
@@ -503,6 +502,12 @@ export class InitiativesService {
 
   getMenu(initiativeId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
+  }
+
+  //? previews
+
+  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
   }
 
   getPreviewPartnersData(): Observable<any> {
