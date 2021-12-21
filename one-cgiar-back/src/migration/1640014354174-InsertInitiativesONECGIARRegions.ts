@@ -1,4 +1,9 @@
-import {getRepository, MigrationInterface, QueryRunner} from 'typeorm';
+import {
+  getRepository,
+  MigrationInterface,
+  QueryRunner,
+  getConnection
+} from 'typeorm';
 import {RegionsByInitiativeByStage} from '../entity/RegionsByInitiativeByStage';
 
 export class InsertInitiativesONECGIARRegions1640014354174
@@ -28,16 +33,11 @@ export class InsertInitiativesONECGIARRegions1640014354174
     (1,267,4,58),(1,268,4,58),(1,268,5,58),(1,269,5,58),(1,269,4,58),(1,269,3,58),(1,275,4,60),(1,275,4,60),
     (1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),(1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),
     (1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),(1,275,2,67),(1,275,4,67),(1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67)`;
-    const [query, parameters] =
-      await queryRunner.connection.driver.escapeQueryWithParameters(
-        insertSQL,
-        {},
-        {}
-      );
-    const insertedRegions = await queryRunner.connection.query(
-      query,
-      parameters
-    );
+    
+    const insertedRegions = await getConnection()
+      .createQueryRunner()
+      .query(insertSQL);
+
     console.log(insertedRegions);
   }
 
