@@ -13,6 +13,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { DataControlService } from '@app/shared/services/data-control.service';
 import { ManageAccessComponent } from '../manage-access/manage-access.component';
+import { DataValidatorsService } from '../../data-validators.service';
 
 @Component({
   selector: 'app-general-information',
@@ -57,7 +58,8 @@ export class GeneralInformationComponent implements OnInit {
     public _initiativesService: InitiativesService,
     private router: Router,
     public _dataControlService: DataControlService,
-    private _StagesMenuService: StagesMenuService
+    private _StagesMenuService: StagesMenuService,
+    public _dataValidatorsService : DataValidatorsService
   ) {
     this.summaryForm = new FormGroup({
       name: new FormControl(null, Validators.required),
@@ -177,10 +179,16 @@ export class GeneralInformationComponent implements OnInit {
     this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
-      this._interactionsService.successMessage('General information has been saved');
-      this.summaryForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      // this._interactionsService.successMessage('General information has been saved');
+
+      this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
+
+
+      
+
+
     },error => {
     // console.log(error, this.errorService.getServerMessage(error))
     console.log(error);
