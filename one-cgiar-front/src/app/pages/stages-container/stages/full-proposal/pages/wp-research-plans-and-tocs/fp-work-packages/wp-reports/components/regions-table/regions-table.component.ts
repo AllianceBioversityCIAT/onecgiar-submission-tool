@@ -9,14 +9,14 @@ import { ManageExcelService } from '../../../../../../services/manage-excel.serv
 })
 export class RegionsTableComponent implements OnInit {
   @Input() regions:Region[]=[];
-  headerPreviewPartners = ['um49code', 'name'];
-
+  headerPreview= ['code', 'name','acronym'];
   constructor(
     private _manageExcelService:ManageExcelService
   ) { }
 
   ngOnInit(): void {
     this.regions.map((item:any)=>delete item.official_code);
+    console.log(this.regions)
   }
 
   exportBasicExcel(){

@@ -121,24 +121,10 @@ export class ImpactAreaIsComponent implements OnInit {
   }
 
   ngDoCheck(): void {
-    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
-    //Add 'implements DoCheck' to the class.
-    // console.log(this.iaID);
     this.pobColorselected(3, 7, 16, this.iaID);
   }
-
-  // customValidation(frm: FormGroup){
-  //   console.log("hola");
-  //   console.log(this.casa);
-  //   // this._DataValidatorsService.validateIfArrayHasActiveFalse(this.savedList)
-  //   console.log(this.savedList);
-  //   return null;
-  // }
  
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    
    this.pobColorselected(3, 7, 16,-1)
    this.cleanForm();
   }
@@ -172,28 +158,26 @@ export class ImpactAreaIsComponent implements OnInit {
   }
 
   
-  pobColorselected(stageId, sectionId, subSectionId, pobIaID){
+  pobColorselected(stageId, sectionId, subSectionId, pobIaID) {
     // select all wp 
 
+    let allImpactAreas = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
+      .sections.find((section) => section.sectionId == sectionId)
+      .subsections.find((subSection) => subSection.subSectionId == subSectionId)
+      .dynamicList
+    if (!allImpactAreas?.length) return;
+    // clean wp activeSection attribute
+    allImpactAreas?.map(ia => ia.activeSection = false)
 
-        let allImpactAreas = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
-        .sections.find((section) => section.sectionId == sectionId)
-        .subsections.find((subSection) => subSection.subSectionId == subSectionId)
-        .dynamicList
-        // clean wp activeSection attribute
-        allImpactAreas.map(ia=>ia.activeSection = false)
+    // select current wp
+    if (pobIaID != -1) {
+      // console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
+      if (allImpactAreas.find((IA) => IA.id == pobIaID)) {
+        allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
+        let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
+      }
 
-        
-        // select current wp
-        if (pobIaID != -1) {
-          // console.log(allImpactAreas.find((IA) => IA.id == pobIaID));
-          if (allImpactAreas.find((IA) => IA.id == pobIaID)) {
-            allImpactAreas.find((IA) => IA.id == pobIaID).activeSection = true;
-            let sectionFinded = allImpactAreas.find((IA) => IA.id == pobIaID)
-          }
-
-          // this.pobImpactAreaForm.controls['impact_area_name'].setValue(sectionFinded.showName);
-        }
+    }
 
   }
 

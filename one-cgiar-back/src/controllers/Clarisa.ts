@@ -80,6 +80,30 @@ export const getClaRegions = async () => {
 
 /**
  *
+ * @returns clarisa regions CGIAR
+ */
+export const getClaRegionsCgiar = async () => {
+  try {
+    const regions = await axios.get(clarisaHost + 'OneCGIARRegions', {
+      auth: {
+        username: process.env['clarisa_user'],
+        password: process.env['clarisa_password']
+      }
+    });
+    return regions.data;
+  } catch (error) {
+    console.log(error);
+    throw new APIError(
+      'NOT FOUND',
+      HttpStatusCode.NOT_FOUND,
+      true,
+      error.message
+    );
+  }
+};
+
+/**
+ *
  * @returns clarisa institutions
  */
 // export const getClaInstitutions = async (req: Request, res: Response) => {

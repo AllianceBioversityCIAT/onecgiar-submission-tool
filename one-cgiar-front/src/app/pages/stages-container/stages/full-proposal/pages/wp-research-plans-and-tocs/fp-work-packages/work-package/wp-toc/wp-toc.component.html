@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-4">
-      <button pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
+      <button *ngIf="!this._initiativesService.initiative.readonly" pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
     </div>
 
     <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="txtIsLoaded">

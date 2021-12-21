@@ -123,17 +123,17 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
-  // Query to get CLARISA Regions 
+  //? Query to get CLARISA Regions 
   getCLARISARegions(filterText: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?filter=${filterText}`).pipe(map(resp => {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions-cgiar?filter=${filterText}`).pipe(map(resp => {
       resp.response.regions.map(region => {
-        region.region_id = region.um49Code;
+        region.region_id = region.id;
       })
       return resp;
     }));;
   }
 
-  // Query to get CLARISA Countries
+  //? Query to get CLARISA Countries
   getCLARISACountries(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`).pipe(map(resp => {
       resp.response.countries.map(country => {
@@ -502,6 +502,12 @@ export class InitiativesService {
 
   getMenu(initiativeId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
+  }
+
+  //? previews
+
+  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
   }
 
   getPreviewPartnersData(): Observable<any> {

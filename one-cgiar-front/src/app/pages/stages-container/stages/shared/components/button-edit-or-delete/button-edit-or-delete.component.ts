@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-button-edit-or-delete',
@@ -7,11 +8,19 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ButtonEditOrDeleteComponent implements OnInit {
   @Input() type;
+  @Input() confirmDeleteModal = false;;
   @Output() action = new EventEmitter;
-  constructor() { }
+  constructor(private _interactionsService : InteractionsService) { }
 
   ngOnInit(): void {
     if (!this.type) this.type = 'edit';
+  }
+
+  confirmDelete(){
+    this._interactionsService.confirmationModal((decision)=>{
+      if (!decision) return;
+      this.action.emit()
+    });
   }
 
 }

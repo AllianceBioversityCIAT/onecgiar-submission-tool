@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MenuService } from '../../services/menu.service';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { Router } from '@angular/router';
+import { InteractionsService } from '../../../../services/interactions.service';
 
 @Component({
   selector: 'app-menu-dynamic-list',
@@ -15,10 +16,22 @@ export class MenuDynamicListComponent implements OnInit {
   constructor(
     public _menuService : MenuService,
     private _initiativesService:InitiativesService,
-    private router : Router
+    private router : Router,
+    private _interactionsService : InteractionsService
   ) { }
 
   ngOnInit(): void {
+  }
+
+  addWorkPackage(){
+    console.log('addWorkPackage()')
+    let body = {active:true,id:null}
+    this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+      console.log(resp.response.workpackage.id)
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package/${resp.response.workpackage.id}/wp-general-info`])
+
+      this._interactionsService.successMessage('Work package has been created')
+    })
   }
 
   partnersNotRelatedRoute() {
@@ -39,6 +52,10 @@ export class MenuDynamicListComponent implements OnInit {
     // console.log(baseUrl+ stageParam+'/'+ section + subsection + itemID);
     return baseUrl + stageParam + '/' + section + subsection;
     // this.router.navigate([baseUrl, stageParam, section, subsection, itemID]);
+  }
+
+  validateIfShowAddWp(){
+    return (this.stage.stageId === 3 ) && (this.section.sectionId === 5) && (this.subSection.subSectionId === 12) && !this._initiativesService.initiative.readonly;
   }
 
 }

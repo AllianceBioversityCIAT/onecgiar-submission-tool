@@ -1,28 +1,29 @@
-    
+<section-title name="Human Resources preview" ></section-title>
+
+<div class="section-container-for-previews animate__animated animate__fadeIn">
     <div class="card-for-preview ibd-shadow-2">
         <!-- <h5>Horizontal and Vertical</h5> -->
-        <section-sub-title  name="Regions ONE CGIAR table"></section-sub-title>
+        <section-sub-title name="Human Resources table"></section-sub-title>
 
         <div class="card-content">
-            <p-table #tablee [value]="this.regions" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
+            <p-table #tablee *ngIf="previewHumanResources.length" [value]="previewHumanResources" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
             sortMode="multiple"
             >
                 <ng-template pTemplate="caption">
-                    <div class="p-d-flex" *ngIf="!this.notAreRegions">
+                    <div class="p-d-flex" *ngIf="!this.notArePreviewPartners">
     
-                        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportBasicExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
     
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreview; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
-                        <!-- <span style="color: gray; font-size: .8em; font-style: italic; font-weight: 500;">(Regions ONE CGIAR)</span>  -->
+                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item | replaceSymbolBySpace | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-customer>
                     <tr>
-                        <td  *ngFor="let item of headerPreview; let i=index" [style]="i<2?'width:150px':'width:200px'">
+                        <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
                             <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
                                 <span >{{customer[item]?'Yes':'No'}}</span>
                             </div>
@@ -47,10 +48,10 @@
                 </ng-template> -->
             </p-table>
             <br>
-            <app-text-not-data [hidden]="this.regions?.length" text="There are not Regions data"></app-text-not-data>
+            <app-text-not-data [hidden]="!this.notArePreviewPartners" text="There are not Partners data"></app-text-not-data>
             <br>
         </div>
 
 
-
     </div>
+</div>

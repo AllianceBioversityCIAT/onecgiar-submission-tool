@@ -7,6 +7,10 @@
     justify-content: space-between;
     padding: 0 3rem 0 5rem;
     background-color: #898e8966;
+    .navbar-options{
+        display: flex;
+        gap: 10px;
+    }
 }
 .navbar-title.active{
     background-color: #666;
@@ -26,6 +30,12 @@
         background-color: #616161a8;
         border-radius: 5px;
     }
+}
+
+.navbar-title.disabled{
+    background-color: #e2e2e25b !important;
+    color: rgb(168, 168, 168) !important;
+    cursor: auto;
 }
 
 .isActive {

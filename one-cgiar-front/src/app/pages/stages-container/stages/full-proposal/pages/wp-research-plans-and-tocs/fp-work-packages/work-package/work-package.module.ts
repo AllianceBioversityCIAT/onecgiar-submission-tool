@@ -9,6 +9,7 @@ import { SkeletonsModule } from '../../../../../../../../shared/components/skele
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { GeographicScopeModule } from '../../../../../shared/components/geographic-scope/geographic-scope.module';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
+import { ButtonEditOrDeleteModule } from '../../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
     IbdAngularComponentsModule,
     SkeletonsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonEditOrDeleteModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

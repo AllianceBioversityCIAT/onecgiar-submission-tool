@@ -12,7 +12,6 @@ import { StepOneComponent } from './components/step-one/step-one.component';
 import { StepTwoComponent } from './components/step-two/step-two.component';
 import {ButtonModule} from 'primeng/button';
 import { RiskAssessmentItemModule } from './components/risk-assessment-item/risk-assessment-item.module';
-import { ButtonAddElementModule } from '../../../../shared/components/button-add-element/button-add-element.module';
 
 @NgModule({
   declarations: [RiskAssessmentComponent, StepOneComponent, StepTwoComponent],
@@ -24,8 +23,7 @@ import { ButtonAddElementModule } from '../../../../shared/components/button-add
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
-    RiskAssessmentItemModule,
-    ButtonAddElementModule
+    RiskAssessmentItemModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
