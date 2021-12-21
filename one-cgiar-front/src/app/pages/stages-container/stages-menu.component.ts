@@ -72,7 +72,7 @@ export class StagesMenuComponent implements OnInit {
     })
     
     this._dataControlService.validateMenu$.subscribe(resp=>{
-      this.validateAllSections();
+        this.validateAllSections();
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 
@@ -111,6 +111,7 @@ export class StagesMenuComponent implements OnInit {
   validateAllSections() {
 
     this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id, 3).subscribe(resp => {
+      // console.log("%c Green check: ",  'color: #f4f814',resp.response);
 
       Object.keys(resp.response).map(key => {
         let stageId = 3;
@@ -127,8 +128,8 @@ export class StagesMenuComponent implements OnInit {
           if (menuSubsections) menuSubsections.fieldsCompleted = item.validation;
 
           if (!item.hasOwnProperty('dinamicList')) return;
-          item.dinamicList.map(resp => {
-            if (!(menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id))) return false
+          item.dinamicList?.map(resp => {
+            if (!(menuSubsections?.dynamicList?.find(dynamicItem => dynamicItem.id == resp.impact_area_id))) return false
             menuSubsections.dynamicList.find(dynamicItem => dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
           })
 

@@ -29,4 +29,7 @@ export class RiskAssessment extends UpdatedCreatedAt {
 
   @Column({type: 'tinyint'})
   active: boolean;
+
+  @Column({type: 'tinyint'})
+  add_by_user: boolean;
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OpportunityItemComponent } from './opportunity-item.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule
-  ]
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OpportunityItemModule { }

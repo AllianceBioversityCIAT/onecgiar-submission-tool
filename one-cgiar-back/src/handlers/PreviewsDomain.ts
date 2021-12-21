@@ -124,7 +124,7 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id) as um49code,ini.official_code,
+      SELECT DISTINCT(co.country_id) as code,ini.official_code,
       cco.isoAlpha2,cco.name
         FROM countries_by_initiative_by_stage co
        JOIN clarisa_countries cco
@@ -136,14 +136,14 @@ export class PreviewsDomain {
        WHERE co.initvStgId =${initiativeId}
          AND co.active = 1
          AND co.wrkPkgId IS NOT NULL
-       GROUP BY co.id,co.country_id  
+       GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id)as um49code,ini.official_code,
-        re.name
+        SELECT DISTINCT (r.region_id)as code,ini.official_code,
+        re.name,re.acronym
         FROM regions_by_initiative_by_stage r
-        JOIN clarisa_regions re
-        ON r.region_id = re.um49Code
+        JOIN clarisa_regions_cgiar re
+        ON r.region_id = re.id
         JOIN initiatives_by_stages ist
         ON r.initvStgId = ist.id
         JOIN initiatives ini
@@ -151,7 +151,7 @@ export class PreviewsDomain {
         WHERE r.initvStgId = ${initiativeId}
         AND r.active = 1
         AND r.wrkPkgId IS NOT NULL
-        GROUP BY r.region_id    
+        GROUP BY r.region_id,ini.official_code,re.name   
               `;
 
       const regions = await this.queryRunner.query(regionsQuery);
@@ -264,6 +264,36 @@ export class PreviewsDomain {
       console.log(error);
       throw new BaseError(
         'ERROR Get Preview Human Resources: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * REQUEST PREVIEW FINANCIAL RESOURCES
+   * @param initiativeId
+   * @returns previewHumanResources
+   */
+  async requestPreviewFinancialResources(initiativeId: string) {
+    try {
+      const financialResourcesQuery = `  SELECT if(fr.col_name='id',fr.table_name,fr.col_name) as description,fy.year,fy.value
+        FROM financial_resources fr
+        LEFT JOIN financial_resources_years fy
+        ON fr.id = fy.financialResourcesId
+       WHERE fr.initvStgId = ${initiativeId}
+       AND fr.active > 0;`;
+
+      const finacialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+
+      return {financialResources: finacialResources};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Financial Resources: Previews General',
         400,
         error.message,
         false

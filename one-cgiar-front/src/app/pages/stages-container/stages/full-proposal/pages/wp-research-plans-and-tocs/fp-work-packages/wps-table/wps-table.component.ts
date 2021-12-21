@@ -21,8 +21,8 @@ export class WpsTableComponent implements OnInit {
 
     this.cols = [
         { field: 'acronym', header: 'Short name' },
-        { field: 'active', header: 'General information status' },
-        { field: 'active', header: 'Theory of change status' }
+        // { field: 'active', header: 'General information status' },
+        // { field: 'active', header: 'Theory of change status' }
     ];
   }
 

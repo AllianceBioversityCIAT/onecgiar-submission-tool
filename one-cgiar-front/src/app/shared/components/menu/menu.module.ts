@@ -11,6 +11,7 @@ import { MenuSectionComponent } from './components/menu-section/menu-section.com
 import { MenuSubSectionComponent } from './components/menu-sub-section/menu-sub-section.component';
 import { MenuSubSectionPreviewComponent } from './components/menu-sub-section-preview/menu-sub-section-preview.component';
 import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dynamic-list.component';
+import { ButtonAddElementModule } from '../../../pages/stages-container/stages/shared/components/button-add-element/button-add-element.module';
 
 
 
@@ -32,7 +33,8 @@ import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dy
     ButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    ButtonAddElementModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

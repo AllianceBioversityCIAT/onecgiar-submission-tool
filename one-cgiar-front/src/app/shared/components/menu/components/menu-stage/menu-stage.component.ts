@@ -24,7 +24,6 @@ export class MenuStageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.userMenu)
   }
 
 

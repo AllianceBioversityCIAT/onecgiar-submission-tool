@@ -186,6 +186,14 @@ export class InitiativeHandler {
     return countires;
   }
 
+  async requestRegionsCgiar() {
+    const querySql = `
+        SELECT id,name,acronym
+        FROM clarisa_regions_cgiar`;
+    const countires = await this.queryRunner.query(querySql);
+    return countires;
+  }
+
   /**
    * PREVIEW PARTNERS FOR IMPACT STRATEGIES
    */
@@ -227,7 +235,7 @@ export class InitiativeHandler {
     try {
       const querySql = `
       SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme as risks_theme
-      FROM initiativesdb.clarisa_risks ri
+      FROM clarisa_risks ri
       JOIN clarisa_risk_theme th
         ON ri.clarisa_risks_theme_id = th.id;`;
       const risks = await this.queryRunner.query(querySql);

@@ -135,7 +135,6 @@ export class MenuComponent implements OnInit {
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
       this._dataControlService.userMenu = userMenuResp.response.stages;
-      console.log(this._dataControlService.userMenu);
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
@@ -151,8 +150,7 @@ export class MenuComponent implements OnInit {
           this._dataControlService.wpMaped = true;
         });
 
-
-        let pobList =  new ListToMap(this.impacAreasList,'/projection-of-benefits/impact-area/','impact-area','id','name').getList();
+        let pobList =  new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
 
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
@@ -162,6 +160,11 @@ export class MenuComponent implements OnInit {
         this.mapReportInSubSectionMenu(3,9,{
           showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
+        })
+ 
+        this.mapReportInSubSectionMenu(3,15,{
+          showName: 'Human Resources preview',
+          frontRoute: '/human-resources-reports'
         })
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
@@ -190,8 +193,6 @@ export class MenuComponent implements OnInit {
           frontRoute: '/projection-of-benefits/pob-resports'
         });
 
-        // console.log(this._dataControlService.userMenu);
-
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;
           this._dataControlService.impactStatementsMaped = true;
@@ -199,7 +200,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-
+      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

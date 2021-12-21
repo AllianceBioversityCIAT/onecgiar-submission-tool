@@ -220,6 +220,11 @@ button {
   font-size: 12px;
 }
 
+.ibdc_green_gradient{
+  background: rgb(91,189,147);
+  background: linear-gradient(131deg, rgba(91,189,147,1) 0%, rgba(210,225,200,1) 100%);
+}
+
 //ibdc colors end
 
 :root{

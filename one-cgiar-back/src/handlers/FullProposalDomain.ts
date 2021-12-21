@@ -1246,7 +1246,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         riskAssessmentQuery = `
                 SELECT id,risks_achieving_impact,risks_theme,
                        description_risk,likelihood,impact,
-                       risk_score,manage_plan_risk_id,active
+                       risk_score,manage_plan_risk_id,active,add_by_user
                  FROM risk_assessment
                 WHERE manage_plan_risk_id in (
                 SELECT id
@@ -1343,6 +1343,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             newRiskAssessment.risk_score = risk.risk_score;
             newRiskAssessment.active = risk.active;
             newRiskAssessment.manage_plan_risk_id = managePlanRiskId;
+            newRiskAssessment.add_by_user = risk.add_by_user;
 
             /**UPDATE RISK ASSESSMENT */
             if (newRiskAssessment.id !== null) {
