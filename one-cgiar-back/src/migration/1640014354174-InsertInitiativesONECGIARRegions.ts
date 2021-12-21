@@ -10,7 +10,10 @@ export class InsertInitiativesONECGIARRegions1640014354174
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const regionsRepo = getRepository(RegionsByInitiativeByStage);
+
+    const connection = getConnection();
+
+    const regionsRepo = connection.getRepository(RegionsByInitiativeByStage);
 
     const regions = await regionsRepo.find();
 
@@ -34,7 +37,7 @@ export class InsertInitiativesONECGIARRegions1640014354174
     (1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),(1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),
     (1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67),(1,275,2,67),(1,275,4,67),(1,275,2,67),(1,275,3,67),(1,275,4,67),(1,275,1,67)`;
     
-    const insertedRegions = await getConnection()
+    const insertedRegions = await connection
       .createQueryRunner()
       .query(insertSQL);
 
