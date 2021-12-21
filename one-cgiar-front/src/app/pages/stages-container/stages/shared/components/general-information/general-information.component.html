@@ -1,7 +1,7 @@
 <section-title name="General information"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <app-section-alerts-pack [sectionForm]="summaryForm"></app-section-alerts-pack>
+    <app-section-alerts-pack [sectionForm]="summaryForm" [extraValidation]="this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get('name').value, 50)"></app-section-alerts-pack>
     <br>
     <div class="sekeletons_load" *ngIf="!showForm">
         <app-general-information-skeleton></app-general-information-skeleton>
