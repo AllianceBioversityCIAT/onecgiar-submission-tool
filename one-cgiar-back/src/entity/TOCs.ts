@@ -12,6 +12,21 @@ export class TOCs extends UpdatedCreatedAt {
   @IsNotEmpty()
   narrative: string;
 
+  @Column({type: 'text'})
+  diagram:String;
+
+  @Column({type: 'tinyint'})
+  type:boolean
+
+  @Column({type: 'tinyint'})
+  active:boolean
+
+  @Column({type: 'text'})
+  tocId: string;
+
+  @Column({type: 'int'})
+  initvStgId: number;
+
   @ManyToOne(() => InitiativesByStages, (initvStg) => initvStg.id)
   public initvStg!: InitiativesByStages;
 }

@@ -1432,3 +1432,53 @@ export async function getInnovationPackages(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
+
+/**
+ * PATCH TOCS
+ * @param req tocId,narrative, diagram, type, active
+ * @param res tocs
+ * @returns tocs
+ */
+export async function patchTocs(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+  const {tocId,narrative, diagram, type, active} = req.body;
+
+  //Validate stage
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read policy compliance oversight: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const tocs = fullPposal.upsertTocs(tocId,narrative, diagram, type, active);
+
+    res.json(
+      new ResponseHandler('Full Proposal:TOC', {
+        tocs
+      })
+    );
+
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}

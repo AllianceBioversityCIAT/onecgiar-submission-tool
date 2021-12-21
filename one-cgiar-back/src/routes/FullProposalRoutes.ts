@@ -1497,4 +1497,68 @@ router.get(
   stagefull.getInnovationPackages
 );
 
+/**
+ * PATCH TOCS
+ */
+/**
+ * @api {patch} stages-control/proposal/toc/:initiativeId/ TOCS- Create and update TOC
+ * @apiVersion 1.0.0
+ * @apiPermission admin
+ * @apiName PatchTOC
+ * @apiGroup Proposal
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/toc/2
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/toc/2
+ *
+ * @apiHeader {String} auth TOKEN
+ *
+ * @apiParam {Number} initiativeId Id initiative.
+ * @apiParam {String} TocId identificator TOC.
+ * @apiParam {String} narrative description TOC.
+ * @apiParam {String} diagram url diagram.
+ * @apiParam {Boolean} type 0 is TOC into Work Package or 1 Full Initiative TOC.
+ * @apiParam {Boolean} active status.
+ *
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *   "id": null,
+ *   "tocId": "tsdgd9o3zc",
+ *   "narrative":"SeEdQUAL supports the delivery of seed of improved climate-resilient, market-preferred",
+ *   "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
+ *   "type": true
+ *   "active": true
+ *  }
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *   "response": {
+ *       "innovationPackages": {
+ *           "upsertedInnovationPackages": {
+ *               "id": 1,
+ *               "key_principles": "Test 1 innovation package",
+ *               "active": true,
+ *               "initvStgId": 35,
+ *               "updated_at": "2021-09-22T16:09:07.000Z",
+ *               "created_at": "2021-09-22T16:09:07.000Z"
+ *           }
+ *       }
+ *   },
+ *   "title": "Full Proposal: Innovation Packages."
+ * }
+ *
+ * @apiError Error Upsert TOC: Full proposal
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"name": "Upsert TOC: Full proposal","httpCode": 400,"isOperational": false}
+ */
+router.patch(
+  '/toc/:initiativeId([0-9]+)',
+  [checkJwt],
+  stagefull.getInnovationPackages
+);
+
 export default router;
