@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { map } from 'rxjs/operators';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-impact-area',
@@ -21,6 +22,7 @@ export class ImpactAreaComponent implements OnInit {
     public _initiativesService:InitiativesService,
     private _dataControlService:DataControlService,
     public activatedRoute:ActivatedRoute,
+    public _interactionsService:InteractionsService,
     private router:Router
     ){}
 
@@ -66,16 +68,36 @@ export class ImpactAreaComponent implements OnInit {
     })
 
     let cont = 0;
+    let indicatorsSavedList:boolean[] = [];
     this.indicatorsListPOBSavedList.map(item=>{
       this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
+        indicatorsSavedList.push(true);
         cont++
         if (cont == this.indicatorsListPOBSavedList.length) {
           this.reloadComponent()
         }
-      },err=>(console.log(err),()=>{}))
+      },err=>(console.log(err),()=>{indicatorsSavedList.push(false)}))
 
     })
 
+    this.validateAllIndicatorsSaved(indicatorsSavedList);
+
+
+  }
+
+
+  validateAllIndicatorsSaved(indicatorsSavedList:boolean[]){
+
+    let allAreLoaded = true;
+
+    indicatorsSavedList.map(item=>{
+      if (item) return;
+      allAreLoaded = false; 
+    })
+
+    allAreLoaded?
+    this._interactionsService.successMessage('Projection of benefits has been saved'):
+    this._interactionsService.warningMessage('Projection of benefits has been saved, but there are incomplete fields')
 
   }
 

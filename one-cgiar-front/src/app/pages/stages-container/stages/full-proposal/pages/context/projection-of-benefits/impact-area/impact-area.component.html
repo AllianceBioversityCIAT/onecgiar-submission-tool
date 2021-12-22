@@ -2,7 +2,9 @@
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <div class="top_bar"></div> -->
     <form (ngSubmit)="saveForm()">
-
+  
+        <!-- <app-section-alerts-pack  [extraValidation]="false"></app-section-alerts-pack> -->
+  
         <div *ngIf="indicatorsListLoaded">
             <div *ngFor="let item of indicatorsListPOBSavedList; let i=index"
                 [hidden]="item.impact_area_active === false">
