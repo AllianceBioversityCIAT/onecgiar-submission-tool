@@ -97,21 +97,12 @@
             </div>
             <div class="col-sm-6">
                 <div style="height: 20px;"></div>
-                <ibdc-input
-                    [class.invalid]= "summaryForm.get('budget_value').invalid"
-                    [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
-                </ibdc-input>
-            </div>
-            <!-- <div class="col-sm-6" *ngIf="showBudget">
                 <ibdc-textarea
-                    [options]="{inputTitle:'Budget (USD)', form:budgetForm, formControlName:'value'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
-                </ibdc-textarea>
-            </div> -->
-            <!-- <div class="col-sm-12">
-                <app-geographic-scope [localForm]="this.summaryForm" [regionsSelectedList]="this.geographicScope.regions" [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
-            </div> -->
+                [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
+                ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
+               </ibdc-textarea>
+            </div>
+
             <div class="col-12">
                 <div class="blue_border">
                     <section-sub-title name="Geographic scope summary"></section-sub-title>
