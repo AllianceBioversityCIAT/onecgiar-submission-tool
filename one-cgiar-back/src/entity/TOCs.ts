@@ -13,16 +13,19 @@ export class TOCs extends UpdatedCreatedAt {
   narrative: string;
 
   @Column({type: 'text'})
-  diagram:String;
+  diagram: String;
 
   @Column({type: 'tinyint'})
-  type:boolean
+  type: boolean;
 
   @Column({type: 'tinyint'})
-  active:boolean
+  active: boolean;
 
   @Column({type: 'text'})
-  tocId: string;
+  toc_id: string;
+
+  @Column({type: 'text'})
+  work_package: string;
 
   @Column({type: 'int'})
   initvStgId: number;
