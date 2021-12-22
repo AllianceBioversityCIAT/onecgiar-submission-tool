@@ -64,7 +64,7 @@ export class CapacityDevelopmentComponent implements OnInit {
       //console.log("Human resources");
       //console.log(resp);
       this.getHumanResources();
-      this.secionForm.valid?
+      this.secionForm.valid && this.extraValidation ?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources  has been saved, but there are incomplete fields')
     })

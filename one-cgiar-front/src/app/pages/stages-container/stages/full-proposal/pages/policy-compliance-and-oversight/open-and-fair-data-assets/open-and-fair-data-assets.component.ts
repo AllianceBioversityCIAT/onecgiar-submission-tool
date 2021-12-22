@@ -39,7 +39,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
     this._initiativesService.savePolicyCompliance(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp);
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
-      this.sectionForm.valid?
+      this.sectionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Open and FAIR data assets has been saved'):
       this._interactionsService.warningMessage('Open and FAIR data assets has been saved, but there are incomplete fields')
     })

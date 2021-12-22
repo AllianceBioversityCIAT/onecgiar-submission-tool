@@ -44,7 +44,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   saveSection(){
     this._initiativesService.saveInnovationPackages(this.secionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
       this.secionForm.controls['id'].setValue(resp.response.innovationPackages.upsertedInnovationPackages.id);
-      this.secionForm.valid?
+      this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Innovation Packages and Scaling Readiness Plan has been saved'):
       this._interactionsService.warningMessage('Innovation Packages and Scaling Readiness Plan has been saved, but there are incomplete fields')
     })
