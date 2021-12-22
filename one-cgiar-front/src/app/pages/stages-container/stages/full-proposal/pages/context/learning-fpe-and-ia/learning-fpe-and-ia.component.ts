@@ -59,7 +59,7 @@ export class LearningFpeAndIaComponent implements OnInit {
     //save narrative
     this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
       this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')
     })
