@@ -18,6 +18,7 @@ import {Partners} from '../entity/Partners';
 import {PolicyComplianceOrversight} from '../entity/PolicyComplianceOversight';
 import {ProjectionBenefits} from '../entity/ProjectionBenefits';
 import {RiskAssessment} from '../entity/RiskAssessment';
+import {TOCs} from '../entity/TOCs';
 import {WorkPackages} from '../entity/WorkPackages';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {BaseError} from './BaseError';
@@ -2088,6 +2089,49 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Get Preview Partners: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT TOCS
+   */
+  async upsertTocs(tocId?, narrative?, diagram?, type?, active?) {
+    const tocsRepo = getRepository(TOCs);
+    const initvStg = await this.setInitvStage();
+
+    var newTocs = new TOCs();
+    var upsertedTocs;
+
+    newTocs.tocId = tocId;
+    newTocs.narrative = narrative;
+    newTocs.diagram = diagram;
+    newTocs.type = type;
+    newTocs.active = active ? active : true;
+
+    try {
+      var savedInnovationPackages: any = await tocsRepo.find({
+        where: {tocId: newTocs.id}
+      });
+
+      if (savedInnovationPackages.length > 0) {
+        tocsRepo.merge(savedInnovationPackages, newTocs);
+
+        upsertedTocs = await tocsRepo.save(savedInnovationPackages);
+      } else {
+        newTocs.initvStgId = initvStg.id;
+
+        upsertedTocs = await tocsRepo.save(newTocs);
+      }
+
+      return {upsertedTocs};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert TOC: Full proposal',
         400,
         error.message,
         false
