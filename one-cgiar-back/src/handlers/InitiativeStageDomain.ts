@@ -162,7 +162,7 @@ export class InitiativeStageHandler extends BaseValidation {
    * @returns citation
    */
   async addBudget(
-    value: number,
+    value: string,
     table_name: string,
     col_name: string,
     budgetId?: string,
@@ -234,9 +234,7 @@ export class InitiativeStageHandler extends BaseValidation {
       });
 
       if (getBudget) {
-        getBudget.value = Number(
-          (Math.round(getBudget.value * 100) / 100).toFixed(2)
-        );
+        getBudget.value;
       } else {
         getBudget = new Budget();
       }
