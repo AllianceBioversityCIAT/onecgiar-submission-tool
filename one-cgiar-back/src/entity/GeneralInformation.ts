@@ -13,7 +13,7 @@ export class GeneralInformation extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({length: '2000'})
+  @Column({type: 'text'})
   name: string;
 
   @Column({type: 'int'})
