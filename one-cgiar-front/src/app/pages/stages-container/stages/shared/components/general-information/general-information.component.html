@@ -100,7 +100,7 @@
                 <ibdc-input
                     [class.invalid]= "summaryForm.get('budget_value').invalid"
                     [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
-                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number', min:0}">
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly, type:'number'}">
                 </ibdc-input>
             </div>
             <!-- <div class="col-sm-6" *ngIf="showBudget">
