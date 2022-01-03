@@ -3320,6 +3320,13 @@
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "work_package",
+            "description": "<p>acronym example WP1.</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Boolean",
             "optional": false,
             "field": "active",
@@ -3330,7 +3337,7 @@
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n \"id\": null,\n \"tocId\": \"tsdgd9o3zc\",\n \"narrative\":\"SeEdQUAL supports...\",\n \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png\",\n \"type\": true,\n \"active\": true\n}",
+          "content": "[ {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o3zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png\",\n    \"type\": false,\n    \"work_package\":\"WP1\",\n    \"active\": true\n   },\n   {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o4zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png\",\n    \"type\": false,\n    \"work_package\":\"WP2\",\n    \"active\": true\n   },\n      {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o5zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png\",\n    \"type\": false,\n    \"work_package\":null,\n    \"active\": true\n   }\n]",
           "type": "json"
         }
       ]

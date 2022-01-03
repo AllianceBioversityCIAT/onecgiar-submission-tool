@@ -1519,17 +1519,39 @@ router.get(
  * @apiParam {String} narrative description TOC.
  * @apiParam {String} diagram url diagram.
  * @apiParam {Boolean} type 0 is TOC into Work Package or 1 Full Initiative TOC.
+ * @apiParam {String} work_package acronym example WP1.
  * @apiParam {Boolean} active status.
  *
  * @apiParamExample {json} Request-Example:
- *  {
- *   "id": null,
- *   "tocId": "tsdgd9o3zc",
- *   "narrative":"SeEdQUAL supports...",
- *   "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
- *   "type": true,
- *   "active": true
- *  }
+ * [ {
+ *     "id": null,
+ *     "tocId": "tsdgd9o3zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
+ *     "type": false,
+ *     "work_package":"WP1",
+ *     "active": true
+ *    },
+ *    {
+ *     "id": null,
+ *     "tocId": "tsdgd9o4zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png",
+ *     "type": false,
+ *     "work_package":"WP2",
+ *     "active": true
+ *    },
+ *       {
+ *     "id": null,
+ *     "tocId": "tsdgd9o5zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png",
+ *     "type": false,
+ *     "work_package":null,
+ *     "active": true
+ *    }
+ * ]
+ * 
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK

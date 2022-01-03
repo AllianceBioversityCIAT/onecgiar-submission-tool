@@ -2104,6 +2104,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStg = await this.setInitvStage();
 
     var newTocs = new TOCs();
+    var results = [];
     var savedToc;
 
     try {
@@ -2111,29 +2112,34 @@ export class ProposalHandler extends InitiativeStageHandler {
         for (let index = 0; index < toc.length; index++) {
           const element = toc[index];
 
+          newTocs.id = null;
           newTocs.toc_id = element.tocId;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
           newTocs.type = element.type;
+          newTocs.work_package = element.work_package;
           newTocs.active = element.active ? element.active : true;
+
+          newTocs.initvStgId = initvStg.id;
 
           var savedInnovationPackages: any = await tocsRepo.find({
             where: {toc_id: newTocs.toc_id}
           });
-
           if (savedInnovationPackages.length > 0) {
             tocsRepo.merge(savedInnovationPackages, newTocs);
 
             savedToc = await tocsRepo.save(savedInnovationPackages);
+
+            results[index] = savedToc;
           } else {
             newTocs.initvStgId = initvStg.id;
 
             savedToc = await tocsRepo.save(newTocs);
+            results[index] = savedToc;
           }
         }
       }
-
-      return {savedToc};
+      return {savedTocs: results};
     } catch (error) {
       console.log(error);
       throw new BaseError(
