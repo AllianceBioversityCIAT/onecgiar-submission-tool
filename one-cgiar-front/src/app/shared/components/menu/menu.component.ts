@@ -132,9 +132,42 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
+  getPreConceptSimulated(stages:any[]){
+    let object = {
+      description: "Pre concept"
+    }
+
+    stages.push(object);
+
+  }
+
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
+      console.log("getMenu")
       this._dataControlService.userMenu = userMenuResp.response.stages;
+      console.log(this._dataControlService.userMenu)
+
+      // setTimeout(() => {
+      this._dataControlService.userMenu.push({
+        description: "Pre concept",
+        sections: [
+          {
+            "sectionId": 2,
+            "stage": "Full Proposal",
+            "description": "general-information",
+            "display_name": "General Information",
+            "active": 1,
+            "visible": 1,
+            "orderSection": 1,
+            "stageId": 3,
+            "subsections": [],
+            "fieldsCompleted": 0
+          }
+        ]
+      })
+      // }, 1000);
+
+      // this.getPreConceptSimulated(this._dataControlService.userMenu);
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
