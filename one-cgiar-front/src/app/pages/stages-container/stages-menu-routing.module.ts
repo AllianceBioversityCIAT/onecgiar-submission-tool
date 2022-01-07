@@ -108,8 +108,12 @@ const preConceptRoutes = [
     pathMatch: 'full'
   },
   {
-    path: 'full-proposal',
-    loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
+    path: 'pre-concept',
+    loadChildren: () => import('./stages/pre-concept/pre-concept.module').then(mod => mod.PreConceptModule),
+  },
+  {
+    path: 'pre-concept/general-information',
+    loadChildren: () => import('./stages/pre-concept/pages/general-info-pre-concept/general-info-pre-concept.module').then(mod => mod.GeneralInfoPreConceptModule),
   },
   {
     path: 'under-construction-page',
@@ -129,10 +133,7 @@ const routes: Routes = [
         loadChildren: () => import('./stages/concept/concept.module').then(mod => mod.ConceptModule),
       },
       ...fullProposalRoutes,
-      {
-        path: 'pre-concept',
-        loadChildren: () => import('./stages/pre-concept/pre-concept.module').then(mod => mod.PreConceptModule),
-      },
+      ...preConceptRoutes
     ],
   },
 ];
