@@ -1316,8 +1316,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/financial-resources/:initiativeId/stageId",
-    "title": "Get Financial Resources per Initiative",
+    "url": "previews/financial-resources/:initiativeId/:stageId",
+    "title": "6. Get Financial Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1385,8 +1385,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-geographic-scope/:initiativeId/stageId",
-    "title": "Get Geographic Scope per Initiative",
+    "url": "previews/preview-geographic-scope/:initiativeId/:stageId",
+    "title": "1. Get Geographic Scope per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1395,17 +1395,17 @@ define({ "api": [
     ],
     "name": "GetPreviewGeographicScope",
     "group": "Previews",
-    "description": "<p>Shows Preview Geographic Scope per Initiative</p>",
+    "description": "<p>Shows Geographic Scope per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3"
       }
     ],
     "header": {
@@ -1425,7 +1425,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"previewGeographicScope\": {\n          \"GeoScope\": {\n              \"regions\": [\n                  {\n                      \"region_id\": 2,\n                      \"name\": \"Africa\",\n                      \"initvStgId\": 34\n                  }\n              ],\n              \"countries\": [\n                  {\n                      \"country_id\": 4,\n                      \"name\": \"Afghanistan\",\n                      \"initvStgId\": 34\n                  }\n              ]\n          }\n      }\n  },\n  \"title\": \"Previews:Preview Geographic Scope\"\n}",
+          "content": "    HTTP/1.1 200 OK\n {\n    \"response\": {\n        \"previewGeographicScope\": {\n            \"GeoScope\": {\n                \"regions\": [\n                    {\n                        \"clarisa_code\": 4,\n                        \"name\": \"East and Southern Africa\",\n                        \"acronym\": \"ESA\"\n                    },\n                    {\n                        \"clarisa_code\": 5,\n                        \"name\": \"South Asia\",\n                        \"acronym\": \"SA\"\n                    }\n                ],\n                \"countries\": [\n                    {\n                        \"clarisa_code\": 4,\n                        \"isoAlpha2\": \"AF\",\n                        \"name\": \"Afghanistan\"\n                    },\n                    {\n                        \"clarisa_code\": 8,\n                        \"isoAlpha2\": \"AL\",\n                        \"name\": \"Albania\"\n                    }\n                ]\n            }\n        }\n    },\n    \"title\": \"Previews:Get Geographic Scope per initiative\"\n}",
           "type": "json"
         }
       ]
@@ -1437,14 +1437,14 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: ERROR Get Preview Geographic Scope: Previews General</p>"
+            "description": "<p>: ERROR Get Geographic Scope per initiative: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Geographic Scope: Previews General\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Geographic Scope per initiative: Previews General\", error }",
           "type": "json"
         }
       ]
@@ -1454,8 +1454,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/human-resources/:initiativeId/stageId",
-    "title": "Get Human Resources per Initiative",
+    "url": "previews/human-resources/:initiativeId/:stageId",
+    "title": "5. Get Human Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1523,8 +1523,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-partners/:initiativeId/stageId",
-    "title": "Get Partners per Initiative",
+    "url": "previews/preview-partners/:initiativeId/:stageId",
+    "title": "2. Get Partners per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1533,7 +1533,7 @@ define({ "api": [
     ],
     "name": "GetPreviewPartners",
     "group": "Previews",
-    "description": "<p>Shows Preview Partners per Initiative</p>",
+    "description": "<p>Shows Partners per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
@@ -1592,8 +1592,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-projected-benefits/:initiativeId/stageId",
-    "title": "Get Projected benefits per Initiative",
+    "url": "previews/preview-projected-benefits/:initiativeId/:stageId",
+    "title": "3. Get Projected benefits per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1661,8 +1661,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-risk-assessment/:initiativeId/stageId",
-    "title": "Get Risk Assessment per Initiative",
+    "url": "previews/preview-risk-assessment/:initiativeId/:stageId",
+    "title": "4. Get Risk Assessment per Initiative",
     "version": "1.0.2",
     "permission": [
       {

@@ -124,7 +124,7 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id) as code,ini.official_code,
+      SELECT DISTINCT(co.country_id) as clarisa_code,
       cco.isoAlpha2,cco.name
         FROM countries_by_initiative_by_stage co
        JOIN clarisa_countries cco
@@ -139,7 +139,7 @@ export class PreviewsDomain {
        GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id)as code,ini.official_code,
+        SELECT DISTINCT (r.region_id)as clarisa_code,
         re.name,re.acronym
         FROM regions_by_initiative_by_stage r
         JOIN clarisa_regions_cgiar re
@@ -161,7 +161,7 @@ export class PreviewsDomain {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'ERROR Get Preview Geographic Scope: Previews General',
+        'ERROR Get Geographic Scope per initiative: Previews General',
         400,
         error.message,
         false

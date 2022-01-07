@@ -12,16 +12,84 @@ const router = Router();
  */
 
 /**
+ * GET PREVIEW GEOGRAPHIC SCOPE
+ */
+/**
+ * @api {get} previews/preview-geographic-scope/:initiativeId/:stageId 1. Get Geographic Scope per Initiative
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetPreviewGeographicScope
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows Geographic Scope per Initiative
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3
+ *
+ * @apiHeader {String} auth token
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *  {
+ *     "response": {
+ *         "previewGeographicScope": {
+ *             "GeoScope": {
+ *                 "regions": [
+ *                     {
+ *                         "clarisa_code": 4,
+ *                         "name": "East and Southern Africa",
+ *                         "acronym": "ESA"
+ *                     },
+ *                     {
+ *                         "clarisa_code": 5,
+ *                         "name": "South Asia",
+ *                         "acronym": "SA"
+ *                     }
+ *                 ],
+ *                 "countries": [
+ *                     {
+ *                         "clarisa_code": 4,
+ *                         "isoAlpha2": "AF",
+ *                         "name": "Afghanistan"
+ *                     },
+ *                     {
+ *                         "clarisa_code": 8,
+ *                         "isoAlpha2": "AL",
+ *                         "name": "Albania"
+ *                     }
+ *                 ]
+ *             }
+ *         }
+ *     },
+ *     "title": "Previews:Get Geographic Scope per initiative"
+ * }
+ *
+ * @apiError Error : ERROR Get Geographic Scope per initiative: Previews General
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "ERROR Get Geographic Scope per initiative: Previews General", error }
+ */
+ router.get(
+  '/geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  previewController.getPreviewGeographicScope
+);
+
+
+/**
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} previews/preview-partners/:initiativeId/stageId Get Partners per Initiative
+ * @api {get} previews/preview-partners/:initiativeId/:stageId 2. Get Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
  * @apiGroup Previews
  *
- * @apiDescription  Shows Preview Partners per Initiative
+ * @apiDescription  Shows Partners per Initiative
  *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
@@ -75,7 +143,7 @@ router.get(
  * GET PREVIEW PROJECTED BENEFITS
  */
 /**
- * @api {get} previews/preview-projected-benefits/:initiativeId/stageId Get Projected benefits per Initiative
+ * @api {get} previews/preview-projected-benefits/:initiativeId/:stageId 3. Get Projected benefits per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewProjectedBenefits
@@ -132,68 +200,13 @@ router.get(
   previewController.getPreviewProjectedBenefits
 );
 
-/**
- * GET PREVIEW GEOGRAPHIC SCOPE
- */
-/**
- * @api {get} previews/preview-geographic-scope/:initiativeId/stageId Get Geographic Scope per Initiative
- * @apiVersion 1.0.2
- * @apiPermission admin
- * @apiName GetPreviewGeographicScope
- * @apiGroup Previews
- *
- * @apiDescription  Shows Preview Geographic Scope per Initiative
- *
- * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3
- *
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3
- *
- * @apiHeader {String} auth token
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- * {
- *   "response": {
- *       "previewGeographicScope": {
- *           "GeoScope": {
- *               "regions": [
- *                   {
- *                       "region_id": 2,
- *                       "name": "Africa",
- *                       "initvStgId": 34
- *                   }
- *               ],
- *               "countries": [
- *                   {
- *                       "country_id": 4,
- *                       "name": "Afghanistan",
- *                       "initvStgId": 34
- *                   }
- *               ]
- *           }
- *       }
- *   },
- *   "title": "Previews:Preview Geographic Scope"
- * }
- *
- * @apiError Error : ERROR Get Preview Geographic Scope: Previews General
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     { message: "ERROR Get Preview Geographic Scope: Previews General", error }
- */
-router.get(
-  '/preview-geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('packages', 'readOwn')],
-  previewController.getPreviewGeographicScope
-);
+
 
 /**
  * PREVIEW RISK ASSESSMENT
  */
 /**
- * @api {get} previews/preview-risk-assessment/:initiativeId/stageId Get Risk Assessment per Initiative
+ * @api {get} previews/preview-risk-assessment/:initiativeId/:stageId 4. Get Risk Assessment per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewRiskAssessment
@@ -269,7 +282,7 @@ router.get(
  * GET HUMAN RESOURCES
  */
 /**
- * @api {get} previews/human-resources/:initiativeId/stageId Get Human Resources per Initiative
+ * @api {get} previews/human-resources/:initiativeId/:stageId 5. Get Human Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewHumanResources
@@ -317,7 +330,7 @@ router.get(
  * GET FINANCIAL RESOURCES
  */
 /**
- * @api {get} previews/financial-resources/:initiativeId/stageId Get Financial Resources per Initiative
+ * @api {get} previews/financial-resources/:initiativeId/:stageId 6. Get Financial Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewFinancialResources

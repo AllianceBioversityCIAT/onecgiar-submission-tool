@@ -143,7 +143,7 @@ export async function getPreviewGeographicScope(req: Request, res: Response) {
       );
 
     res.json(
-      new ResponseHandler('Previews:Preview Geographic Scope', {
+      new ResponseHandler('Previews:Get Geographic Scope per initiative', {
         previewGeographicScope
       })
     );
