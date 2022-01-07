@@ -15,7 +15,7 @@ const router = Router();
  * GET PREVIEW GEOGRAPHIC SCOPE
  */
 /**
- * @api {get} previews/preview-geographic-scope/:initiativeId/:stageId 1. Get Geographic Scope per Initiative
+ * @api {get} previews/geographic-scope/:initiativeId/:stageId 1. Get Geographic Scope per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewGeographicScope
@@ -38,19 +38,19 @@ const router = Router();
  *             "GeoScope": {
  *                 "regions": [
  *                     {
- *                         "clarisa_code": 4,
+ *                         "clarisa_region_code": 4,
  *                         "name": "East and Southern Africa",
  *                         "acronym": "ESA"
  *                     },
  *                     {
- *                         "clarisa_code": 5,
+ *                         "clarisa_region_code": 5,
  *                         "name": "South Asia",
  *                         "acronym": "SA"
  *                     }
  *                 ],
  *                 "countries": [
  *                     {
- *                         "clarisa_code": 4,
+ *                         "clarisa_country_code": 4,
  *                         "isoAlpha2": "AF",
  *                         "name": "Afghanistan"
  *                     },
@@ -78,12 +78,94 @@ const router = Router();
   previewController.getPreviewGeographicScope
 );
 
+/**
+ * GET ALL GEOGRAPHIC SCOPE
+ */
+/**
+ * @api {get} previews/all-geographic-scope/:stageId 2. Get all Geographic Scope
+ * @apiPermission admin
+ * @apiName GetPreviewGeographicScopeGeneral
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows Geographic Scope
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/all-geographic-scope/3
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/all-geographic-scope/1/3
+ *
+ * @apiHeader {String} auth token
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "previewGeographicScope": {
+ *             "GeoScope": {
+ *                 "regions": [
+ *                     {
+ *                         "clarisa_region_code": 4,
+ *                         "name": "East and Southern Africa",
+ *                         "acronym": "ESA",
+ *                         "initiative_code": "INIT-1"
+ *                     },
+ *                     {
+ *                         "clarisa_region_code": 5,
+ *                         "name": "South Asia",
+ *                         "acronym": "SA",
+ *                         "initiative_code": "INIT-1"
+ *                     },
+ *                     {
+ *                         "clarisa_region_code": 4,
+ *                         "name": "East and Southern Africa",
+ *                         "acronym": "ESA",
+ *                         "initiative_code": "INIT-5"
+ *                     },
+ *                     {
+ *                         "clarisa_region_code": 5,
+ *                         "name": "South Asia",
+ *                         "acronym": "SA",
+ *                         "initiative_code": "INIT-5"
+ *                     }
+ *                 ],
+ *                 "countries": [
+ *                     {
+ *                         "clarisa_country_code": 4,
+ *                         "isoAlpha2": "AF",
+ *                         "name": "Afghanistan",
+ *                         "initiative_code": "INIT-1"
+ *                     },
+ *                     {
+ *                         "clarisa_country_code": 8,
+ *                         "isoAlpha2": "AL",
+ *                         "name": "Albania",
+ *                         "initiative_code": "INIT-1"
+ *                     }
+ *                 ]
+ *             }
+ *         }
+ *     },
+ *     "title": "Previews:Get all Geographic Scope"
+ * }
+ *
+ * @apiError Error : ERROR Get all Geographic Scope: Previews General
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "ERROR Get all Geographic Scope: Previews General", error }
+ */
+ router.get(
+  '/all-geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  previewController.getAllGeographicScope
+);
+
 
 /**
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} previews/preview-partners/:initiativeId/:stageId 2. Get Partners per Initiative
+ * @api {get} previews/partners/:initiativeId/:stageId 3. Get Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
@@ -92,9 +174,9 @@ const router = Router();
  * @apiDescription  Shows Partners per Initiative
  *
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
+ * https://initiativestest.ciat.cgiar.org/api/previews/partners/1/3
  *
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/partners/1/3
  *
  * @apiHeader {String} auth token
  *
@@ -104,37 +186,42 @@ const router = Router();
  *     "response": {
  *         "previewPartners": [
  *             {
- *                 "partner_name": "Wageningen University and Research Centre",
- *                 "url": "http://www.wur.nl/en.htm",
+ *                 "code": 1,
  *                 "acronym": "WUR",
- *                 "initiative_id": "INIT-1",
- *                 "action_area": "Genetic Innovation",
- *                 "partner_id": "",
- *                 "location": "",
- *                 "organization_type_IATI": "",
- *                 "network_mapping_codes": "",
- *                 "organization_type_clarisa": "University",
- *                 "clarisa_id": 36,
+ *                 "institution_type": "University",
+ *                 "office_location": "NL",
+ *                 "name": "Wageningen University and Research Centre",
+ *                 "impact_area": "Poverty reduction, livelihoods and jobs",
  *                 "demand": 0,
  *                 "innovation": 0,
  *                 "scaling": 0,
- *                 "hq_location_clarisa": "NL",
- *                 "impact_area_id": 2,
- *                 "Source": "impact_satatements"
+ *                 "website": "http://www.wur.nl/en.htm"
+ *             },
+ *             {
+ *                 "code": 1,
+ *                 "acronym": "WUR",
+ *                 "institution_type": "University",
+ *                 "office_location": "NL",
+ *                 "name": "Wageningen University and Research Centre",
+ *                 "impact_area": "Nutrition, health and food security",
+ *                 "demand": 1,
+ *                 "innovation": 0,
+ *                 "scaling": 1,
+ *                 "website": "http://www.wur.nl/en.htm"
  *             }
  *         ]
  *     },
- *     "title": "Full Proposal:Preview Partners"
+ *     "title": "Previews:Get Partners per initiative"
  * }
  *
- * @apiError Error : Get Preview Partners: Previews General
+ * @apiError Error : Get Partners per initiative: Previews General
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
- *     { message: "Get Preview Partners: Previews General", error }
+ *     { message: "Get Partners per initiative: Previews General", error }
  */
 router.get(
-  '/preview-partners/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  '/partners/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('strategies', 'readOwn')],
   previewController.getPreviewPartners
 );
@@ -143,18 +230,18 @@ router.get(
  * GET PREVIEW PROJECTED BENEFITS
  */
 /**
- * @api {get} previews/preview-projected-benefits/:initiativeId/:stageId 3. Get Projected benefits per Initiative
+ * @api {get} previews/preview-projected-benefits/:initiativeId/:stageId 4. Get Projected benefits per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewProjectedBenefits
  * @apiGroup Previews
  *
- * @apiDescription  Shows Preview Projected benefits per Initiative
+ * @apiDescription  Shows Projected benefits per Initiative
  *
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3
+ * https://initiativestest.ciat.cgiar.org/api/previews/projected-benefits/1/3
  *
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/projected-benefits/1/3
  *
  * @apiHeader {String} auth token
  *
@@ -162,118 +249,159 @@ router.get(
  *     HTTP/1.1 200 OK
  * {
  *     "response": {
- *         "previewProjectedBenefits": [
- *             {
- *                 "id": 778,
- *                 "impact_area_id": 1,
- *                 "impact_area_name": "Nutrition, health and food security",
- *                 "impact_area_indicator_id": 4,
- *                 "impact_area_indicator_name": "#cases communicable and noncommunicable diseases",
- *                 "depth_scale_id": 2,
- *                 "probability_id": 2,
- *                 "depth_scale_name": null,
- *                 "probability_name": null,
- *                 "dimensions": [
- *                     [
- *                         {
- *                             "projectionId": 778,
- *                             "depth_description": "Life saving",
- *                             "breadth_value": "100.00"
- *                         }
- *                     ]
- *                 ]
- *             }
- *         ]
+ *         "previewProjectedBenefits": {
+ *             "impactAreas": [
+ *                 {
+ *                     "id": 778,
+ *                     "impact_area_id": 1,
+ *                     "impact_area_name": "Nutrition, health and food security",
+ *                     "impactIndicators": {
+ *                         "id": 778,
+ *                         "impact_area_indicator_id": 4,
+ *                         "impact_area_indicator_name": "#cases communicable and noncommunicable diseases",
+ *                         "depth_scale_id": 2,
+ *                         "depth_scale_name": null,
+ *                         "probability_id": 2,
+ *                         "probability_name": null,
+ *                         "dimensions": [
+ *                             {
+ *                                 "projection_id": 778,
+ *                                 "depth_description": "Life saving",
+ *                                 "targetUnit": "Millions",
+ *                                 "breadth_value": "100.00000000"
+ *                             }
+ *                         ]
+ *                     }
+ *                 }
+ *             ]
+ *         }
  *     },
- *     "title": "Full Proposal:Preview Partners"
+ *     "title": "Previews:Get Projected Benefits"
  * }
  *
- * @apiError Error : Get Preview Projected Benefits: Previews General
+ * @apiError ERROR Get Projected Benefits: Previews General
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
- *     { message: "Get Preview Projected Benefits: Previews General", error }
+ *     { message: "ERROR Get Projected Benefits: Previews General", error }
  */
 router.get(
-  '/preview-projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  '/projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('benefits', 'readOwn')],
   previewController.getPreviewProjectedBenefits
 );
-
 
 
 /**
  * PREVIEW RISK ASSESSMENT
  */
 /**
- * @api {get} previews/preview-risk-assessment/:initiativeId/:stageId 4. Get Risk Assessment per Initiative
+ * @api {get} previews/risk-assessment/:initiativeId/:stageId 5. Get Risk Assessment per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewRiskAssessment
  * @apiGroup Previews
  *
- * @apiDescription  Shows Preview Risk Assessment per Initiative
+ * @apiDescription  Shows Risk Assessment per Initiative
  *
  * @apiExample Example usage:
- * https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3
+ * https://initiativestest.ciat.cgiar.org/api/previews/risk-assessment/1/3
  *
- * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/risk-assessment/1/3
  *
  * @apiHeader {String} auth token
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
- *   "response": {
- *       "previewRiskAssessment": {
- *           "managePlan": {
- *               "id": 5,
- *               "initvStgId": 33,
- *               "riskassessment": [
- *                   {
- *                       "id": 20,
- *                       "risks_achieving_impact": "TEST ",
- *                       "description_risk": "TEST TEST",
- *                       "likelihood": 5,
- *                       "impact": 1,
- *                       "risk_score": 4,
- *                       "manage_plan_risk_id": 5,
- *                       "active": 1,
- *                       "opportinities": [
- *                           {
- *                               "id": 4,
- *                               "opportunities_description": "TEST",
- *                               "risk_assessment_id": 20,
- *                               "active": 1
- *                           }
- *                       ]
- *                   },
- *                   {
- *                       "id": 21,
- *                       "risks_achieving_impact": "TEST TEST TEST",
- *                       "description_risk": "TEST TEST",
- *                       "likelihood": 5,
- *                       "impact": 1,
- *                       "risk_score": 4,
- *                       "manage_plan_risk_id": 5,
- *                       "active": 1,
- *                       "opportinities": []
- *                   }
- *               ]
- *           }
- *       }
- *   },
- *   "title": "Previews:Preview Risk Assessment"
- *}
+ *     "response": {
+ *         "previewRiskAssessment": {
+ *             "managePlan": {
+ *                 "id": 3,
+ *                 "initvStgId": 34,
+ *                 "riskassessment": [
+ *                     {
+ *                         "id": 61,
+ *                         "risks_achieving_impact": "Business interruption or delays due to pandemic, war, natural disaster or other incident affecting the Initiative or key dependencies",
+ *                         "risks_theme": "Operational",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 5,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": [
+ *                             {
+ *                                 "id": 29,
+ *                                 "opportunities_description": "test",
+ *                                 "risk_assessment_id": 61,
+ *                                 "active": 1
+ *                             }
+ *                         ]
+ *                     },
+ *                     {
+ *                         "id": 62,
+ *                         "risks_achieving_impact": "Capability, and capacity constraints within and across the regions may hinder the uptake of innovations",
+ *                         "risks_theme": "Fit for purpose partnerships",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 0,
+ *                         "impact": 0,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 63,
+ *                         "risks_achieving_impact": "Conflicting intended or unintended consequences of technologies/innovations for natural resources, GHG emissions, and social and economic aspects impacting objectives and reputation",
+ *                         "risks_theme": "Cohesion",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 1,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 64,
+ *                         "risks_achieving_impact": "Data management and systems not fit for purpose or outdated affecting Initiative's efficiency",
+ *                         "risks_theme": "Operational",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 2,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 65,
+ *                         "risks_achieving_impact": "Ethical/behavioural (i.e. failure to protect children and vulnerable adults), financial irregularity, data privacy incident leading to reputational event affecting Initiative",
+ *                         "risks_theme": "Ethical",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 4,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     }
+ *                 ]
+ *             }
+ *         }
+ *     },
+ *     "title": "Previews:Risk Assessment"
+ * }
  *
- * @apiError Error : ERROR Get Preview Risk Assessment: Previews General
+ * @apiError Error : ERROR Preview Risk Assessment: Previews General
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
- *     { message: "ERROR Get Preview Risk Assessment: Previews General", error }
+ *     { message: "ERROR Preview Risk Assessment: Previews General", error }
  */
 router.get(
-  '/preview-risk-assessment/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  '/risk-assessment/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('mpr', 'readOwn')],
   previewController.getPreviewRiskAssessment
 );
@@ -282,7 +410,7 @@ router.get(
  * GET HUMAN RESOURCES
  */
 /**
- * @api {get} previews/human-resources/:initiativeId/:stageId 5. Get Human Resources per Initiative
+ * @api {get} previews/human-resources/:initiativeId/:stageId 6. Get Human Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewHumanResources
@@ -330,7 +458,7 @@ router.get(
  * GET FINANCIAL RESOURCES
  */
 /**
- * @api {get} previews/financial-resources/:initiativeId/:stageId 6. Get Financial Resources per Initiative
+ * @api {get} previews/financial-resources/:initiativeId/:stageId 7. Get Financial Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewFinancialResources
@@ -347,40 +475,36 @@ router.get(
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *{
-    "response": {
-        "previewFinancialResources": {
-            "financialResources": [
-                {
-                    "description": "crosscutting_wokpackages",
-                    "year": "2022",
-                    "value": "1000.00"
-                },
-                {
-                    "description": "crosscutting_wokpackages",
-                    "year": "2023",
-                    "value": "1000.00"
-                },
-                {
-                    "description": "crosscutting_wokpackages",
-                    "year": "2024",
-                    "value": "1000.00"
-                },
-                {
-                    "description": "innovation_packages",
-                    "year": "2022",
-                    "value": "1000.00"
-                },
-                {
-                    "description": "work_packages",
-                    "year": null,
-                    "value": null
-                }
-            ]
-        }
-    },
-    "title": "Previews:Preview Financial Resources"
-}
+ * {
+ *     "response": {
+ *         "previewFinancialResources": {
+ *             "financialResources": [
+ *                 {
+ *                     "description": "crosscutting_wokpackages",
+ *                     "year": "2022",
+ *                     "value": "100"
+ *                 },
+ *                 {
+ *                     "description": "innovation_packages",
+ *                     "year": "2022",
+ *                     "value": "100"
+ *                 },
+ *                 {
+ *                     "description": "Work Package 1",
+ *                     "year": "2022",
+ *                     "value": "100"
+ *                 },
+ *                 {
+ *                     "description": "Work Package 2",
+ *                     "year": "2022",
+ *                     "value": "100"
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Previews:Preview Financial Resources"
+ * }
+ *
  *
  * @apiError ERROR Get Preview Financial Resources: Previews General
  *

@@ -49,7 +49,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
     );
 
     res.json(
-      new ResponseHandler('Previews:Preview Partners', {previewPartners})
+      new ResponseHandler('Previews:Get Partners per initiative', {previewPartners})
     );
   } catch (error) {
     console.log(error);
@@ -95,7 +95,7 @@ export async function getPreviewProjectedBenefits(req: Request, res: Response) {
       );
 
     res.json(
-      new ResponseHandler('Previews:Preview Projected Benefits', {
+      new ResponseHandler('Previews:Get Projected Benefits', {
         previewProjectedBenefits
       })
     );
@@ -153,6 +153,55 @@ export async function getPreviewGeographicScope(req: Request, res: Response) {
   }
 }
 
+
+/**
+ * GET ALL GEOGRAPHIC SCOPE
+ * @param req { initiativeId, stageId }
+ * @param res { previewGeographicScope }
+ * @returns {Regions, Countries}
+ */
+ export async function getAllGeographicScope(req: Request, res: Response) {
+  const {initiativeId, stageId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {id: stageId}});
+
+    // get intiative by stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    // if not intitiative by stage, throw error
+    if (initvStg == null || initvStg == undefined) {
+      throw new BaseError(
+        'Previews: Error',
+        400,
+        `Previews not found in stage:` + stageId,
+        false
+      );
+    }
+
+    // create new full proposal object
+    const previewsdomain = new PreviewsDomain();
+
+    const previewGeographicScope =
+      await previewsdomain.requestAllGeographicScope(
+        initvStg.id.toString()
+      );
+
+    res.json(
+      new ResponseHandler('Previews:Get all Geographic Scope', {
+        previewGeographicScope
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 /**
  * GET PREVIEW FOR RISK ASSESSMENT
  * @param req { initiativeId, stageId }
@@ -189,7 +238,7 @@ export async function getPreviewRiskAssessment(req: Request, res: Response) {
       await previewsdomain.requestPreviewRiskAssessment(initvStg.id.toString());
 
     res.json(
-      new ResponseHandler('Previews:Preview Risk Assessment', {
+      new ResponseHandler('Previews:Risk Assessment', {
         previewRiskAssessment
       })
     );
