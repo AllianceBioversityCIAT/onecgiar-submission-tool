@@ -8,12 +8,14 @@
         [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
         <br>
-        <app-menu-section *ngIf="stage.sections.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
+        <app-menu-section *ngIf="stage?.sections?.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
     </div>
 
-    <div class="submitButtonInitiative">
-        <button pButton type="button" label="Submit initiative" class="p-button-rounded p-button-success"
-            disabled="true"></button>
-    </div>
 
+
+</div>
+
+<div class="submitButtonInitiative">
+    <button pButton type="button" label="Submit initiative" class="p-button-rounded p-button-success"
+        disabled="true"></button>
 </div>
