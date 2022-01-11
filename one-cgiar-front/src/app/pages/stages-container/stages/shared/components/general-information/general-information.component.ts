@@ -170,6 +170,10 @@ export class GeneralInformationComponent implements OnInit {
 
   }
 
+  validateBudget(){
+    return (Number(this.summaryForm.value?.budget_value)>=0.1);
+  }
+
   upsertGeneralInfo() {
 
     console.log(this.summaryForm);
@@ -183,7 +187,7 @@ export class GeneralInformationComponent implements OnInit {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
       // this._interactionsService.successMessage('General information has been saved');
-      this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      this.validateBudget() && this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
