@@ -1316,8 +1316,77 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "previews/initiatives",
+    "title": "1. Get all initiatives",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetInitiatives",
+    "group": "Previews",
+    "description": "<p>Shows all initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/initiatives/",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/initiatives/"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"initiatives\": [\n            {\n                \"initvStgId\": 35,\n                \"id\": 2,\n                \"name\": \"Accelerated Crop Improvement through Precision Genetic Technologies\",\n                \"oficial_code\":\"INIT-2\"\n                \"status\": \"Editing\",\n                \"action_area_id\": \"1\",\n                \"action_area_description\": \"Systems Transformation\",\n                \"active\": 1,\n                \"stageId\": 3,\n                \"description\": \"Stage 3: Full Proposal\",\n                \"stages\": [\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 2,\n                        \"stageId\": 2,\n                        \"active\": 0\n                    },\n                    {\n                        \"id\": 2,\n                        \"initvStgId\": 35,\n                        \"stageId\": 3,\n                        \"active\": 1\n                    }\n                ]\n            }\n\n\t\t\t        ]\n    },\n    \"title\": \"All Initiatives.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get Initiatives.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Initiatives:\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
     "url": "previews/financial-resources/:initiativeId/:stageId",
-    "title": "7. Get Financial Resources per Initiative",
+    "title": "9. Get Financial Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1386,7 +1455,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/geographic-scope/:initiativeId/:stageId",
-    "title": "1. Get Geographic Scope per Initiative",
+    "title": "3. Get Geographic Scope per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1455,7 +1524,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/all-geographic-scope/:stageId",
-    "title": "2. Get all Geographic Scope",
+    "title": "4. Get all Geographic Scope",
     "permission": [
       {
         "name": "admin"
@@ -1524,7 +1593,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/human-resources/:initiativeId/:stageId",
-    "title": "6. Get Human Resources per Initiative",
+    "title": "8. Get Human Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1593,7 +1662,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/partners/:initiativeId/:stageId",
-    "title": "3. Get Partners per Initiative",
+    "title": "5. Get Partners per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1662,7 +1731,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/preview-projected-benefits/:initiativeId/:stageId",
-    "title": "4. Get Projected benefits per Initiative",
+    "title": "6. Get Projected benefits per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1731,7 +1800,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "previews/risk-assessment/:initiativeId/:stageId",
-    "title": "5. Get Risk Assessment per Initiative",
+    "title": "7. Get Risk Assessment per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1790,6 +1859,88 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Preview Risk Assessment: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
+    "url": "previews/packages/:initiativeId",
+    "title": "2. Get Work Packages per Initiative",
+    "version": "1.0.2",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetWorkPackage",
+    "group": "Previews",
+    "description": "<p>Shows work packages data from initiatives</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/packages/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/packages/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"workpackage\": [\n            {\n                \"id\": 41,\n                \"active\": 1,\n                \"name\": \"Market intelligence\",\n                \"acronym\": \"Work Package 1\",\n                \"results\": \"CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.\",\n                \"pathway_content\": \"Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).\",\n                \"is_global\": null,\n                \"regions\": [],\n                \"countries\": []\n\n            }\n\n\t\t\t     ]\n    },\n    \"title\": \"Workpackages.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: Get workpackage.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get workpackage:\", error }",
           "type": "json"
         }
       ]
