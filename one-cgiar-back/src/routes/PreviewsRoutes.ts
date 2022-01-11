@@ -2,6 +2,8 @@ import {Router} from 'express';
 import {checkJwt} from '../middlewares/jwt';
 import {checkRole} from '../middlewares/role';
 import * as previewController from '../controllers/PreviewsController';
+import * as stagefull from '../controllers/StageFullProposalController';
+import * as initiatives from '../controllers/InitiativesController';
 
 const router = Router();
 
@@ -11,11 +13,130 @@ const router = Router();
  *
  */
 
+
+// GET ALL INITIATIVES
+/**
+ * @api {get} previews/initiatives 1. Get all initiatives
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetInitiatives
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows all initiatives
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/initiatives/
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/initiatives/
+ * @apiHeader {String} auth
+ *
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "initiatives": [
+ *             {
+ *                 "initvStgId": 35,
+ *                 "id": 2,
+ *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
+ *                 "oficial_code":"INIT-2"
+ *                 "status": "Editing",
+ *                 "action_area_id": "1",
+ *                 "action_area_description": "Systems Transformation",
+ *                 "active": 1,
+ *                 "stageId": 3,
+ *                 "description": "Stage 3: Full Proposal",
+ *                 "stages": [
+ *                     {
+ *                         "id": 2,
+ *                         "initvStgId": 2,
+ *                         "stageId": 2,
+ *                         "active": 0
+ *                     },
+ *                     {
+ *                         "id": 2,
+ *                         "initvStgId": 35,
+ *                         "stageId": 3,
+ *                         "active": 1
+ *                     }
+ *                 ]
+ *             }
+ *
+ * 			        ]
+ *     },
+ *     "title": "All Initiatives."
+ * }
+ *
+ * @apiError Error : Get Initiatives.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get Initiatives:", error }
+ */
+ router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
+
+
+// GET WORK PACKAGES PER INITIATIVE
+/**
+ * @api {get} previews/packages/:initiativeId 2. Get Work Packages per Initiative
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetWorkPackage
+ * @apiGroup Previews
+ *
+ * @apiDescription  Shows work packages data from initiatives
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/previews/packages/2
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/previews/packages/2
+ *
+ * @apiHeader {String} auth
+ *
+ * @apiParam {Number} initiativeId Id initiative
+ *
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "workpackage": [
+ *             {
+ *                 "id": 41,
+ *                 "active": 1,
+ *                 "name": "Market intelligence",
+ *                 "acronym": "Work Package 1",
+ *                 "results": "CGIAR GI initiatives and public and private sector partners collaboratively share, access and use a shared digital infrastructure for global and local market intelligence to build and prioritize investment cases, develop product profiles and address stage gate decision making.",
+ *                 "pathway_content": "Design and implement market intelligence that characterizes current and future needs and perceptions of improved value across crops, varieties and traits in key regions. Approaches will consider priorities and needs of different actors (e.g., processors, seed businesses, consumers, women and men farmers) and potential mediating factors (e.g., policies, trade, technology, market structure, culture).",
+ *                 "is_global": null,
+ *                 "regions": [],
+ *                 "countries": []
+ * 
+ *             }
+ *
+ * 			     ]
+ *     },
+ *     "title": "Workpackages."
+ * }
+ *
+ * @apiError Error : Get workpackage.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get workpackage:", error }
+ */
+ router.get(
+  '/packages/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stagefull.getWorkPackages
+);
+
 /**
  * GET PREVIEW GEOGRAPHIC SCOPE
  */
 /**
- * @api {get} previews/geographic-scope/:initiativeId/:stageId 1. Get Geographic Scope per Initiative
+ * @api {get} previews/geographic-scope/:initiativeId/:stageId 3. Get Geographic Scope per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewGeographicScope
@@ -82,7 +203,7 @@ const router = Router();
  * GET ALL GEOGRAPHIC SCOPE
  */
 /**
- * @api {get} previews/all-geographic-scope/:stageId 2. Get all Geographic Scope
+ * @api {get} previews/all-geographic-scope/:stageId 4. Get all Geographic Scope
  * @apiPermission admin
  * @apiName GetPreviewGeographicScopeGeneral
  * @apiGroup Previews
@@ -165,7 +286,7 @@ const router = Router();
  * GET PREVIEW PARTNERS PER INITIATIVE
  */
 /**
- * @api {get} previews/partners/:initiativeId/:stageId 3. Get Partners per Initiative
+ * @api {get} previews/partners/:initiativeId/:stageId 5. Get Partners per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewPartners
@@ -230,7 +351,7 @@ router.get(
  * GET PREVIEW PROJECTED BENEFITS
  */
 /**
- * @api {get} previews/preview-projected-benefits/:initiativeId/:stageId 4. Get Projected benefits per Initiative
+ * @api {get} previews/preview-projected-benefits/:initiativeId/:stageId 6. Get Projected benefits per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewProjectedBenefits
@@ -296,7 +417,7 @@ router.get(
  * PREVIEW RISK ASSESSMENT
  */
 /**
- * @api {get} previews/risk-assessment/:initiativeId/:stageId 5. Get Risk Assessment per Initiative
+ * @api {get} previews/risk-assessment/:initiativeId/:stageId 7. Get Risk Assessment per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewRiskAssessment
@@ -410,7 +531,7 @@ router.get(
  * GET HUMAN RESOURCES
  */
 /**
- * @api {get} previews/human-resources/:initiativeId/:stageId 6. Get Human Resources per Initiative
+ * @api {get} previews/human-resources/:initiativeId/:stageId 8. Get Human Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewHumanResources
@@ -458,7 +579,7 @@ router.get(
  * GET FINANCIAL RESOURCES
  */
 /**
- * @api {get} previews/financial-resources/:initiativeId/:stageId 7. Get Financial Resources per Initiative
+ * @api {get} previews/financial-resources/:initiativeId/:stageId 9. Get Financial Resources per Initiative
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetPreviewFinancialResources
