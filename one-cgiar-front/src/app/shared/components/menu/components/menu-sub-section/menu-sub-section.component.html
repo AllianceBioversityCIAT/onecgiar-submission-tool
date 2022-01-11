@@ -1,8 +1,7 @@
 
 
 
-<div class="sub-section-container" *ngFor="let subSection of this.section.subsections" [hidden]="subSection.block == true">
-
+<div class="sub-section-container" *ngFor="let subSection of this.section.subsections" [hidden]="subSection.block == true || subSection.subSectionId === 24">
     <div *ngIf="(!subSection?.dynamicList?.length) && (!subSection?.dynamicListSubSection?.length)" class="noActiveSection {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"
         routerLinkActive="activeSection"
         [routerLink]="'full-proposal/'+section.description+'/'+subSection.description">
