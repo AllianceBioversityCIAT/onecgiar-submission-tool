@@ -1316,8 +1316,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/financial-resources/:initiativeId/stageId",
-    "title": "Get Financial Resources per Initiative",
+    "url": "previews/financial-resources/:initiativeId/:stageId",
+    "title": "7. Get Financial Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1356,7 +1356,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewFinancialResources\": {\n            \"financialResources\": [\n                {\n                    \"description\": \"crosscutting_wokpackages\",\n                    \"year\": \"2022\",\n                    \"value\": \"1000.00\"\n                },\n                {\n                    \"description\": \"crosscutting_wokpackages\",\n                    \"year\": \"2023\",\n                    \"value\": \"1000.00\"\n                },\n                {\n                    \"description\": \"crosscutting_wokpackages\",\n                    \"year\": \"2024\",\n                    \"value\": \"1000.00\"\n                },\n                {\n                    \"description\": \"innovation_packages\",\n                    \"year\": \"2022\",\n                    \"value\": \"1000.00\"\n                },\n                {\n                    \"description\": \"work_packages\",\n                    \"year\": null,\n                    \"value\": null\n                }\n            ]\n        }\n    },\n    \"title\": \"Previews:Preview Financial Resources\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewFinancialResources\": {\n            \"financialResources\": [\n                {\n                    \"description\": \"crosscutting_wokpackages\",\n                    \"year\": \"2022\",\n                    \"value\": \"100\"\n                },\n                {\n                    \"description\": \"innovation_packages\",\n                    \"year\": \"2022\",\n                    \"value\": \"100\"\n                },\n                {\n                    \"description\": \"Work Package 1\",\n                    \"year\": \"2022\",\n                    \"value\": \"100\"\n                },\n                {\n                    \"description\": \"Work Package 2\",\n                    \"year\": \"2022\",\n                    \"value\": \"100\"\n                }\n            ]\n        }\n    },\n    \"title\": \"Previews:Preview Financial Resources\"\n}",
           "type": "json"
         }
       ]
@@ -1385,8 +1385,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-geographic-scope/:initiativeId/stageId",
-    "title": "Get Geographic Scope per Initiative",
+    "url": "previews/geographic-scope/:initiativeId/:stageId",
+    "title": "1. Get Geographic Scope per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1395,17 +1395,17 @@ define({ "api": [
     ],
     "name": "GetPreviewGeographicScope",
     "group": "Previews",
-    "description": "<p>Shows Preview Geographic Scope per Initiative</p>",
+    "description": "<p>Shows Geographic Scope per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-geographic-scope/1/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/geographic-scope/1/3"
       }
     ],
     "header": {
@@ -1425,7 +1425,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"previewGeographicScope\": {\n          \"GeoScope\": {\n              \"regions\": [\n                  {\n                      \"region_id\": 2,\n                      \"name\": \"Africa\",\n                      \"initvStgId\": 34\n                  }\n              ],\n              \"countries\": [\n                  {\n                      \"country_id\": 4,\n                      \"name\": \"Afghanistan\",\n                      \"initvStgId\": 34\n                  }\n              ]\n          }\n      }\n  },\n  \"title\": \"Previews:Preview Geographic Scope\"\n}",
+          "content": "    HTTP/1.1 200 OK\n {\n    \"response\": {\n        \"previewGeographicScope\": {\n            \"GeoScope\": {\n                \"regions\": [\n                    {\n                        \"clarisa_region_code\": 4,\n                        \"name\": \"East and Southern Africa\",\n                        \"acronym\": \"ESA\"\n                    },\n                    {\n                        \"clarisa_region_code\": 5,\n                        \"name\": \"South Asia\",\n                        \"acronym\": \"SA\"\n                    }\n                ],\n                \"countries\": [\n                    {\n                        \"clarisa_country_code\": 4,\n                        \"isoAlpha2\": \"AF\",\n                        \"name\": \"Afghanistan\"\n                    },\n                    {\n                        \"clarisa_code\": 8,\n                        \"isoAlpha2\": \"AL\",\n                        \"name\": \"Albania\"\n                    }\n                ]\n            }\n        }\n    },\n    \"title\": \"Previews:Get Geographic Scope per initiative\"\n}",
           "type": "json"
         }
       ]
@@ -1437,14 +1437,14 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: ERROR Get Preview Geographic Scope: Previews General</p>"
+            "description": "<p>: ERROR Get Geographic Scope per initiative: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Geographic Scope: Previews General\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Geographic Scope per initiative: Previews General\", error }",
           "type": "json"
         }
       ]
@@ -1454,8 +1454,77 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/human-resources/:initiativeId/stageId",
-    "title": "Get Human Resources per Initiative",
+    "url": "previews/all-geographic-scope/:stageId",
+    "title": "2. Get all Geographic Scope",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "GetPreviewGeographicScopeGeneral",
+    "group": "Previews",
+    "description": "<p>Shows Geographic Scope</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/all-geographic-scope/3",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/all-geographic-scope/1/3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewGeographicScope\": {\n            \"GeoScope\": {\n                \"regions\": [\n                    {\n                        \"clarisa_region_code\": 4,\n                        \"name\": \"East and Southern Africa\",\n                        \"acronym\": \"ESA\",\n                        \"initiative_code\": \"INIT-1\"\n                    },\n                    {\n                        \"clarisa_region_code\": 5,\n                        \"name\": \"South Asia\",\n                        \"acronym\": \"SA\",\n                        \"initiative_code\": \"INIT-1\"\n                    },\n                    {\n                        \"clarisa_region_code\": 4,\n                        \"name\": \"East and Southern Africa\",\n                        \"acronym\": \"ESA\",\n                        \"initiative_code\": \"INIT-5\"\n                    },\n                    {\n                        \"clarisa_region_code\": 5,\n                        \"name\": \"South Asia\",\n                        \"acronym\": \"SA\",\n                        \"initiative_code\": \"INIT-5\"\n                    }\n                ],\n                \"countries\": [\n                    {\n                        \"clarisa_country_code\": 4,\n                        \"isoAlpha2\": \"AF\",\n                        \"name\": \"Afghanistan\",\n                        \"initiative_code\": \"INIT-1\"\n                    },\n                    {\n                        \"clarisa_country_code\": 8,\n                        \"isoAlpha2\": \"AL\",\n                        \"name\": \"Albania\",\n                        \"initiative_code\": \"INIT-1\"\n                    }\n                ]\n            }\n        }\n    },\n    \"title\": \"Previews:Get all Geographic Scope\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>: ERROR Get all Geographic Scope: Previews General</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get all Geographic Scope: Previews General\", error }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/PreviewsRoutes.ts",
+    "groupTitle": "Previews"
+  },
+  {
+    "type": "get",
+    "url": "previews/human-resources/:initiativeId/:stageId",
+    "title": "6. Get Human Resources per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1523,8 +1592,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-partners/:initiativeId/stageId",
-    "title": "Get Partners per Initiative",
+    "url": "previews/partners/:initiativeId/:stageId",
+    "title": "3. Get Partners per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1533,17 +1602,17 @@ define({ "api": [
     ],
     "name": "GetPreviewPartners",
     "group": "Previews",
-    "description": "<p>Shows Preview Partners per Initiative</p>",
+    "description": "<p>Shows Partners per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/partners/1/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-partners/1/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/partners/1/3"
       }
     ],
     "header": {
@@ -1563,7 +1632,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewPartners\": [\n            {\n                \"partner_name\": \"Wageningen University and Research Centre\",\n                \"url\": \"http://www.wur.nl/en.htm\",\n                \"acronym\": \"WUR\",\n                \"initiative_id\": \"INIT-1\",\n                \"action_area\": \"Genetic Innovation\",\n                \"partner_id\": \"\",\n                \"location\": \"\",\n                \"organization_type_IATI\": \"\",\n                \"network_mapping_codes\": \"\",\n                \"organization_type_clarisa\": \"University\",\n                \"clarisa_id\": 36,\n                \"demand\": 0,\n                \"innovation\": 0,\n                \"scaling\": 0,\n                \"hq_location_clarisa\": \"NL\",\n                \"impact_area_id\": 2,\n                \"Source\": \"impact_satatements\"\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewPartners\": [\n            {\n                \"code\": 1,\n                \"acronym\": \"WUR\",\n                \"institution_type\": \"University\",\n                \"office_location\": \"NL\",\n                \"name\": \"Wageningen University and Research Centre\",\n                \"impact_area\": \"Poverty reduction, livelihoods and jobs\",\n                \"demand\": 0,\n                \"innovation\": 0,\n                \"scaling\": 0,\n                \"website\": \"http://www.wur.nl/en.htm\"\n            },\n            {\n                \"code\": 1,\n                \"acronym\": \"WUR\",\n                \"institution_type\": \"University\",\n                \"office_location\": \"NL\",\n                \"name\": \"Wageningen University and Research Centre\",\n                \"impact_area\": \"Nutrition, health and food security\",\n                \"demand\": 1,\n                \"innovation\": 0,\n                \"scaling\": 1,\n                \"website\": \"http://www.wur.nl/en.htm\"\n            }\n        ]\n    },\n    \"title\": \"Previews:Get Partners per initiative\"\n}",
           "type": "json"
         }
       ]
@@ -1575,14 +1644,14 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: Get Preview Partners: Previews General</p>"
+            "description": "<p>: Get Partners per initiative: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Partners: Previews General\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Partners per initiative: Previews General\", error }",
           "type": "json"
         }
       ]
@@ -1592,8 +1661,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-projected-benefits/:initiativeId/stageId",
-    "title": "Get Projected benefits per Initiative",
+    "url": "previews/preview-projected-benefits/:initiativeId/:stageId",
+    "title": "4. Get Projected benefits per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1602,17 +1671,17 @@ define({ "api": [
     ],
     "name": "GetPreviewProjectedBenefits",
     "group": "Previews",
-    "description": "<p>Shows Preview Projected benefits per Initiative</p>",
+    "description": "<p>Shows Projected benefits per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/projected-benefits/1/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-projected-benefits/1/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/projected-benefits/1/3"
       }
     ],
     "header": {
@@ -1632,7 +1701,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewProjectedBenefits\": [\n            {\n                \"id\": 778,\n                \"impact_area_id\": 1,\n                \"impact_area_name\": \"Nutrition, health and food security\",\n                \"impact_area_indicator_id\": 4,\n                \"impact_area_indicator_name\": \"#cases communicable and noncommunicable diseases\",\n                \"depth_scale_id\": 2,\n                \"probability_id\": 2,\n                \"depth_scale_name\": null,\n                \"probability_name\": null,\n                \"dimensions\": [\n                    [\n                        {\n                            \"projectionId\": 778,\n                            \"depth_description\": \"Life saving\",\n                            \"breadth_value\": \"100.00\"\n                        }\n                    ]\n                ]\n            }\n        ]\n    },\n    \"title\": \"Full Proposal:Preview Partners\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewProjectedBenefits\": {\n            \"impactAreas\": [\n                {\n                    \"id\": 778,\n                    \"impact_area_id\": 1,\n                    \"impact_area_name\": \"Nutrition, health and food security\",\n                    \"impactIndicators\": {\n                        \"id\": 778,\n                        \"impact_area_indicator_id\": 4,\n                        \"impact_area_indicator_name\": \"#cases communicable and noncommunicable diseases\",\n                        \"depth_scale_id\": 2,\n                        \"depth_scale_name\": null,\n                        \"probability_id\": 2,\n                        \"probability_name\": null,\n                        \"dimensions\": [\n                            {\n                                \"projection_id\": 778,\n                                \"depth_description\": \"Life saving\",\n                                \"targetUnit\": \"Millions\",\n                                \"breadth_value\": \"100.00000000\"\n                            }\n                        ]\n                    }\n                }\n            ]\n        }\n    },\n    \"title\": \"Previews:Get Projected Benefits\"\n}",
           "type": "json"
         }
       ]
@@ -1643,15 +1712,15 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "Error",
-            "description": "<p>: Get Preview Projected Benefits: Previews General</p>"
+            "field": "ERROR",
+            "description": "<p>Get Projected Benefits: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"Get Preview Projected Benefits: Previews General\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Projected Benefits: Previews General\", error }",
           "type": "json"
         }
       ]
@@ -1661,8 +1730,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "previews/preview-risk-assessment/:initiativeId/stageId",
-    "title": "Get Risk Assessment per Initiative",
+    "url": "previews/risk-assessment/:initiativeId/:stageId",
+    "title": "5. Get Risk Assessment per Initiative",
     "version": "1.0.2",
     "permission": [
       {
@@ -1671,17 +1740,17 @@ define({ "api": [
     ],
     "name": "GetPreviewRiskAssessment",
     "group": "Previews",
-    "description": "<p>Shows Preview Risk Assessment per Initiative</p>",
+    "description": "<p>Shows Risk Assessment per Initiative</p>",
     "examples": [
       {
         "title": "Example usage:",
-        "content": "https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3",
+        "content": "https://initiativestest.ciat.cgiar.org/api/previews/risk-assessment/1/3",
         "type": "json"
       }
     ],
     "sampleRequest": [
       {
-        "url": "https://initiativestest.ciat.cgiar.org/api/previews/preview-risk-assessment/1/3"
+        "url": "https://initiativestest.ciat.cgiar.org/api/previews/risk-assessment/1/3"
       }
     ],
     "header": {
@@ -1701,7 +1770,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n{\n  \"response\": {\n      \"previewRiskAssessment\": {\n          \"managePlan\": {\n              \"id\": 5,\n              \"initvStgId\": 33,\n              \"riskassessment\": [\n                  {\n                      \"id\": 20,\n                      \"risks_achieving_impact\": \"TEST \",\n                      \"description_risk\": \"TEST TEST\",\n                      \"likelihood\": 5,\n                      \"impact\": 1,\n                      \"risk_score\": 4,\n                      \"manage_plan_risk_id\": 5,\n                      \"active\": 1,\n                      \"opportinities\": [\n                          {\n                              \"id\": 4,\n                              \"opportunities_description\": \"TEST\",\n                              \"risk_assessment_id\": 20,\n                              \"active\": 1\n                          }\n                      ]\n                  },\n                  {\n                      \"id\": 21,\n                      \"risks_achieving_impact\": \"TEST TEST TEST\",\n                      \"description_risk\": \"TEST TEST\",\n                      \"likelihood\": 5,\n                      \"impact\": 1,\n                      \"risk_score\": 4,\n                      \"manage_plan_risk_id\": 5,\n                      \"active\": 1,\n                      \"opportinities\": []\n                  }\n              ]\n          }\n      }\n  },\n  \"title\": \"Previews:Preview Risk Assessment\"\n}",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"response\": {\n        \"previewRiskAssessment\": {\n            \"managePlan\": {\n                \"id\": 3,\n                \"initvStgId\": 34,\n                \"riskassessment\": [\n                    {\n                        \"id\": 61,\n                        \"risks_achieving_impact\": \"Business interruption or delays due to pandemic, war, natural disaster or other incident affecting the Initiative or key dependencies\",\n                        \"risks_theme\": \"Operational\",\n                        \"description_risk\": \"Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\\n\",\n                        \"likelihood\": 1,\n                        \"impact\": 5,\n                        \"risk_score\": 0,\n                        \"manage_plan_risk_id\": 3,\n                        \"active\": 1,\n                        \"opportinities\": [\n                            {\n                                \"id\": 29,\n                                \"opportunities_description\": \"test\",\n                                \"risk_assessment_id\": 61,\n                                \"active\": 1\n                            }\n                        ]\n                    },\n                    {\n                        \"id\": 62,\n                        \"risks_achieving_impact\": \"Capability, and capacity constraints within and across the regions may hinder the uptake of innovations\",\n                        \"risks_theme\": \"Fit for purpose partnerships\",\n                        \"description_risk\": \"Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\\n\",\n                        \"likelihood\": 0,\n                        \"impact\": 0,\n                        \"risk_score\": 0,\n                        \"manage_plan_risk_id\": 3,\n                        \"active\": 1,\n                        \"opportinities\": []\n                    },\n                    {\n                        \"id\": 63,\n                        \"risks_achieving_impact\": \"Conflicting intended or unintended consequences of technologies/innovations for natural resources, GHG emissions, and social and economic aspects impacting objectives and reputation\",\n                        \"risks_theme\": \"Cohesion\",\n                        \"description_risk\": \"Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\\n\",\n                        \"likelihood\": 1,\n                        \"impact\": 1,\n                        \"risk_score\": 0,\n                        \"manage_plan_risk_id\": 3,\n                        \"active\": 1,\n                        \"opportinities\": []\n                    },\n                    {\n                        \"id\": 64,\n                        \"risks_achieving_impact\": \"Data management and systems not fit for purpose or outdated affecting Initiative's efficiency\",\n                        \"risks_theme\": \"Operational\",\n                        \"description_risk\": \"Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\\n\",\n                        \"likelihood\": 1,\n                        \"impact\": 2,\n                        \"risk_score\": 0,\n                        \"manage_plan_risk_id\": 3,\n                        \"active\": 1,\n                        \"opportinities\": []\n                    },\n                    {\n                        \"id\": 65,\n                        \"risks_achieving_impact\": \"Ethical/behavioural (i.e. failure to protect children and vulnerable adults), financial irregularity, data privacy incident leading to reputational event affecting Initiative\",\n                        \"risks_theme\": \"Ethical\",\n                        \"description_risk\": \"Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\\n\",\n                        \"likelihood\": 1,\n                        \"impact\": 4,\n                        \"risk_score\": 0,\n                        \"manage_plan_risk_id\": 3,\n                        \"active\": 1,\n                        \"opportinities\": []\n                    }\n                ]\n            }\n        }\n    },\n    \"title\": \"Previews:Risk Assessment\"\n}",
           "type": "json"
         }
       ]
@@ -1713,14 +1782,14 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "Error",
-            "description": "<p>: ERROR Get Preview Risk Assessment: Previews General</p>"
+            "description": "<p>: ERROR Preview Risk Assessment: Previews General</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Get Preview Risk Assessment: Previews General\", error }",
+          "content": "HTTP/1.1 400 Not Found\n{ message: \"ERROR Preview Risk Assessment: Previews General\", error }",
           "type": "json"
         }
       ]
@@ -3236,6 +3305,136 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert policy compliance oversight: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/FullProposalRoutes.ts",
+    "groupTitle": "Proposal"
+  },
+  {
+    "type": "patch",
+    "url": "stages-control/proposal/toc/:initiativeId/",
+    "title": "TOCS- Create and update TOC",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "PatchTOC",
+    "group": "Proposal",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/toc/2",
+        "type": "json"
+      }
+    ],
+    "sampleRequest": [
+      {
+        "url": "https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/toc/2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "auth",
+            "description": "<p>TOKEN</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "initiativeId",
+            "description": "<p>Id initiative.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "TocId",
+            "description": "<p>identificator TOC.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "narrative",
+            "description": "<p>description TOC.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "diagram",
+            "description": "<p>url diagram.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "type",
+            "description": "<p>0 is TOC into Work Package or 1 Full Initiative TOC.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "work_package",
+            "description": "<p>acronym example WP1.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "active",
+            "description": "<p>status.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "[ {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o3zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png\",\n    \"type\": false,\n    \"work_package\":\"WP1\",\n    \"active\": true\n   },\n   {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o4zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png\",\n    \"type\": false,\n    \"work_package\":\"WP2\",\n    \"active\": true\n   },\n      {\n    \"id\": null,\n    \"tocId\": \"tsdgd9o5zc\",\n    \"narrative\":\"SeEdQUAL supports...\",\n    \"diagram\":\"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png\",\n    \"type\": false,\n    \"work_package\":null,\n    \"active\": true\n   }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n {\n    \"response\": {\n        \"tocs\": {\n            \"savedToc\": [\n                {\n                    \"created_at\": \"2021-12-22T13:06:51.000Z\",\n                    \"updated_at\": \"2021-12-22T13:06:51.000Z\",\n                    \"id\": 3,\n                    \"narrative\": \"SeEdQUAL supports...\",\n                    \"diagram\": \"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png\",\n                    \"type\": 1,\n                    \"active\": 1,\n                    \"toc_id\": \"tsdgd9o3zc\",\n                    \"initvStgId\": 33\n                }\n            ]\n        }\n    },\n    \"title\": \"Full Proposal:TOC\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Error",
+            "description": "<p>Upsert TOC: Full proposal</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Not Found\n{\"name\": \"Upsert TOC: Full proposal\",\"httpCode\": 400,\"isOperational\": false}",
           "type": "json"
         }
       ]

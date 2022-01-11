@@ -13,8 +13,8 @@ export class Budget extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'double'})
-  value: number;
+  @Column({type: 'text'})
+  value: string;
 
   @Column({type: 'text'})
   table_name: string;

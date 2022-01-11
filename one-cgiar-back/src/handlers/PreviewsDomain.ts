@@ -43,7 +43,7 @@ export class PreviewsDomain {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get Preview Partners: Previews General',
+        'Get Partners per initiative: Previews General',
         400,
         error.message,
         false
@@ -68,13 +68,13 @@ export class PreviewsDomain {
             `,
         impactIndicatorQuery = `
                 SELECT p.id,p.impact_area_indicator_id,p.impact_area_indicator_name,
-                       p.depth_scale_id,p.probability_id,p.depth_scale_name,p.probability_name
+                       p.depth_scale_id,p.depth_scale_name,p.probability_name,p.probability_id
                   FROM projection_benefits p
                  WHERE p.initvStgId = ${initiativeId}
                    AND p.active > 0;
                 `,
         dimensionsQuery = `
-        SELECT d.projectionId,d.depth_description,cii.targetUnit,breadth_value
+        SELECT d.projectionId as projection_id,d.depth_description,cii.targetUnit,breadth_value
         FROM dimensions d
          JOIN projection_benefits pb
          ON d.projectionId = pb.id
@@ -92,7 +92,7 @@ export class PreviewsDomain {
       impactIndicators.map(
         (ii) =>
           (ii['dimensions'] = dimensions.filter((dim) => {
-            return ii.id === dim.projectionId;
+            return ii.id === dim.projection_id;
           }))
       );
 
@@ -107,7 +107,7 @@ export class PreviewsDomain {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get Preview Projected Benefits: Previews General',
+        'ERROR Get Projected Benefits: Previews General',
         400,
         error.message,
         false
@@ -124,7 +124,7 @@ export class PreviewsDomain {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
-      SELECT DISTINCT(co.country_id) as code,ini.official_code,
+      SELECT DISTINCT(co.country_id) as clarisa_country_code,
       cco.isoAlpha2,cco.name
         FROM countries_by_initiative_by_stage co
        JOIN clarisa_countries cco
@@ -139,7 +139,7 @@ export class PreviewsDomain {
        GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
           `,
         regionsQuery = `
-        SELECT DISTINCT (r.region_id)as code,ini.official_code,
+        SELECT DISTINCT (r.region_id)as clarisa_region_code,
         re.name,re.acronym
         FROM regions_by_initiative_by_stage r
         JOIN clarisa_regions_cgiar re
@@ -161,7 +161,60 @@ export class PreviewsDomain {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'ERROR Get Preview Geographic Scope: Previews General',
+        'ERROR Get Geographic Scope per initiative: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+
+  /**
+   * REQUEST PREVIEW GEOGRAPHIC SCOPE
+   * @param initiativeId
+   * @returns GeoScope
+   */
+   async requestAllGeographicScope(initiativeId: string) {
+    try {
+      // retrieve preview Geographic Scope (Regions and countries)
+      const countriesQuery = `
+      SELECT DISTINCT(co.country_id) as clarisa_country_code,
+      cco.isoAlpha2,cco.name,ini.official_code as initiative_code
+        FROM countries_by_initiative_by_stage co
+       JOIN clarisa_countries cco
+       ON co.country_id = cco.code
+       JOIN initiatives_by_stages ist
+          ON co.initvStgId = ist.id
+       JOIN initiatives ini
+          ON ist.initiativeId = ini.id
+       WHERE co.active = 1
+         AND co.wrkPkgId IS NOT NULL
+       GROUP BY co.id,co.country_id,cco.isoAlpha2,cco.name
+          `,
+        regionsQuery = `
+        SELECT DISTINCT (r.region_id)as clarisa_region_code,
+        re.name,re.acronym,ini.official_code as initiative_code
+        FROM regions_by_initiative_by_stage r
+        JOIN clarisa_regions_cgiar re
+        ON r.region_id = re.id
+        JOIN initiatives_by_stages ist
+        ON r.initvStgId = ist.id
+        JOIN initiatives ini
+        ON ist.initiativeId = ini.id
+        WHERE r.active = 1
+        AND r.wrkPkgId IS NOT NULL
+        GROUP BY r.region_id,ini.official_code,re.name
+              `;
+
+      const regions = await this.queryRunner.query(regionsQuery);
+      const countries = await this.queryRunner.query(countriesQuery);
+
+      return {GeoScope: {regions, countries}};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get all Geographic Scope: Previews General',
         400,
         error.message,
         false
@@ -232,7 +285,7 @@ export class PreviewsDomain {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'ERROR Get Preview Risk Assessment: Previews General',
+        'ERROR Get Risk Assessment: Previews General',
         400,
         error.message,
         false
@@ -278,12 +331,15 @@ export class PreviewsDomain {
    */
   async requestPreviewFinancialResources(initiativeId: string) {
     try {
-      const financialResourcesQuery = `  SELECT if(fr.col_name='id',fr.table_name,fr.col_name) as description,fy.year,fy.value
-        FROM financial_resources fr
-        LEFT JOIN financial_resources_years fy
-        ON fr.id = fy.financialResourcesId
-       WHERE fr.initvStgId = ${initiativeId}
-       AND fr.active > 0;`;
+      const financialResourcesQuery = `SELECT if(fr.col_name='id',wp.acronym,fr.col_name) as description,
+      fy.year,fy.value
+      FROM financial_resources fr
+      LEFT JOIN financial_resources_years fy
+      ON fr.id = fy.financialResourcesId
+      LEFT JOIN work_packages wp
+      ON fr.financial_type_id = wp.id
+     WHERE fr.initvStgId = ${initiativeId}
+     AND fr.active > 0;`;
 
       const finacialResources = await this.queryRunner.query(
         financialResourcesQuery

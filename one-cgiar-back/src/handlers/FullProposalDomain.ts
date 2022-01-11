@@ -2099,35 +2099,47 @@ export class ProposalHandler extends InitiativeStageHandler {
   /**
    * UPSERT TOCS
    */
-  async upsertTocs(tocId?, narrative?, diagram?, type?, active?) {
+  async upsertTocs(toc) {
     const tocsRepo = getRepository(TOCs);
     const initvStg = await this.setInitvStage();
 
     var newTocs = new TOCs();
-    var upsertedTocs;
-
-    newTocs.tocId = tocId;
-    newTocs.narrative = narrative;
-    newTocs.diagram = diagram;
-    newTocs.type = type;
-    newTocs.active = active ? active : true;
+    var results = [];
+    var savedToc;
 
     try {
-      var savedInnovationPackages: any = await tocsRepo.find({
-        where: {tocId: newTocs.id}
-      });
+      if (toc.length > 0) {
+        for (let index = 0; index < toc.length; index++) {
+          const element = toc[index];
 
-      if (savedInnovationPackages.length > 0) {
-        tocsRepo.merge(savedInnovationPackages, newTocs);
+          newTocs.id = null;
+          newTocs.toc_id = element.tocId;
+          newTocs.narrative = element.narrative;
+          newTocs.diagram = element.diagram;
+          newTocs.type = element.type;
+          newTocs.work_package = element.work_package;
+          newTocs.active = element.active ? element.active : true;
 
-        upsertedTocs = await tocsRepo.save(savedInnovationPackages);
-      } else {
-        newTocs.initvStgId = initvStg.id;
+          newTocs.initvStgId = initvStg.id;
 
-        upsertedTocs = await tocsRepo.save(newTocs);
+          var savedInnovationPackages: any = await tocsRepo.find({
+            where: {toc_id: newTocs.toc_id}
+          });
+          if (savedInnovationPackages.length > 0) {
+            tocsRepo.merge(savedInnovationPackages, newTocs);
+
+            savedToc = await tocsRepo.save(savedInnovationPackages);
+
+            results[index] = savedToc;
+          } else {
+            newTocs.initvStgId = initvStg.id;
+
+            savedToc = await tocsRepo.save(newTocs);
+            results[index] = savedToc;
+          }
+        }
       }
-
-      return {upsertedTocs};
+      return {savedTocs: results};
     } catch (error) {
       console.log(error);
       throw new BaseError(

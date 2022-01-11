@@ -66,7 +66,7 @@ export class ManagementPlanComponent implements OnInit {
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();
-      this.managementPlanForm.valid?
+      this.managementPlanForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
     })

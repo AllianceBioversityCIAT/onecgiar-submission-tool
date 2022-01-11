@@ -1519,34 +1519,61 @@ router.get(
  * @apiParam {String} narrative description TOC.
  * @apiParam {String} diagram url diagram.
  * @apiParam {Boolean} type 0 is TOC into Work Package or 1 Full Initiative TOC.
+ * @apiParam {String} work_package acronym example WP1.
  * @apiParam {Boolean} active status.
  *
  * @apiParamExample {json} Request-Example:
- *  {
- *   "id": null,
- *   "tocId": "tsdgd9o3zc",
- *   "narrative":"SeEdQUAL supports the delivery of seed of improved climate-resilient, market-preferred",
- *   "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
- *   "type": true
- *   "active": true
- *  }
+ * [ {
+ *     "id": null,
+ *     "tocId": "tsdgd9o3zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
+ *     "type": false,
+ *     "work_package":"WP1",
+ *     "active": true
+ *    },
+ *    {
+ *     "id": null,
+ *     "tocId": "tsdgd9o4zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png",
+ *     "type": false,
+ *     "work_package":"WP2",
+ *     "active": true
+ *    },
+ *       {
+ *     "id": null,
+ *     "tocId": "tsdgd9o5zc",
+ *     "narrative":"SeEdQUAL supports...",
+ *     "diagram":"https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd10o3zc/tsdgd10o3zc.png",
+ *     "type": false,
+ *     "work_package":null,
+ *     "active": true
+ *    }
+ * ]
+ * 
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- * {
- *   "response": {
- *       "innovationPackages": {
- *           "upsertedInnovationPackages": {
- *               "id": 1,
- *               "key_principles": "Test 1 innovation package",
- *               "active": true,
- *               "initvStgId": 35,
- *               "updated_at": "2021-09-22T16:09:07.000Z",
- *               "created_at": "2021-09-22T16:09:07.000Z"
- *           }
- *       }
- *   },
- *   "title": "Full Proposal: Innovation Packages."
+ *  {
+ *     "response": {
+ *         "tocs": {
+ *             "savedToc": [
+ *                 {
+ *                     "created_at": "2021-12-22T13:06:51.000Z",
+ *                     "updated_at": "2021-12-22T13:06:51.000Z",
+ *                     "id": 3,
+ *                     "narrative": "SeEdQUAL supports...",
+ *                     "diagram": "https://dev-toc.s3.us-east-2.amazonaws.com/toc_tsdgd9o3zc/tsdgd9o3zc.png",
+ *                     "type": 1,
+ *                     "active": 1,
+ *                     "toc_id": "tsdgd9o3zc",
+ *                     "initvStgId": 33
+ *                 }
+ *             ]
+ *         }
+ *     },
+ *     "title": "Full Proposal:TOC"
  * }
  *
  * @apiError Error Upsert TOC: Full proposal
@@ -1555,10 +1582,6 @@ router.get(
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert TOC: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch(
-  '/toc/:initiativeId([0-9]+)',
-  [checkJwt],
-  stagefull.getInnovationPackages
-);
+router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
 export default router;

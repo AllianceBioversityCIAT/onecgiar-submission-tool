@@ -37,14 +37,14 @@ describe('Previews Controller', async () => {
   it('GET previewPartners/ Request partners per initiative', async () => {
     await chai
       .request(app)
-      .get('/api/previews/preview-partners/' + initiativeId + '/' + stageId)
+      .get('/api/previews/partners/' + initiativeId + '/' + stageId)
       .set('auth', token)
       .then((res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Previews:Preview Partners');
+          .to.be.equal('Previews:Get Partners per initiative');
         expect(res).to.be.a('object');
       });
   });
@@ -54,7 +54,7 @@ describe('Previews Controller', async () => {
     await chai
       .request(app)
       .get(
-        '/api/previews/preview-projected-benefits/' +
+        '/api/previews/projected-benefits/' +
           initiativeId +
           '/' +
           stageId
@@ -65,7 +65,7 @@ describe('Previews Controller', async () => {
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Previews:Preview Projected Benefits');
+          .to.be.equal('Previews:Get Projected Benefits');
         expect(res).to.be.a('object');
       });
   });
@@ -75,7 +75,7 @@ describe('Previews Controller', async () => {
     await chai
       .request(app)
       .get(
-        '/api/previews/preview-geographic-scope/' + initiativeId + '/' + stageId
+        '/api/previews/geographic-scope/' + initiativeId + '/' + stageId
       )
       .set('auth', token)
       .then((res) => {
@@ -83,7 +83,7 @@ describe('Previews Controller', async () => {
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Previews:Preview Geographic Scope');
+          .to.be.equal('Previews:Get Geographic Scope per initiative');
         expect(res).to.be.a('object');
       });
   });
@@ -93,7 +93,7 @@ describe('Previews Controller', async () => {
     await chai
       .request(app)
       .get(
-        '/api/previews/preview-risk-assessment/' + initiativeId + '/' + stageId
+        '/api/previews/risk-assessment/' + initiativeId + '/' + stageId
       )
       .set('auth', token)
       .then((res) => {
@@ -101,7 +101,7 @@ describe('Previews Controller', async () => {
         expect(res.body).to.have.property('response').to.be.a('object');
         expect(res.body)
           .to.have.property('title')
-          .to.be.equal('Previews:Preview Risk Assessment');
+          .to.be.equal('Previews:Risk Assessment');
         expect(res).to.be.a('object');
       });
   });

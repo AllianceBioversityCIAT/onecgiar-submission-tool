@@ -13,13 +13,13 @@ export class GeneralInformation extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({length: '1000'})
+  @Column({type: 'text'})
   name: string;
 
   @Column({type: 'int'})
   action_area_id: number;
 
-  @Column({length: '500'})
+  @Column({length: '1000'})
   action_area_description: string;
 
   @OneToOne(() => InitiativesByStages)
