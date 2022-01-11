@@ -8,6 +8,7 @@
   <link href="vendor/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="vendor/prettify.css" rel="stylesheet" media="screen">
   <link href="css/style.css" rel="stylesheet" media="screen, print">
+  <link href="css/custom.css" rel="stylesheet">
   <link href="img/favicon.ico" rel="icon" type="image/x-icon">
   <script src="vendor/polyfill.js"></script>
 </head>
@@ -136,7 +137,7 @@
     <span class="type type__{{toLowerCase article.type}}">{{toLowerCase article.type}}</span>
     <pre class="prettyprint language-html" data-type="{{toLowerCase article.type}}"><code>{{article.url}}</code></pre>
 
-    {{#if article.permission}}
+    <!-- {{#if article.permission}}
       <p>
         {{__ "Permission:"}}
         {{#each article.permission}}
@@ -148,7 +149,7 @@
           {{/if}}
         {{/each}}
       </p>
-    {{/if}}
+    {{/if}} -->
 
     {{#if_gt article.examples.length compare=0}}
       <ul class="nav nav-tabs nav-tabs-examples">
