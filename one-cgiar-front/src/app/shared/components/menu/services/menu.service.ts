@@ -26,7 +26,7 @@ export class MenuService {
   }
 
   toggleExpand(subSectionsList: HTMLElement) {
-    console.log(subSectionsList)
+    // console.log(subSectionsList)
     subSectionsList.classList.toggle('expandIbd');
     subSectionsList.classList.toggle('collapseIbd');
     // console.log('toggleExpand');
