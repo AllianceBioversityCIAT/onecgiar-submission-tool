@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsHandler } from '@shared/utils/utils';
-import { InitiativesService } from '@shared/services/initiatives.service';
-import { RequestsService } from '@shared/services/requests.service';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
 import { ListToMap } from './classes/listToMap';
+import { RequestsService } from '../../services/requests.service';
+import { InitiativesService } from '../../services/initiatives.service';
+import { StagesMenuService } from '../../services/stages-menu.service';
+import { UtilsHandler } from '../../utils/utils';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',

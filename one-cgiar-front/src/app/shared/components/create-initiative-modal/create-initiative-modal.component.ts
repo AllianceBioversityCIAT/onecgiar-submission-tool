@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-// import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({

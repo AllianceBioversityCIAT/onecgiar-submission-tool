@@ -62,7 +62,7 @@ export class RequestsService {
 
   constructor() { }
 
-  urlId;
+  urlId:any;
 
   addedCoordinator: User[] = [
     { id: 1, name: 'Jaime Duque', email: 'J.Duque@cgiar.org' }
@@ -264,7 +264,7 @@ export class RequestsService {
   //   });
   // }
 
-  removeRangeProjection(i) {
+  removeRangeProjection(i:any) {
     this.range.removeAt(i);
   }
 

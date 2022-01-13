@@ -43,7 +43,7 @@ export class InteractionsService {
     })
   }
 
-  confirmationModal(callback){
+  confirmationModal(callback:any){
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -61,7 +61,7 @@ export class InteractionsService {
   
   currentUserIdOnlyExpand=-1;
   disableAllExpandBool=false;
-  disableOthersExpand(userId){
+  disableOthersExpand(userId:any){
     // console.log(sl+" "+this.user.first_name);
     console.log("helloo "+ userId);
     this.disableAllExpandBool=true;

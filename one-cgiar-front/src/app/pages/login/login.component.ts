@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BaseFormUser } from '@shared/utils/base-form-user';
-import { AuthService } from '@shared/services/auth.service';
+
 import { Subscription } from 'rxjs';
 import { InteractionsService } from '../../shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../shared/services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { WorkPackageComponent } from './work-package.component';
 import { GeneralInformationWorkPackageComponent } from './general-information-work-package/general-information-work-package.component';
 import { GeographicScopeWorkPackageComponent } from './geographic-scope-work-package/geographic-scope-work-package.component';
-import { ProjectionOfBenefitsWorkPackageComponent } from './projection-of-benefits-work-package/projection-of-benefits-work-package.component';
+// import { ProjectionOfBenefitsWorkPackageComponent } from './projection-of-benefits-work-package/projection-of-benefits-work-package.component';
 
 const routes: Routes = [
   {
@@ -23,10 +23,10 @@ const routes: Routes = [
         path: 'geographic-scope',
         component: GeographicScopeWorkPackageComponent,
       },
-      {
-        path: 'projection-of-benefits',
-        component: ProjectionOfBenefitsWorkPackageComponent,
-      },
+      // {
+      //   path: 'projection-of-benefits',
+      //   component: ProjectionOfBenefitsWorkPackageComponent,
+      // },
       // {
       //   path: 'projection_of_benefits',
       //   component: NarrativesConceptComponent,

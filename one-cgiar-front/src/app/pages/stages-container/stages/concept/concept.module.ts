@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { ConceptRoutingModule } from './concept-routing.module';
 import { ConceptComponent } from './concept.component';
-import { MaterialModule } from '@app/material.module';
+import { MaterialModule } from '../../../../material.module';
 
 
 @NgModule({

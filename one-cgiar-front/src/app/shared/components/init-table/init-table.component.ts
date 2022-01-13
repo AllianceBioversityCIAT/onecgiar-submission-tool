@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { CreateInitiativeModalComponent } from '@shared/components/create-initiative-modal/create-initiative-modal.component';
 import { map } from 'rxjs/operators';
+import { InitiativesService } from '../../services/initiatives.service';
+// import { CreateInitiativeModalComponent } from '../create-initiative-modal/create-initiative-modal.component';
 export interface TableData {
   initvStgId: string;
   initiativeName: string;
@@ -76,7 +76,7 @@ export class InitTableComponent implements AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     // console.log(this.data);
-    this.dataSource = new MatTableDataSource(changes.data.currentValue)
+    this.dataSource = new MatTableDataSource(changes['data'].currentValue)
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.matSort;
   }
@@ -122,11 +122,11 @@ export class InitTableComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  openDialog() {
-    const dialogRef = this.dialog.open(CreateInitiativeModalComponent, { panelClass: 'custom-dialog-container' });
+  // openDialog() {
+  //   const dialogRef = this.dialog.open(CreateInitiativeModalComponent, { panelClass: 'custom-dialog-container' });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log(`Dialog result: ${result}`);
+  //   });
+  // }
 }

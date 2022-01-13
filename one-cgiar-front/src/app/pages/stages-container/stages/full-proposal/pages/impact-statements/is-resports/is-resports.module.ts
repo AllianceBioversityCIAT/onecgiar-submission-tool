@@ -6,7 +6,7 @@ import { IsResportsComponent } from './is-resports.component';
 import {TableModule} from 'primeng/table';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import {ButtonModule} from 'primeng/button';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+// import {ClipboardModule} from '@angular/cdk/clipboard';
 import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module';
 
 
@@ -18,7 +18,7 @@ import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module'
     TableModule,
     UtilsModule,
     ButtonModule,
-    ClipboardModule,
+    // ClipboardModule,
     StagesPipesModule
   ]
 })

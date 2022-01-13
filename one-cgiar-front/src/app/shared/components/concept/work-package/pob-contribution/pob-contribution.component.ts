@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { RequestsService } from '@app/shared/services/requests.service';
 import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-modal/projection-indicators-modal.component';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
 import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
 import { InteractionsService } from '../../../../services/interactions.service';
+import { RequestsService } from '../../../../services/requests.service';
 
 @Component({
   selector: 'app-pob-contribution',

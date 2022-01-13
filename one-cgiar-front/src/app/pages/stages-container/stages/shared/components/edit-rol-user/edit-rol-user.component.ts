@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-edit-rol-user',
@@ -38,10 +38,10 @@ export class EditRolUserComponent implements OnInit {
      this.assignUserGuestToInitiative();
     }
     if (this.user.roleId) {
-      this.userRolForm.controls.roleId.setValue(this.user.roleId);
+      this.userRolForm.get("roleId").setValue(this.user.roleId);
       this.getLocalRolById(this.user.roleId);
     }
-    this.userRolForm.controls.userId.setValue(this.user.userId);
+    this.userRolForm.get("userId").setValue(this.user.userId);
     this.userRolForm.valueChanges.subscribe(resp=>{
       this.getLocalRolById(resp.roleId);
       if (resp.roleId != this.user.roleId) {
@@ -104,7 +104,7 @@ export class EditRolUserComponent implements OnInit {
     this._interactions.animateButtonSave = false;
     // console.log("assignUserToInitiative");
     // console.log(this.user);
-    this.userRolForm.controls.userId.setValue(this.user.userId);
+    this.userRolForm.get("userId").setValue(this.user.userId);
     // console.log(this.userRolForm.value);
     let body =  this.userRolForm.value;
     body.active = true;

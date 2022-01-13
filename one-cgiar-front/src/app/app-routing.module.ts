@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { CheckLoginGuard } from '@shared/guards/check-login.guard';
-import { CheckHomeGuard } from '@shared/guards/check-home.guard';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-
-
+import { CheckHomeGuard } from './shared/guards/check-home.guard';
+import { CheckLoginGuard } from './shared/guards/check-login.guard';
 const routes: Routes = [
   {
     path: 'initiatives/:id/stages',
@@ -33,6 +30,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

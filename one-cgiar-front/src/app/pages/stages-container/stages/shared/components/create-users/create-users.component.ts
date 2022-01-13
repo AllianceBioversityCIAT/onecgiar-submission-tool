@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+
 
 @Component({
   selector: 'app-create-users',
@@ -36,7 +37,7 @@ export class CreateUsersComponent implements OnInit {
 
   createUser(){
     this.validateEmail();
-    this.createUserForm.controls.is_cgiar.setValue(this.isCgiar);
+    this.createUserForm.get("is_cgiar").setValue(this.isCgiar);
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
     body.roles=[4];
@@ -64,12 +65,12 @@ export class CreateUsersComponent implements OnInit {
       this.isCgiar = this.createUserForm.value.email.indexOf("@cgiar.org")>-1?true:false;
     }
     if (this.isCgiar) {
-      this.createUserForm.controls.first_name.setValue("cgiarfirstname");
-      this.createUserForm.controls.last_name.setValue("cgiarlastname")
+      this.createUserForm.get("first_name").setValue("cgiarfirstname");
+      this.createUserForm.get("last_name").setValue("cgiarlastname")
       passInForm.clearValidators();
       passInForm.updateValueAndValidity();
     }else{
-      this.createUserForm.controls.password.setValidators([Validators.required, Validators.minLength(8)]);
+      this.createUserForm.get("password").setValidators([Validators.required, Validators.minLength(8)]);
       passInForm.updateValueAndValidity();
     }
   }

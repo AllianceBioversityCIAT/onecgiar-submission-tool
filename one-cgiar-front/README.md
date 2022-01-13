@@ -1,80 +1,27 @@
-# one-cgiar-front
+# OneCgiarFront
 
-This is the front end project of the web platform called Submission Tool, the objective of this web platform is submit scientific initiatives. *This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.2.*
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
 
+## Development server
 
-## Getting Started and Installing
-These instructions will provide you with a copy of the working project on your local machine for development and testing purposes.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-First, clone the repo into your computer.
-```bash
-git clone https://github.com/AllianceBioversityCIAT/onecgiar-submission-tool.git
-```
-Open your terminal, move to the project folder and install the dependencies.
-```bash
-cd onecgiar-submission-tool/one-cgiar-front
-npm install
-```
-In the root of **one-cgiar-front** folder, create a file and call it: **proxy.conf.json** and add the next code lines:
-```
-{
-    "/api": {
-        "target": "http://localhost:3000/api",
-        "secure": false,
-        "logLevel": "debug",
-        "pathRewrite": {
-            "^/api": ""
-        },
-        "changeOrigin": true
-    }
-}
-```
+## Code scaffolding
 
-Also, you have to create a folder called **uploads** in the root of **one-cgiar-front.**
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-**The element tree should look like this in your code editor: [element tree image](https://www.screencast.com/t/sIfSnVeF3)**
+## Build
 
-Once done, run:
-```bash
-npm start
-```
-Open [http://localhost:4200](http://localhost:4200) in your browser. This should open up the Demo App.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-**Note:** *Please be sure that the installation of the back end will be successful to interact with the entirely platform*
+## Running unit tests
 
-## Deploy
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-Please, open the **FortiClient VPN** and log in with your CGIAR access credentials. After that, open **PuTTY** and fill the next information:
+## Running end-to-end tests
 
-```bash
-Host Name (or IP address): tstnodejs01.cgiard.org
-Port: 22
-Connection type: SSH
-```
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-**you should have something like this: [PuTTY image](https://www.screencast.com/t/bnhEztS8pxQ)**
-and then, click in **open** button.
+## Further help
 
-After that, you would see something like this:
-[login PuTTY image](https://www.screencast.com/t/jeie6FoZh). *Contact someone related to the project to provide you the access credentials*
-
-once you access to the server, run:
-```bash
-sudo su
-cd ~/../projects/scripts
-```
-
-After that, stop the server process:
-```bash
-forever stopall
-```
-and then, run the script inside the scripts folder:
-```bash
-bash upSumissionTool.sh
-```
-
-### ¡Good job! this is all that you have to know.
-
-## License
-
-This project uses the following license: [MIT](<https://choosealicense.com/licenses/mit/>)
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

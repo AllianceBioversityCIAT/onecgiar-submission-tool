@@ -10,6 +10,7 @@ import { MaterialModule } from '../../../../../../material.module';
 import { GeographicScopeModule } from '../geographic-scope/geographic-scope.module';
 import { UtilsModule } from '../../../../../../shared/components/utils/utils.module';
 import { SkeletonsModule } from '../../../../../../shared/components/skeletons/skeletons.module';
+import {ButtonModule} from 'primeng/button';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { SkeletonsModule } from '../../../../../../shared/components/skeletons/s
     FormsModule,
     GeographicScopeModule,
     UtilsModule,
-    SkeletonsModule
+    SkeletonsModule,
+    ButtonModule
   ],
   exports:[GeneralInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

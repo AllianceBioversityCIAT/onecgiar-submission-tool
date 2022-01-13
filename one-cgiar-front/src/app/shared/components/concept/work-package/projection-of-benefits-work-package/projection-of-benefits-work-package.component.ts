@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { RequestsService } from '@app/shared/services/requests.service';
-import { ProjectionIndicatorsModalComponent } from '../../projection-indicators-modal/projection-indicators-modal.component';
 import { ClarisaService } from '../../../../services/clarisa.service';
 import { impactArea } from '../../../../models/impactArea.interface';
 import { impactAreaIndicator } from '../../../../models/impactAreaIndicator.interface';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../services/initiatives.service';
 import { DataControlService } from '../../../../services/data-control.service';
 import { ProjectionOfBenefits } from '../../../../models/projection-of-benefits.interface';
 import { InteractionsService } from '../../../../services/interactions.service';
+import { RequestsService } from '../../../../services/requests.service';
 
 @Component({
   selector: 'app-projection-of-benefits-work-package',

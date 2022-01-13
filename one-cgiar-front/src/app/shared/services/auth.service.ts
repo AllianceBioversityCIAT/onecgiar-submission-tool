@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 
-import { ServerResponse, User } from '@shared/models/user.interface';
+import { ServerResponse, User } from '../models/user.interface';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../../environments/environment.prod';
 
 const helper = new JwtHelperService();
 

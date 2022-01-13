@@ -29,7 +29,7 @@ export class BaseFormUser {
     const { errors } = this.baseForm.get(field);
 
     if (errors) {
-      const minlenght = errors?.minlength?.requiredLength;
+      const minlenght = errors['minlength']?.requiredLength;
       const messages = {
         required: 'You must enter a value.',
         minlength: `This field must be longer than ${minlenght} characters`,

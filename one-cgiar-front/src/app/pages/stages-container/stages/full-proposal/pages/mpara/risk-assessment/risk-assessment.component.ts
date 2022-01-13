@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
@@ -9,6 +8,7 @@ import { managementPlan } from './models/management-plan.interface';
 import { Risk } from './models/risk.interface';
 import { Router } from '@angular/router';
 import { Riskassessment } from './models/riskassessment.interface';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-risk-assessment',

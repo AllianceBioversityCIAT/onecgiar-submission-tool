@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ConceptService } from '@app/shared/services/concept.service';
-import { RequestsService } from '@app/shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { InteractionsService } from '../../../services/interactions.service';
 import { StagesMenuService } from '../../../services/stages-menu.service';
+import { RequestsService } from '../../../services/requests.service';
+import { ConceptService } from '../../../services/concept.service';
 
 @Component({
   selector: 'app-theory-of-change',

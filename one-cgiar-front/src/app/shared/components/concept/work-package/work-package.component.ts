@@ -1,13 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { RequestsService } from '@app/shared/services/requests.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectionIndicatorsModalComponent } from '@app/shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InteractionsService } from '../../../services/interactions.service';
-import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataControlService } from '../../../services/data-control.service';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'app-work-package',

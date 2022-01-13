@@ -1,19 +1,21 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
-import { ConceptService } from '@app/shared/services/concept.service';
+
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ErrorService } from '@app/shared/services/error.service';
+
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
-import { InteractionsService } from '@app/shared/services/interactions.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { DataControlService } from '@app/shared/services/data-control.service';
+
 import { ManageAccessComponent } from '../manage-access/manage-access.component';
 import { DataValidatorsService } from '../../data-validators.service';
+import { AppErrorHandler } from '../../../../../../shared/utils/app-error-handler';
+import { ConceptService } from '../../../../../../shared/services/concept.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../shared/services/data-control.service';
+import { StagesMenuService } from '../../../../../../shared/services/stages-menu.service';
 
 @Component({
   selector: 'app-general-information',

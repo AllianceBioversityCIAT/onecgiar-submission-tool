@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { RequestsService } from '@app/shared/services/requests.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPartnersModalComponent } from '../add-partners-modal/add-partners-modal.component';
 import { InitiativesService } from '../../../services/initiatives.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { StagesMenuService } from '@app/shared/services/stages-menu.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../services/data-control.service';
 import { map } from 'rxjs/operators';
+import { RequestsService } from '../../../services/requests.service';
+import { StagesMenuService } from '../../../services/stages-menu.service';
+import { InteractionsService } from '../../../services/interactions.service';
 
 export interface keyPartner {
   key_partner_id: number,

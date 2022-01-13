@@ -1,8 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BudgetModel } from '../models/budget.model';
+import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-geography-breakdown',

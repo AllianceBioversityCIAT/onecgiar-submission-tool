@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { LocalStorageService } from '@shared/services/local-storage.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class StagesMenuService extends LocalStorageService {
     this.set(initvStgId, this.menuObj);
   }
 
-  validateAllSectionsStatus(stage,greenCheckStatus,initvStgId){
+  validateAllSectionsStatus(stage:any,greenCheckStatus:any,initvStgId:any){
     let greenCheckStatusArray = Object.entries(greenCheckStatus);
     greenCheckStatusArray.forEach(greencheck=>{
       this.setFormStageStatus(stage, greencheck[0], greencheck[1]?'VALID':'INVALID', initvStgId )

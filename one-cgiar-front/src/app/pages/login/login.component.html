@@ -31,7 +31,7 @@
           <div style="margin-top: 5px;"></div>
           <mat-form-field class="full-width-input separator">
             <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
-            <mat-error *ngIf="loginForm.get('password').errors?.minlength">
+            <mat-error *ngIf="loginForm.get('password').errors['minlength']">
               The password must be longer than <strong>8</strong> characters 
             </mat-error>
             <mat-error *ngIf="loginForm.get('password').hasError('required')">
@@ -44,7 +44,8 @@
               <!-- {{ loginForm.errorMessage }} -->
             </mat-error>
           </mat-form-field>
-          <button [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Sign in</button>
+          <!-- <button [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Sign in</button> -->
+          <button  mat-raised-button type="submit" color="primary">Sign in</button>
           <br><br>
           <!-- <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button> -->
           <p class="color-tertiary change-password-text" (click)="x_position = - 100"> change password </p>

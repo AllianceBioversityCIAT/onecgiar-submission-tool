@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ErrorHandler, Injectable, Injector } from "@angular/core";
-import { ErrorService } from "@shared/services/error.service";
-import { NotificationService } from "@shared/services/notification.service";
-import { LoggerService } from "@shared/services/logger.service";
 import { NgxSpinnerService } from "ngx-spinner";
+import { ErrorService } from "../services/error.service";
+import { LoggerService } from "../services/logger.service";
+import { NotificationService } from "../services/notification.service";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class AppErrorHandler implements ErrorHandler {
         // const auth = this.injector.get(AuthService);
 
         let message;
-        let stackTrace;
+        let stackTrace:any;
 
         if (error instanceof HttpErrorResponse) {
             console.log('server error', error)

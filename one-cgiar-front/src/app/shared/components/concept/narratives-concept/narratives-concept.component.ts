@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { InitiativesService } from '@shared/services/initiatives.service';
-import { ConceptService } from '@shared/services/concept.service';
-import { RequestsService } from '@shared/services/requests.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { InteractionsService } from '../../../services/interactions.service';
+import { StagesMenuService } from '../../../services/stages-menu.service';
+import { ConceptService } from '../../../services/concept.service';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 
 @Component({

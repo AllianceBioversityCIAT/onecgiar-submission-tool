@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { StagesMenuService } from '@app/shared/services/stages-menu.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InteractionsService } from '../../../services/interactions.service';
 import { DataControlService } from '../../../services/data-control.service';
+import { InitiativesService } from '../../../services/initiatives.service';
+import { StagesMenuService } from '../../../services/stages-menu.service';
 @Component({
   selector: 'app-work-packages',
   templateUrl: './work-packages.component.html',

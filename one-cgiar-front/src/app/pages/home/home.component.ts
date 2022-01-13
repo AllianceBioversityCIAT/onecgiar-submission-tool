@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from '@shared/services/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
-import { LoggerService } from '@shared/services/logger.service';
 import { ClarisaService } from '../../shared/services/clarisa.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-home',

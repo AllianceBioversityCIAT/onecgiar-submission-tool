@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@shared/services/initiatives.service';
 import { ActivatedRoute, NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
-import { StagesMenuService } from '@app/shared/services/stages-menu.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DataControlService } from '../../shared/services/data-control.service';
 import { ManageAccessComponent } from './stages/shared/components/manage-access/manage-access.component';
+import { StagesMenuService } from '../../shared/services/stages-menu.service';
+import { InitiativesService } from '../../shared/services/initiatives.service';
+import { InteractionsService } from '../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-stages-menu',

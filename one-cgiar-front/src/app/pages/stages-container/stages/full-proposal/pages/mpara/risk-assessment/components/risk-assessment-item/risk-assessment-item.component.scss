@@ -37,7 +37,7 @@
             }
             .list{
                 display: flex;
-                justify-content: end;
+                justify-content: flex-end;
                
                 .button_option{
                     background-color: rgb(91,189,147);
@@ -45,7 +45,7 @@
             }
             .input{
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 .button_option{
                     background-color: rgb(145, 91, 189);
                 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { ReFreDataControlService } from '../services/re-fre-data-control.service';
+import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-rf-table-b',
