@@ -20,7 +20,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "preserveSymlinks": true,
             "outputPath": "dist/one-cgiar-front",
             "index": "src/index.html",
             "main": "src/main.ts",

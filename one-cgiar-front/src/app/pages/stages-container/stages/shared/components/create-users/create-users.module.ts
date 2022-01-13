@@ -6,6 +6,8 @@ import {MatCardModule} from '@angular/material/card';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 
 
@@ -16,10 +18,13 @@ import {MatDividerModule} from '@angular/material/divider';
     CommonModule,
     MatIconModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatDividerModule,
+    MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    MatFormFieldModule,
-    MatDividerModule
+    MatButtonModule
+
   ]
 })
 export class CreateUsersModule { }

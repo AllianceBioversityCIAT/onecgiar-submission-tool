@@ -24,7 +24,7 @@
     ]
   },
   "angularCompilerOptions": {
-    "preserveSymlinks": true,
+    // "preserveSymlinks": true,
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": false,
     "strictInputAccessModifiers": false,

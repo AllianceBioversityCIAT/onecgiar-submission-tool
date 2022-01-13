@@ -58,7 +58,7 @@ import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 // import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
-import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { InitTableModule } from './shared/components/init-table/init-table.module';
 import { CreateUserModalModule } from './shared/components/create-user-modal/create-user-modal.module';
 @NgModule({
@@ -109,7 +109,7 @@ import { CreateUserModalModule } from './shared/components/create-user-modal/cre
     MatPaginatorModule,
     NgxSpinnerModule,
     CustomFormsModule,
-    IbdAngularComponentsModule,
+    // IbdAngularComponentsModule,
     MaterialModule,
     InitTableModule,
     CreateUserModalModule
