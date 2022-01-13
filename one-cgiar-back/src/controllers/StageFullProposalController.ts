@@ -1441,7 +1441,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
  */
 export async function patchTocs(req: Request, res: Response) {
   const {initiativeId} = req.params;
-  const {tocId,narrative, diagram, type, active} = req.body;
+  const toc = req.body;
 
   //Validate stage
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -1469,14 +1469,13 @@ export async function patchTocs(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const tocs = fullPposal.upsertTocs(tocId,narrative, diagram, type, active);
+    const tocs = await fullPposal.upsertTocs(toc);
 
     res.json(
       new ResponseHandler('Full Proposal:TOC', {
         tocs
       })
     );
-
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);

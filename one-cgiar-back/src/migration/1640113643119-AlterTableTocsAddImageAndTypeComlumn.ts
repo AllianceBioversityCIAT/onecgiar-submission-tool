@@ -18,10 +18,9 @@ export class AlterTableTocsAddImageAndTypeComlumn1640113643119
     ALTER TABLE tocs ADD COLUMN active tinyint(2) NOT NULL DEFAULT 1
 `);
 
-await queryRunner.query(`
+    await queryRunner.query(`
 ALTER TABLE tocs ADD COLUMN toc_id TEXT NOT NULL
 `);
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
