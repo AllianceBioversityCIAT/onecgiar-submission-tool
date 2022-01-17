@@ -10,9 +10,17 @@
         <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
         *ngIf="showForm">
         <div class="row">
+
             <div class="col-sm-12" >
                 <ibdc-textarea
                     [options]="{inputTitle:'Initiative name', form:summaryForm, formControlName:'name'
+                    ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
+                </ibdc-textarea>
+            </div>
+
+            <div class="col-sm-12" *ngIf="stageName == 'pre-concept'" >
+                <ibdc-textarea
+                    [options]="{inputTitle:'Short format', form:summaryForm, formControlName:'shortFormat'
                     ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
                 </ibdc-textarea>
             </div>
@@ -95,7 +103,7 @@
                 }">
                 ></ibdc-select>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" *ngIf="this.stageName != 'pre-concept'">
                 <div style="height: 20px;"></div>
                 <ibdc-textarea
                 [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
@@ -103,7 +111,7 @@
                </ibdc-textarea>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" *ngIf="stageName != 'pre-concept'">
                 <div class="blue_border">
                     <section-sub-title name="Geographic scope summary"></section-sub-title>
                     <div class="local_container">

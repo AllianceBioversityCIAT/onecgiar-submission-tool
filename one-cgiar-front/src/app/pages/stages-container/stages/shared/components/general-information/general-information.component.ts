@@ -72,6 +72,7 @@ export class GeneralInformationComponent implements OnInit {
       active: new FormControl(true),
       budgetId: new FormControl(null),
       is_global: new FormControl(true),
+      shortFormat: new FormControl(null),
     });
 
   }
