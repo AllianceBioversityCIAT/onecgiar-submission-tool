@@ -1,4 +1,31 @@
 <section-title name="Initiative statements"></section-title>
+
 <div class="section-container animate__animated animate__fadeIn">
-    <ibdc-alert [options]="{text: 'Hello', type:'info'}"></ibdc-alert>
+
+    <ibdc-alert
+        [options]="{text: 'Provide a concise description of 5 Initiative Highlights focusing on the originality of  the Initiative in terms of how it addresses the defined challenges and achieves impacts through its innovations and partnerships.', type:'info'}">
+    </ibdc-alert>
+
+    <div class="highlights-list">
+        <div class="highlight" *ngFor="let highligh of this.body.highlightsList; let i=index" >
+            <ibdc-text-area-field 
+                inputTitle="highligh {{i+1}}"
+                [objectItem]="highligh" 
+                [objectAtributteName]="'value'">
+            </ibdc-text-area-field>
+        </div>
+    </div>
+
+    <ibdc-text-area-field 
+    inputTitle="Challenge Statement"
+    [objectItem]="body" 
+    [objectAtributteName]="'challengeStatement'">
+    </ibdc-text-area-field>
+    <br>
+    <ibdc-text-area-field 
+    inputTitle="Objective Statement"
+    [objectItem]="body" 
+    [objectAtributteName]="'objectiveStatement'">
+    </ibdc-text-area-field>
+
 </div>

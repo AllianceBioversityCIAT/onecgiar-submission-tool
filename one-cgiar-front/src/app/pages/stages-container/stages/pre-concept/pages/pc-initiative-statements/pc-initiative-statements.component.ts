@@ -6,7 +6,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pc-initiative-statements.component.scss']
 })
 export class PcInitiativeStatementsComponent implements OnInit {
-
+  body = {
+    highlightsList : [
+      {
+        value:''
+      },    {
+        value:''
+      },    {
+        value:''
+      },    {
+        value:''
+      },    {
+        value:''
+      }
+    ],
+    challengeStatement:'',
+    objectiveStatement: ''
+  }
   constructor() { }
 
   ngOnInit(): void {

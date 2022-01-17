@@ -58,7 +58,7 @@ export class SectionBreadcrumbComponent implements OnInit {
 
           if (this.sectionsArray[2]) {
             getSectionName  = this._dataControlService.userMenu[1].sections.find(item=>item.description == this.sectionsArray[2]);
-            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSectionName.display_name});
+            this.sectionsList.push({routeName:this.sectionsArray[2],url:'null',name:getSectionName?.display_name});
           }
 
           if (this.sectionsArray[3]) {
