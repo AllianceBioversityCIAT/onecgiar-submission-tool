@@ -124,7 +124,7 @@ const preConceptRoutes = [
     loadChildren: () => import('./stages/pre-concept/pages/pc-initiative-statements/pc-initiative-statements.module').then(mod => mod.PcInitiativeStatementsModule),
   },
   {
-    path: 'pre-concept/',
+    path: 'pre-concept/innovations',
     loadChildren: () => import('./stages/pre-concept/pages/pc-innovations/pc-innovations.module').then(mod => mod.PcInnovationsModule),
   },
   {

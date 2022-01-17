@@ -25,6 +25,11 @@ export class MenuSectionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.findPcPrefix();
+  }
+
+  findPcPrefix(){
+    console.log('pc.some'.search('pc'))
   }
 
 }

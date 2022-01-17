@@ -178,7 +178,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 3,
             "stage": "Full Proposal",
-            "description": "Initiative statements",
+            "description": "initiative-statements",
             "display_name": "Initiative statements",
             "active": 1,
             "visible": 1,
@@ -190,7 +190,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 4,
             "stage": "Full Proposal",
-            "description": "Work packages and Geographic focus",
+            "description": "wp-and-geo-focus",
             "display_name": "Work packages and Geographic focus",
             "active": 1,
             "visible": 1,
@@ -202,7 +202,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 5,
             "stage": "Full Proposal",
-            "description": "Results",
+            "description": "results",
             "display_name": "Results",
             "active": 1,
             "visible": 1,
@@ -214,7 +214,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 6,
             "stage": "Full Proposal",
-            "description": "Innovations",
+            "description": "innovations",
             "display_name": "Innovations",
             "active": 1,
             "visible": 1,
@@ -226,7 +226,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 7,
             "stage": "Full Proposal",
-            "description": "Key partners",
+            "description": "key-partners",
             "display_name": "Key partners",
             "active": 1,
             "visible": 1,
@@ -238,7 +238,7 @@ export class MenuComponent implements OnInit {
           {
             "sectionId": 8,
             "stage": "Full Proposal",
-            "description": "Global Budget",
+            "description": "global-budget",
             "display_name": "Global Budget",
             "active": 1,
             "visible": 1,
