@@ -117,7 +117,7 @@ export class GeneralInformationComponent implements OnInit {
     this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageName == 'proposal' ? 3 : 2).subscribe(resp => {
      
 
-      console.log(resp.response.geoScope);
+      // console.log(resp.response.geoScope);
       this.regionsList = resp?.response?.geoScope?.regions;
       this.countriesList = resp?.response?.geoScope?.countries;
       // get general information leads
@@ -137,8 +137,8 @@ export class GeneralInformationComponent implements OnInit {
       let budget_data = resp.response.budget;
       this.summaryForm.controls['budgetId'].setValue(budget_data.id);
       this.summaryForm.controls['budget_value'].setValue(budget_data.value);
-      console.log(budget_data.value)
-      console.log(this.summaryForm.value.budget_value);
+      // console.log(budget_data.value)
+      // console.log(this.summaryForm.value.budget_value);
       // get Geo
       let geo_data = resp.response.geoScope;
       this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
@@ -170,6 +170,10 @@ export class GeneralInformationComponent implements OnInit {
 
   }
 
+  validateBudget(){
+    return (Number(this.summaryForm.value?.budget_value)>=0.1);
+  }
+
   upsertGeneralInfo() {
 
     console.log(this.summaryForm);
@@ -183,7 +187,7 @@ export class GeneralInformationComponent implements OnInit {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
       // this._interactionsService.successMessage('General information has been saved');
-      this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      this.validateBudget() && this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
 
