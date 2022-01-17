@@ -116,6 +116,34 @@ const preConceptRoutes = [
     loadChildren: () => import('./stages/pre-concept/pages/general-info-pre-concept/general-info-pre-concept.module').then(mod => mod.GeneralInfoPreConceptModule),
   },
   {
+    path: 'pre-concept/initial-theory-of-change',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-initial-theory-of-change/pc-initial-theory-of-change.module').then(mod => mod.PcInitialTheoryOfChangeModule),
+  },
+  {
+    path: 'pre-concept/initiative-statements',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-initiative-statements/pc-initiative-statements.module').then(mod => mod.PcInitiativeStatementsModule),
+  },
+  {
+    path: 'pre-concept/',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-innovations/pc-innovations.module').then(mod => mod.PcInnovationsModule),
+  },
+  {
+    path: 'pre-concept/wp-and-geo-focus',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-wp-and-geo-focus/pc-wp-and-geo-focus.module').then(mod => mod.PcWpAndGeoFocusModule),
+  },
+  {
+    path: 'pre-concept/key-partners',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-key-partners/pc-key-partners.module').then(mod => mod.PcKeyPartnersModule),
+  },
+  {
+    path: 'pre-concept/results',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-results/pc-results.module').then(mod => mod.PcResultsModule),
+  },
+  {
+    path: 'pre-concept/global-budget',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-global-budget/pc-global-budget.module').then(mod => mod.PcGlobalBudgetModule),
+  },
+  {
     path: 'under-construction-page',
     component: UnderConstructionPageComponent,
   }

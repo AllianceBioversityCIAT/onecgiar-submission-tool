@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { PcResultsComponent } from './pc-results.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path:'',
+    component: PcResultsComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
