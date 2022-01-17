@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pc-initial-theory-of-change.component.scss']
 })
 export class PcInitialTheoryOfChangeComponent implements OnInit {
-
+  body = {
+    theory_of_Change_Statement : '' 
+  } 
   constructor() { }
 
   ngOnInit(): void {
