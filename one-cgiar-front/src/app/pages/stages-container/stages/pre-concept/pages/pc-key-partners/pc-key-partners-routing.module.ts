@@ -8,15 +8,15 @@ const routes: Routes = [
     component: PcKeyPartnersComponent,
     children: [
       {
-        path: 'top-key-demand-po',
+        path: 'top-5-key-demand-partner-organizations',
         loadChildren: () => import('./pages/top-key-demand-po/top-key-demand-po.module').then(mod => mod.TopKeyDemandPoModule),
       },
       {
-        path: 'top-key-innovation-po',
+        path: 'top-5-key-innovation-partner-organizations',
         loadChildren: () => import('./pages/top-key-innovation-po/top-key-innovation-po.module').then(mod => mod.TopKeyInnovationPoModule),
       },
       {
-        path: 'top-key-scaling-po',
+        path: 'top-5-key-scaling-partner-organizations',
         loadChildren: () => import('./pages/top-key-scaling-po/top-key-scaling-po.module').then(mod => mod.TopKeyScalingPoModule),
       }
     ]

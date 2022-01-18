@@ -256,7 +256,7 @@ export class MenuComponent implements OnInit {
           "subsections": [
             {
               "subSectionId": 116,
-              "description": "Top 5 Key Demand Partner Organizations",
+              "description": "top-5-key-demand-partner-organizations",
               "display_name": "Top 5 Key Demand Partner Organizations",
               "single_section": 1,
               "sectionId": 7,
@@ -267,7 +267,7 @@ export class MenuComponent implements OnInit {
             },
             {
               "subSectionId": 117,
-              "description": "Top 5 Key Innovation Partner Organizations",
+              "description": "top-5-key-innovation-partner-organizations",
               "display_name": "Top 5 Key Innovation Partner Organizations",
               "single_section": 1,
               "sectionId": 7,
@@ -278,7 +278,7 @@ export class MenuComponent implements OnInit {
             },
             {
               "subSectionId": 118,
-              "description": "Top 5 Key Scaling Partner Organizations",
+              "description": "top-5-key-scaling-partner-organizations",
               "display_name": "Top 5 Key Scaling Partner Organizations",
               "single_section": 1,
               "sectionId": 7,
