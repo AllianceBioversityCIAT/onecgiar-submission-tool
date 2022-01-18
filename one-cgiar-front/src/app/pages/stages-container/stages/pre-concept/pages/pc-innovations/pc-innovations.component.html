@@ -1,4 +1,18 @@
 <section-title name="Innovations"></section-title>
 <div class="section-container animate__animated animate__fadeIn">
     
+    <ibdc-alert
+    [options]="{text: 'List five key Innovations that the Initiative expects to develop and/or scale with partners during the period 2022-2024. Formulate Innovations as tangible ‘things’ (a product, a technology, a service, a business strategy or public policy strategy) that can be assessed for its stage of development and use.', type:'info'}">
+    </ibdc-alert>
+
+    <div class="innovations-list">
+        <div class="innovations" *ngFor="let innovation of this.innovationsList; let i=index" >
+            <ibdc-text-area-field 
+                inputTitle="innovation {{i+1}}"
+                [objectItem]="innovation" 
+                [objectAtributteName]="'value'">
+            </ibdc-text-area-field>
+        </div>
+    </div>
+
 </div>
