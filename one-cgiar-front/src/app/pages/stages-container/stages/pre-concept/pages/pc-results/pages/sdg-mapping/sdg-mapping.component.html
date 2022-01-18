@@ -1,0 +1,22 @@
+
+
+<section-title name="SDG Mapping"></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+    <ibdc-select-multiple [options]="{
+        hideSavedList: true,
+        inputTitle:'Primary SDGs',
+        description: 'Select the primary SDGs to which this Initiative expects to make a quantified',
+        selectList: this.sdgMappingList,
+        selectItemName:'risks_achieving_impact',
+        selectItemId:'idBd',
+        frontendSearchAttribute:'risks_achieving_impact',
+        readOnlyVariable: false,
+        savedList:{
+            list: [],
+            selectItemId:'idBd',
+            selectItemName:'risks_achieving_impact',
+            idToSave:'idBd',
+            labelName:'regions'
+        }
+        }"></ibdc-select-multiple>
+</div>
