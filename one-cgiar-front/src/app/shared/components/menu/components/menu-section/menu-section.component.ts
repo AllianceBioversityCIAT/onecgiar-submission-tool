@@ -24,12 +24,5 @@ export class MenuSectionComponent implements OnInit {
     public router: Router
   ) { }
 
-  ngOnInit(): void {
-    this.findPcPrefix();
-  }
-
-  findPcPrefix(){
-    console.log('pc.some'.search('pc'))
-  }
-
+  ngOnInit(): void {}
 }

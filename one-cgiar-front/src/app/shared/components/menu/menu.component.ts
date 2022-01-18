@@ -132,126 +132,188 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  getPreConceptSimulated(stages:any[]){
-    let object = {
-      description: "Pre concept"
-    }
-
-    stages.push(object);
+  getPreConceptSimulated(){
+    this._dataControlService.userMenu.push({
+      stageId:1,
+      description: "Pre concept",
+      sections: [
+        {
+          "sectionId": 1,
+          "stage": "Full Proposal",
+          "description": "general-information",
+          "display_name": "General Information",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 2,
+          "stage": "Full Proposal",
+          "description": "initial-theory-of-change",
+          "display_name": "Initial theory of change",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 3,
+          "stage": "Full Proposal",
+          "description": "initiative-statements",
+          "display_name": "Initiative statements",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 4,
+          "stage": "Full Proposal",
+          "description": "wp-and-geo-focus",
+          "display_name": "Work packages and Geographic focus",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [
+            {
+              "subSectionId": 112,
+              "description": "work-packages",
+              "display_name": "Work packages",
+              "single_section": 1,
+              "sectionId": 5,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            }
+          ],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 5,
+          "stage": "Full Proposal",
+          "description": "results",
+          "display_name": "Results",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [
+            {
+              "subSectionId": 113,
+              "description": "impact-areas",
+              "display_name": "Impact areas",
+              "single_section": 0,
+              "sectionId": 5,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            },
+            {
+              "subSectionId": 115,
+              "description": "sdg-mapping",
+              "display_name": "SDG Mapping",
+              "single_section": 1,
+              "sectionId": 5,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            }
+          ],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 6,
+          "stage": "Full Proposal",
+          "description": "innovations",
+          "display_name": "Innovations",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 7,
+          "stage": "Full Proposal",
+          "description": "key-partners",
+          "display_name": "Key partners",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [
+            {
+              "subSectionId": 116,
+              "description": "Top 5 Key Demand Partner Organizations",
+              "display_name": "Top 5 Key Demand Partner Organizations",
+              "single_section": 1,
+              "sectionId": 7,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            },
+            {
+              "subSectionId": 117,
+              "description": "Top 5 Key Innovation Partner Organizations",
+              "display_name": "Top 5 Key Innovation Partner Organizations",
+              "single_section": 1,
+              "sectionId": 7,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            },
+            {
+              "subSectionId": 118,
+              "description": "Top 5 Key Scaling Partner Organizations",
+              "display_name": "Top 5 Key Scaling Partner Organizations",
+              "single_section": 1,
+              "sectionId": 7,
+              "active": 1,
+              "visible": 1,
+              "order": 0,
+              "block": null,
+            },
+          ],
+          "fieldsCompleted": 0
+        },
+        {
+          "sectionId": 8,
+          "stage": "Full Proposal",
+          "description": "global-budget",
+          "display_name": "Global Budget",
+          "active": 1,
+          "visible": 1,
+          "orderSection": 1,
+          "stageId": 3,
+          "subsections": [],
+          "fieldsCompleted": 0
+        }
+      ]
+    })
 
   }
 
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
-      console.log("getMenu")
+      // console.log("getMenu")
       this._dataControlService.userMenu = userMenuResp.response.stages;
-      console.log(this._dataControlService.userMenu)
+      // console.log(this._dataControlService.userMenu)
 
-      // setTimeout(() => {
-      this._dataControlService.userMenu.push({
-        description: "Pre concept",
-        sections: [
-          {
-            "sectionId": 1,
-            "stage": "Full Proposal",
-            "description": "general-information",
-            "display_name": "General Information",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 2,
-            "stage": "Full Proposal",
-            "description": "initial-theory-of-change",
-            "display_name": "Initial theory of change",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 3,
-            "stage": "Full Proposal",
-            "description": "initiative-statements",
-            "display_name": "Initiative statements",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 4,
-            "stage": "Full Proposal",
-            "description": "wp-and-geo-focus",
-            "display_name": "Work packages and Geographic focus",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 5,
-            "stage": "Full Proposal",
-            "description": "results",
-            "display_name": "Results",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 6,
-            "stage": "Full Proposal",
-            "description": "innovations",
-            "display_name": "Innovations",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 7,
-            "stage": "Full Proposal",
-            "description": "key-partners",
-            "display_name": "Key partners",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          },
-          {
-            "sectionId": 8,
-            "stage": "Full Proposal",
-            "description": "global-budget",
-            "display_name": "Global Budget",
-            "active": 1,
-            "visible": 1,
-            "orderSection": 1,
-            "stageId": 3,
-            "subsections": [],
-            "fieldsCompleted": 0
-          }
-        ]
-      })
-      // }, 1000);
-
-      // this.getPreConceptSimulated(this._dataControlService.userMenu);
+      this.getPreConceptSimulated();
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
@@ -261,6 +323,9 @@ export class MenuComponent implements OnInit {
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
           let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
+          //! Pre concept simulation
+          this.mapDataInMenu(1, 4, 112, wpss);
+          //! 
           this._dataControlService.wpMaped = true;
         }, (err) => {
           console.log(err);
@@ -273,6 +338,10 @@ export class MenuComponent implements OnInit {
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
+        //! Pre concept simulation
+        let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        this.mapDataInMenu(1, 5, 113, resultsList);
+        //! 
 
         this.mapReportInSubSectionMenu(3,9,{
           showName: 'Risk assessment preview',
@@ -317,7 +386,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 
