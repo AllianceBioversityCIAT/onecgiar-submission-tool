@@ -9,12 +9,15 @@ export class PcInnovationsComponent implements OnInit {
   innovationsList = [
     {
       value:'test'
-    },
-    {
-      value:'test'
     }
   ];
   constructor() { }
+
+  addInnovation(){
+    console.log("addInnovation")
+    if (this.innovationsList.length >= 5) return;
+    this.innovationsList.push({value:''})
+  }
 
   ngOnInit(): void {
   }
