@@ -1,7 +1,7 @@
 <!-- sections list -->
 <div class="stage-section" *ngFor="let section of this.sections; let i = index">
     <div *ngIf="!section.subsections.length" class="number-and-title-container noActiveSection" routerLinkActive="activeSection"
-        [routerLink]="(stage.description == 'full proposal'?'full-proposal/':'pre-concept/')+section.description"
+        [routerLink]="(stage.description == 'Full Proposal'?'full-proposal/':'pre-concept/')+section.description"
         (click)="this._menuService.toggleExpand(subSectionsList);">
     
         <div class="number">{{i+1}} </div>
