@@ -324,7 +324,8 @@ export class MenuComponent implements OnInit {
           let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
           //! Pre concept simulation
-          this.mapDataInMenu(1, 4, 112, wpss);
+          let wpssPc = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          this.mapDataInMenu(1, 4, 112, wpssPc);
           //! 
           this._dataControlService.wpMaped = true;
         }, (err) => {
