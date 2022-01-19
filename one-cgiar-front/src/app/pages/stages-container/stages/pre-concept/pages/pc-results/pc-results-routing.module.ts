@@ -7,10 +7,10 @@ const routes: Routes = [
     path:'',
     component: PcResultsComponent,
     children: [
-      // {
-      //   path: 'pc-impact-areas',
-      //   loadChildren: () => import('./melia-plan/melia-plan.module').then(mod => mod.MeliaPlanModule),
-      // },
+      {
+        path: 'impact-areas/impact-area/:id',
+        loadChildren: () => import('./pages/pc-results-impact-areas/pc-results-impact-areas.module').then(mod => mod.PcResultsImpactAreasModule),
+      },
       {
         path: 'sdg-mapping',
         loadChildren: () => import('./pages/sdg-mapping/sdg-mapping.module').then(mod => mod.SdgMappingModule),
