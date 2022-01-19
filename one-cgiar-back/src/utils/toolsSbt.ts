@@ -2,9 +2,9 @@ import {getConnection} from 'typeorm';
 import {BaseError} from '../handlers/BaseError';
 
 export class ToolsSbt {
-    queryRunner = getConnection().createQueryRunner().connection;
+  queryRunner = getConnection().createQueryRunner().connection;
 
-    /**
+  /**
    * FUNCTION FOR MERGE DATA
    * @param initvStgId
    * @param repo
@@ -45,6 +45,4 @@ export class ToolsSbt {
       throw new BaseError('Error merge array', 400, error.message, false);
     }
   }
-
-
 }

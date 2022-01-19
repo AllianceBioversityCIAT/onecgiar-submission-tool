@@ -1,4 +1,4 @@
-import _, {toLower} from 'lodash';
+import _ from 'lodash';
 import {getRepository, In} from 'typeorm';
 import {getClaActionAreas} from '../controllers/Clarisa';
 import {Context} from '../entity/Context';
@@ -1306,7 +1306,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-   /**
+  /**
    * UPSERT TABLE C (Results)
    * @param tableC
    * @param initvStgId

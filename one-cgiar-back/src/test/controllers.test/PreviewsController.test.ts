@@ -53,12 +53,7 @@ describe('Previews Controller', async () => {
   it('GET previewProjectedBenefits/ Request projected benefits per initiative', async () => {
     await chai
       .request(app)
-      .get(
-        '/api/previews/projected-benefits/' +
-          initiativeId +
-          '/' +
-          stageId
-      )
+      .get('/api/previews/projected-benefits/' + initiativeId + '/' + stageId)
       .set('auth', token)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -74,9 +69,7 @@ describe('Previews Controller', async () => {
   it('GET previewGeographicScope/ Request geographic scope per initiative', async () => {
     await chai
       .request(app)
-      .get(
-        '/api/previews/geographic-scope/' + initiativeId + '/' + stageId
-      )
+      .get('/api/previews/geographic-scope/' + initiativeId + '/' + stageId)
       .set('auth', token)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -92,9 +85,7 @@ describe('Previews Controller', async () => {
   it('GET previewRiskAssessment/ Request risk assessment per initiative', async () => {
     await chai
       .request(app)
-      .get(
-        '/api/previews/risk-assessment/' + initiativeId + '/' + stageId
-      )
+      .get('/api/previews/risk-assessment/' + initiativeId + '/' + stageId)
       .set('auth', token)
       .then((res) => {
         expect(res.status).to.equal(200);

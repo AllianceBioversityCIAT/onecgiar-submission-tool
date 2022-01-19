@@ -773,10 +773,18 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       updateFiles
     );
 
-    const resultFramework = await fullPposal.upsertResultsFramework(tableA,tableB,tableC);
+    const resultFramework = await fullPposal.upsertResultsFramework(
+      tableA,
+      tableB,
+      tableC
+    );
 
     res.json(
-      new ResponseHandler('Full Proposal: Patch melia.', {melia, files,resultFramework})
+      new ResponseHandler('Full Proposal: Patch melia.', {
+        melia,
+        files,
+        resultFramework
+      })
     );
   } catch (error) {
     console.log(error);

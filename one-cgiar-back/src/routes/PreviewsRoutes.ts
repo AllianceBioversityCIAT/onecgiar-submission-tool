@@ -13,7 +13,6 @@ const router = Router();
  *
  */
 
-
 // GET ALL INITIATIVES
 /**
  * @api {get} previews/initiatives 1. Get all initiatives
@@ -74,8 +73,7 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Initiatives:", error }
  */
- router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
-
+router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
 
 // GET WORK PACKAGES PER INITIATIVE
 /**
@@ -112,7 +110,7 @@ const router = Router();
  *                 "is_global": null,
  *                 "regions": [],
  *                 "countries": []
- * 
+ *
  *             }
  *
  * 			     ]
@@ -126,7 +124,7 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "Get workpackage:", error }
  */
- router.get(
+router.get(
   '/packages/:initiativeId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   stagefull.getWorkPackages
@@ -193,7 +191,7 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "ERROR Get Geographic Scope per initiative: Previews General", error }
  */
- router.get(
+router.get(
   '/geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   previewController.getPreviewGeographicScope
@@ -275,12 +273,11 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "ERROR Get all Geographic Scope: Previews General", error }
  */
- router.get(
+router.get(
   '/all-geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   previewController.getAllGeographicScope
 );
-
 
 /**
  * GET PREVIEW PARTNERS PER INITIATIVE
@@ -411,7 +408,6 @@ router.get(
   [checkJwt, checkRole('benefits', 'readOwn')],
   previewController.getPreviewProjectedBenefits
 );
-
 
 /**
  * PREVIEW RISK ASSESSMENT
