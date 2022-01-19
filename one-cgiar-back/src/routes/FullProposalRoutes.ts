@@ -711,7 +711,8 @@ router.get(
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  // '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  '/melia/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
   stagefull.patchMeliaAndFiles
 );

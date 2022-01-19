@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, {toLower} from 'lodash';
 import {getRepository, In} from 'typeorm';
 import {getClaActionAreas} from '../controllers/Clarisa';
 import {Context} from '../entity/Context';
@@ -9,7 +9,11 @@ import {FinancialResourcesYears} from '../entity/FinancialResourcesYears';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {HumanResources} from '../entity/HumanResources';
 import {ImpactStrategies} from '../entity/ImpactStrategies';
+import {InitActionAreasOutcomesIndicators} from '../entity/InitActionAreasOutcomesIndicators';
 import {InitiativeTeam} from '../entity/InitiativesTeam';
+import {InitImpactAreaGlobalTargets} from '../entity/InitImpactAreaGlobalTargets';
+import {InitImpactAreaImpactIndicators} from '../entity/InitImpactAreaImpactIndicators';
+import {InitImpactAreaSdgTargets} from '../entity/InitImpactAreaSdgTargets';
 import {InnovationPackages} from '../entity/InnovationPackages';
 import {ManagePlanRisk} from '../entity/ManagePlanRisk';
 import {Melia} from '../entity/melia';
@@ -17,10 +21,16 @@ import {Opportunities} from '../entity/Opportunities';
 import {Partners} from '../entity/Partners';
 import {PolicyComplianceOrversight} from '../entity/PolicyComplianceOversight';
 import {ProjectionBenefits} from '../entity/ProjectionBenefits';
+import {Results} from '../entity/Results';
+import {ResultsCountries} from '../entity/ResultsCountries';
+import {ResultsDataManagement} from '../entity/ResultsDataManagement';
+import {ResultsIndicators} from '../entity/ResultsIndicators';
+import {ResultsRegions} from '../entity/ResultsRegions';
 import {RiskAssessment} from '../entity/RiskAssessment';
 import {TOCs} from '../entity/TOCs';
 import {WorkPackages} from '../entity/WorkPackages';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
@@ -956,21 +966,25 @@ export class ProposalHandler extends InitiativeStageHandler {
     var upsertedMelia;
     var upsertedFile;
 
+    meliaId = typeof meliaId === 'undefined' ? '' : meliaId;
+
     newMelia.id = meliaId;
     newMelia.melia_plan = melia_plan;
     newMelia.active = meliaActive ? meliaActive : true;
 
     try {
-      if (newMelia.id !== null) {
-        var savedMelia = await meliaRepo.findOne(newMelia.id);
+      if (newMelia.id) {
+        if (newMelia.id !== null) {
+          var savedMelia = await meliaRepo.findOne(newMelia.id);
 
-        meliaRepo.merge(savedMelia, newMelia);
+          meliaRepo.merge(savedMelia, newMelia);
 
-        upsertedMelia = await meliaRepo.save(savedMelia);
-      } else {
-        newMelia.initvStgId = initvStg.id;
+          upsertedMelia = await meliaRepo.save(savedMelia);
+        } else {
+          newMelia.initvStgId = initvStg.id;
 
-        upsertedMelia = await meliaRepo.save(newMelia);
+          upsertedMelia = await meliaRepo.save(newMelia);
+        }
       }
 
       /**
@@ -984,7 +998,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         host = `${process.env.EXT_HOST}`;
       }
-
+      files = typeof files === 'undefined' ? [] : files;
       if (files) {
         for (let index = 0; index < files.length; index++) {
           const file = files[index];
@@ -1008,7 +1022,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-
+      updateFiles = typeof updateFiles === 'undefined' ? [] : updateFiles;
       if (updateFiles.length > 0) {
         for (let index = 0; index < updateFiles.length; index++) {
           const updateFile = updateFiles[index];
@@ -1042,6 +1056,272 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
+  }
+
+  /**
+   * UPSERT MELIA RESULTS FRAMEWORK (TABLE A,B AND C)
+   * @param initiativeId
+   * @param ubication
+   * @param stege
+   * @returns { upsertedMelia, upsertedFile }
+   */
+  async upsertResultsFramework(tableA?, tableB?, tableC?) {
+    /**
+     * GET INITIATIVE BY STAGE CODE
+     */
+    const initvStg = await this.setInitvStage();
+
+    try {
+      tableA = typeof tableA === 'undefined' ? [] : tableA;
+      tableB = typeof tableB === 'undefined' ? [] : tableB;
+      tableC = typeof tableC === 'undefined' ? [] : tableC;
+
+      let upsertedTableA = await this.upsertTableA(tableA, initvStg.id);
+      let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
+
+      return {upsertedTableA, upsertedTableB};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT TABLE A (Global Targets, Impacts Indicators and SDG Targets)
+   * @param tableA
+   * @param initvStgId
+   * @returns {upsertedGlobalTargets, upsertedImpactIndicators,upsertedSdgTargets}
+   */
+  async upsertTableA(tableA?, initvStgId?) {
+    /**
+     * REPOS TABLE A
+     */
+    const initGlobalTargetsRepo = getRepository(InitImpactAreaGlobalTargets);
+    const initImpactIndicatorsRepo = getRepository(
+      InitImpactAreaImpactIndicators
+    );
+    const initSdgTargetsRepo = getRepository(InitImpactAreaSdgTargets);
+
+    /*ARRAYS*/
+    const globalTargets = [];
+    const impactIndicators = [];
+    const sdgTargets = [];
+
+    let toolsSbt = new ToolsSbt();
+
+    try {
+      /*Init Global Targets*/
+
+      for (let index = 0; index < tableA.global_targets.length; index++) {
+        const element = tableA.global_targets[index];
+        let newinitGlobalTargets = new InitImpactAreaGlobalTargets();
+
+        newinitGlobalTargets.initvStgId = initvStgId;
+        newinitGlobalTargets.active = element.active;
+        newinitGlobalTargets.global_target_id = element.global_target_id;
+
+        globalTargets.push(
+          toolsSbt.mergeData(
+            initGlobalTargetsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_global_targets
+             WHERE initvStgId = ${newinitGlobalTargets.initvStgId}
+               AND global_target_id = ${newinitGlobalTargets.global_target_id}`,
+            newinitGlobalTargets
+          )
+        );
+      }
+
+      /*Init Impact Indicators */
+
+      for (
+        let index = 0;
+        index < tableA.impact_ara_indicators.length;
+        index++
+      ) {
+        const element = tableA.impact_ara_indicators[index];
+        let newinitImpactIndicators = new InitImpactAreaImpactIndicators();
+
+        newinitImpactIndicators.initvStgId = initvStgId;
+        newinitImpactIndicators.impact_indicator_id =
+          element.impact_indicator_id;
+        newinitImpactIndicators.active = element.active;
+
+        impactIndicators.push(
+          toolsSbt.mergeData(
+            initImpactIndicatorsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_impact_indicators
+             WHERE initvStgId = ${newinitImpactIndicators.initvStgId}
+               AND impact_indicator_id = ${newinitImpactIndicators.impact_indicator_id}`,
+            newinitImpactIndicators
+          )
+        );
+      }
+      /*Init SDG Targets */
+
+      for (let index = 0; index < tableA.sdg_targets.length; index++) {
+        const element = tableA.sdg_targets[index];
+        let newinitSdgTargets = new InitImpactAreaSdgTargets();
+
+        newinitSdgTargets.initvStgId = initvStgId;
+        newinitSdgTargets.sdg_target_id = element.sdg_target_id;
+        newinitSdgTargets.active = element.active;
+
+        sdgTargets.push(
+          toolsSbt.mergeData(
+            initSdgTargetsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_sdg_targets
+             WHERE initvStgId = ${newinitSdgTargets.initvStgId}
+               AND sdg_target_id = ${newinitSdgTargets.sdg_target_id}`,
+            newinitSdgTargets
+          )
+        );
+      }
+
+      /**
+       * SAVE Init Global Targets
+       */
+
+      // Execute all promises (mergeData)
+      let mergeGlobalTarget = await Promise.all(globalTargets);
+      // Save data
+      let upsertedGlobalTargets = await initGlobalTargetsRepo.save(
+        mergeGlobalTarget
+      );
+
+      /**
+       * SAVE Init Impact Indicators
+       */
+
+      // Execute all promises (mergeData)
+      let mergeImpactIndicators = await Promise.all(impactIndicators);
+      // Save data
+      let upsertedImpactIndicators = await initImpactIndicatorsRepo.save(
+        mergeImpactIndicators
+      );
+
+      /**
+       * SAVE Init SDG Targets
+       */
+      let mergeSdgTargets = await Promise.all(sdgTargets);
+      console.log(mergeSdgTargets);
+
+      // Save data
+      let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
+      console.log(upsertedSdgTargets);
+
+      return {
+        upsertedGlobalTargets,
+        upsertedImpactIndicators,
+        upsertedSdgTargets
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia results framework tableA: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT TABLE B (Outcomes Indicators)
+   * @param tableB
+   * @param initvStgId
+   * @returns {upsertedOutcomesIndicators}
+   */
+  async upsertTableB(tableB?, initvStgId?) {
+    /**
+     * REPOS TABLE B
+     */
+
+    const initOutcomesIndicatorsRepo = getRepository(
+      InitActionAreasOutcomesIndicators
+    );
+
+    /*ARRAYS*/
+    const outcomesIndicators = [];
+
+    let toolsSbt = new ToolsSbt();
+
+    try {
+      for (
+        let index = 0;
+        index < tableB.action_areas_outcomes_indicators.length;
+        index++
+      ) {
+        const element = tableB.action_areas_outcomes_indicators[index];
+        let newActionAreasOutcomesIndicators =
+          new InitActionAreasOutcomesIndicators();
+
+        newActionAreasOutcomesIndicators.initvStgId = initvStgId;
+        newActionAreasOutcomesIndicators.outcomes_indicators_id =
+          element.outcome_indicator_id;
+        newActionAreasOutcomesIndicators.active = element.active;
+
+        outcomesIndicators.push(
+          toolsSbt.mergeData(
+            initOutcomesIndicatorsRepo,
+            ` 
+                SELECT *
+                  FROM init_action_areas_out_indicators
+                 WHERE initvStgId = ${newActionAreasOutcomesIndicators.initvStgId}
+                   AND outcomes_indicators_id = ${newActionAreasOutcomesIndicators.outcomes_indicators_id}`,
+            newActionAreasOutcomesIndicators
+          )
+        );
+      }
+
+      /**
+       * SAVE Init Outcomes Indicatos
+       */
+      let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
+
+      // Save data
+      let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
+        mergeOutcomesIndicators
+      );
+
+      return {upsertedOutcomesIndicators};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia results framework tableB: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+   /**
+   * UPSERT TABLE C (Results)
+   * @param tableC
+   * @param initvStgId
+   * @returns {upsertedOutcomesIndicators}
+   */
+  async upsertTableC(tableC?, initvStgId?) {
+    /**
+     * REPOS TABLE C
+     */
+
+    const resultsRepo = getRepository(Results);
+    const resultsIndicatorsRepo = getRepository(ResultsIndicators);
+    const resultsDataManagementRepo = getRepository(ResultsDataManagement);
+    const resultsRegionsRepo = getRepository(ResultsRegions);
+    const resultsCountriesRepo = getRepository(ResultsCountries);
   }
 
   /**
@@ -1090,14 +1370,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
-  }
-
-  async upsertResultsFrameworks(impactAreas) {
-    console.log(impactAreas);
-  }
-
-  async upsertImpactAreas(impactAreas) {
-    console.log(impactAreas);
   }
 
   /**
@@ -1402,7 +1674,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 }
               }
             }
-          }
+          } //End FOR
         }
       }
 

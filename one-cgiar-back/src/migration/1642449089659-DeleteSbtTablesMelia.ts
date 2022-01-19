@@ -2,6 +2,14 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class DeleteSbtTablesMelia1642449089659 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+
+
+    await queryRunner.query(
+      `
+            drop table IF EXISTS results_framework;
+            `
+    );
+
     await queryRunner.query(
       `
             drop table IF EXISTS sbt_global_targets;

@@ -731,9 +731,8 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
   const {initiativeId, ubication} = req.params;
 
   //melia section data
-  const {id, melia_plan, active, section, updateFiles} = JSON.parse(
-    req.body.data
-  );
+  const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
+    req.body.data ? JSON.parse(req.body.data) : req.body;
 
   //melia section files
   const files = req['files'];
@@ -774,8 +773,10 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       updateFiles
     );
 
+    const resultFramework = await fullPposal.upsertResultsFramework(tableA,tableB,tableC);
+
     res.json(
-      new ResponseHandler('Full Proposal: Patch melia.', {melia, files})
+      new ResponseHandler('Full Proposal: Patch melia.', {melia, files,resultFramework})
     );
   } catch (error) {
     console.log(error);

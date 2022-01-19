@@ -10,14 +10,13 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
                         active TINYINT NOT NULL DEFAULT 1,
                         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        initiatives_by_stages_id INT NOT NULL,
+                        initvStgId INT NOT NULL,
                         outcomes_indicators_id INT NULL,
-                        init_action_areas_out_indicatorscol VARCHAR(45) NULL,
                         PRIMARY KEY (id),
-                        INDEX fk_init_action_areas_out_indicators_initiatives_by_stages1_idx (initiatives_by_stages_id ASC) VISIBLE,
+                        INDEX fk_init_action_areas_out_indicators_initiatives_by_stages1_idx (initvStgId ASC) VISIBLE,
                         INDEX fk_outcomes_indicators_idx (outcomes_indicators_id ASC) VISIBLE,
                         CONSTRAINT fk_init_action_areas_out_indicators_initiatives_by_stages1
-                          FOREIGN KEY (initiatives_by_stages_id)
+                          FOREIGN KEY (initvStgId)
                           REFERENCES initiatives_by_stages (id)
                           ON DELETE NO ACTION
                           ON UPDATE NO ACTION)
@@ -35,12 +34,12 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
             active TINYINT NOT NULL DEFAULT 1,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            initiatives_by_stages_id INT NOT NULL,
+            initvStgId INT NOT NULL,
             PRIMARY KEY (id),
-            INDEX fk_init_action_area_global_targets_initiatives_by_stages1_idx (initiatives_by_stages_id ASC) VISIBLE,
+            INDEX fk_init_action_area_global_targets_initiatives_by_stages1_idx (initvStgId ASC) VISIBLE,
             INDEX fk_global_target_idx (global_target_id ASC) VISIBLE,
             CONSTRAINT fk_init_action_area_global_targets_initiatives_by_stages1
-              FOREIGN KEY (initiatives_by_stages_id)
+              FOREIGN KEY (initvStgId)
               REFERENCES initiatives_by_stages (id)
               ON DELETE NO ACTION
               ON UPDATE NO ACTION)
@@ -58,12 +57,12 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
             active TINYINT NOT NULL DEFAULT 1,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            initiatives_by_stages_id INT NOT NULL,
+            initvStgId INT NOT NULL,
             PRIMARY KEY (id),
-            INDEX fk_init_impact_area_impact_indicators_initiatives_by_stages_idx (initiatives_by_stages_id ASC) VISIBLE,
+            INDEX fk_init_impact_area_impact_indicators_initiatives_by_stages_idx (initvStgId ASC) VISIBLE,
             INDEX fk_impact_indicator_idx (impact_indicator_id ASC) VISIBLE,
             CONSTRAINT fk_init_impact_area_impact_indicators_initiatives_by_stages1
-              FOREIGN KEY (initiatives_by_stages_id)
+              FOREIGN KEY (initvStgId)
               REFERENCES initiatives_by_stages (id)
               ON DELETE NO ACTION
               ON UPDATE NO ACTION)
@@ -81,12 +80,12 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
             active TINYINT NOT NULL DEFAULT 1,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            initiatives_by_stages_id INT NOT NULL,
+            initvStgId INT NOT NULL,
             PRIMARY KEY (id),
-            INDEX fk_init_impact_area_sdg_targets_initiatives_by_stages1_idx (initiatives_by_stages_id ASC) VISIBLE,
+            INDEX fk_init_impact_area_sdg_targets_initiatives_by_stages1_idx (initvStgId ASC) VISIBLE,
             INDEX fk_sdg_target_idx (sdg_target_id ASC) VISIBLE,
             CONSTRAINT fk_init_impact_area_sdg_targets_initiatives_by_stages1
-              FOREIGN KEY (initiatives_by_stages_id)
+              FOREIGN KEY (initvStgId)
               REFERENCES initiatives_by_stages (id)
               ON DELETE NO ACTION
               ON UPDATE NO ACTION)
@@ -104,12 +103,11 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
             result_type_id INT NULL,
             result_title TEXT NULL,
             is_global TINYINT NULL DEFAULT NULL,
-            results_framework_id INT NOT NULL,
-            initiatives_by_stages_id INT NOT NULL,
+            initvStgId INT NOT NULL,
             PRIMARY KEY (id),
-            INDEX fk_init_wp_out_indicators_initiatives_by_stages1_idx (initiatives_by_stages_id ASC) VISIBLE,
+            INDEX fk_init_wp_out_indicators_initiatives_by_stages1_idx (initvStgId ASC) VISIBLE,
             CONSTRAINT fk_init_wp_out_indicators_initiatives_by_stages1
-              FOREIGN KEY (initiatives_by_stages_id)
+              FOREIGN KEY (initvStgId)
               REFERENCES initiatives_by_stages (id)
               ON DELETE NO ACTION
               ON UPDATE NO ACTION)
@@ -119,7 +117,7 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
 
     await queryRunner.query(
       `
-        CREATE TABLE IF NOT EXISTS indicators (
+        CREATE TABLE IF NOT EXISTS results_indicators (
             id INT NOT NULL,
             name TEXT NULL,
             unit_measurement TEXT NULL,
@@ -144,7 +142,7 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
 
     await queryRunner.query(
       `
-        CREATE TABLE IF NOT EXISTS data_management (
+        CREATE TABLE IF NOT EXISTS results_data_management (
             id INT NOT NULL,
             data_source TEXT NULL,
             data_collection_method TEXT NULL,
