@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PcWorkPackageRoutingModule } from './pc-work-package-routing.module';
 import { PcWorkPackageComponent } from './pc-work-package.component';
 import { PcCommonModulesModule } from '../../../pc-common-modules.module';
+import { GeographicScopeModule } from './../../../../../shared/components/geographic-scope/geographic-scope.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { PcCommonModulesModule } from '../../../pc-common-modules.module';
   imports: [
     CommonModule,
     PcWorkPackageRoutingModule,
-    PcCommonModulesModule
+    PcCommonModulesModule,
+    GeographicScopeModule 
   ]
 })
 export class PcWorkPackageModule { }
