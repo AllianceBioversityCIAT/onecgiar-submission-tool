@@ -731,8 +731,11 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
   const {initiativeId, ubication} = req.params;
 
   //melia section data
-  const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
-    req.body.data ? JSON.parse(req.body.data) : req.body;
+  // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
+  //   req.body.data ? JSON.parse(req.body.data) : req.body;
+
+   const {melia_plan, tableA, tableB, tableC} =
+  req.body.data ? JSON.parse(req.body.data) : req.body
 
   //melia section files
   const files = req['files'];
@@ -765,12 +768,8 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       initiativeId,
       ubication,
       stage,
-      id,
       melia_plan,
-      active,
-      section,
-      files,
-      updateFiles
+      files
     );
 
     const resultFramework = await fullPposal.upsertResultsFramework(
