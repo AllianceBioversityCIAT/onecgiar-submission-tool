@@ -37,6 +37,10 @@ export class GeneralInformationComponent implements OnInit {
     co_lead_id: -1
   }
 
+  body = {
+    budget_value:''
+  }
+
   @ViewChild("text") text: ElementRef;
   words: any;
   showForm = false;
@@ -66,7 +70,7 @@ export class GeneralInformationComponent implements OnInit {
       action_area_description: new FormControl(''),
       action_area_id: new FormControl(null, Validators.required),
       generalInformationId: new FormControl(null, Validators.required),
-      budget_value: new FormControl(null, Validators.required),
+      // budget_value: new FormControl(null, Validators.required),
       table_name: new FormControl("general_information"),
       col_name: new FormControl("budget"),
       active: new FormControl(true),
@@ -81,13 +85,18 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.budgetCol?.valueChanges.subscribe(budget => {
-      if (budget < 0) {
-        this.budgetCol.setValue(0)
-        this.budgetCol.setErrors({ 'invalid': true });
-        //  console.log(this.budgetCol.invalid)/
-      }
-    })
+    // this.budgetCol?.valueChanges.subscribe(budget => {
+    //   if (budget < 0) {
+    //     this.budgetCol.setValue(0)
+    //     this.budgetCol.setErrors({ 'invalid': true });
+    //     //  console.log(this.budgetCol.invalid)/
+    //   }
+    // })
+
+      // get budgetCol() {
+  //   return this.summaryForm.get('budget_value') as FormControl;
+  // }
+
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
       this.getSummary();
     })
@@ -96,10 +105,6 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.localEmitter.unsubscribe()
-  }
-
-  get budgetCol() {
-    return this.summaryForm.get('budget_value') as FormControl;
   }
 
   validateFormAndLeads() {
@@ -136,7 +141,8 @@ export class GeneralInformationComponent implements OnInit {
       // get budget
       let budget_data = resp.response.budget;
       this.summaryForm.controls['budgetId'].setValue(budget_data.id);
-      this.summaryForm.controls['budget_value'].setValue(budget_data.value);
+      // this.summaryForm.controls['budget_value'].setValue(budget_data.value);
+      this.body.budget_value = budget_data.value;
       // console.log(budget_data.value)
       // console.log(this.summaryForm.value.budget_value);
       // get Geo
@@ -180,10 +186,11 @@ export class GeneralInformationComponent implements OnInit {
 
     this.spinnerService.show('general-information');
     let body = this.summaryForm.value;
+    body.budget_value = this.body.budget_value;
 
-    if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
+    // if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
     console.log(body)
-    this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
+    this._initiativesService.patchSummary(body, this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
       // this._interactionsService.successMessage('General information has been saved');
