@@ -205,7 +205,7 @@ router.get(
  *     HTTP/1.1 400 Not Found
  *     { message: "Get All work packages:", error }
  */
-router.get('/packages', stagefull.getAllWorkPackages);
+router.get('/packages', stagefull.getAllWorkPackagesProposal);
 
 // assign Work Package
 /**

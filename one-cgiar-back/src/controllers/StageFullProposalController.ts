@@ -141,6 +141,29 @@ export async function getWorkPackage(req: Request, res: Response) {
 }
 
 /**
+ * GET ALL WORK PACKAGES STAGE 3
+ * @param req
+ * @param res { workpackages }
+ * @returns workPackagesProposal
+ */
+ export async function getAllWorkPackagesProposal(req: Request, res: Response) {
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    // get ALL workpackage from porposal
+    const workPackagesProposal = await fullPposal.requestAllWorkPackagesProposal();
+
+    res.json(
+      new ResponseHandler('Full Proposal: All Work Packages proposal.', {workPackagesProposal})
+    );
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
  * GET ALL WORK PACKAGES
  * @param req
  * @param res { workpackages }

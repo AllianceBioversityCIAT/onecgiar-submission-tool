@@ -232,6 +232,63 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /***
+   * GET ALL WP PROPOSAL
+   */
+  async requestAllWorkPackagesProposal() {
+
+    try {
+      let COquery = `
+              SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE active = 1
+               GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE active = 1
+                GROUP BY id,region_id
+                `,
+        WPquery = `
+        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+         FROM work_packages wp
+         JOIN initiatives_by_stages init
+        WHERE wp.initvStgId = 33
+         AND init.stageId = 3
+         AND wp.active = 1
+        ORDER BY initiativeId asc
+                    `;
+
+      var workPackages = await this.queryRunner.query(WPquery);
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((wp) => {
+          wp['regions'] = regions.filter((reg) => {
+            return reg.wrkPkgId === wp.id;
+          });
+
+          wp['countries'] = countries.filter((cou) => {
+            return cou.wrkPkgId === wp.id;
+          });
+        });
+      }
+
+      return workPackages;
+    } catch (error) {
+      throw new BaseError('Get All work packages', 400, error.message, false);
+    }
+  }
+
+
+
+/**
+ * GET ALL WP
+ */
   async requestAllWorkPackages() {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage
