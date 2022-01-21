@@ -237,10 +237,11 @@ export class ProposalHandler extends InitiativeStageHandler {
     // const initvStg = await this.initvStage
 
     try {
-      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+      let COquery = `
+              SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
                WHERE active = 1
-              GROUP BY id,country_id`,
+               GROUP BY id,country_id`,
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
@@ -248,11 +249,12 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-                    SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
-                      FROM work_packages wp
-                      JOIN initiatives_by_stages init
-                     WHERE wp.initvStgId = init.id
-                       AND wp.active = 1
+        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+         FROM work_packages wp
+         JOIN initiatives_by_stages init
+        WHERE wp.initvStgId = 33
+         AND wp.active = 1
+        ORDER BY initiativeId asc
                     `;
 
       // var workPackages = await wpRepo.find({ where: { active: 1 } });
