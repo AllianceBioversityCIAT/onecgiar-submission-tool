@@ -80,7 +80,6 @@ export class MenuComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    console.log("ngOnDestroy");
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 

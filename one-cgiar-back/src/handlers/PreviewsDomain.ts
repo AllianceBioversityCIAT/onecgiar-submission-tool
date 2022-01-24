@@ -169,13 +169,12 @@ export class PreviewsDomain {
     }
   }
 
-
   /**
    * REQUEST PREVIEW GEOGRAPHIC SCOPE
    * @param initiativeId
    * @returns GeoScope
    */
-   async requestAllGeographicScope(initiativeId: string) {
+  async requestAllGeographicScope() {
     try {
       // retrieve preview Geographic Scope (Regions and countries)
       const countriesQuery = `
