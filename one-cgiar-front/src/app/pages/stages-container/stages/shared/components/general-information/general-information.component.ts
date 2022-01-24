@@ -14,6 +14,7 @@ import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { DataControlService } from '@app/shared/services/data-control.service';
 import { ManageAccessComponent } from '../manage-access/manage-access.component';
 import { DataValidatorsService } from '../../data-validators.service';
+import { DevConsole } from '../../../../../../shared/models/dev-console-log';
 
 @Component({
   selector: 'app-general-information',
@@ -47,6 +48,8 @@ export class GeneralInformationComponent implements OnInit {
   showFormActionArea = false;
   regionsList = [];
   countriesList = [];
+
+  devprint = new DevConsole();
 
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
@@ -182,14 +185,13 @@ export class GeneralInformationComponent implements OnInit {
 
   upsertGeneralInfo() {
 
-    console.log(this.summaryForm);
-
     this.spinnerService.show('general-information');
     let body = this.summaryForm.value;
     body.budget_value = this.body.budget_value;
 
     // if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
-    console.log(body)
+    
+    this.devprint.log('body',body)
     this._initiativesService.patchSummary(body, this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
       this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
       this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
