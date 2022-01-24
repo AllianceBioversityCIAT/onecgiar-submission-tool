@@ -244,7 +244,7 @@ export class GeneralInformationComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
-        console.log(propName)
+        // console.log(propName)
       }
     }
   }
