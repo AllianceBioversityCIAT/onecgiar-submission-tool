@@ -1,6 +1,6 @@
 <div class="menu">
     <!-- stages list -->
-    <app-menu-stage *ngIf="this._dataControlService.userMenu.length" [userMenu]="this._dataControlService.userMenu"></app-menu-stage>
+    <app-menu-stage (onAssessSubmission)="changeHide($event)" *ngIf="this._dataControlService.userMenu.length" [userMenu]="this._dataControlService.userMenu"></app-menu-stage>
 </div>
 
 
@@ -96,3 +96,7 @@
             
         </mat-expansion-panel>
     </mat-accordion>
+
+    <p-dialog header="Title" [(visible)]="display">
+        Content
+    </p-dialog>

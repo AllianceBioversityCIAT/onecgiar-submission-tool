@@ -551,4 +551,11 @@ export class InitiativesService {
   }
 
 
+  /*** submitt initiative */
+
+  submitInitiative(initiativeId, stageId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/submit/${initiativeId}/${stageId}`, {});
+  }
+
+
 }
