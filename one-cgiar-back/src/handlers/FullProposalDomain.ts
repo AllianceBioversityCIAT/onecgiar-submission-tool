@@ -1,26 +1,9 @@
 import _ from 'lodash';
 import {getRepository, In} from 'typeorm';
 import {getClaActionAreas} from '../controllers/Clarisa';
-import {Context} from '../entity/Context';
-import {Dimensions} from '../entity/Dimensions';
-import {Files} from '../entity/Files';
-import {FinancialResources} from '../entity/FinancialResources';
-import {FinancialResourcesYears} from '../entity/FinancialResourcesYears';
-import {GeneralInformation} from '../entity/GeneralInformation';
-import {HumanResources} from '../entity/HumanResources';
-import {ImpactStrategies} from '../entity/ImpactStrategies';
-import {InitiativeTeam} from '../entity/InitiativesTeam';
-import {InnovationPackages} from '../entity/InnovationPackages';
-import {ManagePlanRisk} from '../entity/ManagePlanRisk';
-import {Melia} from '../entity/melia';
-import {Opportunities} from '../entity/Opportunities';
-import {Partners} from '../entity/Partners';
-import {PolicyComplianceOrversight} from '../entity/PolicyComplianceOversight';
-import {ProjectionBenefits} from '../entity/ProjectionBenefits';
-import {RiskAssessment} from '../entity/RiskAssessment';
-import {TOCs} from '../entity/TOCs';
-import {WorkPackages} from '../entity/WorkPackages';
+import * as entities from '../entity';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
@@ -208,7 +191,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async getWorkPackageId(id) {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage
-    const wpRepo = getRepository(WorkPackages);
+    const wpRepo = getRepository(entities.WorkPackages);
 
     try {
       let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
@@ -249,15 +232,17 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  async requestAllWorkPackages() {
-    // const initvStgId: string = this.initvStgId_;
-    // const initvStg = await this.initvStage
+  /***
+   * GET ALL WP PROPOSAL
+   */
+  async requestAllWorkPackagesProposal() {
 
     try {
-      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+      let COquery = `
+              SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
                WHERE active = 1
-              GROUP BY id,country_id`,
+               GROUP BY id,country_id`,
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
@@ -265,11 +250,68 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-                    SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
-                      FROM work_packages wp
-                      JOIN initiatives_by_stages init
-                     WHERE wp.initvStgId = init.id
-                       AND wp.active = 1
+        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+         FROM work_packages wp
+         JOIN initiatives_by_stages init
+        WHERE wp.initvStgId = 33
+         AND init.stageId = 3
+         AND wp.active = 1
+        ORDER BY initiativeId asc
+                    `;
+
+      var workPackages = await this.queryRunner.query(WPquery);
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((wp) => {
+          wp['regions'] = regions.filter((reg) => {
+            return reg.wrkPkgId === wp.id;
+          });
+
+          wp['countries'] = countries.filter((cou) => {
+            return cou.wrkPkgId === wp.id;
+          });
+        });
+      }
+
+      return workPackages;
+    } catch (error) {
+      throw new BaseError('Get All work packages', 400, error.message, false);
+    }
+  }
+
+
+
+/**
+ * GET ALL WP
+ */
+  async requestAllWorkPackages() {
+    // const initvStgId: string = this.initvStgId_;
+    // const initvStg = await this.initvStage
+
+    try {
+      let COquery = `
+              SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE active = 1
+               GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE active = 1
+                GROUP BY id,region_id
+                `,
+        WPquery = `
+        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+         FROM work_packages wp
+         JOIN initiatives_by_stages init
+        WHERE wp.initvStgId = 33
+         AND wp.active = 1
+        ORDER BY initiativeId asc
                     `;
 
       // var workPackages = await wpRepo.find({ where: { active: 1 } });
@@ -301,24 +343,23 @@ export class ProposalHandler extends InitiativeStageHandler {
   /*******  FULL PROPOSAL SETTERS   *********/
 
   /**
-   *
+   ** UPSERT GENERAL INFORMATION
    * @param generalInformationId?
    * @param name
    * @param action_area_id
    * @param action_area_description
    * @returns generalInformation
    */
-
   async upsertGeneralInformation(
     generalInformationId?,
     name?,
     action_area_id?,
     action_area_description?
   ) {
-    const gnralInfoRepo = getRepository(GeneralInformation);
+    const gnralInfoRepo = getRepository(entities.GeneralInformation);
 
     //  create empty object
-    let generalInformation: GeneralInformation;
+    let generalInformation: entities.GeneralInformation;
     try {
       // get current intiative by stage
       // const initvStg = await this.initvStage;
@@ -334,7 +375,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       // if null, create object
       if (generalInformationId == null) {
-        generalInformation = new GeneralInformation();
+        generalInformation = new entities.GeneralInformation();
         generalInformation.name = name;
 
         generalInformation.action_area_description =
@@ -397,7 +438,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   *
+   ** UPSERT CONTEXT
    * @param contextId?
    * @param challenge_statement
    * @param smart_objectives
@@ -416,16 +457,16 @@ export class ProposalHandler extends InitiativeStageHandler {
     comparative_advantage?,
     participatory_design?
   ) {
-    const contextRepo = getRepository(Context);
+    const contextRepo = getRepository(entities.Context);
     //  create empty object
-    let context: Context;
+    let context: entities.Context;
     try {
       // get current intiative by stage
       const initvStg = await this.initvStage;
 
       // if null, create object
       if (contextId == null) {
-        context = new Context();
+        context = new entities.Context();
         // assign initiative by stage
         context.initvStg = initvStg[0].id;
       } else {
@@ -467,8 +508,13 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** UPSERT WORK PACKAGES
+   * @param newWP
+   * @returns upsertedInfo
+   */
   async upsertWorkPackages(newWP?) {
-    const wpRepo = getRepository(WorkPackages);
+    const wpRepo = getRepository(entities.WorkPackages);
     // get current intiative by stage
     const initvStg = await this.initvStage;
 
@@ -502,7 +548,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   *
+   ** UPSERT WORK PACKAGES REPLICATION
    * @param workPackageId
    * @param acronym
    * @param name
@@ -510,7 +556,7 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns workPackageInfo
    */
   async upsertWorkPackagesRepl(fullProposalWP?, conceptWP?) {
-    const wpRepo = getRepository(WorkPackages);
+    const wpRepo = getRepository(entities.WorkPackages);
 
     //  create empty object
     var workPackage = [];
@@ -565,7 +611,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   *
+   ** UPSERT PROJECTION BENEFITS
    * @param projectionBenefitsId
    * @param impact_area_id
    * @param impact_area_name
@@ -594,11 +640,11 @@ export class ProposalHandler extends InitiativeStageHandler {
     active?,
     dimensions?
   ) {
-    const projBeneRepo = getRepository(ProjectionBenefits);
-    const dimensionsRepo = getRepository(Dimensions);
+    const projBeneRepo = getRepository(entities.ProjectionBenefits);
+    const dimensionsRepo = getRepository(entities.Dimensions);
     const initvStg = await this.setInitvStage();
-    var newWorkProjectionBenefits = new ProjectionBenefits();
-    var newDimensions = new Dimensions();
+    var newWorkProjectionBenefits = new entities.ProjectionBenefits();
+    var newDimensions = new entities.Dimensions();
     var upsertedPjectionBenefits;
     var upsertedDimensions;
 
@@ -675,7 +721,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   *
+   ** REQUEST PROJECTION BENEFITS
    * @returns { projectBenefits }
    */
   async requestProjectionBenefits() {
@@ -723,7 +769,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   *
+   ** REQUEST PROJECTION BENEFITS BY IMPACT AREA
    * @returns { projectBenefits }
    */
   async requestProjectionBenefitsByImpact(impactAreaId) {
@@ -772,7 +818,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * IMPACT STRATEGIES
+   ** UPSERT IMPACT STRATEGIES
    * @param impact_strategies_id
    * @param active
    * @param challenge_priorization
@@ -795,11 +841,11 @@ export class ProposalHandler extends InitiativeStageHandler {
     impact_area_name?,
     partners?
   ) {
-    const impactStrategiesRepo = getRepository(ImpactStrategies);
-    const partnersRepo = getRepository(Partners);
+    const impactStrategiesRepo = getRepository(entities.ImpactStrategies);
+    const partnersRepo = getRepository(entities.Partners);
     const initvStg = await this.setInitvStage();
-    var newImpactStrategies = new ImpactStrategies();
-    var newPartners = new Partners();
+    var newImpactStrategies = new entities.ImpactStrategies();
+    var newPartners = new entities.Partners();
     var upsertedImpactStrategies;
     var upsertedPartners;
 
@@ -874,6 +920,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** REQUEST IMPACT STRATEGIES
+   */
   async requestImpactStrategies(impact_area_id) {
     const initvStg = await this.setInitvStage();
 
@@ -922,7 +971,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT MELIA and Files
+   ** UPSERT MELIA and Files
    * @param initiativeId
    * @param ubication
    * @param stege
@@ -938,44 +987,48 @@ export class ProposalHandler extends InitiativeStageHandler {
     initiativeId?,
     ubication?,
     stege?,
-    meliaId?,
     melia_plan?,
-    meliaActive?,
     section?,
-    files?,
-    updateFiles?
+    files?
   ) {
-    const meliaRepo = getRepository(Melia);
-    const filesRepo = getRepository(Files);
+    const meliaRepo = getRepository(entities.Melia);
+    const filesRepo = getRepository(entities.Files);
     const initvStg = await this.setInitvStage();
     var host = `${process.env.EXT_HOST}`;
     const path = 'uploads';
 
-    var newMelia = new Melia();
-    var newFiles = new Files();
+    var newMelia = new entities.Melia();
+    var newFiles = new entities.Files();
     var upsertedMelia;
     var upsertedFile;
 
-    newMelia.id = meliaId;
-    newMelia.melia_plan = melia_plan;
-    newMelia.active = meliaActive ? meliaActive : true;
-
     try {
-      if (newMelia.id !== null) {
-        var savedMelia = await meliaRepo.findOne(newMelia.id);
+      melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
 
-        meliaRepo.merge(savedMelia, newMelia);
+      console.log(melia_plan);
 
-        upsertedMelia = await meliaRepo.save(savedMelia);
-      } else {
-        newMelia.initvStgId = initvStg.id;
+      if (melia_plan) {
+        newMelia.id = melia_plan.meliaId;
+        newMelia.melia_plan = melia_plan.melia_plan;
+        newMelia.active = melia_plan.meliaActive
+          ? melia_plan.meliaActive
+          : true;
 
-        upsertedMelia = await meliaRepo.save(newMelia);
+        if (newMelia.id !== null) {
+          var savedMelia = await meliaRepo.findOne(newMelia.id);
+
+          meliaRepo.merge(savedMelia, newMelia);
+
+          upsertedMelia = await meliaRepo.save(savedMelia);
+        } else {
+          newMelia.initvStgId = initvStg.id;
+          console.log('else', newMelia);
+          upsertedMelia = await meliaRepo.save(newMelia);
+        }
       }
-
       /**
        *
-       * MELIA FILES
+       *! MELIA FILES
        *
        */
 
@@ -984,7 +1037,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         host = `${process.env.EXT_HOST}`;
       }
-
+      files = typeof files === 'undefined' ? [] : files;
       if (files) {
         for (let index = 0; index < files.length; index++) {
           const file = files[index];
@@ -1008,26 +1061,31 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
+      if (melia_plan) {
+        melia_plan.updateFiles =
+          typeof melia_plan.updateFiles === 'undefined'
+            ? []
+            : melia_plan.updateFiles;
+        if (melia_plan.updateFiles.length > 0) {
+          for (let index = 0; index < melia_plan.updateFiles.length; index++) {
+            const updateFile = melia_plan.updateFiles[index];
 
-      if (updateFiles.length > 0) {
-        for (let index = 0; index < updateFiles.length; index++) {
-          const updateFile = updateFiles[index];
+            newFiles.id = updateFile.id;
+            newFiles.active = updateFile.active ? updateFile.active : true;
+            newFiles.meliaId = updateFile.meliaId;
+            newFiles.section = updateFile.section;
+            newFiles.url = updateFile.urlDB;
+            newFiles.name = updateFile.originalname;
 
-          newFiles.id = updateFile.id;
-          newFiles.active = updateFile.active ? updateFile.active : true;
-          newFiles.meliaId = updateFile.meliaId;
-          newFiles.section = updateFile.section;
-          newFiles.url = updateFile.urlDB;
-          newFiles.name = updateFile.originalname;
+            if (newFiles.id !== null) {
+              var savedFiles = await filesRepo.findOne(newFiles.id);
 
-          if (newFiles.id !== null) {
-            var savedFiles = await filesRepo.findOne(newFiles.id);
+              filesRepo.merge(savedFiles, updateFile);
 
-            filesRepo.merge(savedFiles, updateFile);
-
-            upsertedFile = await filesRepo.save(savedFiles);
-          } else {
-            upsertedFile = await filesRepo.save(newFiles);
+              upsertedFile = await filesRepo.save(savedFiles);
+            } else {
+              upsertedFile = await filesRepo.save(newFiles);
+            }
           }
         }
       }
@@ -1042,6 +1100,289 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
+  }
+
+  /**
+   ** UPSERT MELIA RESULTS FRAMEWORK (TABLE A,B AND C)
+   * @param initiativeId
+   * @param ubication
+   * @param stege
+   * @returns { upsertedMelia, upsertedFile }
+   */
+  async upsertResultsFramework(tableA?, tableB?, tableC?) {
+    /**
+     * GET INITIATIVE BY STAGE CODE
+     */
+    const initvStg = await this.setInitvStage();
+
+    try {
+      tableA = typeof tableA === 'undefined' ? [] : tableA;
+      tableB = typeof tableB === 'undefined' ? [] : tableB;
+      tableC = typeof tableC === 'undefined' ? [] : tableC;
+
+      let upsertedTableA = await this.upsertTableA(tableA, initvStg.id);
+      let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
+
+      return {upsertedTableA, upsertedTableB};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT TABLE A (Global Targets, Impacts Indicators and SDG Targets)
+   * @param tableA
+   * @param initvStgId
+   * @returns {upsertedGlobalTargets, upsertedImpactIndicators,upsertedSdgTargets}
+   */
+  async upsertTableA(tableA?, initvStgId?) {
+    /**
+     * REPOS TABLE A
+     */
+    const initGlobalTargetsRepo = getRepository(
+      entities.InitImpactAreaGlobalTargets
+    );
+    const initImpactIndicatorsRepo = getRepository(
+      entities.InitImpactAreaImpactIndicators
+    );
+    const initSdgTargetsRepo = getRepository(entities.InitImpactAreaSdgTargets);
+
+    /*ARRAYS*/
+    const globalTargets = [];
+    const impactIndicators = [];
+    const sdgTargets = [];
+
+    /*IMPORT CLASS TOOLS SBT - FUNCTION MERGE DATA */
+    let toolsSbt = new ToolsSbt();
+
+    try {
+      /*Init Global Targets*/
+      tableA.global_targets =
+        typeof tableA.global_targets === 'undefined'
+          ? []
+          : tableA.global_targets;
+      for (let index = 0; index < tableA.global_targets.length; index++) {
+        const element = tableA.global_targets[index];
+        let newinitGlobalTargets = new entities.InitImpactAreaGlobalTargets();
+
+        newinitGlobalTargets.initvStgId = initvStgId;
+        newinitGlobalTargets.active = element.active;
+        newinitGlobalTargets.global_target_id = element.global_target_id;
+
+        globalTargets.push(
+          toolsSbt.mergeData(
+            initGlobalTargetsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_global_targets
+             WHERE initvStgId = ${newinitGlobalTargets.initvStgId}
+               AND global_target_id = ${newinitGlobalTargets.global_target_id}`,
+            newinitGlobalTargets
+          )
+        );
+      }
+
+      /*Init Impact Indicators */
+      tableA.impact_areas_indicators =
+        typeof tableA.impact_areas_indicators === 'undefined'
+          ? []
+          : tableA.impact_areas_indicators;
+      for (
+        let index = 0;
+        index < tableA.impact_areas_indicators.length;
+        index++
+      ) {
+        const element = tableA.impact_areas_indicators[index];
+        let newinitImpactIndicators =
+          new entities.InitImpactAreaImpactIndicators();
+
+        newinitImpactIndicators.initvStgId = initvStgId;
+        newinitImpactIndicators.impact_indicator_id =
+          element.impact_indicator_id;
+        newinitImpactIndicators.active = element.active;
+
+        impactIndicators.push(
+          toolsSbt.mergeData(
+            initImpactIndicatorsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_impact_indicators
+             WHERE initvStgId = ${newinitImpactIndicators.initvStgId}
+               AND impact_indicator_id = ${newinitImpactIndicators.impact_indicator_id}`,
+            newinitImpactIndicators
+          )
+        );
+      }
+      /*Init SDG Targets */
+      tableA.sdg_targets =
+        typeof tableA.sdg_targets === 'undefined' ? [] : tableA.sdg_targets;
+      for (let index = 0; index < tableA.sdg_targets.length; index++) {
+        const element = tableA.sdg_targets[index];
+        let newinitSdgTargets = new entities.InitImpactAreaSdgTargets();
+
+        newinitSdgTargets.initvStgId = initvStgId;
+        newinitSdgTargets.sdg_target_id = element.sdg_target_id;
+        newinitSdgTargets.active = element.active;
+
+        sdgTargets.push(
+          toolsSbt.mergeData(
+            initSdgTargetsRepo,
+            ` 
+            SELECT *
+              FROM init_impact_area_sdg_targets
+             WHERE initvStgId = ${newinitSdgTargets.initvStgId}
+               AND sdg_target_id = ${newinitSdgTargets.sdg_target_id}`,
+            newinitSdgTargets
+          )
+        );
+      }
+
+      /**
+       * SAVE Init Global Targets
+       */
+
+      // Execute all promises (mergeData)
+      let mergeGlobalTarget = await Promise.all(globalTargets);
+      // Save data
+      let upsertedGlobalTargets = await initGlobalTargetsRepo.save(
+        mergeGlobalTarget
+      );
+
+      /**
+       * SAVE Init Impact Indicators
+       */
+
+      // Execute all promises (mergeData)
+      let mergeImpactIndicators = await Promise.all(impactIndicators);
+      // Save data
+      let upsertedImpactIndicators = await initImpactIndicatorsRepo.save(
+        mergeImpactIndicators
+      );
+
+      /**
+       * SAVE Init SDG Targets
+       */
+      let mergeSdgTargets = await Promise.all(sdgTargets);
+      console.log(mergeSdgTargets);
+
+      // Save data
+      let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
+      console.log(upsertedSdgTargets);
+
+      return {
+        upsertedGlobalTargets,
+        upsertedImpactIndicators,
+        upsertedSdgTargets
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia results framework tableA: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT TABLE B (Outcomes Indicators)
+   * @param tableB
+   * @param initvStgId
+   * @returns {upsertedOutcomesIndicators}
+   */
+  async upsertTableB(tableB?, initvStgId?) {
+    /**
+     * REPOS TABLE B
+     */
+
+    const initOutcomesIndicatorsRepo = getRepository(
+      entities.InitActionAreasOutcomesIndicators
+    );
+
+    /*ARRAYS*/
+    const outcomesIndicators = [];
+
+    let toolsSbt = new ToolsSbt();
+
+    try {
+      tableB.action_areas_outcomes_indicators =
+        typeof tableB.action_areas_outcomes_indicators === 'undefined'
+          ? []
+          : tableB.action_areas_outcomes_indicators;
+      for (
+        let index = 0;
+        index < tableB.action_areas_outcomes_indicators.length;
+        index++
+      ) {
+        const element = tableB.action_areas_outcomes_indicators[index];
+        let newActionAreasOutcomesIndicators =
+          new entities.InitActionAreasOutcomesIndicators();
+
+        newActionAreasOutcomesIndicators.initvStgId = initvStgId;
+        newActionAreasOutcomesIndicators.outcomes_indicators_id =
+          element.outcome_indicator_id;
+        newActionAreasOutcomesIndicators.active = element.active;
+
+        outcomesIndicators.push(
+          toolsSbt.mergeData(
+            initOutcomesIndicatorsRepo,
+            ` 
+                SELECT *
+                  FROM init_action_areas_out_indicators
+                 WHERE initvStgId = ${newActionAreasOutcomesIndicators.initvStgId}
+                   AND outcomes_indicators_id = ${newActionAreasOutcomesIndicators.outcomes_indicators_id}`,
+            newActionAreasOutcomesIndicators
+          )
+        );
+      }
+
+      /**
+       * SAVE Init Outcomes Indicatos
+       */
+      let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
+
+      // Save data
+      let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
+        mergeOutcomesIndicators
+      );
+
+      return {upsertedOutcomesIndicators};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia results framework tableB: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT TABLE C (Results)
+   * @param tableC
+   * @param initvStgId
+   * @returns {upsertedOutcomesIndicators}
+   */
+  async upsertTableC(tableC?, initvStgId?) {
+    /**
+     * REPOS TABLE C
+     */
+
+    const resultsRepo = getRepository(entities.Results);
+    const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
+    const resultsDataManagementRepo = getRepository(
+      entities.ResultsDataManagement
+    );
+    const resultsRegionsRepo = getRepository(entities.ResultsRegions);
+    const resultsCountriesRepo = getRepository(entities.ResultsCountries);
   }
 
   /**
@@ -1092,16 +1433,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  async upsertResultsFrameworks(impactAreas) {
-    console.log(impactAreas);
-  }
-
-  async upsertImpactAreas(impactAreas) {
-    console.log(impactAreas);
-  }
-
   /**
-   * UPSERT Manage plan risk and files
+   ** UPSERT Manage plan risk and files
    * @param initiativeId
    * @param ubication
    * @param stege
@@ -1124,14 +1457,14 @@ export class ProposalHandler extends InitiativeStageHandler {
     files?,
     updateFiles?
   ) {
-    const manageRepo = getRepository(ManagePlanRisk);
-    const filesRepo = getRepository(Files);
+    const manageRepo = getRepository(entities.ManagePlanRisk);
+    const filesRepo = getRepository(entities.Files);
     const initvStg = await this.setInitvStage();
     var host = `${process.env.EXT_HOST}`;
     const path = 'uploads';
 
-    var newManagePlan = new ManagePlanRisk();
-    var newFiles = new Files();
+    var newManagePlan = new entities.ManagePlanRisk();
+    var newFiles = new entities.Files();
     var upsertedManagePlan;
     var upsertedFile;
 
@@ -1219,7 +1552,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * REQUEST Manage plan risk and files data
+   ** REQUEST Manage plan risk and files data
    * @param sectionName
    * @returns {managePlan}
    */
@@ -1307,7 +1640,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT RISK ASSESSMENT
+   ** UPSERT RISK ASSESSMENT
    * @param managePlanRiskId
    * @param riskAssessment
    * @returns {upsertedRiskAssessment}
@@ -1316,11 +1649,11 @@ export class ProposalHandler extends InitiativeStageHandler {
     riskAssessment =
       typeof riskAssessment === 'undefined' ? [] : riskAssessment;
 
-    const riskAssessmentRepo = getRepository(RiskAssessment);
-    const opportinitiesRepo = getRepository(Opportunities);
+    const riskAssessmentRepo = getRepository(entities.RiskAssessment);
+    const opportinitiesRepo = getRepository(entities.Opportunities);
 
-    var newRiskAssessment = new RiskAssessment();
-    var newOpportinities = new Opportunities();
+    var newRiskAssessment = new entities.RiskAssessment();
+    var newOpportinities = new entities.Opportunities();
 
     var riskSaved;
     var opportunitiesSaved;
@@ -1402,7 +1735,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 }
               }
             }
-          }
+          } //End FOR
         }
       }
 
@@ -1426,7 +1759,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT Human Resources and Files
+   ** UPSERT Human Resources and Files
    * @param initiativeId
    * @param ubication
    * @param stege
@@ -1452,14 +1785,14 @@ export class ProposalHandler extends InitiativeStageHandler {
     files?,
     updateFiles?
   ) {
-    const humanResourcesRepo = getRepository(HumanResources);
-    const filesRepo = getRepository(Files);
+    const humanResourcesRepo = getRepository(entities.HumanResources);
+    const filesRepo = getRepository(entities.Files);
     const initvStg = await this.setInitvStage();
     var host = `${process.env.EXT_HOST}`;
     const path = 'uploads';
 
-    var newHumanResources = new HumanResources();
-    var newFiles = new Files();
+    var newHumanResources = new entities.HumanResources();
+    var newFiles = new entities.Files();
     var upsertedHumanResources;
     var upsertedFile;
 
@@ -1553,7 +1886,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT INITIATIVE TEAM (SECTION HUMAN RESOURCES)
+   ** UPSERT INITIATIVE TEAM (SECTION HUMAN RESOURCES)
    * @param humanResourcesId
    * @param initvTeam
    * @returns{upsertedInitiativeTeam}
@@ -1564,8 +1897,8 @@ export class ProposalHandler extends InitiativeStageHandler {
   ): Promise<{upsertedInitiativeTeam: any}> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
-    const initiativeTeamRepo = getRepository(InitiativeTeam);
-    const newInitiativeTeam = new InitiativeTeam();
+    const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
+    const newInitiativeTeam = new entities.InitiativeTeam();
 
     var initiativeTeamSaved;
     var upsertedInitiativeTeam = [];
@@ -1622,7 +1955,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * REQUEST Human Resources and files data
+   ** REQUEST Human Resources and files data
    * @param sectionName
    * @returns {humanResources}
    */
@@ -1682,7 +2015,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT Financial Resourches
+   ** UPSERT Financial Resourches
    * @param initiativeId
    * @param ubication
    * @param stage
@@ -1695,7 +2028,7 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { upsertedFinancialResources, upsertedFile }
    */
   async upsertFinancialResources(upsertArray?, initvStg?, sectionName?) {
-    const financialResourcesRepo = getRepository(FinancialResources);
+    const financialResourcesRepo = getRepository(entities.FinancialResources);
 
     try {
       let upsertFRArr = [],
@@ -1723,7 +2056,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         if (!_.isEmpty(upsEle.valuesList)) {
           for (const key in upsEle.valuesList) {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
-              const _year = new FinancialResourcesYears();
+              const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
               _year.active = true;
               _year.year = key;
@@ -1778,7 +2111,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   async upsertFinancialRS(initvStg, financialRSObject) {
     try {
-      const financialResourcesRepo = getRepository(FinancialResources);
+      const financialResourcesRepo = getRepository(entities.FinancialResources);
 
       const existingFR = await financialResourcesRepo.findOne({
         where: {
@@ -1788,7 +2121,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           financial_type_id: financialRSObject.financial_type_id
         }
       });
-      let fResource = new FinancialResources();
+      let fResource = new entities.FinancialResources();
       if (!existingFR) {
         fResource.active = financialRSObject.active;
         fResource.col_name = financialRSObject.col_name;
@@ -1820,7 +2153,9 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   async upsertYear(financialResource, financialYearsArr) {
-    const financialResourcesYearRepo = getRepository(FinancialResourcesYears);
+    const financialResourcesYearRepo = getRepository(
+      entities.FinancialResourcesYears
+    );
     try {
       let upsertedYears = [];
       if (financialYearsArr.yearsArray.length > 0) {
@@ -1862,7 +2197,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * REQUEST Finanacial Resources
+   ** REQUEST Finanacial Resources
    * @param sectionName
    * @returns {financialResources}
    */
@@ -1900,6 +2235,15 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** UPSERT POLICY AND COMPLIANCE
+   * @param policyComplianceId
+   * @param research_governance_policy
+   * @param open_fair_data_policy
+   * @param open_fair_data_details
+   * @param policyComplianceActive
+   * @returns upsertedPolicyCompliance
+   */
   async upsertPolicyComplianceOversight(
     policyComplianceId?,
     research_governance_policy?,
@@ -1907,10 +2251,12 @@ export class ProposalHandler extends InitiativeStageHandler {
     open_fair_data_details?,
     policyComplianceActive?
   ) {
-    const PolicyComplianceRepo = getRepository(PolicyComplianceOrversight);
+    const PolicyComplianceRepo = getRepository(
+      entities.PolicyComplianceOrversight
+    );
     const initvStg = await this.setInitvStage();
 
-    var newPolicyCompliance = new PolicyComplianceOrversight();
+    var newPolicyCompliance = new entities.PolicyComplianceOrversight();
     var upsertedPolicyCompliance;
 
     newPolicyCompliance.id = policyComplianceId;
@@ -1952,6 +2298,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** REQUEST POLICY AND COMPLIANCE
+   * @returns policyCompliance
+   */
   async requestPolicyComplianceOversight() {
     const initvStg = await this.setInitvStage();
 
@@ -1980,15 +2330,22 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** UPSERT INNOVATION PACKAGES
+   * @param innovationPackageId
+   * @param key_principles
+   * @param innovationPackageActive
+   * @returns upsertedInnovationPackages
+   */
   async upsertInnovationPackages(
     innovationPackageId?,
     key_principles?,
     innovationPackageActive?
   ) {
-    const innovationPackagesRepo = getRepository(InnovationPackages);
+    const innovationPackagesRepo = getRepository(entities.InnovationPackages);
     const initvStg = await this.setInitvStage();
 
-    var newInnovationPackages = new InnovationPackages();
+    var newInnovationPackages = new entities.InnovationPackages();
     var upsertedInnovationPackages;
 
     newInnovationPackages.id = innovationPackageId;
@@ -2031,6 +2388,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** REQUEST INNOVATION PACKAGES
+   * @returns
+   */
   async requestInnovationPackages() {
     const initvStg = await this.setInitvStage();
 
@@ -2054,6 +2415,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  /**
+   ** REQUEST PREVIEW PARTNERS
+   * @returns previewPartners
+   */
   async requestPreviewPartners() {
     const initvStg = await this.setInitvStage();
 
@@ -2097,13 +2462,13 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT TOCS
+   ** UPSERT TOCS
    */
   async upsertTocs(toc) {
-    const tocsRepo = getRepository(TOCs);
+    const tocsRepo = getRepository(entities.TOCs);
     const initvStg = await this.setInitvStage();
 
-    var newTocs = new TOCs();
+    var newTocs = new entities.TOCs();
     var results = [];
     var savedToc;
 

@@ -283,7 +283,7 @@ export class InitiativesService {
   }
 
   saveMelia(body: any, initiativeId, location: string, stageId: string | number): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${location}/${stageId}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}`, body);
   }
 
   getMelia(initiativeId, section: string): Observable<any> {
