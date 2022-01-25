@@ -515,19 +515,19 @@ export class InitiativesService {
   }
 
   getPreviewGeographicScopeData(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/preview-geographic-scope/${initiativeId}/${stageId}`);
+    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${stageId}`);
   }
 
   getPreviewPartners(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/preview-partners/${initiativeId}/${stageId}`);
+    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${stageId}`);
   }
 
   getPreviewRiskAssessment(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/preview-risk-assessment/${initiativeId}/${stageId}`);
+    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${stageId}`);
   }
 
   getPreviewProjectedBenefits(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/preview-projected-benefits/${initiativeId}/${stageId}`);
+    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${stageId}`);
   }
 
   getLinks(body, initiativeID, stageID) {
