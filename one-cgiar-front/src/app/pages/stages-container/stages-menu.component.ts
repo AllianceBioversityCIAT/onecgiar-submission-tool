@@ -96,7 +96,7 @@ export class StagesMenuComponent implements OnInit {
 
   getRolefromInitiativeById() {
     this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp => {
-
+      console.log(resp);
       let rol = resp.response.roles
       let firstRol = rol[0]?.roleId
 

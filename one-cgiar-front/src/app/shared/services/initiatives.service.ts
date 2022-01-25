@@ -194,8 +194,6 @@ export class InitiativesService {
 
   // Query to create a user
   createUser(body: any): Observable<any> {
-    console.log('%c' + `${environment.apiUrl}/users`, 'background: #222; color: #ffff00');
-    console.log(body);
     return this.http.post<any>(`${environment.apiUrl}/users`, body);
   }
 
