@@ -1,9 +1,9 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/InitiativesController';
 import * as toc from '../controllers/TocController';
-import {checkJwt} from '../middlewares/jwt';
-import {checkRole} from '../middlewares/role';
+import { checkJwt } from '../middlewares/jwt';
+import { checkRole } from '../middlewares/role';
 
 const router = Router();
 
@@ -184,12 +184,42 @@ router.post(
   initiatives.assignStageToInitiative
 );
 
-// assign TOC file to stage by initiative
+
+/****** */
+
+
+
+// submit initiative
+router.post(
+  '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  initiatives.submitInitiative
+);
+
+// update submission
+router.patch(
+  '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  initiatives.updateSubmissionStatusByInitiative
+);
+
+
+
+// submit initiatiave by stage
+
+/****** */
+
+
+
 router.post(
   '/assign-files',
   [checkJwt, checkRole('stages', 'updateOwn')],
   initiatives.assignTOCsByInitvStg
 );
+
+
+
+
 
 // assign citation / link to initiative/
 /**
