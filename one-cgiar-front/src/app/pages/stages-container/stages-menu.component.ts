@@ -24,7 +24,7 @@ export class StagesMenuComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     public _dataControlService: DataControlService,
-    private _initiativesService:InitiativesService
+    private _initiativesService: InitiativesService
   ) { }
 
   openDialog(): void {
@@ -57,8 +57,9 @@ export class StagesMenuComponent implements OnInit {
       this.initiativesSvc.initiative.id = resp['id'];
       this.initiativesSvc.getInitiativeById(resp['id']).subscribe((success) => {
         this.initiativesSvc.initiative.name = success.name;
-          this.initiativesSvc.initiative.official_code = success.official_code;
-        },
+        this.initiativesSvc.initiative.official_code = success.official_code;
+        this.initiativesSvc.initiative.stageId = success.stages.find(stg => stg.initvStgId == success.initvStgId).stageId;
+      },
         error => {
           console.log(error);
         },
@@ -66,13 +67,13 @@ export class StagesMenuComponent implements OnInit {
 
     });
 
-    this._initiativesService.getInitvStgId(this._initiativesService.initiative.id,3).subscribe(resp=>{
+    this._initiativesService.getInitvStgId(this._initiativesService.initiative.id, 3).subscribe(resp => {
       this._initiativesService.initvStgId = resp.response;
       this.getRolefromInitiativeById();
     })
-    
-    this._dataControlService.validateMenu$.subscribe(resp=>{
-        this.validateAllSections();
+
+    this._dataControlService.validateMenu$.subscribe(resp => {
+      this.validateAllSections();
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 
@@ -82,7 +83,7 @@ export class StagesMenuComponent implements OnInit {
     // console.log("GUARDANDO", generalInformationForm.value);
   }
 
-  toggleMenu(menu:HTMLElement){
+  toggleMenu(menu: HTMLElement) {
     menu.classList.toggle('showMenu');
   }
 
@@ -93,16 +94,16 @@ export class StagesMenuComponent implements OnInit {
 
 
 
-  getRolefromInitiativeById(){
-    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp=>{
+  getRolefromInitiativeById() {
+    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp => {
 
       let rol = resp.response.roles
-      let firstRol =  rol[0]?.roleId
+      let firstRol = rol[0]?.roleId
 
       if (rol.length) {
-        this._initiativesService.initiative.readonly = ( firstRol === 1|| firstRol === 2|| firstRol === 3|| firstRol === 5||this.user?.roles[0].id === 1)?false:true;
-      }else{
-        this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1)?false:true;
+        this._initiativesService.initiative.readonly = (firstRol === 1 || firstRol === 2 || firstRol === 3 || firstRol === 5 || this.user?.roles[0].id === 1) ? false : true;
+      } else {
+        this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1) ? false : true;
       }
 
     });
