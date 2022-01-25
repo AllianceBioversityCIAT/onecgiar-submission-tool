@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-pc-innovations',
@@ -11,7 +12,9 @@ export class PcInnovationsComponent implements OnInit {
       value:'test'
     }
   ];
-  constructor() { }
+  constructor(
+    private _interactionsService:InteractionsService
+  ) { }
 
   addInnovation(){
     console.log("addInnovation")
@@ -20,6 +23,19 @@ export class PcInnovationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  removeInnovation(innovation){
+    this._interactionsService.confirmationModal((decision)=>{
+      if (!decision) return;
+      let array = [{...innovation}];
+      for (const key in array) {
+        console.log("hola");
+        this.innovationsList.splice(Number(key), 1);
+        return;
+      }
+    });
+
   }
 
 }
