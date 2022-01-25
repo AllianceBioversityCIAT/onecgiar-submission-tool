@@ -49,7 +49,9 @@ export async function getPreviewPartners(req: Request, res: Response) {
     );
 
     res.json(
-      new ResponseHandler('Previews:Get Partners per initiative', {previewPartners})
+      new ResponseHandler('Previews:Get Partners per initiative', {
+        previewPartners
+      })
     );
   } catch (error) {
     console.log(error);
@@ -153,14 +155,13 @@ export async function getPreviewGeographicScope(req: Request, res: Response) {
   }
 }
 
-
 /**
  * GET ALL GEOGRAPHIC SCOPE
  * @param req { initiativeId, stageId }
  * @param res { previewGeographicScope }
  * @returns {Regions, Countries}
  */
- export async function getAllGeographicScope(req: Request, res: Response) {
+export async function getAllGeographicScope(req: Request, res: Response) {
   const {initiativeId, stageId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -187,9 +188,7 @@ export async function getPreviewGeographicScope(req: Request, res: Response) {
     const previewsdomain = new PreviewsDomain();
 
     const previewGeographicScope =
-      await previewsdomain.requestAllGeographicScope(
-        initvStg.id.toString()
-      );
+      await previewsdomain.requestAllGeographicScope();
 
     res.json(
       new ResponseHandler('Previews:Get all Geographic Scope', {

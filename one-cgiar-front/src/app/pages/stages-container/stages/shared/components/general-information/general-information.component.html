@@ -1,7 +1,7 @@
 <section-title name="General information"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <app-section-alerts-pack [sectionForm]="summaryForm" [extraValidation]="this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get('name').value, 50)"></app-section-alerts-pack>
+    <app-section-alerts-pack [sectionForm]="summaryForm" [extraValidation]="this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get('name').value, 50) && this.validateBudget()"></app-section-alerts-pack>
     <br>
     <div class="sekeletons_load" *ngIf="!showForm">
         <app-general-information-skeleton></app-general-information-skeleton>
@@ -96,11 +96,14 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6">
+
                 <div style="height: 20px;"></div>
-                <ibdc-textarea
+                <!-- <ibdc-input-field
                 [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
                 ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
-               </ibdc-textarea>
+               </ibdc-input-field> -->
+                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body"  [objectAtributteName]="'budget_value'"></ibdc-input-field>
+
             </div>
 
             <div class="col-12">

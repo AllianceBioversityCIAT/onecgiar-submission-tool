@@ -205,7 +205,7 @@ router.get(
  *     HTTP/1.1 400 Not Found
  *     { message: "Get All work packages:", error }
  */
-router.get('/packages', stagefull.getAllWorkPackages);
+router.get('/packages', stagefull.getAllWorkPackagesProposal);
 
 // assign Work Package
 /**
@@ -711,7 +711,8 @@ router.get(
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  // '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
+  '/melia/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
   stagefull.patchMeliaAndFiles
 );
@@ -1551,7 +1552,7 @@ router.get(
  *     "active": true
  *    }
  * ]
- * 
+ *
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK

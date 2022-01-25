@@ -53,14 +53,12 @@ export class MeliaPlanComponent implements OnInit {
   }
   saveSection(){
 
-    const formData = new FormData();
-
     this.data.melia_plan = this.secionForm.get("example").value;
-
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
-    formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
+    let body = { melia_plan: this.data };
+
+    this._initiativesService.saveMelia(body,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
       this.getMelia();

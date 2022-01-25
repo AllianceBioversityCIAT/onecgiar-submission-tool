@@ -20,7 +20,7 @@
 
 //     const updatedR = await regionsRepo.save(regions);
 
-//     const insertSQL = `INSERT INTO regions_by_initiative_by_stage (active, wrkPkgId, region_id, initvStgId) 
+//     const insertSQL = `INSERT INTO regions_by_initiative_by_stage (active, wrkPkgId, region_id, initvStgId)
 //     VALUES (1,155,4,34),(1,155,5,34),(1,157,4,34),(1,157,5,34),(1,159,4,34),(1,159,5,34),(1,168,4,37),
 //     (1,168,5,37),(1,170,4,37),(1,170,5,37),(1,171,4,37),(1,171,5,37),(1,172,4,37),(1,172,5,37),(1,173,5,38),
 //     (1,173,6,38),(1,173,1,38),(1,173,4,38),(1,173,3,38),(1,173,2,38),(1,175,6,38),(1,175,2,38),(1,176,4,38),
