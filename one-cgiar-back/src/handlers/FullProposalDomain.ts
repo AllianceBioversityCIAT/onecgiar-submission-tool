@@ -236,7 +236,6 @@ export class ProposalHandler extends InitiativeStageHandler {
    * GET ALL WP PROPOSAL
    */
   async requestAllWorkPackagesProposal() {
-
     try {
       let COquery = `
               SELECT id,country_id,initvStgId,wrkPkgId
@@ -284,11 +283,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
-
-/**
- * GET ALL WP
- */
+  /**
+   * GET ALL WP
+   */
   async requestAllWorkPackages() {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage

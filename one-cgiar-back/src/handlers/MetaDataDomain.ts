@@ -1,8 +1,8 @@
-import { getConnection, getRepository } from 'typeorm';
-import { Users } from '../entity/Users';
-import { HttpStatusCode } from '../interfaces/Constants';
-import { APIError, BaseError } from './BaseError';
-import { InitiativeStageHandler } from './InitiativeStageDomain';
+import {getConnection, getRepository} from 'typeorm';
+import {Users} from '../entity/Users';
+import {HttpStatusCode} from '../interfaces/Constants';
+import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class MetaDataHandler extends InitiativeStageHandler {
   /**
@@ -1635,11 +1635,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
-
   /**
-   * 
+   *
    * SUBMISSION STATUS PROCESS VALIDATION
-   * 
+   *
    **/
 
   async validationSubmissionStatuses() {
@@ -1647,47 +1646,49 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const queryRunner = getConnection().createQueryBuilder();
     return {
       isComplete: function (submission) {
-        return submission.complete
+        return submission.complete;
       },
       isAssessor: async function (userId) {
         const user = await usersRepo.findOne(userId);
-        if(!user){
+        if (!user) {
           return {
-            message: 'User bot found', 
+            message: 'User bot found',
             code: HttpStatusCode.BAD_REQUEST,
-            title:  'Bad request',
+            title: 'Bad request',
             available: false
-          }
+          };
         }
         const assessSQL = `
       SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
-    `
+    `;
 
         /** validate if user is assessor **/
 
         const [query, parameters] =
           await queryRunner.connection.driver.escapeQueryWithParameters(
             assessSQL,
-            { userId },
+            {userId},
             {}
           );
 
-        const userAvailable = await queryRunner.connection.query(query, parameters);
+        const userAvailable = await queryRunner.connection.query(
+          query,
+          parameters
+        );
         if (userAvailable.length == 0) {
           return {
-            message: 'User does not have permission to do this action', 
+            message: 'User does not have permission to do this action',
             code: HttpStatusCode.UNAUTHORIZED,
-            title:  'Unauthorized',
+            title: 'Unauthorized',
             available: false
-          }
+          };
         }
 
-        return{
-          available: true, 
+        return {
+          available: true,
           user
-        }
-
+        };
       }
-    }
+    };
   }
 }

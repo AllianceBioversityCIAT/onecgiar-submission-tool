@@ -1,6 +1,5 @@
 import {Router} from 'express';
 import {checkJwt} from '../middlewares/jwt';
-import {checkRole} from '../middlewares/role';
 import * as previewController from '../controllers/PreviewsController';
 import * as stagefull from '../controllers/StageFullProposalController';
 import * as initiatives from '../controllers/InitiativesController';

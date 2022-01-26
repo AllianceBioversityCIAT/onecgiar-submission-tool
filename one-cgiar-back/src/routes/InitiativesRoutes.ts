@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import * as clarisa from '../controllers/Clarisa';
 import * as initiatives from '../controllers/InitiativesController';
 import * as toc from '../controllers/TocController';
-import { checkJwt } from '../middlewares/jwt';
-import { checkRole } from '../middlewares/role';
+import {checkJwt} from '../middlewares/jwt';
+import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
@@ -184,10 +184,7 @@ router.post(
   initiatives.assignStageToInitiative
 );
 
-
 /****** */
-
-
 
 // submit initiative
 router.post(
@@ -203,23 +200,15 @@ router.patch(
   initiatives.updateSubmissionStatusByInitiative
 );
 
-
-
 // submit initiatiave by stage
 
 /****** */
-
-
 
 router.post(
   '/assign-files',
   [checkJwt, checkRole('stages', 'updateOwn')],
   initiatives.assignTOCsByInitvStg
 );
-
-
-
-
 
 // assign citation / link to initiative/
 /**
@@ -738,11 +727,21 @@ router.get(
   initiatives.getImpactAreasIndicators
 );
 
-// get institutions types from submission
-router.get('/institutions/types', [checkJwt], initiatives.getInstitutionsTypes);
+//get SDG Targets
+router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
+
+//get Action Areas Outcomes Indicators
+router.get(
+  '/action-areas/outcomes-indicators',
+  [checkJwt],
+  initiatives.getActionAreasOutcomesIndicators
+);
 
 // get Global targets
 router.get('/global-targets', [checkJwt], initiatives.getGlobalTargets);
+
+// get institutions types from submission
+router.get('/institutions/types', [checkJwt], initiatives.getInstitutionsTypes);
 
 //get countries
 router.get('/countries', [checkJwt], initiatives.getCountries);
@@ -807,13 +806,13 @@ router.get(
   initiatives.getProjectedProbabilities
 );
 //get SDG Targets
-router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
+// router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
 //get Action Areas Outcomes Indicators
-router.get(
-  '/action-areas/outcomes-indicators',
-  [checkJwt],
-  initiatives.getActionAreasOutcomesIndicators
-);
+// router.get(
+//   '/action-areas/outcomes-indicators',
+//   [checkJwt],
+//   initiatives.getActionAreasOutcomesIndicators
+// );
 
 /**
  *
