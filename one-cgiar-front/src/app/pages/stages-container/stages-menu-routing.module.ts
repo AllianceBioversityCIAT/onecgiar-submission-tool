@@ -104,7 +104,7 @@ const fullProposalRoutes = [
 const preConceptRoutes = [
   {
     path: '',
-    redirectTo: 'full-proposal/general-information',
+    redirectTo: 'pre-concept/general-information',
     pathMatch: 'full'
   },
   {

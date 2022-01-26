@@ -38,13 +38,13 @@ export class HomeComponent implements OnInit {
   getInitiatives() {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
-        // this.data = data;
-        data.map(item=>{
-          if (item.stageId == 3) {
-            this.data.push(item)
-            // console.log(item);
-          }
-        })
+        this.data = data;
+        // data.map(item=>{
+        //   if (item.stageId == 3) {
+        //     this.data.push(item)
+        //     // console.log(item);
+        //   }
+        // })
         this.showTable = true;
         
       },err=>{console.log(err);},

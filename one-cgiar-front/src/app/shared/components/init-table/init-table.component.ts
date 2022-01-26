@@ -100,7 +100,7 @@ export class InitTableComponent implements AfterViewInit {
   parseStageLink(description: string) {
     switch (description) {
       case 'Stage 2: Concept':
-        return 'concept' ;
+        return 'pre-concept/general-information' ;
         case 'Stage 3: Full Proposal':
           return 'full-proposal' ;
       default:
