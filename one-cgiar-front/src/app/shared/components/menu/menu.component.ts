@@ -312,6 +312,20 @@ export class MenuComponent implements OnInit {
       ]
     })
 
+    //* Sort stages
+
+    this._dataControlService.userMenu.sort(function (a, b) {
+      if (a['stageId'] < b['stageId']) {
+        return -1;
+      }
+      if (a['stageId']> b['stageId']) {
+        return 1;
+      }
+      return 0;
+    });
+
+
+
   }
 
   getMenu() {
