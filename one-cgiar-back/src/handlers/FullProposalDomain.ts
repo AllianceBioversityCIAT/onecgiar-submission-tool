@@ -1375,9 +1375,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     const resultsRepo = getRepository(entities.Results);
     const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
-    const resultsDataManagementRepo = getRepository(
-      entities.ResultsDataManagement
-    );
     const resultsRegionsRepo = getRepository(entities.ResultsRegions);
     const resultsCountriesRepo = getRepository(entities.ResultsCountries);
   }
