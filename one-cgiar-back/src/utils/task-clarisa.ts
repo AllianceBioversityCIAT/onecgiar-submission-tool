@@ -9,6 +9,9 @@ import {ClarisaRegions} from '../entity/ClarisaRegions';
 import {ClarisaImpactAreasIndicators} from '../entity/ClarisaImpactAreasIndicators';
 import {ClarisaProjectedBenefits} from '../entity/ClarisaProjectedBenefits';
 import {ClarisaRegionsCgiar} from '../entity/ClarisaRegionsCgiar';
+import {ClarisaSdgTargets} from '../entity/ClarisaSdgTargets';
+import {ClarisaGlobalTargets} from '../entity/ClarisaGlobalTargets';
+import {ClarisaActionAreasOutcomesIndicators} from '../entity/ClarisaActionAreasOutcomesIndicators';
 
 /**MAIN FUNCTION*/
 
@@ -22,6 +25,9 @@ export async function Main() {
   await createImpactAreasIndicators();
   await createProjectedBenefits();
   await createRegionsCgiar();
+  await createSdgTargets();
+  await createGlobalTargets();
+  await createActionAreasOutIndicators();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -475,5 +481,156 @@ export async function createRegionsCgiar() {
     }
   } catch (error) {
     console.log('createRegionsCgiar', error);
+  }
+}
+
+/**CLARISA SDG TARGETS*/
+
+export async function deleteSdgTargets() {
+  try {
+    const clarisaRepo = getRepository(ClarisaSdgTargets);
+    const clarisaSdgTargets = new ClarisaSdgTargets();
+    await clarisaRepo.delete(clarisaSdgTargets);
+    console.log('29.delete sdg targets');
+  } catch (error) {
+    console.log('deleteSdgTargets', error);
+  }
+}
+
+export async function createSdgTargets() {
+  console.log('28.start create SDG Targest');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaSdgTargets);
+    const sdgTargets = await clarisa.getClaSdgTargets();
+
+    if (sdgTargets.length > 0) {
+      await deleteSdgTargets();
+
+      let sdgTargestsArray: ClarisaSdgTargets[] = [];
+
+      for (let index = 0; index < sdgTargets.length; index++) {
+        const element = sdgTargets[index];
+        let cla = clarisaRepo.create({
+          id: element.id,
+          sdg_target_code: element.sdgTargetCode,
+          sdg_target: element.sdgTarget,
+          sdg: element.sdg
+        });
+        sdgTargestsArray.push(cla);
+      }
+
+      await clarisaRepo.save(sdgTargestsArray);
+
+      console.log('30.end SDG Targets');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createSdgTargets', error);
+  }
+}
+
+/**CLARISA GLOBAL TARGETS*/
+
+export async function deleteGlobalTargets() {
+  try {
+    const clarisaRepo = getRepository(ClarisaGlobalTargets);
+    const clarisaGlobalTargets = new ClarisaGlobalTargets();
+    await clarisaRepo.delete(clarisaGlobalTargets);
+    console.log('32.delete Global Targets');
+  } catch (error) {
+    console.log('deleteGlobalTargets', error);
+  }
+}
+
+export async function createGlobalTargets() {
+  console.log('31.start create Global Targets');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaGlobalTargets);
+    const globalTargets = await clarisa.getClaGlobalTargest();
+
+    if (globalTargets.length > 0) {
+      await deleteGlobalTargets();
+
+      let globalTargetsArray: ClarisaGlobalTargets[] = [];
+
+      for (let index = 0; index < globalTargets.length; index++) {
+        const element = globalTargets[index];
+        let cla = clarisaRepo.create({
+          id: element.targetId,
+          impact_area_id: element.impactAreaId,
+          impact_area_name: element.impactAreaName,
+          target: element.target
+        });
+        globalTargetsArray.push(cla);
+      }
+
+      await clarisaRepo.save(globalTargetsArray);
+
+      console.log('33.end Global Targets');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createSdgTargets', error);
+  }
+}
+
+/**CLARISA ACTION AREAS OUTCOMES INDICATORS*/
+
+export async function deleteActionAreasOutIndicators() {
+  try {
+    const clarisaRepo = getRepository(ClarisaActionAreasOutcomesIndicators);
+    const clarisaActionAreasOutIndicators =
+      new ClarisaActionAreasOutcomesIndicators();
+    await clarisaRepo.delete(clarisaActionAreasOutIndicators);
+    console.log('35.delete Action Areas Outcomes Indicators');
+  } catch (error) {
+    console.log('deleteActionAreasOutIndicators', error);
+  }
+}
+
+export async function createActionAreasOutIndicators() {
+  console.log('34.start create Action Areas Outcomes Indicators');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaActionAreasOutcomesIndicators);
+    const actionAreasOutIndicators =
+      await clarisa.getActionAreasOutcomesIndicators();
+
+    if (actionAreasOutIndicators.length > 0) {
+      await deleteActionAreasOutIndicators();
+
+      let actionAreasOutIndicatorsArray: ClarisaActionAreasOutcomesIndicators[] =
+        [];
+      let idTable = 0;
+
+      for (let index = 0; index < actionAreasOutIndicators.length; index++) {
+        const element = actionAreasOutIndicators[index];
+        idTable = idTable + 1;
+        let cla = clarisaRepo.create({
+          id: idTable,
+          action_area_id: element.actionAreaId,
+          action_area_name: element.actionAreaName,
+          outcome_id: element.outcomeId,
+          outcome_smo_code: element.outcomeSMOcode,
+          outcome_statement: element.outcomeStatement,
+          outcome_indicator_id: element.outcomeIndicatorId,
+          outcome_indicator_smo_code: element.outcomeIndicatorSMOcode,
+          outcome_indicator_statement: element.outcomeIndicatorStatement
+        });
+        actionAreasOutIndicatorsArray.push(cla);
+      }
+
+      await clarisaRepo.save(actionAreasOutIndicatorsArray);
+
+      console.log('36.end Action Areas Outcomes Indicators');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createSdgTargets', error);
   }
 }

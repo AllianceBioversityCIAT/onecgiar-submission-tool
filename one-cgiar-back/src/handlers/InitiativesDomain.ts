@@ -287,4 +287,39 @@ export class InitiativeHandler {
       throw new BaseError('Get Projected benefits', 400, error.message, false);
     }
   }
+
+  async requesSdgTargets() {
+    try {
+      const querySql = `
+      SELECT id, sdg_target_code,sdg_target,sdg
+        FROM clarisa_sdg_targets`;
+      const sdgTargets = await this.queryRunner.query(querySql);
+
+      return sdgTargets;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get SDG Targets', 400, error.message, false);
+    }
+  }
+
+  async requestActionAreasOutIndicators() {
+    try {
+      const querySql = `
+      SELECT id,action_area_id,action_area_name,
+	           outcome_id,outcome_indicator_smo_code,outcome_indicator_statement,
+             outcome_indicator_id,outcome_indicator_smo_code,outcome_indicator_statement
+       FROM clarisa_action_areas_outcomes_indicators`;
+      const actionAreasOutIndicators = await this.queryRunner.query(querySql);
+
+      return actionAreasOutIndicators;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Action Areas Outcomes Indicators',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }
