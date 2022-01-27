@@ -21,7 +21,7 @@
                                 labelName:'Institutions'
                             }
                 }"></ibdc-select-multiple>
-                <div class="partner_request_text_container">
+                <div class="partner_request_text_container" *ngIf="!this._initiativesService.initiative.readonly">
                     <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
                         are looking for, request to have it added to the list.</a>
                 </div>
