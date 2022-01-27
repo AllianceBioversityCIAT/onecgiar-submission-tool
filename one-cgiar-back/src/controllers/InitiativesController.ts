@@ -20,6 +20,9 @@ import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
 import {InitiativeHandler} from '../handlers/InitiativesDomain';
 import {ProposalHandler} from '../handlers/FullProposalDomain';
 import {ConceptHandler} from '../handlers/ConceptDomain';
+import {MetaDataHandler} from '../handlers/MetaDataDomain';
+import {Submissions} from '../entity/Submissions';
+import {SubmissionsStatus} from '../entity/SubmissionStatus';
 
 require('dotenv').config();
 
@@ -994,6 +997,207 @@ export const createStage = async (req: Request, res: Response) => {
   }
 };
 
+/// -*----*- ///
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
+ * @param res
+ */
+export const submitInitiative = async (req: Request, res: Response) => {
+  // console.log(req.params, req.body)
+
+  const {initiativeId, stageId} = req.params;
+  // const { description, active, start_date, end_date } = req.body;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const usersRepo = getRepository(Users);
+  const submissionStatusRepo = getRepository(SubmissionsStatus);
+  const submissionRepo = getRepository(Submissions);
+
+  try {
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
+
+    // validate if initiative is already submitted
+    const alreadySub = await submissionRepo.findOne({
+      where: {initvStg, active: 1}
+    });
+    if (alreadySub) {
+      const submittedStatus = await submissionStatusRepo.find({
+        where: {submission: alreadySub, active: 1},
+        relations: ['submission']
+      });
+      return res.json(
+        new ResponseHandler('Initiative submitted', {submittedStatus})
+      );
+    }
+
+    // create new Meta Data object
+    const metaData = new MetaDataHandler(initvStg.id.toString());
+
+    // get current user
+    const {userId} = res.locals.jwtPayload;
+
+    if (!userId) {
+      throw new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        'User not found'
+      );
+    }
+    const user = await usersRepo.findOne(userId);
+
+    // create new submission object
+    const submission = new Submissions();
+    submission.initvStg = initvStg;
+    submission.active = true;
+    submission.missing =
+      submission.missing == undefined ? '' : submission.missing;
+
+    // get validation by sections
+    const validatedSections = {
+      GeneralInformation: await metaData.validationGI(),
+      InnovationPackages: await metaData.validationInnovationPackages(),
+      Melia: await metaData.validationMelia(),
+      ManagePlan: await metaData.validationManagementPlan(),
+      HumanResources: await metaData.validationHumanResources(),
+      FinancialResources: await metaData.validationFinancialResources(),
+      PolicyCompliance: await metaData.validationPolicyCompliance(),
+      ImpactStrategies: await metaData.validationImpactStrategies(),
+      WorkPackages: await metaData.validationWorkPackages(),
+      Context: await metaData.validationContext()
+    };
+
+    for (const key in validatedSections) {
+      if (
+        Object.prototype.hasOwnProperty.call(validatedSections, key) &&
+        validatedSections[key].validation == 0
+      ) {
+        submission.missing += `${key.split(/(?=[A-Z])/).join(' ')}, `;
+      }
+    }
+    submission.complete = submission.missing == undefined || '' ? true : false;
+
+    // save submission
+    const submitted = await submissionRepo.save(submission);
+
+    // create submission status
+    const submissionStatus = new SubmissionsStatus();
+    submissionStatus.active = true;
+    submissionStatus.userId = user.id;
+    submissionStatus.status = 'Pending';
+    submissionStatus.submission = submitted;
+
+    const submittedStatus = await submissionStatusRepo.save(submissionStatus);
+
+    return res.json(
+      new ResponseHandler('Initiative submitted', {submittedStatus})
+    );
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      error = new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+export const updateSubmissionStatusByInitiative = async (
+  req: Request,
+  res: Response
+) => {
+  const {initiativeId, stageId} = req.params;
+  const {status, description, isComplete} = req.body;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  // const usersRepo = getRepository(Users);
+  const submissionStatusRepo = getRepository(SubmissionsStatus);
+  const submissionRepo = getRepository(Submissions);
+
+  // const queryRunner = getConnection().createQueryBuilder();
+
+  // const usersByInitiativeRepo = getRepository(InitiativesByUsers);
+
+  try {
+    // get initiaitive by stage
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
+    // get submission
+    const submission = await submissionRepo.findOne({
+      where: {initvStg, active: 1}
+    });
+
+    const metaData = new MetaDataHandler(initvStg.id.toString());
+    const validateSbSts = await metaData.validationSubmissionStatuses();
+
+    if (validateSbSts.isComplete(submission)) {
+      throw new APIError(
+        'Unauthorized',
+        HttpStatusCode.UNAUTHORIZED,
+        true,
+        'Initiative already approved.'
+      );
+    }
+    // get current user
+    const {userId} = res.locals.jwtPayload;
+
+    const assessmentValidation = await validateSbSts.isAssessor(userId);
+    if (!assessmentValidation.available) {
+      throw new APIError(
+        assessmentValidation.title,
+        assessmentValidation.code,
+        true,
+        assessmentValidation.message
+      );
+    }
+
+    const subStatus = new SubmissionsStatus();
+    subStatus.submission = submission;
+    subStatus.status = status;
+    subStatus.description = description;
+    subStatus.userId = assessmentValidation.user.id;
+    subStatus.first_name = assessmentValidation.user.first_name;
+    subStatus.last_name = assessmentValidation.user.last_name;
+
+    const updatedStatus = await submissionStatusRepo.save(subStatus);
+    submission.complete = isComplete;
+
+    await submissionRepo.save(submission);
+    const updatedSubmission = await submissionRepo.findOne(submission.id);
+
+    return res.json(
+      new ResponseHandler('Initiative submission status updated', {
+        updatedSubmission
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      error = new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+/// -*----*- ///
+
 /**
  *
  * @param req params:{ stageInitiativeId, stageId, stageData }
@@ -1502,7 +1706,7 @@ export async function GetRisksTheme(req: Request, res: Response) {
 }
 
 /**
- * REQUEST PROJECTED BENEFITS
+ * REQUEST PROJECTED BENEFITS FROM ST
  * @param req
  * @param res
  * @returns
@@ -1535,9 +1739,16 @@ export async function getProjectedProbabilities(req: Request, res: Response) {
   }
 }
 
+/**
+ * GET SDG TARGETS FROM ST
+ * @param req
+ * @param res
+ * @returns
+ */
 export async function getSdgTargets(req: Request, res: Response) {
   try {
-    const sdgTargets = await clarisa.requestSdgTargets();
+    const initiativeshandler = new InitiativeHandler();
+    const sdgTargets = await initiativeshandler.requesSdgTargets();
     res.json(new ResponseHandler('Requested SDG Targets.', {sdgTargets}));
   } catch (error) {
     console.log(error);
@@ -1550,8 +1761,9 @@ export async function getActionAreasOutcomesIndicators(
   res: Response
 ) {
   try {
+    const initiativeshandler = new InitiativeHandler();
     const outcomesIndicators =
-      await clarisa.requestActionAreasOutcomesIndicators();
+      await initiativeshandler.requestActionAreasOutIndicators();
     res.json(
       new ResponseHandler('Requested Action Areas Outcomes Indicators.', {
         outcomesIndicators

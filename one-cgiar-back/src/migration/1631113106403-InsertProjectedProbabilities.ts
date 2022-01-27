@@ -1,11 +1,11 @@
 import {MigrationInterface, QueryRunner, getRepository} from 'typeorm';
-import {projectedProbabilities} from '../entity/ProjectedProbabilities';
+import {ProjectedProbabilities} from '../entity/ProjectedProbabilities';
 
 export class InsertProjectedProbabilities1631113106403
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const projectedProbabilitiesRepo = getRepository(projectedProbabilities);
+    const projectedProbabilitiesRepo = getRepository(ProjectedProbabilities);
 
     const rojectedProbabilitiesData = projectedProbabilitiesRepo.create([
       {

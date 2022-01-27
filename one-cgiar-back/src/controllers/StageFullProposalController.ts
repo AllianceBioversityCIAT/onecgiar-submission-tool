@@ -141,6 +141,31 @@ export async function getWorkPackage(req: Request, res: Response) {
 }
 
 /**
+ * GET ALL WORK PACKAGES STAGE 3
+ * @param req
+ * @param res { workpackages }
+ * @returns workPackagesProposal
+ */
+export async function getAllWorkPackagesProposal(req: Request, res: Response) {
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    // get ALL workpackage from porposal
+    const workPackagesProposal =
+      await fullPposal.requestAllWorkPackagesProposal();
+
+    res.json(
+      new ResponseHandler('Full Proposal: All Work Packages proposal.', {
+        workPackagesProposal
+      })
+    );
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
  * GET ALL WORK PACKAGES
  * @param req
  * @param res { workpackages }
@@ -731,9 +756,12 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
   const {initiativeId, ubication} = req.params;
 
   //melia section data
-  const {id, melia_plan, active, section, updateFiles} = JSON.parse(
-    req.body.data
-  );
+  // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
+  //   req.body.data ? JSON.parse(req.body.data) : req.body;
+
+  const {melia_plan, tableA, tableB, tableC} = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
 
   //melia section files
   const files = req['files'];
@@ -766,16 +794,22 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       initiativeId,
       ubication,
       stage,
-      id,
       melia_plan,
-      active,
-      section,
-      files,
-      updateFiles
+      files
+    );
+
+    const resultFramework = await fullPposal.upsertResultsFramework(
+      tableA,
+      tableB,
+      tableC
     );
 
     res.json(
-      new ResponseHandler('Full Proposal: Patch melia.', {melia, files})
+      new ResponseHandler('Full Proposal: Patch melia.', {
+        melia,
+        files,
+        resultFramework
+      })
     );
   } catch (error) {
     console.log(error);

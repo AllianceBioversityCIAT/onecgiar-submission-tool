@@ -46,6 +46,7 @@ export class AuthService {
       .post<ServerResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
         map((srvRes: ServerResponse) => {
+          console.log(srvRes);
           this.saveLocalStorage(srvRes);
           this.setLoggedUserTawkTo(srvRes.response)
           this.user.next(srvRes.response);

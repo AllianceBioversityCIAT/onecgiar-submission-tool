@@ -184,7 +184,26 @@ router.post(
   initiatives.assignStageToInitiative
 );
 
-// assign TOC file to stage by initiative
+/****** */
+
+// submit initiative
+router.post(
+  '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  initiatives.submitInitiative
+);
+
+// update submission
+router.patch(
+  '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  initiatives.updateSubmissionStatusByInitiative
+);
+
+// submit initiatiave by stage
+
+/****** */
+
 router.post(
   '/assign-files',
   [checkJwt, checkRole('stages', 'updateOwn')],
@@ -708,11 +727,21 @@ router.get(
   initiatives.getImpactAreasIndicators
 );
 
-// get institutions types from submission
-router.get('/institutions/types', [checkJwt], initiatives.getInstitutionsTypes);
+//get SDG Targets
+router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
+
+//get Action Areas Outcomes Indicators
+router.get(
+  '/action-areas/outcomes-indicators',
+  [checkJwt],
+  initiatives.getActionAreasOutcomesIndicators
+);
 
 // get Global targets
 router.get('/global-targets', [checkJwt], initiatives.getGlobalTargets);
+
+// get institutions types from submission
+router.get('/institutions/types', [checkJwt], initiatives.getInstitutionsTypes);
 
 //get countries
 router.get('/countries', [checkJwt], initiatives.getCountries);
@@ -777,13 +806,13 @@ router.get(
   initiatives.getProjectedProbabilities
 );
 //get SDG Targets
-router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
+// router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
 //get Action Areas Outcomes Indicators
-router.get(
-  '/action-areas/outcomes-indicators',
-  [checkJwt],
-  initiatives.getActionAreasOutcomesIndicators
-);
+// router.get(
+//   '/action-areas/outcomes-indicators',
+//   [checkJwt],
+//   initiatives.getActionAreasOutcomesIndicators
+// );
 
 /**
  *

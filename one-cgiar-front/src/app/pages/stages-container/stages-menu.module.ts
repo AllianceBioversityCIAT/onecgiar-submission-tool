@@ -8,6 +8,7 @@ import { ManageAccessComponent } from './stages/shared/components/manage-access/
 import { EditRolUserComponent } from './stages/shared/components/edit-rol-user/edit-rol-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { MenuModule } from '../../shared/components/menu/menu.module';
 import { MaterialModule } from '../../material.module';
 import { ManageAccessModule } from './stages/shared/components/manage-access/manage-access.module';

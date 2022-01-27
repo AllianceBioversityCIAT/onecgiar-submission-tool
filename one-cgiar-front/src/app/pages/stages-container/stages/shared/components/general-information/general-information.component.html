@@ -96,11 +96,14 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6">
+
                 <div style="height: 20px;"></div>
-                <ibdc-textarea
+                <!-- <ibdc-input-field
                 [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
                 ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
-               </ibdc-textarea>
+               </ibdc-input-field> -->
+                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body"  [objectAtributteName]="'budget_value'"></ibdc-input-field>
+
             </div>
 
             <div class="col-12">

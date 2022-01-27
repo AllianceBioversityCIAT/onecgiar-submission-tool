@@ -30,7 +30,8 @@ export class MenuComponent implements OnInit {
   utilsHandler = new UtilsHandler();
   subMenusFormValidation: {};
   currentStageName = '';
-  impacAreasList = []
+  impacAreasList = [];
+  display: boolean = false;
 
   // stageUrl;
   constructor(
@@ -69,10 +70,16 @@ export class MenuComponent implements OnInit {
 
   }
 
+
+  changeHide(val: boolean) {
+    this.display = val;
+  }
+
+
+
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    // console.log("ngOnDestroy");
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
