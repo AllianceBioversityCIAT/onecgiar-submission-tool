@@ -7,14 +7,14 @@
             </div>
             <div class="col-sm-12" >
                 <ibdc-textarea
-                    [options]="{inputTitle:'Describe your Initiative’s MELIA plan, including',readOnlyVariable: false, form:secionForm,editText:true, formControlName:'example', maxWords:500,
+                    [options]="{inputTitle:'Describe your Initiative’s MELIA plan, including',readOnlyVariable: this._initiativesService.initiative.readonly, form:secionForm,editText:true, formControlName:'example', maxWords:500,
                     description:'How your MEL will support effective management and learning, including baseline data collection, and evaluative and review processes corresponding to stage-gates and course-correction decisions. \n· How your MEL will be used to proactively reflect on and adapt the Initiative and Work Package Theories of Change (ToCs), where appropriate.\n · Identify key learning questions that will be the focus process evaluation in the Initiative and Work Package ToCs\n· Provide a plan for within Initiative lifespan evaluative studies (noting that the Office of Evaluation and Evidence/CAS is likely to conduct overall end of Initiative evaluations).'}">
                 </ibdc-textarea>
             </div>
 
         </div>
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
         </div>
     </div>
     
