@@ -104,12 +104,11 @@
                 ></ibdc-select>
             </div>
             <div class="col-sm-6" *ngIf="this.stageName != 'pre-concept'">
-                <div style="height: 20px;"></div>
                 <!-- <ibdc-input-field
                 [options]="{inputTitle:'Budget (USD)', form:summaryForm, formControlName:'budget_value'
                 ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1}">
                </ibdc-input-field> -->
-                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body"  [objectAtributteName]="'budget_value'"></ibdc-input-field>
+                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body" [readOnlyVariable]="this._initiativesService.initiative.readonly"  [objectAtributteName]="'budget_value'"></ibdc-input-field>
 
             </div>
 
