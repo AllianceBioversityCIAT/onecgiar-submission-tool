@@ -43,11 +43,11 @@
                             <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
                             <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
                               
-                                (click)="onSelectTag(item,button_item.attributeName)">
+                                (click)="!this._initiativesService.initiative.readonly ? onSelectTag(item,button_item.attributeName):''">
                                 {{button_item.name}}
                             </div>
                         </div>
-                        <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
+                        <span class="material-icons close_icon" (click)="onSelectOption(item)" *ngIf="(!this._initiativesService.initiative.readonly)">delete</span>
                     </div>
                     <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
                 </div>
@@ -77,7 +77,7 @@
                         <div *ngFor="let item of countDuplicates(this.savedList)" class="type_item"
                             [hidden]="item.active">
                             <span class="material-icons close_icon" (click)="onDeleteInstitutionType(item)"
-                                *ngIf="item.manual && item.cont == 0">delete</span>
+                                *ngIf="item.manual && item.cont == 0 && (!this._initiativesService.initiative.readonly)">delete</span>
                             <p>{{item.name}} - <span
                                     class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
                         </div>
