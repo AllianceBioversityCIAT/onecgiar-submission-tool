@@ -3,59 +3,50 @@
     <div class="local_grid">
         <div class="listOne">
 
-            <div class="col-12">
-
-                <ibdc-select-multiple (unselect)="onSelectOption($event)" [options]="{
-                            inputTitle:'Select partners',
-                            selectList: this.institutions,
-                            selectItemName:'acronym_name',
-                            selectItemId:'code',
-                            hideSavedList: true,
-                            frontendSearchAttribute:'acronym_name',
-                            readOnlyVariable: this._initiativesService.initiative.readonly,
-                            savedList:{
-                                list:this.savedList,
-                                selectItemId:'code',
-                                selectItemName:'acronym_name',
-                                idToSave:'id',
-                                labelName:'Institutions'
-                            }
-                }"></ibdc-select-multiple>
-                <div class="partner_request_text_container">
-                    <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
-                        are looking for, request to have it added to the list.</a>
-                </div>
-  
-
-
+            <ibdc-select-multiple (unselect)="onSelectOption($event)" [options]="{
+                inputTitle:'Select partners',
+                selectList: this.institutions,
+                selectItemName:'acronym_name',
+                selectItemId:'code',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list:this.savedList,
+                    selectItemId:'code',
+                    selectItemName:'acronym_name',
+                    idToSave:'id',
+                    labelName:'Institutions'
+                }
+            }"></ibdc-select-multiple>
+            <div class="partner_request_text_container">
+                <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
+                    are looking for, request to have it added to the list.</a>
             </div>
-            <div class="col-12">
-                <br>
-            </div>
-            <div class="col-12">
-                <div class="all_parners_saved">
-                    <div class="partner_selected_container" *ngFor="let item of this.savedList"
-                        [hidden]="item.active === false" [hidden]="!item.code">
-                        <div class="partner_name">{{item.name}}</div>
-                        <p><span class="institutionTypeLabel">Institution type:</span><span
-                                class="partner_type">{{item.institutionType}}</span></p>
-                        <div class="buttons_changing">
-                            <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
-                            <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
-                              
-                                (click)="onSelectTag(item,button_item.attributeName)">
-                                {{button_item.name}}
-                            </div>
+    
+        
+            <div class="all_parners_saved">
+                <div class="partner_selected_container" *ngFor="let item of this.savedList"
+                    [hidden]="item.active === false" [hidden]="!item.code">
+                    <div class="partner_name">{{item.name}}</div>
+                    <p><span class="institutionTypeLabel">Institution type:</span><span
+                            class="partner_type">{{item.institutionType}}</span></p>
+                    <div class="buttons_changing">
+                        <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
+                        <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
+                            
+                            (click)="onSelectTag(item,button_item.attributeName)">
+                            {{button_item.name}}
                         </div>
-                        <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
                     </div>
-                    <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
+                    <span class="material-icons close_icon" (click)="onSelectOption(item)">delete</span>
                 </div>
+                <p *ngIf="!this.savedList.length" class="empy_list_title">No selected institutions</p>
             </div>
+           
         </div>
         <div class="listTwo">
-            <div class="row">
-                <div class="col-12 ">
+          
                     <ibdc-select-multiple [options]="{
                             inputTitle:'Select institutions types',
                             selectList: this.institutionsTypes,
@@ -84,17 +75,8 @@
                     </div>
                     <p *ngIf="!countDuplicates(this.savedList).length" class="empy_list_title">No institutions types
                         maped</p>
-
-                </div>
-
-            </div>
-
         </div>
 
     </div>
-    <div class="row">
-        <div class="col-12">
-            <br>
-        </div>
-    </div>
+
 </div>
