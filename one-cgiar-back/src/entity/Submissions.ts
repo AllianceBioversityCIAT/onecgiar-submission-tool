@@ -13,8 +13,17 @@ export class Submissions extends UpdatedCreatedAt {
     @Column('tinyint')
     complete: boolean;
 
-    @Column({type: 'text'})
-    missing: string;
+    // @Column({type: 'text'})
+    // missing: string;
+
+    @Column('int')
+    userId: number;
+    
+    @Column('text')
+    first_name: string;
+    
+    @Column('text')
+    last_name: string;
 
     @OneToOne(() => InitiativesByStages)
     @JoinColumn()

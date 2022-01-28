@@ -1647,15 +1647,25 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const queryRunner = getConnection().createQueryBuilder();
     return {
       isComplete: function (submission) {
-        return submission.complete
+        if (submission == null) {
+          return {
+            status: true,
+            message: 'Initiative not submitted yet.'
+          }
+        } else {
+          return {
+            status: submission.complete,
+            message: 'Initiative already approved.'
+          }
+        }
       },
       isAssessor: async function (userId) {
         const user = await usersRepo.findOne(userId);
-        if(!user){
+        if (!user) {
           return {
-            message: 'User bot found', 
+            message: 'User bot found',
             code: HttpStatusCode.BAD_REQUEST,
-            title:  'Bad request',
+            title: 'Bad request',
             available: false
           }
         }
@@ -1675,15 +1685,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
         const userAvailable = await queryRunner.connection.query(query, parameters);
         if (userAvailable.length == 0) {
           return {
-            message: 'User does not have permission to do this action', 
+            message: 'User does not have permission to do this action',
             code: HttpStatusCode.UNAUTHORIZED,
-            title:  'Unauthorized',
+            title: 'Unauthorized',
             available: false
           }
         }
 
-        return{
-          available: true, 
+        return {
+          available: true,
           user
         }
 

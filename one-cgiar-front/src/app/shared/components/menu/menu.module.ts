@@ -13,6 +13,7 @@ import { MenuSubSectionPreviewComponent } from './components/menu-sub-section-pr
 import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dynamic-list.component';
 import { ButtonAddElementModule } from '../../../pages/stages-container/stages/shared/components/button-add-element/button-add-element.module';
 import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { DialogModule } from 'primeng/dialog';
     ReactiveFormsModule,
     IbdAngularComponentsModule,
     ButtonAddElementModule,
-    DialogModule
+    DialogModule,
+    CardModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

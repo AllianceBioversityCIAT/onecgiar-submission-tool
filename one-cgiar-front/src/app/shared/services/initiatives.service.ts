@@ -556,6 +556,16 @@ export class InitiativesService {
   submitInitiative(initiativeId, stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/submit/${initiativeId}/${stageId}`, {});
   }
+  getAssesssmentStatuses(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/assessment/${initiativeId}/${stageId}/statuses`);
+  }
+
+  updateSubmissionStatus(initiativeId, stageId, body): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
+  }
+
+
+  /*** submitt initiative */
 
 
 }

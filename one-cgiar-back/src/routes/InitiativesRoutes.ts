@@ -188,6 +188,13 @@ router.post(
 /****** */
 
 
+//get assessment status
+router.get(
+  '/assessment/:initiativeId([0-9]+)/:stageId([0-9]+)/statuses',
+  [checkJwt, checkRole('assessment', 'readAny')],
+  initiatives.getAssessmentStatus
+);
+
 
 // submit initiative
 router.post(
@@ -198,8 +205,8 @@ router.post(
 
 // update submission
 router.patch(
-  '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  '/assessment/status/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('assessment', 'updateAny')],
   initiatives.updateSubmissionStatusByInitiative
 );
 

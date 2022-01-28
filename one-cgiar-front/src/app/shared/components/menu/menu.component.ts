@@ -32,6 +32,12 @@ export class MenuComponent implements OnInit {
   currentStageName = '';
   impacAreasList = [];
   display: boolean = false;
+  city: string;
+  localMenuChangesubscribtion$;
+  statuses: any[];
+  statusTextObj = {
+    description: ''
+  };
 
   // stageUrl;
   constructor(
@@ -43,7 +49,7 @@ export class MenuComponent implements OnInit {
     public _dataControlService: DataControlService
   ) { }
 
-  localMenuChangesubscribtion$;
+
 
   ngOnInit(): void {
     let loadMenu$ = this._dataControlService.loadMenu$.subscribe(
@@ -56,6 +62,7 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
       // console.log("menuChange$");
       this.getMenu();
+
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
@@ -70,11 +77,63 @@ export class MenuComponent implements OnInit {
 
   }
 
-
+  /**
+   * 
+   * Asssessment management
+   */
   changeHide(val: boolean) {
     this.display = val;
+    this.statuses.forEach(s => {
+      s['clicked'] = false;
+    });
   }
 
+  getAssessmentStatuses() {
+    this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
+      resp => {
+        resp.response.statuses.forEach(s => {
+          s['clicked'] = false;
+        });
+        this.statuses = resp.response.statuses;
+      },
+      err => {
+        console.log(err);
+        this._interactionsService.errorMessage(err.error?.description, 2000);
+      }
+    )
+  }
+
+  onStatusClick(event, clickedStatus) {
+    clickedStatus.clicked = !clickedStatus.clicked
+    this.statuses.forEach(st => {
+      const s = st;
+      if (s['id'] != clickedStatus.id) {
+        s['clicked'] = false
+      }
+    });
+  }
+
+  validateDisabledStatusSelected() {
+    const statusSelected = this.statuses.filter(st => st.clicked == true);
+    return statusSelected.length > 0 ? false : true;
+  }
+
+  onConfirmAssessment() {
+    const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
+    console.log(statusSelected, this.statusTextObj.description);
+    const updateObj = this.statusTextObj
+    this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
+      resp => { 
+        console.log(resp)
+      },
+      err => {
+        console.log(err);
+        this._interactionsService.errorMessage(err.error?.description, 2000);
+      }
+    )
+  }
+
+  // * Asssessment management
 
 
   ngOnDestroy(): void {
@@ -145,12 +204,12 @@ export class MenuComponent implements OnInit {
       // console.log(this._dataControlService.userMenu)
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
-      this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
+      this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3)?.sections?.find(section => section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3).sections.find(section => section.sectionId == 8).subsections.findIndex(subSection => subSection.subSectionId == 17), 1)
       //!
       if (userMenuResp.response.stages.length > 1) {
 
         this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-          let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
           this._dataControlService.wpMaped = true;
         }, (err) => {
@@ -158,19 +217,19 @@ export class MenuComponent implements OnInit {
           this._dataControlService.wpMaped = true;
         });
 
-        let pobList =  new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
 
-        let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
 
-        this.mapReportInSubSectionMenu(3,9,{
+        this.mapReportInSubSectionMenu(3, 9, {
           showName: 'Risk assessment preview',
           frontRoute: '/mpara-reports'
         })
- 
-        this.mapReportInSubSectionMenu(3,15,{
+
+        this.mapReportInSubSectionMenu(3, 15, {
           showName: 'Human Resources preview',
           frontRoute: '/human-resources-reports'
         })
@@ -180,7 +239,7 @@ export class MenuComponent implements OnInit {
           frontRoute: '/is-resports'
         });
 
-        this.mapDataInMenuDynamicListSubSection(3, 4, 27, 
+        this.mapDataInMenuDynamicListSubSection(3, 4, 27,
           [{
             showName: '10.1.1 Activity breakdown',
             frontRoute: '/budget/activity-breakdown/',
@@ -192,8 +251,8 @@ export class MenuComponent implements OnInit {
         );
 
         this.mapPreviewInDynamicListMenu(3, 5, 12, {
-          showName : 'Geographic scope preview',
-          frontRoute : '/work-packages/wp-reports'
+          showName: 'Geographic scope preview',
+          frontRoute: '/work-packages/wp-reports'
         });
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
@@ -206,6 +265,7 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
+        this.getAssessmentStatuses();
         this._dataControlService.validateMenu$.emit();
       }
       // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);

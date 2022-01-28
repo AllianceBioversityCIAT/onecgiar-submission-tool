@@ -1,39 +1,47 @@
 <div class="menu">
     <!-- stages list -->
-    <app-menu-stage (onAssessSubmission)="changeHide($event)" *ngIf="this._dataControlService.userMenu.length" [userMenu]="this._dataControlService.userMenu"></app-menu-stage>
+    <app-menu-stage (onAssessSubmission)="changeHide($event)" *ngIf="this._dataControlService.userMenu.length"
+        [userMenu]="this._dataControlService.userMenu"></app-menu-stage>
 </div>
 
 
 
 
-    <mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
-        <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;" [disabled]="stage.active == false">
-            <mat-expansion-panel-header>
-                <mat-panel-title >
-                    <span class="stage_title">{{stage.description}}</span>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+<mat-accordion style="position: fixed; right: 0; width: 400px; z-index: 100; top: 0;" *ngIf="false">
+    <mat-expansion-panel [expanded]="stage.active == true" *ngFor="let stage of stages;"
+        [disabled]="stage.active == false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <span class="stage_title">{{stage.description}}</span>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
 
 
 
 
-            <span *ngIf="currentStageName == 'concept'">
-                <mat-list class="menu-options row" *ngFor="let meta of stage.grouped">
-                    <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3" [routerLink]="this.parseStageUrl(stage,meta.title)" >
-                        <span  class="stage__section_title">{{meta.title}}</span>
-                        <button mat-icon-button class="mat-icon-no-color"
-                            [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
-                            aria-label="Verified icon">
-                            <mat-icon>verified</mat-icon>
-                            <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
-                        </button>
-                    </mat-list-item>
+        <span *ngIf="currentStageName == 'concept'">
+            <mat-list class="menu-options row" *ngFor="let meta of stage.grouped">
+                <mat-list-item class="menu_items" routerLinkActive="isActive background-color-primary-3"
+                    [routerLink]="this.parseStageUrl(stage,meta.title)">
+                    <span class="stage__section_title">{{meta.title}}</span>
+                    <button mat-icon-button class="mat-icon-no-color"
+                        [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                        aria-label="Verified icon">
+                        <mat-icon>verified</mat-icon>
+                        <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)"
+                            src="/assets/images/under-construction.png" alt="" srcset="">
+                    </button>
+                </mat-list-item>
                 <div [ngClass]="{'section_container':  meta.title == 'Work Packages'}">
-    
-    
+
+
                     <div *ngIf="meta.title == 'Work Packages'&& this.workPackagesList.length >0">
-                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items" (click)="goToWp(item.id)"  routerLinkActive="isActive background-color-primary-3" routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}" routerLinkActive="isActive background-color-primary-3" >
-                            <span  class="stage__section_title"> <strong>{{(item.acronym||'unnamed')|uppercase}}</strong></span>
+                        <mat-list-item *ngFor="let item of   this.workPackagesList; let i = index" class="menu_items"
+                            (click)="goToWp(item.id)" routerLinkActive="isActive background-color-primary-3"
+                            routerLink="`/initiatives/{{this.initiativesSvc.initvStgId}}/stages/concept/work-package/{{item.id}}"
+                            routerLinkActive="isActive background-color-primary-3">
+                            <span class="stage__section_title">
+                                <strong>{{(item.acronym||'unnamed')|uppercase}}</strong></span>
                             <button mat-icon-button class="mat-icon-no-color"
                                 [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
                                 aria-label="Verified icon">
@@ -41,62 +49,108 @@
                             </button>
                         </mat-list-item>
                     </div>
-    
+
                 </div>
-    
+
             </mat-list>
-            </span>
-            <mat-accordion  *ngIf="currentStageName != 'concept'">
-                <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections" *ngFor="let meta of stage.grouped ">
-                   
-                    <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color" >
-                      <mat-panel-title  class="subSections_color" >
-                          <span [style.width]="'85%'">{{meta.title}}</span>
-                      </mat-panel-title>
+        </span>
+        <mat-accordion *ngIf="currentStageName != 'concept'">
+            <mat-expansion-panel [hideToggle]="!meta.subSections" [disabled]="!meta.subSections"
+                *ngFor="let meta of stage.grouped ">
 
-                      <button mat-icon-button style="margin-right: 40px;" class="mat-icon-no-color_new"
-                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
-                      aria-label="Verified icon">
-                      <mat-icon>verified</mat-icon>
-                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
-                      </button>
-                      
-                    </mat-expansion-panel-header>
-              
-                    <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color" routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal/'+meta.route">
-                      <mat-panel-title  class="subSections_color" >
+                <mat-expansion-panel-header *ngIf="meta.subSections" class="to_Hover_color">
+                    <mat-panel-title class="subSections_color">
                         <span [style.width]="'85%'">{{meta.title}}</span>
-                      </mat-panel-title>
+                    </mat-panel-title>
 
-                      <button mat-icon-button class="mat-icon-no-color_new"
-                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
-                      aria-label="Verified icon">
-                      <mat-icon>verified</mat-icon>
-                      <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)" src="/assets/images/under-construction.png" alt="" srcset="">
-                      </button>
+                    <button mat-icon-button style="margin-right: 40px;" class="mat-icon-no-color_new"
+                        [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                        aria-label="Verified icon">
+                        <mat-icon>verified</mat-icon>
+                        <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)"
+                            src="/assets/images/under-construction.png" alt="" srcset="">
+                    </button>
+
+                </mat-expansion-panel-header>
+
+                <mat-expansion-panel-header *ngIf="!meta.subSections" class="to_Hover_color"
+                    routerLinkActive="isActive background-color-primary-3"
+                    [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal/'+meta.route">
+                    <mat-panel-title class="subSections_color">
+                        <span [style.width]="'85%'">{{meta.title}}</span>
+                    </mat-panel-title>
+
+                    <button mat-icon-button class="mat-icon-no-color_new"
+                        [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                        aria-label="Verified icon">
+                        <mat-icon>verified</mat-icon>
+                        <img class="icon_under_construction" *ngIf="validate_under_construction(meta.title)"
+                            src="/assets/images/under-construction.png" alt="" srcset="">
+                    </button>
 
 
-                    </mat-expansion-panel-header>
+                </mat-expansion-panel-header>
 
-                    <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
-                        <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"  routerLinkActive="isActive background-color-primary-3" [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/'+subSection.route">
-                          <span style="width: 80%;">{{subSection.title}}</span>
-                          
-                      <button mat-icon-button class="mat-icon-no-color_new"
-                      [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
-                      aria-label="Verified icon">
-                      <mat-icon>verified</mat-icon>
-                      <img class="icon_under_construction" *ngIf="validate_under_construction(subSection.title)" src="/assets/images/under-construction.png" alt="" srcset="">
-                      </button>
+                <mat-selection-list #shoes [multiple]="false" *ngIf="meta.subSections">
+                    <mat-list-option *ngFor="let subSection of meta.subSections" [value]="subSection.title"
+                        routerLinkActive="isActive background-color-primary-3"
+                        [routerLink]="'/initiatives/'+this.initiativesSvc.initvStgId+'/stages/full-proposal/'+subSection.route">
+                        <span style="width: 80%;">{{subSection.title}}</span>
 
-                        </mat-list-option>
-                      </mat-selection-list>
-                  </mat-expansion-panel>
-            </mat-accordion>
-            
-        </mat-expansion-panel>
-    </mat-accordion>
+                        <button mat-icon-button class="mat-icon-no-color_new"
+                            [ngClass]="{'valid': validateSubMenuForm(stage.description, meta.title) === 'VALID','invalid': validateSubMenuForm(stage.description, meta.title) != 'VALID'}"
+                            aria-label="Verified icon">
+                            <mat-icon>verified</mat-icon>
+                            <img class="icon_under_construction" *ngIf="validate_under_construction(subSection.title)"
+                                src="/assets/images/under-construction.png" alt="" srcset="">
+                        </button>
 
-    <p-dialog header="Title" [(visible)]="display">
-        Content
-    </p-dialog>
+                    </mat-list-option>
+                </mat-selection-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+    </mat-expansion-panel>
+</mat-accordion>
+
+<p-dialog class="center_flex" header="Initiative Assessment" [(visible)]="display" [modal]="true"
+    [style]="{width: '50vw'}">
+    <div>
+
+        Please assess this initiative submittion based on the <a
+            href="https://docs.google.com/document/d/1JYs7GOIqMbZHWdym5kNUfr7xc4y11vit/edit#"> proposal template</a> and
+        all guidances provided on it.
+        <a href="https://performance.cgiar.org/">More info click here</a>
+
+    </div>
+    <div *ngIf="statuses " class="statuses-container">
+        <div class="status-card" *ngFor="let status of statuses " (click)="onStatusClick($event, status)" [class.clicked]="status.clicked" >
+            <div class="icon-container center_flex  {{status.status.toLowerCase().split(' ').join('_')}}">
+                <span class="material-icons material-icons-outlined">
+                    {{status.icon}}
+                </span>
+
+            </div>
+            <div class="description-container">
+                <h2>
+                    {{status.status}}
+                </h2>
+                <h4>{{status.description}}</h4>
+            </div>
+        </div>
+        <div>
+            <ibdc-text-area-field 
+                inputTitle="Comments"
+                inputDescription="If your assessment needs to be explain"
+                [inputRequired] = "false"
+                [objectItem]="statusTextObj" 
+                [objectAtributteName]="description">
+            </ibdc-text-area-field>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" (click)="changeHide(false)" label="Cancel" class="p-button-raised p-button-secondary"></button>
+        <button pButton pRipple type="button" (click)="onConfirmAssessment()" label="Confirm" [disabled]="validateDisabledStatusSelected()" class="p-button-raised p-button-success"></button>
+    </ng-template>
+</p-dialog>

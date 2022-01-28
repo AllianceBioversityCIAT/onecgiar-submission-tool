@@ -7,15 +7,15 @@ import { Submissions } from './Submissions';
 export class SubmissionsStatus extends UpdatedCreatedAt {
     @PrimaryGeneratedColumn()
     id: number;
+        
+    @Column('int')
+    statusId: number;
+    
+    @Column('text')
+    description: string;
     
     @Column('int')
     userId: number;
-   
-    @Column('text')
-    status: string;
-   
-    @Column('text')
-    description: string;
     
     @Column('text')
     first_name: string;
