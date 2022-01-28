@@ -1,17 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
-import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { InitiativesByStages } from './InititativesByStages';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne
+} from 'typeorm';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import {InitiativesByStages} from './InititativesByStages';
 
 @Entity('submissions')
 export class Submissions extends UpdatedCreatedAt {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column('tinyint')
-    active: boolean;
+  @Column('tinyint')
+  active: boolean;
 
-    @Column('tinyint')
-    complete: boolean;
+  @Column('tinyint')
+  complete: boolean;
 
     // @Column({type: 'text'})
     // missing: string;
@@ -25,8 +31,7 @@ export class Submissions extends UpdatedCreatedAt {
     @Column('text')
     last_name: string;
 
-    @OneToOne(() => InitiativesByStages)
-    @JoinColumn()
-    initvStg!: InitiativesByStages;
-
+  @OneToOne(() => InitiativesByStages)
+  @JoinColumn()
+  initvStg!: InitiativesByStages;
 }

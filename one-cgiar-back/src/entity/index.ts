@@ -48,7 +48,6 @@ export {RegionsByInitiativeByStage} from './RegionsByInitiativeByStage';
 export {RegionsByWorkPackages} from './RegionsByWorkPackages';
 export {Results} from './Results';
 export {ResultsCountries} from './ResultsCountries';
-export {ResultsDataManagement} from './ResultsDataManagement';
 export {ResultsFramework} from './ResultsFramework';
 export {ResultsIndicators} from './ResultsIndicators';
 export {ResultsRegions} from './ResultsRegions';

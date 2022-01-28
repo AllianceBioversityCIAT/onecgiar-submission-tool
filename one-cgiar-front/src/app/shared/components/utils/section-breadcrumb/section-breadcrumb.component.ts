@@ -28,7 +28,6 @@ export class SectionBreadcrumbComponent implements OnInit {
     this.mapList();
     this.routerEvents = this.router.events.subscribe((event: NavigationEvent)=>{
       if(event instanceof NavigationStart && event.url !== '/home') {
-        console.log(event.url);
         this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');
         this.mapList();
       }

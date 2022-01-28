@@ -1,7 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne
+} from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
-import { Submissions } from './Submissions';
-
+import {Submissions} from './Submissions';
 
 @Entity('submissions_status')
 export class SubmissionsStatus extends UpdatedCreatedAt {

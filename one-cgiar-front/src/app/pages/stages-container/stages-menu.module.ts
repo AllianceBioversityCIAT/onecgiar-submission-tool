@@ -10,6 +10,7 @@ import { EditRolUserComponent } from './stages/shared/components/edit-rol-user/e
 import { CreateUsersComponent } from './stages/shared/components/create-users/create-users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { MenuModule } from '../../shared/components/menu/menu.module';
 
 @NgModule({

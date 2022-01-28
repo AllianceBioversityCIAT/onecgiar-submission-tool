@@ -37,6 +37,15 @@ export class ResultsIndicators extends UpdatedCreatedAt {
   @Column({type: 'tinyint'})
   active: boolean;
 
+  @Column({type: 'text'})
+  data_source: string;
+
+  @Column({type: 'text'})
+  data_collection_method: string;
+
+  @Column({type: 'text'})
+  frequency_data_collection: string;
+
   @OneToOne(() => Results)
   @JoinColumn()
   resultsId!: Results;

@@ -236,7 +236,6 @@ export class ProposalHandler extends InitiativeStageHandler {
    * GET ALL WP PROPOSAL
    */
   async requestAllWorkPackagesProposal() {
-
     try {
       let COquery = `
               SELECT id,country_id,initvStgId,wrkPkgId
@@ -284,11 +283,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
-
-/**
- * GET ALL WP
- */
+  /**
+   * GET ALL WP
+   */
   async requestAllWorkPackages() {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage
@@ -1378,9 +1375,6 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     const resultsRepo = getRepository(entities.Results);
     const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
-    const resultsDataManagementRepo = getRepository(
-      entities.ResultsDataManagement
-    );
     const resultsRegionsRepo = getRepository(entities.ResultsRegions);
     const resultsCountriesRepo = getRepository(entities.ResultsCountries);
   }
