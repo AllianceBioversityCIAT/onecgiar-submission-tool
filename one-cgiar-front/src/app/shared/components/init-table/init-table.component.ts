@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { CreateInitiativeModalComponent } from '@shared/components/create-initiative-modal/create-initiative-modal.component';
 import { map } from 'rxjs/operators';
+import { DataControlService } from '../../services/data-control.service';
 export interface TableData {
   initvStgId: string;
   initiativeName: string;
@@ -19,7 +20,7 @@ export interface TableData {
   templateUrl: './init-table.component.html',
   styleUrls: ['./init-table.component.scss']
 })
-export class InitTableComponent implements AfterViewInit {
+export class InitTableComponent {
   @Input() data: any;
 
   displayedColumns: string[] = ['official_code', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
@@ -34,7 +35,11 @@ export class InitTableComponent implements AfterViewInit {
     // console.log(this.data);
   }
 
-  constructor(public dialog: MatDialog, public initiativesSvc: InitiativesService) {
+  constructor(
+    public dialog: MatDialog, 
+    public initiativesSvc: InitiativesService,
+    public _dataControlService: DataControlService
+    ) {
   
   }
 
@@ -81,9 +86,6 @@ export class InitTableComponent implements AfterViewInit {
     this.dataSource.sort = this.matSort;
   }
 
-  ngAfterViewInit() {
-  }
-
   parseCurrentStageColor(description:string){
     if (description.indexOf('1')>-1) {
       return '#3d85c6ff';
@@ -95,23 +97,6 @@ export class InitTableComponent implements AfterViewInit {
       return '#a64d79ff';
     }
     return 'gray'
-  }
-
-  parseStageLink(description: string) {
-    switch (description) {
-      case 'Stage 2: Concept':
-        return 'pre-concept/general-information' ;
-        case 'Stage 3: Full Proposal':
-          return 'full-proposal' ;
-      default:
-        return '';
-    }
-    // if (stageName == null) return '';
-    // return stageName.split(' ').join('-').toLowerCase();
-  }
-
-  parseInitiativeId(){
-    
   }
 
   applyFilter(event: Event) {

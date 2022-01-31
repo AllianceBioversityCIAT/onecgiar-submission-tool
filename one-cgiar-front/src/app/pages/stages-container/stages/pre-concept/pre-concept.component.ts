@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pre-concept',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreConceptComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router:Router) { }
 
   ngOnInit(): void {
+    this.router.navigate([this.router.url,'general-information'])
   }
 
 }

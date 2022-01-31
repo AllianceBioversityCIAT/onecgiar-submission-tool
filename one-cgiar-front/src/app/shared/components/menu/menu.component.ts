@@ -334,7 +334,7 @@ export class MenuComponent implements OnInit {
       this._dataControlService.userMenu = userMenuResp.response.stages;
       // console.log(this._dataControlService.userMenu)
 
-      this.getPreConceptSimulated();
+      // this.getPreConceptSimulated();
       // console.log(userMenuResp.response.stages.length);
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3)?.sections?.find(section=>section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage=>stage?.stageId == 3).sections.find(section=>section.sectionId == 8).subsections.findIndex(subSection=> subSection.subSectionId == 17),1)
@@ -345,9 +345,9 @@ export class MenuComponent implements OnInit {
           let wpss = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
           this.mapDataInMenu(3, 5, 12, wpss);
           //! Pre concept simulation
-          let wpssPc = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
-          this.mapDataInMenu(1, 4, 112, wpssPc);
-          //! 
+          // let wpssPc = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
+          // this.mapDataInMenu(1, 4, 112, wpssPc);
+          // //! 
           this._dataControlService.wpMaped = true;
         }, (err) => {
           console.log(err);
@@ -360,10 +360,10 @@ export class MenuComponent implements OnInit {
         let impactStatementsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
-        //! Pre concept simulation
-        let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
-        this.mapDataInMenu(1, 5, 113, resultsList);
-        //! 
+        // //! Pre concept simulation
+        // let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        // this.mapDataInMenu(1, 5, 113, resultsList);
+        // //! 
 
         this.mapReportInSubSectionMenu(3,9,{
           showName: 'Risk assessment preview',

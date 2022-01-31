@@ -1,4 +1,4 @@
-<div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="stage.stageId == 2">
+<div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
     <div class="stage-title" [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         (click)="this._menuService.toggleExpand(sectionsList)">
         <span>{{stage.description}}</span>
