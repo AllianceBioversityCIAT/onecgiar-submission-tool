@@ -12,8 +12,9 @@
             </div>
             <div class="table_item" *ngFor="let item of fixedData.years; let j=index">
                 <div>
-                    <input [ngModel]="tableDataItem.valuesList[item] " (ngModelChange)="tableDataItem.valuesList[item]= $event" name="value" placeholder="Value" class="field"
-                        type="text">
+                    <!-- <input [ngModel]="tableDataItem.valuesList[item] " (ngModelChange)="tableDataItem.valuesList[item]= $event" name="value" placeholder="Value" class="field" type="text"> -->
+                    <ibdc-input-field inputType="currency" [objectItem]="tableDataItem.valuesList"  [objectAtributteName]="item"></ibdc-input-field>
+
                 </div>
             </div>
             <div class="table_item center_flex">
@@ -29,3 +30,5 @@
         [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}">
     </ibdc-save-button>
 </form>
+
+
