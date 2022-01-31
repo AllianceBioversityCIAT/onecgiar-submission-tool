@@ -26,7 +26,7 @@ export class Results extends UpdatedCreatedAt {
   active: boolean;
 
   @Column({type: 'int'})
-  initiatives_by_stages_id: number;
+  initvStgId: number;
 
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()

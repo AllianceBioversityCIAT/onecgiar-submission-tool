@@ -22,6 +22,9 @@ export class GeneralInformation extends UpdatedCreatedAt {
   @Column({length: '1000'})
   action_area_description: string;
 
+  @Column({type: 'text'})
+  acronym: string;
+  
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;
