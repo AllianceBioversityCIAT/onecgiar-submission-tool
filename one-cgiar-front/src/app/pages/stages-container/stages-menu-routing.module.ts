@@ -4,10 +4,6 @@ import { StagesGuard } from '@shared/guards/stages.guard';
 import { StagesMenuComponent } from './stages-menu.component';
 import { UnderConstructionPageComponent } from '../../shared/components/utils/under-construction-page/under-construction-page.component';
 
-/////////////////////////////////
-//////Full proposal routing//////
-////////////////////////////////
-
 const preConceptRoutes = [
   {
     path: 'pre-concept',
