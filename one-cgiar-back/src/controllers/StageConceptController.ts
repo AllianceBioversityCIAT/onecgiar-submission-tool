@@ -9,52 +9,49 @@ import {ResponseHandler} from '../handlers/Response';
 const currentStage = 'Concept';
 
 /**
- *
+ * GENERAL INFORMATION FOR STAGE 2 PRECONCEPT
  * @param req initiativeId
  * @param res  { generalInformation }
  * @returns  { generalInformation }
  */
 
-export const getGeneralInformation = async (req: Request, res: Response) => {
+ export const getGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
   const {initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
-    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    const stage = await stageRepo.findOne({
+      where: {description: 'Pre Concept'}
+    });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
-        'General Information: Error',
+        'Read General information: Error',
         400,
         `Initiative not found in stage: ${stage.description}`,
         false
       );
     }
 
-    // create new Concept object
+    // create new full proposal object
     const concept = new ConceptHandler(initvStg.id.toString());
 
-    // get general information from concept object
+    // get general information from porposal object
     const generalInformation = await concept.getGeneralInformation();
 
-    // get metadata
-    let metadata = await concept.metaData;
+
     // and filter by section
-    metadata = metadata.filter(
-      (meta) => meta.group_by == 'General Information'
-    );
+    // metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
     res.json(
-      new ResponseHandler('General information : Concept', {
-        generalInformation,
-        metadata
+      new ResponseHandler('Pre Concept: General information.', {
+        generalInformation
       })
     );
   } catch (error) {
@@ -62,6 +59,55 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
     return res.status(error.httpCode).json(error);
   }
 };
+
+
+// export const getGeneralInformation = async (req: Request, res: Response) => {
+//   // get initiative by stage id from client
+//   const {initiativeId} = req.params;
+//   const initvStgRepo = getRepository(InitiativesByStages);
+//   const stageRepo = getRepository(Stages);
+//   try {
+//     // get stage
+//     const stage = await stageRepo.findOne({where: {description: currentStage}});
+//     // get intiative by stage : proposal
+//     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+//       where: {initiative: initiativeId, stage}
+//     });
+
+//     // if not intitiative by stage, throw error
+//     if (initvStg == null) {
+//       throw new BaseError(
+//         'General Information: Error',
+//         400,
+//         `Initiative not found in stage: ${stage.description}`,
+//         false
+//       );
+//     }
+
+//     // create new Concept object
+//     const concept = new ConceptHandler(initvStg.id.toString());
+
+//     // get general information from concept object
+//     const generalInformation = await concept.getGeneralInformation();
+
+//     // get metadata
+//     let metadata = await concept.metaData;
+//     // and filter by section
+//     metadata = metadata.filter(
+//       (meta) => meta.group_by == 'General Information'
+//     );
+
+//     res.json(
+//       new ResponseHandler('General information : Concept', {
+//         generalInformation,
+//         metadata
+//       })
+//     );
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(error.httpCode).json(error);
+//   }
+// };
 
 /**
  *

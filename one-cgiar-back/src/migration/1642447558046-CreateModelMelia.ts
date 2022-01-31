@@ -99,11 +99,14 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
     await queryRunner.query(
       `
         CREATE TABLE IF NOT EXISTS results (
-            id INT NOT NULL,
+            id INT NOT NULL AUTO_INCREMENT,
             result_type_id INT NULL,
             result_title TEXT NULL,
             is_global TINYINT NULL DEFAULT NULL,
             initvStgId INT NOT NULL,
+            active TINYINT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             INDEX fk_init_wp_out_indicators_initiatives_by_stages1_idx (initvStgId ASC) VISIBLE,
             CONSTRAINT fk_init_wp_out_indicators_initiatives_by_stages1
@@ -118,17 +121,20 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
     await queryRunner.query(
       `
         CREATE TABLE IF NOT EXISTS results_indicators (
-            id INT NOT NULL,
+            id INT NOT NULL AUTO_INCREMENT,
             name TEXT NULL,
             unit_measurement TEXT NULL,
             results_id INT NOT NULL,
-            active TINYINT NOT NULL,
-            created_at TIMESTAMP NOT NULL,
-            updated_at TIMESTAMP NOT NULL,
             baseline_value TEXT NULL,
             baseline_year INT NULL,
             target_value TEXT NULL,
             target_year INT NULL,
+            active TINYINT NOT NULL,
+            data_source TEXT NULL,
+            data_collection_method TEXT NULL,
+            frequency_data_collection TEXT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             INDEX fk_indicators_init_wp_out_indicators1_idx (results_id ASC) VISIBLE,
             CONSTRAINT fk_indicators_init_wp_out_indicators1
@@ -140,32 +146,11 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
         `
     );
 
-    await queryRunner.query(
-      `
-        CREATE TABLE IF NOT EXISTS results_data_management (
-            id INT NOT NULL,
-            data_source TEXT NULL,
-            data_collection_method TEXT NULL,
-            frequency_data_collection TEXT NULL,
-            results_id INT NOT NULL,
-            active TINYINT NOT NULL,
-            created_at TIMESTAMP NOT NULL,
-            update_at TIMESTAMP NOT NULL,
-            PRIMARY KEY (id),
-            INDEX fk_data_management_init_wp_out_indicators1_idx (results_id ASC) VISIBLE,
-            CONSTRAINT fk_data_management_init_wp_out_indicators1
-              FOREIGN KEY (results_id)
-              REFERENCES results (id)
-              ON DELETE NO ACTION
-              ON UPDATE NO ACTION)
-          ENGINE = InnoDB;
-        
-        `
-    );
+
 
     await queryRunner.query(`
     CREATE TABLE IF NOT EXISTS results_countries (
-        id INT NOT NULL,
+        id INT NOT NULL AUTO_INCREMENT,
         active TINYINT NOT NULL DEFAULT 1,
         country_id INT NULL DEFAULT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -185,7 +170,7 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
     await queryRunner.query(
       `
         CREATE TABLE IF NOT EXISTS results_regions (
-            id INT NOT NULL,
+            id INT NOT NULL AUTO_INCREMENT,
             active TINYINT NOT NULL DEFAULT 1,
             region_id INT NULL DEFAULT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
