@@ -116,7 +116,7 @@ export async function upsertConceptGeneralInformation(
     );
 
     res.json(
-      new ResponseHandler('Concept: General information.', {
+      new ResponseHandler('Pre Concept: General information.', {
         generalInformation,
         metadata
       })
@@ -128,7 +128,7 @@ export async function upsertConceptGeneralInformation(
 }
 
 /**
- *
+ * GET NARRATIVES
  * @param req initiativeId
  * @param res  { narratives }
  * @returns  { narratives }
@@ -180,7 +180,7 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
 };
 
 /**
- *
+ * UPSERT NARRATIVES
  * @param req params: {  initiativeId, narrativeId, challenge, objectives, results, highlights }
  * @param res
  */
@@ -232,6 +232,61 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
     return res.status(error.httpCode).json(error);
   }
 };
+
+/**
+ * UPSERT INITIAL TOC
+ * @param req
+ * @param res
+ * @returns
+ */
+export async function upsertIntialToc(req: Request, res: Response) {
+  const {initiativeId, ubication} = req.params;
+
+  const {id, narrative, active, section, updateFiles} = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
+
+  //Initial Toc files
+  const files = req['files'];
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+        // create new concept object
+        const concept = new ConceptHandler(initvStg.id.toString());
+
+        const initialToc = await concept.upsertIntialToc(
+          initiativeId,ubication,id, narrative, active, section, updateFiles
+  
+        );
+
+        res.json(
+          new ResponseHandler('Pre Concept: Initial Toc.', {
+            initialToc
+          })
+        );
+
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
 
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 

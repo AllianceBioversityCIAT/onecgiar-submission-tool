@@ -95,49 +95,6 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /***** CONCEPT SECTIONS GETTERS *******/
-  /**
-
-    /**
-     * 
-     * @returns { generalInfo }
-     */
-  async getGeneralInformation() {
-    // get initiative by stage id from intitiative
-    const initvStgId: string = this.initvStgId_;
-    try {
-      // general information sql query
-      const GIquery = ` 
-            SELECT
-                initvStgs.id AS initvStgId,
-                general.id AS generalInformationId,
-                IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-                IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS short_name,
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
-            
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                        
-                general.action_area_description AS action_area_description,
-                general.action_area_id AS action_area_id
-            
-            FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
-            
-            WHERE initvStgs.id = ${initvStgId};
-        `;
-      const generalInfo = await this.queryRunner.query(GIquery);
-
-      return generalInfo[0];
-    } catch (error) {
-      throw new BaseError('Get general information', 400, error.message, false);
-    }
-  }
-
   /**
    *
    * @returns { narratives }
@@ -188,17 +145,14 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /*******  CONCEPT SECTIONS SETTERS   *********/
-
   /**
-   *
+   * UPSERT GENERAL INFORMATION
    * @param generalInformationId?
    * @param name
    * @param action_area_id
    * @param action_area_description
    * @returns generalInformation
    */
-
   async upsertGeneralInformation(
     generalInformationId?,
     name?,
@@ -224,7 +178,7 @@ export class ConceptHandler extends ConceptValidation {
       if (generalInformationId == null) {
         generalInformation = new GeneralInformation();
         generalInformation.name = name;
-        generalInformation.acronym =  acronym;
+        generalInformation.acronym = acronym;
         generalInformation.action_area_description =
           action_area_description || selectedActionArea.name;
         generalInformation.action_area_id = action_area_id;
@@ -233,7 +187,9 @@ export class ConceptHandler extends ConceptValidation {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
-        generalInformation.name = acronym ? acronym : generalInformation.acronym;
+        generalInformation.name = acronym
+          ? acronym
+          : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -255,7 +211,7 @@ export class ConceptHandler extends ConceptValidation {
                 initvStgs.id AS initvStgId,
                 general.id AS generalInformationId,
                 IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-                IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS short_name,
+                IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
                 (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
                 (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
                 (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
@@ -288,7 +244,47 @@ export class ConceptHandler extends ConceptValidation {
   }
 
   /**
-   *
+   * GET GENERAL INFORMATION
+   * @returns { generalInfo }
+   */
+  async getGeneralInformation() {
+    // get initiative by stage id from intitiative
+    const initvStgId: string = this.initvStgId_;
+    try {
+      // general information sql query
+      const GIquery = ` 
+              SELECT
+                  initvStgs.id AS initvStgId,
+                  general.id AS generalInformationId,
+                  IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+                  IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+              
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                          
+                  general.action_area_description AS action_area_description,
+                  general.action_area_id AS action_area_id
+              
+              FROM
+                  initiatives_by_stages initvStgs
+              LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+              
+              WHERE initvStgs.id = ${initvStgId};
+          `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      throw new BaseError('Get general information', 400, error.message, false);
+    }
+  }
+
+  /**
+   * UPSERT NARRATIVES
    * @param generalInformationId?
    * @param name
    * @param action_area_id
@@ -349,4 +345,14 @@ export class ConceptHandler extends ConceptValidation {
       );
     }
   }
+
+  async upsertIntialToc(
+    initiativeId?,
+    ubication?,
+    tocs_id?,
+    narrative?,
+    active?,
+    section?,
+    updateFiles?
+  ) {}
 }
