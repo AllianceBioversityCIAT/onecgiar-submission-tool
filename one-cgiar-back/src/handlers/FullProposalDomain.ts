@@ -398,6 +398,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       //    update initiative name
       let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
       initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
       initiative = await this.initiativeRepo.save(initiative);
 
       // retrieve general information
@@ -406,7 +407,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             initvStgs.id AS initvStgId,
             general.id AS generalInformationId,
             IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
+            IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
             (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
             (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
             (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
