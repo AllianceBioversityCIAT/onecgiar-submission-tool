@@ -10,6 +10,16 @@
         <form (ngSubmit)="upsertSection()" class="general-information-form">
         <div class="row">
 
+            <div class="col-sm-6">
+                <ibdc-input-field 
+                inputTitle="Short name" 
+                [objectItem]="this.body?.generalInformation"  
+                [objectAtributteName]="'acronym'"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                [maxWords]="3"
+                ></ibdc-input-field>
+            </div>
+
             <div class="col-sm-12" >
                 <ibdc-text-area-field 
                 inputTitle="Initiative name" 
@@ -17,16 +27,7 @@
                 [objectAtributteName]="'name'"
                 [readOnlyVariable]="this._initiativesService?.initiative.readonly"
                 [maxWords]="50"
-                ></ibdc-text-area-field>
-            </div>
-
-            <div class="col-sm-12">
-                <ibdc-text-area-field 
-                inputTitle="Short name" 
-                [objectItem]="this.body?.generalInformation"  
-                [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
-                [maxWords]="50"
+                [editText]="true"
                 ></ibdc-text-area-field>
             </div>
 
