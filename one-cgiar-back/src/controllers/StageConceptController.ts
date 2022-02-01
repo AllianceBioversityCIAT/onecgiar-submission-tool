@@ -117,8 +117,7 @@ export async function upsertConceptGeneralInformation(
 
     res.json(
       new ResponseHandler('Pre Concept: General information.', {
-        generalInformation,
-        metadata
+        generalInformation
       })
     );
   } catch (error) {
