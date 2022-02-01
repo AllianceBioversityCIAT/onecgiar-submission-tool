@@ -271,7 +271,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
   const {initiativeId} = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
-  const {generalInformationId, name, action_area_id, action_area_description} =
+  const {generalInformationId, name, action_area_id, action_area_description,acronym} =
     req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -300,7 +300,8 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
       generalInformationId,
       name,
       action_area_id,
-      action_area_description
+      action_area_description,
+      acronym
     );
 
     //set metadata

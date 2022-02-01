@@ -351,7 +351,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     generalInformationId?,
     name?,
     action_area_id?,
-    action_area_description?
+    action_area_description?,
+    acronym?
   ) {
     const gnralInfoRepo = getRepository(entities.GeneralInformation);
 
@@ -374,7 +375,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       if (generalInformationId == null) {
         generalInformation = new entities.GeneralInformation();
         generalInformation.name = name;
-
+        generalInformation.acronym = acronym;
         generalInformation.action_area_description =
           action_area_description || selectedActionArea.name;
         generalInformation.action_area_id = action_area_id;
@@ -383,6 +384,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym=acronym?acronym:generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
