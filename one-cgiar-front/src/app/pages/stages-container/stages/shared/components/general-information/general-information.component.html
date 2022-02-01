@@ -7,7 +7,7 @@
         <app-general-information-skeleton></app-general-information-skeleton>
     </div>
     <!-- <form [formGroup]="summaryForm" (ngSubmit)="getSummary()" class="general-information-form" -->
-        <form (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
+        <form (ngSubmit)="upsertSection()" class="general-information-form">
         <div class="row">
 
             <div class="col-sm-12" >
@@ -20,7 +20,7 @@
                 ></ibdc-text-area-field>
             </div>
 
-            <div class="col-sm-12" *ngIf="stageId == 2" >
+            <div class="col-sm-12">
                 <ibdc-text-area-field 
                 inputTitle="Short name" 
                 [objectItem]="this.body?.generalInformation"  

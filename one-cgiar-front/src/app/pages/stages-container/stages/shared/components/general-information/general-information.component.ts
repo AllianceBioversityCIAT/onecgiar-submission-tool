@@ -121,8 +121,8 @@ export class GeneralInformationComponent implements OnInit {
 
   getGeneralInformation(){
     console.log("getGeneralInformation");
-    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe(resp=>{
-      console.log(resp);
+    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
+      this.body.generalInformation = resp.response.generalInformation;
     })
   }
 
@@ -157,15 +157,11 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   validateBudget(){
-    return (Number(this.summaryForm.value?.budget_value)>=0.1);
+    return (Number(this.body.budget.value)>=0.1);
   }
 
-  upsertGeneralInfo() {
+  upsertSection() {
 
-    // this.spinnerService.show('general-information');
-
-    
-    
     let patchBody:GeneralInfoPatchBody = {
       acronym: this.body.generalInformation.acronym,
       action_area_description: this.body.generalInformation.action_area_description,
@@ -179,17 +175,24 @@ export class GeneralInformationComponent implements OnInit {
       name: this.body.generalInformation.name,
       table_name:"general_information",
     }
+
+    if (this.stageId == 2) this.saveGeneralInformation(patchBody);
+    if (this.stageId == 3) this.saveSummary(patchBody);
+
+  }
+
+  saveSummary(patchBody){
+    // this.spinnerService.show('general-information');    
+
     this.devprint.log('body', this.body)
     this.devprint.log('patchBody', patchBody)
-    // console.log(patchBody);
-    return;
-    this._initiativesService.patchSummary(patchBody, this._initiativesService.initiative.id,'').subscribe(generalResp => {
-      this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
-      this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
-      // this._interactionsService.successMessage('General information has been saved');
-      // this.validateBudget() && this.summaryForm.valid && this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get("name").value, 50) && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
-      // ?this._interactionsService.successMessage('General information has been saved')
-      // :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
+
+    this._initiativesService.patchSummary(patchBody, this._initiativesService.initiative.id, this.stageId).subscribe(generalResp => {
+      this._interactionsService.successMessage('General information has been saved');
+      this.validateBudget() && this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
+      ?this._interactionsService.successMessage('General information has been saved')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
+      this._dataControlService.generalInfoChange$.emit();
     },error => {
     // console.log(error, this.errorService.getServerMessage(error))
     this.spinnerService.hide('general-information');
@@ -199,8 +202,20 @@ export class GeneralInformationComponent implements OnInit {
       this.spinnerService.hide('general-information');
 
     });
-
   }
+
+  saveGeneralInformation(patchBody){
+    console.log(patchBody);
+    this._initiativesService.patchGeneralInformation( this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, patchBody ).subscribe(resp=>{
+      console.log(resp);
+      this._dataControlService.generalInfoChange$.emit();
+      this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
+      ?this._interactionsService.successMessage('General information has been saved')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
+    });
+  }
+
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ManageAccessComponent, {
