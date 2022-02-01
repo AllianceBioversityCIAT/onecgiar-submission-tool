@@ -205,6 +205,7 @@ export class ConceptHandler extends ConceptValidation {
         initvStg[0].initiativeId
       );
       initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
       initiative = await this.initiativeRepo.save(initiative);
 
       // retrieve general information
