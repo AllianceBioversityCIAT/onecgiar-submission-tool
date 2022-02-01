@@ -41,12 +41,11 @@ export class DataControlService {
   constructor() { }
 
   getStageRouteByStageId(stageId): StageDescription {
-    
     switch (stageId) {
       case 2:
-        return { route: 'pre-concept', name: 'pre-concept' }
+        return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 3:
-        return { route: 'full-proposal', name: 'full-proposal' }
+        return { route: 'full-proposal', name: 'full-proposal', ownPath: 'proposal' }
     }
   }
 
@@ -54,5 +53,6 @@ export class DataControlService {
 
 interface StageDescription{
   route:string,
-  name:string
+  name:string,
+  ownPath:string
 }
