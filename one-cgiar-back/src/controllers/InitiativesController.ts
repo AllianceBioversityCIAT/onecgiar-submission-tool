@@ -1102,7 +1102,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-      error = new APIError(
+       new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1170,7 +1170,8 @@ export const updateSubmissionStatusByInitiative = async (
     subStatus.first_name = assessmentValidation.user.first_name;
     subStatus.last_name = assessmentValidation.user.last_name;
 
-    const updatedStatus = await submissionStatusRepo.save(subStatus);
+    // const updatedStatus = await submissionStatusRepo.save(subStatus);
+    await submissionStatusRepo.save(subStatus);
     submission.complete = isComplete;
 
     await submissionRepo.save(submission);
@@ -1187,7 +1188,7 @@ export const updateSubmissionStatusByInitiative = async (
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-      error = new APIError(
+      new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1415,7 +1416,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
  * @returns
  */
 
-export  async function getActionAreas (req: Request, res: Response) {
+export async function getActionAreas(req: Request, res: Response) {
   try {
     //Get Action Areas from CLARISA
     // const actionAreas = await getClaActionAreas();
@@ -1443,7 +1444,7 @@ export  async function getActionAreas (req: Request, res: Response) {
     }
     return res.status(error.httpCode).json(error);
   }
-};
+}
 
 /**
  *

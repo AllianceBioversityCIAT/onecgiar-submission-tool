@@ -146,8 +146,6 @@ export class CreateModelMelia1642447558046 implements MigrationInterface {
         `
     );
 
-
-
     await queryRunner.query(`
     CREATE TABLE IF NOT EXISTS results_countries (
         id INT NOT NULL AUTO_INCREMENT,

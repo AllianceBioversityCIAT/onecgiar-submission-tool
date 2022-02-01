@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import {getRepository, In} from 'typeorm';
-import {getClaActionAreas} from '../controllers/Clarisa';
 import * as entities from '../entity';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import { InitiativeHandler } from './InitiativesDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
@@ -386,7 +385,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
-        generalInformation.acronym=acronym?acronym:generalInformation.acronym;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -1421,7 +1422,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         const indicators = results.indicators[index];
         let newResultsIndicators = new entities.ResultsIndicators();
 
-        newResultsIndicators.id = indicators.id? indicators.id:null;
+        newResultsIndicators.id = indicators.id ? indicators.id : null;
         newResultsIndicators.results_id = upsertResults[0].id;
         newResultsIndicators.active = indicators.active;
         newResultsIndicators.baseline_value = indicators.baseline_value;

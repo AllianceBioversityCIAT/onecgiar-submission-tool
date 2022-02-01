@@ -35,7 +35,14 @@ router.patch(
 
 /**PATCH INITIAL TOC */
 router.patch(
-  '/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId',
+  '/initial-toc/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.upsertIntialToc
+);
+
+/**GET INITIAL TOC */
+router.get(
+  '/initial-toc/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stageconcept.upsertIntialToc
 );

@@ -9,7 +9,7 @@ import {ResponseHandler} from '../handlers/Response';
 const currentStage = 'Pre Concept';
 
 /**
- * GENERAL INFORMATION FOR STAGE 2 PRECONCEPT
+ * GET GENERAL INFORMATION
  * @param req initiativeId
  * @param res  { generalInformation }
  * @returns  { generalInformation }
@@ -106,13 +106,6 @@ export async function upsertConceptGeneralInformation(
       action_area_id,
       action_area_description,
       acronym
-    );
-
-    // get metadata
-    let metadata = await concept.metaData;
-    // and filter by section
-    metadata = metadata.filter(
-      (meta) => meta.group_by == 'General Information'
     );
 
     res.json(
@@ -267,20 +260,26 @@ export async function upsertIntialToc(req: Request, res: Response) {
       );
     }
 
-        // create new concept object
-        const concept = new ConceptHandler(initvStg.id.toString());
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
 
-        const initialToc = await concept.upsertIntialToc(
-          initiativeId,ubication,id, narrative, active, section, updateFiles
-  
-        );
+    const initialToc = await concept.upsertIntialToc(
+      initiativeId,
+      ubication,
+      stage,
+      id,
+      narrative,
+      active,
+      section,
+      files,
+      updateFiles
+    );
 
-        res.json(
-          new ResponseHandler('Pre Concept: Initial Toc.', {
-            initialToc
-          })
-        );
-
+    res.json(
+      new ResponseHandler('Pre Concept: Initial Toc.', {
+        initialToc
+      })
+    );
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);
