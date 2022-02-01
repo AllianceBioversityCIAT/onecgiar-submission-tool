@@ -189,7 +189,7 @@ export class ConceptHandler extends ConceptValidation {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
-        generalInformation.name = acronym
+        generalInformation.acronym = acronym
           ? acronym
           : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
@@ -238,7 +238,7 @@ export class ConceptHandler extends ConceptValidation {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'General information : Concept',
+        'General information : Pre Concept',
         400,
         error.message,
         false
