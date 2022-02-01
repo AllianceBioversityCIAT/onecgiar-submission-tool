@@ -60,7 +60,7 @@ export async function getGeneralInformation(req: Request, res: Response) {
 }
 
 /**
- * UPSERT GENERARL INFORMATION
+ * UPSERT GENERAL INFORMATION
  * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
  * @param res
  */
@@ -117,8 +117,7 @@ export async function upsertConceptGeneralInformation(
 
     res.json(
       new ResponseHandler('Pre Concept: General information.', {
-        generalInformation,
-        metadata
+        generalInformation
       })
     );
   } catch (error) {

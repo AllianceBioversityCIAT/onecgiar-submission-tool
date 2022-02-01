@@ -1413,7 +1413,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
  * @returns
  */
 
-export const getActionAreas = async (req: Request, res: Response) => {
+export  async function getActionAreas (req: Request, res: Response) {
   try {
     //Get Action Areas from CLARISA
     // const actionAreas = await getClaActionAreas();

@@ -5,6 +5,7 @@ import * as entities from '../entity';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
@@ -364,7 +365,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       const initvStg = await this.setInitvStage();
 
       // get clarisa action action areas
-      const actionAreas = await getClaActionAreas();
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
 
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(

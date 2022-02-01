@@ -1,10 +1,10 @@
 import {getRepository} from 'typeorm';
-import {getClaActionAreas} from '../controllers/Clarisa';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {Narratives} from '../entity/Narratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {ConceptValidation} from './validation/ConceptSectionValidation';
 
 export class ConceptHandler extends ConceptValidation {
@@ -167,7 +167,9 @@ export class ConceptHandler extends ConceptValidation {
       // get current intiative by stage
       const initvStg = await this.initvStage;
       // get clarisa action action areas
-      const actionAreas = await getClaActionAreas();
+      // create new Meta Data object
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
 
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
