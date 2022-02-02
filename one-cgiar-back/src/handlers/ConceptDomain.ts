@@ -1,4 +1,5 @@
 import {getRepository} from 'typeorm';
+import {Files, TOCs} from '../entity';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {Narratives} from '../entity/Narratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
@@ -349,13 +350,171 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
+  /**
+   * UPSERT INITIAL TOC AND FILE
+   * @param initiativeId
+   * @param ubication
+   * @param stage
+   * @param tocs_id
+   * @param narrative
+   * @param active
+   * @param section
+   * @param files
+   * @param updateFiles
+   * @returns  {upsertedInitialTocs, upsertedFile};
+   */
   async upsertIntialToc(
     initiativeId?,
     ubication?,
+    stage?,
     tocs_id?,
     narrative?,
     active?,
     section?,
+    files?,
     updateFiles?
-  ) {}
+  ) {
+    const initialTocsRepo = getRepository(TOCs);
+    const filesRepo = getRepository(Files);
+
+    var host = `${process.env.EXT_HOST}`;
+    const path = 'uploads';
+    const initvStgId = this.initvStgId_;
+
+    let newInitialTocs = new TOCs();
+    let newFiles = new Files();
+
+    var upsertedInitialTocs;
+    var upsertedFile;
+
+    try {
+      newInitialTocs.id = tocs_id;
+      newInitialTocs.narrative = narrative;
+      newInitialTocs.active = active;
+
+      if (newInitialTocs.id !== null) {
+        var savedInitialTocs = await initialTocsRepo.findOne(newInitialTocs.id);
+
+        initialTocsRepo.merge(savedInitialTocs, newInitialTocs);
+
+        upsertedInitialTocs = await initialTocsRepo.save(savedInitialTocs);
+      } else {
+        newInitialTocs.initvStgId = initvStgId;
+
+        upsertedInitialTocs = await initialTocsRepo.save(newInitialTocs);
+      }
+
+      if (host == 'http://localhost') {
+        host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+      } else {
+        host = `${process.env.EXT_HOST}`;
+      }
+
+      files = typeof files === 'undefined' ? [] : files;
+      if (files) {
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+
+          const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
+          newFiles.id = null;
+          newFiles.active = file.active ? file.active : true;
+          newFiles.tocsId = upsertedInitialTocs.id;
+          newFiles.section = section;
+          newFiles.url = urlDB;
+          newFiles.name = file.originalname;
+
+          if (newFiles.id !== null) {
+            var savedFiles = await filesRepo.findOne(newFiles.id);
+
+            filesRepo.merge(savedFiles, file);
+
+            upsertedFile = await filesRepo.save(savedFiles);
+          } else {
+            upsertedFile = await filesRepo.save(newFiles);
+          }
+        }
+      }
+      updateFiles = typeof updateFiles === 'undefined' ? [] : updateFiles;
+      if (updateFiles.length > 0) {
+        for (let index = 0; index < updateFiles.length; index++) {
+          const updateFile = updateFiles[index];
+
+          newFiles.id = updateFile.id;
+          newFiles.active = updateFile.active ? updateFile.active : true;
+          newFiles.manage_plan_risk_id = updateFile.managePlanId;
+          newFiles.section = updateFile.section;
+          newFiles.url = updateFile.urlDB;
+          newFiles.name = updateFile.originalname;
+
+          if (newFiles.id !== null) {
+            var savedFiles = await filesRepo.findOne(newFiles.id);
+
+            filesRepo.merge(savedFiles, updateFile);
+
+            upsertedFile = await filesRepo.save(savedFiles);
+          } else {
+            upsertedFile = await filesRepo.save(newFiles);
+          }
+        }
+      }
+
+      return {upsertedInitialTocs, upsertedFile};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert initial Tocs: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * REQUEST INITIAL TOC AND FILE
+   * @param sectionName
+   * @returns initialToc[0]
+   */
+  async requestInitialToc(sectionName) {
+    const initvStgId = this.initvStgId_;
+
+    try {
+      // retrieve general information
+      const filesQuery = `
+                    SELECT * 
+                    FROM files 
+                   WHERE manage_plan_risk_id in (SELECT id
+                    FROM manage_plan_risk
+                   WHERE initvStgId = ${initvStgId}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `,
+        intialTocQuery = `
+        SELECT id,initvStgId,narrative,type,active
+         FROM tocs
+        WHERE initvStgId = ${initvStgId}
+          AND active = 1
+                     )
+                    `;
+      const files = await this.queryRunner.query(filesQuery);
+      const initialToc = await this.queryRunner.query(intialTocQuery);
+
+      initialToc.map((toc) => {
+        toc['files'] = files.filter((f) => {
+          return f.tocId === toc.id;
+        });
+      });
+
+      return initialToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get manage Initial Toc and files: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

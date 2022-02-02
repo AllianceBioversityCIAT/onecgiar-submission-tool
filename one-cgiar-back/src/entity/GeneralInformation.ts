@@ -24,7 +24,7 @@ export class GeneralInformation extends UpdatedCreatedAt {
 
   @Column({type: 'text'})
   acronym: string;
-  
+
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;
