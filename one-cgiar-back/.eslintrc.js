@@ -7,7 +7,7 @@ module.exports = {
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "prettier"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -16,11 +16,11 @@ module.exports = {
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2021,
-        "sourceType": "module"
+        "sourceType": "module",
+        "project": ['./tsconfig.json']
     },
     "plugins": [
         "@typescript-eslint",
-        "prettier"
     ],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
