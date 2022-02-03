@@ -45,6 +45,9 @@ import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.compo
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
+//? Module of components
+import { InitiativeCreatorModule } from './pages/stages-container/stages/shared/components/initiative-creator/initiative-creator.module';
+
 //? Others
 import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
@@ -97,6 +100,7 @@ import { CurrencyPipe } from '@angular/common';
     NgxSpinnerModule,
     CustomFormsModule,
     IbdAngularComponentsModule,
+    InitiativeCreatorModule
     // InputTextModule
   ],
   providers: [

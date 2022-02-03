@@ -1,4 +1,4 @@
-<section-title name="General information"></section-title>
+<section-title *ngIf="!creator" name="General information"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <app-section-alerts-pack [sectionForm]="summaryForm" [extraValidation]="this._dataValidatorsService.wordCounterIsCorrect(this.summaryForm.get('name').value, 50) && this.validateBudget()"></app-section-alerts-pack> -->
@@ -15,7 +15,7 @@
                 inputTitle="Short name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly && !creator"
                 [maxWords]="3"
                 ></ibdc-input-field>
             </div>
@@ -25,13 +25,13 @@
                 inputTitle="Initiative name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'name'"
-                [readOnlyVariable]="this._initiativesService?.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService?.initiative.readonly && !creator"
                 [maxWords]="50"
                 [editText]="true"
                 ></ibdc-text-area-field>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" *ngIf="!creator">
 
                 <div class="leads_grid">
                     <div>
@@ -43,7 +43,7 @@
                                 <div>
                                     <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not available'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                <button *ngIf="!_initiativesService.initiative.readonly && !creator" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
                                     <mat-icon >edit</mat-icon>
                                 </button>
                                 
@@ -61,7 +61,7 @@
                                 <div>
                                     <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not available'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                <button *ngIf="!_initiativesService.initiative.readonly && !creator" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
                                     <mat-icon >edit</mat-icon>
                                 </button>
                             </div>
@@ -86,7 +86,7 @@
               ></ibdc-select-field>
             </div>
             <div class="col-sm-6" *ngIf="this.stageId != 2">
-                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body?.budget" [readOnlyVariable]="this._initiativesService.initiative.readonly"  objectAtributteName="value"></ibdc-input-field>
+                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body?.budget" [readOnlyVariable]="this._initiativesService.initiative.readonly && !creator"  objectAtributteName="value"></ibdc-input-field>
             </div>
 
             <div class="col-12" *ngIf="this.stageId != 2">
@@ -125,8 +125,8 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly && !creator">
+            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly && !creator,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

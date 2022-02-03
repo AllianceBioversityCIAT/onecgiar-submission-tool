@@ -30,6 +30,8 @@ import { GeneralInfoPatchBody } from './interfaces/general-info-patch-body.inter
 export class GeneralInformationComponent implements OnInit {
 
   @Input() stageId: number = 0;
+  @Input() creator: boolean = false;
+
   public summaryForm: FormGroup;
   public actionAreas: any[];
   actionAreasList = [];
@@ -120,6 +122,7 @@ export class GeneralInformationComponent implements OnInit {
 
 
   getGeneralInformation(){
+    if (this.creator) return;
     console.log("getGeneralInformation");
     this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
       this.body.generalInformation = resp.response.generalInformation;

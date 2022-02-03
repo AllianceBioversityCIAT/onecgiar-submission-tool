@@ -74,10 +74,7 @@
         </table>
         <mat-paginator  class="mat-paginator-sticky" [pageSizeOptions]="[50, 100, 150, 200]"></mat-paginator>
     </div>
-    <div class="button-container mt-3" align="end" *ngIf="false">
-            <button (click)="openDialog()" type="submit" color="primary" mat-raised-button class="initiative-button mat-elevation-z8">
-                <mat-icon>add</mat-icon>
-                <strong>Create an initiative</strong>
-            </button>
-    </div>
+
+    <app-initiative-creator></app-initiative-creator>
+
 </div>
