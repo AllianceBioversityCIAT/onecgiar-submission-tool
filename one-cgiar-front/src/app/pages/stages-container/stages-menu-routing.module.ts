@@ -4,9 +4,48 @@ import { StagesGuard } from '@shared/guards/stages.guard';
 import { StagesMenuComponent } from './stages-menu.component';
 import { UnderConstructionPageComponent } from '../../shared/components/utils/under-construction-page/under-construction-page.component';
 
-/////////////////////////////////
-//////Full proposal routing//////
-////////////////////////////////
+const preConceptRoutes = [
+  {
+    path: 'pre-concept',
+    loadChildren: () => import('./stages/pre-concept/pre-concept.module').then(mod => mod.PreConceptModule),
+  },
+  {
+    path: 'pre-concept/general-information',
+    loadChildren: () => import('./stages/pre-concept/pages/general-info-pre-concept/general-info-pre-concept.module').then(mod => mod.GeneralInfoPreConceptModule),
+  },
+  {
+    path: 'pre-concept/initial-theory-of-change',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-initial-theory-of-change/pc-initial-theory-of-change.module').then(mod => mod.PcInitialTheoryOfChangeModule),
+  },
+  {
+    path: 'pre-concept/initiative-statements',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-initiative-statements/pc-initiative-statements.module').then(mod => mod.PcInitiativeStatementsModule),
+  },
+  {
+    path: 'pre-concept/innovations',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-innovations/pc-innovations.module').then(mod => mod.PcInnovationsModule),
+  },
+  {
+    path: 'pre-concept/wp-and-geo-focus',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-wp-and-geo-focus/pc-wp-and-geo-focus.module').then(mod => mod.PcWpAndGeoFocusModule),
+  },
+  {
+    path: 'pre-concept/key-partners',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-key-partners/pc-key-partners.module').then(mod => mod.PcKeyPartnersModule),
+  },
+  {
+    path: 'pre-concept/results',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-results/pc-results.module').then(mod => mod.PcResultsModule),
+  },
+  {
+    path: 'pre-concept/global-budget',
+    loadChildren: () => import('./stages/pre-concept/pages/pc-global-budget/pc-global-budget.module').then(mod => mod.PcGlobalBudgetModule),
+  },
+  {
+    path: 'under-construction-page',
+    component: UnderConstructionPageComponent,
+  }
+]
 
 const contextRoutes = [
   {
@@ -48,11 +87,6 @@ const contextRoutes = [
 ]
 
 const fullProposalRoutes = [
-  {
-    path: '',
-    redirectTo: 'full-proposal/general-information',
-    pathMatch: 'full'
-  },
   {
     path: 'full-proposal',
     loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
@@ -107,10 +141,7 @@ const routes: Routes = [
     path: '',
     component: StagesMenuComponent,
     children: [
-      {
-        path: 'concept',
-        loadChildren: () => import('./stages/concept/concept.module').then(mod => mod.ConceptModule),
-      },
+      ...preConceptRoutes,
       ...fullProposalRoutes
     ],
   },

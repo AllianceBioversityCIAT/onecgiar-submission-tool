@@ -73,7 +73,7 @@ export const getSummary = async (req: Request, res: Response) => {
                     initvStgs.id AS initvStgId,
                     general.id AS generalInformationId,
                     IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-                
+                    IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
                     (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
                     (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
                     (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
@@ -153,6 +153,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
   const {
     generalInformationId,
     name,
+    acronym,
     action_area_id,
     action_area_description,
     budgetId,
@@ -220,7 +221,8 @@ export const upsertSummary = async (req: Request, res: Response) => {
         generalInformationId,
         name,
         action_area_id,
-        action_area_description
+        action_area_description,
+        acronym
       );
 
     res.json(
@@ -1197,7 +1199,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-      error = new APIError(
+       new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1264,7 +1266,7 @@ export const updateSubmissionStatusByInitiative = async (
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-      error = new APIError(
+      new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1492,7 +1494,7 @@ export async function getPreviewPartners(req: Request, res: Response) {
  * @returns
  */
 
-export const getActionAreas = async (req: Request, res: Response) => {
+export async function getActionAreas(req: Request, res: Response) {
   try {
     //Get Action Areas from CLARISA
     // const actionAreas = await getClaActionAreas();
@@ -1520,7 +1522,7 @@ export const getActionAreas = async (req: Request, res: Response) => {
     }
     return res.status(error.httpCode).json(error);
   }
-};
+}
 
 /**
  *

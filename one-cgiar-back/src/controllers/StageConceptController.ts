@@ -6,65 +6,121 @@ import {BaseError} from '../handlers/BaseError';
 import {ConceptHandler} from '../handlers/ConceptDomain';
 import {ResponseHandler} from '../handlers/Response';
 
-const currentStage = 'Concept';
+const currentStage = 'Pre Concept';
 
 /**
- *
+ * GET GENERAL INFORMATION
  * @param req initiativeId
  * @param res  { generalInformation }
  * @returns  { generalInformation }
  */
 
-export const getGeneralInformation = async (req: Request, res: Response) => {
+export async function getGeneralInformation(req: Request, res: Response) {
   // get initiative by stage id from client
   const {initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
-    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    const stage = await stageRepo.findOne({
+      where: {description: 'Pre Concept'}
+    });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
-        'General Information: Error',
+        'Read General information: Error',
         400,
         `Initiative not found in stage: ${stage.description}`,
         false
       );
     }
 
-    // create new Concept object
+    // create new full proposal object
     const concept = new ConceptHandler(initvStg.id.toString());
 
-    // get general information from concept object
+    // get general information from porposal object
     const generalInformation = await concept.getGeneralInformation();
 
-    // get metadata
-    let metadata = await concept.metaData;
     // and filter by section
-    metadata = metadata.filter(
-      (meta) => meta.group_by == 'General Information'
-    );
+    // metadata = metadata.filter(meta => meta.group_by == 'General Information');
 
     res.json(
-      new ResponseHandler('General information : Concept', {
-        generalInformation,
-        metadata
+      new ResponseHandler('Pre Concept: General information.', {
+        generalInformation
       })
     );
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);
   }
-};
+}
 
 /**
- *
+ * UPSERT GENERAL INFORMATION
+ * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
+ * @param res
+ */
+
+export async function upsertConceptGeneralInformation(
+  req: Request,
+  res: Response
+) {
+  // get initiative by stage id from client
+  const {initiativeId} = req.params;
+  // get generalInformationId, name, action_area_id, action_area_description by stage id from client
+  const {
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym
+  } = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    const generalInformation = await concept.upsertGeneralInformation(
+      generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: General information.', {
+        generalInformation
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET NARRATIVES
  * @param req initiativeId
  * @param res  { narratives }
  * @returns  { narratives }
@@ -116,69 +172,7 @@ export const getConceptNarratives = async (req: Request, res: Response) => {
 };
 
 /**
- *
- * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
- * @param res
- */
-
-export const upsertConceptGeneralInformation = async (
-  req: Request,
-  res: Response
-) => {
-  // get initiative by stage id from client
-  const {initiativeId} = req.params;
-  // get generalInformationId, name, action_area_id, action_area_description by stage id from client
-  const {generalInformationId, name, action_area_id, action_area_description} =
-    req.body;
-
-  const initvStgRepo = getRepository(InitiativesByStages);
-  const stageRepo = getRepository(Stages);
-  try {
-    // get stage
-    const stage = await stageRepo.findOne({where: {description: currentStage}});
-    // get intiative by stage : concept
-    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
-    });
-    if (initvStg == null) {
-      throw new BaseError(
-        'Upsert General information: Error',
-        400,
-        `Initiative not found in stage: ${stage.description}`,
-        false
-      );
-    }
-    // create new concept object
-    const concept = new ConceptHandler(initvStg.id.toString());
-
-    const generalInformation = await concept.upsertGeneralInformation(
-      generalInformationId,
-      name,
-      action_area_id,
-      action_area_description
-    );
-
-    // get metadata
-    let metadata = await concept.metaData;
-    // and filter by section
-    metadata = metadata.filter(
-      (meta) => meta.group_by == 'General Information'
-    );
-
-    res.json(
-      new ResponseHandler('Concept: General information.', {
-        generalInformation,
-        metadata
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    return res.status(error.httpCode).json(error);
-  }
-};
-
-/**
- *
+ * UPSERT NARRATIVES
  * @param req params: {  initiativeId, narrativeId, challenge, objectives, results, highlights }
  * @param res
  */
@@ -230,6 +224,67 @@ export const upsertConceptNarratives = async (req: Request, res: Response) => {
     return res.status(error.httpCode).json(error);
   }
 };
+
+/**
+ * UPSERT INITIAL TOC
+ * @param req
+ * @param res
+ * @returns
+ */
+export async function upsertIntialToc(req: Request, res: Response) {
+  const {initiativeId, ubication} = req.params;
+
+  const {id, narrative, active, section, updateFiles} = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
+
+  //Initial Toc files
+  const files = req['files'];
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    const initialToc = await concept.upsertIntialToc(
+      initiativeId,
+      ubication,
+      stage,
+      id,
+      narrative,
+      active,
+      section,
+      files,
+      updateFiles
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: Initial Toc.', {
+        initialToc
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
 
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 

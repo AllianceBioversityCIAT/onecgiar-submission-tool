@@ -33,6 +33,19 @@ router.patch(
   stageconcept.upsertConceptNarratives
 );
 
+/**PATCH INITIAL TOC */
+router.patch(
+  '/initial-toc/:initiativeId([0-9]+)/:ubication/:stageId',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.upsertIntialToc
+);
+
+/**GET INITIAL TOC */
+router.get(
+  '/initial-toc/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.upsertIntialToc
+);
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 

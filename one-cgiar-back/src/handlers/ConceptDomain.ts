@@ -1,10 +1,11 @@
 import {getRepository} from 'typeorm';
-import {getClaActionAreas} from '../controllers/Clarisa';
+import {Files, TOCs} from '../entity';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {Narratives} from '../entity/Narratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {ConceptValidation} from './validation/ConceptSectionValidation';
 
 export class ConceptHandler extends ConceptValidation {
@@ -95,49 +96,6 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /***** CONCEPT SECTIONS GETTERS *******/
-  /**
-
-    /**
-     * 
-     * @returns { generalInfo }
-     */
-  async getGeneralInformation() {
-    // get initiative by stage id from intitiative
-    const initvStgId: string = this.initvStgId_;
-    try {
-      // general information sql query
-      const GIquery = ` 
-            SELECT
-                initvStgs.id AS initvStgId,
-                general.id AS generalInformationId,
-                IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
-            
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                        
-                general.action_area_description AS action_area_description,
-                general.action_area_id AS action_area_id
-            
-            FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
-            
-            WHERE initvStgs.id = ${initvStgId};
-        `;
-      const generalInfo = await this.queryRunner.query(GIquery);
-
-      return generalInfo[0];
-    } catch (error) {
-      throw new BaseError('Get general information', 400, error.message, false);
-    }
-  }
-
   /**
    *
    * @returns { narratives }
@@ -188,22 +146,20 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /*******  CONCEPT SECTIONS SETTERS   *********/
-
   /**
-   *
+   * UPSERT GENERAL INFORMATION
    * @param generalInformationId?
    * @param name
    * @param action_area_id
    * @param action_area_description
    * @returns generalInformation
    */
-
   async upsertGeneralInformation(
     generalInformationId?,
     name?,
     action_area_id?,
-    action_area_description?
+    action_area_description?,
+    acronym?
   ) {
     const gnralInfoRepo = getRepository(GeneralInformation);
     //  create empty object
@@ -212,7 +168,9 @@ export class ConceptHandler extends ConceptValidation {
       // get current intiative by stage
       const initvStg = await this.initvStage;
       // get clarisa action action areas
-      const actionAreas = await getClaActionAreas();
+      // create new Meta Data object
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
 
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
@@ -223,7 +181,7 @@ export class ConceptHandler extends ConceptValidation {
       if (generalInformationId == null) {
         generalInformation = new GeneralInformation();
         generalInformation.name = name;
-
+        generalInformation.acronym = acronym;
         generalInformation.action_area_description =
           action_area_description || selectedActionArea.name;
         generalInformation.action_area_id = action_area_id;
@@ -232,6 +190,9 @@ export class ConceptHandler extends ConceptValidation {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -245,6 +206,7 @@ export class ConceptHandler extends ConceptValidation {
         initvStg[0].initiativeId
       );
       initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
       initiative = await this.initiativeRepo.save(initiative);
 
       // retrieve general information
@@ -253,7 +215,7 @@ export class ConceptHandler extends ConceptValidation {
                 initvStgs.id AS initvStgId,
                 general.id AS generalInformationId,
                 IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
+                IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
                 (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
                 (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
                 (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
@@ -277,7 +239,7 @@ export class ConceptHandler extends ConceptValidation {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'General information : Concept',
+        'General information : Pre Concept',
         400,
         error.message,
         false
@@ -286,7 +248,47 @@ export class ConceptHandler extends ConceptValidation {
   }
 
   /**
-   *
+   * GET GENERAL INFORMATION
+   * @returns { generalInfo }
+   */
+  async getGeneralInformation() {
+    // get initiative by stage id from intitiative
+    const initvStgId: string = this.initvStgId_;
+    try {
+      // general information sql query
+      const GIquery = ` 
+              SELECT
+                  initvStgs.id AS initvStgId,
+                  general.id AS generalInformationId,
+                  IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+                  IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+              
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                          
+                  general.action_area_description AS action_area_description,
+                  general.action_area_id AS action_area_id
+              
+              FROM
+                  initiatives_by_stages initvStgs
+              LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+              
+              WHERE initvStgs.id = ${initvStgId};
+          `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      throw new BaseError('Get general information', 400, error.message, false);
+    }
+  }
+
+  /**
+   * UPSERT NARRATIVES
    * @param generalInformationId?
    * @param name
    * @param action_area_id
@@ -341,6 +343,174 @@ export class ConceptHandler extends ConceptValidation {
       console.log(error);
       throw new BaseError(
         'General information : Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT INITIAL TOC AND FILE
+   * @param initiativeId
+   * @param ubication
+   * @param stage
+   * @param tocs_id
+   * @param narrative
+   * @param active
+   * @param section
+   * @param files
+   * @param updateFiles
+   * @returns  {upsertedInitialTocs, upsertedFile};
+   */
+  async upsertIntialToc(
+    initiativeId?,
+    ubication?,
+    stage?,
+    tocs_id?,
+    narrative?,
+    active?,
+    section?,
+    files?,
+    updateFiles?
+  ) {
+    const initialTocsRepo = getRepository(TOCs);
+    const filesRepo = getRepository(Files);
+
+    var host = `${process.env.EXT_HOST}`;
+    const path = 'uploads';
+    const initvStgId = this.initvStgId_;
+
+    let newInitialTocs = new TOCs();
+    let newFiles = new Files();
+
+    var upsertedInitialTocs;
+    var upsertedFile;
+
+    try {
+      newInitialTocs.id = tocs_id;
+      newInitialTocs.narrative = narrative;
+      newInitialTocs.active = active;
+
+      if (newInitialTocs.id !== null) {
+        var savedInitialTocs = await initialTocsRepo.findOne(newInitialTocs.id);
+
+        initialTocsRepo.merge(savedInitialTocs, newInitialTocs);
+
+        upsertedInitialTocs = await initialTocsRepo.save(savedInitialTocs);
+      } else {
+        newInitialTocs.initvStgId = initvStgId;
+
+        upsertedInitialTocs = await initialTocsRepo.save(newInitialTocs);
+      }
+
+      if (host == 'http://localhost') {
+        host = `${process.env.EXT_HOST}:${process.env.PORT}`;
+      } else {
+        host = `${process.env.EXT_HOST}`;
+      }
+
+      files = typeof files === 'undefined' ? [] : files;
+      if (files) {
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+
+          const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
+          newFiles.id = null;
+          newFiles.active = file.active ? file.active : true;
+          newFiles.tocsId = upsertedInitialTocs.id;
+          newFiles.section = section;
+          newFiles.url = urlDB;
+          newFiles.name = file.originalname;
+
+          if (newFiles.id !== null) {
+            var savedFiles = await filesRepo.findOne(newFiles.id);
+
+            filesRepo.merge(savedFiles, file);
+
+            upsertedFile = await filesRepo.save(savedFiles);
+          } else {
+            upsertedFile = await filesRepo.save(newFiles);
+          }
+        }
+      }
+      updateFiles = typeof updateFiles === 'undefined' ? [] : updateFiles;
+      if (updateFiles.length > 0) {
+        for (let index = 0; index < updateFiles.length; index++) {
+          const updateFile = updateFiles[index];
+
+          newFiles.id = updateFile.id;
+          newFiles.active = updateFile.active ? updateFile.active : true;
+          newFiles.manage_plan_risk_id = updateFile.managePlanId;
+          newFiles.section = updateFile.section;
+          newFiles.url = updateFile.urlDB;
+          newFiles.name = updateFile.originalname;
+
+          if (newFiles.id !== null) {
+            var savedFiles = await filesRepo.findOne(newFiles.id);
+
+            filesRepo.merge(savedFiles, updateFile);
+
+            upsertedFile = await filesRepo.save(savedFiles);
+          } else {
+            upsertedFile = await filesRepo.save(newFiles);
+          }
+        }
+      }
+
+      return {upsertedInitialTocs, upsertedFile};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert initial Tocs: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * REQUEST INITIAL TOC AND FILE
+   * @param sectionName
+   * @returns initialToc[0]
+   */
+  async requestInitialToc(sectionName) {
+    const initvStgId = this.initvStgId_;
+
+    try {
+      // retrieve general information
+      const filesQuery = `
+                    SELECT * 
+                    FROM files 
+                   WHERE manage_plan_risk_id in (SELECT id
+                    FROM manage_plan_risk
+                   WHERE initvStgId = ${initvStgId}
+                     AND active = 1)
+                     AND section = "${sectionName}"
+                     AND active = 1
+                `,
+        intialTocQuery = `
+        SELECT id,initvStgId,narrative,type,active
+         FROM tocs
+        WHERE initvStgId = ${initvStgId}
+          AND active = 1
+                     )
+                    `;
+      const files = await this.queryRunner.query(filesQuery);
+      const initialToc = await this.queryRunner.query(intialTocQuery);
+
+      initialToc.map((toc) => {
+        toc['files'] = files.filter((f) => {
+          return f.tocId === toc.id;
+        });
+      });
+
+      return initialToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get manage Initial Toc and files: Pre Concept',
         400,
         error.message,
         false

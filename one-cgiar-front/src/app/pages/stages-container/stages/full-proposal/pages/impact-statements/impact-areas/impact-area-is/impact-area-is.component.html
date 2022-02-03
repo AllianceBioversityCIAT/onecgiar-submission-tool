@@ -8,31 +8,31 @@
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                    [options]="{inputTitle:'Challenges and prioritization',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'challenge_priorization', maxWords:150,
+                    [options]="{inputTitle:'Challenges and prioritization',readOnlyVariable: this._initiativesService.initiative.readonly, editText:true, form:sectionForm,editText:true, formControlName:'challenge_priorization', maxWords:150,
                     description:'Provide an evidence-based statement identifying the Impact Area challenge(s) the Initiative will address, and how those informed the priority-setting for the Initiative’s research and innovation. If the Initiative does not address this Impact Area, provide a justification'}">
                 </ibdc-textarea>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                    [options]="{inputTitle:'Research questions',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'research_questions', maxWords:150,
+                    [options]="{inputTitle:'Research questions',readOnlyVariable: this._initiativesService.initiative.readonly, editText:true, form:sectionForm,editText:true, formControlName:'research_questions', maxWords:150,
                     description:'Note the key research questions that deliver on this Impact Area.'}">
                 </ibdc-textarea>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                    [options]="{inputTitle:'Components of Work Packages',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'component_work_package', maxWords:150,
+                    [options]="{inputTitle:'Components of Work Packages',readOnlyVariable: this._initiativesService.initiative.readonly, editText:true, form:sectionForm,editText:true, formControlName:'component_work_package', maxWords:150,
                     description:'Highlight the specific Work Packages or components of Work Packages (research and associated work, outputs, outcomes) that deliver on the Impact Area.'}">
                 </ibdc-textarea>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                    [options]="{inputTitle:'Measuring performance and results',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'performance_results', maxWords:150,
+                    [options]="{inputTitle:'Measuring performance and results',readOnlyVariable: this._initiativesService.initiative.readonly, editText:true, form:sectionForm,editText:true, formControlName:'performance_results', maxWords:150,
                     description:'Describe the 3-year (End-of-Initiative) outcomes and metrics for this Impact Area.'}">
                 </ibdc-textarea>
             </div>
             <div class="col-12">
                 <ibdc-textarea 
-                    [options]="{inputTitle:'Human resources and capacity development of Initiative team',readOnlyVariable: false,editText:true, form:sectionForm,editText:true, formControlName:'human_capacity', maxWords:150,
+                    [options]="{inputTitle:'Human resources and capacity development of Initiative team',readOnlyVariable: this._initiativesService.initiative.readonly, editText:true, form:sectionForm,editText:true, formControlName:'human_capacity', maxWords:150,
                     description:'Highlight dedicated human resources to achieve the Work Package components and targets for this Impact Area. Refer/link to any strategy to improve capacity via internal capacity-building or through partnership'}">
                 </ibdc-textarea>
             </div>

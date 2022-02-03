@@ -17,10 +17,10 @@ import { HttpRequestInterceptor } from '@shared/interceptors/http-request.interc
 import { ErrorInterceptor } from '@shared/interceptors/error.interceptor';
 import { AppErrorHandler } from '@shared/utils/app-error-handler';
 
+//? Components
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
-import { StagesMenuComponent } from './pages/stages-container/stages-menu.component';
 import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
 import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';
 import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
@@ -31,30 +31,21 @@ import { KeyPartnersComponent } from './shared/components/preconcept/key-partner
 import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
 import { CountryControlComponent } from './shared/components/preconcept/country-control/country-control.component';
 import { RegionControlComponent } from './shared/components/preconcept/region-control/region-control.component';
-import { NarrativesConceptComponent } from './shared/components/concept/narratives-concept/narratives-concept.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
-import { TheoryOfChangeComponent } from './shared/components/concept/theory-of-change/theory-of-change.component';
-import { WorkPackagesComponent } from './shared/components/concept/work-packages/work-packages.component';
-import { ProjectionIndicatorsModalComponent } from './shared/components/concept/projection-indicators-modal/projection-indicators-modal.component';
-import { KeyPartnersConceptComponent } from './shared/components/concept/key-partners-concept/key-partners-concept.component';
-import { AddPartnersModalComponent } from './shared/components/concept/add-partners-modal/add-partners-modal.component';
 import { CreateUserModalComponent } from './shared/components/create-user-modal/create-user-modal.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
-import { WorkPackageComponent } from './shared/components/concept/work-package/work-package.component';
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
 import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
-import { PobContributionComponent } from './shared/components/concept/work-package/pob-contribution/pob-contribution.component';
-import { ProjectionTimeFrameComponent } from './shared/components/concept/projection-indicators-modal/projection-time-frame/projection-time-frame.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-// import { IbdAngularComponentsModule } from '../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
-// import {InputTextModule} from 'primeng/inputtext';
+
+//? Others
 import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
@@ -76,22 +67,14 @@ import { CurrencyPipe } from '@angular/common';
     FeedbackComponent,
     CountryControlComponent,
     RegionControlComponent,
-    NarrativesConceptComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
-    TheoryOfChangeComponent,
-    WorkPackagesComponent,
-    ProjectionIndicatorsModalComponent,
-    KeyPartnersConceptComponent,
-    AddPartnersModalComponent,
     CreateInitiativeModalComponent,
     CreateUserModalComponent,
-    WorkPackageComponent,
     DevTagComponent,
     DevPanelComponent,
     ChangePasswordComponent,
-    ProjectionTimeFrameComponent,
     TawkToComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

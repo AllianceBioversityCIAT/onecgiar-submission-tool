@@ -1,11 +1,11 @@
 import {Router} from 'express';
-import concept from './ConceptRoutes';
+import preConcept from './ConceptRoutes';
 import proposal from './FullProposalRoutes';
 
 const router = Router();
 
 // concept routes
-router.use('/concept', concept);
+router.use('/pre-concept', preConcept);
 // full proposal routes
 router.use('/proposal', proposal);
 

@@ -1,4 +1,4 @@
-<div class="stage" *ngFor="let stage of this.userMenu;" [hidden]="stage.stageId == 2">
+<div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
     <div class="stage-title" [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         (click)="this._menuService.toggleExpand(sectionsList)">
         <span>{{stage.description}}</span>
@@ -8,8 +8,10 @@
         [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
         <br>
-        <app-menu-section *ngIf="stage.sections.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
+        <app-menu-section *ngIf="stage?.sections?.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
     </div>
+    
+    <br>
 
     <div class="submitButtonInitiative" *ngIf="usrAvailableSubm">
         <button pButton type="button" (click)="onAssess()" label="Submit Initiative" class="p-button-rounded p-button-success"></button>
