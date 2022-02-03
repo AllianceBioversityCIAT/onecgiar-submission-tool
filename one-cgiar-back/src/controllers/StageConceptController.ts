@@ -4,6 +4,7 @@ import {InitiativesByStages} from '../entity/InititativesByStages';
 import {Stages} from '../entity/Stages';
 import {BaseError} from '../handlers/BaseError';
 import {ConceptHandler} from '../handlers/ConceptDomain';
+import {InitiativeHandler} from '../handlers/InitiativesDomain';
 import {ResponseHandler} from '../handlers/Response';
 
 const currentStage = 'Pre Concept';
@@ -86,9 +87,26 @@ export async function upsertConceptGeneralInformation(
     // get stage
     const stage = await stageRepo.findOne({where: {description: currentStage}});
     // get intiative by stage : concept
-    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    let initvStg: any = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
+
+    // Create initiative and initiative by Stages
+
+    if (initvStg == null || typeof initvStg == undefined) {
+      const initiativeHandler = new InitiativeHandler();
+
+      const respinitvStg = await initiativeHandler.createInitiativesByStage(
+        initiativeId,
+        name,
+        acronym,
+        stage
+      );
+
+      initvStg = respinitvStg.savedItvStg.id;
+    }
+
+    // Validate initiative by Stages
     if (initvStg == null) {
       throw new BaseError(
         'Upsert General information: Error',
@@ -98,7 +116,9 @@ export async function upsertConceptGeneralInformation(
       );
     }
     // create new concept object
-    const concept = new ConceptHandler(initvStg.id.toString());
+    const concept = new ConceptHandler(
+      initvStg.id ? initvStg.id.toString() : initvStg
+    );
 
     const generalInformation = await concept.upsertGeneralInformation(
       generalInformationId,
