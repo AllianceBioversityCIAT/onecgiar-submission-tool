@@ -15,9 +15,7 @@ export class FullProposalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //console.log("ngOnInit");
     this.router.navigate([this.router.url,'general-information'])
-    
   }
 
 

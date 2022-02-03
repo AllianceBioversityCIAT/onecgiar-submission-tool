@@ -21,7 +21,7 @@
     </div>
     <div class="col-12">
         <ibdc-textarea 
-        [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: false, form:pobImpactAreaForm,editText:true, formControlName:'notes', maxWords:200,
+        [options]="{inputTitle:'Provide a narrative containing assumptions for breadth and probability',readOnlyVariable: this._initiativesService.initiative.readonly, form:pobImpactAreaForm,editText:true, formControlName:'notes', maxWords:200,
         description:'Provide results from, and method used, to set priority science (research questions, methods), innovations, activities, geographies, systems, crops or other choices relevant to the Initiative.'}">
     </ibdc-textarea>
     </div>

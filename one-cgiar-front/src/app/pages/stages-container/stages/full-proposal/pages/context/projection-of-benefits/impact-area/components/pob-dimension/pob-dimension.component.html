@@ -13,7 +13,7 @@
         }"></ibdc-select-ngmodel>
     </div>
     <div class="col-xl-4">
-        <ibdc-input-field  [inputType]="unit.textContent.search('dollars') > 0?'currency':'number'" inputTitle="Input breadth - Numbers reached" [objectItem]="item"  [objectAtributteName]="'breadth_value'"></ibdc-input-field>
+        <ibdc-input-field [readOnlyVariable]="this._initiativesService.initiative.readonly"  [inputType]="unit.textContent.search('dollars') > 0?'currency':'decimal'" inputTitle="Input breadth - Numbers reached" [objectItem]="item"  [objectAtributteName]="'breadth_value'"></ibdc-input-field>
     </div>
     <div class="col-xl-2 targetUnit">
         <strong #unit class="ibdc_secondary_color">{{getIndicatorMetaData(indicatorsListPOBSavediItem?.impactAreaIndicator)?.targetUnit}}</strong>
