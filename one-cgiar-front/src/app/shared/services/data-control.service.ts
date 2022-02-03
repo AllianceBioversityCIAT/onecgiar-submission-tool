@@ -42,6 +42,8 @@ export class DataControlService {
 
   getStageRouteByStageId(stageId): StageDescription {
     switch (stageId) {
+      case 1:
+        return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 2:
         return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 3:
