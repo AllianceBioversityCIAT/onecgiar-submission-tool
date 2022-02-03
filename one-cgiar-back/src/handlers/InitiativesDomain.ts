@@ -30,7 +30,9 @@ export class InitiativeHandler {
 
       return {savedInitiative,savedItvStg}
 
-    } catch (error) {}
+    } catch (error) {
+      throw new BaseError('createInitiativesByStage', 400, error.message, false);
+    }
   }
 
   /** Get all initiatives for main table */
