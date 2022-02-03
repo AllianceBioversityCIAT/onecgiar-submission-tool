@@ -165,6 +165,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapReportInSubSectionMenu(stageId, sectionId, object) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -173,6 +174,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -183,6 +185,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -193,6 +196,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
