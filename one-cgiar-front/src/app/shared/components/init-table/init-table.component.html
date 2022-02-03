@@ -20,8 +20,8 @@
             <!-- Name Column -->
             <ng-container matColumnDef="initiativeName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Initiative Name </th>
-                <td mat-cell *matCellDef="let row" class="inititiative_title" (click)="initiativesSvc.initvStgId = row.initvStgId">
-                    <a class="initiative_link" routerLink="/initiatives/{{row.description ==  'Stage 2: Concept' ? row.initvStgId : row.id}}/stages/{{parseStageLink(row.description)}}/general-information">{{row.name}}</a>
+                <td mat-cell *matCellDef="let initiative" class="inititiative_title" (click)="initiativesSvc.initvStgId = initiative.initvStgId">
+                    <a class="initiative_link" routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId).route}}/general-information">{{initiative.name}}</a>
                 </td>
             </ng-container>
 
@@ -64,7 +64,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns;  sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat_row pointer outline_none" routerLink="/initiatives/{{row.description ==  'Stage 2: Concept' ? row.initvStgId : row.id}}/stages/{{parseStageLink(row.description)}}"></tr>
+            <tr mat-row *matRowDef="let initiative; columns: displayedColumns;" class="mat_row pointer outline_none" routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId).route}}"></tr>
             <!-- <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat_row pointer outline_none"></tr> -->
 
             <!-- Row shown when there is no matching data. -->

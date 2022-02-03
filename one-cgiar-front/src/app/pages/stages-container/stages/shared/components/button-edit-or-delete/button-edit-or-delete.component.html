@@ -1,4 +1,4 @@
-<div class="icon_container" 
+<div class="icon_container" [ngStyle]="this.ngCustomStyle"
 (click)=" this.type == 'delete' && this.confirmDeleteModal ? this.confirmDelete() : this.action.emit();"
 [ngClass]="
 {'icon_delete_container_background_color':  this.type =='delete',

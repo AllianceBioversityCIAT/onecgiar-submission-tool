@@ -1,0 +1,30 @@
+<section-title name="Global budget"></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+
+    <div class="custom_table_container">
+
+        <div class="table_header">
+            <div class="table_title" *ngFor="let item of ['USD','2021','2022','Total']">{{item}}</div>
+        </div>
+        <div class="table_content" *ngFor="let tableDataItem of [{name:'Col 1'},{name:'Col 2'}]; let i=index">
+            <div class="table_item">
+                <div class="name">{{tableDataItem.name}}</div>
+            </div>
+            <div class="table_item" *ngFor="let item of [{name:'ss'},{name:'ss'}]; let j=index">
+                <div>
+                    <input [(ngModel)]="item.name"  name="value" placeholder="Value" class="field" type="text">
+                </div>
+            </div>
+            <div class="table_item center_flex">
+                <div class="total">{{1 }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='activity-breakdown'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner> -->
+</div>
+<!-- 
+<form (ngSubmit)="onSave()">
+    <ibdc-save-button
+        [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}">
+    </ibdc-save-button>
+</form> -->
