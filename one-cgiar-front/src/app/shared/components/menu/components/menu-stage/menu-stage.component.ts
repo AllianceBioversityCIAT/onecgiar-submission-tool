@@ -5,7 +5,7 @@ import { AuthService } from '@app/shared/services/auth.service';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { MenuService } from '../../services/menu.service';
-
+import { isEmpty } from 'lodash';
 
 @Component({
   selector: 'app-menu-stage',
@@ -29,6 +29,7 @@ export class MenuStageComponent implements OnInit {
 
   currentUser;
   usrAvailableSubm: boolean;
+  usrAssessSubm: boolean;
   constructor(
     private router: Router,
     private auth: AuthService,
@@ -43,12 +44,9 @@ export class MenuStageComponent implements OnInit {
         const userByInitiative = resp.response.users;
         this.currentUser = this.auth.userValue
 
-        const foundInInitiativeUser = userByInitiative.find(initvUsr => initvUsr.userId == this.currentUser.id)
-        if (foundInInitiativeUser) {
-          this.usrAvailableSubm = true;
-        } else {
-          this.usrAvailableSubm = false;
-        }
+        const foundInInitiativeUser = userByInitiative.find(initvUsr => initvUsr.userId == this.currentUser.id);
+        this.validateSubmitButton(foundInInitiativeUser);
+        this.validateAssessButton();
       },
       err => {
         this._interactionsService.errorMessage(err.error?.description, 2000);
@@ -58,7 +56,65 @@ export class MenuStageComponent implements OnInit {
   /** submission process
    * 
    */
-  onSubmitt() {
+
+  validateSubmitButton(userInInitiative) {
+
+    if (this.initiativeService.initiative.submission) {
+      this.usrAvailableSubm = false;
+      return;
+    }
+
+    if (this.currentUser.roles.find(r => r.acronym == 'ADM')) {
+      this.usrAvailableSubm = true;
+      return;
+    }
+    if (this.currentUser.roles.find(r => r.acronym == 'SGD') || this.currentUser.roles.find(r => r.acronym == 'PI')) {
+      const userInInitiative = this.initiativeService.initiative.users.find(usr => usr.userId == this.currentUser.id);
+      console.log(userInInitiative)
+      this.usrAvailableSubm = userInInitiative == null ? false : (userInInitiative.role_acronym == 'PI' || userInInitiative.role_acronym == 'SGD') ? true : false;
+      return;
+    }
+    if (this.initiativeService.initiative.status == null || this.initiativeService.initiative.status == 'On hold') {
+      switch (userInInitiative.role_acronym) {
+        case "SGD":
+          this.usrAvailableSubm = true;
+          break;
+        case "PI":
+          this.usrAvailableSubm = true;
+          break;
+        default:
+          this.usrAvailableSubm = false;
+          break;
+      }
+    }
+  }
+  validateAssessButton() {
+    console.log(isEmpty(this.initiativeService.initiative.submission), this.initiativeService.initiative);
+    // if(!isEmpty(this.initiativeService.initiative.submission)){
+    //   this.usrAssessSubm = false;
+    //   return;
+    // }
+    if (this.currentUser.roles.find(r => r.acronym == 'ADM') || this.currentUser.roles.find(r => r.acronym == 'ASSESS')) {
+      this.usrAssessSubm = isEmpty(this.initiativeService.initiative.submission) ? false : true;
+      return;
+    }
+    // if (this.initiativeService.initiative.status == null || this.initiativeService.initiative.status == 'On hold') {
+    //   switch (userInInitiative.role_acronym) {
+    //     case "SGD":
+    //       this.usrAssessSubm = true;
+    //       break;
+    //     case "PI":
+    //       this.usrAssessSubm = true;
+    //       break;
+    //     default:
+    //       this.usrAssessSubm = false;
+    //       break;
+    //   }
+    // }
+  }
+
+
+  onAssess() {
     this._interactionsService.customConfirmationModal(
       {
         title: 'Are you sure of submitting?',
@@ -74,10 +130,13 @@ export class MenuStageComponent implements OnInit {
         this.initiativeService.submitInitiative(this.initiativeService.initiative.id, this.initiativeService.initiative.stageId).subscribe(
           resp => {
             const submissionRsp = resp.response.submittedStatus[0].submission;
-            if (submissionRsp.complete == 1) {
-              this._interactionsService.successMessage('Initiative submitted sucessfully', 2000)
+            console.log(resp.response)
+            if (submissionRsp.active == 1) {
+              this._interactionsService.successMessage('Initiative submitted sucessfully', 2000);
+              this.router.navigateByUrl(this.router.url)
             } else {
-              this._interactionsService.warningMessage(`Initiative submitted but missing sections: ${submissionRsp.missing.replace(/\s+$/, '').slice(0, -1)}`)
+              this._interactionsService.warningMessage(`Initiative submission needs validation. Please contact support`)
+              // this._interactionsService.warningMessage(`Initiative submitted but missing sections: ${submissionRsp.missing.replace(/\s+$/, '').slice(0, -1)}`)
             }
           },
           err => {
@@ -85,10 +144,6 @@ export class MenuStageComponent implements OnInit {
           }
         )
       })
-  }
-
-  onAssess() {
-
   }
 
   showDialogSubStasModal() {

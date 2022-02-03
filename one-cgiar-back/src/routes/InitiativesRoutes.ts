@@ -195,6 +195,13 @@ router.get(
 );
 
 
+// get submition per initiative
+router.get(
+  '/submission/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  initiatives.getSubmission
+);
+
 // submit initiative
 router.post(
   '/submit/:initiativeId([0-9]+)/:stageId([0-9]+)',

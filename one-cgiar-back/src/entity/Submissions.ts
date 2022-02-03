@@ -5,8 +5,8 @@ import {
   JoinColumn,
   OneToOne
 } from 'typeorm';
-import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
-import {InitiativesByStages} from './InititativesByStages';
+import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
+import { InitiativesByStages } from './InititativesByStages';
 
 @Entity('submissions')
 export class Submissions extends UpdatedCreatedAt {
@@ -19,17 +19,17 @@ export class Submissions extends UpdatedCreatedAt {
   @Column('tinyint')
   complete: boolean;
 
-    // @Column({type: 'text'})
-    // missing: string;
+  // @Column({type: 'text'})
+  // missing: string;
 
-    @Column('int')
-    userId: number;
-    
-    @Column('text')
-    first_name: string;
-    
-    @Column('text')
-    last_name: string;
+  @Column('int')
+  userId: number;
+
+  @Column('text')
+  first_name: string;
+
+  @Column('text')
+  last_name: string;
 
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()

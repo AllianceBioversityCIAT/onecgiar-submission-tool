@@ -12,10 +12,10 @@
     </div>
 
     <div class="submitButtonInitiative" *ngIf="usrAvailableSubm">
-        <button pButton type="button" (click)="onSubmitt()" label="Submit Initiative" class="p-button-rounded p-button-success"></button>
+        <button pButton type="button" (click)="onAssess()" label="Submit Initiative" class="p-button-rounded p-button-success"></button>
     </div>
-    <div class="submitButtonInitiative" *ngIf="currentUser?.roles[0].acronym == 'ASSESS'">
-        <button pButton type="button" (click)="showDialogSubStasModal()" label="Assess Initiative" class="p-button-rounded p-button-info"></button>
+    <div class="submitButtonInitiative" *ngIf="usrAssessSubm" style="margin-top: 10px;">
+        <button pButton type="button" (click)="showDialogSubStasModal()" label="Stage gating" class="p-button-rounded p-button-info"></button>
     </div>
 
  

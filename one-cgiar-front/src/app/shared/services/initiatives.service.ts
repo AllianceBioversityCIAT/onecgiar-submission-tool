@@ -20,7 +20,10 @@ export class InitiativesService {
     roleId: 4,
     readonly: true,
     stageId: null,
-    name: null
+    name: null,
+    users: [],
+    status: null,
+    submission: {}
   }
 
   actionAreas: [];
@@ -560,6 +563,10 @@ export class InitiativesService {
 
   updateSubmissionStatus(initiativeId, stageId, body): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
+  }
+
+  getSubmission(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/submission/${initiativeId}/${stageId}`, {});
   }
 
 

@@ -14,6 +14,7 @@ import { MenuDynamicListComponent } from './components/menu-dynamic-list/menu-dy
 import { ButtonAddElementModule } from '../../../pages/stages-container/stages/shared/components/button-add-element/button-add-element.module';
 import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -37,8 +38,9 @@ import { CardModule } from 'primeng/card';
     IbdAngularComponentsModule,
     ButtonAddElementModule,
     DialogModule,
-    CardModule
+    CardModule,
   ],
+  providers: [DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MenuModule { }

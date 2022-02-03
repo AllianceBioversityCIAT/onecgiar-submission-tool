@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavigationStart, Router,Event as NavigationEvent } from '@angular/router';
+import { NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 import { DataControlService } from '../../../services/data-control.service';
 import { Subscription } from 'rxjs';
 
 interface SectionList {
-  routeName:string
-  url:string
-  name:string
+  routeName: string
+  url: string
+  name: string
 }
 @Component({
   selector: 'app-section-breadcrumb',
@@ -15,36 +15,38 @@ interface SectionList {
 })
 export class SectionBreadcrumbComponent implements OnInit {
   // @Input() 
-  sectionsArray:any;
-  sectionsList:SectionList[];
+  sectionsArray: any;
+  sectionsList: SectionList[];
   routerEvents: Subscription = new Subscription();
   constructor(
-    private router:Router,
-    private _dataControlService:DataControlService
+    private router: Router,
+    private _dataControlService: DataControlService
   ) { }
 
   ngOnInit(): void {
-    this.sectionsArray =  this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
+    this.sectionsArray = this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     this.mapList();
-    this.routerEvents = this.router.events.subscribe((event: NavigationEvent)=>{
-      if(event instanceof NavigationStart && event.url !== '/home') {
+    this.routerEvents = this.router.events.subscribe((event: NavigationEvent) => {
+      if (event instanceof NavigationStart && event.url !== '/home') {
         this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');
         this.mapList();
       }
     })
 
-    
+
   }
 
   ngOnDestroy(): void {
     this.routerEvents.unsubscribe();
   }
 
-  toFirstMayus(text){
-    let mayus = text.substring(0, 1).toUpperCase();
-    let resto = text.substring(1, text.length).toLowerCase();
-    mayus.concat(resto.toString());
-    return mayus.concat(resto.toString())
+  toFirstMayus(text) {
+    if (text) {
+      let mayus = text.substring(0, 1).toUpperCase();
+      let resto = text.substring(1, text.length).toLowerCase();
+      mayus.concat(resto.toString());
+      return mayus.concat(resto.toString())
+    }
   }
 
   mapList() {

@@ -10,6 +10,7 @@ import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
 import { ListToMap } from './classes/listToMap';
+import { AuthService } from '@app/shared/services/auth.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -35,14 +36,14 @@ export class MenuComponent implements OnInit {
   city: string;
   localMenuChangesubscribtion$;
   statuses: any[];
-  statusTextObj = {
-    description: ''
-  };
+  statusTextObj = {};
+  currentUser;
 
   // stageUrl;
   constructor(
     public _requests: RequestsService,
     public router: Router,
+    private auth: AuthService,
     public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
     public _interactionsService: InteractionsService,
@@ -61,6 +62,7 @@ export class MenuComponent implements OnInit {
 
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
       // console.log("menuChange$");
+      this.currentUser = this.auth.userValue;
       this.getMenu();
 
       // this.getAllIWorkPackages();
@@ -84,23 +86,25 @@ export class MenuComponent implements OnInit {
   changeHide(val: boolean) {
     this.display = val;
     this.statuses.forEach(s => {
-      s['clicked'] = false;
+      s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
     });
   }
 
   getAssessmentStatuses() {
-    this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
-      resp => {
-        resp.response.statuses.forEach(s => {
-          s['clicked'] = false;
-        });
-        this.statuses = resp.response.statuses;
-      },
-      err => {
-        console.log(err);
-        this._interactionsService.errorMessage(err.error?.description, 2000);
-      }
-    )
+    if (this.currentUser.roles.find(r => r.acronym == 'ADM') || this.currentUser.roles.find(r => r.acronym == 'ASSESS')) {
+      this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
+        resp => {
+          resp.response.statuses.forEach(s => {
+            s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
+          });
+          this.statuses = resp.response.statuses;
+        },
+        err => {
+          console.log(err);
+          this._interactionsService.errorMessage(err.error?.description, 2000);
+        }
+      )
+    }
   }
 
   onStatusClick(event, clickedStatus) {
@@ -120,10 +124,10 @@ export class MenuComponent implements OnInit {
 
   onConfirmAssessment() {
     const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
-    console.log(statusSelected, this.statusTextObj.description);
-    const updateObj = this.statusTextObj
+    const updateObj = { description: this.statusTextObj['description'], statusId: statusSelected.id };
+    console.log(updateObj)
     this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
-      resp => { 
+      resp => {
         console.log(resp)
       },
       err => {
