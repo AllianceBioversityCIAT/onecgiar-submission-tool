@@ -1,0 +1,27 @@
+<div class="button_container">
+    <app-add-button name="Create initiative" (click)="showDialog()"></app-add-button>
+</div>
+
+<!-- 
+<p-dialog *ngIf="this.renderDilog" header="Title" [(visible)]="display">
+    <app-general-information [stageId]="2" ></app-general-information>
+</p-dialog> -->
+
+
+<p-dialog 
+    *ngIf="this.renderDilog"
+    header="Create Initiative" 
+    [(visible)]="display" 
+    [modal]="true" 
+    [style]="{width: '70vw'}" 
+    [draggable]="false"
+    [resizable]="false">
+
+    <app-general-information [stageId]="2" [creator]="true"></app-general-information>
+    
+    <ng-template pTemplate="footer">
+        <button pButton (click)="display=false" type="button" label="Cancel" class="p-button-secondary"></button>
+        <button pButton (click)="display=false" type="button" label="Create initiative" class="p-button-success"></button>
+    </ng-template>
+    
+</p-dialog>

@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { CreateInitiativeModalComponent } from '@shared/components/create-initiative-modal/create-initiative-modal.component';
 import { map } from 'rxjs/operators';
 import { DataControlService } from '../../services/data-control.service';
 export interface TableData {
@@ -36,7 +34,6 @@ export class InitTableComponent {
   }
 
   constructor(
-    public dialog: MatDialog, 
     public initiativesSvc: InitiativesService,
     public _dataControlService: DataControlService
     ) {
@@ -107,11 +104,5 @@ export class InitTableComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  openDialog() {
-    const dialogRef = this.dialog.open(CreateInitiativeModalComponent, { panelClass: 'custom-dialog-container' });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
 }
