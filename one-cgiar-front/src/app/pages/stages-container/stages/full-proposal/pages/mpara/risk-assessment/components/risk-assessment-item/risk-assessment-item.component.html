@@ -4,7 +4,10 @@
             {{this.riskAssessment.add_by_user?'Created by user':''}}
         </div>
         <br *ngIf="this.riskAssessment.add_by_user">
-        <div class="risk_name" *ngIf="!riskTitleEditableIsActive">{{this.riskAssessment.risks_achieving_impact}}</div>
+        <div class="risk_name" *ngIf="!riskTitleEditableIsActive">
+            {{this.riskAssessment.risks_achieving_impact}}
+            <h5>Risk theme: <strong>{{this.riskAssessment.risks_theme}}</strong> </h5>
+        </div>
         <div class="edit_button" *ngIf="!riskTitleEditableIsActive">
             <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
         </div>
@@ -69,6 +72,7 @@
 
 
     </div>
+    
     <hr>
     <div class="row">
         <div class="col-12">
