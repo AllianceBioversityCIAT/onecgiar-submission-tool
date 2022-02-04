@@ -8,8 +8,11 @@ import { DataControlService } from '../../../../../../shared/services/data-contr
   styleUrls: ['./initiative-creator.component.scss']
 })
 export class InitiativeCreatorComponent implements OnInit {
+  private user = JSON.parse(localStorage.getItem('user')) || null;
   renderDilog: boolean = false;
   display: boolean = false;
+  isAdmin: boolean = false;
+
 
 
   constructor(
@@ -18,11 +21,12 @@ export class InitiativeCreatorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isAdmin = this.user.roles[0]?.acronym == 'ADM' ? true : false;
   }
 
   showDialog() {
-      this.renderDilog = true;
-      this.display = true;
+    this.renderDilog = true;
+    this.display = true;
   }
 
   createInitiative(){
