@@ -4,7 +4,7 @@
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    <ibdc-text-area-field 
+    <ibdc-text-area-field     
         inputTitle="Theory of Change Statement" 
         [objectItem]="body"
         [objectAtributteName]="'theory_of_Change_Statement'">
@@ -13,7 +13,7 @@
     <br>
     <br>
 
-    <ibdc-upload-files [options]="{
+    <ibdc-upload-files [multipleFiles]="false" [options]="{
         inputTitle:'Upload  Diagram',filesList: [],filesSavedList: []}">
     </ibdc-upload-files>
 
