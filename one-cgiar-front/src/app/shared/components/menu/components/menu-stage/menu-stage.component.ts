@@ -41,6 +41,7 @@ export class MenuStageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.userMenu)
     this.initiativeService.getUsersByInitiative(this.initiativeService.initiative.id).subscribe(
       resp => {
         const userByInitiative = resp.response.users;
@@ -91,14 +92,9 @@ export class MenuStageComponent implements OnInit {
     }
   }
   validateAssessButton() {
-    console.log(isEmpty(this.initiativeService.initiative.submission), this.initiativeService.initiative);
-    // if(!isEmpty(this.initiativeService.initiative.submission)){
-    //   this.usrAssessSubm = false;
-    //   return;
-    // }
     if (this.currentUser.roles.find(r => r.acronym == 'ADM') || this.currentUser.roles.find(r => r.acronym == 'ASSESS')) {
-      this.usrAssessSubm = isEmpty(this.initiativeService.initiative.submission) ? false : true;
-      return;
+      this.usrAssessSubm = true;
+      // this.usrAssessSubm = isEmpty(this.initiativeService.initiative.submission) ? false : true;
     }
     // if (this.initiativeService.initiative.status == null || this.initiativeService.initiative.status == 'On hold') {
     //   switch (userInInitiative.role_acronym) {
@@ -147,6 +143,10 @@ export class MenuStageComponent implements OnInit {
         )
       })
   }
+
+   /** submission process
+   * 
+   */
 
   showDialogSubStasModal() {
     this.onAssessSubmission.emit(true);
