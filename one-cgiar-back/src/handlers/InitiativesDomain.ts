@@ -1,8 +1,39 @@
-import {getConnection} from 'typeorm';
+import {getConnection, getRepository} from 'typeorm';
+import {Initiatives, InitiativesByStages} from '../entity';
 import {BaseError} from './BaseError';
 
 export class InitiativeHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
+
+  async createInitiativesByStage(initiativeId?, name?, acronym?, stage?) {
+    const official_code = 'INIT-' + initiativeId;
+
+    const initiativeRepo = getRepository(Initiatives);
+    const initvStgRepo = getRepository(InitiativesByStages);
+
+    const newInitiative = new Initiatives();
+    const newInitvStg = new InitiativesByStages();
+
+    try {
+      newInitiative.id = initiativeId;
+      newInitiative.name = name;
+      newInitiative.acronym = acronym;
+      newInitiative.official_code = official_code;
+
+      const savedInitiative:any = await initiativeRepo.save(newInitiative);
+
+      newInitvStg.initiative = savedInitiative.id;
+      newInitvStg.stage = stage.id;
+      newInitvStg.active = true;
+
+      const savedItvStg = await initvStgRepo.save(newInitvStg);
+
+      return {savedInitiative,savedItvStg}
+
+    } catch (error) {
+      throw new BaseError('createInitiativesByStage', 400, error.message, false);
+    }
+  }
 
   /** Get all initiatives for main table */
   async getAllInitiatives() {
