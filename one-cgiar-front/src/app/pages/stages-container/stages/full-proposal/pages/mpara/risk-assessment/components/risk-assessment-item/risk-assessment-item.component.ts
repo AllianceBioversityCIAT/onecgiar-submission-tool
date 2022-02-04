@@ -34,7 +34,7 @@ export class RiskAssessmentItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.riskAssessment);
+    console.log(this.riskAssessment);
     this.getCurrentData();
     this.riskAssessmentForm.valueChanges.subscribe(resp=>{
       // console.log("chnge");

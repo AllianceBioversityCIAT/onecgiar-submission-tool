@@ -118,10 +118,17 @@ export class RiskAssessmentComponent implements OnInit {
       })
   }
 
+  calculateRiskScore(){
+    this.managementPlan.riskassessment.map((riskAssessment:Riskassessment)=>{
+      riskAssessment.risk_score = riskAssessment.likelihood * riskAssessment.impact
+    })
+  }
+
   saveSection() {
     if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
 
     let formData = new FormData();
+    this.calculateRiskScore();
     formData.append('data', JSON.stringify(this.managementPlan));
 
     console.log(this.managementPlan);
