@@ -10,6 +10,71 @@ import {ResponseHandler} from '../handlers/Response';
 const currentStage = 'Pre Concept';
 
 /**
+ * CREATE INITIATIVE
+ * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
+ * @param res
+ */
+
+export async function createInitiative(req: Request, res: Response) {
+  // get generalInformationId, name, action_area_id, action_area_description by stage id from client
+  const {
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym
+  } = req.body;
+
+  const stageRepo = getRepository(Stages);
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+
+    // Create initiative and initiative by Stages
+
+    const initiativeHandler = new InitiativeHandler();
+
+    const newInitiative = await initiativeHandler.createInitiativesByStage(
+      name,
+      acronym,
+      stage
+    );
+
+    const initvStg: any = newInitiative.savedInitvStg.id;
+
+    // Validate initiative by Stages
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new concept object
+    const concept = new ConceptHandler(initvStg);
+
+    const generalInformation = await concept.upsertGeneralInformation(
+      generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: Create Initiative.', {
+        newInitiative,
+        generalInformation
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
  * GET GENERAL INFORMATION
  * @param req initiativeId
  * @param res  { generalInformation }
@@ -91,21 +156,6 @@ export async function upsertConceptGeneralInformation(
       where: {initiative: initiativeId, stage}
     });
 
-    // Create initiative and initiative by Stages
-
-    if (initvStg == null || typeof initvStg == undefined) {
-      const initiativeHandler = new InitiativeHandler();
-
-      const respinitvStg = await initiativeHandler.createInitiativesByStage(
-        initiativeId,
-        name,
-        acronym,
-        stage
-      );
-
-      initvStg = respinitvStg.savedItvStg.id;
-    }
-
     // Validate initiative by Stages
     if (initvStg == null) {
       throw new BaseError(
@@ -116,9 +166,7 @@ export async function upsertConceptGeneralInformation(
       );
     }
     // create new concept object
-    const concept = new ConceptHandler(
-      initvStg.id ? initvStg.id.toString() : initvStg
-    );
+    const concept = new ConceptHandler(initvStg.id.toString());
 
     const generalInformation = await concept.upsertGeneralInformation(
       generalInformationId,
