@@ -5,6 +5,13 @@ import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
+// CREATE INITIATIVE
+router.post(
+  '/create-initiative',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.createInitiative
+);
+
 // get concept general information
 router.get(
   '/:initiativeId([0-9]+)/general-information',
