@@ -30,7 +30,6 @@ import { GeneralInfoPatchBody } from './interfaces/general-info-patch-body.inter
 export class GeneralInformationComponent implements OnInit {
 
   @Input() stageId: number = 0;
-  @Input() creator: boolean = false;
 
   public summaryForm: FormGroup;
   public actionAreas: any[];
@@ -82,7 +81,6 @@ export class GeneralInformationComponent implements OnInit {
   ngOnInit(): void {
 
     this.getActionAreas();
-    this.createInitiative();
 
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
 
@@ -103,8 +101,6 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.localEmitter.unsubscribe()
-    if (this.stageId && !this.creator) return
-    this.createInitiative$.unsubscribe()
   }
 
   getActionAreas(){
@@ -125,7 +121,6 @@ export class GeneralInformationComponent implements OnInit {
 
 
   getGeneralInformation(){
-    if (this.creator) return;
     console.log("getGeneralInformation");
     this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
       this.body.generalInformation = resp.response.generalInformation;
@@ -184,37 +179,6 @@ export class GeneralInformationComponent implements OnInit {
 
     if (this.stageId == 2) this.saveGeneralInformation(patchBody);
     if (this.stageId == 3) this.saveSummary(patchBody);
-
-  }
-
-  createInitiative() {
-
-    if (this.stageId && !this.creator) return
-    
-    this.createInitiative$ = this._dataControlService.createInitiative$.subscribe(resp => {
-      console.log("createInitiative");
-      if (!resp) return
-
-      let createBody: any = {
-        name: this.body.generalInformation.name,
-        acronym: this.body.generalInformation.acronym,
-        action_area_description: this.body.generalInformation.action_area_description,
-        action_area_id: this.body.generalInformation.action_area_id,
-        active: true,
-        generalInformationId: null,
-      }
-
-      this._initiativesService.createInitiative(createBody).subscribe(resp => {
-        console.log(resp);
-      })
-
-      //? CLEAN form
-      this.body.generalInformation.name = '';
-      this.body.generalInformation.acronym = '';
-      this.body.generalInformation.action_area_description = '';
-      this.body.generalInformation.action_area_id = null;
-
-    })
 
   }
 

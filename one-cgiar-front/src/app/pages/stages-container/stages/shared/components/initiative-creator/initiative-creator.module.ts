@@ -5,6 +5,7 @@ import { AddButtonModule } from '../../../../../../shared/components/add-button/
 import { DialogModule } from 'primeng/dialog';
 import { GeneralInformationModule } from '../general-information/general-information.module';
 import { ButtonModule } from 'primeng/button';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ButtonModule } from 'primeng/button';
     AddButtonModule,
     DialogModule,
     GeneralInformationModule,
-    ButtonModule
+    ButtonModule,
+    IbdAngularComponentsModule
   ]
 })
 export class InitiativeCreatorModule { }
