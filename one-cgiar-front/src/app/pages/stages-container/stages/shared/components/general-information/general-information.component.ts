@@ -62,7 +62,7 @@ export class GeneralInformationComponent implements OnInit {
   words: any;
   devprint = new DevConsole();
   localEmitter: Subscription;
-
+  createInitiative$: Subscription;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
@@ -82,6 +82,7 @@ export class GeneralInformationComponent implements OnInit {
   ngOnInit(): void {
 
     this.getActionAreas();
+    this.createInitiative();
 
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
 
@@ -102,6 +103,8 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.localEmitter.unsubscribe()
+    if (this.stageId && !this.creator) return
+    this.createInitiative$.unsubscribe()
   }
 
   getActionAreas(){
@@ -181,6 +184,37 @@ export class GeneralInformationComponent implements OnInit {
 
     if (this.stageId == 2) this.saveGeneralInformation(patchBody);
     if (this.stageId == 3) this.saveSummary(patchBody);
+
+  }
+
+  createInitiative() {
+
+    if (this.stageId && !this.creator) return
+    
+    this.createInitiative$ = this._dataControlService.createInitiative$.subscribe(resp => {
+      console.log("createInitiative");
+      if (!resp) return
+
+      let createBody: any = {
+        name: this.body.generalInformation.name,
+        acronym: this.body.generalInformation.acronym,
+        action_area_description: this.body.generalInformation.action_area_description,
+        action_area_id: this.body.generalInformation.action_area_id,
+        active: true,
+        generalInformationId: null,
+      }
+
+      this._initiativesService.createInitiative(createBody).subscribe(resp => {
+        console.log(resp);
+      })
+
+      //? CLEAN form
+      this.body.generalInformation.name = '';
+      this.body.generalInformation.acronym = '';
+      this.body.generalInformation.action_area_description = '';
+      this.body.generalInformation.action_area_id = null;
+
+    })
 
   }
 

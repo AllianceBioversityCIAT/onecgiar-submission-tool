@@ -163,7 +163,7 @@ export class InitiativesService {
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
-    return this.postQuery('/initiatives', body);
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/pre-concept/create-initiative`, body);  
   }
 
   /**

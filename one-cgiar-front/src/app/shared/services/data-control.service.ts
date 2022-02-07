@@ -32,6 +32,7 @@ export class DataControlService {
   validateMenu$= new EventEmitter<any>();
   countriesAndRegionsloaded$ = new EventEmitter<any>();
   loadMenu$= new EventEmitter<any>();
+  createInitiative$= new EventEmitter<any>();
   reloadPob = false;
   minutesToRemeberSave = 10;
   fileSteps= '<strong style="margin-right: 25px;">Steps:</strong><ol style="margin-top: 7px;"><li>Download and Fill in the template below</li><li>Start the Uploading process, pressing the "choose file" button and selecting the filled file on step 1.</li><li>Finish the uploading process, pressing the "save" button.</li></ol>'
