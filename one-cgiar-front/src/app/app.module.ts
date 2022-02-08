@@ -43,6 +43,8 @@ import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
 import { LoginModule } from './pages/login/login.module';
+import { LoginCardModule } from './shared/components/login-card/login-card.module';
+import { JwtExpirationSubscriptionModule } from './shared/components/jwt-expiration-subscription/jwt-expiration-subscription.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +82,8 @@ import { LoginModule } from './pages/login/login.module';
     CustomFormsModule,
     IbdAngularComponentsModule,
     InitiativeCreatorModule,
-    LoginModule
+    LoginModule,
+    JwtExpirationSubscriptionModule
     // InputTextModule
   ],
   providers: [

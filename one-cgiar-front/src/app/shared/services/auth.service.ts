@@ -63,6 +63,13 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  logoutWithoutNavigate(): void {
+    // localStorage.removeItem('user');
+    this.logOutTawtkTo();
+    localStorage.clear()
+    this.user.next(null);
+  }
+
   private checkToken(): void {
     const user = JSON.parse(localStorage.getItem('user')) || null;
 
@@ -100,7 +107,7 @@ export class AuthService {
   }
   
   private logOutTawtkTo() {
-    console.log(window.hasOwnProperty('Tawk_API'))
+    // console.log(window.hasOwnProperty('Tawk_API'))
     if (window.hasOwnProperty('Tawk_API')) {
       try {
         window['Tawk_API'].endChat();

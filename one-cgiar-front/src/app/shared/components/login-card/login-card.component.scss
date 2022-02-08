@@ -11,6 +11,7 @@
     padding: 30px 20px;
     width: 500px;
     padding: 2rem;
+    z-index: 1002;
 
     .card_custom_header {
       width: 100%;
@@ -62,4 +63,9 @@
       }
     }
   }
+}
+
+.black-bg{
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
 }

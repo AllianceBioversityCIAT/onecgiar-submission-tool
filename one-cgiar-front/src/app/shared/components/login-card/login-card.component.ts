@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { DataControlService } from '../../services/data-control.service';
   styleUrls: ['./login-card.component.scss']
 })
 export class LoginCardComponent implements OnInit {
+  @Input() modeJwtExpired: boolean = false;
   loginForm: FormGroup;
   subscription: Subscription = new Subscription();
   hide = true;
@@ -25,6 +26,7 @@ export class LoginCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // console.log(this.router.routerState.snapshot.url);
     this.loginForm = new FormGroup({
       email: new FormControl(null,[Validators.required,Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
@@ -35,27 +37,37 @@ export class LoginCardComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  onLogin(): void {
-    // console.log("spinner");
-    this.spinnerService.show("login_spinner");
-    // if (this.loginForm.invalid) {
-    //   return;
-    // }
+  basicLogin(resp){
+    if (this.modeJwtExpired) return;
+    if (resp) {
+      this.router.navigate(['/home']);
+      this._interactionsService.showHeader = true;
+    }
+  }
 
-    // const formValue = this.loginForm.baseForm.value;
+  jwtExpirationLogin(){
+    if (!this.modeJwtExpired) return;
+    // console.log("emit");
+    this._dataControlService.jwtExpirationSubscription$.emit(false);
+    console.log(this._dataControlService.currentRequestMethod);
+    // console.log('GET');
+    // console.log(this._dataControlService.currentRequestMethod === 'GET');
+    if (!this._dataControlService.currentRequestMethod) window.location.reload(); //console.log("reload");
+    this._dataControlService.currentRequestMethod = null;
+    // window.location.reload();
+  }
+
+  onLogin(): void {
+
+    this.spinnerService.show("login_spinner");
+
     this.subscription.add(
       this.authSvc.login(this.loginForm.value).subscribe((res) => {
-        // console.log("quitar spinner");s
-        if (res) {
-          this.router.navigate(['/home']);
-          this._interactionsService.showHeader = true;
-          // console.log('login', res);
-       
-        }
-        // this.spinnerService.hide("login_spinner");
+        
+        this.basicLogin(res);
+        this.jwtExpirationLogin();
+
       },err=>{
-        //console.log(err.error?.description);
-        //console.log(err);
 
         if (err.error?.description) {
           if (err.error?.description.indexOf('80090308')>-1) {
@@ -65,12 +77,13 @@ export class LoginCardComponent implements OnInit {
           }
         }
         
-        // User password incorrect.
-        // Not Found
-        //console.log("error");
         this.spinnerService.hide("login_spinner");
       },()=>{this.spinnerService.hide("login_spinner");})
     );
+  }
+
+  validateShowBg(){
+    return this.modeJwtExpired
   }
 
 }

@@ -28,6 +28,8 @@ export class DataControlService {
   showCountries=false;
 
   // events to reload info in sections
+  currentRequestMethod:string = '';
+  jwtExpirationSubscription$= new EventEmitter<boolean>();
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
   validateMenu$= new EventEmitter<any>();
