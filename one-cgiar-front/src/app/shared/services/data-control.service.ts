@@ -17,6 +17,7 @@ export class DataControlService {
   //  } 
   // }
   // Variables used in various sections
+  x_position_login_animation = 0;
   clarisaIsDown = false;
   wpMaped = false;
   pobMaped = false;

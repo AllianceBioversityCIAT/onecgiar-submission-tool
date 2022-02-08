@@ -10,7 +10,6 @@ import { MaterialModule } from '@app/material.module';
 import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { HttpRequestInterceptor } from '@shared/interceptors/http-request.interceptor';
@@ -21,7 +20,6 @@ import { AppErrorHandler } from '@shared/utils/app-error-handler';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
@@ -31,11 +29,9 @@ import { CreateUserModalComponent } from './shared/components/create-user-modal/
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { CreateInitiativeModalComponent } from './shared/components/create-initiative-modal/create-initiative-modal.component';
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
 import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { DevPanelComponent } from './shared/components/dev-panel/dev-panel.component';
-import { ChangePasswordComponent } from './shared/components/login/change-password/change-password.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
 //? Module of components
@@ -46,10 +42,10 @@ import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
+import { LoginModule } from './pages/login/login.module';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     FooterComponent,
     HeaderComponent,
     NavbarComponent,
@@ -59,11 +55,9 @@ import { CurrencyPipe } from '@angular/common';
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
-    CreateInitiativeModalComponent,
     CreateUserModalComponent,
     DevTagComponent,
     DevPanelComponent,
-    ChangePasswordComponent,
     TawkToComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -71,7 +65,6 @@ import { CurrencyPipe } from '@angular/common';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
     SidebarModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -80,13 +73,14 @@ import { CurrencyPipe } from '@angular/common';
     QuillModule.forRoot(),
     NgxHotjarModule.forRoot(environment.hotjar),
     NgxHotjarRouterModule,
+    MaterialModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    NgxSpinnerModule,
     CustomFormsModule,
     IbdAngularComponentsModule,
-    InitiativeCreatorModule
+    InitiativeCreatorModule,
+    LoginModule
     // InputTextModule
   ],
   providers: [

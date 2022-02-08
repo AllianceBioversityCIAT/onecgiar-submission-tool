@@ -26,7 +26,8 @@ const routes: Routes = [
       import('./pages/admin/admin.module').then((m) => m.AdminModule),
   },
   {
-    path: '', component: LoginComponent,
+    path: '', 
+    loadChildren: () =>import('./pages/login/login.module').then((m) => m.LoginModule),
     canActivate: [CheckLoginGuard],
   },
 ];

@@ -1,0 +1,65 @@
+.absolute_floating_login {
+  position: absolute;
+  top: 0;
+  transition: all .3s ease-in-out;
+  margin-top: 25px;
+
+  .card-signin {
+    border: 0;
+    border-radius: 3rem 3rem 1rem 1rem;
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    width: 500px;
+    padding: 2rem;
+
+    .card_custom_header {
+      width: 100%;
+      height: 50px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 2em 2em 0 0;
+
+      .card-title {
+        margin-bottom: 2rem;
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: white;
+        margin: 0;
+      }
+    }
+
+    .card-body {
+      padding: 2rem;
+      .full-width-input,
+      button {
+        width: 100%;
+      }
+      .form-signin .btn {
+        width: 100%;
+        font-size: 80%;
+        border-radius: 5rem;
+        letter-spacing: .1rem;
+        font-weight: bold;
+        padding: 1rem;
+        transition: all 0.2s;
+      }
+      .change-password-text{
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+        font-size: .95em;
+        font-weight: 300;
+        &:hover{
+          transition: all .3s ease;
+          filter: opacity(.55);
+        }
+      }
+      .note {
+        font-size: 0.7rem;
+        line-height: 1.2;
+        text-align: justify;
+      }
+    }
+  }
+}
