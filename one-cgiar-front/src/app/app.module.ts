@@ -21,16 +21,9 @@ import { AppErrorHandler } from '@shared/utils/app-error-handler';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
-import { GeneralInformationComponent } from './shared/components/preconcept/general-information/general-information.component';
-import { NarrativesComponent } from './shared/components/preconcept/narratives/narratives.component';
-import { GeographicScopeComponent } from './shared/components/preconcept/geographic-scope/geographic-scope.component';
 import { LoginComponent } from './pages/login/login.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { KeyPartnersComponent } from './shared/components/preconcept/key-partners/key-partners.component';
-import { FeedbackComponent } from './shared/components/preconcept/feedback/feedback.component';
-import { CountryControlComponent } from './shared/components/preconcept/country-control/country-control.component';
-import { RegionControlComponent } from './shared/components/preconcept/region-control/region-control.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
@@ -63,13 +56,6 @@ import { CurrencyPipe } from '@angular/common';
     NotFoundComponent,
     HomeComponent,
     InitTableComponent,
-    GeneralInformationComponent,
-    NarrativesComponent,
-    GeographicScopeComponent,
-    KeyPartnersComponent,
-    FeedbackComponent,
-    CountryControlComponent,
-    RegionControlComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
