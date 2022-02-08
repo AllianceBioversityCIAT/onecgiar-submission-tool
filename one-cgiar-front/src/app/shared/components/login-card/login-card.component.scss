@@ -12,6 +12,22 @@
     width: 500px;
     padding: 2rem;
     z-index: 1002;
+    position: relative;
+
+    .jwt-expired-alert{
+      width: 100%;
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background-color: white;
+      padding: 10px;
+      border-radius: 10px;
+      .text{
+        padding: 10px;
+        color: white;
+        border-radius: 10px;
+      }
+    }
 
     .card_custom_header {
       width: 100%;

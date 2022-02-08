@@ -1,11 +1,17 @@
 <div class="center_flex absolute_floating_login" [ngClass]="{'black-bg': validateShowBg()}" [style.left.vw]="this._dataControlService.x_position_login_animation"  style="height: 100%; width: 100%;">
     <div class="card card-signin animate__animated  animate__backInUp animate__fast" >
+
+      <div class="jwt-expired-alert">
+        <div class="text background-color-tertiary">Your session has expired, please login again to continue accessing the online tool</div>
+      </div>
+
       <div class="card_custom_header background-color-tertiary center_flex">
         <h5 class="card-title text-center">Sign In</h5>
       </div>
       <br>
       <br>
       <br>
+
       <div class="card-body">
         <!-- <h5 class="card-title text-center">Sign In</h5> -->
         <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
@@ -49,5 +55,6 @@
           </div>
         </form>
       </div>
+
     </div>
   </div>

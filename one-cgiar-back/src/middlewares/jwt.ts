@@ -40,7 +40,7 @@ export const checkJwt = async (
   const {userId, first_name, last_name} = jwtPayload;
 
   const newToken = jwt.sign({userId, first_name, last_name}, jwtSecret, {
-    expiresIn: '500'
+    expiresIn: '7h'
   });
   res.setHeader('token', newToken);
   next();
