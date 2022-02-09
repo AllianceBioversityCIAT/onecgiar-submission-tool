@@ -45,11 +45,11 @@ import { LoginModule } from './pages/login/login.module';
 import { LoginCardModule } from './shared/components/login-card/login-card.module';
 import { JwtExpirationSubscriptionModule } from './shared/components/jwt-expiration-subscription/jwt-expiration-subscription.module';
 import { FooterModule } from './shared/components/footer/footer.module';
+import { HeaderModule } from './shared/components/header/header.module';
+import { NavbarModule } from './shared/components/navbar/navbar.module';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    NavbarComponent,
     NotFoundComponent,
     HomeComponent,
     InitTableComponent,
@@ -84,7 +84,9 @@ import { FooterModule } from './shared/components/footer/footer.module';
     LoginModule,
     JwtExpirationSubscriptionModule,
     //? shared component modules
-    FooterModule
+    FooterModule,
+    HeaderModule,
+    NavbarModule,
   ],
   providers: [
     CurrencyPipe,
