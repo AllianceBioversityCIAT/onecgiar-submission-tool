@@ -48,7 +48,7 @@ export class DataControlService {
       case 1:
         return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 2:
-        return { route: 'concept', name: 'concept', ownPath: 'concept' }
+        return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 3:
         return { route: 'full-proposal', name: 'full-proposal', ownPath: 'proposal' }
     }
