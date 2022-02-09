@@ -1,7 +1,7 @@
 <div class="center_flex absolute_floating_login" [ngClass]="{'black-bg': validateShowBg()}" [style.left.vw]="this._dataControlService.x_position_login_animation"  style="height: 100%; width: 100%;">
     <div class="card card-signin animate__animated  animate__backInUp animate__fast" >
 
-      <div class="jwt-expired-alert">
+      <div class="jwt-expired-alert" *ngIf="this.modeJwtExpired">
         <div class="text background-color-tertiary">Your session has expired, please login again to continue accessing the online tool</div>
       </div>
 
@@ -15,7 +15,7 @@
       <div class="card-body">
         <!-- <h5 class="card-title text-center">Sign In</h5> -->
         <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <h1>{{this._dataControlService.currentRequestMethod}}</h1>
+          <!-- <h1>{{this._dataControlService.currentRequestMethod}}</h1> -->
           <mat-form-field class="full-width-input">
             <input text="text" formControlName="email" matInput placeholder="Email" required />
             <mat-error *ngIf="loginForm.get('email').hasError('email')">

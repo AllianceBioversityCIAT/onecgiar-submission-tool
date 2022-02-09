@@ -20,7 +20,6 @@ import { AppErrorHandler } from '@shared/utils/app-error-handler';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
 import { HomeComponent } from './pages/home/home.component';
-import { FooterComponent } from './shared/components/footer/footer.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
@@ -45,10 +44,10 @@ import { CurrencyPipe } from '@angular/common';
 import { LoginModule } from './pages/login/login.module';
 import { LoginCardModule } from './shared/components/login-card/login-card.module';
 import { JwtExpirationSubscriptionModule } from './shared/components/jwt-expiration-subscription/jwt-expiration-subscription.module';
+import { FooterModule } from './shared/components/footer/footer.module';
 @NgModule({
   declarations: [
     AppComponent,
-    FooterComponent,
     HeaderComponent,
     NavbarComponent,
     NotFoundComponent,
@@ -83,8 +82,9 @@ import { JwtExpirationSubscriptionModule } from './shared/components/jwt-expirat
     IbdAngularComponentsModule,
     InitiativeCreatorModule,
     LoginModule,
-    JwtExpirationSubscriptionModule
-    // InputTextModule
+    JwtExpirationSubscriptionModule,
+    //? shared component modules
+    FooterModule
   ],
   providers: [
     CurrencyPipe,
