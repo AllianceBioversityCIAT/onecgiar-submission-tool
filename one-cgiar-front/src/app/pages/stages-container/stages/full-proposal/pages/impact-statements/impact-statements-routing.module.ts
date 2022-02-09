@@ -12,8 +12,8 @@ const routes: Routes = [
         loadChildren: () => import('./impact-areas/impact-areas.module').then(mod => mod.ImpactAreasModule),
       },
       {
-        path: 'is-resports',
-        loadChildren: () => import('./is-resports/is-resports.module').then(mod => mod.IsResportsModule),
+        path: 'is-reports',
+        loadChildren: () => import('./is-reports/is-reports.module').then(mod => mod.IsReportsModule),
       }
     ],
   }
