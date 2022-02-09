@@ -4,11 +4,11 @@ import { PreviewPartners } from './models/previewPartners.interface';
 import { ManageExcelService } from '../../../services/manage-excel.service';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
 @Component({
-  selector: 'app-is-resports',
-  templateUrl: './is-resports.component.html',
-  styleUrls: ['./is-resports.component.scss']
+  selector: 'app-is-reports',
+  templateUrl: './is-reports.component.html',
+  styleUrls: ['./is-reports.component.scss']
 })
-export class IsResportsComponent implements OnInit {
+export class IsReportsComponent implements OnInit {
   previewPartners = [];
   notArePreviewPartners = false;
   headerPreviewPartners = ['code', 'acronym', 'institution_type', 'office_location', 'name', 'impact_area',  'demand',  'innovation',  'scaling',   'website'];

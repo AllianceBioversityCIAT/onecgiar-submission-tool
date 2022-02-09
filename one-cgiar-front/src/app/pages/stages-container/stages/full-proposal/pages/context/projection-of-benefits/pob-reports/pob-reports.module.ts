@@ -1,8 +1,8 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PobResportsRoutingModule } from './pob-resports-routing.module';
-import { PobResportsComponent } from './pob-resports.component';
+import { PobReportsRoutingModule } from './pob-reports-routing.module';
+import { PobReportsComponent } from './pob-reports.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TableModule } from 'primeng/table';
@@ -11,10 +11,10 @@ import {ToastModule} from 'primeng/toast';
 
 
 @NgModule({
-  declarations: [PobResportsComponent],
+  declarations: [PobReportsComponent],
   imports: [
     CommonModule,
-    PobResportsRoutingModule,
+    PobReportsRoutingModule,
     UtilsModule,
     ClipboardModule,
     TableModule,
@@ -23,4 +23,4 @@ import {ToastModule} from 'primeng/toast';
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PobResportsModule { }
+export class PobReportsModule { }

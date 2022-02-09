@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { IsResportsRoutingModule } from './is-resports-routing.module';
-import { IsResportsComponent } from './is-resports.component';
+import { IsReportsRoutingModule } from './is-reports-routing.module';
+import { IsReportsComponent } from './is-reports.component';
 import {TableModule} from 'primeng/table';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import {ButtonModule} from 'primeng/button';
@@ -11,10 +11,10 @@ import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module'
 
 
 @NgModule({
-  declarations: [IsResportsComponent],
+  declarations: [IsReportsComponent],
   imports: [
     CommonModule,
-    IsResportsRoutingModule,
+    IsReportsRoutingModule,
     TableModule,
     UtilsModule,
     ButtonModule,
@@ -22,4 +22,4 @@ import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module'
     StagesPipesModule
   ]
 })
-export class IsResportsModule { }
+export class IsReportsModule { }

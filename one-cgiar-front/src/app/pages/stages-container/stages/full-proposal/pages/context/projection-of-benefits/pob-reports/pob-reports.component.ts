@@ -5,13 +5,13 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { MessageService } from 'primeng/api';
 declare var $;
 @Component({
-  selector: 'app-pob-resports',
-  templateUrl: './pob-resports.component.html',
-  styleUrls: ['./pob-resports.component.scss'],
+  selector: 'app-pob-reports',
+  templateUrl: './pob-reports.component.html',
+  styleUrls: ['./pob-reports.component.scss'],
   providers: [MessageService]
 
 })
-export class PobResportsComponent implements OnInit {
+export class PobReportsComponent implements OnInit {
   notArePreviewinformation = false;
   previewProjectedBenefitsListCoverted = [];
   // previewPOBListMetaData = [];

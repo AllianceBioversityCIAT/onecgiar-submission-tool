@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { CheckLoginGuard } from '@shared/guards/check-login.guard';
 import { CheckHomeGuard } from '@shared/guards/check-home.guard';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-
 
 const routes: Routes = [
   {
@@ -18,7 +14,8 @@ const routes: Routes = [
     canActivate: [CheckHomeGuard],
   },
   {
-    path: 'notFound', component: NotFoundComponent,
+    path: 'notFound',
+    loadChildren: () =>import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
   },
   {
     path: 'admin',

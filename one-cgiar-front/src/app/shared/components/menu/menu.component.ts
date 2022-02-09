@@ -255,7 +255,7 @@ export class MenuComponent implements OnInit {
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
           showName: 'Partners preview',
-          frontRoute: '/is-resports'
+          frontRoute: '/is-reports'
         });
 
         this.mapDataInMenuDynamicListSubSection(3, 4, 27,
@@ -276,7 +276,7 @@ export class MenuComponent implements OnInit {
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
           showName: 'Projection of benefits preview',
-          frontRoute: '/projection-of-benefits/pob-resports'
+          frontRoute: '/projection-of-benefits/pob-reports'
         });
 
         if (this.impacAreasList.length) {
