@@ -1,8 +1,14 @@
 import {getRepository} from 'typeorm';
-import {Files, TOCs} from '../entity';
-import {GeneralInformation} from '../entity/GeneralInformation';
-import {Narratives} from '../entity/Narratives';
+import {
+  Context,
+  Files,
+  TOCs,
+  GeneralInformation,
+  Highlights,
+  Narratives
+} from '../entity';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
+import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
 import {InitiativeHandler} from './InitiativesDomain';
@@ -516,5 +522,96 @@ export class ConceptHandler extends ConceptValidation {
         false
       );
     }
+  }
+
+  async upsertHighlights(highlights?: any) {
+    const initvStgId = this.initvStgId_;
+
+    const highlightsRepo = getRepository(Highlights);
+    const toolsSbt = new ToolsSbt();
+    const highlightsArray = [];
+
+    try {
+      for (let index = 0; index < highlights.length; index++) {
+        const element = highlights[index];
+        const newHighlights = new Highlights();
+        newHighlights.id = element.id;
+        newHighlights.initvStgId = initvStgId;
+        newHighlights.name = element.name;
+        newHighlights.description = element.description;
+        newHighlights.active;
+
+        highlightsArray.push(
+          toolsSbt.mergeData(
+            highlightsRepo,
+            `SELECT * 
+             FROM highlights
+            WHERE id = ${newHighlights.id}
+              and initvStgId = ${initvStgId}`,
+            newHighlights
+          )
+        );
+      }
+
+      let mergeHighligths = await Promise.all(highlightsArray);
+
+      let upsertHighligths = await highlightsRepo.save(mergeHighligths);
+
+      return upsertHighligths;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert highlight: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async upsertContext(context?:any) {
+    const initvStgId = this.initvStgId_;
+    const contextRepo = getRepository(Context);
+    const newContextPreconcept = new Context();
+    const toolsSbt = new ToolsSbt();
+
+    try {
+
+      newContextPreconcept.id = context.id;
+      newContextPreconcept.initvStg = initvStgId;
+      newContextPreconcept.challenge_statement = context.challengeStatement;
+      newContextPreconcept.smart_objectives = context.objectiveStament;
+      newContextPreconcept.active = context.active;
+
+      const contextMerge = await toolsSbt.mergeData(
+          contextRepo,
+          `SELECT * 
+           FROM context
+          WHERE id = ${newContextPreconcept.id}
+            and initvStgId = ${initvStgId}`,
+            newContextPreconcept
+  
+      );
+
+
+      const contextSaved = await contextRepo.save(contextMerge);
+
+
+      return contextSaved;
+
+
+      
+    } catch (error) {
+
+      console.log(error);
+      throw new BaseError(
+        'Upsert Context: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+      
+    }
+
   }
 }

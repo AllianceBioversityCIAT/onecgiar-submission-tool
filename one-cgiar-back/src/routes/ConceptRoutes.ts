@@ -53,6 +53,13 @@ router.get(
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stageconcept.upsertIntialToc
 );
+
+/**PATCH INITIATIVE STATEMENTS */
+router.patch(
+  '/initiative-statements/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.patchInitiativeStatement
+);
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 

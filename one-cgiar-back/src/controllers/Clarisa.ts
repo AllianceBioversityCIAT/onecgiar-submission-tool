@@ -181,6 +181,7 @@ export const getClaCRPs = async () => {
 };
 
 /**
+ * REQUEST CLARISA INSTITUTIONS
  * @returns institution requested to clarisa
  * @param {name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments}
  */

@@ -354,6 +354,56 @@ export async function upsertIntialToc(req: Request, res: Response) {
   }
 }
 
+
+/**
+ * UPSERT INITIAL TOC
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function patchInitiativeStatement(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+
+  const {highlights,context} =  req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    const upsertHighlights = await concept.upsertHighlights(
+      highlights
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: Initiative Statement.', {
+        upsertHighlights
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 
 // /**
