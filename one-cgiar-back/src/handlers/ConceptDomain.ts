@@ -524,6 +524,11 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
+  /**
+   * UPSERT HIGHLIGHTS INITIATIVE STATEMENT
+   * @param highlights
+   * @returns
+   */
   async upsertHighlights(highlights?: any) {
     const initvStgId = this.initvStgId_;
 
@@ -569,14 +574,18 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  async upsertContext(context?:any) {
+  /**
+   * UPSERT CONTEXT INITIATIVE STATEMENT
+   * @param context
+   * @returns
+   */
+  async upsertContext(context?: any) {
     const initvStgId = this.initvStgId_;
     const contextRepo = getRepository(Context);
     const newContextPreconcept = new Context();
     const toolsSbt = new ToolsSbt();
 
     try {
-
       newContextPreconcept.id = context.id;
       newContextPreconcept.initvStg = initvStgId;
       newContextPreconcept.challenge_statement = context.challengeStatement;
@@ -584,25 +593,18 @@ export class ConceptHandler extends ConceptValidation {
       newContextPreconcept.active = context.active;
 
       const contextMerge = await toolsSbt.mergeData(
-          contextRepo,
-          `SELECT * 
+        contextRepo,
+        `SELECT * 
            FROM context
           WHERE id = ${newContextPreconcept.id}
             and initvStgId = ${initvStgId}`,
-            newContextPreconcept
-  
+        newContextPreconcept
       );
-
 
       const contextSaved = await contextRepo.save(contextMerge);
 
-
       return contextSaved;
-
-
-      
     } catch (error) {
-
       console.log(error);
       throw new BaseError(
         'Upsert Context: Pre Concept',
@@ -610,8 +612,42 @@ export class ConceptHandler extends ConceptValidation {
         error.message,
         false
       );
-      
     }
+  }
 
+  /**
+   * REQUEST INITIATIVE STATEMENT
+   * (HIGHLIGHTS AND CONTEXT)
+   */
+
+  async requestInitiativeStatement() {
+    const initvStgId = this.initvStgId_;
+
+    try {
+      // retrieve general information
+      const highlightsQuery = `
+      SELECT * 
+      FROM highlights
+     WHERE initvStgId = ${initvStgId}
+                `,
+        contextQuery = `
+        SELECT * 
+        FROM context 
+       WHERE initvStgId = ${initvStgId};
+                     )
+                    `;
+      const highlights = await this.queryRunner.query(highlightsQuery);
+      const context = await this.queryRunner.query(contextQuery);
+
+      return {highlights, context};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Initiative Statement: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
   }
 }
