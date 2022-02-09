@@ -392,9 +392,11 @@ export async function upsertIntialToc(req: Request, res: Response) {
       highlights
     );
 
+    const upsertContext = await concept.upsertContext(context);
+
     res.json(
       new ResponseHandler('Pre Concept: Initiative Statement.', {
-        upsertHighlights
+        upsertHighlights,upsertContext
       })
     );
   } catch (error) {
