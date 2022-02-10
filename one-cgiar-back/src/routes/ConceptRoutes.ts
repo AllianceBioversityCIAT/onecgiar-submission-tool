@@ -51,7 +51,7 @@ router.patch(
 router.get(
   '/initial-toc/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
-  stageconcept.upsertIntialToc
+  stageconcept.getInitialToc
 );
 
 /**PATCH INITIATIVE STATEMENTS */
@@ -66,6 +66,13 @@ router.get(
   '/initiative-statements/:initiativeId([0-9]+)/',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stageconcept.getInitiativeStatement
+);
+
+/**PATCH WORK PACKAGES */
+router.patch(
+  '/packages/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.patchWorkPackage
 );
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
