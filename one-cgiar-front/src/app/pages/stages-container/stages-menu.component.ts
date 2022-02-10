@@ -91,13 +91,19 @@ export class StagesMenuComponent implements OnInit {
       });
 
     });
+    
+    // TODO stageId 3 condition
+    if (this.initiativesSvc.initiative.stageId === 3) {
+      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
+        this.initiativesSvc.initvStgId = resp.response;
+      })
+    }
 
-    this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-      this.initiativesSvc.initvStgId = resp.response;
-    })
-
+    // TODO stageId 3 condition
     this._dataControlService.validateMenu$.subscribe(resp => {
-      this.validateAllSections();
+      if (this.initiativesSvc.initiative.stageId === 3) {
+        this.validateAllSections();
+      }
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 

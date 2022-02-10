@@ -1,8 +1,9 @@
 export interface PcInitialTheoryOfChangeBody{
-    id: number, 
-    narrative: string, 
-    active: boolean, 
-    section: string, 
-    updateFiles: [],
-    filesSavedListAux:[]
+    id:number,
+    initvStgId?:number,
+    narrative:string,
+    section:string,
+    type?:string,
+    active:boolean,
+    files?:[]
 }
