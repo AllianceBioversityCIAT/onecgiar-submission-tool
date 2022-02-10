@@ -5,7 +5,8 @@ import {
   TOCs,
   GeneralInformation,
   Highlights,
-  Narratives
+  Narratives,
+  WorkPackages
 } from '../entity';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
@@ -481,16 +482,19 @@ export class ConceptHandler extends ConceptValidation {
    * @param sectionName
    * @returns initialToc[0]
    */
-  async requestInitialToc(sectionName) {
+  async requestInitialToc(sectionName:any) {
     const initvStgId = this.initvStgId_;
+
+    console.log(sectionName);
+    
 
     try {
       // retrieve general information
       const filesQuery = `
                     SELECT * 
                     FROM files 
-                   WHERE manage_plan_risk_id in (SELECT id
-                    FROM manage_plan_risk
+                   WHERE tocsId in (SELECT id
+                    FROM tocs
                    WHERE initvStgId = ${initvStgId}
                      AND active = 1)
                      AND section = "${sectionName}"
@@ -501,7 +505,6 @@ export class ConceptHandler extends ConceptValidation {
          FROM tocs
         WHERE initvStgId = ${initvStgId}
           AND active = 1
-                     )
                     `;
       const files = await this.queryRunner.query(filesQuery);
       const initialToc = await this.queryRunner.query(intialTocQuery);
@@ -575,7 +578,7 @@ export class ConceptHandler extends ConceptValidation {
   }
 
   /**
-   * UPSERT CONTEXT INITIATIVE STATEMENT
+   * UPSERT INITIATIVE STATEMENT
    * @param context
    * @returns
    */
@@ -650,4 +653,94 @@ export class ConceptHandler extends ConceptValidation {
       );
     }
   }
+
+  /**
+   ** UPSERT WORK PACKAGES
+   * @param newWP
+   * @returns upsertedInfo
+   */
+   async upsertWorkPackages(newWP?:any) {
+    const wpRepo = getRepository(WorkPackages);
+    // get current intiative by stage
+    const initvStgId = this.initvStgId_;
+
+    var upsertedInfo:any;
+
+    try {
+      if (newWP.id !== null) {
+        var savedWP = await this.queryRunner.query(` SELECT *
+                FROM work_packages 
+               WHERE id = ${newWP.id}`);
+
+        wpRepo.merge(savedWP[0], newWP);
+
+        upsertedInfo = await wpRepo.save(savedWP[0]);
+      } else {
+        newWP.initvStgId =initvStgId;
+
+        upsertedInfo = await wpRepo.save(newWP);
+      }
+
+      return upsertedInfo;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Work Package: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+
+ /**
+  * GET WORK PACKAGE BY ID
+  * @param id 
+  * @returns 
+  */
+    async getWorkPackageId(id) {
+    // const initvStgId: string = this.initvStgId_;
+    // const initvStg = await this.initvStage
+    const wpRepo = getRepository(WorkPackages);
+
+    try {
+      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE wrkPkgId = ${id}
+                 AND active = 1
+              GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE wrkPkgId = ${id}
+                   AND active = 1
+                GROUP BY id,region_id
+                `;
+
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((geo) => {
+          geo['regions'] = regions.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
+          });
+
+          geo['countries'] = countries.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
+          });
+        });
+      }
+
+      return workPackages[0];
+    } catch (error) {
+      throw new BaseError('Get workpackage', 400, error.message, false);
+    }
+  }
+
 }
