@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-pc-innovations',
@@ -13,16 +15,19 @@ export class PcInnovationsComponent implements OnInit {
     }
   ];
   constructor(
-    private _interactionsService:InteractionsService
+    public _initiativesService: InitiativesService,
+    public _dataControlService: DataControlService,
+    public _interactionsService:InteractionsService
   ) { }
+
+  ngOnInit(): void {
+    this.getInformation();
+  }
 
   addInnovation(){
     console.log("addInnovation")
     if (this.innovationsList.length >= 5) return;
     this.innovationsList.push({value:''})
-  }
-
-  ngOnInit(): void {
   }
 
   removeInnovation(innovation){
@@ -37,5 +42,23 @@ export class PcInnovationsComponent implements OnInit {
     });
 
   }
+
+  getInformation(){
+
+  }
+
+  updateObject(){
+
+  }
+
+  saveSection() {
+    console.log("saveSection")
+  }
+
+
+
+
+
+
 
 }
