@@ -485,9 +485,7 @@ export class ConceptHandler extends ConceptValidation {
   async requestInitialToc(sectionName:any) {
     const initvStgId = this.initvStgId_;
 
-    console.log(sectionName);
-    
-
+  
     try {
       // retrieve general information
       const filesQuery = `
