@@ -1,4 +1,5 @@
 import {Router} from 'express';
+import {uploadFile} from '../middlewares/multer';
 import * as stageconcept from '../controllers/StageConceptController';
 import {checkJwt} from '../middlewares/jwt';
 import {checkRole} from '../middlewares/role';
@@ -43,7 +44,7 @@ router.patch(
 /**PATCH INITIAL TOC */
 router.patch(
   '/initial-toc/:initiativeId([0-9]+)/:ubication/:stageId',
-  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  [checkJwt, checkRole('initiatives', 'updateOwn'), uploadFile.any()],
   stageconcept.upsertIntialToc
 );
 
