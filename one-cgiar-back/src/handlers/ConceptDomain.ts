@@ -636,7 +636,6 @@ export class ConceptHandler extends ConceptValidation {
         SELECT * 
         FROM context 
        WHERE initvStgId = ${initvStgId};
-                     )
                     `;
       const highlights = await this.queryRunner.query(highlightsQuery);
       const context = await this.queryRunner.query(contextQuery);
