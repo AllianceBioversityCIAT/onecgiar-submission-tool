@@ -23,8 +23,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
-    // console.log(request.url);
-    console.log(request);
     this.excludeLoginService(request);
     if (request.method == 'PATCH') {
       this._dataControlService.validateMenu$.emit();
@@ -41,11 +39,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   excludeLoginService(request:HttpRequest<any>){
 
     if (request.url.search('/api/auth/login') >= 1 || request.url.search('/api/meta/validations/menu/') >= 1 || request.url.search(/\/api\/meta\/menu\/\d*/gi) >= 1) return;
-    console.log(request.url);
-    console.log(request.method);
-    console.log(request.url.search('/api/auth/login') >= 1);
-    console.log(request.url.search('/api/meta/validations/menu/') >= 1);
-    console.log(request.url.search(/\/api\/meta\/menu\/\d*/gi) >= 1);
     this._dataControlService.currentRequestMethod = request.method === 'POST' || request.method === 'PATCH' ? request.method : null;
   }
 

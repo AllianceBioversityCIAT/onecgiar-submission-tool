@@ -565,6 +565,14 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
   }
 
+  patchPcInitialToc(initiativeId, ubication, stageId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${ubication}/${stageId}`, body);
+  }
+
+  getPcInitialToc(initiativeId, sectionName){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${sectionName}`);
+  }
+
   getSubmission(initiativeId, stageId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/submission/${initiativeId}/${stageId}`, {});
   }
