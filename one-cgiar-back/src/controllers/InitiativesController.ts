@@ -1223,7 +1223,7 @@ export const updateSubmissionStatusByInitiative = async (
     subStatus.first_name = assessmentValidation.user.first_name;
     subStatus.last_name = assessmentValidation.user.last_name;
 
-    // const updatedStatus = await submissionStatusRepo.save(subStatus);
+    const updatedStatus = await submissionStatusRepo.save(subStatus);
     await submissionStatusRepo.save(subStatus);
     submission.complete = isComplete;
 

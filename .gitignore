@@ -13,3 +13,5 @@
 /one-cgiar-back/docs/DB
 /package-lock.json
 docs
+/one-cgiar-back/src/migration/1644010969904-LoadPartnersExcelData.ts
+/one-cgiar-back/src/migration/1644416139553-CreateImpactStrategiesMissing.ts
