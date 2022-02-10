@@ -5,9 +5,7 @@ import {BaseError} from './BaseError';
 export class InitiativeHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
 
-  async createInitiativesByStage(initiativeId?, name?, acronym?, stage?) {
-    const official_code = 'INIT-' + initiativeId;
-
+  async createInitiativesByStage(name?, acronym?, stage?) {
     const initiativeRepo = getRepository(Initiatives);
     const initvStgRepo = getRepository(InitiativesByStages);
 
@@ -15,23 +13,33 @@ export class InitiativeHandler {
     const newInitvStg = new InitiativesByStages();
 
     try {
-      newInitiative.id = initiativeId;
+   
+      const lastId = await this.queryRunner.query("SELECT MAX(ID) as lastId FROM INITIATIVES");
+
+      const nextId = parseInt(lastId[0].lastId) + 1;
+      const official_code = 'INIT-' + nextId;
+
+      newInitiative.id = nextId;
       newInitiative.name = name;
       newInitiative.acronym = acronym;
       newInitiative.official_code = official_code;
 
-      const savedInitiative:any = await initiativeRepo.save(newInitiative);
+      const savedInitiative: any = await initiativeRepo.save(newInitiative);
 
       newInitvStg.initiative = savedInitiative.id;
       newInitvStg.stage = stage.id;
       newInitvStg.active = true;
 
-      const savedItvStg = await initvStgRepo.save(newInitvStg);
+      const savedInitvStg = await initvStgRepo.save(newInitvStg);
 
-      return {savedInitiative,savedItvStg}
-
+      return {savedInitiative, savedInitvStg};
     } catch (error) {
-      throw new BaseError('createInitiativesByStage', 400, error.message, false);
+      throw new BaseError(
+        'createInitiativesByStage',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
