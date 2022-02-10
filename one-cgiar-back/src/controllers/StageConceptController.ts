@@ -567,6 +567,47 @@ export async function getInitiativeStatement(req: Request, res: Response) {
   }
 }
 
+
+/**
+ * GET ALL WORK PACKAGES BY INITIATIVE
+ * @param req
+ * @param res { workpackage }
+ * @returns
+ */
+ export async function getWorkPackagesByInitiative(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    // get workpackage from porposal object
+    const workpackage = await concept.getWorkPackage();
+
+    res.json(new ResponseHandler('Full Proposal: Workpackage.', {workpackage}));
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 /**
  * GET WORK PACKAGE BY ID
  * @param req
