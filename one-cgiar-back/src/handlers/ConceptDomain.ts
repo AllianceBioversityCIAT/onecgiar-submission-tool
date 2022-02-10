@@ -409,6 +409,7 @@ export class ConceptHandler extends ConceptValidation {
         newInitialTocs.initvStgId = initvStgId;
 
         upsertedInitialTocs = await initialTocsRepo.save(newInitialTocs);
+        
       }
 
       if (host == 'http://localhost') {
@@ -424,7 +425,7 @@ export class ConceptHandler extends ConceptValidation {
 
           const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
           newFiles.id = null;
-          newFiles.active = file.active ? file.active : true;
+          newFiles.active = file.active;
           newFiles.tocsId = upsertedInitialTocs.id;
           newFiles.section = section;
           newFiles.url = urlDB;
@@ -447,8 +448,8 @@ export class ConceptHandler extends ConceptValidation {
           const updateFile = updateFiles[index];
 
           newFiles.id = updateFile.id;
-          newFiles.active = updateFile.active ? updateFile.active : true;
-          newFiles.manage_plan_risk_id = updateFile.managePlanId;
+          newFiles.active = updateFile.active;
+          newFiles.tocsId = updateFile.tocsId;
           newFiles.section = updateFile.section;
           newFiles.url = updateFile.urlDB;
           newFiles.name = updateFile.originalname;
@@ -688,6 +689,89 @@ export class ConceptHandler extends ConceptValidation {
         error.message,
         false
       );
+    }
+  }
+
+/**
+ * GET WORK PACKAGES BY INITIATIVE
+ * @returns 
+ */
+  async getWorkPackage() {
+    // const initvStgId: string = this.initvStgId_;
+    const initvStgId: string = this.initvStgId_;
+
+    try {
+      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE initvStgId = ${initvStgId}
+                 AND active = 1
+              GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE initvStgId = ${
+                  initvStgId
+                 }
+                   AND active = 1
+                GROUP BY id,region_id
+                `,
+        /*eslint-disable*/
+        WPquery = `
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    IF (
+                        name IS NULL
+                        OR name = ''
+                        OR pathway_content IS NULL
+                        OR pathway_content = ''
+                        OR acronym IS NULL
+                        OR acronym = ''
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3 
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 30
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        false,
+                        true
+                    ) AS validateWP
+                   FROM work_packages wp 
+                  WHERE wp.initvStgId =  ${
+                    initvStgId
+                  }
+                    AND wp.active = 1                    
+                    `;
+      /*eslint-enable*/
+
+      // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
+      var workPackages = await this.queryRunner.query(WPquery);
+
+      workPackages.map((wp) => {
+        wp.validateWP = parseInt(wp.validateWP);
+      });
+
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((wp) => {
+          wp['regions'] = regions.filter((reg) => {
+            return reg.wrkPkgId === wp.id;
+          });
+
+          wp['countries'] = countries.filter((cou) => {
+            return cou.wrkPkgId === wp.id;
+          });
+        });
+      }
+
+      return workPackages;
+    } catch (error) {
+      throw new BaseError('Get workpackage', 400, error.message, false);
     }
   }
 
