@@ -63,13 +63,13 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
       // console.log("menuChange$");
       this.currentUser = this.auth.userValue;
-      this.getMenu();
 
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
     this._dataControlService.menuChange$.emit();
+    this.getMenu();
 
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
@@ -208,6 +208,7 @@ export class MenuComponent implements OnInit {
 
   getMenu() {
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
+      this.getAssessmentStatuses();
       // console.log("getMenu")
       this._dataControlService.userMenu = userMenuResp.response.stages;
       // console.log(this._dataControlService.userMenu)
@@ -284,7 +285,7 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-        this.getAssessmentStatuses();
+        
         this._dataControlService.validateMenu$.emit();
       }
       console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
