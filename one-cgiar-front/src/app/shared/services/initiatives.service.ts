@@ -569,6 +569,14 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${ubication}/${stageId}`, body);
   }
 
+  patchInitiativeStatements(initiativeId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`, body);
+  }
+
+  getInitiativeStatements(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`);
+  }
+
   getPcInitialToc(initiativeId, sectionName){
     return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${sectionName}`);
   }
