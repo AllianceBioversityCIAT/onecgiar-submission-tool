@@ -590,8 +590,8 @@ export class ConceptHandler extends ConceptValidation {
     try {
       newContextPreconcept.id = context.id;
       newContextPreconcept.initvStg = initvStgId;
-      newContextPreconcept.challenge_statement = context.challengeStatement;
-      newContextPreconcept.smart_objectives = context.objectiveStament;
+      newContextPreconcept.challenge_statement = context.challenge_statement;
+      newContextPreconcept.smart_objectives = context.smart_objectives;
       newContextPreconcept.active = context.active;
 
       const contextMerge = await toolsSbt.mergeData(
