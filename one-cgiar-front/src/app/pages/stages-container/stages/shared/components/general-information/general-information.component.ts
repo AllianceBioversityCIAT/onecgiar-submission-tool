@@ -121,19 +121,19 @@ export class GeneralInformationComponent implements OnInit {
 
 
   getGeneralInformation(){
-    console.log("getGeneralInformation");
+    // console.log("getGeneralInformation");
     this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
       this.body.generalInformation = resp.response.generalInformation;
     })
   }
 
   getSummary() {
-    console.log("getSummary");
+    // console.log("getSummary");
     this.spinnerService.show('general-information');
 
     this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageId).subscribe((resp:RootObject) => {
       this.body = resp.response;
-      console.log(this.body);
+      // console.log(this.body);
     },
       err => {
         console.log(err);
