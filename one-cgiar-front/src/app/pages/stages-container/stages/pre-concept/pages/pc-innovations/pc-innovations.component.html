@@ -23,3 +23,9 @@
     </div>
 
 </div>
+
+<div (click)="saveSection()">
+    <ibdc-save-button
+        [options]="{readOnlyVariable: this._initiativesService.initiative.readonly, remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+    </ibdc-save-button>
+</div>

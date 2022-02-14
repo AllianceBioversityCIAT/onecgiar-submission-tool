@@ -85,11 +85,11 @@
                 [readOnlyVariable]="this._initiativesService.initiative.readonly"
               ></ibdc-select-field>
             </div>
-            <div class="col-sm-6" *ngIf="this.stageId != 1">
+            <div class="col-sm-6" *ngIf="this.stageId != 2">
                 <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body?.budget" [readOnlyVariable]="this._initiativesService.initiative.readonly"  objectAtributteName="value"></ibdc-input-field>
             </div>
 
-            <div class="col-12" *ngIf="this.stageId != 1">
+            <div class="col-12" *ngIf="this.stageId != 2">
                 <div class="blue_border">
                     <section-sub-title name="Geographic scope summary"></section-sub-title>
                     <div class="local_container">
