@@ -11,8 +11,7 @@ import { PcWorkPackageRoutingModule } from '../../../../pages/stages-container/s
   exports:[SectionBreadcrumbComponent],
   imports: [
     CommonModule,
-    RouterModule,
-    PcWorkPackageRoutingModule
+    RouterModule
   ]
 })
 export class SectionBreadcrumbModule { }
