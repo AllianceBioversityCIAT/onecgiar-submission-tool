@@ -218,20 +218,29 @@ export class MenuComponent implements OnInit {
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3)?.sections?.find(section => section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3).sections.find(section => section.sectionId == 8).subsections.findIndex(subSection => subSection.subSectionId == 17), 1)
       //!
-      if (userMenuResp.response.stages.length > 1) {
+      if (userMenuResp.response.stages.length > 0) {
 
-        this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-          let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-          this.mapDataInMenu(3, 5, 12, wpss);
-          //! Pre concept simulation
-          let wpssPc = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
-          this.mapDataInMenu(1, 13, 28, wpssPc);
-          // //! 
-          this._dataControlService.wpMaped = true;
-        }, (err) => {
-          console.log(err);
-          this._dataControlService.wpMaped = true;
-        });
+
+        // console.log(this.initiativesSvc.initiative.stageId)
+
+        if (this.initiativesSvc.initiative.stageId === 3) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+            let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(3, 5, 12, wpss);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+
+
+
+
+        // //! Pre concept simulation
+        // let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+        // this.mapDataInMenu(2, 13, 28, wpssPc);
+        // // //!
 
         let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
@@ -241,7 +250,7 @@ export class MenuComponent implements OnInit {
 
         // //! Pre concept simulation
         let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
-        this.mapDataInMenu(1, 16, 29, resultsList);
+        this.mapDataInMenu(2, 16, 29, resultsList);
         // //! 
 
         this.mapReportInSubSectionMenu(3, 9, {
@@ -285,10 +294,12 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-        
+        if (this.initiativesSvc.initiative.stageId === 3) {
+          this.getAssessmentStatuses();
+        }
         this._dataControlService.validateMenu$.emit();
       }
-      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

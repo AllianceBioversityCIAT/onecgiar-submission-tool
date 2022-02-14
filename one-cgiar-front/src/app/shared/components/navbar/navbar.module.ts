@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 const angularMaterialModules = [
   MatButtonModule,
@@ -14,6 +15,7 @@ const angularMaterialModules = [
   exports: [NavbarComponent],
   imports: [
     CommonModule,
+    RouterModule,
     ...angularMaterialModules
   ]
 })

@@ -5,7 +5,8 @@ import {
   TOCs,
   GeneralInformation,
   Highlights,
-  Narratives
+  Narratives,
+  WorkPackages
 } from '../entity';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
@@ -408,6 +409,7 @@ export class ConceptHandler extends ConceptValidation {
         newInitialTocs.initvStgId = initvStgId;
 
         upsertedInitialTocs = await initialTocsRepo.save(newInitialTocs);
+        
       }
 
       if (host == 'http://localhost') {
@@ -423,7 +425,7 @@ export class ConceptHandler extends ConceptValidation {
 
           const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
           newFiles.id = null;
-          newFiles.active = file.active ? file.active : true;
+          newFiles.active = file.active;
           newFiles.tocsId = upsertedInitialTocs.id;
           newFiles.section = section;
           newFiles.url = urlDB;
@@ -446,8 +448,8 @@ export class ConceptHandler extends ConceptValidation {
           const updateFile = updateFiles[index];
 
           newFiles.id = updateFile.id;
-          newFiles.active = updateFile.active ? updateFile.active : true;
-          newFiles.manage_plan_risk_id = updateFile.managePlanId;
+          newFiles.active = updateFile.active;
+          newFiles.tocsId = updateFile.tocsId;
           newFiles.section = updateFile.section;
           newFiles.url = updateFile.urlDB;
           newFiles.name = updateFile.originalname;
@@ -481,16 +483,17 @@ export class ConceptHandler extends ConceptValidation {
    * @param sectionName
    * @returns initialToc[0]
    */
-  async requestInitialToc(sectionName) {
+  async requestInitialToc(sectionName:any) {
     const initvStgId = this.initvStgId_;
 
+  
     try {
       // retrieve general information
       const filesQuery = `
                     SELECT * 
                     FROM files 
-                   WHERE manage_plan_risk_id in (SELECT id
-                    FROM manage_plan_risk
+                   WHERE tocsId in (SELECT id
+                    FROM tocs
                    WHERE initvStgId = ${initvStgId}
                      AND active = 1)
                      AND section = "${sectionName}"
@@ -501,7 +504,6 @@ export class ConceptHandler extends ConceptValidation {
          FROM tocs
         WHERE initvStgId = ${initvStgId}
           AND active = 1
-                     )
                     `;
       const files = await this.queryRunner.query(filesQuery);
       const initialToc = await this.queryRunner.query(intialTocQuery);
@@ -575,7 +577,7 @@ export class ConceptHandler extends ConceptValidation {
   }
 
   /**
-   * UPSERT CONTEXT INITIATIVE STATEMENT
+   * UPSERT INITIATIVE STATEMENT
    * @param context
    * @returns
    */
@@ -588,8 +590,8 @@ export class ConceptHandler extends ConceptValidation {
     try {
       newContextPreconcept.id = context.id;
       newContextPreconcept.initvStg = initvStgId;
-      newContextPreconcept.challenge_statement = context.challengeStatement;
-      newContextPreconcept.smart_objectives = context.objectiveStament;
+      newContextPreconcept.challenge_statement = context.challenge_statement;
+      newContextPreconcept.smart_objectives = context.smart_objectives;
       newContextPreconcept.active = context.active;
 
       const contextMerge = await toolsSbt.mergeData(
@@ -634,10 +636,11 @@ export class ConceptHandler extends ConceptValidation {
         SELECT * 
         FROM context 
        WHERE initvStgId = ${initvStgId};
-                     )
                     `;
       const highlights = await this.queryRunner.query(highlightsQuery);
-      const context = await this.queryRunner.query(contextQuery);
+      let context = await this.queryRunner.query(contextQuery);
+
+      context = context[0];
 
       return {highlights, context};
     } catch (error) {
@@ -650,4 +653,177 @@ export class ConceptHandler extends ConceptValidation {
       );
     }
   }
+
+  /**
+   ** UPSERT WORK PACKAGES
+   * @param newWP
+   * @returns upsertedInfo
+   */
+   async upsertWorkPackages(newWP?:any) {
+    const wpRepo = getRepository(WorkPackages);
+    // get current intiative by stage
+    const initvStgId = this.initvStgId_;
+
+    var upsertedInfo:any;
+
+    try {
+      if (newWP.id !== null) {
+        var savedWP = await this.queryRunner.query(` SELECT *
+                FROM work_packages 
+               WHERE id = ${newWP.id}`);
+
+        wpRepo.merge(savedWP[0], newWP);
+
+        upsertedInfo = await wpRepo.save(savedWP[0]);
+      } else {
+        newWP.initvStgId =initvStgId;
+
+        upsertedInfo = await wpRepo.save(newWP);
+      }
+
+      return upsertedInfo;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Work Package: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+/**
+ * GET WORK PACKAGES BY INITIATIVE
+ * @returns 
+ */
+  async getWorkPackage() {
+    // const initvStgId: string = this.initvStgId_;
+    const initvStgId: string = this.initvStgId_;
+
+    try {
+      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE initvStgId = ${initvStgId}
+                 AND active = 1
+              GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE initvStgId = ${
+                  initvStgId
+                 }
+                   AND active = 1
+                GROUP BY id,region_id
+                `,
+        /*eslint-disable*/
+        WPquery = `
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    IF (
+                        name IS NULL
+                        OR name = ''
+                        OR pathway_content IS NULL
+                        OR pathway_content = ''
+                        OR acronym IS NULL
+                        OR acronym = ''
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3 
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 30
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        false,
+                        true
+                    ) AS validateWP
+                   FROM work_packages wp 
+                  WHERE wp.initvStgId =  ${
+                    initvStgId
+                  }
+                    AND wp.active = 1                    
+                    `;
+      /*eslint-enable*/
+
+      // var workPackages = await wpRepo.find({ where: { initvStg: initvStg.id ? initvStg.id : initvStg[0].id, active: 1 } });
+      var workPackages = await this.queryRunner.query(WPquery);
+
+      workPackages.map((wp) => {
+        wp.validateWP = parseInt(wp.validateWP);
+      });
+
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((wp) => {
+          wp['regions'] = regions.filter((reg) => {
+            return reg.wrkPkgId === wp.id;
+          });
+
+          wp['countries'] = countries.filter((cou) => {
+            return cou.wrkPkgId === wp.id;
+          });
+        });
+      }
+
+      return workPackages;
+    } catch (error) {
+      throw new BaseError('Get workpackage', 400, error.message, false);
+    }
+  }
+
+
+ /**
+  * GET WORK PACKAGE BY ID
+  * @param id 
+  * @returns 
+  */
+    async getWorkPackageId(id) {
+    // const initvStgId: string = this.initvStgId_;
+    // const initvStg = await this.initvStage
+    const wpRepo = getRepository(WorkPackages);
+
+    try {
+      let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE wrkPkgId = ${id}
+                 AND active = 1
+              GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE wrkPkgId = ${id}
+                   AND active = 1
+                GROUP BY id,region_id
+                `;
+
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((geo) => {
+          geo['regions'] = regions.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
+          });
+
+          geo['countries'] = countries.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
+          });
+        });
+      }
+
+      return workPackages[0];
+    } catch (error) {
+      throw new BaseError('Get workpackage', 400, error.message, false);
+    }
+  }
+
 }

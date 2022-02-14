@@ -41,7 +41,7 @@ export class MenuStageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.userMenu)
+    // console.log(this.userMenu)
     this.initiativeService.getUsersByInitiative(this.initiativeService.initiative.id).subscribe(
       resp => {
         const userByInitiative = resp.response.users;
