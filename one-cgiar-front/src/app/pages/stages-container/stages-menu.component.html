@@ -20,19 +20,34 @@
                         <span class="initiative-id">{{this.initiativesSvc.initiative.official_code}}</span>
                         <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
                     </div>
-                    <div class="initIdContainer" *ngIf="this.initiativesSvc.initiative.status != null">
-                        <span class="text-description">
-                            Status: 
-                        </span>
-                        <span class="initiative-id"  pTooltip="{{toolTipText}}"  tooltipPosition="top" placeholder="Top">{{this.initiativesSvc.initiative.status}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-                    
+                                      
                 </div>
                     <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="managerAccesible()">
                         Manage access
                         <mat-icon>settings</mat-icon>
                     </button>
+            </div>
+<!--  -->
+
+            <div class="capsule-header submission-container" *ngIf="this.initiativesSvc.initiative.status != null">
+                <div class="inner-capsule ibdc_bg_secondary_color">
+                    <div class="initIdContainer">
+                        <span class="text-description">
+                            Submitted by: 
+                        </span>
+                        <span class="initiative-id">{{this.initiativesSvc.initiative.submission.first_name}} {{this.initiativesSvc.initiative.submission.last_name}}</span>
+                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
+                        <p class="initiative-id">{{this.initiativesSvc.initiative.submission.updated_at | date:'yyyy-MM-dd HH:mm zz'}}</p>
+                    </div>
+                    <div class="initIdContainer">
+                        <span class="text-description">
+                            Status: 
+                        </span>
+                        <span class="initiative-id">{{this.initiativesSvc.initiative.status}}</span>
+                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
+                    </div>
+                    
+                </div>
             </div>
             <div class="card-container" style="position: relative;">
                 <div class="initiative-identification ibdc_bg_secondary_color" style="position: relative; z-index: 10;">

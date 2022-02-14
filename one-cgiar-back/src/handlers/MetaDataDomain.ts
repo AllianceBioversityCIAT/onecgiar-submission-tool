@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import { getConnection, getRepository } from 'typeorm';
 import { Statuses } from '../entity/Statuses';
 import { Submissions } from '../entity/Submissions';
@@ -1655,7 +1656,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
     try {
-      const submission = await submissionRepo.findOne({ where: { initvStg, active: 1 } });
+      let submission = await submissionRepo.findOne({ where: { initvStg, active: 1 } });
 
       return {
         isComplete: function () {
@@ -1666,8 +1667,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
               true,
               'Initiative not submitted yet.'
             );
-          } 
-          else if(submission.complete) {
+          }
+          else if (submission.complete) {
             throw new APIError(
               'Unauthorized',
               HttpStatusCode.UNAUTHORIZED,
@@ -1687,7 +1688,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
-          const foundSubStatus = currentInitvSubStatuses.find( stses => stses.statusId == newStatusxInitv.id)
+          const foundSubStatus = currentInitvSubStatuses.find(stses => stses.statusId == newStatusxInitv.id)
           if (foundSubStatus) {
             return {
               submission,
@@ -1698,6 +1699,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
             const subStatus = new SubmissionsStatus();
             subStatus.statusId = newStatusxInitv.id;
             subStatus.submission = submission;
+            if(newStatusxInitv.status == 'Approved'){
+              submission.complete = true;
+              submission = await submissionRepo.save(submission)
+            }
 
             return {
               submission,
@@ -1707,7 +1712,13 @@ export class MetaDataHandler extends InitiativeStageHandler {
           }
         },
         isAssessor: async function (userId) {
-          const user = await usersRepo.findOne(userId);
+          const user = await usersRepo.findOne(userId, { relations: ['roles'] });
+          if (user.roles.find(r => r.acronym == 'ADM')) {
+            return {
+              available: true,
+              user
+            };
+          }
           if (!user) {
             throw new APIError(
               'User bot found',

@@ -1026,11 +1026,13 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     const metaData = new MetaDataHandler(initvStg.id.toString());
     const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
 
-    const assessmentValidation = await validateSbSts.isAssessor(userId);
-    
+    await validateSbSts.isAssessor(userId);
+
     const statusesAvailable = statuses.filter(status => {
-      const stsArray = Object.values(status.stagesAvailables);
-      return stsArray.find(sts => sts == stageId);
+      if (status.stagesAvailables != null) {
+        const stsArray = Object.values(status.stagesAvailables);
+        return stsArray.find(sts => sts == stageId);
+      }
     });
 
     return res.json(new ResponseHandler('Initiative submission statuses', { statuses: statusesAvailable }));
@@ -1105,7 +1107,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
   try {
     const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage: stageId } });
     // get pending status
-    const pendingStatus = await statusesRepo.findOne({ where: { status: 'Pending', active: 1 } });
+    const submittedStatus = await statusesRepo.findOne({ where: { status: 'Submitted', active: 1 } });
     // create new Meta Data object
     const metaData = new MetaDataHandler(initvStg.id.toString());
 
@@ -1177,7 +1179,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
 
     // save submission
     const submitted = await submissionRepo.save(submission);
-    initvStg.status = pendingStatus;
+    initvStg.status = submittedStatus;
     const initvStgUpd = await initvStgRepo.save(initvStg);
 
 
@@ -1186,12 +1188,12 @@ export const submitInitiative = async (req: Request, res: Response) => {
     const submissionStatus = new SubmissionsStatus();
     submissionStatus.active = true;
     submissionStatus.submission = submitted;
-    submissionStatus.statusId = pendingStatus.id;
+    submissionStatus.statusId = submittedStatus.id;
 
-    const submittedStatus = await submissionStatusRepo.save(submissionStatus);
+    const evaluatedSubmission = await submissionStatusRepo.save(submissionStatus);
 
     return res.json(
-      new ResponseHandler('Initiative submitted', { submittedStatus })
+      new ResponseHandler('Initiative submitted', { evaluatedSubmission })
     );
   } catch (error) {
     console.log(error);
@@ -1199,7 +1201,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-       new APIError(
+      new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1241,10 +1243,10 @@ export const updateSubmissionStatusByInitiative = async (
 
     const { submission, newSubStatus, newStatusxInitv } = await validateSbSts.validateStatus(statusId);
 
-   
+
 
     validateSbSts.isComplete();
-    console.log(newSubStatus)
+    // console.log(newSubStatus)
 
     newSubStatus.submission = submission;
     newSubStatus.description = description;

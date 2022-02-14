@@ -63,6 +63,7 @@ export class StagesMenuComponent implements OnInit {
       const promise2 = this.initiativesSvc.getUsersByInitiative(resp['id']);
 
       forkJoin([promise1, promise2]).subscribe(val => {
+        console.log(val)
         const sucP1 = val[0];
         const sucP2 = val[1].response.users;
         this.initiativesSvc.initiative.name = sucP1.name;

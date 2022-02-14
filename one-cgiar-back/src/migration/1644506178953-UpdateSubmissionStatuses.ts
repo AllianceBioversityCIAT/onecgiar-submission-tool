@@ -12,10 +12,17 @@ export class UpdateSubmissionStatuses1644506178953 implements MigrationInterface
             switch (status.status) {
                 case 'Pending':
                     status.status = 'Editing';
-                    status.icon = 'edit'
+                    status.icon = 'edit';
+                    status.description = 'Initiative in edit mode';
                     break;
-                case 'Steped up':
-                    status.status = 'Submitted';
+                    case 'Steped up':
+                        status.status = 'Submitted';
+                        status.description = 'Initiative submitted';
+                    // status.icon = 'edit'
+                    break;
+            
+                case 'On hold':
+                    status.stagesAvailables = null;
                     // status.icon = 'edit'
                     break;
             

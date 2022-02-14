@@ -51,6 +51,14 @@
 
 }
 
+.submission-container{
+    margin-top: 5px;
+    justify-content: end;
+    .inner-capsule{
+        left: 0;
+    }
+}
+
 .elements_container{
     width: 100%;
     display: flex;
