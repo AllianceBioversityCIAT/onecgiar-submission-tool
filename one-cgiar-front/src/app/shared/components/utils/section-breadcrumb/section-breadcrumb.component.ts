@@ -20,7 +20,7 @@ export class SectionBreadcrumbComponent implements OnInit {
   currentStage='';
   sectionsArray: any;
   sectionsList: SectionList[];
-  routerEvents: Subscription = new Subscription();
+  routerEvents: Subscription;
   constructor(
     private router: Router,
     private _dataControlService:DataControlService
@@ -28,38 +28,8 @@ export class SectionBreadcrumbComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("bras crumb")
-    this.initBredCrumb();
-
-
-    this.getRouteDataSubscription();
-
-
-    // this.sectionsArray = this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
-    // console.log(this.sectionsArray)
-    // this.mapList();
-    // this.routerEvents = this.router.events.subscribe((event: NavigationEvent) => {
-    //   console.log(event)
-    //   if (event instanceof NavigationStart && event.url !== '/home') {
-    //     this.sectionsArray = event.url.substring(event.url.indexOf('stages/')).split('/');
-    //     this.mapList();
-    //   }
-    // })
-
-
-  }
-
-  initBredCrumb(){
-
-    
-
- 
-   
     this.mapToSectionData( this.router.routerState.snapshot.url);
-    console.log(this._dataControlService.userMenu)
-    console.log(this.sectionsData)
-
-
+    this.getRouteDataSubscription();
   }
 
   mapToSectionData(url:string){
@@ -81,7 +51,7 @@ export class SectionBreadcrumbComponent implements OnInit {
   }
 
   getRouteDataSubscription(){
-    this.router.events.pipe(
+    this.routerEvents = this.router.events.pipe(
       filter<any>(event => event instanceof ActivationEnd),
       filter((event:ActivationEnd)=> event.snapshot.firstChild === null),
       map((event:ActivationEnd)=>event.snapshot['_routerState']['url'])
@@ -93,14 +63,14 @@ export class SectionBreadcrumbComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // this.routerEvents.unsubscribe();
+    this.routerEvents.unsubscribe();
   }
 
-  navigate(path:string){
-    // console.log(path)
-    // if (!path)return;
-    // this.router.navigate([this.urlBase+path]);
-  }
+  // navigate(path:string){
+  //   // console.log(path)
+  //   // if (!path)return;
+  //   // this.router.navigate([this.urlBase+path]);
+  // }
 
 }
 
