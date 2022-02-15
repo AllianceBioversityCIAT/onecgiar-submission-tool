@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ServerResponse, User } from '../models/user.interface';
+import { environment } from '../../../environments/environment';
 
 const helper = new JwtHelperService();
 
