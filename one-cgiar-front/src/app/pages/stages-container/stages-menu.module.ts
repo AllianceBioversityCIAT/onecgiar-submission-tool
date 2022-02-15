@@ -13,6 +13,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { MenuModule } from '../../shared/components/menu/menu.module';
 import { TooltipModule } from 'primeng/tooltip';
+import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
 
 @NgModule({
   declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent],
@@ -27,7 +28,8 @@ import { TooltipModule } from 'primeng/tooltip';
     ReactiveFormsModule,
     IbdAngularComponentsModule,
     MenuModule,
-    TooltipModule
+    TooltipModule,
+    SectionBreadcrumbModule
   ]
 })
 export class StagesMenuModule { }

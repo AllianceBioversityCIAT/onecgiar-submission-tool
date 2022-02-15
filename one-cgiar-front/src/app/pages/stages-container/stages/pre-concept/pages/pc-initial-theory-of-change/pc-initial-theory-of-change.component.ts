@@ -34,8 +34,8 @@ export class PcInitialTheoryOfChangeComponent implements OnInit {
 
       this.updateObject(resp.response.initialToc)
 
-      console.log(resp.response.initialToc)
-      console.log(this.pcInitialTheoryOfChangeBody)
+      // console.log(resp.response.initialToc)
+      // console.log(this.pcInitialTheoryOfChangeBody)
     })
   }
 
