@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@shared/services/initiatives.service';
 import { ActivatedRoute, NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +8,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { StagesMenuService } from '../../shared/services/stages-menu.service';
 import { InteractionsService } from '../../shared/services/interactions.service';
+import { InitiativesService } from '../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-stages-menu',
