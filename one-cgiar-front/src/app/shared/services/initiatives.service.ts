@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { observable, Observable } from 'rxjs';
-import { AllInitiatives } from '../models/initiative.interface';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 const sectionPath = 'initiatives'
 
 @Injectable({
