@@ -10,10 +10,10 @@
     <div class="elements_container">
         <section-sub-title name="Highlights List"></section-sub-title>
         <div class="highlights-list">
-            <div class="highlight" *ngFor="let highligh of this.body.highlights; let i=index" >
+            <div class="highlight" *ngFor="let highlight of this.body.highlights; let i=index" >
                 <ibdc-text-area-field 
-                    inputTitle="highligh {{i+1}}"
-                    [objectItem]="highligh" 
+                    inputTitle="highlight {{i+1}}"
+                    [objectItem]="highlight" 
                     [objectAtributteName]="'description'">
                 </ibdc-text-area-field>
             </div>

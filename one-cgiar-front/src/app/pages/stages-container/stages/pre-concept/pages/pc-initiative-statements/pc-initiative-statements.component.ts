@@ -12,27 +12,27 @@ export class PcInitiativeStatementsComponent implements OnInit {
   body:IsBody = {
     highlights : [
       {
-        name:'highligh 1',
+        name:'Highlight 1',
         id:null,
         description:''
       },
       {
-        name:'highligh 2',
+        name:'Highlight 2',
         id:null,
         description:''
       },
       {
-        name:'highligh 3',
+        name:'Highlight 3',
         id:null,
         description:''
       },
       {
-        name:'highligh 4',
+        name:'Highlight 4',
         id:null,
         description:''
       },
       {
-        name:'highligh 5',
+        name:'Highlight 5',
         id:null,
         description:''
       }
