@@ -1,4 +1,4 @@
-<div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection">
+<div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection || (this.subSection.subSectionId === 12 || this.subSection.subSectionId === 28)">
     <div class="left_line"></div>
     <div *ngIf="subSection.dynamicList">
         <div class="dynamicListButton order_first"
