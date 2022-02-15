@@ -45,10 +45,12 @@ export class ErrorInterceptor implements HttpInterceptor {
         if(error?.status === 400){
           console.log(error);
           if (error?.error?.name === "JsonWebTokenError" || error?.error?.description === "invalid token" || error?.error?.description === "jwt expired" || error?.error?.description === "TokenExpiredError") {
-            this.authSrv.logout();
-            this.router.navigate(['/']);
+            console.log(error);
+            this.authSrv.logoutWithoutNavigate();
+            this._dataControlService.jwtExpirationSubscription$.emit(true)
+            // this.router.navigate(['/']);
           }
-          console.log(error?.error?.name);
+          // console.log(error?.error?.name);
         }
 
         return throwError(error);

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { NgxSpinnerService } from 'ngx-spinner';
-import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
-import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
-import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
+
+
 import { InitiativesService } from '../../services/initiatives.service';
-import { UsersService } from '../../services/users.service';
-
-
+import { UsersService } from '../../../shared/services/users.service';
 
 @Component({
   selector: 'app-create-user-modal',

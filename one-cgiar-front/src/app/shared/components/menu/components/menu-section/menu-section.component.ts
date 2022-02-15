@@ -24,7 +24,5 @@ export class MenuSectionComponent implements OnInit {
     public router: Router
   ) { }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

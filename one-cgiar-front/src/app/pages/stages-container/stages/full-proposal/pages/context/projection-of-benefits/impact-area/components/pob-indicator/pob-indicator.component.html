@@ -2,9 +2,9 @@
     <div class="top_bar">
         {{getIndicatorName(indicatorsListPOBSavediItem?.impactAreaIndicator) || ''}}
     </div>
-    <span (click)="removeindicatorBlock(index,indicatorsListPOBSavediItem,indicatorBlock)" class="icon_delete_indicator  material-icons material-icons-outlined">
-        delete
-    </span>
+    
+    <app-button-edit-or-delete [ngCustomStyle]="{'margin-top':'40px'}" type="delete" (action)="removeindicatorBlock(index,indicatorsListPOBSavediItem,indicatorBlock)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+ 
     <br>
     <div class="row">
         <div class="col-6">

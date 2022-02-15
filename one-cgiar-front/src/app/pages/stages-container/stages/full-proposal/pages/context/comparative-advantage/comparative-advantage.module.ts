@@ -10,8 +10,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CustomFormsModule } from '../../../../../../../shared/components/custom-forms/custom-forms.module';
-import { MaterialModule } from '../../../../../../../material.module';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { MaterialModule } from '../../../../../../../material.module';
 @NgModule({
   declarations: [ComparativeAdvantageComponent],
   imports: [

@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
-import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 import { ClarisaService } from '../../../../../../shared/services/clarisa.service';
 
 
@@ -19,7 +18,6 @@ export class GeographicScopeComponent implements OnInit {
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
-    private _interactionsService:InteractionsService,
     public _clarisaService:ClarisaService
   ) { 
 

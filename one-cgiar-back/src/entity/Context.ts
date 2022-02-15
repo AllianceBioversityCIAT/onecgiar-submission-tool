@@ -31,6 +31,9 @@ export class Context extends UpdatedCreatedAt {
   @Column({type: 'text'})
   participatory_design: string;
 
+  @Column({type: 'tinyint'})
+  active: boolean;
+
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;

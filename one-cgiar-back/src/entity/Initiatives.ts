@@ -9,9 +9,12 @@ export class Initiatives extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({length: '500'})
+  @Column({type: 'text'})
   @IsNotEmpty()
   name: string;
+
+  @Column({type: 'text'})
+  acronym: string;
 
   @Column()
   @IsNotEmpty()
