@@ -2,9 +2,8 @@ import { AfterViewInit, Component, Input, SimpleChanges, ViewChild } from '@angu
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { map } from 'rxjs/operators';
 import { DataControlService } from '../../services/data-control.service';
+import { InitiativesService } from '../../services/initiatives.service';
 export interface TableData {
   initvStgId: string;
   initiativeName: string;

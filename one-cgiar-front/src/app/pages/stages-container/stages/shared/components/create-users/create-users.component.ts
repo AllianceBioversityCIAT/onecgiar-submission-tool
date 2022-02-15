@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+
 
 @Component({
   selector: 'app-create-users',

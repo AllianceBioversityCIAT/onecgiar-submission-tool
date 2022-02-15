@@ -5,7 +5,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@app/material.module';
 import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
@@ -43,6 +42,7 @@ import { FooterModule } from './shared/components/footer/footer.module';
 import { HeaderModule } from './shared/components/header/header.module';
 import { NavbarModule } from './shared/components/navbar/navbar.module';
 import { DevTagModule } from './shared/components/dev-tag/dev-tag.module';
+import { MaterialModule } from './material.module';
 @NgModule({
   declarations: [
     AppComponent,

@@ -5,8 +5,8 @@ import { GeographyBreakdownRoutingModule } from './geography-breakdown-routing.m
 import { GeographyBreakdownComponent } from './geography-breakdown.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
-import { UtilsModule } from '@app/shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({

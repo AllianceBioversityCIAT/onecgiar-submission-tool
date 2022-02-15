@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { AuthService } from '@shared/services/auth.service';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-navbar',

@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StagesMenuRoutingModule } from './stages-menu-routing.module';
 import { StagesMenuComponent } from './stages-menu.component';
-import { MaterialModule } from '@app/material.module';
 import { UtilsModule } from '../../shared/components/utils/utils.module';
 import { ButtonModule } from 'primeng/button';
 import { ManageAccessComponent } from './stages/shared/components/manage-access/manage-access.component';
@@ -14,6 +13,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { MenuModule } from '../../shared/components/menu/menu.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
+import { MaterialModule } from '../../material.module';
 
 @NgModule({
   declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent],

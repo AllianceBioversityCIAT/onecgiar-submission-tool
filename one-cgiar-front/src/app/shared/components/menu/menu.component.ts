@@ -10,7 +10,7 @@ import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { map } from 'rxjs/operators';
 import { ListToMap } from './classes/listToMap';
-import { AuthService } from '@app/shared/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
