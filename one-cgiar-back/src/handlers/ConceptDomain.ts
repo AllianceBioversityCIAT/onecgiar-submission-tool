@@ -1,10 +1,10 @@
 import {getRepository} from 'typeorm';
-import {getClaActionAreas} from '../controllers/Clarisa';
 import {GeneralInformation} from '../entity/GeneralInformation';
 import {Narratives} from '../entity/Narratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {ConceptValidation} from './validation/ConceptSectionValidation';
 
 export class ConceptHandler extends ConceptValidation {
@@ -95,49 +95,6 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /***** CONCEPT SECTIONS GETTERS *******/
-  /**
-
-    /**
-     * 
-     * @returns { generalInfo }
-     */
-  async getGeneralInformation() {
-    // get initiative by stage id from intitiative
-    const initvStgId: string = this.initvStgId_;
-    try {
-      // general information sql query
-      const GIquery = ` 
-            SELECT
-                initvStgs.id AS initvStgId,
-                general.id AS generalInformationId,
-                IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
-            
-                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
-                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
-                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                        
-                general.action_area_description AS action_area_description,
-                general.action_area_id AS action_area_id
-            
-            FROM
-                initiatives_by_stages initvStgs
-            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
-            
-            WHERE initvStgs.id = ${initvStgId};
-        `;
-      const generalInfo = await this.queryRunner.query(GIquery);
-
-      return generalInfo[0];
-    } catch (error) {
-      throw new BaseError('Get general information', 400, error.message, false);
-    }
-  }
-
   /**
    *
    * @returns { narratives }
@@ -188,22 +145,20 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-  /*******  CONCEPT SECTIONS SETTERS   *********/
-
   /**
-   *
+   * UPSERT GENERAL INFORMATION
    * @param generalInformationId?
    * @param name
    * @param action_area_id
    * @param action_area_description
    * @returns generalInformation
    */
-
   async upsertGeneralInformation(
     generalInformationId?,
     name?,
     action_area_id?,
-    action_area_description?
+    action_area_description?,
+    acronym?
   ) {
     const gnralInfoRepo = getRepository(GeneralInformation);
     //  create empty object
@@ -212,7 +167,9 @@ export class ConceptHandler extends ConceptValidation {
       // get current intiative by stage
       const initvStg = await this.initvStage;
       // get clarisa action action areas
-      const actionAreas = await getClaActionAreas();
+      // create new Meta Data object
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
 
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
@@ -223,7 +180,7 @@ export class ConceptHandler extends ConceptValidation {
       if (generalInformationId == null) {
         generalInformation = new GeneralInformation();
         generalInformation.name = name;
-
+        generalInformation.acronym = acronym;
         generalInformation.action_area_description =
           action_area_description || selectedActionArea.name;
         generalInformation.action_area_id = action_area_id;
@@ -232,6 +189,9 @@ export class ConceptHandler extends ConceptValidation {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.name = acronym
+          ? acronym
+          : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -245,6 +205,7 @@ export class ConceptHandler extends ConceptValidation {
         initvStg[0].initiativeId
       );
       initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
       initiative = await this.initiativeRepo.save(initiative);
 
       // retrieve general information
@@ -253,7 +214,7 @@ export class ConceptHandler extends ConceptValidation {
                 initvStgs.id AS initvStgId,
                 general.id AS generalInformationId,
                 IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
+                IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
                 (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
                 (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
                 (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
@@ -286,7 +247,47 @@ export class ConceptHandler extends ConceptValidation {
   }
 
   /**
-   *
+   * GET GENERAL INFORMATION
+   * @returns { generalInfo }
+   */
+  async getGeneralInformation() {
+    // get initiative by stage id from intitiative
+    const initvStgId: string = this.initvStgId_;
+    try {
+      // general information sql query
+      const GIquery = ` 
+              SELECT
+                  initvStgs.id AS initvStgId,
+                  general.id AS generalInformationId,
+                  IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+                  IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+              
+                  (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                  (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                  (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                                          
+                  general.action_area_description AS action_area_description,
+                  general.action_area_id AS action_area_id
+              
+              FROM
+                  initiatives_by_stages initvStgs
+              LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+              
+              WHERE initvStgs.id = ${initvStgId};
+          `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      throw new BaseError('Get general information', 400, error.message, false);
+    }
+  }
+
+  /**
+   * UPSERT NARRATIVES
    * @param generalInformationId?
    * @param name
    * @param action_area_id
@@ -347,4 +348,14 @@ export class ConceptHandler extends ConceptValidation {
       );
     }
   }
+
+  async upsertIntialToc(
+    initiativeId?,
+    ubication?,
+    tocs_id?,
+    narrative?,
+    active?,
+    section?,
+    updateFiles?
+  ) {}
 }

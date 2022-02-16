@@ -5,6 +5,7 @@ import * as entities from '../entity';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
@@ -236,7 +237,6 @@ export class ProposalHandler extends InitiativeStageHandler {
    * GET ALL WP PROPOSAL
    */
   async requestAllWorkPackagesProposal() {
-
     try {
       let COquery = `
               SELECT id,country_id,initvStgId,wrkPkgId
@@ -284,11 +284,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
-
-/**
- * GET ALL WP
- */
+  /**
+   * GET ALL WP
+   */
   async requestAllWorkPackages() {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage
@@ -354,7 +352,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     generalInformationId?,
     name?,
     action_area_id?,
-    action_area_description?
+    action_area_description?,
+    acronym?
   ) {
     const gnralInfoRepo = getRepository(entities.GeneralInformation);
 
@@ -366,7 +365,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       const initvStg = await this.setInitvStage();
 
       // get clarisa action action areas
-      const actionAreas = await getClaActionAreas();
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
 
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
@@ -377,7 +377,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       if (generalInformationId == null) {
         generalInformation = new entities.GeneralInformation();
         generalInformation.name = name;
-
+        generalInformation.acronym = acronym;
         generalInformation.action_area_description =
           action_area_description || selectedActionArea.name;
         generalInformation.action_area_id = action_area_id;
@@ -386,6 +386,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym=acronym?acronym:generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -1122,8 +1123,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       let upsertedTableA = await this.upsertTableA(tableA, initvStg.id);
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
+      let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return {upsertedTableA, upsertedTableB};
+      return {upsertedTableA, upsertedTableB, upsertedTableC};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1269,11 +1271,11 @@ export class ProposalHandler extends InitiativeStageHandler {
        * SAVE Init SDG Targets
        */
       let mergeSdgTargets = await Promise.all(sdgTargets);
-      console.log(mergeSdgTargets);
+      // console.log(mergeSdgTargets);
 
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
-      console.log(upsertedSdgTargets);
+      // console.log(upsertedSdgTargets);
 
       return {
         upsertedGlobalTargets,
@@ -1378,11 +1380,99 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     const resultsRepo = getRepository(entities.Results);
     const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
-    const resultsDataManagementRepo = getRepository(
-      entities.ResultsDataManagement
-    );
     const resultsRegionsRepo = getRepository(entities.ResultsRegions);
     const resultsCountriesRepo = getRepository(entities.ResultsCountries);
+
+    let toolsSbt = new ToolsSbt();
+    const resultsArray = [];
+    const resultsIndicatorsArray = [];
+    const resultsRegionsArray = [];
+    const resultsCountriesArray = [];
+
+    try {
+      const results = tableC.results;
+      let newResults = new entities.Results();
+
+      newResults.initvStgId = initvStgId;
+      newResults.result_type_id = results.result_type;
+      newResults.result_title = results.result_title;
+      newResults.is_global = results.is_global;
+      newResults.active = results.active;
+
+      resultsArray.push(
+        toolsSbt.mergeData(
+          resultsRepo,
+          ` 
+                SELECT *
+                  FROM results
+                 WHERE initvStgId = ${newResults.initvStgId}
+                   AND result_type_id = ${newResults.result_type_id}`,
+          newResults
+        )
+      );
+
+      let mergeResults = await Promise.all(resultsArray);
+
+      // Save data
+      let upsertResults: any = await resultsRepo.save(mergeResults);
+
+      for (let index = 0; index < results.indicators.length; index++) {
+        const indicators = results.indicators[index];
+        let newResultsIndicators = new entities.ResultsIndicators();
+
+        newResultsIndicators.id = indicators.id? indicators.id:null;
+        newResultsIndicators.results_id = upsertResults[0].id;
+        newResultsIndicators.active = indicators.active;
+        newResultsIndicators.baseline_value = indicators.baseline_value;
+        newResultsIndicators.baseline_year = indicators.baseline_year;
+        newResultsIndicators.data_collection_method =
+          indicators.data_collection;
+        newResultsIndicators.data_source = indicators.data_source;
+        newResultsIndicators.frequency_data_collection =
+          indicators.frequency_data_collection;
+        newResultsIndicators.target_value = indicators.target_value;
+        newResultsIndicators.target_year = indicators.target_year;
+        newResultsIndicators.unit_measurement = indicators.unit_messurament;
+        newResultsIndicators.name = indicators.indicator_name;
+
+        resultsIndicatorsArray.push(
+          toolsSbt.mergeData(
+            resultsIndicatorsRepo,
+            ` 
+                  SELECT *
+                    FROM results_indicators
+                   WHERE id = ${newResultsIndicators.id} 
+                     and results_id = ${newResultsIndicators.results_id}`,
+            newResultsIndicators
+          )
+        );
+      }
+
+      for (let index = 0; index < results.geo_scope.regions.length; index++) {}
+
+      for (
+        let index = 0;
+        index < results.geo_scope.countries.length;
+        index++
+      ) {}
+
+      //Merge and Save ResultsIndicators
+      let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+      // Save data
+      let upsertResultsIndicators: any = await resultsRepo.save(
+        mergeResultsIndicators
+      );
+
+      return {upsertResults, upsertResultsIndicators};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia results framework table C: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
   }
 
   /**

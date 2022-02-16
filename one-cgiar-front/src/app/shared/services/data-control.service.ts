@@ -39,4 +39,20 @@ export class DataControlService {
   incompleteFieldsText = 'Please validate the fields marked with a red asterisk that are pending to be completed';
   provideDocumentText = 'Provide link to any additional support document(s)';
   constructor() { }
+
+  getStageRouteByStageId(stageId): StageDescription {
+    switch (stageId) {
+      case 2:
+        return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
+      case 3:
+        return { route: 'full-proposal', name: 'full-proposal', ownPath: 'proposal' }
+    }
+  }
+
+}
+
+interface StageDescription{
+  route:string,
+  name:string,
+  ownPath:string
 }

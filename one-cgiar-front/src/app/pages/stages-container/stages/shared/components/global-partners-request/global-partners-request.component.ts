@@ -39,28 +39,15 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this.institutions);
-    // console.log(this.institutionsTypes);
-    // console.log("savedList");
-    // console.log(this.savedList);
-    // console.log("institutionsTypesSavedList");
-    // console.log(this.institutionsTypesSavedList);
-    // console.log("institutionsTypesDisableList");
-    // console.log(this.institutionsTypesDisableList);
     this.mapInstitutionsTypes();
-    // console.log(this.institutions);
     this.institutions.map(item=>{
-      // item.type_id = 1000;
       item.id = null;
       item.tag_id = '0,0,0';
     })
-    // this.openDialog()
   }
 
   getInstitutionsTypesDisableList(){
-    // console.log("change");
     let institutionsTypesDisableList=[];
-    // console.log(this.savedList);
     this.savedList.map(item=>{
     if (item.code && item.active !== false) {
       let body = {
@@ -87,15 +74,9 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   mapInstitutionsTypes(){
-    // console.log(this.institutionsTypes);
     this.institutionsTypes.map(item=>{
       item.institutionType = item.name;
-      // item.
-      // impact_strategies_id
-      // institutionType
-      // institutionTypeId
     })
-    // console.log(this.institutionsTypes);
   }
 
   showDialog() {
@@ -103,6 +84,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   onSelectTag(item,attributeName){
+    if (this._initiativesService.initiative.readonly) return;
     if ( typeof item[attributeName]  === 'undefined')item[attributeName] = true;
     item[attributeName] = !item[attributeName] 
   }

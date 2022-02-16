@@ -29,7 +29,7 @@ export class ToolsSbt {
       savedData = typeof savedData === 'undefined' ? [] : savedData;
       if (savedData) {
         // Validate if exists record then make marge else next
-        if (savedData.id !== null) {
+        if (savedData.id) {
           repo.merge(savedData, data);
 
           mergeData = savedData;
@@ -37,6 +37,7 @@ export class ToolsSbt {
           return mergeData;
         } else {
           //Return new data
+          //return (data = Object.assign({}, data));
           return data;
         }
       }

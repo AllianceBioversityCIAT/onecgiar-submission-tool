@@ -1,19 +1,18 @@
-import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
-import { InitiativeTeam } from "../entity/InitiativesTeam";
+import {getRepository, MigrationInterface, QueryRunner} from 'typeorm';
+import {InitiativeTeam} from '../entity/InitiativesTeam';
 
-export class InsertHumanResourcesTeamInitiatives1640121657676 implements MigrationInterface {
+export class InsertHumanResourcesTeamInitiatives1640121657676
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    const initiativeTeamRepo = getRepository(InitiativeTeam);
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    const teamPerIntv = await initiativeTeamRepo.find();
+    teamPerIntv.map((t) => (t.active = false));
 
-        const initiativeTeamRepo = getRepository(InitiativeTeam);
+    const updatedTeam = await initiativeTeamRepo.save(teamPerIntv);
 
-        const teamPerIntv = await initiativeTeamRepo.find();
-        teamPerIntv.map( t => t.active = false);
-
-        const updatedTeam = await initiativeTeamRepo.save(teamPerIntv);
-
-        const insertSQL =
-         `
+    const insertSQL = `
         INSERT INTO initiative_team (category, area_expertise, key_accountabilities, human_resources_id, active)
 VALUES ("Research","Non-Research","Project management and MEL",3,1),
 ("Research","Non-Research","Scaling readiness assessment and process, communication",3,1),
@@ -742,17 +741,18 @@ Research on institutional and partnership arrangements",1,1),
 ("Research",null,"Design, implement and publish research and supervise researchers and support staff and students.",20,1),
 ("Research support",null,"Design, execute, and publish studies investigating economic and governance questions. Contribute to impact and process evaluations.",20,1) 
         `;
-        const [query, parameters] =
-            await queryRunner.connection.driver.escapeQueryWithParameters(
-                insertSQL,
-                {},
-                {}
-            );
-        const insertedHRTeam = await queryRunner.connection.query(query, parameters);
-        console.log(insertedHRTeam);
-    }
+    const [query, parameters] =
+      await queryRunner.connection.driver.escapeQueryWithParameters(
+        insertSQL,
+        {},
+        {}
+      );
+    const insertedHRTeam = await queryRunner.connection.query(
+      query,
+      parameters
+    );
+    console.log(insertedHRTeam);
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

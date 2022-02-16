@@ -1,6 +1,5 @@
 import {Router} from 'express';
 import {checkJwt} from '../middlewares/jwt';
-import {checkRole} from '../middlewares/role';
 import * as previewController from '../controllers/PreviewsController';
 import * as stagefull from '../controllers/StageFullProposalController';
 import * as initiatives from '../controllers/InitiativesController';
@@ -126,10 +125,9 @@ router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
  */
 router.get(
   '/packages/:initiativeId([0-9]+)',
-  [checkJwt, checkRole('packages', 'readOwn')],
+  [checkJwt],
   stagefull.getWorkPackages
 );
-
 
 /**
  * GET ALL WORK PACKAGES
@@ -181,7 +179,7 @@ router.get(
  *     HTTP/1.1 400 Not Found
  *     { message: "Get All work packages:", error }
  */
- router.get('/packages', stagefull.getAllWorkPackages);
+router.get('/packages', stagefull.getAllWorkPackages);
 
 /**
  * GET PREVIEW GEOGRAPHIC SCOPE
@@ -246,7 +244,7 @@ router.get(
  */
 router.get(
   '/geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('packages', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewGeographicScope
 );
 
@@ -328,7 +326,7 @@ router.get(
  */
 router.get(
   '/all-geographic-scope/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('packages', 'readOwn')],
+  [checkJwt],
   previewController.getAllGeographicScope
 );
 
@@ -393,7 +391,7 @@ router.get(
  */
 router.get(
   '/partners/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('strategies', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewPartners
 );
 
@@ -458,7 +456,7 @@ router.get(
  */
 router.get(
   '/projected-benefits/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewProjectedBenefits
 );
 
@@ -572,7 +570,7 @@ router.get(
  */
 router.get(
   '/risk-assessment/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('mpr', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewRiskAssessment
 );
 
@@ -620,7 +618,7 @@ router.get(
  */
 router.get(
   '/human-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('hr', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewHumanResources
 );
 
@@ -684,7 +682,7 @@ router.get(
  */
 router.get(
   '/financial-resources/:initiativeId([0-9]+)/:stageId([0-9]+)',
-  [checkJwt, checkRole('fr', 'readOwn')],
+  [checkJwt],
   previewController.getPreviewFinancialResources
 );
 
