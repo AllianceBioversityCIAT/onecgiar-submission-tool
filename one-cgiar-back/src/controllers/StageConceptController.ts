@@ -616,29 +616,12 @@ export async function getInitiativeStatement(req: Request, res: Response) {
  */
  export async function getWorkPackage(req: Request, res: Response) {
 
-  const {initiativeId,wrkPkgId} = req.params;
-
-  const initvStgRepo = getRepository(InitiativesByStages);
-  const stageRepo = getRepository(Stages);
+  const {wrkPkgId} = req.params;
 
   try {
-    // get stage
-    const stage = await stageRepo.findOne({where: {description: currentStage}});
-    // get intiative by stage : Pre Concept
-    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
-    });
-    if (initvStg == null) {
-      throw new BaseError(
-        'Upsert General information: Error',
-        400,
-        `Initiative not found in stage: ${stage.description}`,
-        false
-      );
-    }
 
     // create new concept object
-    const concept = new ConceptHandler(initvStg.id.toString());
+    const concept = new ConceptHandler();
 
     // get workpackage from porposal object
     const workpackage = await concept.getWorkPackageId(wrkPkgId);

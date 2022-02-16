@@ -7,7 +7,7 @@ import {
   Highlights,
   Narratives,
   WorkPackages
-} from '../entity';
+} from '../entity/index';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
@@ -809,7 +809,7 @@ export class ConceptHandler extends ConceptValidation {
         workPackages = [];
       } else {
         // Map Initiatives
-        workPackages.map((geo) => {
+        workPackages.map((geo:any) => {
           geo['regions'] = regions.filter((wp) => {
             return wp.wrkPkgId === geo.id;
           });
