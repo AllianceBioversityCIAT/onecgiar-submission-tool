@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {getRepository} from 'typeorm';
-import { WorkPackages } from '../entity';
+import { WorkPackages } from '../entity/WorkPackages';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {Stages} from '../entity/Stages';
 import {BaseError} from '../handlers/BaseError';
