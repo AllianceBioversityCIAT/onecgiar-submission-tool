@@ -15,7 +15,6 @@ let modules = [
 @NgModule({
   declarations: [],
   exports:[UtilsModule,...modules],
-  imports: [CommonModule,...modules],
-  providers:[ InitiativesService ]
+  imports: [CommonModule,...modules]
 })
 export class PcCommonModulesModule { }

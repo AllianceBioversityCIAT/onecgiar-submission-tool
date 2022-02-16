@@ -1,15 +1,82 @@
 import {Request, Response} from 'express';
 import {getRepository} from 'typeorm';
+import { WorkPackages } from '../entity';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {Stages} from '../entity/Stages';
 import {BaseError} from '../handlers/BaseError';
 import {ConceptHandler} from '../handlers/ConceptDomain';
+import {InitiativeHandler} from '../handlers/InitiativesDomain';
 import {ResponseHandler} from '../handlers/Response';
 
 const currentStage = 'Pre Concept';
 
 /**
- * GENERAL INFORMATION FOR STAGE 2 PRECONCEPT
+ * CREATE INITIATIVE
+ * @param req params: {  initiativeId, generalInformationId, name, action_area_id, action_area_description }
+ * @param res
+ */
+
+export async function createInitiative(req: Request, res: Response) {
+  // get generalInformationId, name, action_area_id, action_area_description by stage id from client
+  const {
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym
+  } = req.body;
+
+  const stageRepo = getRepository(Stages);
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+
+    // Create initiative and initiative by Stages
+
+    const initiativeHandler = new InitiativeHandler();
+
+    const newInitiative = await initiativeHandler.createInitiativesByStage(
+      name,
+      acronym,
+      stage
+    );
+
+    const initvStg: any = newInitiative.savedInitvStg.id;
+
+    // Validate initiative by Stages
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new concept object
+    const concept = new ConceptHandler(initvStg);
+
+    const generalInformation = await concept.upsertGeneralInformation(
+      generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: Create Initiative.', {
+        newInitiative,
+        generalInformation
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET GENERAL INFORMATION
  * @param req initiativeId
  * @param res  { generalInformation }
  * @returns  { generalInformation }
@@ -86,9 +153,11 @@ export async function upsertConceptGeneralInformation(
     // get stage
     const stage = await stageRepo.findOne({where: {description: currentStage}});
     // get intiative by stage : concept
-    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    let initvStg: any = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
+
+    // Validate initiative by Stages
     if (initvStg == null) {
       throw new BaseError(
         'Upsert General information: Error',
@@ -106,13 +175,6 @@ export async function upsertConceptGeneralInformation(
       action_area_id,
       action_area_description,
       acronym
-    );
-
-    // get metadata
-    let metadata = await concept.metaData;
-    // and filter by section
-    metadata = metadata.filter(
-      (meta) => meta.group_by == 'General Information'
     );
 
     res.json(
@@ -267,22 +329,324 @@ export async function upsertIntialToc(req: Request, res: Response) {
       );
     }
 
-        // create new concept object
-        const concept = new ConceptHandler(initvStg.id.toString());
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
 
-        const initialToc = await concept.upsertIntialToc(
-          initiativeId,ubication,id, narrative, active, section, updateFiles
-  
-        );
+    const initialToc = await concept.upsertIntialToc(
+      initiativeId,
+      ubication,
+      stage,
+      id,
+      narrative,
+      active,
+      section,
+      files,
+      updateFiles
+    );
 
-        res.json(
-          new ResponseHandler('Pre Concept: Initial Toc.', {
-            initialToc
-          })
-        );
+    res.json(
+      new ResponseHandler('Pre Concept: Initial Toc.', {
+        initialToc
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * GET INITIAL TOC
+ * (HIGHLIGHTS AND CONTEXT)
+ */
+
+ export async function getInitialToc(req: Request, res: Response) {
+  const {initiativeId,sectionName} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+
+    const initialToc = await concept.requestInitialToc(sectionName);;
+
+    res.json(
+      new ResponseHandler('Pre Concept: Get Initial Toc.', {
+        initialToc
+
+      })
+    );
 
   } catch (error) {
     console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * UPSERT INITIATIVE STATEMENT
+ * @param req
+ * @param res
+ * @returns
+ */
+export async function patchInitiativeStatement(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+
+  const {highlights, context} = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    const upsertHighlights = await concept.upsertHighlights(highlights);
+
+    const upsertContext = await concept.upsertContext(context);
+
+    res.json(
+      new ResponseHandler('Pre Concept: Patch Initiative Statement.', {
+        upsertHighlights,
+        upsertContext
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * REQUEST INITIATIVE STATEMENT
+ * (HIGHLIGHTS AND CONTEXT)
+ */
+
+export async function getInitiativeStatement(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+
+    const initiativeStatemente = await concept.requestInitiativeStatement();
+
+    res.json(
+      new ResponseHandler('Pre Concept: Get Initiative Statement.', {
+        initiativeStatemente
+
+      })
+    );
+
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * PATCH WORK PACKAGES
+ * @param req { acronym, name, pathway_content, is_global, id, regions, countries, active }
+ * @param res { workpackage, upsertedGeoScope }
+ * @returns
+ */
+ export async function patchWorkPackage(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+  const {
+    acronym,
+    name,
+    pathway_content,
+    is_global,
+    id,
+    regions,
+    countries,
+    active
+  } = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  var newWorkPackage = new WorkPackages();
+
+  newWorkPackage.id = id;
+  newWorkPackage.acronym = acronym;
+  newWorkPackage.name = name;
+  newWorkPackage.pathway_content = pathway_content;
+  newWorkPackage.is_global = is_global;
+  newWorkPackage.active = active;
+
+  try {
+   // get stage
+   const stage = await stageRepo.findOne({where: {description: currentStage}});
+   // get intiative by stage : Pre Concept
+   const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+     where: {initiative: initiativeId, stage}
+   });
+   if (initvStg == null) {
+     throw new BaseError(
+       'Upsert General information: Error',
+       400,
+       `Initiative not found in stage: ${stage.description}`,
+       false
+     );
+   }
+
+   // create new concept object
+   const concept = new ConceptHandler(initvStg.id.toString());
+
+    // upsert workpackage from porposal object
+    const workpackage = await concept.upsertWorkPackages(newWorkPackage);
+
+    const upsertedGeoScope = await concept.upsertGeoScopes(
+      regions,
+      countries
+    );
+
+    res.json(
+      new ResponseHandler('Pre Concept: Patch Workpackage.', {
+        workpackage,
+        upsertedGeoScope
+      })
+    );
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * GET ALL WORK PACKAGES BY INITIATIVE
+ * @param req
+ * @param res { workpackage }
+ * @returns
+ */
+ export async function getWorkPackagesByInitiative(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    // get workpackage from porposal object
+    const workpackage = await concept.getWorkPackage();
+
+    res.json(new ResponseHandler('Full Proposal: Workpackage.', {workpackage}));
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET WORK PACKAGE BY ID
+ * @param req
+ * @param res { workpackage }
+ * @returns
+ */
+ export async function getWorkPackage(req: Request, res: Response) {
+
+  const {initiativeId,wrkPkgId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({where: {description: currentStage}});
+    // get intiative by stage : Pre Concept
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    if (initvStg == null) {
+      throw new BaseError(
+        'Upsert General information: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+    // create new concept object
+    const concept = new ConceptHandler(initvStg.id.toString());
+
+    // get workpackage from porposal object
+    const workpackage = await concept.getWorkPackageId(wrkPkgId);
+
+    res.json(
+      new ResponseHandler('Pre Concept: Workpackage id.', {workpackage})
+    );
+  } catch (error) {
     return res.status(error.httpCode).json(error);
   }
 }

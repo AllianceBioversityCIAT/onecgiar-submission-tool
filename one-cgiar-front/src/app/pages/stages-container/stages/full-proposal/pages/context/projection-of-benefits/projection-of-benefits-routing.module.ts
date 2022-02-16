@@ -16,8 +16,8 @@ const routes: Routes = [
         loadChildren: () => import('./impact-area/impact-area.module').then(mod => mod.ImpactAreaModule),
       },
       {
-        path: 'pob-resports',
-        loadChildren: () => import('./pob-resports/pob-resports.module').then(mod => mod.PobResportsModule),
+        path: 'pob-reports',
+        loadChildren: () => import('./pob-reports/pob-reports.module').then(mod => mod.PobReportsModule),
       }
     ],
   }

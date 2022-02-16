@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { InteractionsService } from '../../../services/interactions.service';
+import { DataControlService } from '../../../services/data-control.service';
 
 @Component({
   selector: 'app-change-password',
@@ -14,7 +15,8 @@ export class ChangePasswordComponent implements OnInit {
   @Output() action = new EventEmitter
   constructor(
     private _authService:AuthService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService
   ) {
     this.changePasswordForm = new FormGroup({
       email: new FormControl(null,[Validators.required,Validators.email]),

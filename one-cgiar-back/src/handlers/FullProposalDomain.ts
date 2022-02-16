@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import {getRepository, In} from 'typeorm';
-import {getClaActionAreas} from '../controllers/Clarisa';
 import * as entities from '../entity';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import { InitiativeHandler } from './InitiativesDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
@@ -386,7 +385,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         generalInformation = await gnralInfoRepo.findOne(generalInformationId);
         generalInformation.name = name ? name : generalInformation.name;
-        generalInformation.acronym=acronym?acronym:generalInformation.acronym;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
         generalInformation.action_area_description = selectedActionArea.name;
         generalInformation.action_area_id = action_area_id
           ? action_area_id
@@ -398,6 +399,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       //    update initiative name
       let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
       initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
       initiative = await this.initiativeRepo.save(initiative);
 
       // retrieve general information
@@ -406,7 +408,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             initvStgs.id AS initvStgId,
             general.id AS generalInformationId,
             IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-            
+            IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
             (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
             (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
             (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
@@ -1420,7 +1422,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         const indicators = results.indicators[index];
         let newResultsIndicators = new entities.ResultsIndicators();
 
-        newResultsIndicators.id = indicators.id? indicators.id:null;
+        newResultsIndicators.id = indicators.id ? indicators.id : null;
         newResultsIndicators.results_id = upsertResults[0].id;
         newResultsIndicators.active = indicators.active;
         newResultsIndicators.baseline_value = indicators.baseline_value;

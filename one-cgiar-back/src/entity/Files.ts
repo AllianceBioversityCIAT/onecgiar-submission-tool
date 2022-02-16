@@ -31,6 +31,9 @@ export class Files extends UpdatedCreatedAt {
   @Column({type: 'int'})
   financial_resources_id: number;
 
+  @Column({type: 'int'})
+  tocsId: number;
+
   @Column({length: '200'})
   section: string;
 

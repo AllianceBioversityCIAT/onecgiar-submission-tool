@@ -10,11 +10,11 @@
     <div class="elements_container">
         <section-sub-title name="Highlights List"></section-sub-title>
         <div class="highlights-list">
-            <div class="highlight" *ngFor="let highligh of this.body.highlightsList; let i=index" >
+            <div class="highlight" *ngFor="let highlight of this.body.highlights; let i=index" >
                 <ibdc-text-area-field 
-                    inputTitle="highligh {{i+1}}"
-                    [objectItem]="highligh" 
-                    [objectAtributteName]="'value'">
+                    inputTitle="highlight {{i+1}}"
+                    [objectItem]="highlight" 
+                    [objectAtributteName]="'description'">
                 </ibdc-text-area-field>
             </div>
         </div>
@@ -25,8 +25,8 @@
         <div class="content">
             <ibdc-text-area-field 
             inputTitle="Challenge Statement"
-            [objectItem]="body" 
-            [objectAtributteName]="'challengeStatement'">
+            [objectItem]="body.context" 
+            [objectAtributteName]="'challenge_statement'">
             </ibdc-text-area-field>
         </div>
     </div>
@@ -36,12 +36,18 @@
         <div class="content">
             <ibdc-text-area-field 
             inputTitle="Objective Statement"
-            [objectItem]="body" 
-            [objectAtributteName]="'objectiveStatement'">
+            [objectItem]="body.context" 
+            [objectAtributteName]="'smart_objectives'">
             </ibdc-text-area-field>
         </div>
     </div>
 
 
 
+</div>
+
+<div (click)="saveSection()">
+    <ibdc-save-button
+        [options]="{readOnlyVariable: this._initiativesService.initiative.readonly, remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+    </ibdc-save-button>
 </div>

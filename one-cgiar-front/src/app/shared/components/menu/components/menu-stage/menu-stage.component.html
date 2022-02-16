@@ -1,5 +1,6 @@
 <div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
-    <div class="stage-title" [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
+    <div class="stage-title"
+        [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         (click)="this._menuService.toggleExpand(sectionsList)">
         <span>{{stage.description}}</span>
     </div>
@@ -8,18 +9,20 @@
         [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
         <br>
-        <app-menu-section *ngIf="stage?.sections?.length" [stage]="stage" [sections]="stage.sections"></app-menu-section>
+        <app-menu-section *ngIf="stage?.sections?.length" [stage]="stage" [sections]="stage.sections">
+        </app-menu-section>
     </div>
-    
+
     <br>
 
-    <div class="submitButtonInitiative" *ngIf="usrAvailableSubm && (this.userMenu.length-1 <= i)">
-        <button pButton type="button" (click)="onSubmitt()" label="Submit Initiative" class="p-button-rounded p-button-success"></button>
-    </div>
 
-    <div class="submitButtonInitiative" *ngIf="currentUser?.roles[0].acronym == 'ASSESS'">
-        <button pButton type="button" (click)="showDialogSubStasModal()" label="Assess Initiative" class="p-button-rounded p-button-info"></button>
-    </div>
 
- 
+</div>
+<div class="submitButtonInitiative" *ngIf="usrAvailableSubm">
+    <button pButton type="button" (click)="onAssess()" label="Submit Initiative"
+        class="p-button-rounded p-button-success"></button>
+</div>
+<div class="submitButtonInitiative" *ngIf="usrAssessSubm" style="margin-top: 10px;">
+    <button pButton type="button" (click)="showDialogSubStasModal()" label="Stage gating"
+        class="p-button-rounded p-button-info"></button>
 </div>

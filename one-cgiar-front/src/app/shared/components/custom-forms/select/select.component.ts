@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { selectOptions} from '../../../models/forms-options/select-options.interface';
+import { InitiativesService } from '../../../services/initiatives.service';
 
 @Component({
   selector: 'custom-select',

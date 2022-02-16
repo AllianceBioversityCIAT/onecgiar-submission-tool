@@ -7,8 +7,18 @@
         <app-general-information-skeleton></app-general-information-skeleton>
     </div>
     <!-- <form [formGroup]="summaryForm" (ngSubmit)="getSummary()" class="general-information-form" -->
-        <form (ngSubmit)="upsertGeneralInfo()" class="general-information-form">
+        <form (ngSubmit)="upsertSection()" class="general-information-form">
         <div class="row">
+
+            <div class="col-sm-6">
+                <ibdc-input-field 
+                inputTitle="Short name" 
+                [objectItem]="this.body?.generalInformation"  
+                [objectAtributteName]="'acronym'"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                [maxWords]="3"
+                ></ibdc-input-field>
+            </div>
 
             <div class="col-sm-12" >
                 <ibdc-text-area-field 
@@ -16,16 +26,6 @@
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'name'"
                 [readOnlyVariable]="this._initiativesService?.initiative.readonly"
-                [maxWords]="50"
-                ></ibdc-text-area-field>
-            </div>
-
-            <div class="col-sm-12" *ngIf="stageId == 2" >
-                <ibdc-text-area-field 
-                inputTitle="Short name" 
-                [objectItem]="this.body?.generalInformation"  
-                [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
                 [maxWords]="50"
                 ></ibdc-text-area-field>
             </div>
@@ -82,6 +82,7 @@
                 selectableListAtributteName = 'index_name'
                 selectableListAtributteId = 'id'
                 [selectableList]="this.actionAreasList"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly"
               ></ibdc-select-field>
             </div>
             <div class="col-sm-6" *ngIf="this.stageId != 2">
@@ -125,7 +126,7 @@
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
         </div>
     </form>
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

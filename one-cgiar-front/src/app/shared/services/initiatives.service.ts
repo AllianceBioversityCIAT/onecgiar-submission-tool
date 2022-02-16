@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { observable, Observable } from 'rxjs';
-import { AllInitiatives } from '../models/initiative.interface';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 const sectionPath = 'initiatives'
 
 @Injectable({
@@ -20,7 +19,10 @@ export class InitiativesService {
     roleId: 4,
     readonly: true,
     stageId: null,
-    name: null
+    name: null,
+    users: [],
+    status: null,
+    submission: {}
   }
 
   actionAreas: [];
@@ -160,7 +162,7 @@ export class InitiativesService {
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
-    return this.postQuery('/initiatives', body);
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/pre-concept/create-initiative`, body);  
   }
 
   /**
@@ -554,6 +556,36 @@ export class InitiativesService {
   submitInitiative(initiativeId, stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/submit/${initiativeId}/${stageId}`, {});
   }
+  getAssesssmentStatuses(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/assessment/${initiativeId}/${stageId}/statuses`);
+  }
+
+  updateSubmissionStatus(initiativeId, stageId, body): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
+  }
+
+  patchPcInitialToc(initiativeId, ubication, stageId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${ubication}/${stageId}`, body);
+  }
+
+  patchInitiativeStatements(initiativeId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`, body);
+  }
+
+  getInitiativeStatements(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`);
+  }
+
+  getPcInitialToc(initiativeId, sectionName){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${sectionName}`);
+  }
+
+  getSubmission(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/submission/${initiativeId}/${stageId}`, {});
+  }
+
+
+  /*** submitt initiative */
 
 
 }
