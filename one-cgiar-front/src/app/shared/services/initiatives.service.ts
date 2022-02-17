@@ -447,8 +447,8 @@ export class InitiativesService {
   }
 
   // get one work package by id with stage full proposal
-  getWpFpByInititative(wpID) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
+  getWpById(wpID, stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/package/${wpID}`);
   }
 
   // get one work package by id with stage full proposal
