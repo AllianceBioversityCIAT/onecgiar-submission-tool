@@ -43,6 +43,7 @@ import { FooterModule } from './shared/components/footer/footer.module';
 import { HeaderModule } from './shared/components/header/header.module';
 import { NavbarModule } from './shared/components/navbar/navbar.module';
 import { DevTagModule } from './shared/components/dev-tag/dev-tag.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +81,8 @@ import { DevTagModule } from './shared/components/dev-tag/dev-tag.module';
     FooterModule,
     HeaderModule,
     NavbarModule,
-    DevTagModule
+    DevTagModule,
+    NgxSpinnerModule
   ],
   providers: [
     CurrencyPipe,
