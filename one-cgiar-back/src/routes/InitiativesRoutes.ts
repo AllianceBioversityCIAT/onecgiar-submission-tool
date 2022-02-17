@@ -186,14 +186,12 @@ router.post(
 
 /****** */
 
-
 //get assessment status
 router.get(
   '/assessment/:initiativeId([0-9]+)/:stageId([0-9]+)/statuses',
   [checkJwt, checkRole('assessment', 'readAny')],
   initiatives.getAssessmentStatus
 );
-
 
 // get submition per initiative
 router.get(

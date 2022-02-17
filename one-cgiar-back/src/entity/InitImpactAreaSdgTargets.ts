@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
-import { Statuses } from './Statuses';
+import {Statuses} from './Statuses';
 
 @Entity('init_impact_area_sdg_targets')
 export class InitImpactAreaSdgTargets extends UpdatedCreatedAt {
