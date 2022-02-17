@@ -62,7 +62,7 @@ export const utilLogin = async (email: string, password: string) => {
     //     true
     // );
 
-    throw new BaseError('Util Login', 400, 'User password incorrect.', false);
+    throw new BaseError('Util Login', 400, 'The user or password is incorrect.', false);
   }
   user.last_login = new Date();
   user = await userRepository.save(user);

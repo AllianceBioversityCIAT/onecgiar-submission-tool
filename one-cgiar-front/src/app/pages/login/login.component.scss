@@ -22,7 +22,7 @@ body::before {
   --input-padding-y: .75rem;
 }
 
-.card-signin, .card-change-password {
+.card-change-password {
   border: 0;
   border-radius: 3rem 3rem 1rem 1rem;
   box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
@@ -134,14 +134,14 @@ p {
 .absolute_floating_login{
   position: absolute;
   top: 0;
-  transition: all .3s ease-in-out;
+  transition: all .3s cubic-bezier(0.215, 0.610, 0.355, 1);
   margin-top: 25px;
   // left: -50vw;
 }
 .absolute_floating_CP{
   position: absolute;
   top: 0;
-  transition: all .3s ease-out;
+  transition: all .3s cubic-bezier(0.215, 0.610, 0.355, 1);
   margin-top: 25px;
   // left: 50vw;
 }

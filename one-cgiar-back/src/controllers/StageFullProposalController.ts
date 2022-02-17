@@ -146,22 +146,24 @@ export async function getWorkPackage(req: Request, res: Response) {
  * @param res { workpackages }
  * @returns workPackagesProposal
  */
- export async function getAllWorkPackagesProposal(req: Request, res: Response) {
+export async function getAllWorkPackagesProposal(req: Request, res: Response) {
   try {
     // create new full proposal object
     const fullPposal = new ProposalHandler();
 
     // get ALL workpackage from porposal
-    const workPackagesProposal = await fullPposal.requestAllWorkPackagesProposal();
+    const workPackagesProposal =
+      await fullPposal.requestAllWorkPackagesProposal();
 
     res.json(
-      new ResponseHandler('Full Proposal: All Work Packages proposal.', {workPackagesProposal})
+      new ResponseHandler('Full Proposal: All Work Packages proposal.', {
+        workPackagesProposal
+      })
     );
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }
 }
-
 
 /**
  * GET ALL WORK PACKAGES
@@ -269,8 +271,13 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
   const {initiativeId} = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
-  const {generalInformationId, name, action_area_id, action_area_description} =
-    req.body;
+  const {
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym
+  } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -298,7 +305,8 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
       generalInformationId,
       name,
       action_area_id,
-      action_area_description
+      action_area_description,
+      acronym
     );
 
     //set metadata
@@ -757,8 +765,9 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
   // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
   //   req.body.data ? JSON.parse(req.body.data) : req.body;
 
-   const {melia_plan, tableA, tableB, tableC} =
-  req.body.data ? JSON.parse(req.body.data) : req.body
+  const {melia_plan, tableA, tableB, tableC} = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
 
   //melia section files
   const files = req['files'];

@@ -8,7 +8,8 @@ import { InteractionsService } from '../../../../../../shared/services/interacti
 })
 export class ButtonEditOrDeleteComponent implements OnInit {
   @Input() type;
-  @Input() confirmDeleteModal = false;;
+  @Input() ngCustomStyle={};
+  @Input() confirmDeleteModal = false;
   @Output() action = new EventEmitter;
   constructor(private _interactionsService : InteractionsService) { }
 

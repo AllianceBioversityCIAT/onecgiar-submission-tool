@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from '@shared/services/auth.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
-import { LoggerService } from '@shared/services/logger.service';
 import { ClarisaService } from '../../shared/services/clarisa.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -38,13 +37,14 @@ export class HomeComponent implements OnInit {
   getInitiatives() {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
-        // this.data = data;
-        data.map(item=>{
-          if (item.stageId == 3) {
-            this.data.push(item)
-            // console.log(item);
-          }
-        })
+        this.data = data;
+        // console.log(data);
+        // data.map(item=>{
+        //   if (item.stageId == 3) {
+        //     this.data.push(item)
+        //     // console.log(item);
+        //   }
+        // })
         this.showTable = true;
         
       },err=>{console.log(err);},

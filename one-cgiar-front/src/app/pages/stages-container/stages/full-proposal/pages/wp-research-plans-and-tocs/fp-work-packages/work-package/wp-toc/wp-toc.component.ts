@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { environment } from '../../../../../../../../../../environments/environment';
+import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 declare var $
 @Component({
   selector: 'app-wp-toc',

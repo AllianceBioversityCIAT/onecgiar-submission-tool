@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
-import { environment } from '../../../../../../../../environments/environment';
 import { managementPlan } from './models/management-plan.interface';
 import { Risk } from './models/risk.interface';
 import { Router } from '@angular/router';
 import { Riskassessment } from './models/riskassessment.interface';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-risk-assessment',
@@ -81,7 +79,6 @@ export class RiskAssessmentComponent implements OnInit {
       risks_theme: '',
       add_by_user: true
     })
-    // console.log( this.managementPlan?.riskassessment);
   }
 
   reloadComponent(){
@@ -118,10 +115,17 @@ export class RiskAssessmentComponent implements OnInit {
       })
   }
 
+  calculateRiskScore(){
+    this.managementPlan.riskassessment.map((riskAssessment:Riskassessment)=>{
+      riskAssessment.risk_score = riskAssessment.likelihood * riskAssessment.impact
+    })
+  }
+
   saveSection() {
     if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
 
     let formData = new FormData();
+    this.calculateRiskScore();
     formData.append('data', JSON.stringify(this.managementPlan));
 
     console.log(this.managementPlan);

@@ -1,4 +1,7 @@
 import { getConnection, getRepository } from 'typeorm';
+import { Statuses } from '../entity/Statuses';
+import { Submissions } from '../entity/Submissions';
+import { SubmissionsStatus } from '../entity/SubmissionStatus';
 import { Users } from '../entity/Users';
 import { HttpStatusCode } from '../interfaces/Constants';
 import { APIError, BaseError } from './BaseError';
@@ -248,6 +251,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
   async validationMelia() {
     try {
       // Validate Sections
+
+      /**
+       * Validation only over MELIA PLAN (missing validation with ToC data.)
+       */
       let validationMeliaSQL = `
         SELECT sec.id as sectionId,sec.description, 
         CASE
@@ -256,7 +263,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
         FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+        /* OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
                       WHERE initvStgId = ini.id
                         AND active = 1)
                         AND section = "result_framework"
@@ -275,7 +282,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                          WHERE initvStgId = ini.id
                            AND active = 1)
                            AND section = "melia"
-                           AND active = 1 ) IS NULL
+                           AND active = 1 ) IS NULL */
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1235,7 +1242,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''))) 
     - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
+              FROM context WHERE initvStgId = ini.id ) > 500
 	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
 		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
 		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
@@ -1635,59 +1642,122 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
-
   /**
-   * 
+   *
    * SUBMISSION STATUS PROCESS VALIDATION
-   * 
+   *
    **/
 
-  async validationSubmissionStatuses() {
+  async validationSubmissionStatuses(initvStg) {
     const usersRepo = getRepository(Users);
+    const subStsRepo = getRepository(SubmissionsStatus);
+    const submissionRepo = getRepository(Submissions);
+    const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
-    return {
-      isComplete: function (submission) {
-        return submission.complete
-      },
-      isAssessor: async function (userId) {
-        const user = await usersRepo.findOne(userId);
-        if(!user){
-          return {
-            message: 'User bot found', 
-            code: HttpStatusCode.BAD_REQUEST,
-            title:  'Bad request',
-            available: false
+    try {
+      const submission = await submissionRepo.findOne({ where: { initvStg, active: 1 } });
+
+      return {
+        isComplete: function () {
+          if (submission == null) {
+            throw new APIError(
+              'Bad request',
+              HttpStatusCode.BAD_REQUEST,
+              true,
+              'Initiative not submitted yet.'
+            );
+          } 
+          else if(submission.complete) {
+            throw new APIError(
+              'Unauthorized',
+              HttpStatusCode.UNAUTHORIZED,
+              true,
+              'Initiative already approved.'
+            );
           }
-        }
-        const assessSQL = `
-      SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
-    `
+        },
+        validateStatus: async (newStatusId: any) => {
+          const newStatusxInitv = await statusesRepo.findOne(newStatusId);
+          const currentInitvSubStatuses = await subStsRepo.find({ where: { submission } });
+          if (newStatusxInitv == null) {
+            throw new APIError(
+              'Bad request',
+              HttpStatusCode.BAD_REQUEST,
+              true,
+              'Status not found.'
+            );
+          }
+          const foundSubStatus = currentInitvSubStatuses.find( stses => stses.statusId == newStatusxInitv.id)
+          if (foundSubStatus) {
+            return {
+              submission,
+              newSubStatus: foundSubStatus,
+              newStatusxInitv
+            }
+          } else {
+            const subStatus = new SubmissionsStatus();
+            subStatus.statusId = newStatusxInitv.id;
+            subStatus.submission = submission;
 
-        /** validate if user is assessor **/
+            return {
+              submission,
+              newSubStatus: subStatus,
+              newStatusxInitv
+            }
+          }
+        },
+        isAssessor: async function (userId) {
+          const user = await usersRepo.findOne(userId);
+          if (!user) {
+            throw new APIError(
+              'User bot found',
+              HttpStatusCode.BAD_REQUEST,
+              false,
+              'Bad request'
+            );
+          }
+          const assessSQL = `
+        SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
+      `;
 
-        const [query, parameters] =
-          await queryRunner.connection.driver.escapeQueryWithParameters(
-            assessSQL,
-            { userId },
-            {}
+          /** validate if user is assessor **/
+
+          const [query, parameters] =
+            await queryRunner.connection.driver.escapeQueryWithParameters(
+              assessSQL,
+              { userId },
+              {}
+            );
+
+          const userAvailable = await queryRunner.connection.query(
+            query,
+            parameters
           );
-
-        const userAvailable = await queryRunner.connection.query(query, parameters);
-        if (userAvailable.length == 0) {
-          return {
-            message: 'User does not have permission to do this action', 
-            code: HttpStatusCode.UNAUTHORIZED,
-            title:  'Unauthorized',
-            available: false
+          if (userAvailable.length == 0) {
+            throw new APIError(
+              'User does not have permission to do this action',
+              HttpStatusCode.UNAUTHORIZED,
+              false,
+              'Unauthorized'
+            );
           }
-        }
 
-        return{
-          available: true, 
-          user
+          return {
+            available: true,
+            user
+          };
         }
+      };
 
-      }
+    } catch (error) {
+      console.log(error)
+      throw new APIError(
+        'Bad request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
     }
+
   }
 }

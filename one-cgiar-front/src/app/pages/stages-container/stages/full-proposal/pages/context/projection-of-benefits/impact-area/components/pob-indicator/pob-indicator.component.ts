@@ -41,8 +41,6 @@ export class PobIndicatorComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
-    console.log(this.indicatorsList);
   
     this.showDepthScale = true;
 
@@ -60,7 +58,6 @@ export class PobIndicatorComponent implements OnInit {
     }
     })
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
-      console.log("change");
       if (resp) {
         this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.impactAreaIndicatorName);
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
@@ -75,8 +72,6 @@ export class PobIndicatorComponent implements OnInit {
     })
   }
   getIndicatorName(impactAreaIndicatorId){
-    // console.log(impactAreaIndicatorId);
-    // console.log(this.indicatorsList);
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
   beforeindicator = null;

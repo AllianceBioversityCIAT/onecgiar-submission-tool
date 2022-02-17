@@ -1,8 +1,47 @@
-import {getConnection} from 'typeorm';
+import {getConnection, getRepository} from 'typeorm';
+import {Initiatives, InitiativesByStages} from '../entity';
 import {BaseError} from './BaseError';
 
 export class InitiativeHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
+
+  async createInitiativesByStage(name?, acronym?, stage?) {
+    const initiativeRepo = getRepository(Initiatives);
+    const initvStgRepo = getRepository(InitiativesByStages);
+
+    const newInitiative = new Initiatives();
+    const newInitvStg = new InitiativesByStages();
+
+    try {
+   
+      const lastId = await this.queryRunner.query("SELECT MAX(ID) as lastId FROM INITIATIVES");
+
+      const nextId = parseInt(lastId[0].lastId) + 1;
+      const official_code = 'INIT-' + nextId;
+
+      newInitiative.id = nextId;
+      newInitiative.name = name;
+      newInitiative.acronym = acronym;
+      newInitiative.official_code = official_code;
+
+      const savedInitiative: any = await initiativeRepo.save(newInitiative);
+
+      newInitvStg.initiative = savedInitiative.id;
+      newInitvStg.stage = stage.id;
+      newInitvStg.active = true;
+
+      const savedInitvStg = await initvStgRepo.save(newInitvStg);
+
+      return {savedInitiative, savedInitvStg};
+    } catch (error) {
+      throw new BaseError(
+        'createInitiativesByStage',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 
   /** Get all initiatives for main table */
   async getAllInitiatives() {
@@ -14,7 +53,8 @@ export class InitiativeHandler {
         initiative.id AS id,
         initiative.name AS name,
         initiative.official_code,
-        IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+        -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+        (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
         initvStg.active AS active,
@@ -285,6 +325,41 @@ export class InitiativeHandler {
     } catch (error) {
       console.log(error);
       throw new BaseError('Get Projected benefits', 400, error.message, false);
+    }
+  }
+
+  async requesSdgTargets() {
+    try {
+      const querySql = `
+      SELECT id, sdg_target_code,sdg_target,sdg
+        FROM clarisa_sdg_targets`;
+      const sdgTargets = await this.queryRunner.query(querySql);
+
+      return sdgTargets;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get SDG Targets', 400, error.message, false);
+    }
+  }
+
+  async requestActionAreasOutIndicators() {
+    try {
+      const querySql = `
+      SELECT id,action_area_id,action_area_name,
+	           outcome_id,outcome_indicator_smo_code,outcome_indicator_statement,
+             outcome_indicator_id,outcome_indicator_smo_code,outcome_indicator_statement
+       FROM clarisa_action_areas_outcomes_indicators`;
+      const actionAreasOutIndicators = await this.queryRunner.query(querySql);
+
+      return actionAreasOutIndicators;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Action Areas Outcomes Indicators',
+        400,
+        error.message,
+        false
+      );
     }
   }
 }

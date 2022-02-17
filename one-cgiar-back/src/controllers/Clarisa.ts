@@ -10,7 +10,7 @@ config();
 const clarisaHost = process.env.clarisa || 'https://clarisa.cgiar.org/api/';
 
 /**
- *
+ * GET CLARISA ACTION AREAS
  * @returns clarisa action areas
  */
 export const getClaActionAreas = async () => {
@@ -29,7 +29,7 @@ export const getClaActionAreas = async () => {
 };
 
 /**
- *
+ * GET CLARISA COUNTRIES
  * @returns clarisa countries
  */
 export const getClaCountries = async () => {
@@ -54,7 +54,7 @@ export const getClaCountries = async () => {
 };
 
 /**
- *
+ * GET CLARISA REGIONS
  * @returns clarisa regions
  */
 // export const getClaRegions = async (req: Request, res: Response) => {
@@ -79,7 +79,7 @@ export const getClaRegions = async () => {
 };
 
 /**
- *
+ * GET CLARISA REGIONS ONE CGIAR
  * @returns clarisa regions CGIAR
  */
 export const getClaRegionsCgiar = async () => {
@@ -103,7 +103,7 @@ export const getClaRegionsCgiar = async () => {
 };
 
 /**
- *
+ * GET CLARISA INSTITUTIONS
  * @returns clarisa institutions
  */
 // export const getClaInstitutions = async (req: Request, res: Response) => {
@@ -128,7 +128,7 @@ export const getClaInstitutions = async () => {
 };
 
 /**
- *
+ * GET CLARISA INSTITUTIONS TYPES
  * @returns clarisa institutions types
  */
 // export const getClaInstitutionsTypes = async (req: Request, res: Response) => {
@@ -156,7 +156,7 @@ export const getClaInstitutionsTypes = async () => {
 };
 
 /**
- *
+ * GET CLARISA CRPS
  * @returns clarisa crps
  */
 // export const getClaCRPs = async (req: Request, res: Response) => {
@@ -181,6 +181,7 @@ export const getClaCRPs = async () => {
 };
 
 /**
+ * REQUEST CLARISA INSTITUTIONS
  * @returns institution requested to clarisa
  * @param {name, acronym, websiteLink, institutionTypeCode, hqCountryIso, externalUserMail, externalUserName, externalUserComments}
  */
@@ -243,15 +244,19 @@ export async function requestClaInstitution(req: Request, res: Response) {
   }
 }
 
+/**
+ * GET CLARISA IMPACT AREAS
+ * @returns impactAreas
+ */
 export async function getImpactAreas() {
   try {
-    const institutionsTypes = await axios.get(clarisaHost + 'impact-areas', {
+    const impactAreas = await axios.get(clarisaHost + 'impact-areas', {
       auth: {
         username: process.env['clarisa_user'],
         password: process.env['clarisa_password']
       }
     });
-    return institutionsTypes.data;
+    return impactAreas.data;
   } catch (error) {
     console.log(error);
     throw new APIError(
@@ -263,9 +268,13 @@ export async function getImpactAreas() {
   }
 }
 
+/**
+ * GET CLARISA IMPACT AREAS INDICATORS
+ * @returns impactAreasIndicators
+ */
 export async function getImpactAreasIndicators() {
   try {
-    const institutionsTypes = await axios.get(
+    const impactAreasIndicators = await axios.get(
       clarisaHost + 'impact-areas-indicators',
       {
         auth: {
@@ -274,7 +283,7 @@ export async function getImpactAreasIndicators() {
         }
       }
     );
-    return institutionsTypes.data;
+    return impactAreasIndicators.data;
   } catch (error) {
     console.log(error);
     throw new APIError(
@@ -286,6 +295,10 @@ export async function getImpactAreasIndicators() {
   }
 }
 
+/**
+ *  GET CLARISA PROJECTED BENEFITS
+ * @returns projectedBenefits
+ */
 export async function requestProjectedBenefits() {
   try {
     const projectedBenefits = await axios.get(
@@ -309,9 +322,13 @@ export async function requestProjectedBenefits() {
   }
 }
 
+/**
+ * GET CLARISA PROJECTED PROBABILITIES
+ * @returns projectedProbabilities
+ */
 export async function requestProjectedProbabilities() {
   try {
-    const institutionsTypes = await axios.get(
+    const projectedProbabilities = await axios.get(
       clarisaHost + 'projectedBenefitsProbabilities',
       {
         auth: {
@@ -320,7 +337,7 @@ export async function requestProjectedProbabilities() {
         }
       }
     );
-    return institutionsTypes.data;
+    return projectedProbabilities.data;
   } catch (error) {
     console.log(error);
     throw new APIError(
@@ -332,7 +349,38 @@ export async function requestProjectedProbabilities() {
   }
 }
 
-export async function requestSdgTargets() {
+/**
+ * GET CLARISA ACTION AREAS OUTCOMES INDICATORS
+ * @returns actionAreasOutcomesIndicators
+ */
+export async function getActionAreasOutcomesIndicators() {
+  try {
+    const actionAreasOutcomesIndicators = await axios.get(
+      clarisaHost + 'actionAreaOutcomeIndicators',
+      {
+        auth: {
+          username: process.env['clarisa_user'],
+          password: process.env['clarisa_password']
+        }
+      }
+    );
+    return actionAreasOutcomesIndicators.data;
+  } catch (error) {
+    console.log(error);
+    throw new APIError(
+      'NOT FOUND',
+      HttpStatusCode.NOT_FOUND,
+      true,
+      error.message
+    );
+  }
+}
+
+/**
+ * GET CLARISA SDG TARGETS
+ * @returns clarisa SDG TARGETS
+ */
+export const getClaSdgTargets = async () => {
   try {
     const sdgTargets = await axios.get(clarisaHost + 'allSDGTargets', {
       auth: {
@@ -350,20 +398,21 @@ export async function requestSdgTargets() {
       error.message
     );
   }
-}
+};
 
-export async function requestActionAreasOutcomesIndicators() {
+/**
+ * GET CLARISA GLOBAL TARGETS
+ * @returns clarisa GLOBAL TARGETS
+ */
+export const getClaGlobalTargest = async () => {
   try {
-    const sdgTargets = await axios.get(
-      clarisaHost + 'actionAreaOutcomeIndicators',
-      {
-        auth: {
-          username: process.env['clarisa_user'],
-          password: process.env['clarisa_password']
-        }
+    const globalTargets = await axios.get(clarisaHost + 'globalTargets', {
+      auth: {
+        username: process.env['clarisa_user'],
+        password: process.env['clarisa_password']
       }
-    );
-    return sdgTargets.data;
+    });
+    return globalTargets.data;
   } catch (error) {
     console.log(error);
     throw new APIError(
@@ -373,136 +422,4 @@ export async function requestActionAreasOutcomesIndicators() {
       error.message
     );
   }
-}
-
-// export const getClaCountries = async (req: Request, res: Response) => {
-//     const queryRunner = getConnection().createQueryBuilder();
-//     const { filter } = req.query;
-//     const sqlQuery = `
-//     SELECT
-//         countries.created_at AS created_at,
-//         countries.updated_at AS updated_at,
-//         countries.id AS id,
-//         countries.code AS code,
-//         countries.name AS name,
-//         countries.isoAlpha2 AS isoAlpha2,
-//         countries.data AS data
-//     FROM
-//         clarisa_countries countries
-//     WHERE countries.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     OR countries.isoAlpha2 COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     ORDER BY countries.code
-//      `;
-//     try {
-//         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-//             sqlQuery,
-//             {},
-//             {}
-//         );
-//         const filteredData = await queryRunner.connection.query(query, parameters);
-//         res.json(new ResponseHandler('Countries.', { countries: filteredData }));
-//     } catch (error) {
-//         console.log(error);
-//         let e = error;
-//         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-//             e = new APIError(
-//                 'Bad Request',
-//                 HttpStatusCode.BAD_REQUEST,
-//                 true,
-//                 error.message
-//             );
-//         }
-//         return res.status(error.httpCode).json(error);
-//     }
-
-// }
-// export const getClaRegions = async (req: Request, res: Response) => {
-//     const queryRunner = getConnection().createQueryBuilder();
-//     const { filter } = req.query;
-//     const sqlQuery = `
-//     SELECT
-//         regions.created_at AS created_at,
-//         regions.updated_at AS updated_at,
-//         regions.id AS id,
-//         regions.code AS code,
-//         regions.name AS name,
-//         regions.parentRegionName AS parentRegionName,
-//         regions.parentRegionCode AS parentRegionCode,
-//         regions.data AS data
-//     FROM
-//         clarisa_regions regions
-//     WHERE regions.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     OR regions.parentRegionName COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     ORDER BY regions.code
-//      `;
-
-//     try {
-//         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-//             sqlQuery,
-//             {},
-//             {}
-//         );
-//         const filteredData = await queryRunner.connection.query(query, parameters);
-
-//         res.json(new ResponseHandler('Regions.', { regions: filteredData }));
-//     } catch (error) {
-//         console.log(error);
-//         let e = error;
-//         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-//             e = new APIError(
-//                 'Bad Request',
-//                 HttpStatusCode.BAD_REQUEST,
-//                 true,
-//                 error.message
-//             );
-//         }
-//         return res.status(error.httpCode).json(error);
-//     }
-
-// }
-
-// export const getClaInstitutions = async (req: Request, res: Response) => {
-//     // const clarisaRepo = getRepository(ClarisaInstitutions);
-//     const queryRunner = getConnection().createQueryBuilder();
-//     const { filter } = req.query;
-//     const sqlQuery = `
-//     SELECT
-//         institutions.created_at AS created_at,
-//         institutions.updated_at AS updated_at,
-//         institutions.id AS id,
-//         institutions.code AS code,
-//         institutions.name AS name,
-//         institutions.acronym AS acronym,
-//         institutions.country_name AS country_name,
-//         institutions.data AS data
-//     FROM
-//         clarisa_institutions institutions
-//     WHERE institutions.name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     OR institutions.acronym COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     OR institutions.country_name COLLATE UTF8_GENERAL_CI LIKE '%${filter}%'
-//     ORDER BY institutions.code
-//      `;
-
-//     try {
-//         const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-//             sqlQuery,
-//             {},
-//             {}
-//         );
-//         const filteredData = await queryRunner.connection.query(query, parameters);
-
-//         res.json(new ResponseHandler('Institutions.', { institutions: filteredData }));
-//     } catch (error) {
-//         console.log(error);
-//         let e = error;
-//         if (error instanceof QueryFailedError || error instanceof EntityNotFoundError) {
-//             e = new APIError(
-//                 'Bad Request',
-//                 HttpStatusCode.BAD_REQUEST,
-//                 true,
-//                 error.message
-//             );
-//         }
-//         return res.status(error.httpCode).json(error);
-//     }
-// }
+};
