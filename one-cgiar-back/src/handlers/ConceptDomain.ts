@@ -424,7 +424,7 @@ export class ConceptHandler extends ConceptValidation {
 
           const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
           newFiles.id = null;
-          newFiles.active = file.active;
+          newFiles.active = file.active ? file.active : true;
           newFiles.tocsId = upsertedInitialTocs.id;
           newFiles.section = section;
           newFiles.url = urlDB;
