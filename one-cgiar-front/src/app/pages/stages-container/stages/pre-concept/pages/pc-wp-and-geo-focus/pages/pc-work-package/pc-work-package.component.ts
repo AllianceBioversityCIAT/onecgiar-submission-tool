@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-pc-work-package',
@@ -26,7 +28,9 @@ export class PcWorkPackageComponent implements OnInit {
   constructor(
      private _dataControlService:DataControlService,
      public _initiativesService:InitiativesService ,
-     private _activatedRoute: ActivatedRoute
+     private _activatedRoute: ActivatedRoute,
+     private _interactionsService:InteractionsService,
+     private router:Router
   ) { }
 
 
@@ -36,14 +40,7 @@ export class PcWorkPackageComponent implements OnInit {
 
 
     this.getWpSubscription = this._activatedRoute.params.subscribe(params => {
-      console.log(params) //log the entire params object
-      console.log(params['id']) //log the value of id
-
-
       this.getWpById(params['id']);
-
-
-      
     });
 
     this._dataControlService.showCountries = true;
@@ -60,20 +57,52 @@ export class PcWorkPackageComponent implements OnInit {
 
 
   getWpById(wpId) {
-    this._initiativesService.getWpById(wpId, 'pre-concept').subscribe(resp => {
-      console.log(resp)
+    this._initiativesService.getWpById(wpId, 'pre-concept').pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
+      console.log(resp);
+      let {acronym, name, pathway_content, is_global, id, active} = resp;
+
+      this.workPackageBody ={
+        acronym,
+        name,
+        pathway_content,
+        is_global,
+        id,
+        active
+      }
+      
+      console.log(this.workPackageBody)
+
+
     })
   }
 
 
   saveWpFp() {
 
-    let body;
-    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.saveWpFp(this.workPackageBody, this._initiativesService.initiative.id).subscribe(resp => {
 
-
+      console.log(resp)
     })
 
+  }
+
+  deleteCurrentWP() {
+
+    let body = {
+      id: Number(this.workPackageBody.id),
+      active: false,
+    }
+
+    console.log(this.workPackageBody.id)
+    console.log('addWorkPackage()')
+
+    console.log(body)
+    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+      console.log(resp)
+      this._interactionsService.successMessage('Work package has been removed')
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/pre-concept/wp-and-geo-focus/work-packages-table`])
+    })
+    
   }
 
 
