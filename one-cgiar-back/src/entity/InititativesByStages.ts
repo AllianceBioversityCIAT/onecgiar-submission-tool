@@ -1,8 +1,15 @@
-import {Entity, PrimaryGeneratedColumn, ManyToOne, Column, JoinColumn, OneToOne} from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  JoinColumn,
+  OneToOne
+} from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {Initiatives} from './Initiatives';
 import {Stages} from './Stages';
-import { Statuses } from './Statuses';
+import {Statuses} from './Statuses';
 
 @Entity('initiatives_by_stages')
 export class InitiativesByStages extends UpdatedCreatedAt {
@@ -20,7 +27,7 @@ export class InitiativesByStages extends UpdatedCreatedAt {
 
   @ManyToOne(() => Initiatives, (initiative) => initiative.initvByStages)
   public initiative!: Initiatives;
-   
+
   @OneToOne(() => Statuses)
   @JoinColumn()
   status!: Statuses;

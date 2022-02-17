@@ -221,7 +221,7 @@ export class MenuComponent implements OnInit {
         // console.log(this.initiativesSvc.initiative.stageId)
 
         if (this.initiativesSvc.initiative.stageId === 3) {
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'proposal').subscribe((wpsResp) => {
             let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
             this.mapDataInMenu(3, 5, 12, wpss);
             this._dataControlService.wpMaped = true;
@@ -230,6 +230,19 @@ export class MenuComponent implements OnInit {
             this._dataControlService.wpMaped = true;
           });
         }
+
+
+        if (this.initiativesSvc.initiative.stageId === 2) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'pre-concept' ).subscribe((wpsResp) => {
+            let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(2, 13, 28, wpssPc);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+
 
 
 
@@ -291,9 +304,9 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-        if (this.initiativesSvc.initiative.stageId === 3) {
-          this.getAssessmentStatuses();
-        }
+      
+        this.getAssessmentStatuses();
+        
         this._dataControlService.validateMenu$.emit();
       }
       // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);

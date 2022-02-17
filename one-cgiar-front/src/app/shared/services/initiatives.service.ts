@@ -19,6 +19,7 @@ export class InitiativesService {
     roleId: 4,
     readonly: true,
     stageId: null,
+    stageNameToServices: null,
     name: null,
     users: [],
     status: null,
@@ -440,13 +441,13 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/meta/validations/menu/${initiativeId}/${stageId}`);
   }
   // get all work packages by initiative with stage full proposal
-  getWpsFpByInititative(initiativeId) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);
+  getWpsFpByInititative(initiativeId:string, stageName:string) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/packages/${initiativeId}`);
   }
 
   // get one work package by id with stage full proposal
-  getWpFpByInititative(wpID) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
+  getWpById(wpID, stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/package/${wpID}`);
   }
 
   // get one work package by id with stage full proposal
@@ -485,7 +486,7 @@ export class InitiativesService {
   }
 
   saveWpFp(body: any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageNameToServices}/packages/${initiativeId}`, body);
   }
   // Query to create a work package
   createPartner(body: any): Observable<any> {
