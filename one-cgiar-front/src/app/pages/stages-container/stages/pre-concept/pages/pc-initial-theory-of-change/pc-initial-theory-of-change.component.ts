@@ -31,7 +31,7 @@ export class PcInitialTheoryOfChangeComponent implements OnInit {
   getPcInitialToc(){
     this._initiativesService.getPcInitialToc(this._initiativesService.initiative.id,this.pcInitialTheoryOfChangeBody.section).subscribe(resp=>{
      
-
+      console.log(resp)
       this.updateObject(resp.response.initialToc)
 
       // console.log(resp.response.initialToc)
