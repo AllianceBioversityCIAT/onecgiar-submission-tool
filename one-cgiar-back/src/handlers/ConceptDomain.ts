@@ -508,7 +508,7 @@ export class ConceptHandler extends ConceptValidation {
 
       initialToc.map((toc) => {
         toc['files'] = files.filter((f) => {
-          return f.tocId === toc.id;
+          return f.tocsId === toc.id;
         });
       });
 

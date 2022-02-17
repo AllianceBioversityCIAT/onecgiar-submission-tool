@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 export interface DialogData {
   animal: string;

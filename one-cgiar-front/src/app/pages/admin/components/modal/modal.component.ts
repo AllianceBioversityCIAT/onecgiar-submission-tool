@@ -1,8 +1,8 @@
 import { UsersService } from './../../services/users.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BaseFormUser } from '../../../../shared/utils/base-form-user';
 
-import { BaseFormUser } from '@shared/utils/base-form-user';
 enum Action {
   EDIT = 'edit',
   NEW = 'new',

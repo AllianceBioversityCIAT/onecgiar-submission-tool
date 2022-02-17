@@ -7,10 +7,10 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '@shared/services/auth.service';
 import { InteractionsService } from '../services/interactions.service';
 import { environment } from '../../../environments/environment';
 import { DataControlService } from '../services/data-control.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {

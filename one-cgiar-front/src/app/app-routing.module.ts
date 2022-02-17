@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CheckLoginGuard } from '@shared/guards/check-login.guard';
-import { CheckHomeGuard } from '@shared/guards/check-home.guard';
 import { HomeComponent } from './pages/home/home.component';
+import { CheckHomeGuard } from './shared/guards/check-home.guard';
+import { CheckLoginGuard } from './shared/guards/check-login.guard';
 
 const routes: Routes = [
   {

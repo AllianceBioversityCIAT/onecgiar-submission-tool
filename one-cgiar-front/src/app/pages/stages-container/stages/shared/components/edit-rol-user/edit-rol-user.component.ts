@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-edit-rol-user',

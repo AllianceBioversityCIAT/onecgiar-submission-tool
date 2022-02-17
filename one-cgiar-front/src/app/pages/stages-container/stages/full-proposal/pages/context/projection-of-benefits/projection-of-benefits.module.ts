@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ProjectionOfBenefitsRoutingModule } from './projection-of-benefits-routing.module';
 import { ProjectionOfBenefitsComponent } from './projection-of-benefits.component';
-import { UtilsModule } from '@app/shared/components/utils/utils.module';
 import { TableModule } from 'primeng/table';
+import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({

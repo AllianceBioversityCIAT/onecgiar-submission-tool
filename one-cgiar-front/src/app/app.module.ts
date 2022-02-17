@@ -5,15 +5,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@app/material.module';
-import { SidebarModule } from '@shared/components/sidebar/sidebar.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
-import { HttpRequestInterceptor } from '@shared/interceptors/http-request.interceptor';
-import { ErrorInterceptor } from '@shared/interceptors/error.interceptor';
-import { AppErrorHandler } from '@shared/utils/app-error-handler';
 
 //? Components
 import { InitTableComponent } from './shared/components/init-table/init-table.component';
@@ -26,7 +21,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CustomFormsModule } from './shared/components/custom-forms/custom-forms.module';
-import { DevTagComponent } from './shared/components/dev-tag/dev-tag.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
 //? Module of components
@@ -44,6 +38,11 @@ import { HeaderModule } from './shared/components/header/header.module';
 import { NavbarModule } from './shared/components/navbar/navbar.module';
 import { DevTagModule } from './shared/components/dev-tag/dev-tag.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MaterialModule } from './material.module';
+import { SidebarModule } from './shared/components/sidebar/sidebar.module';
+import { HttpRequestInterceptor } from './shared/interceptors/http-request.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
+import { AppErrorHandler } from './shared/utils/app-error-handler';
 @NgModule({
   declarations: [
     AppComponent,
