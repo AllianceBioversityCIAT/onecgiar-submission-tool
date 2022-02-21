@@ -23,6 +23,15 @@
   background-color: rgb(65, 65, 65);
 }
 
+.card_container_box{
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card_container_list{
+  gap: 30px;
+}
+
 .user-card {
   background: white;
   // background: linear-gradient(180deg, rgba(19,205,218,1) 0%, rgba(17,187,199,1) 86%);
@@ -41,8 +50,8 @@
   .card_container {
     padding: 15px 10px;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    // flex-direction: column;
+    // gap: 15px;
 
     .role {
       display: flex;

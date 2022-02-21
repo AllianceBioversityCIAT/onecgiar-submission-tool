@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MaVariablesService } from '../../services/ma-variables.service';
 
 @Component({
   selector: 'app-ma-user-card',
@@ -10,7 +11,9 @@ export class MaUserCardComponent implements OnInit {
   @Input() roles
   @Output() onSelectOptionEvent = new EventEmitter();
   currentRole = null
-  constructor() { }
+  constructor(
+    public _maVariablesService:MaVariablesService
+  ) { }
 
   ngOnInit(): void {
     this.findRoleName();
@@ -25,7 +28,7 @@ export class MaUserCardComponent implements OnInit {
   //    }
   // }
   checkRoleId(){
-    if (!this.user.roleId)return;
+    if (!this.user.roleId || (this.user.roleId != 2 && this.user.roleId != 3))return;
     return `You can only have one ${ this.roles.find(role=>role.id == this.user.roleId).name} per initiative`
   }
 
