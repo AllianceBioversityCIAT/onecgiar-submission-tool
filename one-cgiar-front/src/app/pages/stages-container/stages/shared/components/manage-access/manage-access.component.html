@@ -61,9 +61,9 @@
                                }"></ibdc-select-multiple>
 
                         </div>
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <ibdc-alert [options]="{htmlText: 'Please assign role if you want to keep the users assigned to this initiative', type:'info'}"></ibdc-alert>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12">
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>
 
@@ -82,9 +82,11 @@
                             </div> -->
                         </div>
                         <div class="col-sm-12">
-                            <button [disabled]="this.updateRolesButtonDisabled" (click)="assignRolesOrUpdate()" pButton pRipple  class="update_roles_button p-button-success">
-                                Update roles
-                            </button>
+                            <div class="update_roles_button_container">
+                                <button [disabled]="this.updateRolesButtonDisabled" (click)="assignRolesOrUpdate()" pButton pRipple  class="update_roles_button p-button-success">
+                                    Update roles
+                                </button>
+                            </div>
                         </div>
                     </div>
 
