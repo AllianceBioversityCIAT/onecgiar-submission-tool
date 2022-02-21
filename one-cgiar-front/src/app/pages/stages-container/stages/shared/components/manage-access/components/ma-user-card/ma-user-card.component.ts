@@ -24,6 +24,10 @@ export class MaUserCardComponent implements OnInit {
   //     roleToDisabled.disabled = true;
   //    }
   // }
+  checkRoleId(){
+    if (!this.user.roleId)return;
+    return `You can only have one ${ this.roles.find(role=>role.id == this.user.roleId).name} per initiative`
+  }
 
   findRoleName(){
     if (!this.user.roleId)return;

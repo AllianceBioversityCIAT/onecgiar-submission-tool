@@ -6,6 +6,23 @@
   outline: 2px solid rgb(235, 84, 84);
 }
 
+.header-invalid{
+  background-color: rgb(235, 84, 84);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 5px;
+  padding-right: 50px;
+  height: auto !important;
+  text-align: center;
+  font-size: 10px;
+}
+
+.header-valid{
+  background-color: rgb(65, 65, 65);
+}
+
 .user-card {
   background: white;
   // background: linear-gradient(180deg, rgba(19,205,218,1) 0%, rgba(17,187,199,1) 86%);
@@ -18,7 +35,6 @@
   position: relative;
 
   .header {
-    background-color: rgb(65, 65, 65);
     height: 30px;
   }
 
