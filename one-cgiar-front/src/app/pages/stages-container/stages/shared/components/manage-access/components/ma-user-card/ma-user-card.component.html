@@ -1,0 +1,29 @@
+<div class="user-card {{this.user.invalid === true ? 'invalid' : 'valid'}}">
+    <app-button-edit-or-delete  type="delete" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+    <div class="header"></div>
+    <div class="card_container">
+        <div class="user_personal_info">
+            <div class="name">
+                {{this.user.first_name}} {{this.user.last_name}}
+            </div>
+            <div class="email">
+                {{this.user.email}}
+            </div>
+        </div>
+        <div class="role">
+            <div class="rol-chip" >
+                <span>Role:</span>  {{currentRole}} 
+             </div>
+             <div class="icon_container" [matMenuTriggerFor]="menu">
+                <div class="icon material-icons">
+                    edit
+                </div>
+             </div>
+        </div>
+    </div>
+
+</div>
+
+<mat-menu #menu="matMenu">
+    <button [disabled]="rol.disabled=== true" (click)="onSelectOption(rol)" *ngFor="let rol of this.roles" mat-menu-item>{{rol.name}}</button>
+</mat-menu>

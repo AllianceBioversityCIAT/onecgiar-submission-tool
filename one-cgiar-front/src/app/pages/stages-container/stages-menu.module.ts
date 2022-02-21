@@ -14,9 +14,12 @@ import { MenuModule } from '../../shared/components/menu/menu.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
 import { MaterialModule } from '../../material.module';
+import { MaUserCardComponent } from './stages/shared/components/manage-access/components/ma-user-card/ma-user-card.component';
+import { MaUserCardListComponent } from './stages/shared/components/manage-access/components/ma-user-card-list/ma-user-card-list.component';
+import { ButtonEditOrDeleteModule } from './stages/shared/components/button-edit-or-delete/button-edit-or-delete.module';
 
 @NgModule({
-  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent],
+  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, MaUserCardComponent, MaUserCardListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
@@ -29,7 +32,8 @@ import { MaterialModule } from '../../material.module';
     IbdAngularComponentsModule,
     MenuModule,
     TooltipModule,
-    SectionBreadcrumbModule
+    SectionBreadcrumbModule,
+    ButtonEditOrDeleteModule
   ]
 })
 export class StagesMenuModule { }

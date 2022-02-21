@@ -305,7 +305,7 @@ export class MenuComponent implements OnInit {
         }
 
       
-        this.getAssessmentStatuses();
+        // this.getAssessmentStatuses();
         
         this._dataControlService.validateMenu$.emit();
       }

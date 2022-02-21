@@ -21,6 +21,7 @@ export class ManageAccessComponent implements OnInit {
   tabNumber=0;
   rolesLoaded = false;
   usersLoaded = false;
+  updateRolesButtonDisabled = true;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -72,11 +73,46 @@ export class ManageAccessComponent implements OnInit {
   getUsersByInitiative(){
     // console.log(this.initiativesSvc.initvStgId);
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initiative.id).subscribe(resp=>{
+      console.log(resp)
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();
+      this.validate_repeat_leads();
       // console.log(resp.response.users);
     },err=>{},()=>{this.usersLoaded = true})
+  }
+
+  validate_repeat_leads(){
+
+    let counter = {
+      lead:0,
+      deputy:0
+    }
+    this.selectedUsers.map(user=>{
+      delete user.invalid
+      counter.lead = user.roleId == 2 ? (counter.lead+1) : counter.lead;
+      counter.deputy = user.roleId == 3 ? (counter.deputy+1) : counter.deputy;
+    })
+
+    console.log(counter)
+    this.mapInvalid(counter);
+  }
+
+  mapInvalid(counter){
+    if (counter.lead>1 || counter.deputy >1) {
+      this.updateRolesButtonDisabled = true;
+      this.selectedUsers.map(user=>{
+        user.invalid = counter.lead>1 && user.roleId == 2 ? true : user.invalid ;
+        user.invalid = counter.deputy>1 && user.roleId == 3 ? true : user.invalid ;
+      })
+    }else{
+      this.updateRolesButtonDisabled = false;
+    }
+  }
+
+  assignRolesOrUpdate(){
+    
+    console.log(this.selectedUsers)
   }
 
   firstTab(){
