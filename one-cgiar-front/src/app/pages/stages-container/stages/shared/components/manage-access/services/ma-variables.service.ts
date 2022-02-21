@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MaVariablesService {
-  orderBox = true;
+ 
   constructor() { }
+  get orderBox(){
+    return localStorage.getItem('orderBox') == 'true' ? true : false;
+  }
+  set orderBox(value){
+    localStorage.setItem('orderBox', value.toString());
+  }
 }
