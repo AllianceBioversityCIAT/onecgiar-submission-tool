@@ -34,7 +34,6 @@ export class MaUserCardComponent implements OnInit {
 
   findRoleName(){
     if (!this.user.roleId)return;
-    console.log(this.user)
     this.currentRole = this.roles.find(role=>role.id === this.user.roleId)?.name
     // this.user.roleId = this.roles.find(role=>role.id === this.user.roleId).id
   }

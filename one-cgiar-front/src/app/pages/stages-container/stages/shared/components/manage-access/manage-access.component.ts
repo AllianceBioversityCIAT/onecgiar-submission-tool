@@ -75,7 +75,6 @@ export class ManageAccessComponent implements OnInit {
   getUsersByInitiative(){
     // console.log(this.initiativesSvc.initvStgId);
     this.initiativesSvc.getUsersByInitiative(this.initiativesSvc.initiative.id).subscribe(resp=>{
-      console.log(resp)
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();
@@ -96,7 +95,6 @@ export class ManageAccessComponent implements OnInit {
       counter.deputy = user.roleId == 3 ? (counter.deputy+1) : counter.deputy;
     })
 
-    console.log(counter)
     this.mapInvalid(counter);
   }
 
