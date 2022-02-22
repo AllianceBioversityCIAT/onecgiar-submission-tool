@@ -39,6 +39,8 @@ export class ManageAccessComponent implements OnInit {
   }
 
   reloadSelectRoleComp(){
+    this.getAllRoles();
+    this.getUsersByInitiative();
     this.showForm = false;
     setTimeout(() => {
     this.showForm = true;
