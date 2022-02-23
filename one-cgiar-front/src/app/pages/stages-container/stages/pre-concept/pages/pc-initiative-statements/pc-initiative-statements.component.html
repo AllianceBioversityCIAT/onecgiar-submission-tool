@@ -14,7 +14,10 @@
                 <ibdc-text-area-field 
                     inputTitle="highlight {{i+1}}"
                     [objectItem]="highlight" 
-                    [objectAtributteName]="'description'">
+                    [objectAtributteName]="'description'"
+                    [maxWords]="250"
+                    >
+
                 </ibdc-text-area-field>
             </div>
         </div>
@@ -26,7 +29,8 @@
             <ibdc-text-area-field 
             inputTitle="Challenge Statement"
             [objectItem]="body.context" 
-            [objectAtributteName]="'challenge_statement'">
+            [objectAtributteName]="'challenge_statement'"
+            [maxWords]="250">
             </ibdc-text-area-field>
         </div>
     </div>
@@ -37,7 +41,8 @@
             <ibdc-text-area-field 
             inputTitle="Objective Statement"
             [objectItem]="body.context" 
-            [objectAtributteName]="'smart_objectives'">
+            [objectAtributteName]="'smart_objectives'"
+            [maxWords]="250">
             </ibdc-text-area-field>
         </div>
     </div>

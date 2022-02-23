@@ -14,14 +14,17 @@
                 <ibdc-text-area-field 
                 inputTitle="Short title"
                 [objectItem]="workPackageBody" 
-                objectAtributteName="acronym">
+                objectAtributteName="acronym"
+                [maxWords]="3"
+                >
                 </ibdc-text-area-field>
               </div>
               <div class="col-sm-7">
                 <ibdc-text-area-field 
                 inputTitle="Title"
                 [objectItem]="workPackageBody" 
-                objectAtributteName="name">
+                objectAtributteName="name"
+                [maxWords]="30">
                 </ibdc-text-area-field>
               </div>
               <div class="col-sm-12">
@@ -29,7 +32,8 @@
                 <ibdc-text-area-field 
                 inputTitle="Main focus and prioritization"
                 [objectItem]="workPackageBody" 
-                objectAtributteName="pathway_content">
+                objectAtributteName="pathway_content"
+                [maxWords]="50">
                 </ibdc-text-area-field>
               </div>
               <div class="col-sm-12">
@@ -38,6 +42,12 @@
                 <!-- <app-geographic-scope [localForm]="workPackageForm"
                   [regionsSelectedList]="[]"
                   [countriesSelectedList]="[]"></app-geographic-scope> -->
+                  <app-geographic-scope-fields 
+                  [regionsSelectedList]="this.workPackageBody.regionsSelectedList"
+                  [countriesSelectedList]="this.workPackageBody.countriesSelectedList"
+                  [objectItem]="this.workPackageBody"
+                  objectAtributteName="is_global"
+                  ></app-geographic-scope-fields>
 
               </div>
             </div>

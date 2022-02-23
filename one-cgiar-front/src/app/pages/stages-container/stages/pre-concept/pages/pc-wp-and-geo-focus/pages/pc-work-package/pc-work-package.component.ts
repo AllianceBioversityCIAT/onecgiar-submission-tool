@@ -20,7 +20,9 @@ export class PcWorkPackageComponent implements OnInit {
     pathway_content: '',
     is_global: '',
     id: '',
-    active: ''
+    active: '',
+    regionsSelectedList:[],
+    countriesSelectedList:[]
   };
 
   getWpSubscription:Subscription;
@@ -59,7 +61,7 @@ export class PcWorkPackageComponent implements OnInit {
   getWpById(wpId) {
     this._initiativesService.getWpById(wpId, 'pre-concept').pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
       console.log(resp);
-      let {acronym, name, pathway_content, is_global, id, active} = resp;
+      let {acronym, name, pathway_content, is_global, id, active,regionsSelectedList,countriesSelectedList} = resp;
 
       this.workPackageBody ={
         acronym,
@@ -67,7 +69,9 @@ export class PcWorkPackageComponent implements OnInit {
         pathway_content,
         is_global,
         id,
-        active
+        active,
+        regionsSelectedList:[],
+        countriesSelectedList:[]
       }
       
       console.log(this.workPackageBody)
