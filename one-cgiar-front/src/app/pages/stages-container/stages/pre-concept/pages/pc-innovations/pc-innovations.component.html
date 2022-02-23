@@ -11,7 +11,8 @@
                 [inputRequired]="i==0?true:false"
                 inputTitle="innovation {{i+1}}"
                 [objectItem]="innovation" 
-                [objectAtributteName]="'value'">
+                [objectAtributteName]="'value'"
+                [maxWords]="50">
             </ibdc-text-area-field>
             <app-button-edit-or-delete (click)="removeInnovation(innovation)" [ngCustomStyle]="{'border-top-right-radius':'7px','margin':'3px 3px 0px 0px'}" margin="4" type="delete" (action)="deleteCurrentWP()"></app-button-edit-or-delete>
 
