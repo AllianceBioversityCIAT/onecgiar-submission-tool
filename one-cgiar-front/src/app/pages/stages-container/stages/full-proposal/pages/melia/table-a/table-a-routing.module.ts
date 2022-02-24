@@ -5,7 +5,10 @@ import { TableAComponent } from './table-a.component';
 const routes: Routes = [
   {
     path:'',
-    component:TableAComponent
+    component:TableAComponent,
+    children:[
+      { path: 'impact-area/:id', loadChildren: () => import('./ta-impact-area/ta-impact-area.module').then(m => m.TaImpactAreaModule) },
+    ]
   }
 ];
 
