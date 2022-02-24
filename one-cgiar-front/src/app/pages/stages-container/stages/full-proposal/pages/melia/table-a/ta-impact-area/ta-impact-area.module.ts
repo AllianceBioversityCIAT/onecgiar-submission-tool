@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { TaImpactAreaRoutingModule } from './ta-impact-area-routing.module';
 import { TaImpactAreaComponent } from './ta-impact-area.component';
+import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
   declarations: [TaImpactAreaComponent],
   imports: [
     CommonModule,
-    TaImpactAreaRoutingModule
+    TaImpactAreaRoutingModule,
+    UtilsModule
   ]
 })
 export class TaImpactAreaModule { }

@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { TableBRoutingModule } from './table-b-routing.module';
 import { TableBComponent } from './table-b.component';
+import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
   declarations: [TableBComponent],
   imports: [
     CommonModule,
-    TableBRoutingModule
+    TableBRoutingModule,
+    UtilsModule
   ]
 })
 export class TableBModule { }
