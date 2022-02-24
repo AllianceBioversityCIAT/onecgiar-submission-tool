@@ -19,6 +19,18 @@ const routes: Routes = [
         path: 'melia-studies-and-activities',
         loadChildren: () => import('./melia-studies-and-activities/melia-studies-and-activities.module').then(mod => mod.MeliaStudiesAndActivitiesModule),
       },
+      {
+        path: 'table-a',
+        loadChildren: () => import('./table-a/table-a.module').then(mod => mod.TableAModule),
+      },
+      {
+        path: 'table-b',
+        loadChildren: () => import('./table-b/table-b.module').then(mod => mod.TableBModule),
+      },
+      {
+        path: 'table-c',
+        loadChildren: () => import('./table-c/table-c.module').then(mod => mod.TableCModule),
+      },
     ],
   }
 ];

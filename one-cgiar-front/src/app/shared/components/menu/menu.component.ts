@@ -258,6 +258,9 @@ export class MenuComponent implements OnInit {
         let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
+        let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(3, 8, 34, tableAImpactArea);
+
         // //! Pre concept simulation
         let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(2, 16, 29, resultsList);
@@ -309,7 +312,7 @@ export class MenuComponent implements OnInit {
         
         this._dataControlService.validateMenu$.emit();
       }
-      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 
