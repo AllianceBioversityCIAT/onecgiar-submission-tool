@@ -1464,7 +1464,6 @@ export class ProposalHandler extends InitiativeStageHandler {
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
 
-      console.log('aqui',mergeResultsIndicators);
       // Save data
       let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
