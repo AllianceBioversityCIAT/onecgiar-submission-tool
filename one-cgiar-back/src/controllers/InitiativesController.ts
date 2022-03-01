@@ -832,6 +832,7 @@ export const createInitiative = async (req: Request, res: Response) => {
   const initiativesByUsersRepository = getRepository(InitiativesByUsers);
   const initiativesByStagesRepository = getRepository(InitiativesByStages);
   const stageRepository = getRepository(Stages);
+  const statusesRepo = getRepository(Statuses)
 
   const initiative = new Initiatives();
   const initByUsr = new InitiativesByUsers();
@@ -858,10 +859,14 @@ export const createInitiative = async (req: Request, res: Response) => {
       // initByUsr.is_lead = is_lead;
       // initByUsr.is_owner = is_owner;
       if (current_stage) {
+        // set editing as current status
+        const editingStatus = await statusesRepo.findOne({ where: { status: 'Editing' } });
         let sltdStage = await stageRepository.findOne(current_stage);
+        newInitStg.status = editingStatus;
         newInitStg.initiative = createdInitiative;
         newInitStg.stage = sltdStage;
         await initiativesByStagesRepository.save(newInitStg);
+
       }
 
       await initiativesByUsersRepository.save(initByUsr);

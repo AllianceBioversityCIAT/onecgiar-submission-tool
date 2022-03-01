@@ -35,9 +35,8 @@
                         <span class="text-description">
                             Submitted by: 
                         </span>
-                        <span class="initiative-id">{{this.initiativesSvc.initiative.submission.first_name}} {{this.initiativesSvc.initiative.submission.last_name}}</span>
+                        <span class="initiative-id">{{this.initiativesSvc.initiative.submission.first_name}} {{this.initiativesSvc.initiative.submission.last_name}} - {{this.initiativesSvc.initiative.submission.updated_at | date:'yyyy-MM-dd HH:mm zz'}}</span>
                         <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                        <p class="initiative-id">{{this.initiativesSvc.initiative.submission.updated_at | date:'yyyy-MM-dd HH:mm zz'}}</p>
                     </div>
                     <div class="initIdContainer">
                         <span class="text-description">
