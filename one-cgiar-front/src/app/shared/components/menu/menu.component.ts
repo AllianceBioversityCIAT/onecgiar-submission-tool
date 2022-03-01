@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsHandler } from '@shared/utils/utils';
-import { InitiativesService } from '@shared/services/initiatives.service';
-import { RequestsService } from '@shared/services/requests.service';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
-import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { map } from 'rxjs/operators';
 import { ListToMap } from './classes/listToMap';
+import { AuthService } from '../../services/auth.service';
+import { StagesMenuService } from '../../services/stages-menu.service';
+import { InitiativesService } from '../../services/initiatives.service';
+import { RequestsService } from '../../services/requests.service';
+import { UtilsHandler } from '../../utils/utils';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -35,14 +34,14 @@ export class MenuComponent implements OnInit {
   city: string;
   localMenuChangesubscribtion$;
   statuses: any[];
-  statusTextObj = {
-    description: ''
-  };
+  statusTextObj = {};
+  currentUser;
 
   // stageUrl;
   constructor(
     public _requests: RequestsService,
     public router: Router,
+    private auth: AuthService,
     public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
     public _interactionsService: InteractionsService,
@@ -61,6 +60,7 @@ export class MenuComponent implements OnInit {
 
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
       // console.log("menuChange$");
+      this.currentUser = this.auth.userValue;
       this.getMenu();
 
       // this.getAllIWorkPackages();
@@ -84,23 +84,25 @@ export class MenuComponent implements OnInit {
   changeHide(val: boolean) {
     this.display = val;
     this.statuses.forEach(s => {
-      s['clicked'] = false;
+      s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
     });
   }
 
   getAssessmentStatuses() {
-    this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
-      resp => {
-        resp.response.statuses.forEach(s => {
-          s['clicked'] = false;
-        });
-        this.statuses = resp.response.statuses;
-      },
-      err => {
-        console.log(err);
-        this._interactionsService.errorMessage(err.error?.description, 2000);
-      }
-    )
+    if (this.currentUser.roles.find(r => r.acronym == 'ADM') || this.currentUser.roles.find(r => r.acronym == 'ASSESS')) {
+      this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
+        resp => {
+          resp.response.statuses.forEach(s => {
+            s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
+          });
+          this.statuses = resp.response.statuses;
+        },
+        err => {
+          console.log(err);
+          this._interactionsService.errorMessage(err.error?.description, 2000);
+        }
+      )
+    }
   }
 
   onStatusClick(event, clickedStatus) {
@@ -120,10 +122,10 @@ export class MenuComponent implements OnInit {
 
   onConfirmAssessment() {
     const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
-    console.log(statusSelected, this.statusTextObj.description);
-    const updateObj = this.statusTextObj
+    const updateObj = { description: this.statusTextObj['description'], statusId: statusSelected.id };
+    console.log(updateObj)
     this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
-      resp => { 
+      resp => {
         console.log(resp)
       },
       err => {
@@ -161,6 +163,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapReportInSubSectionMenu(stageId, sectionId, object) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -169,6 +172,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -179,6 +183,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -189,6 +194,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -196,195 +202,6 @@ export class MenuComponent implements OnInit {
         (subSection) => subSection.subSectionId == subSectionId
       ).previewButton = object);
     // console.log(sectionFinded);
-  }
-
-  getPreConceptSimulated(){
-    this._dataControlService.userMenu.push({
-      stageId:1,
-      description: "Pre concept",
-      sections: [
-        {
-          "sectionId": 1,
-          "stage": "Full Proposal",
-          "description": "general-information",
-          "display_name": "General Information",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 2,
-          "stage": "Full Proposal",
-          "description": "initial-theory-of-change",
-          "display_name": "Initial theory of change",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 3,
-          "stage": "Full Proposal",
-          "description": "initiative-statements",
-          "display_name": "Initiative statements",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 4,
-          "stage": "Full Proposal",
-          "description": "wp-and-geo-focus",
-          "display_name": "Work packages and Geographic focus",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [
-            {
-              "subSectionId": 112,
-              "description": "work-packages",
-              "display_name": "Work packages",
-              "single_section": 1,
-              "sectionId": 5,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            }
-          ],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 5,
-          "stage": "Full Proposal",
-          "description": "results",
-          "display_name": "Results",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [
-            {
-              "subSectionId": 113,
-              "description": "impact-areas",
-              "display_name": "Impact areas",
-              "single_section": 0,
-              "sectionId": 5,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            },
-            {
-              "subSectionId": 115,
-              "description": "sdg-mapping",
-              "display_name": "SDG Mapping",
-              "single_section": 1,
-              "sectionId": 5,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            }
-          ],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 6,
-          "stage": "Full Proposal",
-          "description": "innovations",
-          "display_name": "Innovations",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 7,
-          "stage": "Full Proposal",
-          "description": "key-partners",
-          "display_name": "Key partners",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [
-            {
-              "subSectionId": 116,
-              "description": "top-5-key-demand-partner-organizations",
-              "display_name": "Top 5 Key Demand Partner Organizations",
-              "single_section": 1,
-              "sectionId": 7,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            },
-            {
-              "subSectionId": 117,
-              "description": "top-5-key-innovation-partner-organizations",
-              "display_name": "Top 5 Key Innovation Partner Organizations",
-              "single_section": 1,
-              "sectionId": 7,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            },
-            {
-              "subSectionId": 118,
-              "description": "top-5-key-scaling-partner-organizations",
-              "display_name": "Top 5 Key Scaling Partner Organizations",
-              "single_section": 1,
-              "sectionId": 7,
-              "active": 1,
-              "visible": 1,
-              "order": 0,
-              "block": null,
-            },
-          ],
-          "fieldsCompleted": 0
-        },
-        {
-          "sectionId": 8,
-          "stage": "Full Proposal",
-          "description": "global-budget",
-          "display_name": "Global Budget",
-          "active": 1,
-          "visible": 1,
-          "orderSection": 1,
-          "stageId": 3,
-          "subsections": [],
-          "fieldsCompleted": 0
-        }
-      ]
-    })
-
-    //* Sort stages
-
-    this._dataControlService.userMenu.sort(function (a, b) {
-      if (a['stageId'] < b['stageId']) {
-        return -1;
-      }
-      if (a['stageId']> b['stageId']) {
-        return 1;
-      }
-      return 0;
-    });
-
-
-
   }
 
   getMenu() {
@@ -398,20 +215,42 @@ export class MenuComponent implements OnInit {
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3)?.sections?.find(section => section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3).sections.find(section => section.sectionId == 8).subsections.findIndex(subSection => subSection.subSectionId == 17), 1)
       //!
-      if (userMenuResp.response.stages.length > 1) {
+      if (userMenuResp.response.stages.length > 0) {
 
-        this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
-          let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-          this.mapDataInMenu(3, 5, 12, wpss);
-          //! Pre concept simulation
-          // let wpssPc = new ListToMap( wpsResp.response.workpackage,'/work-package/','work-package','showName','acronym').getList();
-          // this.mapDataInMenu(1, 4, 112, wpssPc);
-          // //! 
-          this._dataControlService.wpMaped = true;
-        }, (err) => {
-          console.log(err);
-          this._dataControlService.wpMaped = true;
-        });
+
+        // console.log(this.initiativesSvc.initiative.stageId)
+
+        if (this.initiativesSvc.initiative.stageId === 3) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'proposal').subscribe((wpsResp) => {
+            let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(3, 5, 12, wpss);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+
+
+        if (this.initiativesSvc.initiative.stageId === 2) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'pre-concept' ).subscribe((wpsResp) => {
+            let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(2, 13, 28, wpssPc);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+
+
+
+
+
+        // //! Pre concept simulation
+        // let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+        // this.mapDataInMenu(2, 13, 28, wpssPc);
+        // // //!
 
         let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
@@ -420,8 +259,8 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         // //! Pre concept simulation
-        // let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
-        // this.mapDataInMenu(1, 5, 113, resultsList);
+        let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        this.mapDataInMenu(2, 16, 29, resultsList);
         // //! 
 
         this.mapReportInSubSectionMenu(3, 9, {
@@ -436,7 +275,7 @@ export class MenuComponent implements OnInit {
 
         this.mapPreviewInDynamicListMenu(3, 7, 16, {
           showName: 'Partners preview',
-          frontRoute: '/is-resports'
+          frontRoute: '/is-reports'
         });
 
         this.mapDataInMenuDynamicListSubSection(3, 4, 27,
@@ -457,7 +296,7 @@ export class MenuComponent implements OnInit {
 
         this.mapPreviewInDynamicListMenu(3, 1, 8, {
           showName: 'Projection of benefits preview',
-          frontRoute: '/projection-of-benefits/pob-resports'
+          frontRoute: '/projection-of-benefits/pob-reports'
         });
 
         if (this.impacAreasList.length) {
@@ -465,7 +304,9 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-        this.getAssessmentStatuses();
+      
+        // this.getAssessmentStatuses();
+        
         this._dataControlService.validateMenu$.emit();
       }
       // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);

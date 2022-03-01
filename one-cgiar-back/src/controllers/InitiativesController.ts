@@ -16,14 +16,14 @@ import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {forwardStage, validatedSection} from '../utils/section-validation';
 import * as clarisa from './Clarisa';
-import { InitiativeStageHandler } from '../handlers/InitiativeStageDomain';
-import { InitiativeHandler } from '../handlers/InitiativesDomain';
-import { ProposalHandler } from '../handlers/FullProposalDomain';
-import { ConceptHandler } from '../handlers/ConceptDomain';
-import { MetaDataHandler } from '../handlers/MetaDataDomain';
-import { Submissions } from '../entity/Submissions';
-import { SubmissionsStatus } from '../entity/SubmissionStatus';
-import { Statuses } from '../entity/Statuses';
+import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
+import {InitiativeHandler} from '../handlers/InitiativesDomain';
+import {ProposalHandler} from '../handlers/FullProposalDomain';
+import {ConceptHandler} from '../handlers/ConceptDomain';
+import {MetaDataHandler} from '../handlers/MetaDataDomain';
+import {Submissions} from '../entity/Submissions';
+import {SubmissionsStatus} from '../entity/SubmissionStatus';
+import {Statuses} from '../entity/Statuses';
 
 require('dotenv').config();
 
@@ -566,7 +566,8 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
             stage.id AS currentStageId,
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
-            initvStg.status AS initvStageStatus,
+            -- initvStg.statusId AS initvStageStatus,
+            (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS initvStageStatus,
             (SELECT id FROM stages WHERE active = true) AS activeStageId,
             (SELECT description FROM stages WHERE active = true) AS activeStageName           
 
@@ -1001,15 +1002,19 @@ export const createStage = async (req: Request, res: Response) => {
 };
 
 /// -*----*- ///
-
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
+ * @param res
+ */
 export const getAssessmentStatus = async (req: Request, res: Response) => {
   const statusesRepo = getRepository(Statuses);
   const stagesRepo = getRepository(Stages);
   const initvStgRepo = getRepository(InitiativesByStages);
 
-  const { initiativeId, stageId } = req.params;
-  // get current user 
-  const { userId } = res.locals.jwtPayload;
+  const {initiativeId, stageId} = req.params;
+  // get current user
+  const {userId} = res.locals.jwtPayload;
 
   try {
     // get current stage
@@ -1017,27 +1022,24 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     // get statuses
     const statuses = await statusesRepo.find();
     // get initiaitive by stage
-    const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage: stageId } });
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
     const metaData = new MetaDataHandler(initvStg.id.toString());
-    const validateSbSts = await metaData.validationSubmissionStatuses();
+    const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
 
     const assessmentValidation = await validateSbSts.isAssessor(userId);
-    if (!assessmentValidation.available) {
-      throw new APIError(
-        assessmentValidation.title,
-        assessmentValidation.code,
-        true,
-        assessmentValidation.message
-      );
-    }
 
-    const statusesAvailable = statuses.filter(status => {
+    const statusesAvailable = statuses.filter((status) => {
       const stsArray = Object.values(status.stagesAvailables);
-      return stsArray.find(sts => sts == stageId);
+      return stsArray.find((sts) => sts == stageId);
     });
 
-    return res.json(new ResponseHandler('Initiative submission statuses', { statuses:statusesAvailable }));
-
+    return res.json(
+      new ResponseHandler('Initiative submission statuses', {
+        statuses: statusesAvailable
+      })
+    );
   } catch (error) {
     console.log(error);
     if (
@@ -1053,8 +1055,42 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     }
     return res.status(error.httpCode).json(error);
   }
-}
+};
 
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
+ * @param res
+ */
+export const getSubmission = async (req: Request, res: Response) => {
+  const {initiativeId, stageId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const submissionRepo = getRepository(Submissions);
+  try {
+    // get initiaitive by stage
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
+
+    const submission = await submissionRepo.findOne({where: {initvStg}});
+
+    return res.json(new ResponseHandler('Initiative submission', {submission}));
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      error = new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
 
 /**
  *
@@ -1073,11 +1109,32 @@ export const submitInitiative = async (req: Request, res: Response) => {
   const statusesRepo = getRepository(Statuses);
 
   try {
-    const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage: stageId } });
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
     // get pending status
-    const pendingStatus = await statusesRepo.findOne({ where: { status: 'Pending', active: 1 } });
+    const pendingStatus = await statusesRepo.findOne({
+      where: {status: 'Pending', active: 1}
+    });
     // create new Meta Data object
     const metaData = new MetaDataHandler(initvStg.id.toString());
+
+    const alreadySub = await submissionRepo.findOne({
+      where: {initvStg, active: 1}
+    });
+
+    if (alreadySub) {
+      const sts = await submissionStatusRepo.find({
+        where: {submission: alreadySub},
+        relations: ['submission']
+      });
+      return res.json(
+        new ResponseHandler('Initiative already submitted', {
+          submittedStatus: sts
+        })
+      );
+    }
+
     // get validation by sections
     const validatedSections = {
       GeneralInformation: await metaData.validationGI(),
@@ -1090,11 +1147,14 @@ export const submitInitiative = async (req: Request, res: Response) => {
       ImpactStrategies: await metaData.validationImpactStrategies(),
       WorkPackages: await metaData.validationWorkPackages(),
       Context: await metaData.validationContext()
-    }
+    };
     // validate if initiative is already submitted
     let missingSections = '';
     for (const key in validatedSections) {
-      if (Object.prototype.hasOwnProperty.call(validatedSections, key) && validatedSections[key].validation == 0) {
+      if (
+        Object.prototype.hasOwnProperty.call(validatedSections, key) &&
+        validatedSections[key].validation == 0
+      ) {
         missingSections += `${key.split(/(?=[A-Z])/).join(' ')}, `;
       }
     }
@@ -1106,7 +1166,6 @@ export const submitInitiative = async (req: Request, res: Response) => {
         `Initiative not completed yet. Missing: ${missingSections}`
       );
     }
-
 
     // get current user
     const {userId} = res.locals.jwtPayload;
@@ -1125,15 +1184,15 @@ export const submitInitiative = async (req: Request, res: Response) => {
     const submission = new Submissions();
     submission.initvStg = initvStg;
     submission.active = true;
-    submission.complete = true;
+    // submission.complete = true;
     submission.first_name = user.first_name;
     submission.last_name = user.last_name;
     submission.userId = user.id;
 
     // save submission
     const submitted = await submissionRepo.save(submission);
-
-
+    initvStg.status = pendingStatus;
+    const initvStgUpd = await initvStgRepo.save(initvStg);
 
     // create submission status
     const submissionStatus = new SubmissionsStatus();
@@ -1152,7 +1211,7 @@ export const submitInitiative = async (req: Request, res: Response) => {
       error instanceof QueryFailedError ||
       error instanceof EntityNotFoundError
     ) {
-       new APIError(
+      new APIError(
         'Bad Request',
         HttpStatusCode.BAD_REQUEST,
         true,
@@ -1163,73 +1222,62 @@ export const submitInitiative = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
+ * @param body params:{ description, statusId }
+ * @param res
+ */
 export const updateSubmissionStatusByInitiative = async (
   req: Request,
   res: Response
 ) => {
   const {initiativeId, stageId} = req.params;
-  const {status, description, isComplete} = req.body;
+  const {description, statusId} = req.body;
   const initvStgRepo = getRepository(InitiativesByStages);
   const submissionStatusRepo = getRepository(SubmissionsStatus);
-  const submissionRepo = getRepository(Submissions);
-
-
-
-  // const queryRunner = getConnection().createQueryBuilder();
-  // const usersByInitiativeRepo = getRepository(InitiativesByUsers);
+  // const submissionRepo = getRepository(Submissions);
+  // const statusesRepo = getRepository(Statuses);
 
   try {
     // get initiaitive by stage
-    const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage: stageId } });
-    const metaData = new MetaDataHandler(initvStg.id.toString());
-    const validateSbSts = await metaData.validationSubmissionStatuses();
-    // get submission
-    const submission = await submissionRepo.findOne({
-      where: {initvStg, active: 1}
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
     });
+    const metaData = new MetaDataHandler(initvStg.id.toString());
+    const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
 
-    const subCompletion = validateSbSts.isComplete(submission)
-
-    if (subCompletion.status) {
-      throw new APIError(
-        'Unauthorized',
-        HttpStatusCode.UNAUTHORIZED,
-        true,
-        subCompletion.message
-      );
-    }
     // get current user
     const {userId} = res.locals.jwtPayload;
 
-    const assessmentValidation = await validateSbSts.isAssessor(userId);
-    if (!assessmentValidation.available) {
-      throw new APIError(
-        assessmentValidation.title,
-        assessmentValidation.code,
-        true,
-        assessmentValidation.message
-      );
-    }
+    const assessmentUser = await validateSbSts.isAssessor(userId);
 
-    submission.complete = isComplete;
-    await submissionRepo.save(submission);
+    const {submission, newSubStatus, newStatusxInitv} =
+      await validateSbSts.validateStatus(statusId);
 
+    validateSbSts.isComplete();
+    console.log(newSubStatus);
 
-    const subStatus = new SubmissionsStatus();
-    // subStatus.status = status;
-    subStatus.submission = submission;
-    subStatus.description = description;
-    subStatus.userId = assessmentValidation.user.id;
-    subStatus.first_name = assessmentValidation.user.first_name;
-    subStatus.last_name = assessmentValidation.user.last_name;
+    newSubStatus.submission = submission;
+    newSubStatus.description = description;
+    newSubStatus.userId = assessmentUser.user.id;
+    newSubStatus.first_name = assessmentUser.user.first_name;
+    newSubStatus.last_name = assessmentUser.user.last_name;
+    const updatedStatus = await submissionStatusRepo.save(newSubStatus);
 
-    const updatedStatus = await submissionStatusRepo.save(subStatus);
-    await submissionStatusRepo.save(subStatus);
-    submission.complete = isComplete;
+    // update status in initiative by stage
+    initvStg.status = newStatusxInitv;
+    await initvStgRepo.save(initvStg);
 
-
-    const statusS = await submissionStatusRepo.findOne({ where: { id: updatedStatus.id, active: 1 }, relations: ['submission'] });
-    return res.json(new ResponseHandler('Initiative submission status updated', { updatedSubmission: statusS }));
+    const statusS = await submissionStatusRepo.findOne({
+      where: {id: updatedStatus.id, active: 1},
+      relations: ['submission']
+    });
+    return res.json(
+      new ResponseHandler('Initiative submission status updated', {
+        updatedSubmission: statusS
+      })
+    );
   } catch (error) {
     console.log(error);
     if (

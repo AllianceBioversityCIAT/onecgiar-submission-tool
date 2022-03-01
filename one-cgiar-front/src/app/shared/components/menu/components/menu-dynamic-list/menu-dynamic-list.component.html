@@ -1,4 +1,4 @@
-<div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection">
+<div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection || (this.subSection.subSectionId === 12 || this.subSection.subSectionId === 28)">
     <div class="left_line"></div>
     <div *ngIf="subSection.dynamicList">
         <div class="dynamicListButton order_first"
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <app-button-add-element *ngIf="validateIfShowAddWp()" name="Add Work package" (click)="addWorkPackage()"></app-button-add-element>
+    <app-button-add-element *ngIf="validateIfShowAddWp()" name="Add Work package" (click)="addWorkPackage(stage)"></app-button-add-element>
 
     <div *ngIf="subSection.subSectionId === 16" class="dynamicListButton order_second"
         [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">

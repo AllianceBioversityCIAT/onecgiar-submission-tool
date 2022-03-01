@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FullProposalService } from '@app/shared/services/full-proposal.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-learning-fpe-and-ia',

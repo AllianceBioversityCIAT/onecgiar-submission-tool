@@ -1,0 +1,52 @@
+<div class="button_container" *ngIf="isAdmin">
+    <app-add-button name="Create initiative" (click)="showDialog()"></app-add-button>
+</div>
+
+<!-- 
+<p-dialog *ngIf="this.renderDilog" header="Title" [(visible)]="display">
+    <app-general-information [stageId]="2" ></app-general-information>
+</p-dialog> -->
+
+
+<p-dialog 
+    *ngIf="this.renderDilog"
+    header="Create Initiative" 
+    [(visible)]="display" 
+    [modal]="true" 
+    [style]="{width: '70vw'}" 
+    [draggable]="false"
+    [resizable]="false">
+
+    <!-- <app-general-information [stageId]="2" [creator]="true"></app-general-information> -->
+    
+    <div class="row">
+    
+        <div class="col-sm-6">
+            <ibdc-input-field inputTitle="Short name" [objectItem]="this.createBody"
+                [objectAtributteName]="'acronym'"
+                [readOnlyVariable]="false" [maxWords]="3">
+            </ibdc-input-field>
+        </div>
+    
+        <div class="col-sm-12">
+            <ibdc-text-area-field inputTitle="Initiative name" [objectItem]="this.createBody"
+                [objectAtributteName]="'name'"
+                [readOnlyVariable]="false" [maxWords]="50">
+            </ibdc-text-area-field>
+        </div>
+    
+        <div class="col-sm-6">
+            <ibdc-select-field [objectItem]="this.createBody" [objectAtributteId]="'action_area_id'"
+                [objectAtributteName]="'action_area_description'" inputTitle="Primary CGIAR Action Area"
+                selectableListAtributteName='index_name' selectableListAtributteId='id'
+                [selectableList]="this.actionAreasList"></ibdc-select-field>
+        </div>
+        
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton (click)="display=false" type="button" label="Cancel" class="p-button-secondary"></button>
+        <button pButton [disabled]="fieldsValidations()" (click)="createInitiative();display=false" type="button" label="Create initiative" class="p-button-success"></button>
+    </ng-template>
+    
+</p-dialog>

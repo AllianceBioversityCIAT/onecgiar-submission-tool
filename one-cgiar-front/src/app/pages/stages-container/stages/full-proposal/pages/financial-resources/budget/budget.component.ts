@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
-import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
 import { environment } from '../../../../../../../../environments/environment';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
 
 @Component({
   selector: 'app-budget',

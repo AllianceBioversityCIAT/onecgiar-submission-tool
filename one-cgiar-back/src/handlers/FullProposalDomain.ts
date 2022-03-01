@@ -1233,6 +1233,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newinitSdgTargets.initvStgId = initvStgId;
         newinitSdgTargets.sdg_target_id = element.sdg_target_id;
         newinitSdgTargets.active = element.active;
+        newinitSdgTargets.impact_area_id = element.impact_area_id;
 
         sdgTargets.push(
           toolsSbt.mergeData(
@@ -1416,14 +1417,16 @@ export class ProposalHandler extends InitiativeStageHandler {
       let mergeResults = await Promise.all(resultsArray);
 
       // Save data
-      let upsertResults: any = await resultsRepo.save(mergeResults);
+    
+      let upsertResults: any = await resultsRepo.save(mergeResults[0]);
+      
 
       for (let index = 0; index < results.indicators.length; index++) {
         const indicators = results.indicators[index];
         let newResultsIndicators = new entities.ResultsIndicators();
 
         newResultsIndicators.id = indicators.id ? indicators.id : null;
-        newResultsIndicators.results_id = upsertResults[0].id;
+        newResultsIndicators.results_id = upsertResults.id;
         newResultsIndicators.active = indicators.active;
         newResultsIndicators.baseline_value = indicators.baseline_value;
         newResultsIndicators.baseline_year = indicators.baseline_year;
@@ -1460,8 +1463,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+
       // Save data
-      let upsertResultsIndicators: any = await resultsRepo.save(
+      let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
 

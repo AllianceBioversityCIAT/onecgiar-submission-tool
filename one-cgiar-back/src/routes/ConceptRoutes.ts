@@ -1,4 +1,5 @@
 import {Router} from 'express';
+import {uploadFile} from '../middlewares/multer';
 import * as stageconcept from '../controllers/StageConceptController';
 import {checkJwt} from '../middlewares/jwt';
 import {checkRole} from '../middlewares/role';
@@ -43,7 +44,7 @@ router.patch(
 /**PATCH INITIAL TOC */
 router.patch(
   '/initial-toc/:initiativeId([0-9]+)/:ubication/:stageId',
-  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  [checkJwt, checkRole('initiatives', 'updateOwn'), uploadFile.any()],
   stageconcept.upsertIntialToc
 );
 
@@ -51,8 +52,44 @@ router.patch(
 router.get(
   '/initial-toc/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
-  stageconcept.upsertIntialToc
+  stageconcept.getInitialToc
 );
+
+/**PATCH INITIATIVE STATEMENTS */
+router.patch(
+  '/initiative-statements/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.patchInitiativeStatement
+);
+
+/**GET INITIATIVE STATEMENTS */
+router.get(
+  '/initiative-statements/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.getInitiativeStatement
+);
+
+/**PATCH WORK PACKAGES */
+router.patch(
+  '/packages/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.patchWorkPackage
+);
+
+/**GET WORK PACKAGES BY INITIATIVE*/
+router.get(
+  '/packages/:initiativeId([0-9]+)/',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stageconcept.getWorkPackagesByInitiative
+);
+
+/**GET WORK PACKAGES BY WORK PACKAGE*/
+router.get(
+  '/package/:wrkPkgId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stageconcept.getWorkPackage
+);
+
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 

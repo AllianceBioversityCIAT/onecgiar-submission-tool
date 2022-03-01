@@ -1,13 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-
-import { ServerResponse, User } from '@shared/models/user.interface';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ServerResponse, User } from '../models/user.interface';
+import { environment } from '../../../environments/environment';
 
 const helper = new JwtHelperService();
 
@@ -17,19 +15,6 @@ const helper = new JwtHelperService();
 export class AuthService {
 
   private user = new BehaviorSubject<ServerResponse>(null);
-  // generalInformationForm = new FormGroup({
-  //   initiativeName: new FormControl('', Validators.required),
-  //   leadContact: new FormControl('', Validators.email),
-  //   actionArea: new FormControl('', Validators.required),
-  //   globalBudget: new FormControl('', Validators.required),
-  // });
-  // narrativesForm = new FormGroup({
-  //   challenge: new FormControl('', Validators.required),
-  //   objectives: new FormControl('', Validators.required),
-  //   results: new FormControl('', Validators.required),
-  //   activities: new FormControl('', Validators.required),
-  //   highlights: new FormControl('', Validators.required),
-  // });
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
@@ -61,6 +46,13 @@ export class AuthService {
     localStorage.clear()
     this.user.next(null);
     this.router.navigate(['/']);
+  }
+
+  logoutWithoutNavigate(): void {
+    // localStorage.removeItem('user');
+    this.logOutTawtkTo();
+    localStorage.clear()
+    this.user.next(null);
   }
 
   private checkToken(): void {
@@ -100,7 +92,7 @@ export class AuthService {
   }
   
   private logOutTawtkTo() {
-    console.log(window.hasOwnProperty('Tawk_API'))
+    // console.log(window.hasOwnProperty('Tawk_API'))
     if (window.hasOwnProperty('Tawk_API')) {
       try {
         window['Tawk_API'].endChat();

@@ -5,6 +5,9 @@ import { PcWorkPackageRoutingModule } from './pc-work-package-routing.module';
 import { PcWorkPackageComponent } from './pc-work-package.component';
 import { PcCommonModulesModule } from '../../../pc-common-modules.module';
 import { GeographicScopeModule } from './../../../../../shared/components/geographic-scope/geographic-scope.module';
+import { ButtonEditOrDeleteModule } from '../../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
+import { GeographicScopeFieldsModule } from '../../../../../shared/components/geographic-scope-fields/geographic-scope-fields.module';
+import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
@@ -13,7 +16,9 @@ import { GeographicScopeModule } from './../../../../../shared/components/geogra
     CommonModule,
     PcWorkPackageRoutingModule,
     PcCommonModulesModule,
-    GeographicScopeModule 
+    ButtonEditOrDeleteModule,
+    GeographicScopeFieldsModule ,
+    UtilsModule
   ]
 })
 export class PcWorkPackageModule { }

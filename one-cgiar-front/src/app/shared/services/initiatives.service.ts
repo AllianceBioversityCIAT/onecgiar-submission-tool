@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { observable, Observable } from 'rxjs';
-import { AllInitiatives } from '../models/initiative.interface';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 const sectionPath = 'initiatives'
 
 @Injectable({
@@ -20,7 +19,11 @@ export class InitiativesService {
     roleId: 4,
     readonly: true,
     stageId: null,
-    name: null
+    stageNameToServices: null,
+    name: null,
+    users: [],
+    status: null,
+    submission: {}
   }
 
   actionAreas: [];
@@ -160,7 +163,7 @@ export class InitiativesService {
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
-    return this.postQuery('/initiatives', body);
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/pre-concept/create-initiative`, body);  
   }
 
   /**
@@ -438,13 +441,13 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/meta/validations/menu/${initiativeId}/${stageId}`);
   }
   // get all work packages by initiative with stage full proposal
-  getWpsFpByInititative(initiativeId) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);
+  getWpsFpByInititative(initiativeId:string, stageName:string) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/packages/${initiativeId}`);
   }
 
   // get one work package by id with stage full proposal
-  getWpFpByInititative(wpID) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
+  getWpById(wpID, stageName) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/package/${wpID}`);
   }
 
   // get one work package by id with stage full proposal
@@ -483,7 +486,7 @@ export class InitiativesService {
   }
 
   saveWpFp(body: any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageNameToServices}/packages/${initiativeId}`, body);
   }
   // Query to create a work package
   createPartner(body: any): Observable<any> {
@@ -560,6 +563,26 @@ export class InitiativesService {
 
   updateSubmissionStatus(initiativeId, stageId, body): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
+  }
+
+  patchPcInitialToc(initiativeId, ubication, stageId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${ubication}/${stageId}`, body);
+  }
+
+  patchInitiativeStatements(initiativeId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`, body);
+  }
+
+  getInitiativeStatements(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`);
+  }
+
+  getPcInitialToc(initiativeId, sectionName){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${sectionName}`);
+  }
+
+  getSubmission(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/submission/${initiativeId}/${stageId}`, {});
   }
 
 

@@ -60,3 +60,4 @@ export {SubSectionsMeta} from './SubSectionsMeta';
 export {TOCs} from './TOCs';
 export {Users} from './Users';
 export {WorkPackages} from './WorkPackages';
+export {Highlights} from './Highlights';

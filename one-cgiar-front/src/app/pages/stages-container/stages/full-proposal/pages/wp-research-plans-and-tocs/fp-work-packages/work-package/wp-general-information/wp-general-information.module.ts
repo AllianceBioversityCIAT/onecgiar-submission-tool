@@ -5,9 +5,9 @@ import { WpGeneralInformationRoutingModule } from './wp-general-information-rout
 import { WpGeneralInformationComponent } from './wp-general-information.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
-import { SkeletonsModule } from '@app/shared/components/skeletons/skeletons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GeographicScopeModule } from '../../../../../../shared/components/geographic-scope/geographic-scope.module';
+import { SkeletonsModule } from '../../../../../../../../../shared/components/skeletons/skeletons.module';
 
 
 @NgModule({

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { environment } from '@env/environment';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-full-initiative-toc',

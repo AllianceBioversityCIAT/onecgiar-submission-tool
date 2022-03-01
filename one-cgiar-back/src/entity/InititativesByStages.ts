@@ -1,7 +1,15 @@
-import {Entity, PrimaryGeneratedColumn, ManyToOne, Column} from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  JoinColumn,
+  OneToOne
+} from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {Initiatives} from './Initiatives';
 import {Stages} from './Stages';
+import {Statuses} from './Statuses';
 
 @Entity('initiatives_by_stages')
 export class InitiativesByStages extends UpdatedCreatedAt {
@@ -14,12 +22,13 @@ export class InitiativesByStages extends UpdatedCreatedAt {
   @Column('tinyint')
   global_dimension: boolean;
 
-  @Column('text')
-  status: boolean;
-
   @ManyToOne(() => Stages, (stage) => stage.initiatives)
   public stage!: Stages;
 
   @ManyToOne(() => Initiatives, (initiative) => initiative.initvByStages)
   public initiative!: Initiatives;
+
+  @OneToOne(() => Statuses)
+  @JoinColumn()
+  status!: Statuses;
 }

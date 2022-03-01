@@ -1,5 +1,5 @@
 import {getConnection, getRepository} from 'typeorm';
-import {Initiatives, InitiativesByStages} from '../entity';
+import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
 
 export class InitiativeHandler {
@@ -13,8 +13,9 @@ export class InitiativeHandler {
     const newInitvStg = new InitiativesByStages();
 
     try {
-   
-      const lastId = await this.queryRunner.query("SELECT MAX(ID) as lastId FROM INITIATIVES");
+      const lastId = await this.queryRunner.query(
+        'SELECT MAX(ID) as lastId FROM initiatives'
+      );
 
       const nextId = parseInt(lastId[0].lastId) + 1;
       const official_code = 'INIT-' + nextId;
@@ -53,7 +54,8 @@ export class InitiativeHandler {
         initiative.id AS id,
         initiative.name AS name,
         initiative.official_code,
-        IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+        -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+        (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
         (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
         initvStg.active AS active,

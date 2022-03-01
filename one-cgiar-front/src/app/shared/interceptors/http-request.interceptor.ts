@@ -7,10 +7,10 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '@shared/services/auth.service';
 import { InteractionsService } from '../services/interactions.service';
 import { environment } from '../../../environments/environment';
 import { DataControlService } from '../services/data-control.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
@@ -23,7 +23,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with jwt token if available
-    // console.log(request.url);
+    this.excludeLoginService(request);
     if (request.method == 'PATCH') {
       this._dataControlService.validateMenu$.emit();
       this._dataControlService.menuChange$.emit();
@@ -36,10 +36,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     }
   }
 
+  excludeLoginService(request:HttpRequest<any>){
+
+    if (request.url.search('/api/auth/login') >= 1 || request.url.search('/api/meta/validations/menu/') >= 1 || request.url.search(/\/api\/meta\/menu\/\d*/gi) >= 1) return;
+    this._dataControlService.currentRequestMethod = request.method === 'POST' || request.method === 'PATCH' ? request.method : null;
+  }
 
   setHeadersSubmission(request:HttpRequest<any>){
-    // console.log(request.url);
-    // console.log('/api/');
     let currentUser = this.authSvc.userValue;
     if (currentUser && currentUser.token) {
       request = request.clone({

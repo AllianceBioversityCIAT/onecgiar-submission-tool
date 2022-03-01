@@ -17,6 +17,7 @@ export class DataControlService {
   //  } 
   // }
   // Variables used in various sections
+  x_position_login_animation = 0;
   clarisaIsDown = false;
   wpMaped = false;
   pobMaped = false;
@@ -27,6 +28,8 @@ export class DataControlService {
   showCountries=false;
 
   // events to reload info in sections
+  currentRequestMethod:string = '';
+  jwtExpirationSubscription$= new EventEmitter<boolean>();
   generalInfoChange$= new EventEmitter<any>();
   menuChange$= new EventEmitter<any>();
   validateMenu$= new EventEmitter<any>();
@@ -42,6 +45,8 @@ export class DataControlService {
 
   getStageRouteByStageId(stageId): StageDescription {
     switch (stageId) {
+      case 1:
+        return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 2:
         return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 3:
