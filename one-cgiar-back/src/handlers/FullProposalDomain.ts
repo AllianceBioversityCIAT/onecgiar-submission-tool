@@ -1233,6 +1233,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newinitSdgTargets.initvStgId = initvStgId;
         newinitSdgTargets.sdg_target_id = element.sdg_target_id;
         newinitSdgTargets.active = element.active;
+        newinitSdgTargets.impact_area_id = element.impact_area_id;
 
         sdgTargets.push(
           toolsSbt.mergeData(
@@ -1416,14 +1417,15 @@ export class ProposalHandler extends InitiativeStageHandler {
       let mergeResults = await Promise.all(resultsArray);
 
       // Save data
-      let upsertResults: any = await resultsRepo.save(mergeResults);
+
+      let upsertResults: any = await resultsRepo.save(mergeResults[0]);
 
       for (let index = 0; index < results.indicators.length; index++) {
         const indicators = results.indicators[index];
         let newResultsIndicators = new entities.ResultsIndicators();
 
         newResultsIndicators.id = indicators.id ? indicators.id : null;
-        newResultsIndicators.results_id = upsertResults[0].id;
+        newResultsIndicators.results_id = upsertResults.id;
         newResultsIndicators.active = indicators.active;
         newResultsIndicators.baseline_value = indicators.baseline_value;
         newResultsIndicators.baseline_year = indicators.baseline_year;
@@ -1460,8 +1462,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+
       // Save data
-      let upsertResultsIndicators: any = await resultsRepo.save(
+      let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
 
@@ -1502,18 +1505,101 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1)
                      AND section = "${sectionName}"
                      AND active = 1
-                `;
-
-      const melia = await this.queryRunner.query(meliaQuery);
+                `,
+        globalTargetsQuery = `
+                SELECT igt.initvStgId,igt.id,igt.global_target_id,cgt.target,igt.active,
+                       cgt.impact_area_id
+                  FROM init_impact_area_global_targets igt
+                  JOIN clarisa_global_targets cgt
+                    ON igt.global_target_id = cgt.id
+                 WHERE igt.initvStgId =${initvStg.id}
+                   AND igt.active =1;`,
+        impactAreasIndicatorsQuery = `
+        SELECT iai.initvStgId,iai.id,iai.impact_indicator_id,
+               ciai.indicatorStatement,ciai.impactAreaId as impact_area_id,
+               iai.active
+          FROM init_impact_area_impact_indicators iai
+          JOIN clarisa_impact_areas_indicators ciai
+            ON iai.impact_indicator_id = ciai.id
+         WHERE iai.initvStgId = ${initvStg.id}
+           AND iai.active =1;
+        `,
+        sdgTargetsQuery = `
+        SELECT sdt.initvStgId,sdt.id, sdt.sdg_target_id,
+               csdt.sdg_target,csdt.sdg_target
+          FROM init_impact_area_sdg_targets sdt
+          JOIN clarisa_sdg_targets csdt
+            ON sdt.sdg_target_id = csdt.id
+         WHERE sdt.initvStgId = ${initvStg.id}
+           AND sdt.active =1;
+        `,
+        outIndicatorsQuery = `
+        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,
+               couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+               couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+          FROM init_action_areas_out_indicators outi
+          JOIN clarisa_action_areas_outcomes_indicators couti
+            ON outi.outcomes_indicators_id = couti.id
+         WHERE outi.initvStgId = ${initvStg.id}
+           AND outi.active =1;
+        `,
+        resultsQuery = `
+     SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
+       FROM results re
+      WHERE re.initvStgId = ${initvStg.id}
+        AND re.active =1;
+        `,
+        resultsIndicatorsQuery=`
+        SELECT *
+          FROM results_indicators ri
+         WHERE ri.results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1);
+        `;
+      // MELIA PLAN
+      const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
 
-      melia.map((mel) => {
+      meliaPlan.map((mel) => {
         mel['files'] = files.filter((f) => {
           return f.meliaId === mel.id;
         });
       });
 
-      return melia[0];
+      //TABLE A
+
+      const globalTargets = await this.queryRunner.query(globalTargetsQuery);
+      const impactAreasIndicators = await this.queryRunner.query(
+        impactAreasIndicatorsQuery
+      );
+      const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
+      const tableA = {globalTargets, impactAreasIndicators, sdgTargets};
+
+      //TABLE B
+
+      const actionAreasOutcomesIndicators = await this.queryRunner.query(
+        outIndicatorsQuery
+      );
+      const tableB = {actionAreasOutcomesIndicators};
+
+      //TABLE C
+
+      const results = await this.queryRunner.query(resultsQuery);
+      const resultsIndicators = await this.queryRunner.query(resultsIndicatorsQuery);
+
+      results.map((res) => {
+        res['indicators'] = resultsIndicators.filter((resi) => {
+          return res.id === resi.results_id;
+        });
+      });
+
+      const tableC = {results: results[0]};
+
+      return {
+        meliaPlan: meliaPlan[0],
+        resultFramework: {tableA, tableB, tableC}
+      };
     } catch (error) {
       console.log(error);
       throw new BaseError(

@@ -620,6 +620,55 @@ export async function getWorkPackage(req: Request, res: Response) {
   }
 }
 
+
+/**
+ * PATCH RESULTS
+ */
+export async function patchResults(req: Request, res: Response){
+  const {initiativeId} = req.params;
+  const {resultsNarratives, sdg} = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+
+       // get stage
+       const stage = await stageRepo.findOne({where: {description: currentStage}});
+       // get intiative by stage : Pre Concept
+       const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+         where: {initiative: initiativeId, stage}
+       });
+       if (initvStg == null) {
+         throw new BaseError(
+           'Upsert General information: Error',
+           400,
+           `Initiative not found in stage: ${stage.description}`,
+           false
+         );
+       }
+   
+       // create new concept object
+       const concept = new ConceptHandler(initvStg.id.toString());
+   
+       const upsertHighlights = await concept.upsertResultsNarratives(resultsNarratives);
+   
+       const upsertContext = await concept.upsertContext(context);
+   
+       res.json(
+         new ResponseHandler('Pre Concept: Patch Initiative Statement.', {
+           upsertHighlights,
+           upsertContext
+         })
+       );
+    
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+
+}
+
+
 //              ----------------------------                TO UPDATE             -------------------------------------            //
 
 // /**
