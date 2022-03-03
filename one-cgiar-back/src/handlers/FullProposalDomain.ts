@@ -1526,7 +1526,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         `,
         sdgTargetsQuery = `
         SELECT sdt.initvStgId,sdt.id, sdt.sdg_target_id,
-               csdt.sdg_target,csdt.sdg_target
+               csdt.sdg_target,csdt.sdg_target,sdt.impact_area_id
           FROM init_impact_area_sdg_targets sdt
           JOIN clarisa_sdg_targets csdt
             ON sdt.sdg_target_id = csdt.id
