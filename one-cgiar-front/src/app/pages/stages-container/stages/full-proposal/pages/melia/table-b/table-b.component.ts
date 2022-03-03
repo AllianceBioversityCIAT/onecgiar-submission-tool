@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-table-b',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TableBComponent implements OnInit {
 
-  constructor() { }
+  constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
+    this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe(resp=>{
+      console.log(resp);
+    })
   }
 
 }

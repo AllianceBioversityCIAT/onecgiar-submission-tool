@@ -259,7 +259,7 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu(3, 7, 16, impactStatementsList);
 
         let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 8, 34, tableAImpactArea);
+        this.mapDataInMenu(3, 8, 37, tableAImpactArea);
 
         // //! Pre concept simulation
         let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
