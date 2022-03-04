@@ -20,11 +20,8 @@ export class IaVisualReferenceComponent implements OnInit {
 
   getImpactAreDataById(){
     let impactArea = this.impacAreasList?.find(impactArea=>impactArea?.id == this.impactAreId);
-    // console.log(impactArea)
     return impactArea?.name;
   }
-
-
 
   getImpacAreasList() {
     this._initiativesService.getImpactAreas().subscribe(impacAreas => {
@@ -32,7 +29,6 @@ export class IaVisualReferenceComponent implements OnInit {
       this.impacAreasList = impacAreas.response.impactAreasRequested;
     }, (err) => {
       console.log(err);
-
     })
   }
 

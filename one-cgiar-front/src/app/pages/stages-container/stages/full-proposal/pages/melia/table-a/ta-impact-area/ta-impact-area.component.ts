@@ -34,7 +34,7 @@ export class TaImpactAreaComponent implements OnInit {
         })
         ).subscribe((resp:tableAData)=>{
         this.tableAData = resp;
-        console.log(this.tableAData)
+        // console.log(this.tableAData)
       })
     });
   
