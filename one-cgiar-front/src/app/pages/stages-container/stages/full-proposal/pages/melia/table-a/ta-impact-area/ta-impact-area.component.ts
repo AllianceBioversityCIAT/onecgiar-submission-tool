@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TaImpactAreaComponent implements OnInit {
   tableAData:tableAData;
+  currentImpactAreaId: number;
   constructor( 
     private _initiativesService:InitiativesService,
     private activatedRoute:ActivatedRoute
@@ -22,7 +23,7 @@ export class TaImpactAreaComponent implements OnInit {
 
   activatedRouteSubsription(){
     this.activatedRoute.params.subscribe((routeResp: any) => {
-
+      this.currentImpactAreaId = routeResp.id;
       this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(
         map(res=>res.response.melia.resultFramework.tableA),
         map((res:tableAData)=>{
