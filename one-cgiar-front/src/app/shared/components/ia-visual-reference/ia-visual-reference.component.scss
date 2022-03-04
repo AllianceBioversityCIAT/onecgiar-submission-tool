@@ -1,0 +1,40 @@
+.circle{
+    $widthvw : 40vw;
+    width: $widthvw;
+    height: $widthvw;
+    background-color: #eb5b47;
+    position: absolute;
+    top: calc(-20vw + 70px);
+    right: -($widthvw/2);
+    border-radius: 1000px;
+    display: flex;
+    align-items: center;
+    // z-index: 1;
+    // padding-left: 10px;
+    // box-sizing: border-box;
+    .circle_container{
+        width: $widthvw/2;
+        display: grid;
+        grid-template-columns: 1fr 60px;
+        align-items: center;
+        grid-gap: 10px;
+        // border: 1px solid blue;
+        padding: 0px 10px;
+        .title{
+            color: white;
+        }
+        .img-circle{
+            padding: 5px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100px;
+            img{
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+            }
+        }
+    }
+}
