@@ -1,5 +1,27 @@
 <section-title name="Table C" ></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <h1>Hello world</h1>
+    <div class="box ibd-shadow-2">
+        <div class="title">
+            Initiative and Work package outcomes, outputs and indicators
+        </div>
+        <div class="no-data" *ngIf="!resultData?.indicators?.length">
+            No information
+        </div>
+        <div class="values">
+            <div class="gray-bar"></div>
+            <div *ngFor="let indicator of resultData?.indicators" class="value-item ibd-shadow-1">
+                <div><strong>Indicator name: </strong>{{indicator?.name}}</div>
+                <div><strong>Unit of measurement: </strong>{{indicator?.unit_measurement}}</div>
+                <div><strong>Data source: </strong>{{indicator?.data_source}}</div>
+                <div><strong>Data collection_method: </strong>{{indicator?.data_collection_method}}</div>
+                <div style="column-span: all"><strong>Frequency data collection: </strong>{{indicator?.frequency_data_collection}}</div>
+                <div><strong>Baseline value: </strong>{{indicator?.baseline_value}}</div>
+                <div><strong>Baseline year: </strong>{{indicator?.baseline_year}}</div>
+                <div><strong>Target value: </strong>{{indicator?.target_value}}</div>
+                <div><strong>Target year: </strong>{{indicator?.target_year}}</div>
+                <!-- <div><strong>Title: </strong>{{indicator?.value}}</div> -->
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,5 +1,18 @@
 <section-title name="Table B"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <h1>Hello world</h1>
+    <div class="box ibd-shadow-2">
+        <div class="title">
+            Action Area outcomes
+        </div>
+        <div class="no-data" *ngIf="!tableBData?.actionAreasOutcomesIndicators?.length">
+            No information
+        </div>
+        <div class="values">
+            <div *ngFor="let actionAreasOutcomesIndicator of tableBData?.actionAreasOutcomesIndicators" class="value-item box ibd-shadow-1">
+                <div class="outcome_statement"><strong>Outcome statement: </strong>{{actionAreasOutcomesIndicator?.outcome_statement}}</div>
+                <div class="outcome_indicator_statement"><strong>Outcome indicator statement: </strong>{{actionAreasOutcomesIndicator?.outcome_indicator_statement}}</div>
+            </div>
+        </div>
+    </div>
 </div>

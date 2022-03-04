@@ -1,0 +1,31 @@
+.box{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    overflow: hidden;
+    .title{
+        padding: 7px 0px;
+        background-color: rgb(75, 75, 75);
+        color: white;
+        text-align: center;
+        font-weight: 500;
+    }
+    .no-data{
+        text-align: center;
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
+    .values{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .value-item{
+            padding: 7px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+}
