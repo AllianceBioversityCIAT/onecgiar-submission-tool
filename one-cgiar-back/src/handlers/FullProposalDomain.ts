@@ -1546,14 +1546,14 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,
-               couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
-               couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
-          FROM init_action_areas_out_indicators outi
-          JOIN clarisa_action_areas_outcomes_indicators couti
-            ON outi.outcomes_indicators_id = couti.id
-         WHERE outi.initvStgId = ${initvStg.id}
-           AND outi.active =1;
+          SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.action_area_name,
+          couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+          couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+           FROM init_action_areas_out_indicators outi
+           JOIN clarisa_action_areas_outcomes_indicators couti
+             ON outi.outcomes_indicators_id = couti.id
+          WHERE outi.initvStgId =${initvStg.id}
+            AND outi.active =1;
         `,
         resultsQuery = `
      SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
