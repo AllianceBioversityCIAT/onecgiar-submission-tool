@@ -10,8 +10,12 @@
         <div class="no-data" *ngIf="!tableBData?.actionAreasOutcomesIndicators?.length">
             No information
         </div>
+        <!-- <div class="result_title">
+            <div style="font-size: 11px;"><strong style="margin-right: 5px; font-size: 14px;">Outcome name:</strong>Lorem ipsum</div>
+       </div> -->
         <div class="values">
             <div *ngFor="let actionAreasOutcomesIndicator of tableBData?.actionAreasOutcomesIndicators" class="value-item box ibd-shadow-1">
+                <div><strong>Action area name: </strong>{{actionAreasOutcomesIndicator?.action_area_name}}</div>
                 <div class="outcome_statement"><strong>Outcome statement: </strong>{{actionAreasOutcomesIndicator?.outcome_statement}}</div>
                 <div class="outcome_indicator_statement"><strong>Outcome indicator statement: </strong>{{actionAreasOutcomesIndicator?.outcome_indicator_statement}}</div>
             </div>
