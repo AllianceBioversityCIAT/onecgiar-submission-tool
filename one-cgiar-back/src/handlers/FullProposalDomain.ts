@@ -205,16 +205,24 @@ export class ProposalHandler extends InitiativeStageHandler {
                  WHERE wrkPkgId = ${id}
                    AND active = 1
                 GROUP BY id,region_id
+                `,
+        tocQuery = `
+                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+                  FROM tocs
+                 WHERE active = 1
+                  and type = 0
+                  and work_package_id = ${id}
                 `;
 
       var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
+      const tocs = await this.queryRunner.query(tocQuery);
 
       if (workPackages == undefined || workPackages.length == 0) {
         workPackages = [];
       } else {
-        // Map Initiatives
+        // Map Geo
         workPackages.map((geo) => {
           geo['regions'] = regions.filter((wp) => {
             return wp.wrkPkgId === geo.id;
@@ -222,6 +230,13 @@ export class ProposalHandler extends InitiativeStageHandler {
 
           geo['countries'] = countries.filter((wp) => {
             return wp.wrkPkgId === geo.id;
+          });
+        });
+
+        // Map toc
+        workPackages.map((wp) => {
+          wp['toc'] = tocs.filter((toc) => {
+            return (toc.work_package_id = wp.id);
           });
         });
       }
@@ -1008,8 +1023,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
 
-      console.log(melia_plan);
-
       if (melia_plan) {
         newMelia.id = melia_plan.meliaId;
         newMelia.melia_plan = melia_plan.melia_plan;
@@ -1025,7 +1038,6 @@ export class ProposalHandler extends InitiativeStageHandler {
           upsertedMelia = await meliaRepo.save(savedMelia);
         } else {
           newMelia.initvStgId = initvStg.id;
-          console.log('else', newMelia);
           upsertedMelia = await meliaRepo.save(newMelia);
         }
       }
@@ -1534,14 +1546,14 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,
-               couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
-               couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
-          FROM init_action_areas_out_indicators outi
-          JOIN clarisa_action_areas_outcomes_indicators couti
-            ON outi.outcomes_indicators_id = couti.id
-         WHERE outi.initvStgId = ${initvStg.id}
-           AND outi.active =1;
+          SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.action_area_name,
+          couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+          couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+           FROM init_action_areas_out_indicators outi
+           JOIN clarisa_action_areas_outcomes_indicators couti
+             ON outi.outcomes_indicators_id = couti.id
+          WHERE outi.initvStgId =${initvStg.id}
+            AND outi.active =1;
         `,
         resultsQuery = `
      SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
@@ -1549,7 +1561,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       WHERE re.initvStgId = ${initvStg.id}
         AND re.active =1;
         `,
-        resultsIndicatorsQuery=`
+        resultsIndicatorsQuery = `
         SELECT *
           FROM results_indicators ri
          WHERE ri.results_id in (SELECT re.id
@@ -1586,7 +1598,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       //TABLE C
 
       const results = await this.queryRunner.query(resultsQuery);
-      const resultsIndicators = await this.queryRunner.query(resultsIndicatorsQuery);
+      const resultsIndicators = await this.queryRunner.query(
+        resultsIndicatorsQuery
+      );
 
       results.map((res) => {
         res['indicators'] = resultsIndicators.filter((resi) => {
@@ -2659,8 +2673,9 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.toc_id = element.tocId;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
-          newTocs.type = element.type;
-          newTocs.work_package = element.work_package;
+          newTocs.type = element.type; // 0 into wp and 1 to level initiative
+          newTocs.work_package = element.work_package_acronym;
+          newTocs.work_package_id = element.work_package_id;
           newTocs.active = element.active ? element.active : true;
 
           newTocs.initvStgId = initvStg.id;
