@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../../../../../../environments/environment';
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
+import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
 @Component({
   selector: 'app-wp-toc',
@@ -15,8 +17,10 @@ export class WpTocComponent implements OnInit {
   linkIsgenerated=false;
   imageIsLoaded=false;
   txtIsLoaded=false;
+  tocList = [];
   constructor(
     public _initiativesService: InitiativesService,
+    private _wpDataControlService:WpDataControlService,
     public http: HttpClient
   ) { 
     this.wpTocForm = new FormGroup({
@@ -25,7 +29,17 @@ export class WpTocComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getWpById();
+  }
+
+  getWpById(){
+    this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
+      
+      this.tocList = resp;
+      console.log( this.tocList)
+    })
+  }
 
 
   generateUrl(){

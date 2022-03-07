@@ -7,3 +7,17 @@
         box-shadow: 0 10px 20px #72727230, 0 6px 6px #72727230;
     }
 }
+
+.toc_list{
+    // display: flex;
+    // flex-direction: column;
+    .toc_item{
+        border: 1px solid rgb(224, 224, 224);
+        border-radius: 10px;
+        padding: 10px;
+        margin-top: 20px;
+        .tex_container{
+            margin-bottom: 20px;
+        }
+    }
+}
