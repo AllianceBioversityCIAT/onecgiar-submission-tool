@@ -28,6 +28,9 @@ export class TOCs extends UpdatedCreatedAt {
   work_package: string;
 
   @Column({type: 'int'})
+  work_package_id: number;
+
+  @Column({type: 'int'})
   initvStgId: number;
 
   @ManyToOne(() => InitiativesByStages, (initvStg) => initvStg.id)
