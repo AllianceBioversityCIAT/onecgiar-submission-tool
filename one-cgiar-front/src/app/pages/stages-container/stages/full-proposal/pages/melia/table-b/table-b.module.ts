@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TableBRoutingModule } from './table-b-routing.module';
 import { TableBComponent } from './table-b.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
   imports: [
     CommonModule,
     TableBRoutingModule,
-    UtilsModule
+    UtilsModule,
+    IbdAngularComponentsModule
   ]
 })
 export class TableBModule { }

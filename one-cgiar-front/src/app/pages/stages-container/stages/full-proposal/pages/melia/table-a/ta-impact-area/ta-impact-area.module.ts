@@ -5,6 +5,7 @@ import { TaImpactAreaRoutingModule } from './ta-impact-area-routing.module';
 import { TaImpactAreaComponent } from './ta-impact-area.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 import { IaVisualReferenceModule } from '../../../../../../../../shared/components/ia-visual-reference/ia-visual-reference.module';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { IaVisualReferenceModule } from '../../../../../../../../shared/componen
     CommonModule,
     TaImpactAreaRoutingModule,
     UtilsModule,
-    IaVisualReferenceModule
+    IaVisualReferenceModule,
+    IbdAngularComponentsModule
   ]
 })
 export class TaImpactAreaModule { }

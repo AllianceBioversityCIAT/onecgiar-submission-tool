@@ -15,18 +15,64 @@
         padding-top: 30px;
         padding-bottom: 10px;
     }
+    .result_title{
+        font-weight: 500;
+        background-color: gray;
+        padding: 5px 10px;
+        text-align: center;
+        color: white;
+    }
     .values{
         padding: 10px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
         .value-item{
+            border: 1px solid rgb(223, 223, 223);
             border-top: 10px solid rgb(75, 75, 75);
-            padding: 7px;
+            padding: 10px;
             font-size: 12px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            .data_container{
+                padding: 10px;
+
+                
+                
+
+            }
         }
+    }
+}
+
+.orange, .blue, .green{
+    transition: all ease-in .3s;
+    &:hover{
+        transition: all ease-in .3s;
+    }
+}
+
+.orange{
+    border-top: 5px solid orange;
+    outline: 2px solid transparent;
+    &:hover{
+        outline: 2px solid orange;
+    }
+}
+
+.blue{
+    border-top: 5px solid #465bb5;
+    outline: 2px solid transparent;
+    &:hover{
+        outline: 2px solid #465bb5;
+    }
+}
+
+.green{
+    border-top: 5px solid green;
+    outline: 2px solid transparent;
+    &:hover{
+        outline: 2px solid green;
     }
 }
