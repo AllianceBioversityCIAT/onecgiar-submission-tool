@@ -12,21 +12,17 @@ declare var $
   styleUrls: ['./wp-toc.component.scss']
 })
 export class WpTocComponent implements OnInit {
-  wpTocForm: FormGroup;
   toctxtData:string;
   linkIsgenerated=false;
   imageIsLoaded=false;
   txtIsLoaded=false;
   tocList = [];
+  serviceIsConsumed = false;
   constructor(
     public _initiativesService: InitiativesService,
     private _wpDataControlService:WpDataControlService,
     public http: HttpClient
   ) { 
-    this.wpTocForm = new FormGroup({
-      TocId: new FormControl(null),
-      imageUrl: new FormControl(null),
-    });
   }
 
   ngOnInit(): void {
@@ -34,20 +30,13 @@ export class WpTocComponent implements OnInit {
   }
 
   getWpById(){
+    this.serviceIsConsumed = false;
     this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
       
       this.tocList = resp;
+      this.serviceIsConsumed = true;
       console.log( this.tocList)
     })
-  }
-
-
-  generateUrl(){
-    this.wpTocForm.controls['imageUrl'].setValue(`${environment.tocBaseUrl}${this.wpTocForm.value['TocId']}/${this.wpTocForm.value['TocId']}`);
-
-    console.log("get txt");
-    this.getTocTxtDataByTocId(this.wpTocForm.value['TocId'])
-    
   }
 
   expandImage(htmlId){

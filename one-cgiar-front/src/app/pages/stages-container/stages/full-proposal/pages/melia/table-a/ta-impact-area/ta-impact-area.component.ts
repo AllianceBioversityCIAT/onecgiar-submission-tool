@@ -12,6 +12,7 @@ export class TaImpactAreaComponent implements OnInit {
   tableAData:tableAData;
   currentImpactAreaId: number;
   htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  
   constructor(
     private _initiativesService:InitiativesService,
     private activatedRoute:ActivatedRoute
@@ -23,6 +24,7 @@ export class TaImpactAreaComponent implements OnInit {
   }
 
   activatedRouteSubsription(){
+    
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.currentImpactAreaId = routeResp.id;
       this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(
@@ -35,7 +37,8 @@ export class TaImpactAreaComponent implements OnInit {
         })
         ).subscribe((resp:tableAData)=>{
         this.tableAData = resp;
-        // console.log(this.tableAData)
+        
+        console.log(this.tableAData)
       })
     });
   

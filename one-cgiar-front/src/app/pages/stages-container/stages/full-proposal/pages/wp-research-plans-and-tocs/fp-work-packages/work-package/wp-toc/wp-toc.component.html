@@ -1,12 +1,13 @@
 <!-- <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
         *ngIf="showForm"> -->
 
-<form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row">
+<!-- <form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row"> -->
     <!-- <div class="col-12">
       <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
       <br>
     </div> -->
 <div class="toc_list">
+  <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
 
     <div class="tex_container">
@@ -29,4 +30,4 @@
 
     
 
-</form>
+<!-- </form> -->
