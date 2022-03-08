@@ -50,6 +50,10 @@ export class WpTocComponent implements OnInit {
     
   }
 
+  expandImage(htmlId){
+    document.getElementById(htmlId).classList.toggle('expandImage')
+  }
+
   saveSection(){
 
   }
@@ -62,6 +66,14 @@ export class WpTocComponent implements OnInit {
   imageError(){
     console.log("errorrer");
     this.imageIsLoaded=false;
+  }
+
+  checkExpandClass(htmlId){
+    let elementById = document.getElementById(htmlId);
+    if (!elementById) return false;
+    
+    // console.log(dsdsd)
+    return elementById.classList.contains('expandImage') ? false : true;
   }
 
   getTocTxtDataByTocId(tocId){

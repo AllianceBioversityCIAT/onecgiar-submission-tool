@@ -7,17 +7,17 @@
       <br>
     </div> -->
 <div class="toc_list">
-  <div class="toc_item" *ngFor="let toc of this.tocList">
+  <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
 
     <div class="tex_container">
       <ibdc-simple-text [options]="{inputTitle:'TOC ID',value: toc.narrative}">
       </ibdc-simple-text>
     </div>
 
-    <div class="col-12 toc_image" style="display: flex; justify-content: center;" >
-      <div class="image_container">
+    <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram'+i) ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'+i" style="display: flex; justify-content: center;" >
+      <div class="image_container" (click)="expandImage('diagram'+i)">
         <section-sub-title name="Diagram"></section-sub-title>
-        <a target="_blank" [href]="this.toc.diagram"><img (load)="imageLoaded()" (error)="imageError()" [src]="this.toc.diagram" alt="" srcset="" width="100%"></a> 
+        <img (load)="imageLoaded()" (error)="imageError()" [src]="this.toc.diagram" alt="" srcset="" width="100%">
       </div>
     </div>
 
