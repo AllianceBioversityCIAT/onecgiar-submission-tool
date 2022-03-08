@@ -14,10 +14,10 @@
       </ibdc-simple-text>
     </div>
 
-    <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram'+i) ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'+i" style="display: flex; justify-content: center;" >
+    <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram'+i) ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'+i">
       <div class="image_container" (click)="expandImage('diagram'+i)">
         <section-sub-title name="Diagram"></section-sub-title>
-        <img (load)="imageLoaded()" (error)="imageError()" [src]="this.toc.diagram" alt="" srcset="" width="100%">
+        <img (load)="imageLoaded('diagram'+i)" (error)="imageError()" [src]="this.toc.diagram" alt="" srcset="" width="100%">
       </div>
     </div>
 

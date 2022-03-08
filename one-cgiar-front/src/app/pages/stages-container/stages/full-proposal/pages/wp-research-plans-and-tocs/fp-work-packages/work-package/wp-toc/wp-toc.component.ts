@@ -58,8 +58,9 @@ export class WpTocComponent implements OnInit {
 
   }
 
-  imageLoaded(){
+  imageLoaded(htmlId){
     console.log("loaded");
+    document.getElementById(htmlId).style.display = 'flex';
     this.imageIsLoaded=true;
   }
 
