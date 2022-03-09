@@ -62,19 +62,19 @@ export class MenuComponent implements OnInit {
       // console.log("menuChange$");
       this.currentUser = this.auth.userValue;
       this.getMenu();
-
+      console.log("Get menu")
       // this.getAllIWorkPackages();
       // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
-    this._dataControlService.menuChange$.emit();
+    
 
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
     });
 
     this.getImpacAreasList();
-
+    this._dataControlService.menuChange$.emit();
   }
 
   /**
@@ -144,19 +144,18 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-  getImpacAreasList() {
-    // console.log("getImpacAreasList");
-    this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
-      this.impacAreasList = impacAreas.response.impactAreasRequested;
-      this._dataControlService.impacAreas = this.impacAreasList;
-    }, (err) => {
-      console.log(err);
-
-    }, () => {
-      // console.log("call");
-      this._dataControlService.menuChange$.emit();
-      // this._dataControlService.validateMenu$.emit();
+   getImpacAreasList(){
+    return  new Promise((resolve,reject)=>{
+      this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
+        this.impacAreasList = impacAreas.response.impactAreasRequested;
+        this._dataControlService.impacAreas = this.impacAreasList;
+        resolve(null)
+      }, (err) => {
+        console.log(err);
+        reject();
+      })
     })
+
   }
 
   mapReportInSubSectionMenu(stageId, sectionId, object) {

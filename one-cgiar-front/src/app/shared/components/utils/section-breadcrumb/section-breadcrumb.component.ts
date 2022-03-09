@@ -35,7 +35,6 @@ export class SectionBreadcrumbComponent implements OnInit {
   mapToSectionData(url: string) {
     let urlBase = '';
     this.sectionsData = [];
-    console.log("%c menu: ", 'color: #00ccff', this._dataControlService.userMenu);
 
     url.split('/').map((resp, i) => {
       if (i >= 1) {
@@ -50,11 +49,11 @@ export class SectionBreadcrumbComponent implements OnInit {
         )
       }
     })
-    console.table(this.sectionsData)
+ 
   }
 
   findTitle(i, name: string) {
-    console.log(i)
+
     switch (i) {
       case 4:
         if (name === 'full-proposal') return 'Full Proposal';
@@ -85,11 +84,6 @@ export class SectionBreadcrumbComponent implements OnInit {
             if (section.description === name) return currentNameFinded = section.display_name;
             section.subsections.map(subsections => {
               if (subsections.description === name) return currentNameFinded = subsections.display_name;
-              console.log(subsections.dynamicListSubSection)
-              // subsections.dynamicListSubSection.map(dynamicListitem => {
-              // console.log(dynamicListitem)
-              // })
-              
             })
           })
         })
