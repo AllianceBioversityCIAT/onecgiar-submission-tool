@@ -147,11 +147,8 @@ export class MenuComponent implements OnInit {
   getImpacAreasList() {
     // console.log("getImpacAreasList");
     this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
-
-      // console.log(impacAreas.response.impactAreasRequested);
-
       this.impacAreasList = impacAreas.response.impactAreasRequested;
-      // console.log(this.impacAreasList);
+      this._dataControlService.impacAreas = this.impacAreasList;
     }, (err) => {
       console.log(err);
 
@@ -312,7 +309,7 @@ export class MenuComponent implements OnInit {
         
         this._dataControlService.validateMenu$.emit();
       }
-      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 
