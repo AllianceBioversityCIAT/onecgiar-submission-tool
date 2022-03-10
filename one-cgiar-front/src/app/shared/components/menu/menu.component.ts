@@ -144,7 +144,7 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-   getImpacAreasList(){
+  getImpacAreasList(){
     return  new Promise((resolve,reject)=>{
       this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
         this.impacAreasList = impacAreas.response.impactAreasRequested;

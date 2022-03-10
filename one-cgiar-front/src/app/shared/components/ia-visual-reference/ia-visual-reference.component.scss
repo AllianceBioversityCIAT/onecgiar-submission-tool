@@ -11,12 +11,13 @@
     transition: all ease .3s;
     z-index: 0;
     filter: opacity(.7);
+    margin-top: 10px;
     margin-right: 80px;
     transition: all cubic-bezier(.165,.84,.44,1) 1s;
-    transform: rotateX(-15deg) rotateY(40deg) rotateZ(10deg) translateX(-50px) translateZ(100px);
+    // transform: rotateX(-15deg) rotateY(40deg) rotateZ(10deg) translateX(-50px) translateZ(100px);
     &:hover{
         filter: opacity(1);
-        transform: rotate3d(0,0,0,60deg);
+        // transform: rotate3d(0,0,0,60deg);
         transition: all cubic-bezier(.165,.84,.44,1) 1s; 
         .img-circle{
             img{
