@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { WpTocRoutingModule } from './wp-toc-routing.module';
 import { WpTocComponent } from './wp-toc.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-import { SkeletonsModule } from '@app/shared/components/skeletons/skeletons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
+import { SkeletonsModule } from '../../../../../../../../../shared/components/skeletons/skeletons.module';
 
 
 @NgModule({

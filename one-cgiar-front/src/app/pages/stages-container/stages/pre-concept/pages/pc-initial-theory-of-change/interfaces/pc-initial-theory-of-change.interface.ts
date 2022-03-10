@@ -5,5 +5,6 @@ export interface PcInitialTheoryOfChangeBody{
     section:string,
     type?:string,
     active:boolean,
-    files?:[]
+    files?:[],
+    updateFiles:any[]
 }

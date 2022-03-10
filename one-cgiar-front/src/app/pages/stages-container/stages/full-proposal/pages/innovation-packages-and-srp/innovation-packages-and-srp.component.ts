@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../shared/data-validators.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-innovation-packages-and-srp',

@@ -7,7 +7,8 @@ import {
   Highlights,
   Narratives,
   WorkPackages
-} from '../entity';
+} from '../entity/index';
+import {ResultsNarratives} from '../entity/ResultsNarratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
@@ -409,7 +410,6 @@ export class ConceptHandler extends ConceptValidation {
         newInitialTocs.initvStgId = initvStgId;
 
         upsertedInitialTocs = await initialTocsRepo.save(newInitialTocs);
-        
       }
 
       if (host == 'http://localhost') {
@@ -425,7 +425,7 @@ export class ConceptHandler extends ConceptValidation {
 
           const urlDB = `${host}/${path}/INIT-${initiativeId}/${ubication}/stage-${stage.id}/${file.filename}`;
           newFiles.id = null;
-          newFiles.active = file.active;
+          newFiles.active = file.active ? file.active : true;
           newFiles.tocsId = upsertedInitialTocs.id;
           newFiles.section = section;
           newFiles.url = urlDB;
@@ -483,10 +483,9 @@ export class ConceptHandler extends ConceptValidation {
    * @param sectionName
    * @returns initialToc[0]
    */
-  async requestInitialToc(sectionName:any) {
+  async requestInitialToc(sectionName: any) {
     const initvStgId = this.initvStgId_;
 
-  
     try {
       // retrieve general information
       const filesQuery = `
@@ -510,7 +509,7 @@ export class ConceptHandler extends ConceptValidation {
 
       initialToc.map((toc) => {
         toc['files'] = files.filter((f) => {
-          return f.tocId === toc.id;
+          return f.tocsId === toc.id;
         });
       });
 
@@ -659,12 +658,12 @@ export class ConceptHandler extends ConceptValidation {
    * @param newWP
    * @returns upsertedInfo
    */
-   async upsertWorkPackages(newWP?:any) {
+  async upsertWorkPackages(newWP?: any) {
     const wpRepo = getRepository(WorkPackages);
     // get current intiative by stage
     const initvStgId = this.initvStgId_;
 
-    var upsertedInfo:any;
+    var upsertedInfo: any;
 
     try {
       if (newWP.id !== null) {
@@ -676,7 +675,7 @@ export class ConceptHandler extends ConceptValidation {
 
         upsertedInfo = await wpRepo.save(savedWP[0]);
       } else {
-        newWP.initvStgId =initvStgId;
+        newWP.initvStgId = initvStgId;
 
         upsertedInfo = await wpRepo.save(newWP);
       }
@@ -693,10 +692,10 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-/**
- * GET WORK PACKAGES BY INITIATIVE
- * @returns 
- */
+  /**
+   * GET WORK PACKAGES BY INITIATIVE
+   * @returns
+   */
   async getWorkPackage() {
     // const initvStgId: string = this.initvStgId_;
     const initvStgId: string = this.initvStgId_;
@@ -710,9 +709,7 @@ export class ConceptHandler extends ConceptValidation {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${
-                  initvStgId
-                 }
+                 WHERE initvStgId = ${initvStgId}
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -738,9 +735,7 @@ export class ConceptHandler extends ConceptValidation {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${
-                    initvStgId
-                  }
+                  WHERE wp.initvStgId =  ${initvStgId}
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -776,13 +771,12 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
-
- /**
-  * GET WORK PACKAGE BY ID
-  * @param id 
-  * @returns 
-  */
-    async getWorkPackageId(id) {
+  /**
+   * GET WORK PACKAGE BY ID
+   * @param id
+   * @returns
+   */
+  async getWorkPackageId(id) {
     // const initvStgId: string = this.initvStgId_;
     // const initvStg = await this.initvStage
     const wpRepo = getRepository(WorkPackages);
@@ -809,7 +803,7 @@ export class ConceptHandler extends ConceptValidation {
         workPackages = [];
       } else {
         // Map Initiatives
-        workPackages.map((geo) => {
+        workPackages.map((geo: any) => {
           geo['regions'] = regions.filter((wp) => {
             return wp.wrkPkgId === geo.id;
           });
@@ -826,4 +820,50 @@ export class ConceptHandler extends ConceptValidation {
     }
   }
 
+  /**
+   * UPSERT RESULTS NARRATIVES
+   * @param resultsNarratives
+   * @returns
+   */
+  async upsertResultsNarratives(resultsNarratives: any) {
+    const initvStgId = this.initvStgId_;
+
+    const resultsNarrativesRepo = getRepository(ResultsNarratives);
+    const toolsSbt = new ToolsSbt();
+    const newResultsNarratives = new ResultsNarratives();
+    const resultsNarrativesArray = [];
+
+    try {
+      newResultsNarratives.id = resultsNarratives.id;
+      newResultsNarratives.initvStgId = initvStgId;
+      newResultsNarratives.active;
+      newResultsNarratives.impact_area_contribution = resultsNarratives.impact_area_contribution;
+      newResultsNarratives.end_init_outcomes = resultsNarratives.end_init_outcomes;
+
+      resultsNarrativesArray.push(
+        toolsSbt.mergeData(
+          resultsNarrativesRepo,
+          `SELECT * 
+             FROM results_narratives
+            WHERE id = ${newResultsNarratives.id}
+              and initvStgId = ${initvStgId}`,
+              newResultsNarratives
+        )
+      );
+
+      let mergeResultsNarratives = await Promise.all(resultsNarrativesArray);
+
+      let upsertResultsNarratives = await resultsNarrativesRepo.save(mergeResultsNarratives);
+
+      return upsertResultsNarratives;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Results Narratives: Pre Concept',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

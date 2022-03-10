@@ -1,5 +1,5 @@
-import { find } from 'lodash';
 import { getConnection, getRepository } from 'typeorm';
+import { Stages } from '../entity';
 import { Statuses } from '../entity/Statuses';
 import { Submissions } from '../entity/Submissions';
 import { SubmissionsStatus } from '../entity/SubmissionStatus';
@@ -151,8 +151,225 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
   /**
-   * VALIDATIONS (GREEN CHECKS)
+  * VALIDATIONS (GREEN CHECKS) PRE CONCEPT
+  * SECTIONS:
+  * 1. General Information.
+  * 2. Initial Theory Change.
+  * 3. Initiative Statements.
+  * 4. Work Packges Geo Scope. - validation Level WP
+  * 5. Results.
+  * 6. Innovations.
+  * 7. Key Partners.
+  * 8. Global Budget.
+  */
+
+  /**
+ * Validation General Information (Summary Table)
+ * @returns pre_validationGI (True or False)
+ *
+ */
+  async pre_validationGI() {
+    try {
+      /* eslint-disable */
+      let validationGISQL = `
+   SELECT sec.id as sectionId,sec.description, 
+     CASE
+      WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
+		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+        OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM general_information WHERE initvStgId = ini.id) > 50
+	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
+        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+    THEN FALSE
+      ELSE TRUE
+      END AS validation
+    FROM initiatives_by_stages ini
+    JOIN sections_meta sec
+   WHERE ini.id = ${this.initvStgId_}
+     AND sec.stageId= ini.stageId
+     AND sec.description='general-information'`;
+      var validationGI = await this.queryRunner.query(validationGISQL);
+
+      validationGI[0].validation = parseInt(validationGI[0].validation);
+
+      return validationGI[0];
+    } catch (error) {
+      throw new BaseError('Get validations pre concept GI', 400, error.message, false);
+    }
+  }
+
+  /**
+* Validation Initial Theory of Change
+* @returns pre_validationInitialTOC (True or False)
+*
+*/
+  async pre_validationInitialTOC() {
+
+    try {
+      /* eslint-disable */
+      let initialTOCSQL = ` 
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+      WHEN (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) IS NULL
+      OR (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) = ''
+      OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>','')) 
+          - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM tocs WHERE initvStgId = ini.id) > 250
+      OR (SELECT max(id) FROM files WHERE tocsId in (SELECT id FROM tocs
+        WHERE initvStgId = ini.id
+          AND active = 1)
+          AND active = 1 ) = ''
+      OR (SELECT max(id) FROM files WHERE tocsId in (SELECT id FROM tocs
+            WHERE initvStgId = ini.id
+              AND active = 1)
+              AND active = 1 ) IS NULL
+      THEN FALSE
+        ELSE TRUE
+        END AS validation
+      FROM initiatives_by_stages ini
+      JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='initial-theory-of-change'
+      `
+      var validationInitTOC = await this.queryRunner.query(initialTOCSQL);
+
+      validationInitTOC[0].validation = parseInt(validationInitTOC[0].validation);
+
+      return validationInitTOC[0];
+    } catch (error) {
+      throw new BaseError('Get validations pre concept initial ToC', 400, error.message, false);
+    }
+
+
+  }
+
+  /**
+* Validation Initiative statements
+* @returns pre_validationInitiativeStatements (True or False)
+*
+*/
+
+  async pre_validationInitiativeStatements() {
+    try {
+      /* eslint-disable */
+      let validationInitStatmntsSQL = `
+     SELECT sec.id as sectionId,sec.description, 
+    CASE
+-- CHALLENGE STATEMENT (CONTEXT)
+    WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) IS NULL
+    OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) = ''
+    OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM context WHERE initvStgId = ini.id) > 250
+-- HIGHLIGHTS
+		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1') > 250
+
+		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2') > 250
+		
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3') > 250
+    
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4') > 250
+    
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5') > 250
+
+    THEN FALSE
+    ELSE TRUE
+    END AS validation
+    FROM initiatives_by_stages ini
+    JOIN sections_meta sec
+    WHERE ini.id =  ${this.initvStgId_}
+    AND sec.stageId= ini.stageId
+    AND sec.description='initiative-statements'`;
+      var validationInitStatments = await this.queryRunner.query(validationInitStatmntsSQL);
+
+      validationInitStatments[0].validation = parseInt(validationInitStatments[0].validation);
+
+      return validationInitStatments[0];
+    } catch (error) {
+      throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
+    }
+  }
+
+  /**
+* Validation Work paclagaes and geographic scope
+* @returns pre_validationWorkPackagesGeoScope (True or False)
+*
+*/
+
+  async pre_validationWorkPackagesGeoScope() {
+    try {
+      const validationWP_GSSQL =`
+      `
+      var validationWP_GS = await this.queryRunner.query(validationWP_GSSQL);
+
+      validationWP_GS[0].validation = parseInt(validationWP_GS[0].validation);
+
+      return validationWP_GS[0];
+    } catch (error) {
+      throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * VALIDATIONS (GREEN CHECKS) FULL PROPOSAL
    * SECTIONS:
    * 1. General Information.
    * 2. Context.
@@ -169,6 +386,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
   /**
    * Validation General Information (Summary Table)
    * @returns validationGI (True or False)
+   *
    */
   async validationGI() {
     try {
@@ -1649,37 +1867,88 @@ export class MetaDataHandler extends InitiativeStageHandler {
    *
    **/
 
-  async validationSubmissionStatuses(initvStg) {
+  async validationSubmissionStatuses() {
+    const initvStg = await this.initvStage;
     const usersRepo = getRepository(Users);
     const subStsRepo = getRepository(SubmissionsStatus);
     const submissionRepo = getRepository(Submissions);
+    const stageRepo = getRepository(Stages);
     const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
+    const handler = this;
     try {
-      let submission = await submissionRepo.findOne({ where: { initvStg, active: 1 } });
+      let submission = await submissionRepo.findOne({
+        where: { initvStg, active: 1 }
+      });
 
       return {
-        isComplete: function () {
-          if (submission == null) {
+        isComplete: async function () {
+
+          try {
+            // Get current stage
+            const currentStage = await stageRepo.findOne(initvStg[0].stageId);
+
+            // Validated sections object
+            let validatedSections;
+            switch (currentStage.description) {
+              case 'Pre Concept':
+                validatedSections = {
+                  GeneralInformation: await handler.pre_validationGI(),
+                  InitialTheoryChange: await handler.pre_validationInitialTOC(),
+                  InitiativeStatements: await handler.pre_validationInitiativeStatements(),
+                  WorkPackgesGeoScope: null,
+                  Results: null,
+                  Innovations: null,
+                  KeyPartners: null,
+                  GlobalBudget: null
+                }
+
+
+                console.log('preconcept')
+                console.log(validatedSections)
+
+                break;
+              case 'Full Proposal':
+                console.log('proposal')
+                break;
+
+              default:
+                throw new APIError('Unauthorized', HttpStatusCode.UNAUTHORIZED, true, 'Initiattive by stage null');
+                break;
+            }
+
+          } catch (error) {
+            console.log(error)
             throw new APIError(
               'Bad request',
               HttpStatusCode.BAD_REQUEST,
               true,
-              'Initiative not submitted yet.'
+              error.message
             );
           }
-          else if (submission.complete) {
-            throw new APIError(
-              'Unauthorized',
-              HttpStatusCode.UNAUTHORIZED,
-              true,
-              'Initiative already approved.'
-            );
-          }
+
+
+          // if (submission == null) {
+          //   throw new APIError(
+          //     'Bad request',
+          //     HttpStatusCode.BAD_REQUEST,
+          //     true,
+          //     'Initiative not submitted yet.'
+          //   );
+          // } else if (submission.complete) {
+          //   throw new APIError(
+          //     'Unauthorized',
+          //     HttpStatusCode.UNAUTHORIZED,
+          //     true,
+          //     'Initiative already approved.'
+          //   );
+          // }
         },
         validateStatus: async (newStatusId: any) => {
           const newStatusxInitv = await statusesRepo.findOne(newStatusId);
-          const currentInitvSubStatuses = await subStsRepo.find({ where: { submission } });
+          const currentInitvSubStatuses = await subStsRepo.find({
+            where: { submission }
+          });
           if (newStatusxInitv == null) {
             throw new APIError(
               'Bad request',
@@ -1688,18 +1957,20 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
-          const foundSubStatus = currentInitvSubStatuses.find(stses => stses.statusId == newStatusxInitv.id)
+          const foundSubStatus = currentInitvSubStatuses.find(
+            (stses) => stses.statusId == newStatusxInitv.id
+          );
           if (foundSubStatus) {
             return {
               submission,
               newSubStatus: foundSubStatus,
               newStatusxInitv
-            }
+            };
           } else {
             const subStatus = new SubmissionsStatus();
             subStatus.statusId = newStatusxInitv.id;
             subStatus.submission = submission;
-            if(newStatusxInitv.status == 'Approved'){
+            if (newStatusxInitv.status == 'Approved') {
               submission.complete = true;
               submission = await submissionRepo.save(submission)
             }
@@ -1708,7 +1979,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               submission,
               newSubStatus: subStatus,
               newStatusxInitv
-            }
+            };
           }
         },
         isAssessor: async function (userId) {
@@ -1728,8 +1999,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
             );
           }
           const assessSQL = `
-        SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
-      `;
+          SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
+        `;
 
           /** validate if user is assessor **/
 
@@ -1759,9 +2030,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
           };
         }
       };
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new APIError(
         'Bad request',
         HttpStatusCode.BAD_REQUEST,
@@ -1769,6 +2039,5 @@ export class MetaDataHandler extends InitiativeStageHandler {
         error.message
       );
     }
-
   }
 }

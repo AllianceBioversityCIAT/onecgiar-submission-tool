@@ -1,26 +1,19 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
-import { ConceptService } from '@app/shared/services/concept.service';
+import { FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ErrorService } from '@app/shared/services/error.service';
-import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
-import { InteractionsService } from '@app/shared/services/interactions.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { DataControlService } from '@app/shared/services/data-control.service';
 import { ManageAccessComponent } from '../manage-access/manage-access.component';
 import { DataValidatorsService } from '../../data-validators.service';
 import { DevConsole } from '../../../../../../shared/models/dev-console-log';
 import { Subscription } from 'rxjs';
-import { GeoScope } from '../../../full-proposal/pages/wp-research-plans-and-tocs/fp-work-packages/wp-reports/models/geoScopeModel.interface';
 import { RootObject, ServiceResponse } from './interfaces/genetal-information-data.interface';
 import { GeneralInfoFullProposalBody } from './interfaces/general-information-fp-body.interface';
 import { GeneralInfoPreConceptBody } from './interfaces/general-information-pc-body.interface';
 import { GeneralInfoPatchBody } from './interfaces/general-info-patch-body.interface';
+import { DataControlService } from '../../../../../../shared/services/data-control.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { ConceptService } from '../../../../../../shared/services/concept.service';
 
 @Component({
   selector: 'app-general-information',
@@ -121,19 +114,19 @@ export class GeneralInformationComponent implements OnInit {
 
 
   getGeneralInformation(){
-    console.log("getGeneralInformation");
+    // console.log("getGeneralInformation");
     this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
       this.body.generalInformation = resp.response.generalInformation;
     })
   }
 
   getSummary() {
-    console.log("getSummary");
+    // console.log("getSummary");
     this.spinnerService.show('general-information');
 
     this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageId).subscribe((resp:RootObject) => {
       this.body = resp.response;
-      console.log(this.body);
+      // console.log(this.body);
     },
       err => {
         console.log(err);

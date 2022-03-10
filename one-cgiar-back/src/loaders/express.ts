@@ -5,6 +5,7 @@ import {startAccsCtrl} from '../middlewares/access-control';
 import {startMulter} from '../middlewares/multer';
 import Routes from '../routes';
 
+
 export default ({app}: {app: express.Application}) => {
   const parentDir = require('path').resolve(process.cwd(), '../');
 

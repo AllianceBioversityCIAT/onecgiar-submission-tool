@@ -10,6 +10,10 @@ const routes: Routes = [
       {
         path: 'work-packages/work-package/:id',
         loadChildren: () => import('./pages/pc-work-package/pc-work-package.module').then(mod => mod.PcWorkPackageModule),
+      },
+      {
+        path: 'work-packages-table',
+        loadChildren: () => import('./pages/pc-wp-table/pc-wp-table.module').then(mod => mod.PcWpTableModule),
       }
     ]
   }

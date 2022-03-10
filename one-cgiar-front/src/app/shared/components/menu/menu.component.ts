@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsHandler } from '@shared/utils/utils';
-import { InitiativesService } from '@shared/services/initiatives.service';
-import { RequestsService } from '@shared/services/requests.service';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
 import { InteractionsService } from '../../services/interactions.service';
-import { group } from '@angular/animations';
 import { DataControlService } from '../../services/data-control.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { map } from 'rxjs/operators';
 import { ListToMap } from './classes/listToMap';
-import { AuthService } from '@app/shared/services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { StagesMenuService } from '../../services/stages-menu.service';
+import { InitiativesService } from '../../services/initiatives.service';
+import { RequestsService } from '../../services/requests.service';
+import { UtilsHandler } from '../../utils/utils';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -224,7 +222,7 @@ export class MenuComponent implements OnInit {
         // console.log(this.initiativesSvc.initiative.stageId)
 
         if (this.initiativesSvc.initiative.stageId === 3) {
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id).subscribe((wpsResp) => {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'proposal').subscribe((wpsResp) => {
             let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
             this.mapDataInMenu(3, 5, 12, wpss);
             this._dataControlService.wpMaped = true;
@@ -233,6 +231,19 @@ export class MenuComponent implements OnInit {
             this._dataControlService.wpMaped = true;
           });
         }
+
+
+        if (this.initiativesSvc.initiative.stageId === 2) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'pre-concept' ).subscribe((wpsResp) => {
+            let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(2, 13, 28, wpssPc);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+
 
 
 
@@ -294,9 +305,9 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-        if (this.initiativesSvc.initiative.stageId === 3) {
-          this.getAssessmentStatuses();
-        }
+      
+        // this.getAssessmentStatuses();
+        
         this._dataControlService.validateMenu$.emit();
       }
       // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
