@@ -9,6 +9,7 @@ import { StagesMenuService } from '../../services/stages-menu.service';
 import { InitiativesService } from '../../services/initiatives.service';
 import { RequestsService } from '../../services/requests.service';
 import { UtilsHandler } from '../../utils/utils';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -63,8 +64,6 @@ export class MenuComponent implements OnInit {
       this.currentUser = this.auth.userValue;
       this.getMenu();
       console.log("Get menu")
-      // this.getAllIWorkPackages();
-      // console.log('%cgetAllIWorkPackages','background: #222; color: #37ff73');
     });
 
     
@@ -82,9 +81,6 @@ export class MenuComponent implements OnInit {
    
  
   }
-
-
-
 
   /**
    * 
@@ -148,8 +144,6 @@ export class MenuComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
@@ -210,53 +204,46 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  getMenu() {
-    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).subscribe((userMenuResp: any) => {
-      // console.log("getMenu")
-      this._dataControlService.userMenu = userMenuResp.response.stages;
-      // console.log(this._dataControlService.userMenu)
+  mapWorkPackagesInStage({ stageName ,stageId, sectionId, subSectionId}){
+        if (this.initiativesSvc.initiative.stageId === stageId) {
+          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, stageName).subscribe((wpsResp) => {
+            let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+            this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
+            this._dataControlService.wpMaped = true;
+          }, (err) => {
+            console.log(err);
+            this._dataControlService.wpMaped = true;
+          });
+        }
+  }
 
-      // this.getPreConceptSimulated();
-      // console.log(userMenuResp.response.stages.length);
+  getMenu() {
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).pipe(map(resp=>resp.response.stages)).subscribe((userMenuResp: any) => {
+
+      this._dataControlService.userMenu = userMenuResp;
       //! DELETE 
       this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3)?.sections?.find(section => section?.sectionId == 8)?.subsections?.splice(this._dataControlService?.userMenu?.find(stage => stage?.stageId == 3).sections.find(section => section.sectionId == 8).subsections.findIndex(subSection => subSection.subSectionId == 17), 1)
       //!
-      if (userMenuResp.response.stages.length > 0) {
+      if (userMenuResp.length) {
 
-
-        // console.log(this.initiativesSvc.initiative.stageId)
-
-        if (this.initiativesSvc.initiative.stageId === 3) {
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'proposal').subscribe((wpsResp) => {
-            let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-            this.mapDataInMenu(3, 5, 12, wpss);
-            this._dataControlService.wpMaped = true;
-          }, (err) => {
-            console.log(err);
-            this._dataControlService.wpMaped = true;
-          });
+        const preConceptData = {
+          stageId: 2,
+          stageName: 'pre-concept',
+          sectionId: 13,
+          subSectionId: 28
         }
 
+        this.mapWorkPackagesInStage(preConceptData);
 
-        if (this.initiativesSvc.initiative.stageId === 2) {
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, 'pre-concept' ).subscribe((wpsResp) => {
-            let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-            this.mapDataInMenu(2, 13, 28, wpssPc);
-            this._dataControlService.wpMaped = true;
-          }, (err) => {
-            console.log(err);
-            this._dataControlService.wpMaped = true;
-          });
+
+        const fullProposalData = {
+          stageId: 3,
+          stageName: 'proposal',
+          sectionId: 5,
+          subSectionId: 12
         }
 
-
-
-
-
-        // //! Pre concept simulation
-        // let wpssPc = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-        // this.mapDataInMenu(2, 13, 28, wpssPc);
-        // // //!
+        this.mapWorkPackagesInStage(fullProposalData);
 
         let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 1, 8, pobList);
@@ -267,10 +254,9 @@ export class MenuComponent implements OnInit {
         let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 8, 37, tableAImpactArea);
 
-        // //! Pre concept simulation
         let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
         this.mapDataInMenu(2, 16, 29, resultsList);
-        // //! 
+     
 
         this.mapReportInSubSectionMenu(3, 9, {
           showName: 'Risk assessment preview',
@@ -368,17 +354,12 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(meta: any, section: string) {
-    // if(section != 'Key partners'){
     this.router.navigate([this.parseStageUrl(meta, section)]);
-    // }else{
-    //   this._interactionsService.openSnackBarPosition('Section under construction','Ok')
-    // }
   }
 
   validateSubMenuForm(stageName: any, subMenu: string) {
     stageName = stageName.toLowerCase().split(' ').join('_');
     subMenu = subMenu.toLowerCase().split(' ').join('_');
-    // console.log(stageName, subMenu, this.subMenusFormValidation)
     return this.subMenusFormValidation[stageName][subMenu];
   }
 }
