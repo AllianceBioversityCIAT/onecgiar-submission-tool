@@ -59,7 +59,7 @@ export class MenuComponent implements OnInit {
     );
 
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
-      // console.log("menuChange$");
+      console.log("menuChange$");
       this.currentUser = this.auth.userValue;
       this.getMenu();
       console.log("Get menu")
@@ -73,9 +73,18 @@ export class MenuComponent implements OnInit {
       this.subMenusFormValidation = menu;
     });
 
-    this.getImpacAreasList();
-    this._dataControlService.menuChange$.emit();
+    this.getImpacAreasList().then(()=>{
+      this._dataControlService.menuChange$.emit();
+    }).catch(err=>{
+      console.log(err)
+      this._dataControlService.menuChange$.emit();
+    });
+   
+ 
   }
+
+
+
 
   /**
    * 
@@ -144,12 +153,13 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-  getImpacAreasList(){
-    return  new Promise((resolve,reject)=>{
+  async getImpacAreasList(){
+    return  await new Promise((resolve,reject)=>{
       this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
         this.impacAreasList = impacAreas.response.impactAreasRequested;
         this._dataControlService.impacAreas = this.impacAreasList;
         resolve(null)
+        console.log("getImpacAreasList")
       }, (err) => {
         console.log(err);
         reject();
