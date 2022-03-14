@@ -22,7 +22,7 @@ p{
 }
 
 .rigth{
-    right: 0;
+    left: calc(100vw - 210px);
     transition: all .3s ease-in-out;
 }
 

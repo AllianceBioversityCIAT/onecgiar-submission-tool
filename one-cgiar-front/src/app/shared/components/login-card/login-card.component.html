@@ -6,14 +6,13 @@
       </div>
 
       <div class="card_custom_header background-color-tertiary center_flex">
-        <h5 class="card-title text-center">Sign In</h5>
+        <h5 class="card-title text-center">Log In</h5>
       </div>
       <br>
       <br>
       <br>
 
       <div class="card-body">
-        <!-- <h5 class="card-title text-center">Sign In</h5> -->
         <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
           <!-- <h1>{{this._dataControlService.currentRequestMethod}}</h1> -->
           <mat-form-field class="full-width-input">
@@ -41,9 +40,8 @@
               <!-- {{ loginForm.errorMessage }} -->
             </mat-error>
           </mat-form-field>
-          <button style="margin-top: 11px;" [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Sign in</button>
+          <button style="margin-top: 11px;" [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Log in</button>
           <br><br>
-          <!-- <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button> -->
           <p class="color-tertiary change-password-text" (click)="this._dataControlService.x_position_login_animation = - 100"> change password </p>
           <hr class="my-4">
           <div class="note">
