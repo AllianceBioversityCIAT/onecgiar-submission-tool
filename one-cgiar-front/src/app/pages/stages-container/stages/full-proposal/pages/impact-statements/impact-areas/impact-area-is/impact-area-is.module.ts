@@ -8,6 +8,7 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalPartnersRequestModule } from '../../../../../shared/components/global-partners-request/global-partners-request.module';
+import { IaVisualReferenceModule } from '../../../../../../../../shared/components/ia-visual-reference/ia-visual-reference.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { GlobalPartnersRequestModule } from '../../../../../shared/components/gl
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule,
-    GlobalPartnersRequestModule
+    GlobalPartnersRequestModule,
+    IaVisualReferenceModule
   ]
 })
 export class ImpactAreaIsModule { }
