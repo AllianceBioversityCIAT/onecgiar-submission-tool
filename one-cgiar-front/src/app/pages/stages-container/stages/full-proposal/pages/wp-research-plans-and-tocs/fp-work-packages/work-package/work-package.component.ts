@@ -18,7 +18,7 @@ export class WorkPackageComponent implements OnInit {
     private _wpDataControlService:WpDataControlService,
     private _dataControlService:DataControlService,
     private router:Router,
-    private _initiativesService:InitiativesService,
+    public _initiativesService:InitiativesService,
     private _interactionsService : InteractionsService
   ){
 
