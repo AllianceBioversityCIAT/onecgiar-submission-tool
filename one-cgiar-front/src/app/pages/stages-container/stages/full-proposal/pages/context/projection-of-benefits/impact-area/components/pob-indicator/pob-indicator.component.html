@@ -3,7 +3,7 @@
         {{getIndicatorName(indicatorsListPOBSavediItem?.impactAreaIndicator) || ''}}
     </div>
     
-    <app-button-edit-or-delete [ngCustomStyle]="{'margin-top':'40px'}" type="delete" (action)="removeindicatorBlock(index,indicatorsListPOBSavediItem,indicatorBlock)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly" [ngCustomStyle]="{'margin-top':'40px'}" type="delete" (action)="removeindicatorBlock(index,indicatorsListPOBSavediItem,indicatorBlock)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
  
     <br>
     <div class="row">

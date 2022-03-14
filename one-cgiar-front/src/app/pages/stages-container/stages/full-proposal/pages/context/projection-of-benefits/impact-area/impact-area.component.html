@@ -15,7 +15,7 @@
         </div>
 
         <br>
-        <div class="button_add_container center_flex" [hidden]="!indicatorsListLoaded">
+        <div class="button_add_container center_flex" [hidden]="!indicatorsListLoaded" *ngIf="!this._initiativesService.initiative.readonly">
             <button pButton pRipple type="button" label="Add Indicator" class="p-button-success save-button"
                 icon="pi pi-plus" iconPos="right" (click)="addIndicator()"></button>
         </div>
