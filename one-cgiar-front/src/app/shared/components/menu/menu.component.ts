@@ -60,10 +60,10 @@ export class MenuComponent implements OnInit {
     );
 
     this.localMenuChangesubscribtion$ = this._dataControlService.menuChange$.subscribe(() => {
-      console.log("menuChange$");
+      // console.log("menuChange$");
       this.currentUser = this.auth.userValue;
       this.getMenu();
-      console.log("Get menu")
+      // console.log("Get menu")
     });
 
     
@@ -153,7 +153,7 @@ export class MenuComponent implements OnInit {
         this.impacAreasList = impacAreas.response.impactAreasRequested;
         this._dataControlService.impacAreas = this.impacAreasList;
         resolve(null)
-        console.log("getImpacAreasList")
+        // console.log("getImpacAreasList")
       }, (err) => {
         console.log(err);
         reject();
