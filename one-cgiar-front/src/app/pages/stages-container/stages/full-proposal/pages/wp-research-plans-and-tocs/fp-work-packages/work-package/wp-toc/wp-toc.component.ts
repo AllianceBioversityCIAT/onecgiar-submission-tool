@@ -35,7 +35,7 @@ export class WpTocComponent implements OnInit {
       
       this.tocList = resp;
       this.serviceIsConsumed = true;
-      console.log( this.tocList)
+      // console.log( this.tocList)
     })
   }
 
