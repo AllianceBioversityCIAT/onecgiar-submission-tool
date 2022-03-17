@@ -1405,72 +1405,94 @@ export class ProposalHandler extends InitiativeStageHandler {
     const resultsCountriesArray = [];
 
     try {
-      const results = tableC.results;
-      let newResults = new entities.Results();
 
-      newResults.initvStgId = initvStgId;
-      newResults.result_type_id = results.result_type;
-      newResults.result_title = results.result_title;
-      newResults.is_global = results.is_global;
-      newResults.active = results.active;
+      let upsertResults: any;
 
-      resultsArray.push(
-        toolsSbt.mergeData(
-          resultsRepo,
-          ` 
-                SELECT *
-                  FROM results
-                 WHERE initvStgId = ${newResults.initvStgId}
-                   AND result_type_id = ${newResults.result_type_id}`,
-          newResults
-        )
-      );
+      for (let index = 0; index < tableC.results.length; index++) {
+        const result = tableC.results[index];
 
-      let mergeResults = await Promise.all(resultsArray);
+        let newResults = new entities.Results();
+
+        newResults.initvStgId = initvStgId;
+        newResults.result_type_id = result.result_type;
+        newResults.result_title = result.result_title;
+        newResults.is_global = result.is_global;
+        newResults.active = result.active;
+
+        // resultsArray.push(
+        //   toolsSbt.mergeData(
+        //     resultsRepo,
+        //     `
+        //         SELECT *
+        //           FROM results
+        //          WHERE initvStgId = ${newResults.initvStgId}
+        //            AND result_type_id = ${newResults.result_type_id}`,
+        //     newResults
+        //   )
+        // );
+
+        upsertResults = await resultsRepo.save(newResults);
+
+        for (let index = 0; index < result.indicators.length; index++) {
+          const indicators = result.indicators[index];
+          let newResultsIndicators = new entities.ResultsIndicators();
+
+          newResultsIndicators.id = indicators.id ? indicators.id : null;
+          newResultsIndicators.results_id = upsertResults.id;
+          newResultsIndicators.active = indicators.active;
+          newResultsIndicators.baseline_value = indicators.baseline_value;
+          newResultsIndicators.baseline_year = indicators.baseline_year;
+          newResultsIndicators.data_collection_method =
+            indicators.data_collection;
+          newResultsIndicators.data_source = indicators.data_source;
+          newResultsIndicators.frequency_data_collection =
+            indicators.frequency_data_collection;
+          newResultsIndicators.target_value = indicators.target_value;
+          newResultsIndicators.target_year = indicators.target_year;
+          newResultsIndicators.unit_measurement = indicators.unit_messurament;
+          newResultsIndicators.name = indicators.indicator_name;
+
+          resultsIndicatorsArray.push(
+            toolsSbt.mergeData(
+              resultsIndicatorsRepo,
+              ` 
+                    SELECT *
+                      FROM results_indicators
+                     WHERE id = ${newResultsIndicators.id} 
+                       and results_id = ${newResultsIndicators.results_id}`,
+              newResultsIndicators
+            )
+          );
+        }
+
+
+        for (let index = 0; index < result.geo_scope.regions.length; index++) {}
+
+        for (
+          let index = 0;
+          index < result.geo_scope.countries.length;
+          index++
+        ) {}
+  
+
+      }
+
+      // merge data
+
+      //    let mergeResults = await Promise.all(resultsArray);
 
       // Save data
 
-      let upsertResults: any = await resultsRepo.save(mergeResults[0]);
+      //  let upsertResults: any = await resultsRepo.save(mergeResults);
 
-      for (let index = 0; index < results.indicators.length; index++) {
-        const indicators = results.indicators[index];
-        let newResultsIndicators = new entities.ResultsIndicators();
+      // Geographic scope
+      // for (let index = 0; index < results.geo_scope.regions.length; index++) {}
 
-        newResultsIndicators.id = indicators.id ? indicators.id : null;
-        newResultsIndicators.results_id = upsertResults.id;
-        newResultsIndicators.active = indicators.active;
-        newResultsIndicators.baseline_value = indicators.baseline_value;
-        newResultsIndicators.baseline_year = indicators.baseline_year;
-        newResultsIndicators.data_collection_method =
-          indicators.data_collection;
-        newResultsIndicators.data_source = indicators.data_source;
-        newResultsIndicators.frequency_data_collection =
-          indicators.frequency_data_collection;
-        newResultsIndicators.target_value = indicators.target_value;
-        newResultsIndicators.target_year = indicators.target_year;
-        newResultsIndicators.unit_measurement = indicators.unit_messurament;
-        newResultsIndicators.name = indicators.indicator_name;
-
-        resultsIndicatorsArray.push(
-          toolsSbt.mergeData(
-            resultsIndicatorsRepo,
-            ` 
-                  SELECT *
-                    FROM results_indicators
-                   WHERE id = ${newResultsIndicators.id} 
-                     and results_id = ${newResultsIndicators.results_id}`,
-            newResultsIndicators
-          )
-        );
-      }
-
-      for (let index = 0; index < results.geo_scope.regions.length; index++) {}
-
-      for (
-        let index = 0;
-        index < results.geo_scope.countries.length;
-        index++
-      ) {}
+      // for (
+      //   let index = 0;
+      //   index < results.geo_scope.countries.length;
+      //   index++
+      // ) {}
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
