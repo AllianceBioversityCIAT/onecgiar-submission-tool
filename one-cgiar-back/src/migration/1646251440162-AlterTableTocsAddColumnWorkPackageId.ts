@@ -5,7 +5,7 @@ export class AlterTableTocsAddColumnWorkPackageId1646251440162 implements Migrat
     public async up(queryRunner: QueryRunner): Promise<void> {
 
         await queryRunner.query(`
-        ALTER TABLE tocs ADD COLUMN work_package_id int(11) NOT NULL
+        ALTER TABLE tocs ADD COLUMN work_package_id int(11) DEFAULT NULL
         `);
 
     }
