@@ -1562,7 +1562,7 @@ export async function patchTocs(req: Request, res: Response) {
     const fullInitiativeToc = await fullPposal.requestTocByInitiative();
 
     res.json(
-      new ResponseHandler('Full Proposal:Get TOC', {
+      new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
         fullInitiativeToc
       })
     );
