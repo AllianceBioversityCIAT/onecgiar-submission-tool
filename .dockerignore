@@ -6,3 +6,4 @@ npm-debug.log
 /one-cgiar-back/docs
 # Cache used by TypeScript's incremental build
 *.tsbuildinfo
+/docs

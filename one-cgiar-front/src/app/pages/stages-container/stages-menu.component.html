@@ -27,28 +27,8 @@
                         <mat-icon>settings</mat-icon>
                     </button>
             </div>
-<!--  -->
+            <div class="card-container">
 
-            <div class="capsule-header submission-container" *ngIf="this.initiativesSvc.initiative.status != null">
-                <div class="inner-capsule ibdc_bg_secondary_color">
-                    <div class="initIdContainer">
-                        <span class="text-description">
-                            Submitted by: 
-                        </span>
-                        <span class="initiative-id">{{this.initiativesSvc.initiative.submission.first_name}} {{this.initiativesSvc.initiative.submission.last_name}} - {{this.initiativesSvc.initiative.submission.updated_at | date:'yyyy-MM-dd HH:mm zz'}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-                    <div class="initIdContainer">
-                        <span class="text-description">
-                            Status: 
-                        </span>
-                        <span class="initiative-id">{{this.initiativesSvc.initiative.status}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-                    
-                </div>
-            </div>
-            <div class="card-container" style="position: relative;">
                 <div class="initiative-identification ibdc_bg_secondary_color">
                     <app-section-breadcrumb *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;" [sectionsList]="sectionsList"></app-section-breadcrumb>              
                     <!-- <div>
@@ -57,8 +37,11 @@
                         <span class="initiative-id" *ngIf="this._dataControlService.breadcrumbItemTwo">{{this._dataControlService.breadcrumbItemTwo}}</span>
                     </div> -->
                 </div>
-                <!-- *ngIf="this._dataControlService.userMenu.length && this._dataControlService.wpMaped && this._dataControlService.pobMaped" -->
-                <router-outlet></router-outlet>
+
+                <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
+                    <router-outlet></router-outlet>
+                </div>
+   
             </div>
         </div>
   

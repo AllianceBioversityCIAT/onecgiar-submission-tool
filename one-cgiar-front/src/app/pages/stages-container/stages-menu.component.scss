@@ -4,7 +4,7 @@
     background-color: white;
     border-radius: 100px;
     margin-top: 30px;
-    position: relative;
+    // position: relative;
     left: 4px;
     display: flex;
     justify-content: space-between;
@@ -114,6 +114,7 @@
 }
 
 .card-container {
+    position: relative;
     background-color: #f7f8f9ff;
     padding: 0;
     margin-top: 15px;
@@ -125,8 +126,8 @@
 }
 
 .initiative-identification {
-    position: relative;
-    z-index: 1;
+    // position: relative;
+    // z-index: 1;
     align-items: center;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;

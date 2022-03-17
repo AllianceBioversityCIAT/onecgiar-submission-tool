@@ -15,7 +15,7 @@ export class TableBComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
       this.tableBData = resp;
-      console.log(this.tableBData)
+      // console.log(this.tableBData)
     })
   }
 

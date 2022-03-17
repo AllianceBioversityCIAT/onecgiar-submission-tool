@@ -83,8 +83,6 @@ export class ImpactAreaIsComponent implements OnInit {
         this.showForm = false;
         this.iaID = routeResp.iaID
   
-        // this.getPobImpatAreaData(routeResp.pobIaID)
-        // this.pobColorselected(3, 7, 16, routeResp.iaID);
         this.sectionForm.controls['impact_area_id'].setValue(Number(routeResp.iaID));
         
         this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, routeResp.iaID).subscribe(resp=>{
