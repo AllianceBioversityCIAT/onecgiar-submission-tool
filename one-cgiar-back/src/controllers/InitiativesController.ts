@@ -1195,12 +1195,14 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     const metaData = new MetaDataHandler(initvStg.id.toString());
     const validateSbSts = await metaData.validationSubmissionStatuses();
     // const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
-
+    
     const assessmentValidation = await validateSbSts.isAssessor(userId);
-
+    
     const statusesAvailable = statuses.filter((status) => {
-      const stsArray = Object.values(status.stagesAvailables);
-      return stsArray.find((sts) => sts == stageId);
+      if(status.stagesAvailables){
+        const stsArray = Object.values(status.stagesAvailables);
+        return stsArray.find((sts) => sts == stageId);
+      }
     });
 
     return res.json(

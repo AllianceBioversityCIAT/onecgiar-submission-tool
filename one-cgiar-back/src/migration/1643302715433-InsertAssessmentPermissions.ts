@@ -10,35 +10,38 @@ export class InsertAssessmentPermissions1643302715433
     const assessmentRole = await getRepository(Roles).findOne({
       where: {acronym: 'ASSESS'}
     });
+    const adminRole = await getRepository(Roles).findOne({
+      where: {acronym: 'ADM'}
+    });
 
     const newPerms = perRepo.create([
       {
-        name: 'create.assessment.asesor',
+        name: 'create.assessment.assessor',
         resource: 'assessment',
         action: 'create:Any',
         attributes: '*',
-        roles: [assessmentRole]
+        roles: [assessmentRole, adminRole]
       },
       {
-        name: 'update.assessment.asesor',
+        name: 'update.assessment.assessor',
         resource: 'assessment',
         action: 'update:Any',
         attributes: '*',
-        roles: [assessmentRole]
+        roles: [assessmentRole, adminRole]
       },
       {
-        name: 'delete.assessment.asesor',
+        name: 'delete.assessment.assessor',
         resource: 'assessment',
         action: 'delete:Own',
         attributes: '*',
-        roles: [assessmentRole]
+        roles: [assessmentRole, adminRole]
       },
       {
-        name: 'read.assessment.asesor',
+        name: 'read.assessment.assessor',
         resource: 'assessment',
         action: 'read:Any',
         attributes: '*',
-        roles: [assessmentRole]
+        roles: [assessmentRole, adminRole]
       }
     ]);
 
