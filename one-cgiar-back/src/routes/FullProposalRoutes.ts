@@ -1585,4 +1585,6 @@ router.get(
  */
 router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
+router.get('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.getTocByInitiative);
+
 export default router;

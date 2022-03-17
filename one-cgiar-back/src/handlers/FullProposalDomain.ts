@@ -2730,4 +2730,40 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+
+  /**
+   ** REQUEST TOC BY INITIATIVE
+   * @returns previewPartners
+   */
+   async requestTocByInitiative() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve preview partners
+      const   tocQuery = `
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+        FROM tocs
+       WHERE active = 1
+        and type = 1
+      `;
+
+      const fullInitiativeToc = await this.queryRunner.query(
+        tocQuery
+      );
+
+      return fullInitiativeToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Preview Partners: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+
+
 }
