@@ -337,13 +337,62 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async pre_validationWorkPackagesGeoScope() {
     try {
-      const validationWP_GSSQL =`
-      `
-      var validationWP_GS = await this.queryRunner.query(validationWP_GSSQL);
+      let getAllWpSQL = `
+      SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
+      `;
 
-      validationWP_GS[0].validation = parseInt(validationWP_GS[0].validation);
+      var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
 
-      return validationWP_GS[0];
+      if (allWorkPackages.length > 0) {
+        // Get Work packages per initiative
+        for (let index = 0; index < allWorkPackages.length; index++) {
+          const wpId = allWorkPackages[index].id;
+
+          var multi = 1;
+
+          let validationWPSQL = `
+          SELECT sec.id as sectionId,sec.description, 
+          CASE
+        WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
+          OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+          OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
+		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
+	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
+		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+        WHERE ini.id = ${this.initvStgId_}
+          AND sec.stageId= ini.stageId
+          AND sec.description='work-package-research-plans-and-tocs';
+          `;
+
+          var workPackage = await this.queryRunner.query(validationWPSQL);
+
+          console.log(validationWPSQL)
+          workPackage[0].validation = parseInt(workPackage[0].validation);
+
+          multi = multi * workPackage[0].validation;
+
+          workPackage[0].validation = multi;
+        }
+      } else {
+        workPackage = [];
+      }
+      return workPackage[0];
     } catch (error) {
       throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
     }
@@ -1896,7 +1945,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                   GeneralInformation: await handler.pre_validationGI(),
                   InitialTheoryChange: await handler.pre_validationInitialTOC(),
                   InitiativeStatements: await handler.pre_validationInitiativeStatements(),
-                  WorkPackgesGeoScope: null,
+                  WorkPackgesGeoScope: await handler.pre_validationWorkPackagesGeoScope(),
                   Results: null,
                   Innovations: null,
                   KeyPartners: null,

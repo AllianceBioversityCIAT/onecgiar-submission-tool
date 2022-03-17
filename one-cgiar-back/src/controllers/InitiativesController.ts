@@ -1037,7 +1037,7 @@ export const createStage = async (req: Request, res: Response) => {
  * @param req params:{ initiativeId, stageId }
  * @param res
  */
- export const submitInitiative = async (req: Request, res: Response) => {
+export const submitInitiative = async (req: Request, res: Response) => {
   // console.log(req.params, req.body)
 
   const { initiativeId, stageId } = req.params;
@@ -1078,7 +1078,7 @@ export const createStage = async (req: Request, res: Response) => {
     await validateSbSts.isComplete()
 
     return res.json(
-      new ResponseHandler('Initiative submitted', {alreadySub})
+      new ResponseHandler('Initiative submitted', { alreadySub })
     );
 
     // get validation by sections
@@ -1187,7 +1187,7 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     // get current stage
     // const stage = await stagesRepo.findOne(stageId);
     // get statuses
-    const statuses = await statusesRepo.find();
+    const statuses = await statusesRepo.find({ where: { active: true } });
     // get initiaitive by stage
     const initvStg = await initvStgRepo.findOne({
       where: { initiative: initiativeId, stage: stageId }
@@ -1195,11 +1195,11 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     const metaData = new MetaDataHandler(initvStg.id.toString());
     const validateSbSts = await metaData.validationSubmissionStatuses();
     // const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
-    
+
     const assessmentValidation = await validateSbSts.isAssessor(userId);
-    
+
     const statusesAvailable = statuses.filter((status) => {
-      if(status.stagesAvailables){
+      if (status.stagesAvailables) {
         const stsArray = Object.values(status.stagesAvailables);
         return stsArray.find((sts) => sts == stageId);
       }
@@ -1298,23 +1298,26 @@ export const updateSubmissionStatusByInitiative = async (
       await validateSbSts.validateStatus(statusId);
 
     validateSbSts.isComplete();
-    console.log(newSubStatus);
 
     newSubStatus.submission = submission;
     newSubStatus.description = description;
     newSubStatus.userId = assessmentUser.user.id;
     newSubStatus.first_name = assessmentUser.user.first_name;
     newSubStatus.last_name = assessmentUser.user.last_name;
-    const updatedStatus = await submissionStatusRepo.save(newSubStatus);
+    // const updatedStatus = await submissionStatusRepo.save(newSubStatus);
 
     // update status in initiative by stage
+    // console.log(newSubStatus);
+    // console.log(newStatusxInitv);
     initvStg.status = newStatusxInitv;
-    await initvStgRepo.save(initvStg);
+    // await initvStgRepo.save(initvStg);
 
     const statusS = await submissionStatusRepo.findOne({
-      where: { id: updatedStatus.id, active: 1 },
+      where: { id: newSubStatus.id, active: 1 },
+      // where: { id: updatedStatus.id, active: 1 },
       relations: ['submission']
     });
+
     return res.json(
       new ResponseHandler('Initiative submission status updated', {
         updatedSubmission: statusS
