@@ -4,11 +4,13 @@ import helmet from 'helmet';
 import {startAccsCtrl} from '../middlewares/access-control';
 import {startMulter} from '../middlewares/multer';
 import Routes from '../routes';
+import morgan from 'morgan';
 
 
 export default ({app}: {app: express.Application}) => {
   const parentDir = require('path').resolve(process.cwd(), '../');
 
+  app.use(morgan('dev'));
   app.use(express.urlencoded({extended: true}));
   app.use(express.json());
   // middlewares
