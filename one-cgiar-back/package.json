@@ -49,6 +49,7 @@
         "nodemailer-express-handlebars": "^4.0.0",
         "reflect-metadata": "^0.1.13",
         "supertest": "^6.1.6",
+        "tx2": "^1.0.5",
         "typeorm": "^0.2.29",
         "winston": "^3.3.3"
     },
