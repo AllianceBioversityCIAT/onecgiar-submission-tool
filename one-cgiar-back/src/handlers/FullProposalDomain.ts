@@ -2756,7 +2756,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get Preview Partners: Full proposal',
+        'Get full initiative ToC: Full proposal',
         400,
         error.message,
         false
