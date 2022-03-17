@@ -18,7 +18,7 @@
     <div class="col-xl-2 targetUnit">
         <strong #unit class="ibdc_secondary_color">{{getIndicatorMetaData(indicatorsListPOBSavediItem?.impactAreaIndicator)?.targetUnit}}</strong>
     </div>
-    <div class="col-xl-1 iconRemove">
+    <div class="col-xl-1 iconRemove" *ngIf="!this._initiativesService.initiative.readonly">
         <span class="material-icons material-icons-outlined" (click)="removeDimension(i,item,itemLink)">
             delete
         </span>
@@ -28,7 +28,7 @@
 
 <h3 style="text-align: center;" *ngIf="!this.dimensionsList?.length"><strong class="ibdc_secondary_color" >No dimensions added</strong></h3>
 
-<div class="button_add_container center_flex">
+<div class="button_add_container center_flex" *ngIf="!this._initiativesService.initiative.readonly">
     <button 
     pButton pRipple 
     type="button" label="Add dimension" 
