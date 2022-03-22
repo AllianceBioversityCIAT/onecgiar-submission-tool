@@ -205,16 +205,24 @@ export class ProposalHandler extends InitiativeStageHandler {
                  WHERE wrkPkgId = ${id}
                    AND active = 1
                 GROUP BY id,region_id
+                `,
+        tocQuery = `
+                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+                  FROM tocs
+                 WHERE active = 1
+                  and type = 0
+                  and work_package_id = ${id}
                 `;
 
       var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
+      const tocs = await this.queryRunner.query(tocQuery);
 
       if (workPackages == undefined || workPackages.length == 0) {
         workPackages = [];
       } else {
-        // Map Initiatives
+        // Map Geo
         workPackages.map((geo) => {
           geo['regions'] = regions.filter((wp) => {
             return wp.wrkPkgId === geo.id;
@@ -222,6 +230,13 @@ export class ProposalHandler extends InitiativeStageHandler {
 
           geo['countries'] = countries.filter((wp) => {
             return wp.wrkPkgId === geo.id;
+          });
+        });
+
+        // Map toc
+        workPackages.map((wp) => {
+          wp['toc'] = tocs.filter((toc) => {
+            return (toc.work_package_id = wp.id);
           });
         });
       }
@@ -1008,8 +1023,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
 
-      console.log(melia_plan);
-
       if (melia_plan) {
         newMelia.id = melia_plan.meliaId;
         newMelia.melia_plan = melia_plan.melia_plan;
@@ -1025,7 +1038,6 @@ export class ProposalHandler extends InitiativeStageHandler {
           upsertedMelia = await meliaRepo.save(savedMelia);
         } else {
           newMelia.initvStgId = initvStg.id;
-          console.log('else', newMelia);
           upsertedMelia = await meliaRepo.save(newMelia);
         }
       }
@@ -1233,6 +1245,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newinitSdgTargets.initvStgId = initvStgId;
         newinitSdgTargets.sdg_target_id = element.sdg_target_id;
         newinitSdgTargets.active = element.active;
+        newinitSdgTargets.impact_area_id = element.impact_area_id;
 
         sdgTargets.push(
           toolsSbt.mergeData(
@@ -1392,76 +1405,100 @@ export class ProposalHandler extends InitiativeStageHandler {
     const resultsCountriesArray = [];
 
     try {
-      const results = tableC.results;
-      let newResults = new entities.Results();
 
-      newResults.initvStgId = initvStgId;
-      newResults.result_type_id = results.result_type;
-      newResults.result_title = results.result_title;
-      newResults.is_global = results.is_global;
-      newResults.active = results.active;
+      let upsertResults: any;
 
-      resultsArray.push(
-        toolsSbt.mergeData(
-          resultsRepo,
-          ` 
-                SELECT *
-                  FROM results
-                 WHERE initvStgId = ${newResults.initvStgId}
-                   AND result_type_id = ${newResults.result_type_id}`,
-          newResults
-        )
-      );
+      for (let index = 0; index < tableC.results.length; index++) {
+        const result = tableC.results[index];
 
-      let mergeResults = await Promise.all(resultsArray);
+        let newResults = new entities.Results();
 
-      // Save data
-      let upsertResults: any = await resultsRepo.save(mergeResults);
+        newResults.initvStgId = initvStgId;
+        newResults.result_type_id = result.result_type;
+        newResults.result_title = result.result_title;
+        newResults.is_global = result.is_global;
+        newResults.active = result.active;
 
-      for (let index = 0; index < results.indicators.length; index++) {
-        const indicators = results.indicators[index];
-        let newResultsIndicators = new entities.ResultsIndicators();
+        // resultsArray.push(
+        //   toolsSbt.mergeData(
+        //     resultsRepo,
+        //     `
+        //         SELECT *
+        //           FROM results
+        //          WHERE initvStgId = ${newResults.initvStgId}
+        //            AND result_type_id = ${newResults.result_type_id}`,
+        //     newResults
+        //   )
+        // );
 
-        newResultsIndicators.id = indicators.id ? indicators.id : null;
-        newResultsIndicators.results_id = upsertResults[0].id;
-        newResultsIndicators.active = indicators.active;
-        newResultsIndicators.baseline_value = indicators.baseline_value;
-        newResultsIndicators.baseline_year = indicators.baseline_year;
-        newResultsIndicators.data_collection_method =
-          indicators.data_collection;
-        newResultsIndicators.data_source = indicators.data_source;
-        newResultsIndicators.frequency_data_collection =
-          indicators.frequency_data_collection;
-        newResultsIndicators.target_value = indicators.target_value;
-        newResultsIndicators.target_year = indicators.target_year;
-        newResultsIndicators.unit_measurement = indicators.unit_messurament;
-        newResultsIndicators.name = indicators.indicator_name;
+        upsertResults = await resultsRepo.save(newResults);
 
-        resultsIndicatorsArray.push(
-          toolsSbt.mergeData(
-            resultsIndicatorsRepo,
-            ` 
-                  SELECT *
-                    FROM results_indicators
-                   WHERE id = ${newResultsIndicators.id} 
-                     and results_id = ${newResultsIndicators.results_id}`,
-            newResultsIndicators
-          )
-        );
+        for (let index = 0; index < result.indicators.length; index++) {
+          const indicators = result.indicators[index];
+          let newResultsIndicators = new entities.ResultsIndicators();
+
+          newResultsIndicators.id = indicators.id ? indicators.id : null;
+          newResultsIndicators.results_id = upsertResults.id;
+          newResultsIndicators.active = indicators.active;
+          newResultsIndicators.baseline_value = indicators.baseline_value;
+          newResultsIndicators.baseline_year = indicators.baseline_year;
+          newResultsIndicators.data_collection_method =
+            indicators.data_collection;
+          newResultsIndicators.data_source = indicators.data_source;
+          newResultsIndicators.frequency_data_collection =
+            indicators.frequency_data_collection;
+          newResultsIndicators.target_value = indicators.target_value;
+          newResultsIndicators.target_year = indicators.target_year;
+          newResultsIndicators.unit_measurement = indicators.unit_messurament;
+          newResultsIndicators.name = indicators.indicator_name;
+
+          resultsIndicatorsArray.push(
+            toolsSbt.mergeData(
+              resultsIndicatorsRepo,
+              ` 
+                    SELECT *
+                      FROM results_indicators
+                     WHERE id = ${newResultsIndicators.id} 
+                       and results_id = ${newResultsIndicators.results_id}`,
+              newResultsIndicators
+            )
+          );
+        }
+
+
+        for (let index = 0; index < result.geo_scope.regions.length; index++) {}
+
+        for (
+          let index = 0;
+          index < result.geo_scope.countries.length;
+          index++
+        ) {}
+  
+
       }
 
-      for (let index = 0; index < results.geo_scope.regions.length; index++) {}
+      // merge data
 
-      for (
-        let index = 0;
-        index < results.geo_scope.countries.length;
-        index++
-      ) {}
+      //    let mergeResults = await Promise.all(resultsArray);
+
+      // Save data
+
+      //  let upsertResults: any = await resultsRepo.save(mergeResults);
+
+      // Geographic scope
+      // for (let index = 0; index < results.geo_scope.regions.length; index++) {}
+
+      // for (
+      //   let index = 0;
+      //   index < results.geo_scope.countries.length;
+      //   index++
+      // ) {}
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+
       // Save data
-      let upsertResultsIndicators: any = await resultsRepo.save(
+      let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
 
@@ -1502,18 +1539,103 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1)
                      AND section = "${sectionName}"
                      AND active = 1
-                `;
-
-      const melia = await this.queryRunner.query(meliaQuery);
+                `,
+        globalTargetsQuery = `
+                SELECT igt.initvStgId,igt.id,igt.global_target_id,cgt.target,igt.active,
+                       cgt.impact_area_id
+                  FROM init_impact_area_global_targets igt
+                  JOIN clarisa_global_targets cgt
+                    ON igt.global_target_id = cgt.id
+                 WHERE igt.initvStgId =${initvStg.id}
+                   AND igt.active =1;`,
+        impactAreasIndicatorsQuery = `
+        SELECT iai.initvStgId,iai.id,iai.impact_indicator_id,
+               ciai.indicatorStatement,ciai.impactAreaId as impact_area_id,
+               iai.active
+          FROM init_impact_area_impact_indicators iai
+          JOIN clarisa_impact_areas_indicators ciai
+            ON iai.impact_indicator_id = ciai.id
+         WHERE iai.initvStgId = ${initvStg.id}
+           AND iai.active =1;
+        `,
+        sdgTargetsQuery = `
+        SELECT sdt.initvStgId,sdt.id, sdt.sdg_target_id,
+               csdt.sdg_target,csdt.sdg_target,sdt.impact_area_id
+          FROM init_impact_area_sdg_targets sdt
+          JOIN clarisa_sdg_targets csdt
+            ON sdt.sdg_target_id = csdt.id
+         WHERE sdt.initvStgId = ${initvStg.id}
+           AND sdt.active =1;
+        `,
+        outIndicatorsQuery = `
+          SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.action_area_name,
+          couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+          couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+           FROM init_action_areas_out_indicators outi
+           JOIN clarisa_action_areas_outcomes_indicators couti
+             ON outi.outcomes_indicators_id = couti.id
+          WHERE outi.initvStgId =${initvStg.id}
+            AND outi.active =1;
+        `,
+        resultsQuery = `
+     SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
+       FROM results re
+      WHERE re.initvStgId = ${initvStg.id}
+        AND re.active =1;
+        `,
+        resultsIndicatorsQuery = `
+        SELECT *
+          FROM results_indicators ri
+         WHERE ri.results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1);
+        `;
+      // MELIA PLAN
+      const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
 
-      melia.map((mel) => {
+      meliaPlan.map((mel) => {
         mel['files'] = files.filter((f) => {
           return f.meliaId === mel.id;
         });
       });
 
-      return melia[0];
+      //TABLE A
+
+      const globalTargets = await this.queryRunner.query(globalTargetsQuery);
+      const impactAreasIndicators = await this.queryRunner.query(
+        impactAreasIndicatorsQuery
+      );
+      const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
+      const tableA = {globalTargets, impactAreasIndicators, sdgTargets};
+
+      //TABLE B
+
+      const actionAreasOutcomesIndicators = await this.queryRunner.query(
+        outIndicatorsQuery
+      );
+      const tableB = {actionAreasOutcomesIndicators};
+
+      //TABLE C
+
+      const results = await this.queryRunner.query(resultsQuery);
+      const resultsIndicators = await this.queryRunner.query(
+        resultsIndicatorsQuery
+      );
+
+      results.map((res) => {
+        res['indicators'] = resultsIndicators.filter((resi) => {
+          return res.id === resi.results_id;
+        });
+      });
+
+      const tableC = {results: results[0]};
+
+      return {
+        meliaPlan: meliaPlan[0],
+        resultFramework: {tableA, tableB, tableC}
+      };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2573,8 +2695,9 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.toc_id = element.tocId;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
-          newTocs.type = element.type;
-          newTocs.work_package = element.work_package;
+          newTocs.type = element.type; // 0 into wp and 1 to level initiative
+          newTocs.work_package = element.work_package_acronym;
+          newTocs.work_package_id = element.work_package_id;
           newTocs.active = element.active ? element.active : true;
 
           newTocs.initvStgId = initvStg.id;
@@ -2607,4 +2730,40 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+
+  /**
+   ** REQUEST TOC BY INITIATIVE
+   * @returns previewPartners
+   */
+   async requestTocByInitiative() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve preview partners
+      const   tocQuery = `
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+        FROM tocs
+       WHERE active = 1
+        and type = 1
+      `;
+
+      const fullInitiativeToc = await this.queryRunner.query(
+        tocQuery
+      );
+
+      return fullInitiativeToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get full initiative ToC: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+
+
 }

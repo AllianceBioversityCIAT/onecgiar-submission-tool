@@ -82,6 +82,14 @@ router.get(
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stageconcept.getWorkPackagesByInitiative
 );
+
+/**GET WORK PACKAGES BY WORK PACKAGE*/
+router.get(
+  '/package/:wrkPkgId([0-9]+)',
+  [checkJwt, checkRole('packages', 'readOwn')],
+  stageconcept.getWorkPackage
+);
+
 // // read work packages list
 // router.get("/packages/:initvStgId([0-9]+)", [checkJwt, checkRole('packages', 'readOwn')], getWorkPackages);
 

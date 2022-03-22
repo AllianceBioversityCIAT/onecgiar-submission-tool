@@ -24,6 +24,10 @@ export class TawkToComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    console.log(this.getUserInfo.name)
+    console.log(this.getUserInfo.email)
+
     if (this.currentUser && this.currentUser.roles[0].id != 3) {
 
       this.script.text = `
@@ -39,17 +43,23 @@ export class TawkToComponent implements OnInit {
       
 
       Tawk_API.visitor = {
-        name  : '',
-        email : ''
+        name  : '${this.getUserInfo.name}',
+        email : '${this.getUserInfo.email}'
       };
       `;
       this._renderer.appendChild(this._document.body, this.script);
-      setTimeout(() => {
-        this.openChat();
-        // this.setLoggedUser()
-      }, 500);
+      // setTimeout(() => {
+      //   this.openChat();
+      //   this.setLoggedUser()
+      // }, 1500);
     }
 
+  }
+
+
+
+  get getUserInfo():{email,name}{
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   openChat() {
@@ -59,20 +69,21 @@ export class TawkToComponent implements OnInit {
 
   }
 
-  setLoggedUser() {
-    if (window['Tawk_API'].hasOwnProperty('visitor')) {
-      if (window.hasOwnProperty('Tawk_API')) {
-        if (window.hasOwnProperty('Tawk_API')) {
-          if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
-          window['Tawk_API'].setAttributes({
-            name:  this.currentUser.name,
-            email:  this.currentUser.email
-          }, function (error) {
-            console.log(error)
-          });
-        }
-      }
-    }
-  }
+  // setLoggedUser() {
+  //   if (window['Tawk_API'].hasOwnProperty('visitor')) {
+  //     if (window.hasOwnProperty('Tawk_API')) {
+  //       if (window.hasOwnProperty('Tawk_API')) {
+  //         if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
+  //         window['Tawk_API'].setAttributes({
+  //           name:  this.currentUser.name,
+  //           email:  this.currentUser.email
+  //         }, function (error) {
+  //           console.log(error)
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
 
 }
+

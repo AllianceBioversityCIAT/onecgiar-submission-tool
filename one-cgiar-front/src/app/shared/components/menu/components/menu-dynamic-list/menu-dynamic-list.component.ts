@@ -23,15 +23,24 @@ export class MenuDynamicListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addWorkPackage(){
-    console.log('addWorkPackage()')
+  addWorkPackage(stage){
+    
+    console.log('addWorkPackage() in stage '+stage?.stageId)
+
     let body = {active:true,id:null}
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       console.log(resp.response.workpackage.id)
-      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package/${resp.response.workpackage.id}/wp-general-info`])
+
+      if (stage?.stageId== 3) {
+        this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package/${resp.response.workpackage.id}/wp-general-info`])
+      }else if(stage?.stageId== 2){
+        this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/pre-concept/wp-and-geo-focus/work-packages/work-package/${resp.response.workpackage.id}`])
+      }
+  
 
       this._interactionsService.successMessage('Work package has been created')
     })
+
   }
 
   partnersNotRelatedRoute() {

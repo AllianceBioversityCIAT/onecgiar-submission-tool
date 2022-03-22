@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <app-button-add-element *ngIf="validateIfShowAddWp()" name="Add Work package" (click)="addWorkPackage()"></app-button-add-element>
+    <app-button-add-element *ngIf="validateIfShowAddWp()" name="Add Work package" (click)="addWorkPackage(stage)"></app-button-add-element>
 
     <div *ngIf="subSection.subSectionId === 16" class="dynamicListButton order_second"
         [routerLink]="partnersNotRelatedRoute()" routerLinkActive="activeSection">

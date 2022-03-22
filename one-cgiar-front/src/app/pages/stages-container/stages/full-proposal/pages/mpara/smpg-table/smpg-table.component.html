@@ -27,7 +27,7 @@
     <form (ngSubmit)="saveSection()">
 
         <ibdc-upload-files *ngIf="showForm" [options]="{
-            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
+            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList, readOnlyVariable: this._initiativesService.initiative.readonly}">
         </ibdc-upload-files>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">

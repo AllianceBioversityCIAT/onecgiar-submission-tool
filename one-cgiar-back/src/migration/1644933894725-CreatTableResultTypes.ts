@@ -1,10 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreatTableResultTypes1644933894725 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('create results types table');
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create results types table');
+    await queryRunner.query(`
         CREATE TABLE IF NOT EXISTS results_types (
             id int(11) NOT NULL AUTO_INCREMENT,
             name TEXT DEFAULT NULL,
@@ -15,13 +14,11 @@ export class CreatTableResultTypes1644933894725 implements MigrationInterface {
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
         INSERT INTO results_types (name)
         VALUES ('Outcome'),   
             ('Output')`);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

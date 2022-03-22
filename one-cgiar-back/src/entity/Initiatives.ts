@@ -4,7 +4,7 @@ import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByUsers} from './InititativesByUsers';
 import {InitiativesByStages} from './InititativesByStages';
 
-@Entity()
+@Entity('initiatives')
 export class Initiatives extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;

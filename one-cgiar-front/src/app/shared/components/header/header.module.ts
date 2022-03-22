@@ -4,6 +4,7 @@ import { HeaderComponent } from './header.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import { TawkToComponent } from '../tawk-to/tawk-to.component';
 
 const angularMaterialModules = [
   MatToolbarModule,
@@ -12,7 +13,7 @@ const angularMaterialModules = [
 ]
 
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [HeaderComponent,TawkToComponent],
   exports: [HeaderComponent],
   imports: [
     CommonModule,

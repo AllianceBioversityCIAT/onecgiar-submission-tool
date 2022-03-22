@@ -47,7 +47,7 @@ export class WpGeneralInformationComponent implements OnInit {
       //console.log(this._wpDataControlService.wpId);
       this.wpID = this._wpDataControlService.wpId 
 
-      this._initiativesService.getWpFpByInititative(this._wpDataControlService.wpId).subscribe(resp => {
+      this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').subscribe(resp => {
         let directResp = resp.response.workpackage;
         //console.log(directResp);
         this.geographicScope.regions = directResp.regions;
@@ -86,7 +86,7 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    console.log(body);
+    // console.log(body);
     this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
       // console.log(resp);
       // console.log(this.workPackageForm.valid?true:false);

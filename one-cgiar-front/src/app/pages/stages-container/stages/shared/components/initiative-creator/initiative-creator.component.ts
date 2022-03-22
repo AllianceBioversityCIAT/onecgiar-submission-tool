@@ -58,6 +58,9 @@ export class InitiativeCreatorComponent implements OnInit {
       console.log("createInitiative");
       this._initiativesService.createInitiative(this.createBody).subscribe(resp => {
         this._interactionsService.successMessage('The initiative "'+resp?.response.generalInformation.name+'" was successfully created')
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
       })
 
 
@@ -68,6 +71,8 @@ export class InitiativeCreatorComponent implements OnInit {
       this.createBody.acronym = '';
       this.createBody.action_area_description = '';
       this.createBody.action_area_id = null;
+
+   
 
   }
 
