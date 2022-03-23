@@ -2744,7 +2744,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       const   tocQuery = `
       SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
         FROM tocs
-       WHERE active = 1
+       WHERE initvStgId = ${initvStg.id}
+        and active = 1
         and type = 1
       `;
 
