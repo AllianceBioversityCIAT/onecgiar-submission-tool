@@ -24,34 +24,35 @@ export class TawkToComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initializeTawkIo();
+  }
 
-    console.log(this.getUserInfo.name)
-    console.log(this.getUserInfo.email)
-
+  initializeTawkIo(){
+    console.log("initializeTawkIo");
+  
     if (this.currentUser && this.currentUser.roles[0].id != 3) {
-
+      console.log("Tawk_API")
       this.script.text = `
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-      (function(){
+      (()=>{
       var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
       s1.async=true;
       s1.src = 'https://embed.tawk.to/${this.config.tawkToId}';
       s1.charset='UTF-8';
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
-      })();
-      
-
-      Tawk_API.visitor = {
-        name  : '${this.getUserInfo.name}',
-        email : '${this.getUserInfo.email}'
-      };
+      })();  
       `;
-      this._renderer.appendChild(this._document.body, this.script);
-      // setTimeout(() => {
-      //   this.openChat();
-      //   this.setLoggedUser()
-      // }, 1500);
+      this._renderer.appendChild(document.querySelector('.Tawk_API_container'), this.script);
+
+      window['Tawk_API'].onLoad = () => {
+        window['Tawk_API'].setAttributes({
+          'name': this.getUserInfo.name,
+          'email': this.getUserInfo.email,
+          // 'hash'  : 'hash value'
+        }, (error) => { console.log(error) });
+      }
+
     }
 
   }
