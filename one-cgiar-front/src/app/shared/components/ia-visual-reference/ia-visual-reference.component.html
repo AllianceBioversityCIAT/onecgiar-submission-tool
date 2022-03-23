@@ -1,0 +1,9 @@
+<div class="circle" [ngStyle]="{'background-color': colors[this.impactAreId-1]}">
+    <div class="circle_container">
+        <div class="title">{{this.getImpactAreDataById()}}</div>
+        <div class="img-circle">
+            <img [src]="'assets/ia-images/'+this.impactAreId+'.png'"  alt="" srcset="">
+        </div>
+        <!-- <h1>{{colors[this.impactAreId]}}</h1> -->
+    </div>
+</div>

@@ -27,7 +27,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { InitiativeCreatorModule } from './pages/stages-container/stages/shared/components/initiative-creator/initiative-creator.module';
 
 //? Others
-import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
@@ -37,6 +36,7 @@ import { FooterModule } from './shared/components/footer/footer.module';
 import { HeaderModule } from './shared/components/header/header.module';
 import { NavbarModule } from './shared/components/navbar/navbar.module';
 import { DevTagModule } from './shared/components/dev-tag/dev-tag.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { MaterialModule } from './material.module';
 import { SidebarModule } from './shared/components/sidebar/sidebar.module';
 import { HttpRequestInterceptor } from './shared/interceptors/http-request.interceptor';
@@ -51,7 +51,6 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
     CreateUserModalComponent,
-    TawkToComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -79,7 +78,8 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
     FooterModule,
     HeaderModule,
     NavbarModule,
-    DevTagModule
+    DevTagModule,
+    NgxSpinnerModule
   ],
   providers: [
     CurrencyPipe,

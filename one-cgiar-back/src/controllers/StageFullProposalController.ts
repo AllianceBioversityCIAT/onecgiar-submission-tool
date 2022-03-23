@@ -856,10 +856,10 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const meliaData = await fullPposal.requestMeliaFiles(sectionName);
+    const melia = await fullPposal.requestMeliaFiles(sectionName);
 
     res.json(
-      new ResponseHandler('Full Proposal: melia and files.', {meliaData})
+      new ResponseHandler('Full Proposal: melia and files.', {melia})
     );
   } catch (error) {
     console.log(error);
@@ -1512,8 +1512,58 @@ export async function patchTocs(req: Request, res: Response) {
     const tocs = await fullPposal.upsertTocs(toc);
 
     res.json(
-      new ResponseHandler('Full Proposal:TOC', {
+      new ResponseHandler('Full Proposal:Patch TOC', {
         tocs
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * GET TOC BY INITIATIVE
+ * @param req tocId,narrative, diagram, type, active
+ * @param res tocs
+ * @returns tocs
+ */
+ export async function getTocByInitiative(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+  const toc = req.body;
+
+  //Validate stage
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read policy compliance oversight: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const fullInitiativeToc = await fullPposal.requestTocByInitiative();
+
+    res.json(
+      new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
+        fullInitiativeToc
       })
     );
   } catch (error) {

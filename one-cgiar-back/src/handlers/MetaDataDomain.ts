@@ -1,11 +1,11 @@
-import { getConnection, getRepository } from 'typeorm';
-import { Statuses } from '../entity/Statuses';
-import { Submissions } from '../entity/Submissions';
-import { SubmissionsStatus } from '../entity/SubmissionStatus';
-import { Users } from '../entity/Users';
-import { HttpStatusCode } from '../interfaces/Constants';
-import { APIError, BaseError } from './BaseError';
-import { InitiativeStageHandler } from './InitiativeStageDomain';
+import {getConnection, getRepository} from 'typeorm';
+import {Statuses} from '../entity/Statuses';
+import {Submissions} from '../entity/Submissions';
+import {SubmissionsStatus} from '../entity/SubmissionStatus';
+import {Users} from '../entity/Users';
+import {HttpStatusCode} from '../interfaces/Constants';
+import {APIError, BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class MetaDataHandler extends InitiativeStageHandler {
   /**
@@ -1655,7 +1655,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
     try {
-      const submission = await submissionRepo.findOne({ where: { initvStg, active: 1 } });
+      const submission = await submissionRepo.findOne({
+        where: {initvStg, active: 1}
+      });
 
       return {
         isComplete: function () {
@@ -1666,8 +1668,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               true,
               'Initiative not submitted yet.'
             );
-          } 
-          else if(submission.complete) {
+          } else if (submission.complete) {
             throw new APIError(
               'Unauthorized',
               HttpStatusCode.UNAUTHORIZED,
@@ -1678,7 +1679,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         },
         validateStatus: async (newStatusId: any) => {
           const newStatusxInitv = await statusesRepo.findOne(newStatusId);
-          const currentInitvSubStatuses = await subStsRepo.find({ where: { submission } });
+          const currentInitvSubStatuses = await subStsRepo.find({
+            where: {submission}
+          });
           if (newStatusxInitv == null) {
             throw new APIError(
               'Bad request',
@@ -1687,13 +1690,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
-          const foundSubStatus = currentInitvSubStatuses.find( stses => stses.statusId == newStatusxInitv.id)
+          const foundSubStatus = currentInitvSubStatuses.find(
+            (stses) => stses.statusId == newStatusxInitv.id
+          );
           if (foundSubStatus) {
             return {
               submission,
               newSubStatus: foundSubStatus,
               newStatusxInitv
-            }
+            };
           } else {
             const subStatus = new SubmissionsStatus();
             subStatus.statusId = newStatusxInitv.id;
@@ -1703,7 +1708,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               submission,
               newSubStatus: subStatus,
               newStatusxInitv
-            }
+            };
           }
         },
         isAssessor: async function (userId) {
@@ -1725,7 +1730,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
           const [query, parameters] =
             await queryRunner.connection.driver.escapeQueryWithParameters(
               assessSQL,
-              { userId },
+              {userId},
               {}
             );
 
@@ -1748,9 +1753,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
           };
         }
       };
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new APIError(
         'Bad request',
         HttpStatusCode.BAD_REQUEST,
@@ -1758,6 +1762,5 @@ export class MetaDataHandler extends InitiativeStageHandler {
         error.message
       );
     }
-
   }
 }

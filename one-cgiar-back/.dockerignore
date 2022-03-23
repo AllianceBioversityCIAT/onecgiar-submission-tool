@@ -3,3 +3,4 @@ npm-debug.log
 /src
 # Cache used by TypeScript's incremental build
 *.tsbuildinfo
+/docs

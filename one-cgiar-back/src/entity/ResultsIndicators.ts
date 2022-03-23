@@ -46,7 +46,4 @@ export class ResultsIndicators extends UpdatedCreatedAt {
   @Column({type: 'text'})
   frequency_data_collection: string;
 
-  @OneToOne(() => Results)
-  @JoinColumn()
-  resultsId!: Results;
 }

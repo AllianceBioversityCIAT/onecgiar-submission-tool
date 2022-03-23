@@ -5,8 +5,8 @@ import {
   JoinColumn,
   OneToOne
 } from 'typeorm';
-import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { InitiativesByStages } from './InititativesByStages';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import {InitiativesByStages} from './InititativesByStages';
 
 @Entity('submissions')
 export class Submissions extends UpdatedCreatedAt {

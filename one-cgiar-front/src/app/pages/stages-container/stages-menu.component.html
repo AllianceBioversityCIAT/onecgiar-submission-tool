@@ -34,8 +34,9 @@
                         <mat-icon>settings</mat-icon>
                     </button>
             </div>
-            <div class="card-container" style="position: relative;">
-                <div class="initiative-identification ibdc_bg_secondary_color" style="position: relative; z-index: 10;">
+            <div class="card-container">
+
+                <div class="initiative-identification ibdc_bg_secondary_color">
                     <app-section-breadcrumb *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;" [sectionsList]="sectionsList"></app-section-breadcrumb>              
                     <!-- <div>
                         
@@ -43,8 +44,11 @@
                         <span class="initiative-id" *ngIf="this._dataControlService.breadcrumbItemTwo">{{this._dataControlService.breadcrumbItemTwo}}</span>
                     </div> -->
                 </div>
-                <!-- *ngIf="this._dataControlService.userMenu.length && this._dataControlService.wpMaped && this._dataControlService.pobMaped" -->
-                <router-outlet></router-outlet>
+
+                <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
+                    <router-outlet></router-outlet>
+                </div>
+   
             </div>
         </div>
   

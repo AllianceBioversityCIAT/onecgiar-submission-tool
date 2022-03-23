@@ -60,16 +60,16 @@ export class PcInitiativeStatementsComponent implements OnInit {
   }
 
   updateObject(data:IsBody){
-    console.log(data.context)
+
 
     data.highlights.map((resp,i)=>{
       this.body.highlights[i].id = resp?.id || null;
       this.body.highlights[i].description = resp?.description || null;
     })
 
-    this.body.context.id = data.context.id;
-    this.body.context.challenge_statement = data.context.challenge_statement;
-    this.body.context.smart_objectives = data.context.smart_objectives;
+    this.body.context.id = data?.context?.id || null;;
+    this.body.context.challenge_statement = data?.context?.challenge_statement || null;;
+    this.body.context.smart_objectives = data?.context?.smart_objectives || null;;
 
     // data.highlights
 
@@ -81,6 +81,7 @@ export class PcInitiativeStatementsComponent implements OnInit {
     console.log(this.body)
     this._initiativesService.patchInitiativeStatements(this._initiativesService.initiative.id, this.body).subscribe(resp=>{
       console.log(resp)
+      this.getInformation();
     }) 
   }
 

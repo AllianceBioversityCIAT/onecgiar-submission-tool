@@ -1,5 +1,5 @@
 import {getConnection, getRepository} from 'typeorm';
-import {Initiatives, InitiativesByStages} from '../entity';
+import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
 
 export class InitiativeHandler {
@@ -13,8 +13,9 @@ export class InitiativeHandler {
     const newInitvStg = new InitiativesByStages();
 
     try {
-   
-      const lastId = await this.queryRunner.query("SELECT MAX(ID) as lastId FROM INITIATIVES");
+      const lastId = await this.queryRunner.query(
+        'SELECT MAX(ID) as lastId FROM initiatives'
+      );
 
       const nextId = parseInt(lastId[0].lastId) + 1;
       const official_code = 'INIT-' + nextId;

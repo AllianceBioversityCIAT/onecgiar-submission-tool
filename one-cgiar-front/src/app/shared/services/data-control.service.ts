@@ -26,6 +26,7 @@ export class DataControlService {
   WorkPackageID:number=null;
   showRegions=false;
   showCountries=false;
+  impacAreas = [];
 
   // events to reload info in sections
   currentRequestMethod:string = '';
