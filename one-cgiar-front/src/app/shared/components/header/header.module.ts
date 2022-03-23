@@ -4,16 +4,17 @@ import { HeaderComponent } from './header.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import { TawkToComponent } from '../tawk-to/tawk-to.component';
+import { TawkToModule } from '../tawk-to/tawk-to.module';
 
 const angularMaterialModules = [
   MatToolbarModule,
   MatButtonModule,
-  MatIconModule
+  MatIconModule,
+  TawkToModule
 ]
 
 @NgModule({
-  declarations: [HeaderComponent,TawkToComponent],
+  declarations: [HeaderComponent],
   exports: [HeaderComponent],
   imports: [
     CommonModule,

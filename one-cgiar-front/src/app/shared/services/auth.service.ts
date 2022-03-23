@@ -42,6 +42,7 @@ export class AuthService {
 
   logout(): void {
     // localStorage.removeItem('user');
+    console.log("logout")
     this.logOutTawtkTo();
     localStorage.clear()
     this.user.next(null);
@@ -131,21 +132,15 @@ export class AuthService {
   }
   
   private logOutTawtkTo() {
-    // console.log(window.hasOwnProperty('Tawk_API'))
+
     if (window.hasOwnProperty('Tawk_API')) {
-      try {
-        window['Tawk_API'].endChat();
-      } catch (error) {
-        console.log(error)
-      }
-      // if (window['Tawk_API'].isChatMaximized()) {
-      // }
       window['Tawk_API'].visitor = {
         name: null,
         email: null
       };
     }
-  }
 
+
+  }
 
 }
