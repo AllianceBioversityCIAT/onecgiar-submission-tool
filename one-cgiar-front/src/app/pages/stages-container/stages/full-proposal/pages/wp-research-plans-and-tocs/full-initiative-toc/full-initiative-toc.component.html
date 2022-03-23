@@ -2,7 +2,7 @@
 <div class="section-container animate__animated animate__fadeIn">
   <div class="toc_list">
     <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
-    <div class="toc_item">
+    <div class="toc_item" *ngIf="tocitem">
   
       <div class="tex_container">
         <ibdc-simple-text [options]="{inputTitle:'TOC ID',value: tocitem?.narrative}">

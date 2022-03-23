@@ -29,9 +29,10 @@ export class FullInitiativeTocComponent implements OnInit {
 
   getProposalTocByInitiativeId(){
     this.serviceIsConsumed = false;
+    console.log(this._initiativesService.initiative.id)
     this._initiativesService.getProposalTocByInitiativeId(this._initiativesService.initiative.id).pipe(map(res=> res.response.fullInitiativeToc)).subscribe((resp) => {
       this.tocitem = resp;
-      console.log(this.tocitem)
+      this.serviceIsConsumed = true;
     })
   }
 
