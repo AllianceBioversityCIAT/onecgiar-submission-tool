@@ -325,6 +325,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       return validationInitStatments[0];
     } catch (error) {
+      console.log(error)
       throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
     }
   }
@@ -342,7 +343,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
       `;
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
-
+      var workPackage = {
+        validation: null,
+        sectionId: null,
+        description: null,
+      };
       if (allWorkPackages.length > 0) {
         // Get Work packages per initiative
         for (let index = 0; index < allWorkPackages.length; index++) {
@@ -377,24 +382,37 @@ export class MetaDataHandler extends InitiativeStageHandler {
          JOIN sections_meta sec
         WHERE ini.id = ${this.initvStgId_}
           AND sec.stageId= ini.stageId
-          AND sec.description='work-package-research-plans-and-tocs';
+          AND sec.description='wp-and-geo-focus';
           `;
 
-          var workPackage = await this.queryRunner.query(validationWPSQL);
+          let workPackageArr = await this.queryRunner.query(validationWPSQL);
 
-          console.log(validationWPSQL)
-          workPackage[0].validation = parseInt(workPackage[0].validation);
+          if (workPackageArr.length > 0) {
+            workPackage['validation'] = parseInt(workPackageArr[0].validation);
+            workPackage['description'] = workPackageArr[0].description;
+            workPackage['sectionId'] = workPackageArr[0].sectionId;
 
-          multi = multi * workPackage[0].validation;
+            multi = multi * workPackage.validation;
 
-          workPackage[0].validation = multi;
+            workPackage.validation = multi;
+          } else {
+            workPackage = null;
+          }
+
         }
       } else {
-        workPackage = [];
+        workPackage = null;
       }
-      return workPackage[0];
+
+      return workPackage;
     } catch (error) {
-      throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
+      console.log(error)
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
@@ -1942,27 +1960,27 @@ export class MetaDataHandler extends InitiativeStageHandler {
             switch (currentStage.description) {
               case 'Pre Concept':
                 validatedSections = {
-                  GeneralInformation: await handler.pre_validationGI(),
-                  InitialTheoryChange: await handler.pre_validationInitialTOC(),
-                  InitiativeStatements: await handler.pre_validationInitiativeStatements(),
-                  WorkPackgesGeoScope: await handler.pre_validationWorkPackagesGeoScope(),
-                  Results: null,
-                  Innovations: null,
-                  KeyPartners: null,
-                  GlobalBudget: null
+                  GeneralInformation: (await handler.pre_validationGI()).validation,
+                  InitialTheoryChange: (await handler.pre_validationInitialTOC()).validation,
+                  InitiativeStatements: (await handler.pre_validationInitiativeStatements()).validation,
+                  WorkPackgesGeoScope: (await handler.pre_validationWorkPackagesGeoScope()).validation,
+                  // missing section validations
+                  // Results: 0,
+                  // Innovations: 0,
+                  // KeyPartners: 0,
+                  // GlobalBudget: 0
                 }
-
-
-                console.log('preconcept')
-                console.log(validatedSections)
-
+                console.log(Object.keys(validatedSections).length ,Object.values(validatedSections).reduce((a: any, b: any) => a + b))
+                if(Object.keys(validatedSections).length !== Object.values(validatedSections).reduce((a: any, b: any) => a + b)){
+                  throw new APIError('Unauthorized', HttpStatusCode.UNAUTHORIZED, true, 'Initiattive is not completed yet. Unavailable to assess.');
+                }
                 break;
               case 'Full Proposal':
                 console.log('proposal')
                 break;
 
               default:
-                throw new APIError('Unauthorized', HttpStatusCode.UNAUTHORIZED, true, 'Initiattive by stage null');
+                throw new APIError('NOT_FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiattive by stage null');
                 break;
             }
 

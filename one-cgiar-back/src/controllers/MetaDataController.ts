@@ -116,7 +116,6 @@ export async function getValidations(req: Request, res: Response) {
 
 
     /*******************************************/
-    console.log(validatorsObject)
     res.json(
       new ResponseHandler('Green Checks:Menu', validatorsObject)
     );

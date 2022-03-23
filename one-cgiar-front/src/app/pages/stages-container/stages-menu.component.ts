@@ -106,9 +106,9 @@ export class StagesMenuComponent implements OnInit {
 
     // TODO stageId 3 condition
     this._dataControlService.validateMenu$.subscribe(resp => {
-      if (this.initiativesSvc.initiative.stageId === 3) {
+      // if (this.initiativesSvc.initiative.stageId === 3) {
         this.validateAllSections();
-      }
+      // }
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 
@@ -187,9 +187,9 @@ export class StagesMenuComponent implements OnInit {
   }
 
   validateAllSections() {
-
-    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-      // console.log("%c Green check: ",  'color: #f4f814',resp.response);
+    console.log(this.initiativesSvc.initiative)
+    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
+      console.log("%c Green check: ",  'color: #f4f814',resp.response);
 
       Object.keys(resp.response).map(key => {
         let stageId = 3;

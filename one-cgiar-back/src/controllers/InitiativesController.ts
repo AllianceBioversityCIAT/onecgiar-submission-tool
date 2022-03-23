@@ -1294,10 +1294,9 @@ export const updateSubmissionStatusByInitiative = async (
 
     const assessmentUser = await validateSbSts.isAssessor(userId);
 
-    const { submission, newSubStatus, newStatusxInitv } =
-      await validateSbSts.validateStatus(statusId);
+    const { submission, newSubStatus, newStatusxInitv } = await validateSbSts.validateStatus(statusId);
 
-    validateSbSts.isComplete();
+    await validateSbSts.isComplete();
 
     newSubStatus.submission = submission;
     newSubStatus.description = description;
@@ -1308,7 +1307,7 @@ export const updateSubmissionStatusByInitiative = async (
 
     // update status in initiative by stage
     // console.log(newSubStatus);
-    // console.log(newStatusxInitv);
+    console.log(newStatusxInitv);
     initvStg.status = newStatusxInitv;
     // await initvStgRepo.save(initvStg);
 

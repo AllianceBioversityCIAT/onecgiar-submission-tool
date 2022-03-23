@@ -135,16 +135,16 @@ export class MenuComponent implements OnInit {
   onConfirmAssessment() {
     const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
     const updateObj = { description: this.statusTextObj['description'], statusId: statusSelected.id };
-    console.log(updateObj)
-    this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
-      resp => {
-        console.log(resp)
-      },
-      err => {
-        console.log(err);
-        this._interactionsService.errorMessage(err.error?.description, 2000);
-      }
-    )
+    // console.log('onConfirmAssessment')
+    // this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
+    //   resp => {
+    //     console.log(resp)
+    //   },
+    //   err => {
+    //     console.log(err);
+    //     this._interactionsService.errorMessage(err.error?.description, 2000);
+    //   }
+    // )
   }
 
   // * Asssessment management
