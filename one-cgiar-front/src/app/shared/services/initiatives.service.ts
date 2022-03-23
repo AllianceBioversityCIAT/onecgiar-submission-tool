@@ -589,6 +589,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/result_framework`, {});
   }
 
+  getProposalTocByInitiativeId(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/toc/${initiativeId}`);
+  }
+
   /*** submitt initiative */
 
 
