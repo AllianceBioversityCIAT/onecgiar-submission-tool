@@ -1,50 +1,22 @@
 <section-title name="Full initiative Toc" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-<!-- <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
-        *ngIf="showForm"> -->
-
-        <form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row">
-            <!-- <div class="col-12">
-              <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
-              <br>
-            </div> -->
-            <div class="col-8">
-              <ibdc-textarea
-              [options]="{inputTitle:'TOC ID', form:wpTocForm, formControlName:'TocId'
-              ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
-              </ibdc-textarea>
-            </div>
-        
-            <div class="col-4">
-              <button *ngIf="!this._initiativesService.initiative.readonly" pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
-            </div>
-        
-            <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="txtIsLoaded">
-                <ibdc-simple-text [options]="{inputTitle:'The Science narrative', value:toctxtData}"></ibdc-simple-text>
-            </div>
-        
-        
-            <div class="col-12 toc_image" style="display: flex; justify-content: center;" [hidden]="!imageIsLoaded" *ngIf="linkIsgenerated">
-              <div class="image_container">
-                <section-sub-title name="Diagram"></section-sub-title>
-                <img (load)="imageLoaded()" (error)="imageError()" [src]="this.wpTocForm.value['imageUrl']+'.png'" alt="" srcset="" width="100%">
-              </div>
-            </div>
-        
-            <div class="col-12">
-              <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!txtIsLoaded" [options]="{text: 'The TOC narrative is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
-            </div>
-        
-            <div class="col-12">
-              <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!imageIsLoaded" [options]="{text: 'The TOC diagram is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
-            </div>
-            
-            <p class="toc_id toc id toc-id" [hidden]="true">SmBQ1GfEjD</p>
-        
-            
-        
-            <!-- <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
-                <img src="https://cdn.pixabay.com/photo/2017/05/14/03/45/gui-2311261_960_720.png" alt="" sizes="100%" srcset="">
-            </div> -->
-        </form>
+  <div class="toc_list">
+    <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
+    <div class="toc_item">
+  
+      <div class="tex_container">
+        <ibdc-simple-text [options]="{inputTitle:'TOC ID',value: tocitem?.narrative}">
+        </ibdc-simple-text>
+      </div>
+  
+      <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram') ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'">
+        <div class="image_container" (click)="expandImage('diagram')">
+          <section-sub-title name="Diagram"></section-sub-title>
+          <img (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
 </div>

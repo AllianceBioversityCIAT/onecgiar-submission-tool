@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { environment } from '../../../../../../../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-full-initiative-toc',
@@ -10,38 +11,41 @@ import { environment } from '../../../../../../../../environments/environment';
   styleUrls: ['./full-initiative-toc.component.scss']
 })
 export class FullInitiativeTocComponent implements OnInit {
-  wpTocForm: FormGroup;
   toctxtData:string;
   linkIsgenerated=false;
   imageIsLoaded=false;
   txtIsLoaded=false;
+  tocitem = null;
+  serviceIsConsumed = false;
   constructor(
     public _initiativesService: InitiativesService,
     public http: HttpClient
   ) { 
-    this.wpTocForm = new FormGroup({
-      TocId: new FormControl(null),
-      imageUrl: new FormControl(null),
-    });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getProposalTocByInitiativeId();
+  }
 
+  getProposalTocByInitiativeId(){
+    this.serviceIsConsumed = false;
+    this._initiativesService.getProposalTocByInitiativeId(this._initiativesService.initiative.id).pipe(map(res=> res.response.fullInitiativeToc)).subscribe((resp) => {
+      this.tocitem = resp;
+      console.log(this.tocitem)
+    })
+  }
 
-  generateUrl(){
-    this.wpTocForm.controls['imageUrl'].setValue(`${environment.tocBaseUrl}${this.wpTocForm.value['TocId']}/${this.wpTocForm.value['TocId']}`);
-    console.log(`${environment.tocBaseUrl}${this.wpTocForm.value['TocId']}/${this.wpTocForm.value['TocId']}`);
-    console.log("get txt");
-    this.getTocTxtDataByTocId(this.wpTocForm.value['TocId'])
-    
+  expandImage(htmlId){
+    document.getElementById(htmlId).classList.toggle('expandImage')
   }
 
   saveSection(){
 
   }
 
-  imageLoaded(){
+  imageLoaded(htmlId){
     console.log("loaded");
+    document.getElementById(htmlId).style.display = 'flex';
     this.imageIsLoaded=true;
   }
 
@@ -50,31 +54,14 @@ export class FullInitiativeTocComponent implements OnInit {
     this.imageIsLoaded=false;
   }
 
-  getTocTxtDataByTocId(tocId){
-    this.linkIsgenerated =  false;
-    this.toctxtData = null;
-    // return this.http.get(`https://dev-toc.s3.us-east-2.amazonaws.com/toc_SmBQ1GfEjD/SmBQ1GfEjD.txt`,{ responseType: 'text'});
-    // return this.http.get(`/assets/test.txt`,{ responseType: 'text'});
-    // return this.http.get(`https://www.w3.org/TR/PNG/iso_8859-1.txt`,{ responseType: 'text'});
-    this._initiativesService.getTocTxtDataByTocId(tocId).subscribe(resp=>{
-      this.toctxtData = resp.TocNarrative;
-      if (this.toctxtData) {
-        this.txtIsLoaded = true;
-      }else{
-        this.txtIsLoaded = false;
-      }
-    },err=>{
-      console.log("error");
-      this.txtIsLoaded = false;
-      this.linkIsgenerated =  true;
-    },()=>{
-      console.log("ended");
-      
-      this.linkIsgenerated =  true;
-    })
-
-
-
+  checkExpandClass(htmlId){
+    let elementById = document.getElementById(htmlId);
+    if (!elementById) return false;
+    
+    // console.log(dsdsd)
+    return elementById.classList.contains('expandImage') ? false : true;
   }
+
+  
 
 }
