@@ -1,6 +1,8 @@
+import {get} from 'https';
 import _ from 'lodash';
 import {getRepository, In} from 'typeorm';
 import * as entities from '../entity';
+import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
@@ -1405,7 +1407,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     const resultsCountriesArray = [];
 
     try {
-
       let upsertResults: any;
 
       for (let index = 0; index < tableC.results.length; index++) {
@@ -1419,19 +1420,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         newResults.is_global = result.is_global;
         newResults.active = result.active;
 
-        // resultsArray.push(
-        //   toolsSbt.mergeData(
-        //     resultsRepo,
-        //     `
-        //         SELECT *
-        //           FROM results
-        //          WHERE initvStgId = ${newResults.initvStgId}
-        //            AND result_type_id = ${newResults.result_type_id}`,
-        //     newResults
-        //   )
-        // );
-
         upsertResults = await resultsRepo.save(newResults);
+
+        resultsArray.push(upsertResults);
 
         for (let index = 0; index < result.indicators.length; index++) {
           const indicators = result.indicators[index];
@@ -1465,7 +1456,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           );
         }
 
-
+        // Geo Scope
         for (let index = 0; index < result.geo_scope.regions.length; index++) {}
 
         for (
@@ -1473,26 +1464,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           index < result.geo_scope.countries.length;
           index++
         ) {}
-  
-
       }
-
-      // merge data
-
-      //    let mergeResults = await Promise.all(resultsArray);
-
-      // Save data
-
-      //  let upsertResults: any = await resultsRepo.save(mergeResults);
-
-      // Geographic scope
-      // for (let index = 0; index < results.geo_scope.regions.length; index++) {}
-
-      // for (
-      //   let index = 0;
-      //   index < results.geo_scope.countries.length;
-      //   index++
-      // ) {}
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
@@ -1502,7 +1474,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsIndicators
       );
 
-      return {upsertResults, upsertResultsIndicators};
+      return {upsertResults: resultsArray, upsertResultsIndicators};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1640,6 +1612,91 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Get melia and files: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT MELIA studies and activities
+   * @param meliaStudiesActivitiesData
+   * @returns meliaStudiesActivitiesSave
+   */
+  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any) {
+    const meliaStudiesActivitiesRepo = getRepository(
+      entities.MeliaStudiesActivities
+    );
+    const initvStg = await this.setInitvStage();
+    let toolsSbt = new ToolsSbt();
+    let meliaStudiesActivitiesArray = [];
+
+    try {
+      for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
+        const element = meliaStudiesActivitiesData[index];
+
+        const newMeliaStudiesActivities = new MeliaStudiesActivities();
+
+        newMeliaStudiesActivities.id = element.id ? element.id : null;
+        newMeliaStudiesActivities.initvStgId = initvStg.id;
+        newMeliaStudiesActivities.type_melia = element.type_melia;
+        newMeliaStudiesActivities.result_title = element.result_title;
+        newMeliaStudiesActivities.anticipated_year_completion =
+          element.anticipated_year_completion;
+        newMeliaStudiesActivities.co_delivery = element.co_delivery;
+        newMeliaStudiesActivities.management_decisions_learning =
+          element.management_decisions_learning;
+        newMeliaStudiesActivities.active = element.active;
+
+        meliaStudiesActivitiesArray.push(
+          toolsSbt.mergeData(
+            meliaStudiesActivitiesRepo,
+            ` 
+             SELECT *
+               FROM melia_studies_activities
+              WHERE id = ${newMeliaStudiesActivities.id}
+                and initvStgId =${newMeliaStudiesActivities.initvStgId}`,
+            newMeliaStudiesActivities
+          )
+        );
+      }
+
+      const meliaStudiesActivitiesMerge = await Promise.all(
+        meliaStudiesActivitiesArray
+      );
+      const meliaStudiesActivitiesSave = await meliaStudiesActivitiesRepo.save(
+        meliaStudiesActivitiesMerge
+      );
+
+      return meliaStudiesActivitiesSave;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert MELIA studies and activities: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async requestMeliaStudiesActivities() {
+    const initvStg = await this.setInitvStage();
+    const meliaStudiesActivitiesRepo = getRepository(
+      entities.MeliaStudiesActivities
+    );
+
+    try {
+      const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
+        initvStgId: initvStg.id
+      });
+
+      return meliaStudiesActivities;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'GET MELIA studies and activities: Full proposal',
         400,
         error.message,
         false
@@ -2731,17 +2788,16 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
   /**
    ** REQUEST TOC BY INITIATIVE
    * @returns previewPartners
    */
-   async requestTocByInitiative() {
+  async requestTocByInitiative() {
     const initvStg = await this.setInitvStage();
 
     try {
       // retrieve preview partners
-      const   tocQuery = `
+      const tocQuery = `
       SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
         FROM tocs
        WHERE initvStgId = ${initvStg.id}
@@ -2749,9 +2805,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         and type = 1
       `;
 
-      const fullInitiativeToc = await this.queryRunner.query(
-        tocQuery
-      );
+      const fullInitiativeToc = await this.queryRunner.query(tocQuery);
 
       return fullInitiativeToc[0];
     } catch (error) {
@@ -2764,7 +2818,4 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
-
-
-
 }

@@ -778,6 +778,22 @@ router.get(
   stagefull.getMeliaAndFiles
 );
 
+
+// Upsert MELIA Studies and Activities
+router.patch(
+  '/melia/studies-activities/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
+  stagefull.patchMeliaStudiesActivities
+);
+
+
+// Get MELIA Studies and Activities
+router.get(
+  '/melia/studies-activities/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('melia', 'readOwn')],
+  stagefull.getMeliaStudiesActivities
+);
+
 // upsert management plan risk and files to initiative
 /**
  * @api {patch} stages-control/proposal/manage-plan/:initiativeId/:ubication/:stageId Manage Plan and Risk - Create and update MPR
@@ -1586,5 +1602,6 @@ router.get(
 router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
 router.get('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.getTocByInitiative);
+
 
 export default router;
