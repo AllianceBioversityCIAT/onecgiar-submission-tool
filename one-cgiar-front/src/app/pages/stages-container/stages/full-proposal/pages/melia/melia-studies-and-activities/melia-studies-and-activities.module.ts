@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CompactInformationTableViewModule } from '../../../../../../../shared/components/compact-information-table-view/compact-information-table-view.module';
 
 @NgModule({
   declarations: [MeliaStudiesAndActivitiesComponent],
@@ -16,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     UtilsModule,
     IbdAngularComponentsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CompactInformationTableViewModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

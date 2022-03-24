@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
-import { DataControlService } from '../../../../../../../shared/services/data-control.service';
-import { DataValidatorsService } from '../../../../shared/data-validators.service';
-import { environment } from '../../../../../../../../environments/environment';
+import { map } from 'rxjs/operators';
+import { AttributesListConfiguration } from '../../../../../../../shared/components/compact-information-table-view/CompactInformationTableView.interface';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activities.interface';
+
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -11,79 +11,53 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
   styleUrls: ['./melia-studies-and-activities.component.scss']
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
-  templatesUrlBase = environment.templatesUrlBase;
-  filesList:any[]=[];
-  filesSavedList = [];
-  showForm = false;
-  data = {
-    id : null,
-    // melia_plan : "algo no tan implicito",
-    active : true,
-    section : "melia",
-    updateFiles : []
-  };
-  constructor(
-    public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService,
-    public _dataValidatorsService:DataValidatorsService
-  ) { }
+  list:MeliaStudiesAndActivities[] = [];
+
+  attr_list_config: AttributesListConfiguration[] = [
+    {
+      attribute: 'type_melia',
+      name: "Type of MELIA study or activity",
+    },
+    {
+      attribute: 'result_title',
+      name: "Result or indicator title that the MELIA study or activity will contribute to.",
+    },
+    {
+      attribute: 'anticipated_year_completion',
+      name: "Anticipated year of completion (based on 2022-24 Initiative timeline)",
+    },
+    {
+      attribute: 'co_delivery',
+      name: "Co-delivery of planned MELIA study with other Initiatives",
+    },
+    {
+      attribute: 'management_decisions_learning',
+      name: "How the MELIA study or activity will inform management decisions and contribute to internal learning"
+    },
+  ]
+
+  constructor(private _initiativesService:InitiativesService){
+    this.getmeliaStudActiByInitId();
+  }
 
   ngOnInit(): void {
-    this.getMelia();
-  }
-
-  getMelia(){
-    this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
-      // console.log(resp);
-      this.filesList = [];
-      let melia = resp.response.meliaData;
-      this.filesSavedList = melia?.files?melia.files:[];
-      this.data.id = melia?.id;
-      // console.log(melia);
-      // console.log(this.filesSavedList);
-    },
-    err=>{console.log(err);}
-    ,()=>{
-      this.showForm = true;
-    })
-  }
-  saveSection(){
-
-    const formData = new FormData();
-
-    if (this.filesList.length) {
-      for  (var i =  0; i <  this.filesList.length; i++)  {  
-        this.filesList[i].atributo = "si funciona"
-       formData.append("file",  this.filesList[i]);
-      } 
-    }
-
-    if (this.filesSavedList.length) {
-      for  (var i =  0; i <  this.filesSavedList.length; i++)  {  
-        if (this.filesSavedList[i].show === false) {
-          let item = {
-            id: this.filesSavedList[i].id,
-            active: false
-          }
-          this.data.updateFiles.push(item);
-        }
-      } 
-    }
-
-    this.data.id = this.data.id == undefined ? null : this.data.id;
-
-    formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
-      console.log("saveMelia");
-      // console.log(resp);
-      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
-      this._interactionsService.successMessage('Melia studies and activities has been saved'):
-      this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')
-      this.getMelia();
-    })
-
     
   }
+
+  getmeliaStudActiByInitId(){
+    console.log(this._initiativesService.initiative.id)
+    this._initiativesService.getmeliaStudActiByInitId(this._initiativesService.initiative.id).pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
+      console.log(resp)
+      this.list = resp;
+    })
+  }
+
+  saveSection(){
+    let body = {};
+    this._initiativesService.patchmeliaStudActiByInitId(this._initiativesService.initiative.id,body).subscribe(resp=>{
+      console.log(resp)
+    })
+  }
+ 
 
 }
