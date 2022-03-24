@@ -10,6 +10,7 @@ import { InitiativesService } from '../../services/initiatives.service';
 import { RequestsService } from '../../services/requests.service';
 import { UtilsHandler } from '../../utils/utils';
 import { map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -45,6 +46,7 @@ export class MenuComponent implements OnInit {
     private auth: AuthService,
     public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
+    private spinnerService: NgxSpinnerService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService
   ) { }
@@ -135,16 +137,20 @@ export class MenuComponent implements OnInit {
   onConfirmAssessment() {
     const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
     const updateObj = { description: this.statusTextObj['description'], statusId: statusSelected.id };
-    // console.log('onConfirmAssessment')
-    // this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
-    //   resp => {
-    //     console.log(resp)
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this._interactionsService.errorMessage(err.error?.description, 2000);
-    //   }
-    // )
+    // console.log('onConfirmAssessment', this.localMenuChangesubscribtion$)
+    // this.spinnerService.show("submission_spinner");
+    this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj)
+    .subscribe(
+      resp => {
+        // this.spinnerService.hide("submission_spinner");
+        console.log(resp)
+      },
+      err => {
+        // this.spinnerService.hide("submission_spinner");
+        console.log(err);
+        this._interactionsService.errorMessage(err.error?.description, 2000);
+      }
+    )
   }
 
   // * Asssessment management

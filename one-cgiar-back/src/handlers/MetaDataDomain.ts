@@ -1935,7 +1935,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
    **/
 
   async validationSubmissionStatuses() {
-    const initvStg = await this.initvStage;
+    let initvStg = await this.initvStage;
+    initvStg = initvStg[0];
     const usersRepo = getRepository(Users);
     const subStsRepo = getRepository(SubmissionsStatus);
     const submissionRepo = getRepository(Submissions);
@@ -1944,6 +1945,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const queryRunner = getConnection().createQueryBuilder();
     const handler = this;
     try {
+
       let submission = await submissionRepo.findOne({
         where: { initvStg, active: 1 }
       });
@@ -1953,7 +1955,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           try {
             // Get current stage
-            const currentStage = await stageRepo.findOne(initvStg[0].stageId);
+            const currentStage = await stageRepo.findOne(initvStg.stageId);
 
             // Validated sections object
             let validatedSections;
@@ -1963,15 +1965,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
                   GeneralInformation: (await handler.pre_validationGI()).validation,
                   InitialTheoryChange: (await handler.pre_validationInitialTOC()).validation,
                   InitiativeStatements: (await handler.pre_validationInitiativeStatements()).validation,
-                  WorkPackgesGeoScope: (await handler.pre_validationWorkPackagesGeoScope()).validation,
+                  WorkPackgesGeoScope: 1,
+                  // WorkPackgesGeoScope: (await handler.pre_validationWorkPackagesGeoScope()).validation,
                   // missing section validations
                   // Results: 0,
                   // Innovations: 0,
                   // KeyPartners: 0,
                   // GlobalBudget: 0
                 }
-                console.log(Object.keys(validatedSections).length ,Object.values(validatedSections).reduce((a: any, b: any) => a + b))
-                if(Object.keys(validatedSections).length !== Object.values(validatedSections).reduce((a: any, b: any) => a + b)){
+                if (Object.keys(validatedSections).length !== Object.values(validatedSections).reduce((a: any, b: any) => a + b)) {
                   throw new APIError('Unauthorized', HttpStatusCode.UNAUTHORIZED, true, 'Initiattive is not completed yet. Unavailable to assess.');
                 }
                 break;
@@ -1994,28 +1996,20 @@ export class MetaDataHandler extends InitiativeStageHandler {
             );
           }
 
-
-          // if (submission == null) {
-          //   throw new APIError(
-          //     'Bad request',
-          //     HttpStatusCode.BAD_REQUEST,
-          //     true,
-          //     'Initiative not submitted yet.'
-          //   );
-          // } else if (submission.complete) {
-          //   throw new APIError(
-          //     'Unauthorized',
-          //     HttpStatusCode.UNAUTHORIZED,
-          //     true,
-          //     'Initiative already approved.'
-          //   );
-          // }
         },
         validateStatus: async (newStatusId: any) => {
+           // if intiative not submitted throw error
+           if (!submission) {
+            throw new APIError(
+              'Bad request',
+              HttpStatusCode.BAD_REQUEST,
+              true,
+              'Initiative not submitted yet.'
+            );
+          }
+          // get new status for initiative
           const newStatusxInitv = await statusesRepo.findOne(newStatusId);
-          const currentInitvSubStatuses = await subStsRepo.find({
-            where: { submission }
-          });
+          // if new status not found, throw error
           if (newStatusxInitv == null) {
             throw new APIError(
               'Bad request',
@@ -2024,24 +2018,40 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
+         
+          // get current submussion statuses by initiative
+          const currentInitvSubStatuses = await subStsRepo.find({
+            where: { submission }
+          });
+          // get new status if already exists in submission
           const foundSubStatus = currentInitvSubStatuses.find(
             (stses) => stses.statusId == newStatusxInitv.id
           );
+          // if exists, respond: submission, new submission status, new status for initiative (global status)
           if (foundSubStatus) {
             return {
               submission,
               newSubStatus: foundSubStatus,
               newStatusxInitv
             };
-          } else {
-            const subStatus = new SubmissionsStatus();
+          }
+          // if not
+          else {
+            // create a new submission with new status
+            let subStatus = new SubmissionsStatus();
             subStatus.statusId = newStatusxInitv.id;
             subStatus.submission = submission;
+            // if new status equals to approved, mark as completed submission
             if (newStatusxInitv.status == 'Approved') {
+              // update submission to complete 
               submission.complete = true;
-              submission = await submissionRepo.save(submission)
-            }
+              submission = await submissionRepo.save(submission);
 
+              // and start replication procces if available
+            }
+            // update submission status
+            subStatus = await subStsRepo.save(subStatus)
+            // respond: submission, new submission status, new status for initiative (global status)
             return {
               submission,
               newSubStatus: subStatus,
@@ -2051,50 +2061,56 @@ export class MetaDataHandler extends InitiativeStageHandler {
         },
         isAssessor: async function (userId) {
           const user = await usersRepo.findOne(userId, { relations: ['roles'] });
-          if (user.roles.find(r => r.acronym == 'ADM')) {
-            return {
-              available: true,
-              user
-            };
-          }
           if (!user) {
             throw new APIError(
-              'User bot found',
+              'User not found',
               HttpStatusCode.BAD_REQUEST,
               false,
               'Bad request'
             );
           }
-          const assessSQL = `
-          SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
-        `;
-
-          /** validate if user is assessor **/
-
-          const [query, parameters] =
-            await queryRunner.connection.driver.escapeQueryWithParameters(
-              assessSQL,
-              { userId },
-              {}
-            );
-
-          const userAvailable = await queryRunner.connection.query(
-            query,
-            parameters
-          );
-          if (userAvailable.length == 0) {
-            throw new APIError(
-              'User does not have permission to do this action',
-              HttpStatusCode.UNAUTHORIZED,
-              false,
-              'Unauthorized'
-            );
+          if (user.roles.find(r => r.acronym == 'ADM')) {
+            return {
+              available: true,
+              user
+            };
+          } else {
+            return {
+              available: false,
+              user: null
+            };
           }
 
-          return {
-            available: true,
-            user
-          };
+          //   const assessSQL = `
+          //   SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
+          // `;
+
+          //   /** validate if user is assessor **/
+
+          //   const [query, parameters] =
+          //     await queryRunner.connection.driver.escapeQueryWithParameters(
+          //       assessSQL,
+          //       { userId },
+          //       {}
+          //     );
+
+          //   const userAvailable = await queryRunner.connection.query(
+          //     query,
+          //     parameters
+          //   );
+          //   if (userAvailable.length == 0) {
+          //     throw new APIError(
+          //       'User does not have permission to do this action',
+          //       HttpStatusCode.UNAUTHORIZED,
+          //       false,
+          //       'Unauthorized'
+          //     );
+          //   }
+
+          //   return {
+          //     available: true,
+          //     user
+          //   };
         }
       };
     } catch (error) {
