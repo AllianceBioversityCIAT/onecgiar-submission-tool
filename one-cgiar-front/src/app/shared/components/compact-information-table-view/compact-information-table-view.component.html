@@ -1,0 +1,8 @@
+<table *ngIf="this.list.length">
+    <tr>
+        <th *ngFor="let item of this.attr_list_config">{{item['name']}}</th>
+    </tr>
+    <tr *ngFor="let item of this.list">
+        <td *ngFor="let key of this.attr_list_config">{{item[key?.attribute]}}</td>
+    </tr>
+</table>
