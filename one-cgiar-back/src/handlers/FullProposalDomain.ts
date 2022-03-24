@@ -1405,7 +1405,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     const resultsCountriesArray = [];
 
     try {
-
       let upsertResults: any;
 
       for (let index = 0; index < tableC.results.length; index++) {
@@ -1419,19 +1418,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         newResults.is_global = result.is_global;
         newResults.active = result.active;
 
-        // resultsArray.push(
-        //   toolsSbt.mergeData(
-        //     resultsRepo,
-        //     `
-        //         SELECT *
-        //           FROM results
-        //          WHERE initvStgId = ${newResults.initvStgId}
-        //            AND result_type_id = ${newResults.result_type_id}`,
-        //     newResults
-        //   )
-        // );
-
         upsertResults = await resultsRepo.save(newResults);
+
+        resultsArray.push(upsertResults);
 
         for (let index = 0; index < result.indicators.length; index++) {
           const indicators = result.indicators[index];
@@ -1465,7 +1454,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           );
         }
 
-
+        // Geo Scope
         for (let index = 0; index < result.geo_scope.regions.length; index++) {}
 
         for (
@@ -1473,26 +1462,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           index < result.geo_scope.countries.length;
           index++
         ) {}
-  
-
       }
-
-      // merge data
-
-      //    let mergeResults = await Promise.all(resultsArray);
-
-      // Save data
-
-      //  let upsertResults: any = await resultsRepo.save(mergeResults);
-
-      // Geographic scope
-      // for (let index = 0; index < results.geo_scope.regions.length; index++) {}
-
-      // for (
-      //   let index = 0;
-      //   index < results.geo_scope.countries.length;
-      //   index++
-      // ) {}
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
@@ -1502,7 +1472,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsIndicators
       );
 
-      return {upsertResults, upsertResultsIndicators};
+      return {upsertResults:resultsArray, upsertResultsIndicators};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2731,17 +2701,16 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
   /**
    ** REQUEST TOC BY INITIATIVE
    * @returns previewPartners
    */
-   async requestTocByInitiative() {
+  async requestTocByInitiative() {
     const initvStg = await this.setInitvStage();
 
     try {
       // retrieve preview partners
-      const   tocQuery = `
+      const tocQuery = `
       SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
         FROM tocs
        WHERE initvStgId = ${initvStg.id}
@@ -2749,9 +2718,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         and type = 1
       `;
 
-      const fullInitiativeToc = await this.queryRunner.query(
-        tocQuery
-      );
+      const fullInitiativeToc = await this.queryRunner.query(tocQuery);
 
       return fullInitiativeToc[0];
     } catch (error) {
@@ -2764,7 +2731,4 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
-
-
-
 }
