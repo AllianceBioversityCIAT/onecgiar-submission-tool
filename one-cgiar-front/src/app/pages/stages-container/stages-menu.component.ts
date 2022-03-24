@@ -106,6 +106,7 @@ export class StagesMenuComponent implements OnInit {
 
     // TODO stageId 3 condition
     this._dataControlService.validateMenu$.subscribe(resp => {
+      // console.log(resp)
       // if (this.initiativesSvc.initiative.stageId === 3) {
         this.validateAllSections();
       // }

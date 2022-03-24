@@ -89,10 +89,10 @@ export async function getValidations(req: Request, res: Response) {
           initialTheoryChange: await metaData.pre_validationInitialTOC(),
           initiativeStatements: await metaData.pre_validationInitiativeStatements(),
           workPackgesGeoScope: await metaData.pre_validationWorkPackagesGeoScope(),
-          results: null,
-          innovations: null,
-          keyPartners: null,
-          globalBudget: null
+          // results: null,
+          // innovations: null,
+          // keyPartners: null,
+          // globalBudget: null
         }
         break;
       case 'Full Proposal':
