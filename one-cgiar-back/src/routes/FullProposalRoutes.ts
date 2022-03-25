@@ -778,14 +778,12 @@ router.get(
   stagefull.getMeliaAndFiles
 );
 
-
 // Upsert MELIA Studies and Activities
 router.patch(
   '/melia/studies-activities/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
   stagefull.patchMeliaStudiesActivities
 );
-
 
 // Get MELIA Studies and Activities
 router.get(
@@ -1601,7 +1599,10 @@ router.get(
  */
 router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
-router.get('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.getTocByInitiative);
-
+router.get(
+  '/toc/:initiativeId([0-9]+)',
+  [checkJwt],
+  stagefull.getTocByInitiative
+);
 
 export default router;
