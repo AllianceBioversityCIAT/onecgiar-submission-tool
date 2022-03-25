@@ -1,0 +1,14 @@
+<div class="collapsible_container">
+    <div class="header">
+        <ng-content select="[header]"></ng-content>
+        <div class="icon" (click)="toggleCollapse()">
+            <i class="material-icons" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'">expand_more</i>
+        </div>
+    </div>  
+    <div class="content" [@expandable]="this.collapse?'collapse':'expand'">
+        <div class="content-container">
+            <ng-content select="[content]"></ng-content>
+        </div>
+    </div>
+
+</div>
