@@ -918,14 +918,14 @@ export async function patchMeliaStudiesActivities(
 
 /**
  * GET MELIA studies and activities
- * @param req 
- * @param res 
- * @returns 
+ * @param req
+ * @param res
+ * @returns
  */
-export async function getMeliaStudiesActivities(req: Request,
+export async function getMeliaStudiesActivities(
+  req: Request,
   res: Response
 ): Promise<Response> {
-
   const {initiativeId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -965,7 +965,6 @@ export async function getMeliaStudiesActivities(req: Request,
     console.log(error);
     return res.status(error.httpCode).json(error);
   }
-  
 }
 
 /**

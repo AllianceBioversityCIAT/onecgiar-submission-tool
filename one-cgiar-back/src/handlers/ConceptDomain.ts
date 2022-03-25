@@ -837,8 +837,10 @@ export class ConceptHandler extends ConceptValidation {
       newResultsNarratives.id = resultsNarratives.id;
       newResultsNarratives.initvStgId = initvStgId;
       newResultsNarratives.active;
-      newResultsNarratives.impact_area_contribution = resultsNarratives.impact_area_contribution;
-      newResultsNarratives.end_init_outcomes = resultsNarratives.end_init_outcomes;
+      newResultsNarratives.impact_area_contribution =
+        resultsNarratives.impact_area_contribution;
+      newResultsNarratives.end_init_outcomes =
+        resultsNarratives.end_init_outcomes;
 
       resultsNarrativesArray.push(
         toolsSbt.mergeData(
@@ -847,13 +849,15 @@ export class ConceptHandler extends ConceptValidation {
              FROM results_narratives
             WHERE id = ${newResultsNarratives.id}
               and initvStgId = ${initvStgId}`,
-              newResultsNarratives
+          newResultsNarratives
         )
       );
 
       let mergeResultsNarratives = await Promise.all(resultsNarrativesArray);
 
-      let upsertResultsNarratives = await resultsNarrativesRepo.save(mergeResultsNarratives);
+      let upsertResultsNarratives = await resultsNarrativesRepo.save(
+        mergeResultsNarratives
+      );
 
       return upsertResultsNarratives;
     } catch (error) {

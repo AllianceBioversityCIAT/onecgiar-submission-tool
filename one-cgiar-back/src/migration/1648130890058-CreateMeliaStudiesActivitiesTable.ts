@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateMeliaStudiesActivitiesTable1648130890058 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('Add melia_studies_activities');
-        await queryRunner.query(`
+export class CreateMeliaStudiesActivitiesTable1648130890058
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('Add melia_studies_activities');
+    await queryRunner.query(`
                         CREATE TABLE melia_studies_activities (
                             id int(11) NOT NULL AUTO_INCREMENT,
                             initvStgId int(11) NOT NULL,
@@ -22,10 +22,7 @@ export class CreateMeliaStudiesActivitiesTable1648130890058 implements Migration
                             CONSTRAINT FK_845588899475asd45583_initiatives_by_stages FOREIGN KEY (initvStgId) REFERENCES initiatives_by_stages (id) ON DELETE CASCADE               
                         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
                     `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }
