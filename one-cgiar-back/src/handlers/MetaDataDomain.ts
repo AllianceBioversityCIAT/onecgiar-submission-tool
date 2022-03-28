@@ -2047,7 +2047,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
               submission.complete = true;
               submission = await submissionRepo.save(submission);
 
-              // and start replication procces if available
+              // and start replication procces if available if stage == PreConcept
+              if(initvStg.stageId == 2){
+                
+              }
             }
             // update submission status
             subStatus = await subStsRepo.save(subStatus)

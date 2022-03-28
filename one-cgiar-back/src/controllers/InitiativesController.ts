@@ -14,7 +14,7 @@ import { Users } from '../entity/Users';
 import { APIError, BaseError } from '../handlers/BaseError';
 import { HttpStatusCode } from '../interfaces/Constants';
 import { ResponseHandler } from '../handlers/Response';
-import { forwardStage, validatedSection } from '../utils/section-validation';
+import { validatedSection } from '../utils/section-validation';
 import * as clarisa from './Clarisa';
 import { InitiativeStageHandler } from '../handlers/InitiativeStageDomain';
 import { InitiativeHandler } from '../handlers/InitiativesDomain';
@@ -251,12 +251,12 @@ export const replicationProcess = async (req: Request, res: Response) => {
 
   try {
     // get replicate to stage
-    const stage = await stageRepo.findOne(replicationStageId);
-    // get replicate to stage description
-    const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
-    // data pushed to next stage
-    const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-    res.json(new ResponseHandler('Replication data', fordwarded));
+    // const stage = await stageRepo.findOne(replicationStageId);
+    // // get replicate to stage description
+    // const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
+    // // data pushed to next stage
+    // const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
+    // res.json(new ResponseHandler('Replication data', fordwarded));
   } catch (error) {
     console.log(error);
     if (
