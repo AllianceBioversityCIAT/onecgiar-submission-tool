@@ -8,6 +8,7 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CompactInformationTableViewModule } from '../../../../../../../shared/components/compact-information-table-view/compact-information-table-view.module';
+import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
 
 @NgModule({
   declarations: [MeliaStudiesAndActivitiesComponent],
@@ -18,7 +19,8 @@ import { CompactInformationTableViewModule } from '../../../../../../../shared/c
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule,
-    CompactInformationTableViewModule
+    CompactInformationTableViewModule,
+    CollapsibleContainerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

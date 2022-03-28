@@ -1,11 +1,42 @@
 <section-title name="Melia studies and activities" ></section-title>
 
-
-
-
 <div class="section-container animate__animated animate__fadeIn">
 
-    <app-compact-information-table-view
+
+
+
+
+
+    <div class="items">
+        <div class="item" *ngFor="let item of list; let i=index">
+
+
+            <app-collapsible-container [collapse]="item?.collapse">
+                <div header>Melia studies and activity {{i+1}}</div>
+                <div content>
+                    <div class="fields">
+                        <div class="field" *ngFor="let field of attr_list_config">
+                            <ibdc-text-area-field 
+                            [inputTitle]="field.name" 
+                            [objectItem]="item"  
+                            [objectAtributteName]="field?.attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly"
+                            [maxWords]="50"
+                        ></ibdc-text-area-field>
+                        </div>
+                    </div>
+                </div>
+            </app-collapsible-container>
+
+
+
+        </div>
+    </div>
+
+
+
+
+    <app-compact-information-table-view (onEdit)="getItemToExpand($event)"
     [list]="this.list"
     [attr_list_config]="this.attr_list_config"
     ></app-compact-information-table-view>

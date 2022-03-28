@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AttributesListConfiguration } from './CompactInformationTableView.interface';
 import { InitiativesService } from '../../services/initiatives.service';
 
@@ -10,11 +10,17 @@ import { InitiativesService } from '../../services/initiatives.service';
 export class CompactInformationTableViewComponent implements OnInit {
   @Input() list: [] = []; //? list
   @Input() attr_list_config:AttributesListConfiguration[] = []; //? attribute omission list
+  @Output() onEdit = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
     console.log(this.list)
     console.log(this.attr_list_config)
+  }
+
+  edit(item){
+    this.onEdit.emit(item);
   }
 
 }

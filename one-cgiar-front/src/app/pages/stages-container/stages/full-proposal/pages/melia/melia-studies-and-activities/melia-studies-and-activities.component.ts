@@ -41,6 +41,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  getItemToExpand(item){
+    console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
     
   }
 
