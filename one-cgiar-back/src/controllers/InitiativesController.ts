@@ -504,21 +504,12 @@ export async function removeBudget(req: Request, res: Response) {
 }
 
 /**
- * All Initiatives
+ * All Initiatives actives
  * @param req
  * @param res
  */
 export async function getInitiatives(req: Request, res: Response) {
   try {
-    // const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-    //     initvSQL,
-    //     { userId },
-    //     {}
-    // );
-
-    // let initvs:Initiatives = new Initiatives();
-    // initvs = await queryRunner.connection.query(query, parameters);
-    // initiatives = await queryRunner.query(initvSQL);
 
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
@@ -527,9 +518,47 @@ export async function getInitiatives(req: Request, res: Response) {
     let initiatives = await initiativeshandler.getAllInitiatives();
 
     if (initiatives.length == 0)
-      res.json(new ResponseHandler('All Initiatives.', {initiatives: []}));
+      res.json(new ResponseHandler('All Initiatives whit status active.', {initiatives: []}));
     else {
-      res.json(new ResponseHandler('All Initiatives.', {initiatives}));
+      res.json(new ResponseHandler('All Initiatives whit status active.', {initiatives}));
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * All Initiatives whit all status
+ * @param req
+ * @param res
+ */
+ export async function getInitiativesAllStatus(req: Request, res: Response) {
+  try {
+ 
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    // Get active initiatives and detail
+    let initiatives = await initiativeshandler.getAllInitiativesAllStatus();
+
+    if (initiatives.length == 0)
+      res.json(new ResponseHandler('All Initiatives whit all status.', {initiatives: []}));
+    else {
+      res.json(new ResponseHandler('All Initiatives whit all status.', {initiatives}));
     }
   } catch (error) {
     console.log(error);

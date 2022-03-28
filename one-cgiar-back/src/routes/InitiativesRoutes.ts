@@ -7,10 +7,9 @@ import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
-// get initiatives
-// router.get("/", [checkJwt, checkRole('initiatives', 'readAny')], getInitiatives);
+// get initiatives whit status active
 /**
- * @api {get} /initiatives Initiatives - Request all Initiative
+ * @api {get} /initiatives Initiatives - Request all Initiatives actives
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName GetInitiatives
@@ -69,6 +68,69 @@ const router = Router();
  *     { message: "Get Initiatives:", error }
  */
 router.get('/', [checkJwt], initiatives.getInitiatives);
+
+
+// get initiatives whit all status
+/**
+ * @api {get} /initiatives Initiatives - Request all Initiatives whit all status
+ * @apiVersion 1.0.2
+ * @apiPermission admin
+ * @apiName GetInitiatives
+ * @apiGroup Initiatives
+ *
+ * @apiDescription  Shows all initiatives
+ *
+ * @apiExample Example usage:
+ * https://initiativestest.ciat.cgiar.org/api/initiatives/
+ *
+ * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/initiatives/
+ * @apiHeader {String} auth
+ *
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+ *     "response": {
+ *         "initiatives": [
+ *             {
+ *                 "initvStgId": 35,
+ *                 "id": 2,
+ *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
+ *                 "oficial_code":"INIT-2"
+ *                 "status": "Editing",
+ *                 "action_area_id": "1",
+ *                 "action_area_description": "Systems Transformation",
+ *                 "active": 1,
+ *                 "stageId": 3,
+ *                 "description": "Stage 3: Full Proposal",
+ *                 "stages": [
+ *                     {
+ *                         "id": 2,
+ *                         "initvStgId": 2,
+ *                         "stageId": 2,
+ *                         "active": 0
+ *                     },
+ *                     {
+ *                         "id": 2,
+ *                         "initvStgId": 35,
+ *                         "stageId": 3,
+ *                         "active": 1
+ *                     }
+ *                 ]
+ *             }
+ *
+ * 			        ]
+ *     },
+ *     "title": "All Initiatives."
+ * }
+ *
+ * @apiError Error : Get Initiatives.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     { message: "Get Initiatives:", error }
+ */
+ router.get('/all-status', [checkJwt], initiatives.getInitiativesAllStatus);
 
 // get initiatives by user
 router.get(
