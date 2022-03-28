@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators';
 import { AttributesListConfiguration } from '../../../../../../../shared/components/compact-information-table-view/CompactInformationTableView.interface';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activities.interface';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 
 @Component({
@@ -36,16 +37,26 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     },
   ]
 
-  constructor(private _initiativesService:InitiativesService){
+  showTableViewVariable = true;
+
+  constructor(
+    public _initiativesService:InitiativesService,
+    public _dataControlService:DataControlService
+    ){
     this.getmeliaStudActiByInitId();
   }
 
   ngOnInit(): void {
   }
 
+  getdasd(e){
+    console.log("event")
+    console.log(e)
+    this.showTableViewVariable = e;
+  }
+
   getItemToExpand(item){
     console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
-    
   }
 
   getmeliaStudActiByInitId(){
@@ -57,10 +68,12 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   saveSection(){
-    let body = {};
-    this._initiativesService.patchmeliaStudActiByInitId(this._initiativesService.initiative.id,body).subscribe(resp=>{
+    console.log(this.list)
+    this._initiativesService.patchmeliaStudActiByInitId(this._initiativesService.initiative.id,this.list).subscribe(resp=>{
       console.log(resp)
+      this.getmeliaStudActiByInitId();
     })
+
   }
  
 

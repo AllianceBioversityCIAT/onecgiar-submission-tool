@@ -10,7 +10,12 @@ import { InitiativesService } from '../../services/initiatives.service';
 export class CompactInformationTableViewComponent implements OnInit {
   @Input() list: [] = []; //? list
   @Input() attr_list_config:AttributesListConfiguration[] = []; //? attribute omission list
+  @Output() buttonViewEvent = new EventEmitter();
   @Output() onEdit = new EventEmitter();
+  showTableViewVariable:boolean = true;
+  
+
+
 
   constructor() { }
 
@@ -19,8 +24,23 @@ export class CompactInformationTableViewComponent implements OnInit {
     console.log(this.attr_list_config)
   }
 
+  onbuttonViewEvent(){
+    console.log("button event")
+    this.showTableViewVariable = !this.showTableViewVariable;
+    this.buttonViewEvent.emit(this.showTableViewVariable);
+  }
+
   edit(item){
+    this.collapseAll();
     this.onEdit.emit(item);
+    this.showTableViewVariable = false;
+    this.buttonViewEvent.emit( this.showTableViewVariable);
+  }
+
+  collapseAll(){
+    this.list.map((resp:any)=>{
+      resp.collapse = true;
+    })
   }
 
 }

@@ -2,12 +2,16 @@
 
 <div class="section-container animate__animated animate__fadeIn">
 
+    <app-compact-information-table-view 
+    (buttonViewEvent)="this.getdasd($event)"
+    (onEdit)="this.getItemToExpand($event)"
+    [list]="this.list"
+    [attr_list_config]="this.attr_list_config"
+    [showTableViewVariable]="this.showTableViewVariable"
+    
+    ></app-compact-information-table-view>
 
-
-
-
-
-    <div class="items">
+    <div class="items" *ngIf="!showTableViewVariable">
         <div class="item" *ngFor="let item of list; let i=index">
 
 
@@ -33,13 +37,8 @@
         </div>
     </div>
 
-
-
-
-    <app-compact-information-table-view (onEdit)="getItemToExpand($event)"
-    [list]="this.list"
-    [attr_list_config]="this.attr_list_config"
-    ></app-compact-information-table-view>
-
+    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly" (click)="saveSection()">
+        <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    </div>
 
 </div>

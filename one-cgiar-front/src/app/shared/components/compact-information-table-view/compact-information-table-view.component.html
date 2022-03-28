@@ -1,4 +1,10 @@
-<table *ngIf="this.list.length">
+<div class="toggle-view-button-container">
+    <div class="toggle-view-button" (click)="this.onbuttonViewEvent()">
+        <span>{{this.showTableViewVariable ? 'Table view' : 'Editable view'}} </span>
+     </div>
+</div>
+
+<table *ngIf="this.list.length && this.showTableViewVariable">
     <tr>
         <th *ngFor="let item of this.attr_list_config">{{item['name']}}</th> <th></th>
     </tr>

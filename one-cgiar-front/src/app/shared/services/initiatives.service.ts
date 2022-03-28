@@ -598,7 +598,7 @@ export class InitiativesService {
   }
 
   patchmeliaStudActiByInitId(initiativeId, body): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities${initiativeId}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${initiativeId}`, body);
   }
 
   /*** submitt initiative */
