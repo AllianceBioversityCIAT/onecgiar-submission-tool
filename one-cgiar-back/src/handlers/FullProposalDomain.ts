@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import {getRepository, In} from 'typeorm';
+import { getRepository, In } from 'typeorm';
 import * as entities from '../entity';
-import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import {ToolsSbt} from '../utils/toolsSbt';
-import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
-import {InitiativeStageHandler} from './InitiativeStageDomain';
+import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
+import { ToolsSbt } from '../utils/toolsSbt';
+import { BaseError } from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
+import { InitiativeStageHandler } from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -122,9 +122,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${
-                   initvStg.id ? initvStg.id : initvStg[0].id
-                 }
+                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -150,9 +149,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${
-                    initvStg.id ? initvStg.id : initvStg[0].id
-                  }
+                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -214,7 +212,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                   and work_package_id = ${id}
                 `;
 
-      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
+      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -385,7 +383,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || {name: null};
+      ) || { name: null };
 
       // if null, create object
       if (generalInformationId == null) {
@@ -726,7 +724,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedPjectionBenefits, upsertedDimensions};
+      return { upsertedPjectionBenefits, upsertedDimensions };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -926,7 +924,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedImpactStrategies, upsertedPartners};
+      return { upsertedImpactStrategies, upsertedPartners };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1105,7 +1103,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedMelia, upsertedFile};
+      return { upsertedMelia, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1139,7 +1137,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
       let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return {upsertedTableA, upsertedTableB, upsertedTableC};
+      return { upsertedTableA, upsertedTableB, upsertedTableC };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1370,7 +1368,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      return {upsertedOutcomesIndicators};
+      return { upsertedOutcomesIndicators };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1464,13 +1462,13 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      for (let index = 0; index < results.geo_scope.regions.length; index++) {}
+      for (let index = 0; index < results.geo_scope.regions.length; index++) { }
 
       for (
         let index = 0;
         index < results.geo_scope.countries.length;
         index++
-      ) {}
+      ) { }
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
@@ -1480,7 +1478,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsIndicators
       );
 
-      return {upsertResults, upsertResultsIndicators};
+      return { upsertResults, upsertResultsIndicators };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1586,14 +1584,14 @@ export class ProposalHandler extends InitiativeStageHandler {
         impactAreasIndicatorsQuery
       );
       const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
-      const tableA = {globalTargets, impactAreasIndicators, sdgTargets};
+      const tableA = { globalTargets, impactAreasIndicators, sdgTargets };
 
       //TABLE B
 
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const tableB = {actionAreasOutcomesIndicators};
+      const tableB = { actionAreasOutcomesIndicators };
 
       //TABLE C
 
@@ -1608,11 +1606,11 @@ export class ProposalHandler extends InitiativeStageHandler {
         });
       });
 
-      const tableC = {results: results[0]};
+      const tableC = { results: results[0] };
 
       return {
         meliaPlan: meliaPlan[0],
-        resultFramework: {tableA, tableB, tableC}
+        resultFramework: { tableA, tableB, tableC }
       };
     } catch (error) {
       console.log(error);
@@ -1731,7 +1729,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedManagePlan, upsertedFile};
+      return { upsertedManagePlan, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1933,12 +1931,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-            return op.risk_assessment_id === risk.id;
-          }))
+        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+          return op.risk_assessment_id === risk.id;
+        }))
       );
 
-      return {upsertedRiskAssessment};
+      return { upsertedRiskAssessment };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2065,7 +2063,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedHumanResources, upsertedFile};
+      return { upsertedHumanResources, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2086,7 +2084,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async upsertInitiativeTeam(
     humanResourcesId,
     initvTeam
-  ): Promise<{upsertedInitiativeTeam: any}> {
+  ): Promise<{ upsertedInitiativeTeam: any }> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
     const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
@@ -2134,7 +2132,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedInitiativeTeam};
+      return { upsertedInitiativeTeam };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2226,6 +2224,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertFRArr = [],
         finYearArr = [];
       upsertArray.forEach((upsEle) => {
+        // console.log(upsEle)
         let objt = {
           id: null,
           yearsArray: []
@@ -2250,6 +2249,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
+              console.log(val)
               _year.active = true;
               _year.year = key;
               _year.value = val;
@@ -2257,6 +2257,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             }
           }
         }
+        // console.log(objt)
         finYearArr.push(objt);
       });
 
@@ -2270,6 +2271,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       await Promise.all(upsertedYears);
+      // console.log(upsertedYears)
 
       const financialResourcesQuery = ` 
             SELECT
@@ -2324,7 +2326,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             : financialRSObject.id;
         fResource.financial_type_id =
           financialRSObject.financial_type_id == null ||
-          financialRSObject.financial_type_id == ''
+            financialRSObject.financial_type_id == ''
             ? null
             : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
@@ -2355,27 +2357,53 @@ export class ProposalHandler extends InitiativeStageHandler {
           ...yU,
           financialResources: financialResource
         }));
+
+        console.log(yearsUpsert.map((y) => y.year))
         const foundYears = await financialResourcesYearRepo.find({
           where: {
             year: In(yearsUpsert.map((y) => y.year)),
             financialResources: financialResource.id
           }
         });
-        if (foundYears.length > 0) {
-          for (let index = 0; index < foundYears.length; index++) {
-            let fY = foundYears[index];
-            const yearIndx = yearsUpsert.findIndex((yU) => yU.year == fY.year);
-            foundYears[index].active = yearsUpsert[yearIndx].active;
-            foundYears[index].value = yearsUpsert[yearIndx].value;
-            upsertedYears.push(foundYears[index]);
+
+
+        for (let index = 0; index < yearsUpsert.length; index++) {
+          const yUpsert = yearsUpsert[index];
+
+          if (foundYears.find(fY => fY.year == yUpsert.year)) {
+            let fYearIndex = foundYears.findIndex(fY => fY.year == yUpsert.year);
+            foundYears[fYearIndex].active = yUpsert.active;
+            foundYears[fYearIndex].value = yUpsert.value;
+            upsertedYears.push(foundYears[fYearIndex]);
           }
-        } else {
-          for (let index = 0; index < yearsUpsert.length; index++) {
-            const uY = yearsUpsert[index];
-            upsertedYears.push(uY);
+          else {
+            upsertedYears.push(yUpsert);
+            // const uY = yearsUpsert[index];
+            // for (let index = 0; index < yearsUpsert.length; index++) {
+            // }
           }
+
         }
+
         upsertedYears = await financialResourcesYearRepo.save(upsertedYears);
+
+
+
+        // if (foundYears.length > 0) {
+        //   for (let index = 0; index < foundYears.length; index++) {
+        //     let fY = foundYears[index];
+        //     const yearIndx = yearsUpsert.findIndex((yU) => yU.year == fY.year);
+        //     foundYears[index].active = yearsUpsert[yearIndx].active;
+        //     foundYears[index].value = yearsUpsert[yearIndx].value;
+        //     upsertedYears.push(foundYears[index]);
+        //   }
+        // } else {
+        //   for (let index = 0; index < yearsUpsert.length; index++) {
+        //     const uY = yearsUpsert[index];
+        //     upsertedYears.push(uY);
+        //   }
+        // }
+        // console.log(upsertedYears)
       }
       return upsertedYears;
     } catch (error) {
@@ -2478,7 +2506,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedPolicyCompliance};
+      return { upsertedPolicyCompliance };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2568,7 +2596,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedInnovationPackages};
+      return { upsertedInnovationPackages };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2681,7 +2709,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.initvStgId = initvStg.id;
 
           var savedInnovationPackages: any = await tocsRepo.find({
-            where: {toc_id: newTocs.toc_id}
+            where: { toc_id: newTocs.toc_id }
           });
           if (savedInnovationPackages.length > 0) {
             tocsRepo.merge(savedInnovationPackages, newTocs);
@@ -2697,7 +2725,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-      return {savedTocs: results};
+      return { savedTocs: results };
     } catch (error) {
       console.log(error);
       throw new BaseError(
