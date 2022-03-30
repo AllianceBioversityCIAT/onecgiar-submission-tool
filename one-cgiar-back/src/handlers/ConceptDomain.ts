@@ -43,66 +43,66 @@ export class ConceptHandler extends ConceptValidation {
 
   /***** REPLICATION PROCESS - forward *******/
 
-  async forwardStage() {
-    try {
-      // current intiative by stage entity
-      const curruentInitvByStg = await this.initvStage;
-      // get full proposal stage id
-      const pplStage = await this.queryRunner.query(
-        `SELECT * FROM stages WHERE description LIKE 'Full Proposal'`
-      );
+  // async forwardStage() {
+  //   try {
+  //     // current intiative by stage entity
+  //     const curruentInitvByStg = await this.initvStage;
+  //     // get full proposal stage id
+  //     const pplStage = await this.queryRunner.query(
+  //       `SELECT * FROM stages WHERE description LIKE 'Full Proposal'`
+  //     );
 
-      // create proposal (next stage) object
+  //     // create proposal (next stage) object
 
-      const proposalObject = new ProposalHandler(
-        null,
-        pplStage[0].id,
-        curruentInitvByStg[0].initiativeId
-      );
+  //     const proposalObject = new ProposalHandler(
+  //       null,
+  //       pplStage[0].id,
+  //       curruentInitvByStg[0].initiativeId
+  //     );
 
-      /**GENERAL INFORMATION */
+  //     /**GENERAL INFORMATION */
 
-      // get concept general information data
-      const conceptGeneralInformation = await this.getGeneralInformation();
+  //     // get concept general information data
+  //     const conceptGeneralInformation = await this.getGeneralInformation();
 
-      // get general information if exists from proposalObject
-      const proposalGI = await proposalObject.getGeneralInformation();
+  //     // get general information if exists from proposalObject
+  //     const proposalGI = await proposalObject.getGeneralInformation();
 
-      // upsert full proposal general infomation
-      const pplGeneralInformation =
-        await proposalObject.upsertGeneralInformation(
-          proposalGI ? proposalGI.generalInformationId : null,
-          conceptGeneralInformation.name,
-          conceptGeneralInformation.action_area_id,
-          conceptGeneralInformation.action_area_description
-        );
+  //     // upsert full proposal general infomation
+  //     const pplGeneralInformation =
+  //       await proposalObject.upsertGeneralInformation(
+  //         proposalGI ? proposalGI.generalInformationId : null,
+  //         conceptGeneralInformation.name,
+  //         conceptGeneralInformation.action_area_id,
+  //         conceptGeneralInformation.action_area_description
+  //       );
 
-      /**WORK PACKAGES*/
+  //     /**WORK PACKAGES*/
 
-      //get concept  work packages information data
-      const conceptWorkPackagesInformation = await this.getWorkPackages();
+  //     //get concept  work packages information data
+  //     const conceptWorkPackagesInformation = await this.getWorkPackages();
 
-      // get  work packages if exists from proposalObject
-      const proposalWP = await proposalObject.getWorkPackage();
+  //     // get  work packages if exists from proposalObject
+  //     const proposalWP = await proposalObject.getWorkPackage();
 
-      // upsert full proposal work Package
-      const pplWorkPackageInformation =
-        await proposalObject.upsertWorkPackagesRepl(
-          proposalWP,
-          conceptWorkPackagesInformation
-        );
+  //     // upsert full proposal work Package
+  //     const pplWorkPackageInformation =
+  //       await proposalObject.upsertWorkPackagesRepl(
+  //         proposalWP,
+  //         conceptWorkPackagesInformation
+  //       );
 
-      /**GEOGRAPHIC SCOPE*/
+  //     /**GEOGRAPHIC SCOPE*/
 
-      await this.forwardGeoScope(pplStage[0]);
-      const pplGeoScope = await proposalObject.getGeoScope();
+  //     await this.forwardGeoScope(pplStage[0]);
+  //     const pplGeoScope = await proposalObject.getGeoScope();
 
-      // return null;
-      return {pplGeneralInformation, pplGeoScope, pplWorkPackageInformation};
-    } catch (error) {
-      throw new BaseError('Concept: Forward', 400, error.message, false);
-    }
-  }
+  //     // return null;
+  //     return {pplGeneralInformation, pplGeoScope, pplWorkPackageInformation};
+  //   } catch (error) {
+  //     throw new BaseError('Concept: Forward', 400, error.message, false);
+  //   }
+  // }
 
   /**
    *

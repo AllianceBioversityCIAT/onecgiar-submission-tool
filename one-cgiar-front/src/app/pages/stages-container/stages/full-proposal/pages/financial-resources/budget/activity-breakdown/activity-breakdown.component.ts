@@ -33,11 +33,12 @@ export class ActivityBreakdownComponent implements OnInit {
 
   onSave() {
     this.spinnerService.show('activity-breakdown');
-    console.log('financial resources', this.fixedData.list);
+    // console.log('financial resources', this.fixedData.list);
     this._initiativesService.saveFinancialResources(this.fixedData.list, this._initiativesService.initiative.id, 'activity_breakdown').subscribe(
-      res => {
-        console.log('financial resources response', res);
-        this.getActivityBreakdown();
+        res => {
+        this.spinnerService.hide('activity-breakdown');
+            console.log('financial resources response', res);
+        // this.getActivityBreakdown();
       },
       error => {
         console.log(error);
