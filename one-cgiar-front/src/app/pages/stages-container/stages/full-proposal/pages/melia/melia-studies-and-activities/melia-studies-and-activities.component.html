@@ -18,6 +18,8 @@
             <app-collapsible-container [collapse]="item?.collapse">
                 <div header>Melia studies and activity {{i+1}}</div>
                 <div content>
+                    <app-button-edit-or-delete [ngCustomStyle]="{'margin-top':'12px'}"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+                    <br><br>
                     <div class="fields">
                         <div class="field" *ngFor="let field of attr_list_config">
                             <ibdc-text-area-field 
@@ -36,6 +38,11 @@
 
         </div>
     </div>
+
+    <div style="margin-top: 20px;">
+        <app-add-button  name="Add Melia studies and activity" (click)="addItem()"></app-add-button>
+    </div>
+
 
     <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly" (click)="saveSection()">
         <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>

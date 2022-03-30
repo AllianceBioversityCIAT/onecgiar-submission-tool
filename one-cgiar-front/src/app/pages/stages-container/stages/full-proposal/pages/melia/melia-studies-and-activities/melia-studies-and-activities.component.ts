@@ -59,6 +59,32 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
   }
 
+  addItem(){
+    this.list.push(
+      {
+
+        id: null,
+        type_melia: '',
+        result_title: '',
+        anticipated_year_completion: '',
+        co_delivery: '',
+        management_decisions_learning: '',
+        active: true
+      }
+    )
+    console.log(this.list)
+  }
+
+  deleteItem(item,i?){
+    if (item?.id){
+      console.log("logic remove")
+      item.active = false;
+    }else{
+      console.log("remove from array")
+      this.list.splice(i,1);
+    }
+  }
+
   getmeliaStudActiByInitId(){
     console.log(this._initiativesService.initiative.id)
     this._initiativesService.getmeliaStudActiByInitId(this._initiativesService.initiative.id).pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
