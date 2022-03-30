@@ -9,6 +9,6 @@
         <th *ngFor="let item of this.attr_list_config">{{item['name']}}</th> <th></th>
     </tr>
     <tr *ngFor="let item of this.list">
-        <td *ngFor="let key of this.attr_list_config">{{item[key?.attribute]}}</td> <th><div class="material-icons" (click)="edit(item)">edit</div></th>
+        <td *ngFor="let key of this.attr_list_config">{{item[key?.attribute]}}</td> <th><div class="material-icons editable-icon" (click)="edit(item)">edit</div></th>
     </tr>
 </table>
