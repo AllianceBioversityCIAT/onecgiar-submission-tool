@@ -14,6 +14,10 @@ const routes: Routes = [
     canActivate: [CheckHomeGuard],
   },
   {
+    path: 'bi',
+    loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
+  },  
+  {
     path: 'notFound',
     loadChildren: () =>import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
   },
