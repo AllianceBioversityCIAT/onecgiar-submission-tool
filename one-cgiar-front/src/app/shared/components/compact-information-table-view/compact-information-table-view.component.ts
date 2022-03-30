@@ -17,7 +17,9 @@ export class CompactInformationTableViewComponent implements OnInit {
 
 
 
-  constructor() { }
+  constructor(
+    public _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
     console.log(this.list)
