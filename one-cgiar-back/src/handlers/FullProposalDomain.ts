@@ -1602,7 +1602,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         });
       });
 
-      const tableC = {results: results[0]};
+      const tableC = {results: results};
 
       return {
         meliaPlan: meliaPlan[0],
