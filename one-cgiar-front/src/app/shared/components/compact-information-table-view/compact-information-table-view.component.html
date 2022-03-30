@@ -1,0 +1,18 @@
+<div class="toggle-view-button-container">
+    <div class="toggle-view-button" (click)="this.onbuttonViewEvent()">
+        <span>{{this.showTableViewVariable ? 'Table view' : 'Editable view'}} </span>
+     </div>
+</div>
+
+<table class="animate__animated animate__fadeIn" *ngIf="this.list.length && this.showTableViewVariable">
+    <tr>
+        <th *ngFor="let item of this.attr_list_config">{{item['name']}}</th> <th></th>
+    </tr>
+    <tr *ngFor="let item of this.list; let i=index" [hidden]="item?.active === false" style="position: relative;">
+        <td *ngFor="let key of this.attr_list_config">{{item[key?.attribute]}}</td> 
+        <td *ngIf="!this._initiativesService.initiative.readonly"><div class="material-icons editable-icon" (click)="editItem(item)">edit</div></td>
+        <td *ngIf="!this._initiativesService.initiative.readonly" style="padding-left: 70px;"></td>
+        <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+
+    </tr>
+</table>

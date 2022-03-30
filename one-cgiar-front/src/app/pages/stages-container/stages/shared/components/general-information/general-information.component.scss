@@ -21,6 +21,9 @@
     border-radius: 10px; 
     border: solid 3px #087b8362;
     overflow: hidden;
+    .alert_container{
+        padding: 20px;
+    }
     .local_container{
         display: grid;
         grid-template-columns: 1fr 30px 1fr;

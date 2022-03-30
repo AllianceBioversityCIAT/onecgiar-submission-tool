@@ -1,11 +1,13 @@
+import {get} from 'https';
 import _ from 'lodash';
 import { getRepository, In } from 'typeorm';
 import * as entities from '../entity';
-import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
-import { ToolsSbt } from '../utils/toolsSbt';
-import { BaseError } from './BaseError';
-import { InitiativeHandler } from './InitiativesDomain';
-import { InitiativeStageHandler } from './InitiativeStageDomain';
+import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
+import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {ToolsSbt} from '../utils/toolsSbt';
+import {BaseError} from './BaseError';
+import {InitiativeHandler} from './InitiativesDomain';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1403,72 +1405,64 @@ export class ProposalHandler extends InitiativeStageHandler {
     const resultsCountriesArray = [];
 
     try {
-      const results = tableC.results;
-      let newResults = new entities.Results();
+      let upsertResults: any;
 
-      newResults.initvStgId = initvStgId;
-      newResults.result_type_id = results.result_type;
-      newResults.result_title = results.result_title;
-      newResults.is_global = results.is_global;
-      newResults.active = results.active;
+      for (let index = 0; index < tableC.results.length; index++) {
+        const result = tableC.results[index];
 
-      resultsArray.push(
-        toolsSbt.mergeData(
-          resultsRepo,
-          ` 
-                SELECT *
-                  FROM results
-                 WHERE initvStgId = ${newResults.initvStgId}
-                   AND result_type_id = ${newResults.result_type_id}`,
-          newResults
-        )
-      );
+        let newResults = new entities.Results();
 
-      let mergeResults = await Promise.all(resultsArray);
+        newResults.initvStgId = initvStgId;
+        newResults.result_type_id = result.result_type;
+        newResults.result_title = result.result_title;
+        newResults.is_global = result.is_global;
+        newResults.active = result.active;
 
-      // Save data
+        upsertResults = await resultsRepo.save(newResults);
 
-      let upsertResults: any = await resultsRepo.save(mergeResults[0]);
+        resultsArray.push(upsertResults);
 
-      for (let index = 0; index < results.indicators.length; index++) {
-        const indicators = results.indicators[index];
-        let newResultsIndicators = new entities.ResultsIndicators();
+        for (let index = 0; index < result.indicators.length; index++) {
+          const indicators = result.indicators[index];
+          let newResultsIndicators = new entities.ResultsIndicators();
 
-        newResultsIndicators.id = indicators.id ? indicators.id : null;
-        newResultsIndicators.results_id = upsertResults.id;
-        newResultsIndicators.active = indicators.active;
-        newResultsIndicators.baseline_value = indicators.baseline_value;
-        newResultsIndicators.baseline_year = indicators.baseline_year;
-        newResultsIndicators.data_collection_method =
-          indicators.data_collection;
-        newResultsIndicators.data_source = indicators.data_source;
-        newResultsIndicators.frequency_data_collection =
-          indicators.frequency_data_collection;
-        newResultsIndicators.target_value = indicators.target_value;
-        newResultsIndicators.target_year = indicators.target_year;
-        newResultsIndicators.unit_measurement = indicators.unit_messurament;
-        newResultsIndicators.name = indicators.indicator_name;
+          newResultsIndicators.id = indicators.id ? indicators.id : null;
+          newResultsIndicators.results_id = upsertResults.id;
+          newResultsIndicators.active = indicators.active;
+          newResultsIndicators.baseline_value = indicators.baseline_value;
+          newResultsIndicators.baseline_year = indicators.baseline_year;
+          newResultsIndicators.data_collection_method =
+            indicators.data_collection;
+          newResultsIndicators.data_source = indicators.data_source;
+          newResultsIndicators.frequency_data_collection =
+            indicators.frequency_data_collection;
+          newResultsIndicators.target_value = indicators.target_value;
+          newResultsIndicators.target_year = indicators.target_year;
+          newResultsIndicators.unit_measurement = indicators.unit_messurament;
+          newResultsIndicators.name = indicators.indicator_name;
 
-        resultsIndicatorsArray.push(
-          toolsSbt.mergeData(
-            resultsIndicatorsRepo,
-            ` 
-                  SELECT *
-                    FROM results_indicators
-                   WHERE id = ${newResultsIndicators.id} 
-                     and results_id = ${newResultsIndicators.results_id}`,
-            newResultsIndicators
-          )
-        );
+          resultsIndicatorsArray.push(
+            toolsSbt.mergeData(
+              resultsIndicatorsRepo,
+              ` 
+                    SELECT *
+                      FROM results_indicators
+                     WHERE id = ${newResultsIndicators.id} 
+                       and results_id = ${newResultsIndicators.results_id}`,
+              newResultsIndicators
+            )
+          );
+        }
+
+        // Geo Scope
+        for (let index = 0; index < result.geo_scope.regions.length; index++) {}
+
+        for (
+          let index = 0;
+          index < result.geo_scope.countries.length;
+          index++
+        ) {}
       }
-
-      for (let index = 0; index < results.geo_scope.regions.length; index++) { }
-
-      for (
-        let index = 0;
-        index < results.geo_scope.countries.length;
-        index++
-      ) { }
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
@@ -1478,7 +1472,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsIndicators
       );
 
-      return { upsertResults, upsertResultsIndicators };
+      return {upsertResults: resultsArray, upsertResultsIndicators};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1606,7 +1600,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         });
       });
 
-      const tableC = { results: results[0] };
+      const tableC = {results: results};
 
       return {
         meliaPlan: meliaPlan[0],
@@ -1616,6 +1610,91 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Get melia and files: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * UPSERT MELIA studies and activities
+   * @param meliaStudiesActivitiesData
+   * @returns meliaStudiesActivitiesSave
+   */
+  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any) {
+    const meliaStudiesActivitiesRepo = getRepository(
+      entities.MeliaStudiesActivities
+    );
+    const initvStg = await this.setInitvStage();
+    let toolsSbt = new ToolsSbt();
+    let meliaStudiesActivitiesArray = [];
+
+    try {
+      for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
+        const element = meliaStudiesActivitiesData[index];
+
+        const newMeliaStudiesActivities = new MeliaStudiesActivities();
+
+        newMeliaStudiesActivities.id = element.id ? element.id : null;
+        newMeliaStudiesActivities.initvStgId = initvStg.id;
+        newMeliaStudiesActivities.type_melia = element.type_melia;
+        newMeliaStudiesActivities.result_title = element.result_title;
+        newMeliaStudiesActivities.anticipated_year_completion =
+          element.anticipated_year_completion;
+        newMeliaStudiesActivities.co_delivery = element.co_delivery;
+        newMeliaStudiesActivities.management_decisions_learning =
+          element.management_decisions_learning;
+        newMeliaStudiesActivities.active = element.active;
+
+        meliaStudiesActivitiesArray.push(
+          toolsSbt.mergeData(
+            meliaStudiesActivitiesRepo,
+            ` 
+             SELECT *
+               FROM melia_studies_activities
+              WHERE id = ${newMeliaStudiesActivities.id}
+                and initvStgId =${newMeliaStudiesActivities.initvStgId}`,
+            newMeliaStudiesActivities
+          )
+        );
+      }
+
+      const meliaStudiesActivitiesMerge = await Promise.all(
+        meliaStudiesActivitiesArray
+      );
+      const meliaStudiesActivitiesSave = await meliaStudiesActivitiesRepo.save(
+        meliaStudiesActivitiesMerge
+      );
+
+      return meliaStudiesActivitiesSave;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert MELIA studies and activities: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async requestMeliaStudiesActivities() {
+    const initvStg = await this.setInitvStage();
+    const meliaStudiesActivitiesRepo = getRepository(
+      entities.MeliaStudiesActivities
+    );
+
+    try {
+      const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
+        initvStgId: initvStg.id
+      });
+
+      return meliaStudiesActivities;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'GET MELIA studies and activities: Full proposal',
         400,
         error.message,
         false
@@ -2730,6 +2809,37 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Upsert TOC: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST TOC BY INITIATIVE
+   * @returns previewPartners
+   */
+  async requestTocByInitiative() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve preview partners
+      const tocQuery = `
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+        FROM tocs
+       WHERE initvStgId = ${initvStg.id}
+        and active = 1
+        and type = 1
+      `;
+
+      const fullInitiativeToc = await this.queryRunner.query(tocQuery);
+
+      return fullInitiativeToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get full initiative ToC: Full proposal',
         400,
         error.message,
         false

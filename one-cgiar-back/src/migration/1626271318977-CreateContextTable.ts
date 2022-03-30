@@ -13,7 +13,6 @@ export class CreateContextTable1626271318977 implements MigrationInterface {
             priority_setting TEXT DEFAULT NULL,
             comparative_advantage TEXT DEFAULT NULL,
             participatory_design TEXT DEFAULT NULL,
-
             created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             KEY IDX_1354654117589921_initvStgId (initvStgId),
