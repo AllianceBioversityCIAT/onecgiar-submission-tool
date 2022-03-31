@@ -1,0 +1,11 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Dim_Partners1 = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Dim_Partners"]}[Data],
+    #"Merged Queries" = Table.NestedJoin(Dim_Partners1, {"institutions_id"}, #"marloDB institutions", {"id"}, "marloDB institutions", JoinKind.LeftOuter),
+    #"Expanded marloDB institutions" = Table.ExpandTableColumn(#"Merged Queries", "marloDB institutions", {"id", "name", "acronym", "website_link", "program_id", "institution_type_id", "added", "parent_id", "is_parent", "marloDB institutions_locations.is_headquater", "marloDB institutions_locations.iso_alpha_3", "marloDB institutions_locations.iso_alpha_2", "marloDB institutions_locations.name", "type of institution MARLO"}, {"id.1", "name", "acronym", "website_link", "program_id", "institution_type_id", "added", "parent_id", "is_parent", "marloDB institutions_locations.is_headquater", "marloDB institutions_locations.iso_alpha_3", "marloDB institutions_locations.iso_alpha_2", "marloDB institutions_locations.name", "type of institution MARLO"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Expanded marloDB institutions",{{"id.1", "clarisaid"}}),
+    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each true)
+in
+    #"Filtered Rows"

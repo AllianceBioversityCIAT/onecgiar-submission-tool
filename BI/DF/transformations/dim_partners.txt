@@ -1,0 +1,8 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "partners"]}[Data],
+  #"Remove columns" = Table.RemoveColumns(#"Navigation 1", Table.ColumnsOfType(#"Navigation 1", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"}),
+  #"Filtered rows" = Table.SelectRows(#"Removed columns", each [institutions_id] <> null)
+in
+  #"Filtered rows"

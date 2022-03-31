@@ -1,0 +1,7 @@
+let
+  Source = ,
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "clarisa_regions"]}[Data],
+  #"Transform columns" = Table.TransformColumnTypes(#"Navigation 1", {{"parentRegion", type text}}),
+  #"Replace errors" = Table.ReplaceErrorValues(#"Transform columns", {{"parentRegion", null}})
+in
+  #"Replace errors"

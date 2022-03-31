@@ -1,0 +1,27 @@
+let
+    Source = PowerBI.Dataflows([]),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Fact_initiatives1 = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Fact_initiatives"]}[Data],
+    #"Added Custom" = Table.AddColumn(Fact_initiatives1, "Color", each "#FFA310"),
+   #"Filtered Rows" = Table.SelectRows(#"Added Custom", each ([stageId] = 3)),
+    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"official_code"}, #"Initiatives shortnames", {"#"}, "Initiatives shortnames", JoinKind.LeftOuter),
+    #"Expanded Initiatives shortnames" = Table.ExpandTableColumn(#"Merged Queries", "Initiatives shortnames", {"Short Name", "Impact Area"}, {"Short Name", "Impact Area"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Expanded Initiatives shortnames",{{"Short Name", "Short_Name"}}),
+    #"Duplicated Column" = Table.DuplicateColumn(#"Renamed Columns", "name", "name - Copy"),
+    #"Renamed Columns1" = Table.RenameColumns(#"Duplicated Column",{{"name - Copy", "Full_official_name"}}),
+    #"Duplicated Column1" = Table.DuplicateColumn(#"Renamed Columns1", "Full_official_name", "Full_official_name - Copy"),
+    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column1",{{"Full_official_name - Copy", "test"}}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns2", "test", Splitter.SplitTextByDelimiter("(", QuoteStyle.Csv), {"test.1", "test.2"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"test.1", type text}, {"test.2", type text}}),
+    #"Split Column by Delimiter1" = Table.SplitColumn(#"Changed Type", "test.1", Splitter.SplitTextByEachDelimiter({":"}, QuoteStyle.Csv, false), {"test.1.1", "test.1.2"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"test.1.1", type text}, {"test.1.2", type text}}),
+    #"Added Conditional Column" = Table.AddColumn(#"Changed Type1", "Custom", each if [test.1.2] = null then [test.1.1] else if [test.1.2] <> null then [test.1.2] else null),
+    #"Trimmed Text" = Table.TransformColumns(#"Added Conditional Column",{{"Custom", Text.Trim, type text}}),
+    #"Replaced Value" = Table.ReplaceValue(#"Trimmed Text","FRESH - Fruit and Vegetables for Sustainable Healthy Diets"," Fruit and Vegetables for Sustainable Healthy Diets",Replacer.ReplaceText,{"Custom"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Replaced Value",{"test.1.1", "test.1.2", "test.2"}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Removed Columns","Transformational Agroecology ","Transf. Agroecology ",Replacer.ReplaceText,{"Short_Name"}),
+    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Rethinking Food Markets","Rethink. Food Markets",Replacer.ReplaceText,{"Short_Name"}),
+    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Foresight and Metrics","Foresight & Metrics",Replacer.ReplaceText,{"Short_Name"})
+in
+    #"Replaced Value3"

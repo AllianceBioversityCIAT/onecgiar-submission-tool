@@ -1,0 +1,18 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "initiatives_by_stages"]}[Data],
+  #"Filtered rows 1" = Table.SelectRows(#"Navigation 1", each [active] = 1),
+  #"Removed other columns" = Table.SelectColumns(#"Filtered rows 1", {"id", "initiativeId", "stageId", "active", "statusId", "global_dimension"}),
+  #"Merged queries" = Table.NestedJoin(#"Removed other columns", {"initiativeId"}, initiatives, {"id"}, "initiatives", JoinKind.LeftOuter),
+  #"Expanded initiatives" = Table.ExpandTableColumn(#"Merged queries", "initiatives", {"name", "official_code"}, {"name", "official_code"}),
+  #"Removed columns" = Table.RemoveColumns(#"Expanded initiatives", {"statusId"}),
+  #"Filtered rows" = Table.SelectRows(#"Removed columns", each [active] = 1),
+  #"Removed columns 1" = Table.RemoveColumns(#"Filtered rows", {"stageId", "active"}),
+  #"Merged queries 1" = Table.NestedJoin(#"Removed columns 1", {"id"}, general_information, {"initvStgId"}, "general_information", JoinKind.LeftOuter),
+  #"Expanded general_information" = Table.ExpandTableColumn(#"Merged queries 1", "general_information", {"name", "action_area_description", "action_area_id"}, {"name.1", "action_area_description", "action_area_id"}),
+  #"Merged queries 2" = Table.NestedJoin(#"Expanded general_information", {"id"}, context, {"initvStgId"}, "context", JoinKind.LeftOuter),
+  #"Expanded context" = Table.ExpandTableColumn(#"Merged queries 2", "context", {"challenge_statement", "smart_objectives", "key_learnings", "priority_setting", "comparative_advantage", "participatory_design"}, {"context.challenge_statement", "context.smart_objectives", "context.key_learnings", "context.priority_setting", "context.comparative_advantage", "context.participatory_design"}),
+  #"Merged queries 3" = Table.NestedJoin(#"Expanded context", {"id"}, Dim_innovation_packages, {"initvStgId"}, "Dim_innovation_packages", JoinKind.LeftOuter),
+  #"Expanded Dim_innovation_packages" = Table.ExpandTableColumn(#"Merged queries 3", "Dim_innovation_packages", {"key_principles", "active"}, {"Dim_innovation_packages.key_principles", "Dim_innovation_packages.active"})
+in
+  #"Expanded Dim_innovation_packages"

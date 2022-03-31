@@ -1,0 +1,8 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "budget"]}[Data],
+  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 1", {{"value", type number}}),
+  #"Remove columns" = Table.RemoveColumns(#"Changed column type", Table.ColumnsOfType(#"Changed column type", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"})
+in
+  #"Removed columns"

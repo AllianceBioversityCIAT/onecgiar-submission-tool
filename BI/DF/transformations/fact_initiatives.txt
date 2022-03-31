@@ -1,0 +1,10 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "initiatives_by_stages"]}[Data],
+  #"Remove columns" = Table.RemoveColumns(#"Navigation 1", Table.ColumnsOfType(#"Navigation 1", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"}),
+  #"Merged queries" = Table.NestedJoin(#"Removed columns", {"initiativeId"}, initiatives, {"id"}, "initiatives", JoinKind.LeftOuter),
+  #"Expanded initiatives" = Table.ExpandTableColumn(#"Merged queries", "initiatives", {"name", "official_code", "acronym"}, {"name", "official_code", "acronym"}),
+  #"Filtered rows" = Table.SelectRows(#"Expanded initiatives", each [active] = 1)
+in
+  #"Filtered rows"

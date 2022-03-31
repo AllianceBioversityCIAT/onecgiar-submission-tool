@@ -1,0 +1,9 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"47f65966-07f4-4574-880c-ed9a8a5a5317" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="47f65966-07f4-4574-880c-ed9a8a5a5317"]}[Data],
+    #"initiativesdb init_action_areas_out_indicators1" = #"47f65966-07f4-4574-880c-ed9a8a5a5317"{[entity="initiativesdb init_action_areas_out_indicators"]}[Data],
+    #"Merged Queries" = Table.NestedJoin(#"initiativesdb init_action_areas_out_indicators1", {"id"}, clarisa_action_areas_outcomes_indicators, {"outcome_id"}, "clarisa_action_areas_outcomes_indicators", JoinKind.LeftOuter),
+    #"Expanded clarisa_action_areas_outcomes_indicators" = Table.ExpandTableColumn(#"Merged Queries", "clarisa_action_areas_outcomes_indicators", {"action_area_id", "action_area_name", "outcome_smo_code", "outcome_statement", "outcome_indicator_id", "outcome_indicator_smo_code", "outcome_indicator_statement"}, {"action_area_id", "action_area_name", "outcome_smo_code", "outcome_statement", "outcome_indicator_id", "outcome_indicator_smo_code", "outcome_indicator_statement"})
+in
+    #"Expanded clarisa_action_areas_outcomes_indicators"

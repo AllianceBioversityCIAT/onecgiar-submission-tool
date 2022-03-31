@@ -1,0 +1,8 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Dim_Work_Packages1 = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Dim_Work_Packages"]}[Data],
+    #"Filtered Rows" = Table.SelectRows(Dim_Work_Packages1, each ([initvStgId] <> 1 and [initvStgId] <> 2 and [initvStgId] <> 3 and [initvStgId] <> 4 and [initvStgId] <> 5 and [initvStgId] <> 6 and [initvStgId] <> 7 and [initvStgId] <> 8 and [initvStgId] <> 9 and [initvStgId] <> 10 and [initvStgId] <> 11 and [initvStgId] <> 12 and [initvStgId] <> 13 and [initvStgId] <> 14 and [initvStgId] <> 15 and [initvStgId] <> 16 and [initvStgId] <> 17 and [initvStgId] <> 18 and [initvStgId] <> 19 and [initvStgId] <> 20 and [initvStgId] <> 21 and [initvStgId] <> 22 and [initvStgId] <> 23 and [initvStgId] <> 24 and [initvStgId] <> 25 and [initvStgId] <> 26 and [initvStgId] <> 27 and [initvStgId] <> 28 and [initvStgId] <> 29 and [initvStgId] <> 30 and [initvStgId] <> 31 and [initvStgId] <> 32) and ([active] = 1))
+in
+    #"Filtered Rows"

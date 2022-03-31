@@ -1,0 +1,7 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8dd22ab6-012b-46c4-b5b8-51ec4fc8597f" = Source{[workspaceId="8dd22ab6-012b-46c4-b5b8-51ec4fc8597f"]}[Data],
+    #"d18053c4-7454-4a2d-aa6f-a46db2552da3" = #"8dd22ab6-012b-46c4-b5b8-51ec4fc8597f"{[dataflowId="d18053c4-7454-4a2d-aa6f-a46db2552da3"]}[Data],
+    #"Countries and Regions1" = #"d18053c4-7454-4a2d-aa6f-a46db2552da3"{[entity="Countries and Regions"]}[Data]
+in
+    #"Countries and Regions1"

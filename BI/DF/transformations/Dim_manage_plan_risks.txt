@@ -1,0 +1,8 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "manage_plan_risk"]}[Data],
+  #"Expanded initiativesdb.risk_assessment" = Table.ExpandTableColumn(#"Navigation 1", "initiativesdb.risk_assessment", {"risks_achieving_impact", "description_risk", "likelihood", "impact", "risk_score", "manage_plan_risk_id", "active", "risks_theme", "initiativesdb.manage_plan_risk", "initiativesdb.opportunities"}, {"initiativesdb.risk_assessment.risks_achieving_impact", "initiativesdb.risk_assessment.description_risk", "initiativesdb.risk_assessment.likelihood", "initiativesdb.risk_assessment.impact", "initiativesdb.risk_assessment.risk_score", "initiativesdb.risk_assessment.manage_plan_risk_id", "initiativesdb.risk_assessment.active", "initiativesdb.risk_assessment.risks_theme", "initiativesdb.risk_assessment.initiativesdb.manage_plan_risk", "initiativesdb.risk_assessment.initiativesdb.opportunities"}),
+  #"Remove columns" = Table.RemoveColumns(#"Expanded initiativesdb.risk_assessment", Table.ColumnsOfType(#"Expanded initiativesdb.risk_assessment", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"})
+in
+  #"Removed columns"
