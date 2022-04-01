@@ -7,6 +7,7 @@ import { Users } from '../entity/Users';
 import { HttpStatusCode } from '../interfaces/Constants';
 import { APIError, BaseError } from './BaseError';
 import { InitiativeStageHandler } from './InitiativeStageDomain';
+import { ReplicationDomain } from './ReplicationDomain';
 
 export class MetaDataHandler extends InitiativeStageHandler {
   /**
@@ -1944,6 +1945,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
     const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
     const handler = this;
+
+    
     try {
 
       let submission = await submissionRepo.findOne({
@@ -1998,13 +2001,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
         },
         validateStatus: async (newStatusId: any) => {
-           // if intiative not submitted throw error
-           if (!submission) {
+          // if intiative not submitted throw error
+          if (!submission) {
             throw new APIError(
               'Bad request',
               HttpStatusCode.BAD_REQUEST,
               true,
               'Initiative not submitted yet.'
+            );
+          }
+          if (!newStatusId) {
+            throw new APIError(
+              'Bad request',
+              HttpStatusCode.BAD_REQUEST,
+              true,
+              'None status provided.'
             );
           }
           // get new status for initiative
@@ -2018,7 +2029,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
-         
+
           // get current submussion statuses by initiative
           const currentInitvSubStatuses = await subStsRepo.find({
             where: { submission }
@@ -2048,8 +2059,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
               submission = await submissionRepo.save(submission);
 
               // and start replication procces if available if stage == PreConcept
-              if(initvStg.stageId == 2){
-                
+              if (initvStg.stageId == 2) {
+                const replication = new ReplicationDomain(initvStg.id)
+                replication.replicationPre(initvStg.initiativeId);
               }
             }
             // update submission status
