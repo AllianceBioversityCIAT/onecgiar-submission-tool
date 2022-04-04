@@ -20,14 +20,7 @@
                         <span class="initiative-id">{{this.initiativesSvc.initiative.official_code}}</span>
                         <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
                     </div>
-                    <div class="initIdContainer" *ngIf="this.initiativesSvc.initiative.status != null">
-                        <span class="text-description">
-                            Status: 
-                        </span>
-                        <span class="initiative-id"  pTooltip="{{toolTipText}}"  tooltipPosition="top" placeholder="Top">{{this.initiativesSvc.initiative.status}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-                    
+                                      
                 </div>
                     <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="managerAccesible()">
                         Manage access
@@ -46,7 +39,7 @@
                 </div>
 
                 <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
-                    <router-outlet></router-outlet>
+                    <router-outlet *ngIf="this.initiativesSvc.initiative.id"></router-outlet>
                 </div>
    
             </div>

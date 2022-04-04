@@ -10,6 +10,7 @@ import { InitiativesService } from '../../services/initiatives.service';
 import { RequestsService } from '../../services/requests.service';
 import { UtilsHandler } from '../../utils/utils';
 import { map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -45,6 +46,7 @@ export class MenuComponent implements OnInit {
     private auth: AuthService,
     public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
+    private spinnerService: NgxSpinnerService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService
   ) { }
@@ -66,20 +68,20 @@ export class MenuComponent implements OnInit {
       // console.log("Get menu")
     });
 
-    
+
 
     this.stgMenuSvc.menu.subscribe((menu) => {
       this.subMenusFormValidation = menu;
     });
 
-    this.getImpacAreasList().then(()=>{
+    this.getImpacAreasList().then(() => {
       this._dataControlService.menuChange$.emit();
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err)
       this._dataControlService.menuChange$.emit();
     });
-   
- 
+
+
   }
 
   /**
@@ -88,13 +90,20 @@ export class MenuComponent implements OnInit {
    */
   changeHide(val: boolean) {
     this.display = val;
-    this.statuses.forEach(s => {
-      s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
-    });
+    if (this.statuses.length > 0) {
+      this.statuses.forEach(s => {
+        // console.log(this.initiativesSvc.initiative, s)
+        s['clicked'] = this.initiativesSvc.initiative.status === s['status'] ? true : false;
+        if (this.initiativesSvc.initiative.status == null && s['status'] == 'Editing') {
+          s['clicked'] = true;
+        }
+      });
+    }
   }
 
   getAssessmentStatuses() {
-    if (this.currentUser.roles.find(r => r.acronym == 'ADM') || this.currentUser.roles.find(r => r.acronym == 'ASSESS')) {
+    //|| this.currentUser.roles.find(r => r.acronym == 'ASSESS')
+    if (this.currentUser.roles.find(r => r.acronym == 'ADM')) {
       this.initiativesSvc.getAssesssmentStatuses(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
         resp => {
           resp.response.statuses.forEach(s => {
@@ -128,12 +137,16 @@ export class MenuComponent implements OnInit {
   onConfirmAssessment() {
     const statusSelected = this.statuses.filter(st => st.clicked == true)[0];
     const updateObj = { description: this.statusTextObj['description'], statusId: statusSelected.id };
-    console.log(updateObj)
-    this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj).subscribe(
+    // console.log('onConfirmAssessment', this.localMenuChangesubscribtion$)
+    // this.spinnerService.show("submission_spinner");
+    this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj)
+    .subscribe(
       resp => {
+        // this.spinnerService.hide("submission_spinner");
         console.log(resp)
       },
       err => {
+        // this.spinnerService.hide("submission_spinner");
         console.log(err);
         this._interactionsService.errorMessage(err.error?.description, 2000);
       }
@@ -147,8 +160,8 @@ export class MenuComponent implements OnInit {
     this.localMenuChangesubscribtion$.unsubscribe();
   }
 
-  async getImpacAreasList(){
-    return  await new Promise((resolve,reject)=>{
+  async getImpacAreasList() {
+    return await new Promise((resolve, reject) => {
       this.initiativesSvc.getImpactAreas().subscribe(impacAreas => {
         this.impacAreasList = impacAreas.response.impactAreasRequested;
         this._dataControlService.impacAreas = this.impacAreasList;
@@ -163,7 +176,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapReportInSubSectionMenu(stageId, sectionId, object) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -172,7 +185,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenu(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -183,7 +196,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -194,7 +207,7 @@ export class MenuComponent implements OnInit {
   }
 
   mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return ;
+    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let sectionFinded = (this._dataControlService.userMenu
       .find((menuItem) => menuItem.stageId == stageId)
       .sections.find((section) => section.sectionId == sectionId)
@@ -204,21 +217,21 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  mapWorkPackagesInStage({ stageName ,stageId, sectionId, subSectionId}){
-        if (this.initiativesSvc.initiative.stageId === stageId) {
-          this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, stageName).subscribe((wpsResp) => {
-            let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-            this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
-            this._dataControlService.wpMaped = true;
-          }, (err) => {
-            console.log(err);
-            this._dataControlService.wpMaped = true;
-          });
-        }
+  mapWorkPackagesInStage({ stageName, stageId, sectionId, subSectionId }) {
+    if (this.initiativesSvc.initiative.stageId === stageId) {
+      this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, stageName).subscribe((wpsResp) => {
+        let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
+        this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
+        this._dataControlService.wpMaped = true;
+      }, (err) => {
+        console.log(err);
+        this._dataControlService.wpMaped = true;
+      });
+    }
   }
 
   getMenu() {
-    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).pipe(map(resp=>resp.response.stages)).subscribe((userMenuResp: any) => {
+    this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).pipe(map(resp => resp.response.stages)).subscribe((userMenuResp: any) => {
 
       this._dataControlService.userMenu = userMenuResp;
       //! DELETE 
@@ -254,9 +267,9 @@ export class MenuComponent implements OnInit {
         let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(3, 8, 37, tableAImpactArea);
 
-        let resultsList = new ListToMap(this.impacAreasList,'/impact-area/','impact-area','id','name').getList();
+        let resultsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(2, 16, 29, resultsList);
-     
+
 
         this.mapReportInSubSectionMenu(3, 9, {
           showName: 'Risk assessment preview',
@@ -299,9 +312,9 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-      
-        // this.getAssessmentStatuses();
-        
+
+        this.getAssessmentStatuses();
+
         this._dataControlService.validateMenu$.emit();
       }
       // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);

@@ -22,7 +22,7 @@ export class InitiativeStageHandler extends BaseValidation {
   private regionsRepo = getRepository(RegionsByInitiativeByStage);
   private countriesRepo = getRepository(CountriesByInitiativeByStage);
 
-  constructor(initvStgId?: string, stageId?: string, initiativeId?: string) {
+  constructor(initvStgId?: string|number, stageId?: string|number, initiativeId?: string|number) {
     super();
     this.initvStgId_ = initvStgId;
     this.stageId_ = stageId;

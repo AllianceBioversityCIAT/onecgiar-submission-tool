@@ -593,6 +593,14 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/toc/${initiativeId}`);
   }
 
+  getmeliaStudActiByInitId(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${initiativeId}`);
+  }
+
+  patchmeliaStudActiByInitId(initiativeId, body): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${initiativeId}`, body);
+  }
+
   /*** submitt initiative */
 
 
