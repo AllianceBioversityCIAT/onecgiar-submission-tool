@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class EditTocButtonComponent implements OnInit {
   @Input() title: string = 'Edit';
   @Input() url: string = null;
-
+  imageLoad : boolean = false;
   constructor() { }
 
   ngOnInit(): void {

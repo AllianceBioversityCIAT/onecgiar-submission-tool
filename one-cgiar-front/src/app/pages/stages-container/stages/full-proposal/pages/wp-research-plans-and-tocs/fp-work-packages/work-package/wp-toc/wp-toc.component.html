@@ -27,14 +27,12 @@
     <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram'+i) ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'+i">
       <div class="image_container" (click)="expandImage('diagram'+i)">
         <section-sub-title name="Diagram"></section-sub-title>
-
-
-
         <img (load)="imageLoaded('diagram'+i,i)" (error)="imageError(i)" [src]="this.toc.diagram" alt="" srcset="" width="100%">
       </div>
     </div>
 
   </div>
+  
 </div>
 
 
