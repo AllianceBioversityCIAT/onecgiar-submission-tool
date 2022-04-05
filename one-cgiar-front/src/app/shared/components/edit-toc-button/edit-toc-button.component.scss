@@ -1,0 +1,33 @@
+.local_container{
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+    .edit-toc-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgb(216, 216, 216);
+        cursor: pointer;
+        &:hover{
+            text-decoration: none;
+        }
+        .title{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0187CA;
+            height: 100%;
+            padding: 0px 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+        .image_container{
+            padding: 5px;
+            .image{
+                height: 50px;
+            }
+        }
+    }
+}

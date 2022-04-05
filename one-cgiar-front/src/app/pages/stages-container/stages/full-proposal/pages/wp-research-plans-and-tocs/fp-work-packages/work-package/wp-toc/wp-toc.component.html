@@ -6,9 +6,12 @@
       <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
       <br>
     </div> -->
+<app-edit-toc-button url="https://toc.mel.cgiar.org/"></app-edit-toc-button>
+
 <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert>
 
 <div class="toc_list">
+
   <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
 
