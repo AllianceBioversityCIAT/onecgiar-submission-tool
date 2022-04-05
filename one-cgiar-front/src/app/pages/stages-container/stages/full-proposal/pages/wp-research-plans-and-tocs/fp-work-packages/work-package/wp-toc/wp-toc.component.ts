@@ -6,6 +6,8 @@ import { environment } from '../../../../../../../../../../environments/environm
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
+import Viewer from 'viewerjs';
+
 @Component({
   selector: 'app-wp-toc',
   templateUrl: './wp-toc.component.html',
@@ -51,14 +53,19 @@ export class WpTocComponent implements OnInit {
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
     document.getElementById('loading'+i).style.display = 'none'
-
-    // this.imageIsLoaded=true;
+    new Viewer(document.getElementById('image'+i), {
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
+      navbar: 0
+    });
   }
 
   imageError(i){
     console.log("errorrer");
     document.getElementById('loading'+i).style.display = 'none'
-    // this.imageIsLoaded=false;
   }
 
   checkExpandClass(htmlId){

@@ -16,10 +16,10 @@
       </div>
   
   
-      <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram') ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'">
-        <div class="image_container" (click)="expandImage('diagram')">
+      <div class="col-12 toc_image" [id]="'diagram'">
+        <div class="image_container">
           <section-sub-title name="Diagram"></section-sub-title>
-          <img (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
+          <img id="image" (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
         </div>
       </div>
   

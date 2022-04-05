@@ -232,3 +232,15 @@ button {
   --ibdc-tertiary-color: #087b83;
   --ibdc-text-color: #797979;
 }
+
+.viewer-backdrop{
+  // background-color: rgb(255, 255, 255) !important;
+  background-image: url('/assets/images/platform_background.jpg') !important;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.viewer-close{
+  background-color: var(--ibdc-secondary-color) !important;
+}
