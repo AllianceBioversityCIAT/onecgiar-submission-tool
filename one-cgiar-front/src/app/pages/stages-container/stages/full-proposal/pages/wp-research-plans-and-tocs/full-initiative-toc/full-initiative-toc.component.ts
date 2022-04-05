@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { environment } from '../../../../../../../../environments/environment';
 import { map } from 'rxjs/operators';
+import Viewer from 'viewerjs';
 
 @Component({
   selector: 'app-full-initiative-toc',
@@ -48,6 +49,10 @@ export class FullInitiativeTocComponent implements OnInit {
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
     document.getElementById('loading').style.display = 'none'
+    new Viewer(document.getElementById('image'), {
+      toolbar: 0,
+      navbar: 0
+    });
     this.imageIsLoaded=true;
   }
 
