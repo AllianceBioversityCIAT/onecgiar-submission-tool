@@ -1596,7 +1596,6 @@ export async function patchTocs(req: Request, res: Response) {
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(

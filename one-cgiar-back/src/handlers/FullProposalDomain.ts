@@ -2766,7 +2766,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     const tocsRepo = getRepository(entities.TOCs);
     const initvStg = await this.setInitvStage();
 
-    var newTocs = new entities.TOCs();
     var results = [];
     var savedToc;
 
@@ -2774,8 +2773,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       if (toc.length > 0) {
         for (let index = 0; index < toc.length; index++) {
           const element = toc[index];
+          var newTocs = new entities.TOCs();
 
-          newTocs.id = element.id;
+          newTocs.id = null;
           newTocs.toc_id = element.tocId;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
@@ -2786,23 +2786,43 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.initvStgId = initvStg.id;
 
           var savedTocs: any = await tocsRepo.find({
-            where: {id: newTocs.id, toc_id: newTocs.toc_id}
+            where: {toc_id: newTocs.toc_id}
           });
 
           if (savedTocs.length > 0) {
-            tocsRepo.merge(savedTocs, newTocs);
+            newTocs.id = savedTocs[0].id;
+            tocsRepo.merge(savedTocs[0], newTocs);
 
             savedToc = await tocsRepo.save(savedTocs);
 
-            results[index] = savedToc;
+            results.push(savedToc);
           } else {
+            //Validate if the initiative has a Full initiative ToC
+            if (newTocs.type) {
+              var savedTocsType: any = await tocsRepo.find({
+                where: {initvStgId: newTocs.initvStgId, type: 1}
+              });
+
+              if (savedTocsType.length > 0) {
+                throw new BaseError(
+                  'Upsert Full Initiative ToC: Full proposal',
+                  400,
+                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},${savedTocsType[0].toc_id}`,
+                  false
+                );
+              }
+            }
+
             newTocs.initvStgId = initvStg.id;
 
             savedToc = await tocsRepo.save(newTocs);
-            results[index] = savedToc;
+            results.push(savedToc);
           }
         }
       }
+
+      console.log(results);
+
       return {savedTocs: results};
     } catch (error) {
       console.log(error);
