@@ -1078,34 +1078,34 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-      // if (melia_plan) {
-      //   melia_plan.updateFiles =
-      //     typeof melia_plan.updateFiles === 'undefined'
-      //       ? []
-      //       : melia_plan.updateFiles;
-      //   if (melia_plan.updateFiles.length > 0) {
-      //     for (let index = 0; index < melia_plan.updateFiles.length; index++) {
-      //       const updateFile = melia_plan.updateFiles[index];
+      if (melia_plan) {
+        melia_plan.updateFiles =
+          typeof melia_plan.updateFiles === 'undefined'
+            ? []
+            : melia_plan.updateFiles;
+        if (melia_plan.updateFiles.length > 0) {
+          for (let index = 0; index < melia_plan.updateFiles.length; index++) {
+            const updateFile = melia_plan.updateFiles[index];
 
-      //       newFiles.id = updateFile.id;
-      //       newFiles.active = updateFile.active ? updateFile.active : true;
-      //       newFiles.meliaId = updateFile.meliaId;
-      //       newFiles.section = updateFile.section;
-      //       newFiles.url = updateFile.urlDB;
-      //       newFiles.name = updateFile.originalname;
+            newFiles.id = updateFile.id;
+            newFiles.active = updateFile.active ? updateFile.active : true;
+            newFiles.meliaId = updateFile.meliaId;
+            newFiles.section = updateFile.section;
+            newFiles.url = updateFile.urlDB;
+            newFiles.name = updateFile.originalname;
 
-      //       if (newFiles.id !== null) {
-      //         var savedFiles = await filesRepo.findOne(newFiles.id);
+            if (newFiles.id !== null) {
+              var savedFiles = await filesRepo.findOne(newFiles.id);
 
-      //         filesRepo.merge(savedFiles, updateFile);
+              filesRepo.merge(savedFiles, updateFile);
 
-      //         upsertedFile = await filesRepo.save(savedFiles);
-      //       } else {
-      //         upsertedFile = await filesRepo.save(newFiles);
-      //       }
-      //     }
-      //   }
-      // }
+              upsertedFile = await filesRepo.save(savedFiles);
+            } else {
+              upsertedFile = await filesRepo.save(newFiles);
+            }
+          }
+        }
+      }
 
       return {upsertedMelia, upsertedFile};
     } catch (error) {
@@ -1408,6 +1408,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     try {
       let upsertResults: any;
+      tableC.results =
+      typeof tableC.results === 'undefined'
+        ? []
+        : tableC.results;
 
       for (let index = 0; index < tableC.results.length; index++) {
         const result = tableC.results[index];
