@@ -47,11 +47,13 @@ export class FullInitiativeTocComponent implements OnInit {
   imageLoaded(htmlId){
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
+    document.getElementById('loading').style.display = 'none'
     this.imageIsLoaded=true;
   }
 
   imageError(){
     console.log("errorrer");
+    document.getElementById('loading').style.display = 'none';
     this.imageIsLoaded=false;
   }
 

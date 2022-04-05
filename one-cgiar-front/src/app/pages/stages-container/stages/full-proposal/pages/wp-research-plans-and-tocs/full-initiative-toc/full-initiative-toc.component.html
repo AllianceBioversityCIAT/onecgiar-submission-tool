@@ -8,6 +8,11 @@
         <ibdc-simple-text [options]="{inputTitle:'TOC ID',value: tocitem?.narrative}">
         </ibdc-simple-text>
       </div>
+
+      <div class="loading-container rotating" [id]="'loading'">
+        <div class="material-icons">cached</div>
+      </div>
+  
   
       <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram') ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'">
         <div class="image_container" (click)="expandImage('diagram')">
