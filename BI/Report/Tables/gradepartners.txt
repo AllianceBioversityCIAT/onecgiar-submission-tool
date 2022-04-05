@@ -1,0 +1,18 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Dim_Partners1 = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Dim_Partners"]}[Data],
+    #"Merged Queries" = Table.NestedJoin(Dim_Partners1, {"institutions_id"}, #"marloDB institutions", {"id"}, "marloDB institutions", JoinKind.LeftOuter),
+    #"Expanded marloDB institutions" = Table.ExpandTableColumn(#"Merged Queries", "marloDB institutions", {"name", "acronym", "website_link", "program_id", "institution_type_id", "added", "marloDB institutions_locations.is_headquater", "marloDB institutions_locations.iso_alpha_3", "marloDB institutions_locations.iso_alpha_2", "marloDB institutions_locations.name"}, {"name", "acronym", "website_link", "program_id", "institution_type_id", "added", "marloDB institutions_locations.is_headquater", "marloDB institutions_locations.iso_alpha_3", "marloDB institutions_locations.iso_alpha_2", "marloDB institutions_locations.name"}),
+    #"Filtered Rows" = Table.SelectRows(#"Expanded marloDB institutions", each true),
+    #"Merged Queries1" = Table.NestedJoin(#"Filtered Rows", {"impact_strategies_id"}, Dim_impact_strategies, {"id"}, "Dim_impact_strategies", JoinKind.LeftOuter),
+    #"Expanded Dim_impact_strategies" = Table.ExpandTableColumn(#"Merged Queries1", "Dim_impact_strategies", {"initvStgId"}, {"initvStgId"}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Expanded Dim_impact_strategies",{"id", "impact_strategies_id", "institutions_id", "initvStgId", "institutions_name", "tag_id", "type_id", "type_name", "active", "demand", "innovation", "scaling", "name", "acronym", "website_link", "program_id", "institution_type_id", "added", "marloDB institutions_locations.is_headquater", "marloDB institutions_locations.iso_alpha_3", "marloDB institutions_locations.iso_alpha_2", "marloDB institutions_locations.name"}),
+    #"Grouped Rows" = Table.Group(#"Reordered Columns", {"institutions_id", "initvStgId"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    #"Sorted Rows" = Table.Sort(#"Grouped Rows",{{"initvStgId", Order.Ascending}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Sorted Rows",{"Count"}),
+    #"Grouped Rows1" = Table.Group(#"Removed Columns", {"institutions_id"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    #"Sorted Rows1" = Table.Sort(#"Grouped Rows1",{{"Count", Order.Descending}})
+in
+    #"Sorted Rows1"

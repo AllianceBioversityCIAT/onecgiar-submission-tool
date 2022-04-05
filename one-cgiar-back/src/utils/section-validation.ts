@@ -36,51 +36,51 @@ export const validatedSection = async (
   return validatedSection;
 };
 
-export const forwardStage = async (
-  replicationStagDsc: string,
-  currentInitiativeId: string
-) => {
-  const stagesRepo = getRepository(Stages);
-  try {
-    switch (replicationStagDsc) {
-      case 'full_proposal': {
-        const currentStage = await stagesRepo.findOne({
-          where: {description: 'Concept'}
-        });
-        // concept handler object
+// export const forwardStage = async (
+//   replicationStagDsc: string,
+//   currentInitiativeId: string
+// ) => {
+//   const stagesRepo = getRepository(Stages);
+//   try {
+//     switch (replicationStagDsc) {
+//       case 'full_proposal': {
+//         const currentStage = await stagesRepo.findOne({
+//           where: {description: 'Concept'}
+//         });
+//         // concept handler object
 
-        const conceptObj = new ConceptHandler(
-          null,
-          currentStage.id.toString(),
-          currentInitiativeId
-        );
-        await conceptObj.setInitvStage();
-        const isComplete = await conceptObj.validateCompletness();
+//         const conceptObj = new ConceptHandler(
+//           null,
+//           currentStage.id.toString(),
+//           currentInitiativeId
+//         );
+//         await conceptObj.setInitvStage();
+//         const isComplete = await conceptObj.validateCompletness();
 
-        // if missing concept data, throw error
-        if (isComplete) {
-          // get full proposal data
-          const fullProposal = await conceptObj.forwardStage();
-          return fullProposal;
-        } else
-          throw new BaseError(
-            'Replication Process',
-            404,
-            'Incomplete concept',
-            false
-          );
-        break;
-      }
+//         // if missing concept data, throw error
+//         if (isComplete) {
+//           // get full proposal data
+//           const fullProposal = await conceptObj.forwardStage();
+//           return fullProposal;
+//         } else
+//           throw new BaseError(
+//             'Replication Process',
+//             404,
+//             'Incomplete concept',
+//             false
+//           );
+//         break;
+//       }
 
-      default:
-        break;
-    }
-  } catch (error) {
-    throw new BaseError(
-      'Replication Process',
-      error.status || 400,
-      error.message,
-      false
-    );
-  }
-};
+//       default:
+//         break;
+//     }
+//   } catch (error) {
+//     throw new BaseError(
+//       'Replication Process',
+//       error.status || 400,
+//       error.message,
+//       false
+//     );
+//   }
+// };

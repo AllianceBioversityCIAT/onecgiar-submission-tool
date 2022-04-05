@@ -1,0 +1,7 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"47f65966-07f4-4574-880c-ed9a8a5a5317" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="47f65966-07f4-4574-880c-ed9a8a5a5317"]}[Data],
+    #"initiativesdb results_regions1" = #"47f65966-07f4-4574-880c-ed9a8a5a5317"{[entity="initiativesdb results_regions"]}[Data]
+in
+    #"initiativesdb results_regions1"

@@ -1,0 +1,10 @@
+let
+    Source = PowerPlatform.Dataflows(null),
+    Workspaces = Source{[Id="Workspaces"]}[Data],
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Workspaces{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Dim_Manage_plan_risk_ = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Dim_Manage_plan_risk",version=""]}[Data],
+    #"Filtered Rows" = Table.SelectRows(Dim_Manage_plan_risk_, each ([initiativesdb.risk_assessment.active] = 1)),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"initiativesdb.risk_assessment.risk_score", "risk_score"}, {"initiativesdb.risk_assessment.impact", "risk_impact"}, {"initiativesdb.risk_assessment.risks_theme", "risks_theme"}, {"initiativesdb.risk_assessment.active", "risk_assessment.active"}, {"initiativesdb.risk_assessment.manage_plan_risk_id", "risk_assessment.manage_plan_risk_id"}, {"initiativesdb.risk_assessment.likelihood", "risk_likelihood"}, {"initiativesdb.risk_assessment.description_risk", "risk_assessment.description_risk"}, {"initiativesdb.risk_assessment.risks_achieving_impact", "risks_achieving_impact"}})
+in
+    #"Renamed Columns"

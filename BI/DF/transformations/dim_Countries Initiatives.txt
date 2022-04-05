@@ -1,0 +1,8 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "countries_by_initiative_by_stage"]}[Data],
+  #"Removed columns" = Table.RemoveColumns(#"Navigation 1", {"initiativesdb.initiatives_by_stages", "initiativesdb.work_packages", "created_at", "updated_at"}),
+  #"Merged queries" = Table.NestedJoin(#"Removed columns", {"country_id"}, clarisa_countries, {"code"}, "clarisa_countries", JoinKind.LeftOuter),
+  #"Expanded clarisa_countries" = Table.ExpandTableColumn(#"Merged queries", "clarisa_countries", {"isoAlpha2", "name", "regionDTO"}, {"isoAlpha2", "name", "regionDTO"})
+in
+  #"Expanded clarisa_countries"

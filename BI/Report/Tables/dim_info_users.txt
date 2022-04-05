@@ -1,0 +1,8 @@
+let
+    Source = PowerPlatform.Dataflows(null),
+    Workspaces = Source{[Id="Workspaces"]}[Data],
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Workspaces{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    Dim_Info_Users_ = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="Dim_Info_Users",version=""]}[Data]
+in
+    Dim_Info_Users_

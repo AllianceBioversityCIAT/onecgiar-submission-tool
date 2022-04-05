@@ -1,0 +1,10 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "regions_by_initiative_by_stage"]}[Data],
+  #"Remove columns" = Table.RemoveColumns(#"Navigation 1", Table.ColumnsOfType(#"Navigation 1", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"}),
+  #"Merged queries" = Table.NestedJoin(#"Removed columns", {"region_id"}, clarisa_regions_cgiar_names, {"id"}, "clarisa_regions_cgiar_names", JoinKind.LeftOuter),
+  #"Expanded clarisa_regions_cgiar_names" = Table.ExpandTableColumn(#"Merged queries", "clarisa_regions_cgiar_names", {"name", "acronym"}, {"name", "acronym"}),
+  #"Renamed columns" = Table.RenameColumns(#"Expanded clarisa_regions_cgiar_names", {{"name", "region_name"}, {"acronym", "region_acronym"}})
+in
+  #"Renamed columns"

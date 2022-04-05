@@ -1,0 +1,21 @@
+let
+  Source = 
+  #"Navigation 1" = Source{[Schema = "initiativesdb", Item = "projection_benefits"]}[Data],
+  #"Remove columns" = Table.RemoveColumns(#"Navigation 1", Table.ColumnsOfType(#"Navigation 1", {type table, type record, type list, type nullable binary, type binary, type function})),
+  #"Removed columns" = Table.RemoveColumns(#"Remove columns", {"created_at", "updated_at"}),
+  #"Merged queries" = Table.NestedJoin(#"Removed columns", {"id"}, dimensions, {"projectionId"}, "dimensions", JoinKind.LeftOuter),
+  #"Expanded dimensions" = Table.ExpandTableColumn(#"Merged queries", "dimensions", {"depthDescriptionId", "breadth_value", "active", "depth_description"}, {"depthDescriptionId", "breadth_value", "active.1", "depth_description"}),
+  #"Filtered rows" = Table.SelectRows(#"Expanded dimensions", each [active.1] = 1),
+  #"Merged queries 1" = Table.NestedJoin(#"Filtered rows", {"depthDescriptionId"}, depth_descriptions, {"id"}, "depth_descriptions", JoinKind.LeftOuter),
+  #"Expanded depth_descriptions" = Table.ExpandTableColumn(#"Merged queries 1", "depth_descriptions", {"name", "active"}, {"depth_descriptions.name", "depth_descriptions.active"}),
+  #"Merged queries 2" = Table.NestedJoin(#"Expanded depth_descriptions", {"probability_id"}, Dim_projected_probabilities, {"id"}, "Dim_projected_probabilities", JoinKind.LeftOuter),
+  #"Expanded Dim_projected_probabilities" = Table.ExpandTableColumn(#"Merged queries 2", "Dim_projected_probabilities", {"name", "description"}, {"Dim_projected_probabilities.name", "Dim_projected_probabilities.description"}),
+  #"Merged queries 3" = Table.NestedJoin(#"Expanded Dim_projected_probabilities", {"impact_area_id"}, clarisa_impact_areas, {"id"}, "clarisa_impact_areas", JoinKind.LeftOuter),
+  #"Expanded clarisa_impact_areas" = Table.ExpandTableColumn(#"Merged queries 3", "clarisa_impact_areas", {"name", "description"}, {"clarisa_impact_areas.name", "clarisa_impact_areas.description"}),
+  #"Changed column type" = Table.TransformColumnTypes(#"Expanded clarisa_impact_areas", {{"breadth_value", type number}}),
+  #"Merged queries 4" = Table.NestedJoin(#"Changed column type", {"impact_area_indicator_id"}, clarisa_projected_benefits, {"impactAreaIndicator"}, "clarisa_projected_benefits", JoinKind.LeftOuter),
+  #"Expanded clarisa_projected_benefits" = Table.ExpandTableColumn(#"Merged queries 4", "clarisa_projected_benefits", {"targetYear", "targetUnit", "value", "depthScales", "weightingValues"}, {"targetYear", "targetUnit", "value", "depthScales", "weightingValues"}),
+  #"Transform columns" = Table.TransformColumnTypes(#"Expanded clarisa_projected_benefits", {{"depthScales", type text}, {"weightingValues", type text}}),
+  #"Replace errors" = Table.ReplaceErrorValues(#"Transform columns", {{"depthScales", null}, {"weightingValues", null}})
+in
+  #"Replace errors"

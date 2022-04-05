@@ -1,0 +1,16 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"47f65966-07f4-4574-880c-ed9a8a5a5317" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="47f65966-07f4-4574-880c-ed9a8a5a5317"]}[Data],
+    #"initiativesdb init_impact_area_sdg_targets1" = #"47f65966-07f4-4574-880c-ed9a8a5a5317"{[entity="initiativesdb init_impact_area_sdg_targets"]}[Data],
+    #"Removed Columns" = Table.RemoveColumns(#"initiativesdb init_impact_area_sdg_targets1",{"created_at", "updated_at"}),
+    #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"sdg_target_id"}, clarisa_sdg_targets, {"id"}, "clarisa_sdg_targets", JoinKind.LeftOuter),
+    #"Expanded clarisa_sdg_targets" = Table.ExpandTableColumn(#"Merged Queries", "clarisa_sdg_targets", {"sdg_target_code", "sdg_target", "sdg"}, {"sdg_target_code", "sdg_target", "sdg"}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Expanded clarisa_sdg_targets", "sdg", Splitter.SplitTextByDelimiter(":", QuoteStyle.Csv), {"sdg.1", "sdg.2", "sdg.3", "sdg.4", "sdg.5"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"sdg.1", type text}, {"sdg.2", type text}, {"sdg.3", type text}, {"sdg.4", type text}, {"sdg.5", type text}}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type",{"sdg.1", "sdg.2", "sdg.3", "sdg.5"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"sdg.4", "sdg"}}),
+    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns",", financialCode","",Replacer.ReplaceText,{"sdg"}),
+    #"Trimmed Text" = Table.TransformColumns(#"Replaced Value",{{"sdg", Text.Trim, type text}})
+in
+    #"Trimmed Text"

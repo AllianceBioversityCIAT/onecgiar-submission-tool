@@ -7,10 +7,10 @@ import Routes from '../routes';
 import morgan from 'morgan';
 import tx2 from 'tx2';
 let meter = tx2.meter({
-  name      : 'req/sec',
-  samples   : 1,
-  timeframe : 60
-})
+  name: 'req/sec',
+  samples: 1,
+  timeframe: 60
+});
 
 export default ({app}: {app: express.Application}) => {
   const parentDir = require('path').resolve(process.cwd(), '../');

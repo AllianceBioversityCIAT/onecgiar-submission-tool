@@ -5,7 +5,7 @@
         <ibdc-alert [options]="{text: 'Please mark the checkbox below when submitting your Proposal.  No additional content is required.',type:'info'}"></ibdc-alert>
         <br>
         <div class="check_box_with_text" *ngIf="showForm">
-            <p-checkbox formControlName="research_governance_policy" binary="true" inputId="binary"></p-checkbox>
+            <p-checkbox [disabled]="this._initiativesService.initiative.readonly" formControlName="research_governance_policy" binary="true" inputId="binary"></p-checkbox>
             <span>"Researchers involved in the implementation of this Initiative will comply with the procedures and policies determined by the System Board to be applicable to the delivery of research undertaken in furtherance of CGIAR’s 2030 Research and Innovation Strategy, thereby ensuring that all research meets applicable legal, regulatory and institutional requirements; appropriate ethical and scientific standards; and standards of quality, safety, privacy, risk management and financial management.  This includes CGIAR’s CGIAR Research Ethics Code and to the values, norms and behaviors in CGIAR’s <a href="https://cgspace.cgiar.org/bitstream/handle/10568/113007/CGIAR-Ethics-Framework-Sept-2020.pdf?sequence=1&isAllowed=y">Ethics Framework</a> and in the <a href="https://www.cgiar.org/research/publication/framework-for-gender-diversity-and-inclusion-in-cgiars-workplaces/">Framework for Gender, Diversity and Inclusion in CGIAR’s workplaces.</a>  "</span>
         </div>
         <br>

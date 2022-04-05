@@ -113,9 +113,10 @@
     </mat-expansion-panel>
 </mat-accordion>
 
+
 <p-dialog class="center_flex" header="Initiative Assessment" [(visible)]="display" [modal]="true"
-    [style]="{width: '50vw'}">
-    <div>
+[style]="{width: '50vw'}">
+<div>
 
         Please assess this initiative submittion based on the <a
             href="https://docs.google.com/document/d/1JYs7GOIqMbZHWdym5kNUfr7xc4y11vit/edit#"> proposal template</a> and
@@ -154,3 +155,5 @@
         <button pButton pRipple type="button" (click)="onConfirmAssessment()" label="Confirm" [disabled]="validateDisabledStatusSelected()" class="p-button-raised p-button-success"></button>
     </ng-template>
 </p-dialog>
+
+<!-- <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="true" name='submission_spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner> -->

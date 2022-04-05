@@ -1,0 +1,10 @@
+let
+    Source = PowerBI.Dataflows(null),
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Source{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"47f65966-07f4-4574-880c-ed9a8a5a5317" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="47f65966-07f4-4574-880c-ed9a8a5a5317"]}[Data],
+    #"initiativesdb init_impact_area_global_targets1" = #"47f65966-07f4-4574-880c-ed9a8a5a5317"{[entity="initiativesdb init_impact_area_global_targets"]}[Data],
+    #"Merged Queries" = Table.NestedJoin(#"initiativesdb init_impact_area_global_targets1", {"global_target_id"}, clarisa_global_targets, {"id"}, "clarisa_global_targets", JoinKind.LeftOuter),
+    #"Expanded clarisa_global_targets" = Table.ExpandTableColumn(#"Merged Queries", "clarisa_global_targets", {"impact_area_id", "impact_area_name", "target"}, {"impact_area_id", "impact_area_name", "target"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Expanded clarisa_global_targets",{"created_at", "updated_at"})
+in
+    #"Removed Columns"

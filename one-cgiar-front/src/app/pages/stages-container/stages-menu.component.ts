@@ -64,6 +64,7 @@ export class StagesMenuComponent implements OnInit {
       const promise2 = this.initiativesSvc.getUsersByInitiative(resp['id']);
 
       forkJoin([promise1, promise2]).subscribe(val => {
+        // console.log(val)
         const sucP1 = val[0];
         const sucP2 = val[1].response.users;
         this.initiativesSvc.initiative.name = sucP1.name;
@@ -105,9 +106,10 @@ export class StagesMenuComponent implements OnInit {
 
     // TODO stageId 3 condition
     this._dataControlService.validateMenu$.subscribe(resp => {
-      if (this.initiativesSvc.initiative.stageId === 3) {
+      // console.log(resp)
+      // if (this.initiativesSvc.initiative.stageId === 3) {
         this.validateAllSections();
-      }
+      // }
     })
     this._dataControlService.loadMenu$.emit('full-proposal');
 
@@ -186,16 +188,14 @@ export class StagesMenuComponent implements OnInit {
   }
 
   validateAllSections() {
-
-    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-      // console.log("%c Green check: ",  'color: #f4f814',resp.response);
-
+    // console.log(this.initiativesSvc.initiative)
+    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
       Object.keys(resp.response).map(key => {
-        let stageId = 3;
-        if (!resp.response[key]) return null;
+        let stageId = this.initiativesSvc.initiative.stageId;
+        if (!resp.response[key] || resp.response[key] == null) return;
         let sectionId = resp.response[key]?.sectionId;
         let ValidateGI = resp.response[key]?.validation;
-        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId).sections.find(item => item.sectionId == sectionId)
+        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId)?.sections.find(item => item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
         let subSectionsToMap = resp.response[key].subSections;
         if (!subSectionsToMap) return;

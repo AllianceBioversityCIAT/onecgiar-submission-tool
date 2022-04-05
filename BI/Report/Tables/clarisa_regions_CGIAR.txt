@@ -1,0 +1,15 @@
+let
+    Source = PowerPlatform.Dataflows(null),
+    Workspaces = Source{[Id="Workspaces"]}[Data],
+    #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3" = Workspaces{[workspaceId="8a7c2b8c-a98f-462a-8f52-738086a7a0d3"]}[Data],
+    #"6f477b22-50ab-492f-af54-33d3d80d85f1" = #"8a7c2b8c-a98f-462a-8f52-738086a7a0d3"{[dataflowId="6f477b22-50ab-492f-af54-33d3d80d85f1"]}[Data],
+    clarisa_regions_cgiar_ = #"6f477b22-50ab-492f-af54-33d3d80d85f1"{[entity="clarisa_regions_cgiar",version=""]}[Data],
+    #"Removed Columns" = Table.RemoveColumns(clarisa_regions_cgiar_,{"created_at", "updated_at"}),
+    #"Parsed JSON" = Table.TransformColumns(#"Removed Columns",{{"countries", Json.Document}}),
+    #"Expanded countries" = Table.ExpandListColumn(#"Parsed JSON", "countries"),
+    #"Expanded countries1" = Table.ExpandRecordColumn(#"Expanded countries", "countries", {"code", "name", "isoAlpha2"}, {"code", "name.1", "isoAlpha2"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Expanded countries1",{{"name.1", "Country Name"}, {"name", "Region Name CGIAR"}, {"acronym", "Region Acronym"}}),
+    #"Merged Queries" = Table.NestedJoin(#"Renamed Columns", {"isoAlpha2"}, #"Countries and Regions", {"Alpha 2 Code"}, "Countries and Regions", JoinKind.LeftOuter),
+    #"Expanded Countries and Regions" = Table.ExpandTableColumn(#"Merged Queries", "Countries and Regions", {"Alpha 3 Code"}, {"Alpha 3 Code"})
+in
+    #"Expanded Countries and Regions"

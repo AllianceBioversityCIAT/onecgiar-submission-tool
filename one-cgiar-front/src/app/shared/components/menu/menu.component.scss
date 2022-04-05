@@ -316,13 +316,13 @@ mat-list-item:focus {
         h2, h4 {
             margin-bottom: 0;
         }
-        .pending{
+        .editing{
             background-color: yellow;
         }
         .on_hold{
             background-color: blue;
         }
-        .steped_up{
+        .submitted{
             background-color: orange;
         }
         .approved{

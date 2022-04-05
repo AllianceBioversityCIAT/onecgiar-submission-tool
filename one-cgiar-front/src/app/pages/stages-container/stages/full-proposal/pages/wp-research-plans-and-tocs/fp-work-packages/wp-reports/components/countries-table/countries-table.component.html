@@ -22,16 +22,8 @@
                 <ng-template pTemplate="body" let-customer>
                     <tr>
                         <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
-                            <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
-                                <span >{{customer[item]?'Yes':'No'}}</span>
-                            </div>
-    
-                            <div *ngIf="item ==='website'">
-                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'not available'}}</a>
-                            </div>
-    
-                            <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
-                                <span >{{customer[item] || 'not available'}}</span>
+                            <div>
+                                <span>{{customer[item !== 'code'?item:'clarisa_country_code'] || 'not available'}}</span>
                             </div>
                             
                         </td>
