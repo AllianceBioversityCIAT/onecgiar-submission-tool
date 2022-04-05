@@ -54,7 +54,11 @@ export class WpTocComponent implements OnInit {
     document.getElementById(htmlId).style.display = 'flex';
     document.getElementById('loading'+i).style.display = 'none'
     new Viewer(document.getElementById('image'+i), {
-      toolbar: 0,
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
       navbar: 0
     });
   }

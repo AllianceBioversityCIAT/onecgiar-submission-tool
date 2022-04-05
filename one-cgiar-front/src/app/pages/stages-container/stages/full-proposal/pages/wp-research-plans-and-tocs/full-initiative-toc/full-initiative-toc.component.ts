@@ -50,7 +50,11 @@ export class FullInitiativeTocComponent implements OnInit {
     document.getElementById(htmlId).style.display = 'flex';
     document.getElementById('loading').style.display = 'none'
     new Viewer(document.getElementById('image'), {
-      toolbar: 0,
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
       navbar: 0
     });
     this.imageIsLoaded=true;
