@@ -1024,13 +1024,19 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     try {
       melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
-
+      
       if (melia_plan) {
-        newMelia.id = melia_plan.meliaId;
+
+        console.log(melia_plan);
+        
+        newMelia.id = melia_plan.id;
         newMelia.melia_plan = melia_plan.melia_plan;
-        newMelia.active = melia_plan.meliaActive
-          ? melia_plan.meliaActive
+        newMelia.active = melia_plan.active
+          ? melia_plan.active
           : true;
+
+          console.log(newMelia);
+          
 
         if (newMelia.id !== null) {
           var savedMelia = await meliaRepo.findOne(newMelia.id);
@@ -1609,7 +1615,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const tableC = {results: results};
 
       return {
-        meliaPlan: meliaPlan[0],
+        meliaPlan: meliaPlan,
         resultFramework: {tableA, tableB, tableC}
       };
     } catch (error) {
