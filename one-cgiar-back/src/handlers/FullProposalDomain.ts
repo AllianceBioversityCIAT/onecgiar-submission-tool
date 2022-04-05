@@ -1,6 +1,6 @@
 import {get} from 'https';
 import _ from 'lodash';
-import { getRepository, In } from 'typeorm';
+import {getRepository, In} from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
@@ -124,8 +124,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
-          }
+                 WHERE initvStgId = ${
+                   initvStg.id ? initvStg.id : initvStg[0].id
+                 }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -151,8 +152,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
-          }
+                  WHERE wp.initvStgId =  ${
+                    initvStg.id ? initvStg.id : initvStg[0].id
+                  }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -214,7 +216,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                   and work_package_id = ${id}
                 `;
 
-      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -385,7 +387,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || { name: null };
+      ) || {name: null};
 
       // if null, create object
       if (generalInformationId == null) {
@@ -726,7 +728,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedPjectionBenefits, upsertedDimensions };
+      return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -926,7 +928,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedImpactStrategies, upsertedPartners };
+      return {upsertedImpactStrategies, upsertedPartners};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1076,36 +1078,36 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-      if (melia_plan) {
-        melia_plan.updateFiles =
-          typeof melia_plan.updateFiles === 'undefined'
-            ? []
-            : melia_plan.updateFiles;
-        if (melia_plan.updateFiles.length > 0) {
-          for (let index = 0; index < melia_plan.updateFiles.length; index++) {
-            const updateFile = melia_plan.updateFiles[index];
+      // if (melia_plan) {
+      //   melia_plan.updateFiles =
+      //     typeof melia_plan.updateFiles === 'undefined'
+      //       ? []
+      //       : melia_plan.updateFiles;
+      //   if (melia_plan.updateFiles.length > 0) {
+      //     for (let index = 0; index < melia_plan.updateFiles.length; index++) {
+      //       const updateFile = melia_plan.updateFiles[index];
 
-            newFiles.id = updateFile.id;
-            newFiles.active = updateFile.active ? updateFile.active : true;
-            newFiles.meliaId = updateFile.meliaId;
-            newFiles.section = updateFile.section;
-            newFiles.url = updateFile.urlDB;
-            newFiles.name = updateFile.originalname;
+      //       newFiles.id = updateFile.id;
+      //       newFiles.active = updateFile.active ? updateFile.active : true;
+      //       newFiles.meliaId = updateFile.meliaId;
+      //       newFiles.section = updateFile.section;
+      //       newFiles.url = updateFile.urlDB;
+      //       newFiles.name = updateFile.originalname;
 
-            if (newFiles.id !== null) {
-              var savedFiles = await filesRepo.findOne(newFiles.id);
+      //       if (newFiles.id !== null) {
+      //         var savedFiles = await filesRepo.findOne(newFiles.id);
 
-              filesRepo.merge(savedFiles, updateFile);
+      //         filesRepo.merge(savedFiles, updateFile);
 
-              upsertedFile = await filesRepo.save(savedFiles);
-            } else {
-              upsertedFile = await filesRepo.save(newFiles);
-            }
-          }
-        }
-      }
+      //         upsertedFile = await filesRepo.save(savedFiles);
+      //       } else {
+      //         upsertedFile = await filesRepo.save(newFiles);
+      //       }
+      //     }
+      //   }
+      // }
 
-      return { upsertedMelia, upsertedFile };
+      return {upsertedMelia, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1139,7 +1141,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
       let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return { upsertedTableA, upsertedTableB, upsertedTableC };
+      return {upsertedTableA, upsertedTableB, upsertedTableC};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1370,7 +1372,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      return { upsertedOutcomesIndicators };
+      return {upsertedOutcomesIndicators};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1578,14 +1580,14 @@ export class ProposalHandler extends InitiativeStageHandler {
         impactAreasIndicatorsQuery
       );
       const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
-      const tableA = { globalTargets, impactAreasIndicators, sdgTargets };
+      const tableA = {globalTargets, impactAreasIndicators, sdgTargets};
 
       //TABLE B
 
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const tableB = { actionAreasOutcomesIndicators };
+      const tableB = {actionAreasOutcomesIndicators};
 
       //TABLE C
 
@@ -1604,7 +1606,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       return {
         meliaPlan: meliaPlan[0],
-        resultFramework: { tableA, tableB, tableC }
+        resultFramework: {tableA, tableB, tableC}
       };
     } catch (error) {
       console.log(error);
@@ -1808,7 +1810,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedManagePlan, upsertedFile };
+      return {upsertedManagePlan, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2010,12 +2012,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-          return op.risk_assessment_id === risk.id;
-        }))
+          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+            return op.risk_assessment_id === risk.id;
+          }))
       );
 
-      return { upsertedRiskAssessment };
+      return {upsertedRiskAssessment};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2142,7 +2144,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedHumanResources, upsertedFile };
+      return {upsertedHumanResources, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2163,7 +2165,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async upsertInitiativeTeam(
     humanResourcesId,
     initvTeam
-  ): Promise<{ upsertedInitiativeTeam: any }> {
+  ): Promise<{upsertedInitiativeTeam: any}> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
     const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
@@ -2211,7 +2213,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedInitiativeTeam };
+      return {upsertedInitiativeTeam};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2328,7 +2330,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
-              console.log(val)
+              console.log(val);
               _year.active = true;
               _year.year = key;
               _year.value = val;
@@ -2405,7 +2407,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             : financialRSObject.id;
         fResource.financial_type_id =
           financialRSObject.financial_type_id == null ||
-            financialRSObject.financial_type_id == ''
+          financialRSObject.financial_type_id == ''
             ? null
             : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
@@ -2437,7 +2439,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           financialResources: financialResource
         }));
 
-        console.log(yearsUpsert.map((y) => y.year))
+        console.log(yearsUpsert.map((y) => y.year));
         const foundYears = await financialResourcesYearRepo.find({
           where: {
             year: In(yearsUpsert.map((y) => y.year)),
@@ -2445,28 +2447,25 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         });
 
-
         for (let index = 0; index < yearsUpsert.length; index++) {
           const yUpsert = yearsUpsert[index];
 
-          if (foundYears.find(fY => fY.year == yUpsert.year)) {
-            let fYearIndex = foundYears.findIndex(fY => fY.year == yUpsert.year);
+          if (foundYears.find((fY) => fY.year == yUpsert.year)) {
+            let fYearIndex = foundYears.findIndex(
+              (fY) => fY.year == yUpsert.year
+            );
             foundYears[fYearIndex].active = yUpsert.active;
             foundYears[fYearIndex].value = yUpsert.value;
             upsertedYears.push(foundYears[fYearIndex]);
-          }
-          else {
+          } else {
             upsertedYears.push(yUpsert);
             // const uY = yearsUpsert[index];
             // for (let index = 0; index < yearsUpsert.length; index++) {
             // }
           }
-
         }
 
         upsertedYears = await financialResourcesYearRepo.save(upsertedYears);
-
-
 
         // if (foundYears.length > 0) {
         //   for (let index = 0; index < foundYears.length; index++) {
@@ -2585,7 +2584,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedPolicyCompliance };
+      return {upsertedPolicyCompliance};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2675,7 +2674,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedInnovationPackages };
+      return {upsertedInnovationPackages};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2776,7 +2775,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         for (let index = 0; index < toc.length; index++) {
           const element = toc[index];
 
-          newTocs.id = null;
+          newTocs.id = element.id;
           newTocs.toc_id = element.tocId;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
@@ -2784,16 +2783,16 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.work_package = element.work_package_acronym;
           newTocs.work_package_id = element.work_package_id;
           newTocs.active = element.active ? element.active : true;
-
           newTocs.initvStgId = initvStg.id;
 
-          var savedInnovationPackages: any = await tocsRepo.find({
-            where: { toc_id: newTocs.toc_id }
+          var savedTocs: any = await tocsRepo.find({
+            where: {id:newTocs.id,toc_id: newTocs.toc_id}
           });
-          if (savedInnovationPackages.length > 0) {
-            tocsRepo.merge(savedInnovationPackages, newTocs);
 
-            savedToc = await tocsRepo.save(savedInnovationPackages);
+          if (savedTocs.length > 0) {
+            tocsRepo.merge(savedTocs, newTocs);
+
+            savedToc = await tocsRepo.save(savedTocs);
 
             results[index] = savedToc;
           } else {
@@ -2804,7 +2803,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-      return { savedTocs: results };
+      return {savedTocs: results};
     } catch (error) {
       console.log(error);
       throw new BaseError(
