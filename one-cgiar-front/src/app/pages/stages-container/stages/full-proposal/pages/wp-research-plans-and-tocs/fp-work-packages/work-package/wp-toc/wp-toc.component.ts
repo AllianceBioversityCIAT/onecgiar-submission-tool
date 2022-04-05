@@ -14,7 +14,7 @@ declare var $
 export class WpTocComponent implements OnInit {
   toctxtData:string;
   linkIsgenerated=false;
-  imageIsLoaded=false;
+  // imageIsLoaded=false;
   txtIsLoaded=false;
   tocList = [];
   serviceIsConsumed = false;
@@ -47,15 +47,18 @@ export class WpTocComponent implements OnInit {
 
   }
 
-  imageLoaded(htmlId){
+  imageLoaded(htmlId,i){
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
-    this.imageIsLoaded=true;
+    document.getElementById('loading'+i).style.display = 'none'
+
+    // this.imageIsLoaded=true;
   }
 
-  imageError(){
+  imageError(i){
     console.log("errorrer");
-    this.imageIsLoaded=false;
+    document.getElementById('loading'+i).style.display = 'none'
+    // this.imageIsLoaded=false;
   }
 
   checkExpandClass(htmlId){
