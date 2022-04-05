@@ -41,9 +41,7 @@ export class MeliaPlanComponent implements OnInit {
   getMelia(){
     this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
       let melia = resp?.response?.melia?.meliaPlan;
-      console.log(resp);
-      this.data.id = melia?.id ? this.data.id : null;
-      console.log(melia);
+      this.data.id = melia?.id ? melia?.id : null;
       this.secionForm.controls['example'].setValue(melia?.melia_plan);
     },
     err=>{console.log(err);}
@@ -73,7 +71,6 @@ export class MeliaPlanComponent implements OnInit {
 
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 500);
     })
   }
