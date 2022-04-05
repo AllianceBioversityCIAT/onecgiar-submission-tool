@@ -1615,7 +1615,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const tableC = {results: results};
 
       return {
-        meliaPlan: meliaPlan,
+        meliaPlan: meliaPlan[0],
         resultFramework: {tableA, tableB, tableC}
       };
     } catch (error) {
