@@ -40,8 +40,8 @@ export class MeliaPlanComponent implements OnInit {
 
   getMelia(){
     this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
+      let melia = resp.response.melia.meliaPlan;
       console.log(resp);
-      let melia = resp.response.meliaData;
       this.data.id = melia?.id;
       console.log(melia);
       this.secionForm.controls['example'].setValue(melia?.melia_plan);
