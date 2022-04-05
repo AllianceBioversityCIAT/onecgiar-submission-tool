@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import { MetaDataHandler } from '../handlers/MetaDataDomain';
-import { ResponseHandler } from '../handlers/Response';
-import { getRepository } from 'typeorm';
-import { InitiativesByStages } from '../entity/InititativesByStages';
-import { Stages } from '../entity/Stages';
-import { BaseError } from '../handlers/BaseError';
+import {Request, Response} from 'express';
+import {MetaDataHandler} from '../handlers/MetaDataDomain';
+import {ResponseHandler} from '../handlers/Response';
+import {getRepository} from 'typeorm';
+import {InitiativesByStages} from '../entity/InititativesByStages';
+import {Stages} from '../entity/Stages';
+import {BaseError} from '../handlers/BaseError';
 
 /**
  * METADATA
@@ -18,7 +18,7 @@ import { BaseError } from '../handlers/BaseError';
  */
 export async function getMenu(req: Request, res: Response) {
   // get initiative by stage id from client
-  const { initiativeId } = req.params;
+  const {initiativeId} = req.params;
 
   try {
     // create new Meta Data object
@@ -42,7 +42,7 @@ export async function getMenu(req: Request, res: Response) {
       });
     });
 
-    res.json(new ResponseHandler('MetaData:Menu', { stages }));
+    res.json(new ResponseHandler('MetaData:Menu', {stages}));
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }
@@ -54,18 +54,18 @@ export async function getMenu(req: Request, res: Response) {
 
 export async function getValidations(req: Request, res: Response) {
   // get initiative by stage id from client
-  const { initiativeId, stageId } = req.params;
+  const {initiativeId, stageId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({ where: { id: stageId } });
+    const stage = await stageRepo.findOne({where: {id: stageId}});
 
     // get intiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: { initiative: initiativeId, stage }
+      where: {initiative: initiativeId, stage}
     });
     // if not intitiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
@@ -87,13 +87,15 @@ export async function getValidations(req: Request, res: Response) {
         validatorsObject = {
           generalInformation: await metaData.pre_validationGI(),
           initialTheoryChange: await metaData.pre_validationInitialTOC(),
-          initiativeStatements: await metaData.pre_validationInitiativeStatements(),
-          workPackgesGeoScope: await metaData.pre_validationWorkPackagesGeoScope(),
+          initiativeStatements:
+            await metaData.pre_validationInitiativeStatements(),
+          workPackgesGeoScope:
+            await metaData.pre_validationWorkPackagesGeoScope()
           // results: null,
           // innovations: null,
           // keyPartners: null,
           // globalBudget: null
-        }
+        };
         break;
       case 'Full Proposal':
         validatorsObject = {
@@ -106,19 +108,16 @@ export async function getValidations(req: Request, res: Response) {
           policyCompliance: await metaData.validationPolicyCompliance(),
           impactStrategies: await metaData.validationImpactStrategies(),
           workPackages: await metaData.validationWorkPackages(),
-          context: await metaData.validationContext(),
-        }
+          context: await metaData.validationContext()
+        };
         break;
 
       default:
         break;
     }
 
-
     /*******************************************/
-    res.json(
-      new ResponseHandler('Green Checks:Menu', validatorsObject)
-    );
+    res.json(new ResponseHandler('Green Checks:Menu', validatorsObject));
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }

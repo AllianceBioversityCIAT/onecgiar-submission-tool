@@ -1024,19 +1024,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     try {
       melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
-      
-      if (melia_plan) {
 
-        console.log(melia_plan);
-        
+      if (melia_plan) {
         newMelia.id = melia_plan.id;
         newMelia.melia_plan = melia_plan.melia_plan;
-        newMelia.active = melia_plan.active
-          ? melia_plan.active
-          : true;
-
-          console.log(newMelia);
-          
+        newMelia.active = melia_plan.active ? melia_plan.active : true;
 
         if (newMelia.id !== null) {
           var savedMelia = await meliaRepo.findOne(newMelia.id);
@@ -1415,9 +1407,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       let upsertResults: any;
       tableC.results =
-      typeof tableC.results === 'undefined'
-        ? []
-        : tableC.results;
+        typeof tableC.results === 'undefined' ? [] : tableC.results;
 
       for (let index = 0; index < tableC.results.length; index++) {
         const result = tableC.results[index];
@@ -2796,7 +2786,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.initvStgId = initvStg.id;
 
           var savedTocs: any = await tocsRepo.find({
-            where: {id:newTocs.id,toc_id: newTocs.toc_id}
+            where: {id: newTocs.id, toc_id: newTocs.toc_id}
           });
 
           if (savedTocs.length > 0) {
