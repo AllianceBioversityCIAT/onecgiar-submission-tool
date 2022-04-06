@@ -15,7 +15,7 @@
     </div>
 
  
-    <app-button-edit-or-delete type="delete" (action)="deleteCurrentInitiativeTeamItem()"></app-button-edit-or-delete>
+    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly" type="delete" (action)="deleteCurrentInitiativeTeamItem()"></app-button-edit-or-delete>
    
 </div>
 
