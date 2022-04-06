@@ -12,38 +12,76 @@
         <div class="title">
             Initiative and Work package outcomes, outputs and indicators
         </div>
-        <div class="no-data" *ngIf="!resultData?.indicators?.length">
+        <div class="no-data" *ngIf="!resultDataList?.length">
             No information
         </div>
-        <div class="result_title" *ngIf="resultData?.indicators?.length">
-             <div style="font-size: 11px;"><strong style="margin-right: 5px; font-size: 14px;">Result title:</strong>{{this.resultData?.result_title}}</div>
+
+        <div style="height: 10px;"></div>
+
+        <div *ngFor="let resultData of resultDataList" >
+
+
+            <app-collapsible-container [collapse]="item?.collapse">
+                <div header><strong style="margin-right: 5px; font-size: 14px;">Result title:</strong>{{this.resultData?.result_title}}</div>
+                <div content>
+                    <div class="values">
+                        <div class="gray-bar"></div>
+                        <div *ngFor="let indicator of resultData?.indicators" class="value-item ibd-shadow-1">
+            
+                            <div class="data_container ibd-shadow-1 orange" style="grid-column: span 2;">
+                                <div><strong>Indicator name: </strong>{{indicator?.name}}</div>
+                                <div><strong>Unit of measurement: </strong>{{indicator?.unit_measurement}}</div>
+                            </div>
+            
+                            <div class="data_container ibd-shadow-1 blue">
+                                <div><strong>Data source: </strong>{{indicator?.data_source}}</div>
+                                <div><strong>Data collection_method: </strong>{{indicator?.data_collection_method}}</div>
+                                <div style="column-span: all"><strong>Frequency data collection: </strong>{{indicator?.frequency_data_collection}}</div>
+                            </div>
+            
+                            <div class="data_container ibd-shadow-1 green">
+                                <div><strong>Baseline value: </strong>{{indicator?.baseline_value}}</div>
+                                <div><strong>Baseline year: </strong>{{indicator?.baseline_year}}</div>
+                                <div><strong>Target value: </strong>{{indicator?.target_value}}</div>
+                                <div><strong>Target year: </strong>{{indicator?.target_year}}</div>
+                            </div>
+                    
+                        </div>
+                    </div>
+                </div>
+            </app-collapsible-container>
+
+
+
+            <!-- <div class="result_title" *ngIf="resultData?.indicators?.length">
+                <div style="font-size: 11px;"><strong style="margin-right: 5px; font-size: 14px;">Result title:</strong>{{this.resultData?.result_title}}</div>
+           </div>
+           <div class="values">
+               <div class="gray-bar"></div>
+               <div *ngFor="let indicator of resultData?.indicators" class="value-item ibd-shadow-1">
+   
+                   <div class="data_container ibd-shadow-1 orange" style="grid-column: span 2;">
+                       <div><strong>Indicator name: </strong>{{indicator?.name}}</div>
+                       <div><strong>Unit of measurement: </strong>{{indicator?.unit_measurement}}</div>
+                   </div>
+   
+                   <div class="data_container ibd-shadow-1 blue">
+                       <div><strong>Data source: </strong>{{indicator?.data_source}}</div>
+                       <div><strong>Data collection_method: </strong>{{indicator?.data_collection_method}}</div>
+                       <div style="column-span: all"><strong>Frequency data collection: </strong>{{indicator?.frequency_data_collection}}</div>
+                   </div>
+   
+                   <div class="data_container ibd-shadow-1 green">
+                       <div><strong>Baseline value: </strong>{{indicator?.baseline_value}}</div>
+                       <div><strong>Baseline year: </strong>{{indicator?.baseline_year}}</div>
+                       <div><strong>Target value: </strong>{{indicator?.target_value}}</div>
+                       <div><strong>Target year: </strong>{{indicator?.target_year}}</div>
+                   </div>
+           
+   
+               </div>
+           </div> -->
         </div>
-        <div class="values">
-            <div class="gray-bar"></div>
-            <div *ngFor="let indicator of resultData?.indicators" class="value-item ibd-shadow-1">
 
-                <div class="data_container ibd-shadow-1 orange" style="grid-column: span 2;">
-                    <div><strong>Indicator name: </strong>{{indicator?.name}}</div>
-                    <div><strong>Unit of measurement: </strong>{{indicator?.unit_measurement}}</div>
-                </div>
-
-                <div class="data_container ibd-shadow-1 blue">
-                    <div><strong>Data source: </strong>{{indicator?.data_source}}</div>
-                    <div><strong>Data collection_method: </strong>{{indicator?.data_collection_method}}</div>
-                    <div style="column-span: all"><strong>Frequency data collection: </strong>{{indicator?.frequency_data_collection}}</div>
-                </div>
-
-                <div class="data_container ibd-shadow-1 green">
-                    <div><strong>Baseline value: </strong>{{indicator?.baseline_value}}</div>
-                    <div><strong>Baseline year: </strong>{{indicator?.baseline_year}}</div>
-                    <div><strong>Target value: </strong>{{indicator?.target_value}}</div>
-                    <div><strong>Target year: </strong>{{indicator?.target_year}}</div>
-                </div>
-        
-
- 
-                <!-- <div><strong>Title: </strong>{{indicator?.value}}</div> -->
-            </div>
-        </div>
     </div>
 </div>
