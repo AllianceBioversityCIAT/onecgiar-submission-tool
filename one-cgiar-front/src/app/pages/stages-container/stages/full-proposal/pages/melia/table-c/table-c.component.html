@@ -15,7 +15,7 @@
         <div class="no-data" *ngIf="!resultData?.indicators?.length">
             No information
         </div>
-        <div class="result_title">
+        <div class="result_title" *ngIf="resultData?.indicators?.length">
              <div style="font-size: 11px;"><strong style="margin-right: 5px; font-size: 14px;">Result title:</strong>{{this.resultData?.result_title}}</div>
         </div>
         <div class="values">
