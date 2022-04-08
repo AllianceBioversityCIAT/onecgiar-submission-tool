@@ -24,6 +24,7 @@ import { MetaDataHandler } from '../handlers/MetaDataDomain';
 import { Submissions } from '../entity/Submissions';
 import { SubmissionsStatus } from '../entity/SubmissionStatus';
 import { Statuses } from '../entity/Statuses';
+import { ReplicationDomain } from '../handlers/ReplicationDomain';
 
 require('dotenv').config();
 
@@ -244,19 +245,30 @@ export const upsertSummary = async (req: Request, res: Response) => {
  * @param res
  * @returns
  */
-export const replicationProcess = async (req: Request, res: Response) => {
-  const { currentInitiativeId } = req.params;
-  const { replicationStageId } = req.body;
+export const duplicationProcess = async (req: Request, res: Response) => {
+  const { initiativeId, stageId } = req.params;
   const stageRepo = getRepository(Stages);
+  const initvStgRepo = getRepository(InitiativesByStages);
 
   try {
+
+    // get current initiative by stage
+    const initvStg = await initvStgRepo.findOne({ where: { initiative: initiativeId, stage: stageId } });
+    
+    const replication = new ReplicationDomain(initvStg.id)
+    const [duplicated, original] = await replication.duplication(initiativeId, stageId);
+
+
+
+
+
     // get replicate to stage
     // const stage = await stageRepo.findOne(replicationStageId);
     // // get replicate to stage description
     // const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
     // // data pushed to next stage
     // const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-    // res.json(new ResponseHandler('Replication data', fordwarded));
+    res.json(new ResponseHandler('Replication data', [duplicated, original]));
   } catch (error) {
     console.log(error);
     if (
@@ -518,9 +530,9 @@ export async function getInitiatives(req: Request, res: Response) {
     let initiatives = await initiativeshandler.getAllInitiatives();
 
     if (initiatives.length == 0)
-      res.json(new ResponseHandler('All Initiatives whit status active.', {initiatives: []}));
+      res.json(new ResponseHandler('All Initiatives whit status active.', { initiatives: [] }));
     else {
-      res.json(new ResponseHandler('All Initiatives whit status active.', {initiatives}));
+      res.json(new ResponseHandler('All Initiatives whit status active.', { initiatives }));
     }
   } catch (error) {
     console.log(error);
@@ -545,9 +557,9 @@ export async function getInitiatives(req: Request, res: Response) {
  * @param req
  * @param res
  */
- export async function getInitiativesAllStatus(req: Request, res: Response) {
+export async function getInitiativesAllStatus(req: Request, res: Response) {
   try {
- 
+
 
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
@@ -556,9 +568,9 @@ export async function getInitiatives(req: Request, res: Response) {
     let initiatives = await initiativeshandler.getAllInitiativesAllStatus();
 
     if (initiatives.length == 0)
-      res.json(new ResponseHandler('All Initiatives whit all status.', {initiatives: []}));
+      res.json(new ResponseHandler('All Initiatives whit all status.', { initiatives: [] }));
     else {
-      res.json(new ResponseHandler('All Initiatives whit all status.', {initiatives}));
+      res.json(new ResponseHandler('All Initiatives whit all status.', { initiatives }));
     }
   } catch (error) {
     console.log(error);
@@ -1158,6 +1170,77 @@ export const submitInitiative = async (req: Request, res: Response) => {
 /**
  *
  * @param req params:{ initiativeId, stageId }
+ * @param body params:{ description, statusId }
+ * @param res
+ */
+ export const updateSubmissionStatusByInitiative = async (
+  req: Request,
+  res: Response
+) => {
+  const { initiativeId, stageId } = req.params;
+  const { description, statusId } = req.body;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const submissionStatusRepo = getRepository(SubmissionsStatus);
+
+  try {
+    // get initiaitive by stage
+    const initvStg = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, stage: stageId }
+    });
+    const metaData = new MetaDataHandler(initvStg.id.toString());
+    const validateSbSts = await metaData.validationSubmissionStatuses();
+
+    // get current user
+    const { userId } = res.locals.jwtPayload;
+
+    //validate if **assessor** or admin is doing assessment
+    const assessmentUser = await validateSbSts.isAssessor(userId);
+    // validate if initiative by stage is completed
+    await validateSbSts.isComplete();
+    // validate  if status is available or submission is not completed yet
+    const { submission, newSubStatus, newStatusxInitv } = await validateSbSts.validateStatus(statusId);
+
+    newSubStatus.submission = submission;
+    newSubStatus.description = description;
+    newSubStatus.userId = assessmentUser.user.id;
+    newSubStatus.first_name = assessmentUser.user.first_name;
+    newSubStatus.last_name = assessmentUser.user.last_name;
+    const updatedStatus = await submissionStatusRepo.save(newSubStatus);
+
+    // update status in initiative by stage
+    initvStg.status = newStatusxInitv;
+    await initvStgRepo.save(initvStg);
+
+    const statusS = await submissionStatusRepo.findOne({
+      where: { id: newSubStatus.id, active: 1 },
+      relations: ['submission']
+    });
+
+    return res.json(
+      new ResponseHandler('Initiative submission status updated', {
+        updatedSubmission: statusS
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
  * @param res
  */
 export const getAssessmentStatus = async (req: Request, res: Response) => {
@@ -1249,76 +1332,7 @@ export const getSubmission = async (req: Request, res: Response) => {
 };
 
 
-/**
- *
- * @param req params:{ initiativeId, stageId }
- * @param body params:{ description, statusId }
- * @param res
- */
-export const updateSubmissionStatusByInitiative = async (
-  req: Request,
-  res: Response
-) => {
-  const { initiativeId, stageId } = req.params;
-  const { description, statusId } = req.body;
-  const initvStgRepo = getRepository(InitiativesByStages);
-  const submissionStatusRepo = getRepository(SubmissionsStatus);
 
-  try {
-    // get initiaitive by stage
-    const initvStg = await initvStgRepo.findOne({
-      where: { initiative: initiativeId, stage: stageId }
-    });
-    const metaData = new MetaDataHandler(initvStg.id.toString());
-    const validateSbSts = await metaData.validationSubmissionStatuses();
-
-    // get current user
-    const { userId } = res.locals.jwtPayload;
-
-    //validate if **assessor** or admin is doing assessment
-    const assessmentUser = await validateSbSts.isAssessor(userId);
-    // validate if initiative by stage is completed
-    await validateSbSts.isComplete();
-    // validate  if status is available or submission is not completed yet
-    const { submission, newSubStatus, newStatusxInitv } = await validateSbSts.validateStatus(statusId);
-
-    newSubStatus.submission = submission;
-    newSubStatus.description = description;
-    newSubStatus.userId = assessmentUser.user.id;
-    newSubStatus.first_name = assessmentUser.user.first_name;
-    newSubStatus.last_name = assessmentUser.user.last_name;
-    const updatedStatus = await submissionStatusRepo.save(newSubStatus);
-
-    // update status in initiative by stage
-    initvStg.status = newStatusxInitv;
-    await initvStgRepo.save(initvStg);
-
-    const statusS = await submissionStatusRepo.findOne({
-      where: { id: newSubStatus.id, active: 1 },
-      relations: ['submission']
-    });
-
-    return res.json(
-      new ResponseHandler('Initiative submission status updated', {
-        updatedSubmission: statusS
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    if (
-      error instanceof QueryFailedError ||
-      error instanceof EntityNotFoundError
-    ) {
-      new APIError(
-        'Bad Request',
-        HttpStatusCode.BAD_REQUEST,
-        true,
-        error.message
-      );
-    }
-    return res.status(error.httpCode).json(error);
-  }
-};
 
 /// -*----*- ///
 

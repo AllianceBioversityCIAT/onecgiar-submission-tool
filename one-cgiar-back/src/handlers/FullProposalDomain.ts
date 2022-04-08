@@ -102,7 +102,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       // contex sql query
       const contextQuery = `SELECT * FROM context WHERE initvStgId = ${initvStgId}`;
-
+      console.log(contextQuery)
       const context = await this.queryRunner.query(contextQuery);
 
       return context[0];

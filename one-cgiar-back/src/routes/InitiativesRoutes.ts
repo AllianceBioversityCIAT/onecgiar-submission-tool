@@ -774,11 +774,11 @@ router.get('/preview-partners/', [checkJwt], initiatives.getPreviewPartners);
  * Submit and replication
  */
 
-// replicate to next stage
+// duplicate current initiative by stage
 router.post(
-  '/replica/:currentInitiativeId([0-9]+)',
+  '/duplication/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt],
-  initiatives.replicationProcess
+  initiatives.duplicationProcess
 );
 
 /**
