@@ -1,67 +1,91 @@
-// .general-information-container {
-//     display: flex;
-//     align-items: center;
-//     flex-direction: column;
-//     width: 90%;
-//     margin: 1rem auto;
-// }
-.leads_grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
-    grid-gap: 10px;
-    .lead_content_grid{
+.leads_grid {
+    display: flex;
+    flex-wrap: wrap;
+    // grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+
+    .lead_content_grid {
         display: flex;
         justify-content: space-between;
+        gap: 20px;
     }
 }
-.blue_border{
+
+.blue_border {
     position: relative;
     box-shadow: 0 10px 20px #087b8327, 0 6px 6px #087b8328;
     width: auto;
-    border-radius: 10px; 
+    border-radius: 10px;
     border: solid 3px #087b8362;
     overflow: hidden;
-    .alert_container{
+
+    .alert_container {
         padding: 20px;
     }
-    .local_container{
+
+    .local_container {
         display: grid;
         grid-template-columns: 1fr 30px 1fr;
         padding: 25px;
-        .rule{
+
+        .rule {
             width: 5px;
             height: 100%;
             background-color: #c4c4c4;
             align-self: center;
         }
-        .data_list{
-            .list_name{
+
+        .data_list {
+            .list_name {
                 font-size: 1.2em;
                 font-weight: 700;
                 text-align: center;
                 color: var(--ibdc-tertiary-color);
             }
-            .full_list{
-                .element{
+
+            .full_list {
+                max-height: 400px;
+                overflow-y: scroll;
+
+                .element {
                     margin-top: 5px;
+                }
+
+                &::-webkit-scrollbar {
+                    width: 10px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 10px;
+                }
+
+                /* Handle */
+                &::-webkit-scrollbar-thumb {
+                    background: #888;
+                    border-radius: 10px;
+                }
+
+                /* Handle on hover */
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #555;
                 }
             }
         }
-        
-    
-    }
- }
 
-  
+
+    }
+}
+
 .general-information-title {
     font-size: 1.4em;
     padding: 1rem 0;
 }
-  
+
 .general-information-form {
     width: 100%;
 }
-    
+
 .general-information-full-width {
     width: 100%;
 }
@@ -75,13 +99,12 @@
     color: #666666;
     font-size: 0.8rem;
 }
-  
+
 .general-information-save {
     display: flex;
     justify-content: flex-end;
 }
-  
 
-.icon_cont{
+.icon_cont {
     position: relative;
 }

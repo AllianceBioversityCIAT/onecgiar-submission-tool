@@ -152,35 +152,24 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
+  /**
+   * VALIDATIONS (GREEN CHECKS) PRE CONCEPT
+   * SECTIONS:
+   * 1. General Information.
+   * 2. Initial Theory Change.
+   * 3. Initiative Statements.
+   * 4. Work Packges Geo Scope. - validation Level WP
+   * 5. Results.
+   * 6. Innovations.
+   * 7. Key Partners.
+   * 8. Global Budget.
+   */
 
   /**
-  * VALIDATIONS (GREEN CHECKS) PRE CONCEPT
-  * SECTIONS:
-  * 1. General Information.
-  * 2. Initial Theory Change.
-  * 3. Initiative Statements.
-  * 4. Work Packges Geo Scope. - validation Level WP
-  * 5. Results.
-  * 6. Innovations.
-  * 7. Key Partners.
-  * 8. Global Budget.
-  */
-
-  /**
- * Validation General Information (Summary Table)
- * @returns pre_validationGI (True or False)
- *
- */
+   * Validation General Information (Summary Table)
+   * @returns pre_validationGI (True or False)
+   *
+   */
   async pre_validationGI() {
     try {
       /* eslint-disable */
@@ -213,17 +202,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       return validationGI[0];
     } catch (error) {
-      throw new BaseError('Get validations pre concept GI', 400, error.message, false);
+      throw new BaseError(
+        'Get validations pre concept GI',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
   /**
-* Validation Initial Theory of Change
-* @returns pre_validationInitialTOC (True or False)
-*
-*/
+   * Validation Initial Theory of Change
+   * @returns pre_validationInitialTOC (True or False)
+   *
+   */
   async pre_validationInitialTOC() {
-
     try {
       /* eslint-disable */
       let initialTOCSQL = ` 
@@ -250,24 +243,29 @@ export class MetaDataHandler extends InitiativeStageHandler {
       WHERE ini.id = ${this.initvStgId_}
       AND sec.stageId= ini.stageId
       AND sec.description='initial-theory-of-change'
-      `
+      `;
       var validationInitTOC = await this.queryRunner.query(initialTOCSQL);
 
-      validationInitTOC[0].validation = parseInt(validationInitTOC[0].validation);
+      validationInitTOC[0].validation = parseInt(
+        validationInitTOC[0].validation
+      );
 
       return validationInitTOC[0];
     } catch (error) {
-      throw new BaseError('Get validations pre concept initial ToC', 400, error.message, false);
+      throw new BaseError(
+        'Get validations pre concept initial ToC',
+        400,
+        error.message,
+        false
+      );
     }
-
-
   }
 
   /**
-* Validation Initiative statements
-* @returns pre_validationInitiativeStatements (True or False)
-*
-*/
+   * Validation Initiative statements
+   * @returns pre_validationInitiativeStatements (True or False)
+   *
+   */
 
   async pre_validationInitiativeStatements() {
     try {
@@ -320,22 +318,31 @@ export class MetaDataHandler extends InitiativeStageHandler {
     WHERE ini.id =  ${this.initvStgId_}
     AND sec.stageId= ini.stageId
     AND sec.description='initiative-statements'`;
-      var validationInitStatments = await this.queryRunner.query(validationInitStatmntsSQL);
+      var validationInitStatments = await this.queryRunner.query(
+        validationInitStatmntsSQL
+      );
 
-      validationInitStatments[0].validation = parseInt(validationInitStatments[0].validation);
+      validationInitStatments[0].validation = parseInt(
+        validationInitStatments[0].validation
+      );
 
       return validationInitStatments[0];
     } catch (error) {
-      console.log(error)
-      throw new BaseError('Get validations pre concept intiatives statements', 400, error.message, false);
+      console.log(error);
+      throw new BaseError(
+        'Get validations pre concept intiatives statements',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
   /**
-* Validation Work paclagaes and geographic scope
-* @returns pre_validationWorkPackagesGeoScope (True or False)
-*
-*/
+   * Validation Work paclagaes and geographic scope
+   * @returns pre_validationWorkPackagesGeoScope (True or False)
+   *
+   */
 
   async pre_validationWorkPackagesGeoScope() {
     try {
@@ -347,7 +354,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var workPackage = {
         validation: null,
         sectionId: null,
-        description: null,
+        description: null
       };
       if (allWorkPackages.length > 0) {
         // Get Work packages per initiative
@@ -399,7 +406,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
           } else {
             workPackage = null;
           }
-
         }
       } else {
         workPackage = null;
@@ -407,7 +413,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       return workPackage;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new BaseError(
         'Get validations Work packages',
         400,
@@ -416,25 +422,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
    * VALIDATIONS (GREEN CHECKS) FULL PROPOSAL
@@ -1948,14 +1935,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
     
     try {
-
       let submission = await submissionRepo.findOne({
-        where: { initvStg, active: 1 }
+        where: {initvStg, active: 1}
       });
 
       return {
         isComplete: async function () {
-
           try {
             // Get current stage
             const currentStage = await stageRepo.findOne(initvStg.stageId);
@@ -1965,32 +1950,51 @@ export class MetaDataHandler extends InitiativeStageHandler {
             switch (currentStage.description) {
               case 'Pre Concept':
                 validatedSections = {
-                  GeneralInformation: (await handler.pre_validationGI()).validation,
-                  InitialTheoryChange: (await handler.pre_validationInitialTOC()).validation,
-                  InitiativeStatements: (await handler.pre_validationInitiativeStatements()).validation,
-                  WorkPackgesGeoScope: 1,
+                  GeneralInformation: (await handler.pre_validationGI())
+                    .validation,
+                  InitialTheoryChange: (
+                    await handler.pre_validationInitialTOC()
+                  ).validation,
+                  InitiativeStatements: (
+                    await handler.pre_validationInitiativeStatements()
+                  ).validation,
+                  WorkPackgesGeoScope: 1
                   // WorkPackgesGeoScope: (await handler.pre_validationWorkPackagesGeoScope()).validation,
                   // missing section validations
                   // Results: 0,
                   // Innovations: 0,
                   // KeyPartners: 0,
                   // GlobalBudget: 0
-                }
-                if (Object.keys(validatedSections).length !== Object.values(validatedSections).reduce((a: any, b: any) => a + b)) {
-                  throw new APIError('Unauthorized', HttpStatusCode.UNAUTHORIZED, true, 'Initiattive is not completed yet. Unavailable to assess.');
+                };
+                if (
+                  Object.keys(validatedSections).length !==
+                  Object.values(validatedSections).reduce(
+                    (a: any, b: any) => a + b
+                  )
+                ) {
+                  throw new APIError(
+                    'Unauthorized',
+                    HttpStatusCode.UNAUTHORIZED,
+                    true,
+                    'Initiattive is not completed yet. Unavailable to assess.'
+                  );
                 }
                 break;
               case 'Full Proposal':
-                console.log('proposal')
+                console.log('proposal');
                 break;
 
               default:
-                throw new APIError('NOT_FOUND', HttpStatusCode.NOT_FOUND, true, 'Initiattive by stage null');
+                throw new APIError(
+                  'NOT_FOUND',
+                  HttpStatusCode.NOT_FOUND,
+                  true,
+                  'Initiattive by stage null'
+                );
                 break;
             }
-
           } catch (error) {
-            console.log(error)
+            console.log(error);
             throw new APIError(
               'Bad request',
               HttpStatusCode.BAD_REQUEST,
@@ -1998,7 +2002,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
               error.message
             );
           }
-
         },
         validateStatus: async (newStatusId: any) => {
           // if intiative not submitted throw error
@@ -2032,7 +2035,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           // get current submussion statuses by initiative
           const currentInitvSubStatuses = await subStsRepo.find({
-            where: { submission }
+            where: {submission}
           });
           // get new status if already exists in submission
           const foundSubStatus = currentInitvSubStatuses.find(
@@ -2054,7 +2057,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
             subStatus.submission = submission;
             // if new status equals to approved, mark as completed submission
             if (newStatusxInitv.status == 'Approved') {
-              // update submission to complete 
+              // update submission to complete
               submission.complete = true;
               submission = await submissionRepo.save(submission);
 
@@ -2065,7 +2068,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               }
             }
             // update submission status
-            subStatus = await subStsRepo.save(subStatus)
+            subStatus = await subStsRepo.save(subStatus);
             // respond: submission, new submission status, new status for initiative (global status)
             return {
               submission,
@@ -2075,7 +2078,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
           }
         },
         isAssessor: async function (userId) {
-          const user = await usersRepo.findOne(userId, { relations: ['roles'] });
+          const user = await usersRepo.findOne(userId, {relations: ['roles']});
           if (!user) {
             throw new APIError(
               'User not found',
@@ -2084,7 +2087,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Bad request'
             );
           }
-          if (user.roles.find(r => r.acronym == 'ADM')) {
+          if (user.roles.find((r) => r.acronym == 'ADM')) {
             return {
               available: true,
               user

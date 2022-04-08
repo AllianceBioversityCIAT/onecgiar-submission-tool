@@ -6,6 +6,8 @@ import { environment } from '../../../../../../../../../../environments/environm
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
+import Viewer from 'viewerjs';
+
 @Component({
   selector: 'app-wp-toc',
   templateUrl: './wp-toc.component.html',
@@ -14,7 +16,7 @@ declare var $
 export class WpTocComponent implements OnInit {
   toctxtData:string;
   linkIsgenerated=false;
-  imageIsLoaded=false;
+  // imageIsLoaded=false;
   txtIsLoaded=false;
   tocList = [];
   serviceIsConsumed = false;
@@ -47,15 +49,23 @@ export class WpTocComponent implements OnInit {
 
   }
 
-  imageLoaded(htmlId){
+  imageLoaded(htmlId,i){
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
-    this.imageIsLoaded=true;
+    document.getElementById('loading'+i).style.display = 'none'
+    new Viewer(document.getElementById('image'+i), {
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
+      navbar: 0
+    });
   }
 
-  imageError(){
+  imageError(i){
     console.log("errorrer");
-    this.imageIsLoaded=false;
+    document.getElementById('loading'+i).style.display = 'none'
   }
 
   checkExpandClass(htmlId){

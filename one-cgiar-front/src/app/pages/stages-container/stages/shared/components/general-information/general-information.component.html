@@ -36,10 +36,10 @@
                     <div>
                         <mat-card>
                             <div class="lead_content_grid">
-                                <div>
+                                <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Lead name', value:this.body?.generalInformation.first_name||'Not available'}"></ibdc-simple-text>
                                 </div>
-                                <div>
+                                <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not available'}"></ibdc-simple-text>
                                 </div>
                                 <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
@@ -54,10 +54,10 @@
                     <div>
                         <mat-card>
                             <div class="lead_content_grid">
-                                <div>
+                                <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Deputy name', value: this.body?.generalInformation.co_first_name||'Not available'}"></ibdc-simple-text>
                                 </div>
-                                <div>
+                                <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not available'}"></ibdc-simple-text>
                                 </div>
                                 <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">

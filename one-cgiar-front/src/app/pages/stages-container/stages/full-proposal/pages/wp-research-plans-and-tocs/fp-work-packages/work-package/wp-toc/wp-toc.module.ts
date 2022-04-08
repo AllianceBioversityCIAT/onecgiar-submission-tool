@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
 import { SkeletonsModule } from '../../../../../../../../../shared/components/skeletons/skeletons.module';
+import { EditTocButtonModule } from '../../../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { SkeletonsModule } from '../../../../../../../../../shared/components/sk
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
-    UtilsModule
+    UtilsModule,
+    EditTocButtonModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

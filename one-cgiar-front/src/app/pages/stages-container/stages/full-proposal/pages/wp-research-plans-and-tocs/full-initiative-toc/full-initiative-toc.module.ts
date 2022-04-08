@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ButtonModule } from 'primeng/button';
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule,
-    ButtonModule
+    ButtonModule,
+    EditTocButtonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,11 +1,11 @@
 
 <span *ngIf="sectionForm?.status && !this._initiativesService.initiative.readonly">
-    <ibdc-alert *ngIf="sectionForm?.status == 'INVALID' || !this.extraValidation" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'alert'}"></ibdc-alert>
+    <ibdc-alert *ngIf="sectionForm?.status == 'INVALID' || !this.extraValidation" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'info'}"></ibdc-alert>
     <ibdc-alert *ngIf="sectionForm?.status == 'INVALID' || !this.extraValidation" class="animate__animated animate__bounceIn"  [options]="{htmlText: this._dataControlService.incompleteFieldsText, type:'warning'}"></ibdc-alert>
     <ibdc-alert *ngIf="sectionForm?.status == 'VALID'   && this.extraValidation" class="animate__animated animate__bounceIn"  [options]="{text: 'This section is completed', type:'success'}"></ibdc-alert> 
 </span>
 <span *ngIf="!sectionForm?.status && !this._initiativesService.initiative.readonly">
-    <ibdc-alert *ngIf="!this.extraValidation" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'alert'}"></ibdc-alert>
+    <ibdc-alert *ngIf="!this.extraValidation" [options]="{htmlText: this._dataControlService.fieldAsteriskInfo, type:'info'}"></ibdc-alert>
     <ibdc-alert *ngIf="!this.extraValidation" class="animate__animated animate__bounceIn"  [options]="{htmlText: this._dataControlService.incompleteFieldsText, type:'warning'}"></ibdc-alert>
     <ibdc-alert *ngIf="this.extraValidation" class="animate__animated animate__bounceIn"  [options]="{text: 'This section is completed', type:'success'}"></ibdc-alert>
 </span>

@@ -69,7 +69,6 @@ const router = Router();
  */
 router.get('/', [checkJwt], initiatives.getInitiatives);
 
-
 // get initiatives whit all status
 /**
  * @api {get} /initiatives Initiatives - Request all Initiatives whit all status
@@ -130,7 +129,7 @@ router.get('/', [checkJwt], initiatives.getInitiatives);
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Initiatives:", error }
  */
- router.get('/all-status', [checkJwt], initiatives.getInitiativesAllStatus);
+router.get('/all-status', [checkJwt], initiatives.getInitiativesAllStatus);
 
 // get initiatives by user
 router.get(

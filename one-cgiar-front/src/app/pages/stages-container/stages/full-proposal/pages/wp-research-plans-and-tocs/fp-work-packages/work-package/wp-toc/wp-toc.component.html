@@ -1,12 +1,9 @@
-<!-- <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
-        *ngIf="showForm"> -->
+<app-edit-toc-button url="https://toc.mel.cgiar.org/"></app-edit-toc-button>
 
-<!-- <form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row"> -->
-    <!-- <div class="col-12">
-      <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
-      <br>
-    </div> -->
+<ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert>
+
 <div class="toc_list">
+
   <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
 
@@ -15,19 +12,17 @@
       </ibdc-simple-text>
     </div>
 
-    <div class="col-12 toc_image" [ngStyle]="{'cursor': checkExpandClass('diagram'+i) ? 'zoom-in' : 'zoom-out'}" [id]="'diagram'+i">
-      <div class="image_container" (click)="expandImage('diagram'+i)">
+    <div class="loading-container rotating" [id]="'loading'+i">
+      <div class="material-icons">cached</div>
+    </div>
+
+    <div class="col-12 toc_image" [id]="'diagram'+i">
+      <div class="image_container">
         <section-sub-title name="Diagram"></section-sub-title>
-        <img (load)="imageLoaded('diagram'+i)" (error)="imageError()" [src]="this.toc.diagram" alt="" srcset="" width="100%">
+        <img [id]="'image'+i" (load)="imageLoaded('diagram'+i,i)" (error)="imageError(i)" [src]="this.toc.diagram" alt="" srcset="" width="100%">
       </div>
     </div>
 
   </div>
+  
 </div>
-
-
-
-
-    
-
-<!-- </form> -->
