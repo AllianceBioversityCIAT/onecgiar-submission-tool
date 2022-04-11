@@ -1550,10 +1550,12 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND outi.active =1;
         `,
         resultsQuery = `
-     SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
-       FROM results re
-      WHERE re.initvStgId = ${initvStg.id}
-        AND re.active =1;
+        SELECT re.initvStgId,re.id,rt.name,re.result_type_id,re.result_title,re.is_global,re.active
+        FROM results re
+        join results_types rt 
+          on rt.id = re.result_type_id 
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1;
         `,
         resultsIndicatorsQuery = `
         SELECT *
