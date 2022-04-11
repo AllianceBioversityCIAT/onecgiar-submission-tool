@@ -8,15 +8,33 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./table-c.component.scss']
 })
 export class TableCComponent implements OnInit {
-  resultDataList: ResultData[];
+  // resultDataList: ResultData[];
+  resultDataList: any[] = [];
+
   htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
     this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
-      this.resultDataList = resp;
-      console.log(this.resultDataList);
+      // this.resultDataList = resp;
+      // console.log(this.resultDataList);
+      this.convertDataToUseInTable(resp);
     })
+  }
+
+  convertDataToUseInTable(resp:ResultData[]){
+    console.log(resp)
+    resp.map(result=>{
+
+      // this.resultDataList.push();
+      result.indicators.map(indicator=>{
+        this.resultDataList.push({result_title: result?.result_title,type_name: result?.type_name, ...indicator});
+      })
+    })
+
+    console.log(this.resultDataList)
+
+
   }
 
 }
@@ -29,6 +47,7 @@ interface ResultData {
   result_title: string;
   is_global: number;
   active: number;
+  type_name: string;
   indicators: Indicator[];
 }
 

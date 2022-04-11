@@ -18,10 +18,50 @@
 
         <div style="height: 10px;"></div>
 
-        <div *ngFor="let resultData of resultDataList" >
+
+        <table *ngIf="resultDataList?.length">
+            <tr>
+              <th class="t_col_5">Result type</th>
+              <th class="t_col_1">Result title</th>
+              <th class="t_col_2">Indicator name</th>
+              <th class="t_col_3">Unit of measurement</th>
+              <th class="t_col_4">Data source</th>
+              <th class="t_col_5">Data collection_method</th>
+              <th class="t_col_6">Frequency data collection</th>
+              <th class="t_col_7">Baseline value</th>
+              <th class="t_col_8">Baseline year</th>
+              <th class="t_col_9">Target value</th>
+              <th class="t_col_10">Target year</th>
 
 
-            <app-collapsible-container [collapse]="item?.collapse">
+            </tr>
+            <tr *ngFor="let resultData of resultDataList">
+              <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
+              <td class="t_col_5">{{resultData?.type_name}}</td>
+              <td class="t_col_1">{{resultData?.result_title}}</td>
+              <td class="t_col_2">{{resultData?.name}}</td>
+              <td class="t_col_3">{{resultData?.unit_measurement}}</td>
+              <td class="t_col_4">{{resultData?.data_source}}</td>
+              <td class="t_col_5">{{resultData?.data_collection_method}}</td>
+              <td class="t_col_6">{{resultData?.frequency_data_collection}}</td>
+              <td class="t_col_7">{{resultData?.baseline_value}}</td>
+              <td class="t_col_8">{{resultData?.baseline_year}}</td>
+              <td class="t_col_9">{{resultData?.target_value}}</td>
+              <td class="t_col_10">{{resultData?.target_year}}</td>
+            </tr>
+        </table>
+
+
+        <div *ngFor="let resultData of resultDataList" [hidden]="true">
+
+
+
+
+
+
+
+
+            <app-collapsible-container [collapse]="item?.collapse" [hidden]="true">
                 <div header><strong style="margin-right: 5px; font-size: 14px;">Result title:</strong>{{this.resultData?.result_title}}</div>
                 <div content>
                     <div class="values">
