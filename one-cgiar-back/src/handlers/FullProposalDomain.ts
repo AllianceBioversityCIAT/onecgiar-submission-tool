@@ -209,7 +209,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         tocQuery = `
-                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
                   FROM tocs
                  WHERE active = 1
                   and type = 0
@@ -1414,6 +1414,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         let newResults = new entities.Results();
 
+        newResults.id = result.id ? result.id : null;
         newResults.initvStgId = initvStgId;
         newResults.result_type_id = result.result_type;
         newResults.result_title = result.result_title;
@@ -1424,6 +1425,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         resultsArray.push(upsertResults);
 
+        result.indicators =
+          typeof result.indicators === 'undefined' ? [] : result.indicators;
         for (let index = 0; index < result.indicators.length; index++) {
           const indicators = result.indicators[index];
           let newResultsIndicators = new entities.ResultsIndicators();
@@ -1457,24 +1460,82 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
         // Geo Scope
-        for (let index = 0; index < result.geo_scope.regions.length; index++) {}
+        result.geo_scope =
+          typeof result.geo_scope === 'undefined' ? [] : result.geo_scope;
+          result.geo_scope.regions =
+          typeof result.geo_scope.regions === 'undefined' ? [] : result.geo_scope.regions;
+        for (let index = 0; index < result.geo_scope.regions.length; index++) {
+          const regions = result.geo_scope.regions[index];
+          let newResultsRegions = new entities.ResultsRegions();
 
+          newResultsRegions.id = regions.id ? regions.id : null;
+          newResultsRegions.results_id = upsertResults.id;
+          newResultsRegions.region_id = regions.region_id;
+
+          resultsRegionsArray.push(
+            toolsSbt.mergeData(
+              resultsRegionsRepo,
+              ` 
+                    SELECT *
+                      FROM results_regions
+                     WHERE region_id = ${newResultsRegions.region_id} 
+                       and results_id = ${newResultsRegions.results_id}`,
+              newResultsRegions
+            )
+          );
+        }
+
+        result.geo_scope.countries =
+        typeof result.geo_scope.countries === 'undefined' ? [] : result.geo_scope.countries;
         for (
           let index = 0;
           index < result.geo_scope.countries.length;
           index++
-        ) {}
+        ) {
+          const countries = result.geo_scope.countries[index];
+          let newResultsCountries = new entities.ResultsCountries();
+
+          newResultsCountries.id = countries.id ? countries.id : null;
+          newResultsCountries.results_id = upsertResults.id;
+          newResultsCountries.country_id = countries.country_id;
+
+          resultsCountriesArray.push(
+            toolsSbt.mergeData(
+              resultsCountriesRepo,
+              ` 
+                    SELECT *
+                      FROM results_countries
+                     WHERE country_id = ${newResultsCountries.country_id} 
+                       and results_id = ${newResultsCountries.results_id}`,
+              newResultsCountries
+            )
+          );
+        }
       }
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+      let mergeResultsRegions = await Promise.all(resultsRegionsArray);
+      let mergeResultsCountries = await Promise.all(resultsCountriesArray);
 
       // Save data
       let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
 
-      return {upsertResults: resultsArray, upsertResultsIndicators};
+      let upsertResultsRegions: any = await resultsRegionsRepo.save(
+        mergeResultsRegions
+      );
+      let upsertResultsCountries: any = await resultsCountriesRepo.save(
+        mergeResultsCountries
+      );
+
+      return {
+        upsertResults: resultsArray,
+        upsertResultsIndicators,
+        upsertResultsRegions,
+        upsertResultsCountries
+      };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1550,7 +1611,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND outi.active =1;
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.name,re.result_type_id,re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.type_name,re.result_type_id,re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
@@ -1564,7 +1625,20 @@ export class ProposalHandler extends InitiativeStageHandler {
           FROM results re
          WHERE re.initvStgId = ${initvStg.id}
            AND re.active =1);
-        `;
+        `,
+        resultsRegionsQuery = `    SELECT *
+        FROM results_regions reg
+       WHERE reg.results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1);`,
+        resultsCountriesQuery = `
+        SELECT *
+        FROM results_countries co
+       WHERE co.results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1);`;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
@@ -1597,11 +1671,25 @@ export class ProposalHandler extends InitiativeStageHandler {
       const resultsIndicators = await this.queryRunner.query(
         resultsIndicatorsQuery
       );
+      const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const resultsCountries = await this.queryRunner.query(
+        resultsCountriesQuery
+      );
 
       results.map((res) => {
         res['indicators'] = resultsIndicators.filter((resi) => {
           return res.id === resi.results_id;
         });
+
+        const reg = resultsRegions.filter((reg) => {
+          return res.id === reg.results_id;
+        });
+
+        const cou = resultsCountries.filter((co) => {
+          return res.id === co.results_id;
+        });
+
+        res['geo_scope'] = {regions: reg, countries: cou};
       });
 
       const tableC = {results: results};
@@ -2847,7 +2935,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       // retrieve preview partners
       const tocQuery = `
-      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
         FROM tocs
        WHERE initvStgId = ${initvStg.id}
         and active = 1
