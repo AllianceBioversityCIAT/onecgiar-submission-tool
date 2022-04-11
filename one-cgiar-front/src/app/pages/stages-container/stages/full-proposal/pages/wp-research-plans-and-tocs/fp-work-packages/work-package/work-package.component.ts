@@ -4,6 +4,7 @@ import { WpDataControlService } from '../services/wp-data-control.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { AuthService } from '../../../../../../../../shared/services/auth.service';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class WorkPackageComponent implements OnInit {
     private _dataControlService:DataControlService,
     private router:Router,
     public _initiativesService:InitiativesService,
-    private _interactionsService : InteractionsService
+    private _interactionsService : InteractionsService,
+    public _authService: AuthService
   ){
 
   }
