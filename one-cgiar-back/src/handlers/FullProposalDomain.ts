@@ -1626,15 +1626,19 @@ export class ProposalHandler extends InitiativeStageHandler {
          WHERE re.initvStgId = ${initvStg.id}
            AND re.active =1);
         `,
-        resultsRegionsQuery = `    SELECT *
+        resultsRegionsQuery = `SELECT reg.id,reg.region_id,cr.name as region_name,reg.results_id ,reg.active,reg.created_at,reg.updated_at 
         FROM results_regions reg
+        join clarisa_regions cr 
+          on cr.um49Code  = reg.region_id 
        WHERE reg.results_id in (SELECT re.id
         FROM results re
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1);`,
         resultsCountriesQuery = `
-        SELECT *
+        SELECT co.id,co.country_id,cc.name as country_name,co.results_id ,co.active ,co.created_at, co.updated_at 
         FROM results_countries co
+        join clarisa_countries cc 
+          on cc.code  = co.country_id 
        WHERE co.results_id in (SELECT re.id
         FROM results re
        WHERE re.initvStgId = ${initvStg.id}
