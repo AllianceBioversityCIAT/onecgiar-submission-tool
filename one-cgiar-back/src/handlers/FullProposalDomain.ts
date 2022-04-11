@@ -1611,7 +1611,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND outi.active =1;
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.type_name,re.result_type_id,re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.name as type_name,re.result_type_id,re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
