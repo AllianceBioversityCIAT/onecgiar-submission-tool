@@ -6,9 +6,11 @@
 
 
     <!-- <p>The following information is in read mode . Please refer to the <a href="http://">theory of change platform</a> and the <a href="http://">MELIA Guidance</a> to edit it.</p> -->
-
     <br>
-    <div class="box ibd-shadow-2">
+    <div class="box ibd-shadow-2" #boxTable>
+        <div class="close_button" *ngIf="boxTable?.classList.contains('boxExpanded');" (click)="this.toggleExpandTable(boxTable)">
+            <i class="material-icons">cancel</i>
+        </div>
         <div class="title">
             Initiative and Work package outcomes, outputs and indicators
         </div>
@@ -18,38 +20,58 @@
 
         <div style="height: 10px;"></div>
 
+        <div class="table_button">
 
-        <table *ngIf="resultDataList?.length">
-            <tr>
-              <th class="t_col_5">Result type</th>
-              <th class="t_col_1">Result title</th>
-              <th class="t_col_2">Indicator name</th>
-              <th class="t_col_3">Unit of measurement</th>
-              <th class="t_col_4">Data source</th>
-              <th class="t_col_5">Data collection_method</th>
-              <th class="t_col_6">Frequency data collection</th>
-              <th class="t_col_7">Baseline value</th>
-              <th class="t_col_8">Baseline year</th>
-              <th class="t_col_9">Target value</th>
-              <th class="t_col_10">Target year</th>
+        </div>
+
+        <div class="table_buttons" *ngIf="resultDataList?.length">
+            <button pButton type="button" (click)="this.toggleExpandTable(boxTable)" style="width: max-content;">{{boxTable?.classList.contains('boxExpanded')? 'Minimize view':'Open in full screen'}}</button>
+            <button type="button" pButton pRipple (click)="exportBasicExcel()" label="Export .xlsx" icon="pi pi-file-excel" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+        </div>
 
 
-            </tr>
-            <tr *ngFor="let resultData of resultDataList">
-              <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
-              <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name}}</td>
-              <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title}}</td>
-              <td class="t_col_2">{{resultData?.name}}</td>
-              <td class="t_col_3">{{resultData?.unit_measurement}}</td>
-              <td class="t_col_4">{{resultData?.data_source}}</td>
-              <td class="t_col_5">{{resultData?.data_collection_method}}</td>
-              <td class="t_col_6">{{resultData?.frequency_data_collection}}</td>
-              <td class="t_col_7">{{resultData?.baseline_value}}</td>
-              <td class="t_col_8">{{resultData?.baseline_year}}</td>
-              <td class="t_col_9">{{resultData?.target_value}}</td>
-              <td class="t_col_10">{{resultData?.target_year}}</td>
-            </tr>
-        </table>
+        <div class="box_container">
+            <table *ngIf="resultDataList?.length">
+                <thead>
+                    <tr>
+                        <th class="t_col_5">Result type</th>
+                        <th class="t_col_1">Result title</th>
+                        <th class="t_col_1">Geographic scope</th>
+                        <th class="t_col_2">Indicator name</th>
+                        <th class="t_col_3">Unit of measurement</th>
+                        <th class="t_col_4">Data source</th>
+                        <th class="t_col_5">Data collection_method</th>
+                        <th class="t_col_6">Frequency data collection</th>
+                        <th class="t_col_7">Baseline value</th>
+                        <th class="t_col_8">Baseline year</th>
+                        <th class="t_col_9">Target value</th>
+                        <th class="t_col_10">Target year</th>
+                      </tr>
+                </thead>
+    
+    
+                <tbody>
+                    <tr *ngFor="let resultData of resultDataList">
+                        <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
+                        <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not available'}}</td>
+                        <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not available'}}</td>
+                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not available'"></td>
+                        <td class="t_col_2">{{resultData?.name || 'Not available'}}</td>
+                        <td class="t_col_3">{{resultData?.unit_measurement  || 'Not available'}}</td>
+                        <td class="t_col_4">{{resultData?.data_source || 'Not available'}}</td>
+                        <td class="t_col_5">{{resultData?.data_collection_method || 'Not available'}}</td>
+                        <td class="t_col_6">{{resultData?.frequency_data_collection || 'Not available'}}</td>
+                        <td class="t_col_7">{{resultData?.baseline_value || 'Not available'}}</td>
+                        <td class="t_col_8">{{resultData?.baseline_year || 'Not available'}}</td>
+                        <td class="t_col_9">{{resultData?.target_value || 'Not available'}}</td>
+                        <td class="t_col_10">{{resultData?.target_year || 'Not available'}}</td>
+                      </tr>
+                </tbody>
+    
+    
+            </table>
+        </div>
+
 
 
         <div *ngFor="let resultData of resultDataList" [hidden]="true">

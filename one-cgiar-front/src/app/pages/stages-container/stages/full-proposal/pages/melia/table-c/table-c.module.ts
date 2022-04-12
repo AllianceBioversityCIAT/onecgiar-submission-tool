@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
 import {TableModule} from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {TableModule} from 'primeng/table';
     UtilsModule,
     IbdAngularComponentsModule,
     CollapsibleContainerModule,
-    TableModule
+    TableModule,
+    ButtonModule
   ]
 })
 export class TableCModule { }
