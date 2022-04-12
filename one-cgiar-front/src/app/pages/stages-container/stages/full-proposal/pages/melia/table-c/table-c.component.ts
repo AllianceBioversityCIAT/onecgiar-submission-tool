@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
+import { ManageExcelService } from '../../../services/manage-excel.service';
 
 @Component({
   selector: 'app-table-c',
@@ -10,26 +11,39 @@ import { map } from 'rxjs/operators';
 export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
-
+  listToSave : any[] = [];
   htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
-  constructor( private _initiativesService:InitiativesService) { }
+  constructor( 
+    private _initiativesService:InitiativesService,
+    private _manageExcelService:ManageExcelService
+    ) { }
 
   ngOnInit(): void {
     this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
+      this.listToSave = resp;
     })
+  }
+
+  toggleExpandTable(boxTable:HTMLElement){
+    boxTable.classList.toggle('boxExpanded')
   }
 
   convertDataToUseInTable(resp:ResultData[]){
     console.log(resp)
     resp.map(result=>{
       result.indicators.map((indicator,index)=>{
-        console.log(index);
-        console.log(result.indicators.length+" "+(index+1))
         if (index == 0) {
-          this.resultDataList.push({result_title: result?.result_title,type_name: result?.type_name, rowSpan: result?.indicators?.length , ...indicator});
+          this.resultDataList.push(
+            {
+              result_title: result?.result_title,
+              type_name: result?.type_name, 
+              rowSpan: result?.indicators?.length, 
+              geo_scope: this.compactGeoData(result['geo_scope']),
+              ...indicator
+            });
         }else{
           this.resultDataList.push({...indicator});
         }
@@ -38,8 +52,73 @@ export class TableCComponent implements OnInit {
     })
 
     console.log(this.resultDataList)
+  }
 
+  compactGeoData(geo_scope){
+    let textResult:string = '';
+    let {countries,regions} = geo_scope;
 
+    if (regions?.length) {
+      textResult+= '<strong>Regions: </strong>'
+    }
+    regions?.map((item,index)=>{
+      textResult+= `${item?.region_name}${index+1 == regions.length ? '' : ', '} `
+    })
+
+    if (regions?.length) {
+      textResult+= '<br><br><strong>Countries: </strong>'
+    }
+    countries?.map((item,index)=>{
+      textResult+= `${item?.country_name}${index+1 == countries.length ? '' : ', '}`
+    })
+
+    console.log(geo_scope)
+    return textResult;
+    
+  }
+
+  compactGeoDataToExport(geo_scope){
+    let textResult:string = '';
+    let {countries,regions} = geo_scope;
+    if (regions?.length) {
+      textResult+= 'Regions: ('
+    }
+    regions?.map((item,index)=>{
+      textResult+= `${item?.region_name}${index+1 == regions.length ? '' : ', '} `
+    })
+
+    if (regions?.length) {
+      textResult+= ') - Countries: ('
+    }
+    countries?.map((item,index)=>{
+      textResult+= `${item?.country_name}${index+1 == countries.length ? '' : ', '}`
+    })
+    if ( countries?.length) { textResult+= ')';} 
+    console.log(geo_scope)
+    return textResult;
+    
+  }
+
+  exportBasicExcel(){
+    let list = [];
+    this.listToSave.map(result=>{
+      result.indicators.map((indicator)=>{
+          list.push({
+            result_title: result?.result_title,
+            type_name: result?.type_name,
+            geo_scope: this.compactGeoDataToExport(result['geo_scope']),
+            indicatorName: indicator?.name,
+            unit_measurement: indicator?.unit_measurement,
+            data_source: indicator?.data_source,
+            data_collection_method: indicator?.data_collection_method,
+            frequency_data_collection: indicator?.frequency_data_collection,
+            baseline_value: indicator?.baseline_value,
+            baseline_year: indicator?.target_value,
+            target_year: indicator?.target_year
+            });
+      })
+    })
+    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:500},{wpx:100},{wpx:90},{wpx:100},{wpx:200},{wpx:200}])
   }
 
 }
