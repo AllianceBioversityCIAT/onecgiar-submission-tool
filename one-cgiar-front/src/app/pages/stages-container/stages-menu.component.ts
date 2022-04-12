@@ -138,14 +138,29 @@ export class StagesMenuComponent implements OnInit {
     /**
      * Validate by roles
      */
-    if (this.user?.roles[0].id === 1) {
-      this.initiativesSvc.initiative.readonly = false;
-      return
-    }
-    if (this.user?.roles[0].id === 4) {
-      this.initiativesSvc.initiative.readonly = true;
-      return
-    }
+
+     this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
+      console.log(resp?.response?.roles[0]?.roleId)
+      this.initiativesSvc.initiative.readonly = resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined? false : this.user?.roles[0].id !== 4 &&  this.user?.roles[0].id != undefined ? false : true;
+      let read = null;
+
+      // if(resp?.response?.roles[0] !== 4){
+      //   console.log("es difere")
+      // }else if(this.user?.roles[0].id !== 4){
+
+      // }
+
+      // console.log(read)
+     })
+
+    // if (this.user?.roles[0].id === 1) {
+    //   this.initiativesSvc.initiative.readonly = false;
+    //   return
+    // }
+    // if (this.user?.roles[0].id === 4) {
+    //   this.initiativesSvc.initiative.readonly = true;
+    //   return
+    // }
 
     /**
      * Validate by initative status
