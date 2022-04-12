@@ -101,12 +101,11 @@ export class InitiativeHandler {
     }
   }
 
-
-    /** Get all initiatives whith all status */
-    async getAllInitiativesAllStatus() {
-      let allInitiatives,
-        stagesInitiatives,
-        initvActiveSQL = ` 
+  /** Get all initiatives whith all status */
+  async getAllInitiativesAllStatus() {
+    let allInitiatives,
+      stagesInitiatives,
+      initvActiveSQL = ` 
           SELECT
           initvStg.id AS initvStgId,
           initiative.id AS id,
@@ -127,7 +126,7 @@ export class InitiativeHandler {
           ON stage.id = initvStg.stageId
           ORDER BY id
           `,
-        initvDetailSQL = `
+      initvDetailSQL = `
           SELECT
           initiative.id AS id,
           initvStg.id AS initvStgId,
@@ -140,23 +139,23 @@ export class InitiativeHandler {
           LEFT JOIN stages stage 
           ON stage.id = initvStg.stageId
           `;
-  
-      try {
-        allInitiatives = await this.queryRunner.query(initvActiveSQL);
-        stagesInitiatives = await this.queryRunner.query(initvDetailSQL);
-  
-        // Map Initiatives
-        allInitiatives.map((active) => {
-          active['stages'] = stagesInitiatives.filter((detail) => {
-            return detail.id === active.id;
-          });
+
+    try {
+      allInitiatives = await this.queryRunner.query(initvActiveSQL);
+      stagesInitiatives = await this.queryRunner.query(initvDetailSQL);
+
+      // Map Initiatives
+      allInitiatives.map((active) => {
+        active['stages'] = stagesInitiatives.filter((detail) => {
+          return detail.id === active.id;
         });
-  
-        return allInitiatives;
-      } catch (error) {
-        throw new BaseError('Get Inititives', 400, error.message, false);
-      }
+      });
+
+      return allInitiatives;
+    } catch (error) {
+      throw new BaseError('Get Inititives', 400, error.message, false);
     }
+  }
 
   /**
    * GET USER PER INITIATIVE

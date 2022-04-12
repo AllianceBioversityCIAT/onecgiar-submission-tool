@@ -17,7 +17,7 @@
 
   <div class="tabs_container">
     <router-outlet></router-outlet>
-    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly" type="delete" (action)="deleteCurrentWP()" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly && this._authService.lsUserRoles.id === 1" type="delete" (action)="deleteCurrentWP()" [confirmDeleteModal]="true"></app-button-edit-or-delete>
   </div>
   
 

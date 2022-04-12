@@ -11,9 +11,10 @@
         inputTitle="Opportunity description" 
         [objectItem]="this.opportunity"  
         [objectAtributteName]="'opportunities_description'"
+        [readOnlyVariable]="this._initiativesService?.initiative.readonly"
         ></ibdc-text-area-field>
     </div>
-    <div class="icon_container" (click)="removeOpportunity()">
+    <div class="icon_container" (click)="removeOpportunity()" *ngIf="!this._initiativesService?.initiative.readonly">
         <span class="material-icons">delete</span>
         <div class="delete_text">Delete</div>
     </div>
