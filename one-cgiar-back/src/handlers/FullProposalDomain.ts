@@ -1468,9 +1468,10 @@ export class ProposalHandler extends InitiativeStageHandler {
           const regions = result.geo_scope.regions[index];
           let newResultsRegions = new entities.ResultsRegions();
 
-          newResultsRegions.id = regions.id ? regions.id : null;
+         // newResultsRegions.id = regions.id ? regions.id : null;
           newResultsRegions.results_id = upsertResults.id;
           newResultsRegions.region_id = regions.region_id;
+          newResultsRegions.active = regions.active;
 
           resultsRegionsArray.push(
             toolsSbt.mergeData(
@@ -1478,7 +1479,7 @@ export class ProposalHandler extends InitiativeStageHandler {
               ` 
                     SELECT *
                       FROM results_regions
-                     WHERE region_id = ${newResultsRegions.region_id} 
+                     WHERE  region_id = ${newResultsRegions.region_id} 
                        and results_id = ${newResultsRegions.results_id}`,
               newResultsRegions
             )
@@ -1495,9 +1496,10 @@ export class ProposalHandler extends InitiativeStageHandler {
           const countries = result.geo_scope.countries[index];
           let newResultsCountries = new entities.ResultsCountries();
 
-          newResultsCountries.id = countries.id ? countries.id : null;
+         // newResultsCountries.id = countries.id ? countries.id : null;
           newResultsCountries.results_id = upsertResults.id;
           newResultsCountries.country_id = countries.country_id;
+          newResultsCountries.active = countries.active;
 
           resultsCountriesArray.push(
             toolsSbt.mergeData(
