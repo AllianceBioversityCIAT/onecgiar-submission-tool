@@ -25,10 +25,15 @@ export class TableCComponent implements OnInit {
   convertDataToUseInTable(resp:ResultData[]){
     console.log(resp)
     resp.map(result=>{
+      result.indicators.map((indicator,index)=>{
+        console.log(index);
+        console.log(result.indicators.length+" "+(index+1))
+        if (index == 0) {
+          this.resultDataList.push({result_title: result?.result_title,type_name: result?.type_name, rowSpan: result?.indicators?.length , ...indicator});
+        }else{
+          this.resultDataList.push({...indicator});
+        }
 
-      // this.resultDataList.push();
-      result.indicators.map(indicator=>{
-        this.resultDataList.push({result_title: result?.result_title,type_name: result?.type_name, ...indicator});
       })
     })
 

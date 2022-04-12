@@ -37,8 +37,8 @@
             </tr>
             <tr *ngFor="let resultData of resultDataList">
               <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
-              <td class="t_col_5">{{resultData?.type_name}}</td>
-              <td class="t_col_1">{{resultData?.result_title}}</td>
+              <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name}}</td>
+              <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title}}</td>
               <td class="t_col_2">{{resultData?.name}}</td>
               <td class="t_col_3">{{resultData?.unit_measurement}}</td>
               <td class="t_col_4">{{resultData?.data_source}}</td>
