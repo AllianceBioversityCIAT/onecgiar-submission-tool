@@ -15,6 +15,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   @Input() institutionsTypesSavedList:any;
   @Input() institutionsTypesDisableList:any;
   display: boolean = false;
+  partner_request_text:string = `<a style="cursor:pointer" target="_blank" class="partner_request_text">If you don't find the partner you are looking for, request to have it added to the list.</a>`;
   button_changing = [
     {
       name:'Scaling',
@@ -85,7 +86,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 
   onSelectTag(item,attributeName){
     if (this._initiativesService.initiative.readonly) return;
-    if ( typeof item[attributeName]  === 'undefined')item[attributeName] = true;
+    if ( item.hasOwnProperty(attributeName)) item[attributeName] = true;
     item[attributeName] = !item[attributeName] 
   }
 
