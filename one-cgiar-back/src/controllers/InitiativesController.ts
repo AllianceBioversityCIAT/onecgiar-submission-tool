@@ -244,19 +244,35 @@ export const upsertSummary = async (req: Request, res: Response) => {
  * @param res
  * @returns
  */
-export const replicationProcess = async (req: Request, res: Response) => {
-  const {currentInitiativeId} = req.params;
-  const {replicationStageId} = req.body;
+export async function replicationProcess(req: Request, res: Response) {
+  const {initiativeId, stageId} = req.params;
+  const {newStage} = req.body;
+  const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
-    // get replicate to stage
-    // const stage = await stageRepo.findOne(replicationStageId);
-    // // get replicate to stage description
-    // const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
-    // // data pushed to next stage
-    // const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-    // res.json(new ResponseHandler('Replication data', fordwarded));
+
+    // get stage
+    const stage:any = await stageRepo.findByIds(newStage);
+
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
+
+     // if not intitiative by stage, throw error
+     if (initvStg == null) {
+      throw new BaseError(
+        'Read Context: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
+
+    console.log(initvStg, newStage);
+
+    return res.json({initvStg, newStage});
   } catch (error) {
     console.log(error);
     if (
@@ -272,7 +288,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
     }
     return res.status(error.httpCode).json(error);
   }
-};
+}
 
 /**
  *
