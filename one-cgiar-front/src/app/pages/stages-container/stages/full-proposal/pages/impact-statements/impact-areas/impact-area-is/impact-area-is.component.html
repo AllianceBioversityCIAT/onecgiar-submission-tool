@@ -51,9 +51,10 @@
         
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button (click)="saveSection()" [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
-        </div>
-
     </form>
+
+    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button (click)="saveSection()" [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
+    </div>
+
 </div>
