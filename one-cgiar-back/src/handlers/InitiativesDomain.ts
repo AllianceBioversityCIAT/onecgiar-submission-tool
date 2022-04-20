@@ -1,8 +1,9 @@
 import {getConnection, getRepository} from 'typeorm';
 import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
-export class InitiativeHandler {
+export class InitiativeHandler extends InitiativeStageHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
 
   async createInitiativesByStage(name?, acronym?, stage?) {
@@ -97,11 +98,11 @@ export class InitiativeHandler {
 
       return allInitiatives;
     } catch (error) {
-      throw new BaseError('Get Inititives', 400, error.message, false);
+      throw new BaseError('Get initiatives', 400, error.message, false);
     }
   }
 
-  /** Get all initiatives whith all status */
+  /** Get all initiatives Whit all status */
   async getAllInitiativesAllStatus() {
     let allInitiatives,
       stagesInitiatives,
@@ -153,7 +154,7 @@ export class InitiativeHandler {
 
       return allInitiatives;
     } catch (error) {
-      throw new BaseError('Get Inititives', 400, error.message, false);
+      throw new BaseError('Get initiatives', 400, error.message, false);
     }
   }
 
@@ -182,7 +183,7 @@ export class InitiativeHandler {
   }
 
   /**
-   * GET METADATA (CLARISA) FROM SUBMISSION TOOL
+   ** GET METADATA (CLARISA) FROM SUBMISSION TOOL
    */
 
   async requestDepthScale(impactIndicatorId) {
@@ -271,61 +272,24 @@ export class InitiativeHandler {
     const querySql = `
         SELECT code,isoAlpha2,name,regionDTO
         FROM clarisa_countries`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
   }
 
   async requestRegions() {
     const querySql = `
         SELECT name,parentRegion,um49Code
         FROM clarisa_regions`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
   }
 
   async requestRegionsCgiar() {
     const querySql = `
         SELECT id,name,acronym
         FROM clarisa_regions_cgiar`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
-  }
-
-  /**
-   * PREVIEW PARTNERS FOR IMPACT STRATEGIES
-   */
-  async requestPreviewPartners() {
-    try {
-      const previewPartnersQuery = `
-            SELECT p.institutions_name as partner_name,JSON_UNQUOTE(ci.data-> "$.websiteLink") as url,ci.acronym as acronym,
-                  ini.official_code as initiative_id,gi.action_area_description as action_area ,
-                  '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
-                  ci.institutionType as organization_type_clarisa,ci.institutionTypeId as clarisa_id,
-                  p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id,
-                  'impact_satatements' as Source
-             FROM impact_strategies i
-             JOIN partners p
-             JOIN clarisa_institutions ci
-             JOIN initiatives_by_stages ist
-             JOIN initiatives ini
-             JOIN general_information gi
-            WHERE i.id = p.impact_strategies_id
-              AND p.institutions_id = ci.code
-              AND i.initvStgId = ist.id
-              AND ist.initiativeId = ini.id
-              AND i.initvStgId = gi.initvStgId
-              AND i.active > 0
-            ORDER BY ini.id asc     
-            `;
-
-      const previewPartners = await this.queryRunner.query(
-        previewPartnersQuery
-      );
-      return previewPartners;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError('Get Preview Partners', 400, error.message, false);
-    }
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
   }
 
   async requestRisks() {
@@ -356,7 +320,7 @@ export class InitiativeHandler {
     }
   }
 
-  async requesProjectedBenefits() {
+  async requestProjectedBenefits() {
     try {
       const querySql = `
             SELECT id as impactAreaId,impactAreaName,impactAreaIndicator,
@@ -385,7 +349,7 @@ export class InitiativeHandler {
     }
   }
 
-  async requesSdgTargets() {
+  async requestSdgTargets() {
     try {
       const querySql = `
       SELECT id, sdg_target_code,sdg_target,sdg
@@ -420,9 +384,40 @@ export class InitiativeHandler {
     }
   }
 
+  /**
+   ** PREVIEW PARTNERS FOR IMPACT STRATEGIES
+   */
+  async requestPreviewPartners() {
+    try {
+      const previewPartnersQuery = `
+            SELECT p.institutions_name as partner_name,JSON_UNQUOTE(ci.data-> "$.websiteLink") as url,ci.acronym as acronym,
+                  ini.official_code as initiative_id,gi.action_area_description as action_area ,
+                  '' partner_id,'' location,'' as organization_type_IATI, '' as network_mapping_codes,
+                  ci.institutionType as organization_type_clarisa,ci.institutionTypeId as clarisa_id,
+                  p.demand,p.innovation,p.scaling,JSON_UNQUOTE(ci.data -> "$.hqLocationISOalpha2") as hq_location_clarisa,i.impact_area_id,
+                  'impact_satatements' as Source
+             FROM impact_strategies i
+             JOIN partners p
+             JOIN clarisa_institutions ci
+             JOIN initiatives_by_stages ist
+             JOIN initiatives ini
+             JOIN general_information gi
+            WHERE i.id = p.impact_strategies_id
+              AND p.institutions_id = ci.code
+              AND i.initvStgId = ist.id
+              AND ist.initiativeId = ini.id
+              AND i.initvStgId = gi.initvStgId
+              AND i.active > 0
+            ORDER BY ini.id asc     
+            `;
 
-  async replicationProcess(){
-
+      const previewPartners = await this.queryRunner.query(
+        previewPartnersQuery
+      );
+      return previewPartners;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Preview Partners', 400, error.message, false);
+    }
   }
-
 }

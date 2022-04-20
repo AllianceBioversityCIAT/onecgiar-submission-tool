@@ -24,6 +24,7 @@ import {MetaDataHandler} from '../handlers/MetaDataDomain';
 import {Submissions} from '../entity/Submissions';
 import {SubmissionsStatus} from '../entity/SubmissionStatus';
 import {Statuses} from '../entity/Statuses';
+import { toInteger } from 'lodash';
 
 require('dotenv').config();
 
@@ -37,7 +38,7 @@ require('dotenv').config();
 /** TEMPORAL */
 /**
  *
- * @param req paramas: { initiativeId, stageId }
+ * @param req params: { initiativeId, stageId }
  * @param res
  * @returns
  */
@@ -52,11 +53,11 @@ export const getSummary = async (req: Request, res: Response) => {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
 
-    // get intiative by stage
+    // get initiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(
         'Summary: Error',
@@ -142,7 +143,7 @@ export const getSummary = async (req: Request, res: Response) => {
 
 /**
  *
- * @param req paramas: { initiativeId, stageId }
+ * @param req params: { initiativeId, stageId }
  * @param res
  * @returns
  */
@@ -169,13 +170,13 @@ export const upsertSummary = async (req: Request, res: Response) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
-    // get intiative by stage
+    // get initiatives by stage
     let initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage},
       relations: ['stage', 'initiative']
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Summary: Error',
@@ -239,40 +240,27 @@ export const upsertSummary = async (req: Request, res: Response) => {
 };
 
 /**
- *
- * @param req paramas: { currentInitiativeId }
- * @param res
+ ** REPLICATION PROCESS
+ * @param req params: { initiativeId,stageId, newStageId}
+ * @param res replicationProcess
  * @returns
  */
 export async function replicationProcess(req: Request, res: Response) {
   const {initiativeId, stageId} = req.params;
-  const {newStage} = req.body;
-  const initvStgRepo = getRepository(InitiativesByStages);
-  const stageRepo = getRepository(Stages);
+  const {newStageId} = req.body;
+
+  // instantiate class InitiativeStageHandler (Domain)
+  const initiative = new InitiativeStageHandler();
 
   try {
+    // Call replication Process from Domain
+    const replicationProcess = await initiative.replicationProcess(
+      toInteger(initiativeId),
+      toInteger(stageId),
+      newStageId
+    );
 
-    // get stage
-    const stage:any = await stageRepo.findByIds(newStage);
-
-    const initvStg = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage: stageId}
-    });
-
-     // if not intitiative by stage, throw error
-     if (initvStg == null) {
-      throw new BaseError(
-        'Read Context: Error',
-        400,
-        `Initiative not found in stage: ${stage.description}`,
-        false
-      );
-    }
-
-
-    console.log(initvStg, newStage);
-
-    return res.json({initvStg, newStage});
+    return res.json(replicationProcess);
   } catch (error) {
     console.log(error);
     if (
@@ -306,11 +294,11 @@ export const addLink = async (req: Request, res: Response) => {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -353,11 +341,11 @@ export async function getInitvStgId(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -390,11 +378,11 @@ export async function getLink(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -431,11 +419,11 @@ export async function addBudget(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add Budget: Error',
@@ -479,11 +467,11 @@ export async function getBudget(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Get budget: Error',
@@ -795,7 +783,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         'UNAUTHORIZED',
         HttpStatusCode.UNAUTHORIZED,
         true,
-        'Role not accesible.'
+        'Role not accessible.'
       );
     }
 
@@ -854,7 +842,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     }
 
     res.json(
-      new ResponseHandler('Assigned user to intiative', {
+      new ResponseHandler('Assigned user to initiative', {
         assignedUser: newUsrByInitv
       })
     );
@@ -1177,7 +1165,7 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     // const stage = await stagesRepo.findOne(stageId);
     // get statuses
     const statuses = await statusesRepo.find({where: {active: true}});
-    // get initiaitive by stage
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
@@ -1226,7 +1214,7 @@ export const getSubmission = async (req: Request, res: Response) => {
   const initvStgRepo = getRepository(InitiativesByStages);
   const submissionRepo = getRepository(Submissions);
   try {
-    // get initiaitive by stage
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
@@ -1267,7 +1255,7 @@ export const updateSubmissionStatusByInitiative = async (
   const submissionStatusRepo = getRepository(SubmissionsStatus);
 
   try {
-    // get initiaitive by stage
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
@@ -1843,7 +1831,7 @@ export async function getProjectedBenefits(req: Request, res: Response) {
     const initiativeshandler = new InitiativeHandler();
 
     let impactProjectedBenefitsRequested =
-      await initiativeshandler.requesProjectedBenefits();
+      await initiativeshandler.requestProjectedBenefits();
 
     res.json(
       new ResponseHandler('Requested projected benefits.', {
@@ -1875,7 +1863,7 @@ export async function getProjectedProbabilities(req: Request, res: Response) {
 export async function getSdgTargets(req: Request, res: Response) {
   try {
     const initiativeshandler = new InitiativeHandler();
-    const sdgTargets = await initiativeshandler.requesSdgTargets();
+    const sdgTargets = await initiativeshandler.requestSdgTargets();
     res.json(new ResponseHandler('Requested SDG Targets.', {sdgTargets}));
   } catch (error) {
     console.log(error);
