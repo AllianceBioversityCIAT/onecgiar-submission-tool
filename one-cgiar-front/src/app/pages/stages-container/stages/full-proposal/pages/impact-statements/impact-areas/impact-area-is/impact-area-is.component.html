@@ -53,8 +53,8 @@
 
     </form>
 
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button (click)="saveSection()" [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
+    <div class="justify_content_end" (click)="saveSection()" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
     </div>
 
 </div>
