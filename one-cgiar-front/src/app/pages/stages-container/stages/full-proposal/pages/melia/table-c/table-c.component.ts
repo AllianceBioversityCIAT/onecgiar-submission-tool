@@ -105,9 +105,9 @@ export class TableCComponent implements OnInit {
       result.indicators.map((indicator)=>{
           list.push({
             result_title: result?.result_title,
-            type_name: result?.type_name,
+            Result_type	: result?.type_name,
             geo_scope: this.compactGeoDataToExport(result['geo_scope']),
-            indicatorName: indicator?.name,
+            indicator_name: indicator?.name,
             unit_measurement: indicator?.unit_measurement,
             data_source: indicator?.data_source,
             data_collection_method: indicator?.data_collection_method,

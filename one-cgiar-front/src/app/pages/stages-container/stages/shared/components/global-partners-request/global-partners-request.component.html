@@ -19,11 +19,14 @@
                     labelName:'Institutions'
                 }
             }"></ibdc-select-multiple>
-            <div class="partner_request_text_container" *ngIf="!this._initiativesService.initiative.readonly">
+
+            <!-- <div class="partner_request_text_container" *ngIf="!this._initiativesService.initiative.readonly">
                 <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
                     are looking for, request to have it added to the list.</a>
-            </div>
-    
+            </div> -->
+            <a (click)="openDialog()" target="_blank">
+                <ibdc-alert  [options]="{htmlText: this.partner_request_text, type:'info'}"></ibdc-alert>
+            </a>
         
             <div class="all_parners_saved">
                 <div class="partner_selected_container" *ngFor="let item of this.savedList"
@@ -34,7 +37,6 @@
                     <div class="buttons_changing">
                         <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
                         <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
-                            
                             (click)="onSelectTag(item,button_item.attributeName)">
                             {{button_item.name}}
                         </div>

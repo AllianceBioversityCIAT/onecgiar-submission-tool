@@ -9,6 +9,9 @@
       <div class="tex_container">
         <ibdc-simple-text [options]="{inputTitle:'TOC ID',value: tocitem?.narrative}">
         </ibdc-simple-text>
+        <div class="updated_at">
+          <strong>Updated at:</strong> {{tocitem?.updated_at | date:'medium'}}
+        </div>
       </div>
 
       <div class="loading-container rotating" [id]="'loading'">
