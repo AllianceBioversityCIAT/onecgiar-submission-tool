@@ -17,8 +17,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ],
 })
 export class MenuSubSectionComponent implements OnInit {
-  @Input() section;
-  @Input() stage;
+  // @Input() section;
+  // @Input() stage;
   constructor(
     public _menuService:MenuService,
     public router:Router

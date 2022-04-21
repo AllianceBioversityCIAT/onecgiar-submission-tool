@@ -1,4 +1,11 @@
-<div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection || (this.subSection.subSectionId === 12 || this.subSection.subSectionId === 28)">
+<div class="section">
+    <div class="header section_title">
+        <ng-content select="[title]"></ng-content>
+    </div>
+    <ng-content select="[content]"></ng-content>
+</div>
+
+<!-- <div class="dynamicList_block_container" *ngIf="subSection.dynamicList  || subSection.dynamicListSubSection || (this.subSection.subSectionId === 12 || this.subSection.subSectionId === 28)">
     <div class="left_line"></div>
     <div *ngIf="subSection.dynamicList">
         <a class="dynamicListButton order_first"
@@ -49,4 +56,4 @@
 
 
 
-</div>
+</div> -->

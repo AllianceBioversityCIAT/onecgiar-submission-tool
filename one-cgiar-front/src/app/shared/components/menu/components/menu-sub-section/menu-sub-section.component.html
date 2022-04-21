@@ -1,6 +1,19 @@
 
 
+<div class="section">
+    <div class="head">
+        <div class="line"></div>
+        <div class="header section_title">
+            <ng-content select="[title]"></ng-content>
+        </div>
+    </div>
+    <div class="content">
+        <ng-content select="[content]"></ng-content>
+    </div>
+    
+</div>
 
+<!-- 
 <div class="sub-section-container" *ngFor="let subSection of this.section.subsections" [hidden]="subSection.block == true">
     <a [routerLink]="(stage.description == 'Full Proposal'?'full-proposal/':'pre-concept/')+section.description+'/'+subSection.description">
         <div *ngIf="(!subSection?.dynamicList?.length) && (!subSection?.dynamicListSubSection?.length)" class="noActiveSection {{subSection.dynamicList?'sub-section-with-dynamicList':'sub-section'}}"
@@ -32,10 +45,10 @@
                 src="/assets/images/under-construction.png" alt="" srcset="">
         </div>
     </div>
-    <!-- LISTAS DINAMICAS -->
+  
     <app-menu-dynamic-list [subSection]="subSection" [section]="section" [stage]="stage"></app-menu-dynamic-list>
 
 
 
 
-</div>
+</div> -->

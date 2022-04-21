@@ -1,4 +1,13 @@
-<div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
+
+<div>
+    <div class="header section_title ibdc_green_gradient">
+        <ng-content select="[title]"></ng-content>
+    </div>
+    <ng-content select="[content]"></ng-content>
+</div>
+
+
+<!-- <div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
     <div class="stage-title"
         [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
         (click)="this._menuService.toggleExpand(sectionsList)">
@@ -18,10 +27,11 @@
 
 
 </div>
+
 <div class="submitButtonInitiative" *ngIf="usrAvailableSubm">
     <button pButton type="button" (click)="onAssess()" label="Submit Initiative"
         class="p-button-rounded p-button-success"></button>
-</div>
+</div> -->
 <!-- <div class="submitButtonInitiative" *ngIf="usrAssessSubm" style="margin-top: 10px;">
     <button pButton type="button" (click)="showDialogSubStasModal()" label="Submit stage"
         class="p-button-rounded p-button-info"></button>

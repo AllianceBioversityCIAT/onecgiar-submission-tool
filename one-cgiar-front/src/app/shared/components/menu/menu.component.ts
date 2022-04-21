@@ -54,6 +54,9 @@ export class MenuComponent implements OnInit {
 
 
   ngOnInit(): void {
+    setTimeout(() => {
+      console.log(this._dataControlService.userMenu)
+    }, 1000);
     let loadMenu$ = this._dataControlService.loadMenu$.subscribe(
       (stageName) => {
         this.currentStageName = stageName;

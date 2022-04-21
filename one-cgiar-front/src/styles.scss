@@ -228,9 +228,11 @@ button {
 //ibdc colors end
 
 :root{
+  --ibdc-primary-color: #272A30;
   --ibdc-secondary-color: #5cc560;
   --ibdc-tertiary-color: #087b83;
   --ibdc-text-color: #797979;
+  --ibdc-black-1: #1A1C1E;
 }
 
 .viewer-backdrop{
@@ -243,4 +245,36 @@ button {
 
 .viewer-close{
   background-color: var(--ibdc-secondary-color) !important;
+}
+
+
+.section_title{
+  font-weight: 700 !important;
+}
+
+
+.ia-1,.ia-2,.ia-3,.ia-4,.ia-5{
+  width: 8px;
+  height: 25px;
+  margin-right: 7px;
+}
+
+.ia-1{
+  background-color: #F07E27;
+}
+
+.ia-2{
+  background-color: #055F6B;
+}
+
+.ia-3{
+  background-color: #EB5B47;
+}
+
+.ia-4{
+  background-color: #00A772;
+}
+
+.ia-5{
+  background-color: #74B959;
 }

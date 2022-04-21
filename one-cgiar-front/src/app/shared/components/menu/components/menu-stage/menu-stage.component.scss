@@ -1,25 +1,29 @@
-.stage {
-  cursor: pointer;
-  margin-top: 12px;
-
-  .stage-title {
-    font-weight: 700;
-    font-size: 1.3em;
-    width: 100%;
-    // background-color: #013243 ;
-    border-bottom: 1px solid white;
+.header{
     padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-  }
-
-  .stage-sections {
-    overflow: hidden;
-  }
+    border-radius: 5px;
 }
+// .stage {
+//   cursor: pointer;
+//   margin-top: 12px;
 
-.submitButtonInitiative {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
+//   .stage-title {
+//     font-weight: 700;
+//     font-size: 1.3em;
+//     width: 100%;
+//     // background-color: #013243 ;
+//     border-bottom: 1px solid white;
+//     padding: 10px;
+//     border-radius: 10px;
+//     text-align: center;
+//   }
+
+//   .stage-sections {
+//     overflow: hidden;
+//   }
+// }
+
+// .submitButtonInitiative {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+// }

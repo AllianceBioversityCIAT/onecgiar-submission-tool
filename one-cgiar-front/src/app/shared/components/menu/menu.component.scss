@@ -18,19 +18,6 @@
     background-color: cyan;
 }
 
-@media only screen and (max-width: 1000px) {
-    .menu {
-        background-color: #000000cc;
-    }
-}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 1000px) {
-    .menu {
-        background-color: #00000063;
-    }
-}
-
 @media only screen and (max-width: 1300px) {
     .right_container {
         padding: 5px 10px 0px;
@@ -56,7 +43,7 @@
         padding: 10px 40px 0px;
     }
     .menu {
-        padding: 50px 25px;
+        padding: 50px 18px;
     }
 }
 
@@ -66,7 +53,7 @@
     max-height: calc(100vh - 120px);
     overflow-y: scroll;
     color: white;
-
+    background-color: var(--ibdc-black-1);
     .stages {
         height: auto;
         border: red 1px solid;
