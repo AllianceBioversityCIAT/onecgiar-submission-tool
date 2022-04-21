@@ -7,7 +7,7 @@
         <app-general-information-skeleton></app-general-information-skeleton>
     </div>
     <!-- <form [formGroup]="summaryForm" (ngSubmit)="getSummary()" class="general-information-form" -->
-        <form (ngSubmit)="upsertSection()" class="general-information-form">
+        <form class="general-information-form">
         <div class="row">
 
             <div class="col-sm-6">
@@ -128,9 +128,11 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
-        </div>
     </form>
+
+    <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button (click)="upsertSection()" [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    </div>
+
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
 </div>

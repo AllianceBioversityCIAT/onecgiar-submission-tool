@@ -34,7 +34,7 @@ export class WpTocComponent implements OnInit {
   getWpById(){
     this.serviceIsConsumed = false;
     this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
-      
+      console.log(resp)
       this.tocList = resp;
       this.serviceIsConsumed = true;
       // console.log( this.tocList)

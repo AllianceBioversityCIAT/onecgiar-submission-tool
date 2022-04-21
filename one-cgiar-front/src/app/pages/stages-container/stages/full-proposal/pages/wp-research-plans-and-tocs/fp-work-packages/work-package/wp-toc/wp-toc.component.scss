@@ -21,6 +21,11 @@
         margin-top: 20px;
         .tex_container{
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            .updated_at{
+              color: rgb(63, 63, 63);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <section-title name="Comparative advantage"></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
+    <form [formGroup]="contextForm" class="general-information-form">
 
         <div class="row">
             <div class="col-12">
@@ -31,9 +31,11 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
-        </div>
     </form>
+
+    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button (click)="upserInfo()" [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    </div>
+
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
 </div>

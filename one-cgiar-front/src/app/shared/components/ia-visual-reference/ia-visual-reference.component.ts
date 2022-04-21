@@ -25,7 +25,7 @@ export class IaVisualReferenceComponent implements OnInit {
 
   getImpacAreasList() {
     this._initiativesService.getImpactAreas().subscribe(impacAreas => {
-      console.log(impacAreas.response.impactAreasRequested);
+      // console.log(impacAreas.response.impactAreasRequested);
       this.impacAreasList = impacAreas.response.impactAreasRequested;
     }, (err) => {
       console.log(err);

@@ -30,7 +30,7 @@
         
             <div class="all_parners_saved">
                 <div class="partner_selected_container" *ngFor="let item of this.savedList"
-                    [hidden]="item.active === false" [hidden]="!item.code">
+                    [hidden]="item.active === false || !item?.code">
                     <div class="partner_name">{{item.name}}</div>
                     <p><span class="institutionTypeLabel">Institution type:</span><span
                             class="partner_type">{{item.institutionType}}</span></p>
@@ -69,14 +69,11 @@
                     <div class="institution_types_container" *ngIf="countDuplicates(this.savedList).length">
                         <div *ngFor="let item of countDuplicates(this.savedList)" class="type_item"
                             [hidden]="item.active">
-                            <span class="material-icons close_icon" (click)="onDeleteInstitutionType(item)"
-                                *ngIf="item.manual && item.cont == 0 && !this._initiativesService.initiative.readonly">delete</span>
-                            <p>{{item.name}} - <span
-                                    class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
+                            <span class="material-icons close_icon" (click)="onDeleteInstitutionType(item)" *ngIf="item.manual && item.cont == 0 && !this._initiativesService.initiative.readonly">delete</span>
+                            <p>{{item.name}} - <span class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
                         </div>
                     </div>
-                    <p *ngIf="!countDuplicates(this.savedList).length" class="empy_list_title">No institutions types
-                        maped</p>
+                    <p *ngIf="!countDuplicates(this.savedList).length" class="empy_list_title">No institutions types maped</p>
         </div>
 
     </div>
