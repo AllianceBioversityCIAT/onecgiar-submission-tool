@@ -24,6 +24,7 @@ export class TableCComponent implements OnInit {
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
       this.listToSave = resp;
+      // console.log(resp)
     })
   }
 
@@ -34,7 +35,18 @@ export class TableCComponent implements OnInit {
   convertDataToUseInTable(resp:ResultData[]){
     console.log(resp)
     resp.map(result=>{
-      result.indicators.map((indicator,index)=>{
+      console.log(result)
+
+      if (!result?.indicators?.length) return this.resultDataList.push(
+        {
+          result_title: result?.result_title,
+          type_name: result?.type_name, 
+          rowSpan: 1, 
+          geo_scope: this.compactGeoData(result['geo_scope'])
+        }) ;
+
+      result?.indicators.map((indicator,index)=>{
+        
         if (index == 0) {
           this.resultDataList.push(
             {
@@ -72,7 +84,7 @@ export class TableCComponent implements OnInit {
       textResult+= `${item?.country_name}${index+1 == countries.length ? '' : ', '}`
     })
 
-    console.log(geo_scope)
+    // console.log(geo_scope)
     return textResult;
     
   }
