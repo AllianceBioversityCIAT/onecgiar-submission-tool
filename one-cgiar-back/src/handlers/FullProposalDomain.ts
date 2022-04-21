@@ -46,7 +46,7 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { generalInfo }
    */
   async getGeneralInformation() {
-    // get initiative by stage id from intitiative
+    // get initiative by stage id from initiative
     const initvStg = await this.initvStage;
 
     let generalInfo;
@@ -581,7 +581,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     //  create empty object
     var workPackage = [];
     try {
-      // get current intiative by stage
+      // get current initiative by stage
       const initvStg = await this.setInitvStage();
 
       if (fullProposalWP.length > 0) {
