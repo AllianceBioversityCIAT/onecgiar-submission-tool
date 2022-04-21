@@ -33,7 +33,7 @@ const router = Router();
  *                 "initvStgId": 35,
  *                 "id": 2,
  *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
- *                 "oficial_code":"INIT-2"
+ *                 "official_code":"INIT-2"
  *                 "status": "Editing",
  *                 "action_area_id": "1",
  *                 "action_area_description": "Systems Transformation",
@@ -95,7 +95,7 @@ router.get('/', [checkJwt], initiatives.getInitiatives);
  *                 "initvStgId": 35,
  *                 "id": 2,
  *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
- *                 "oficial_code":"INIT-2"
+ *                 "official_code":"INIT-2"
  *                 "status": "Editing",
  *                 "action_area_id": "1",
  *                 "action_area_description": "Systems Transformation",
@@ -254,7 +254,7 @@ router.get(
   initiatives.getAssessmentStatus
 );
 
-// get submition per initiative
+// get submission per initiative
 router.get(
   '/submission/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('initiatives', 'readOwn')],
@@ -275,7 +275,7 @@ router.patch(
   initiatives.updateSubmissionStatusByInitiative
 );
 
-// submit initiatiave by stage
+// submit initiative by stage
 
 /****** */
 
@@ -368,7 +368,7 @@ router.patch(
  * @apiName PostCitations
  * @apiGroup Initiatives
  *
- * @apiDescription  Shows all cititations filtered by initiative id, estage id and status
+ * @apiDescription  Shows all citations filtered by initiative id, stage id and status
  *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/initiatives/get-link/2/3
@@ -485,13 +485,13 @@ router.get(
 );
 
 /**
- * @api {patch} /:initiativeId/summary/:stageId Summary - Upserts Initiative summary
+ * @api {patch} /:initiativeId/summary/:stageId Summary - Upsert Initiative summary
  * @apiVersion 1.0.2
  * @apiPermission admin
  * @apiName PatchInitiativeSummary
  * @apiGroup Initiatives
  *
- * @apiDescription  Upserts summary data from initiatives
+ * @apiDescription  Upsert summary data from initiatives
  *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/initiatives/1/summary/3
@@ -614,7 +614,7 @@ router.patch(
  * @apiName PostBudget
  * @apiGroup Initiatives
  *
- * @apiDescription  Shows budget filtered by initiative id, estage id and status
+ * @apiDescription  Shows budget filtered by initiative id, stage id and status
  *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/initiatives/get-budget/2/3
@@ -860,42 +860,13 @@ router.post(
   [checkJwt],
   clarisa.requestClaInstitution
 );
-//get Impact areas
-// router.get("/impact-areas", [checkJwt], initiatives.requestImpactAreas);
-//get Impact areas inticators
-// router.get(
-//   '/impact-areas/inidicators',
-//   [checkJwt],
-//   initiatives.requestImpactAreasIndicators
-// );
-//get Impact areas inticators
-// router.get(
-//   '/projected-benefits',
-//   [checkJwt],
-//   initiatives.requestProjectedBenefits
-// );
-//get projected probabilities
+
 router.get(
   '/projected-probabilities',
   [checkJwt],
   initiatives.getProjectedProbabilities
 );
-//get SDG Targets
-// router.get('/sdg-targets', [checkJwt], initiatives.getSdgTargets);
-//get Action Areas Outcomes Indicators
-// router.get(
-//   '/action-areas/outcomes-indicators',
-//   [checkJwt],
-//   initiatives.getActionAreasOutcomesIndicators
-// );
 
-/**
- *
- * TOC
- *
- */
-
-//get Toc Narrative
 router.get('/toc/narrative/:TocId', [checkJwt], toc.getTocNarrative);
 
 export default router;
