@@ -14,7 +14,9 @@
         align-items: center;
         justify-content: center;
         .expand_more_icon{
+            transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
             font-size: 30px;
+            user-select: none;
         }
     }
 
@@ -22,6 +24,7 @@
 .body{
     display: grid;
     grid-template-columns: 5px 1fr;
+    overflow: hidden;
     .line{
         height: auto;
         width: 5px;

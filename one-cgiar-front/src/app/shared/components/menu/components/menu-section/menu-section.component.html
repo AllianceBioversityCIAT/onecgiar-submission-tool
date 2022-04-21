@@ -1,18 +1,18 @@
 
 <div>
     
-    <div class="header section_title">
+    <div class="header section_title" (click)="this.collapse = !this.collapse">
         <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
         <div class="icon">
-            <i class="material-icons expand_more_icon">expand_more</i>
+            <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': this.haveContent ? 1 : 0}">expand_more</i>
         </div>
     </div>
     
-    <div class="body">
+    <div class="body" [@expandable]="haveContent ? (this.collapse?'collapse':'expand') : null">
         <div class="line"></div>
-        <div class="content">
+        <div class="content" *ngIf="this.haveContent">
             <ng-content select="[content]"></ng-content>
         </div>
     </div>

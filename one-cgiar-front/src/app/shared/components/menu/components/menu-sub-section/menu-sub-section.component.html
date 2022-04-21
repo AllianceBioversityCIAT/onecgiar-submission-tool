@@ -1,13 +1,18 @@
 
 
 <div class="section">
-    <div class="head">
+
+    <div class="header section_title"  [ngClass]="{'active_route': !this.collapse && haveContent}" (click)="this.collapse = !this.collapse">
         <div class="line"></div>
-        <div class="header section_title">
+        <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
+        <div class="icon">
+            <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': this.haveContent ? 1 : 0}">expand_more</i>
+        </div>
     </div>
-    <div class="content">
+
+    <div class="content" [@expandable]="haveContent ? (this.collapse?'collapse':'expand') : null">
         <ng-content select="[content]"></ng-content>
     </div>
     

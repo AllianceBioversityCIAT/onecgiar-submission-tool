@@ -19,6 +19,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class MenuSectionComponent implements OnInit {
   // @Input() sections;
   // @Input() stage;
+  @Input() haveContent = false;
+  @Input() collapse:boolean = true;
   constructor(
     // public _menuService : MenuService,
     public router: Router

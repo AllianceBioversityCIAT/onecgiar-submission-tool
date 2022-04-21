@@ -1,9 +1,12 @@
 .section{
     margin-top: 20px;
-    .head{
+    .header{
         display: grid;
-        grid-template-columns: 20px 1fr;
+        grid-template-columns: 20px 1fr auto;
         grid-gap: 10px;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0);
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .3s;
         .line{
             height: 5px;
             width: auto;
@@ -11,12 +14,31 @@
             align-self: center;
             border-radius: 0px 5px 5px 0px;
         }
+        .title{
+            align-self: center;
+        }
+        .icon{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .expand_more_icon{
+                transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
+                font-size: 30px;
+                user-select: none;
+            }
+        }
     }
     .content{
+        overflow: hidden;
         background-color: var(--ibdc-primary-color);
     }
 }
 
+.active_route{
+    background-color: var(--ibdc-primary-color) !important;
+    transition: all cubic-bezier(0.23, 1, 0.320, 1) .3s;
+    padding: 10px 10px 0px 0px;
+}
 
 // .sub-section{
 //     position: relative;

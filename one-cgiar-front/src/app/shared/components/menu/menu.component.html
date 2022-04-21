@@ -5,10 +5,10 @@
     <app-menu-stage [hidden]="stage?.stageId === 2"  *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
-            <app-menu-section *ngFor="let sections of stage?.sections">
+            <app-menu-section [haveContent]="sections?.subsections?.length" *ngFor="let sections of stage?.sections">
                 <div title>{{sections?.display_name}}</div>
                 <div content>
-                    <app-menu-sub-section  *ngFor="let subsections of sections?.subsections">
+                    <app-menu-sub-section [haveContent]="subsections?.dynamicList?.length"  *ngFor="let subsections of sections?.subsections">
                         <div title>{{subsections.display_name}}</div>
                         <div content style="padding: 10px;" *ngIf="subsections?.dynamicList?.length">
                             <app-menu-dynamic-list *ngFor="let dynamicList of subsections?.dynamicList">
