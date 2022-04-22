@@ -1,5 +1,4 @@
 .header{
-    background-color: var(--ibdc-primary-color);
     padding: 5px 10px;
     border-radius: 5px;
     margin-top: 10px;
@@ -34,6 +33,10 @@
     .content{
 
     }
+}
+
+.active_section{
+    background-color: var(--ibdc-primary-color);
 }
 
 // .stage-section{

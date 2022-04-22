@@ -1,7 +1,7 @@
 
 <div>
     
-    <div class="header section_title" (click)="this.collapse = !this.collapse"  [routerLink]="this.haveContent ? null :this.customRouterLink">
+    <div class="header section_title"  routerLinkActive="active_section" (click)="this.collapse = !this.collapse"  [routerLink]="this.haveContent ? null :this.customRouterLink">
         <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
