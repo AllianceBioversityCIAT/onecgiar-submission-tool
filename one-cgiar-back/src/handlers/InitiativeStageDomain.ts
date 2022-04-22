@@ -9,6 +9,7 @@ import {BaseError} from './BaseError';
 import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
 import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
+import {ProposalHandler} from './FullProposalDomain';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -463,134 +464,7 @@ export class InitiativeStageHandler extends BaseValidation {
 
   /******* REPLICATION STEPS *********/
 
-  async replicationProcess(
-    currentInitiativeId: number,
-    currentStageId: number,
-    newStageId: number
-  ) {
-    const initvStgRepo = getCustomRepository(InitiativesByStagesRepository);
-    const stageRepo = getRepository(Stages);
-
-    try {
-      // Validation between current stage and new stage
-      if (currentStageId > newStageId) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `The current stage cannot be less than the new stage`,
-          false
-        );
-      }
-      /**
-       ** VALIDATION CURRENT INITIATIVE */
-
-      // Get current stage
-      const stage: Stages = await stageRepo.findOne(currentStageId);
-      // get current initiative by stage
-      let initvStg = await initvStgRepo.findOneInitiativeByStage(
-        currentInitiativeId,
-        stage.id
-      );
-
-      // if not initiative by stage, throw error
-      if (initvStg == null) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `Initiative not found in stage: ${stage.description}`,
-          false
-        );
-      }
-
-      /**
-       ** VALIDATION NEW STAGE BY INITIATIVE */
-
-      // Validate new stage
-      const newStage: Stages = await stageRepo.findOne(newStageId);
-
-      // if not exists stage, throw error
-      if (newStage == null) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `Stage not found : ${stage.description}`,
-          false
-        );
-      }
-
-      // get new initiative by stage
-      const newInitvStg = await initvStgRepo.findOneInitiativeByStage(
-        currentInitiativeId,
-        newStage.id
-      );
-
-      if (newInitvStg) {
-        initvStg = newInitvStg;
-      } else {
-        initvStg = initvStg;
-      }
-
-      /**
-       * STEPS
-       */
-
-      // 1. Change Stage by Initiative
-      const changeStage = await this.changeStageInitiative(initvStg, newStage);
-
-      return changeStage;
-    } catch (error) {
-      throw new BaseError(
-        'Error Replication Process',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  /**
-   ** 1. Change Stage by Initiative
-   * @param initvStg
-   * @param newStage
-   */
-  async changeStageInitiative(initvStg, newStage) {
-    const newInitvStg = new InitiativesByStages();
-    let savedInitiativeByStage: InitiativesByStages;
-
-    try {
-      // Conditions to change stage a initiative
-      // If Initiative exists in New Stage
-      if (initvStg.stageId === newStage.id) {
-        savedInitiativeByStage = await this.initvStgRepo.save(initvStg);
-
-        // If Initiative Not exists in New Stage
-      } else if (newStage.id > initvStg.stageId) {
-        newInitvStg.active = true;
-        newInitvStg.global_dimension = initvStg.global_dimension;
-        newInitvStg.initiative = initvStg.initiativeId;
-        newInitvStg.stage = newStage.id;
-
-        savedInitiativeByStage = await this.initvStgRepo.save(newInitvStg);
-      } else {
-        throw new BaseError(
-          'Error Change Stage by initiative - ' + initvStg.initiativeId,
-          400,
-          'Please validate the parameters and try again',
-          false
-        );
-      }
-
-      return savedInitiativeByStage;
-    } catch (error) {
-      throw new BaseError(
-        'Error Change Stage by initiative - ' + initvStg.initiativeId,
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
+  
   async forwardGeoScope(forwardStage: Stages | number) {
     // get initiative by stage id from initiative
     const initvStg = await this.initvStage;

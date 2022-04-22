@@ -25,6 +25,7 @@ import {Submissions} from '../entity/Submissions';
 import {SubmissionsStatus} from '../entity/SubmissionStatus';
 import {Statuses} from '../entity/Statuses';
 import { toInteger } from 'lodash';
+import { ReplicationDomain } from '../handlers/ReplicationDomain';
 
 require('dotenv').config();
 
@@ -250,11 +251,11 @@ export async function replicationProcess(req: Request, res: Response) {
   const {newStageId} = req.body;
 
   // instantiate class InitiativeStageHandler (Domain)
-  const initiative = new InitiativeStageHandler();
+  const replication = new ReplicationDomain();
 
   try {
     // Call replication Process from Domain
-    const replicationProcess = await initiative.replicationProcess(
+    const replicationProcess = await replication.replicationProcess(
       toInteger(initiativeId),
       toInteger(stageId),
       newStageId
