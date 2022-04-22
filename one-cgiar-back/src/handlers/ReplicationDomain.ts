@@ -92,13 +92,39 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newInitvStg.id
       );
 
-      //3. Replicate Challenge Statement
+      //3. Replicate Context without projection benefits
       const replicationContext = await this.replicateContext(
         initvStg.id,
         newInitvStg.id
       );
+      // 3.1 Replicate Projection benefits
+      const replicationProjectionBenefits =
+        await this.replicationProjectionBenefits(initvStg.id, newInitvStg.id);
 
-      return {changeStage, replicationGeneralInfo,replicationContext};
+      //4. Replicate Work packages
+      const replicationWorkPackages = await this.replicationWorkPackages(
+        initvStg.id,
+        newInitvStg.id
+      );
+      //4.1 Replicate ToC (WP ToC and Full Initiative ToC)
+      const replicationToC = await this.replicationToC(
+        initvStg.id,
+        newInitvStg.id
+      );
+
+      //5. Replicate Innovation packages
+      const replicationInnovationPackages =
+        await this.replicationInnovationPackages(initvStg.id, newInitvStg.id);
+
+      return {
+        changeStage,
+        replicationGeneralInfo,
+        replicationContext,
+        replicationProjectionBenefits,
+        replicationWorkPackages,
+        replicationToC,
+        replicationInnovationPackages
+      };
     } catch (error) {
       throw new BaseError(
         'Error Replication Process',
@@ -178,9 +204,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const generalInformationIsdc =
         await fullPposalIsdc.getGeneralInformation();
 
-        console.log('full proposal', generalInformation);
-        console.log('ISDC', generalInformationIsdc);
-
       if (generalInformationIsdc.generalInformationId) {
         savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
           generalInformationIsdc.generalInformationId,
@@ -226,9 +249,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       // get general information from proposal object
       const contextIsdc = await fullPposalIsdc.getContext();
 
-      console.log('full proposal', context);
-      console.log('ISDC', contextIsdc);
-
       if (contextIsdc) {
         savedContext = await fullPposalIsdc.upsertContext(
           contextIsdc.id,
@@ -255,11 +275,267 @@ export class ReplicationDomain extends InitiativeStageHandler {
       return savedContext;
     } catch (error) {
       throw new BaseError(
-        'Error replicating the information of general information',
+        'Error replicating the information of context',
         400,
         error.message,
         false
       );
     }
   }
+
+  async replicationProjectionBenefits(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedProjectedBenefits = [];
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const projectedBenefits = await fullPposal.requestProjectionBenefits();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const projectedBenefitsIsdc =
+        await fullPposalIsdc.requestProjectionBenefits();
+
+      if (projectedBenefitsIsdc.length > 0) {
+        for (let index = 0; index < projectedBenefitsIsdc.length; index++) {
+          const pbIsdc = projectedBenefitsIsdc[index];
+
+          savedProjectedBenefits.push(
+            await fullPposalIsdc.upsertProjectionBenefits(
+              pbIsdc.id,
+              pbIsdc.impactAreaId,
+              pbIsdc.impactAreaName,
+              pbIsdc.impactAreaIndicator,
+              pbIsdc.impactAreaIndicatorName,
+              pbIsdc.notes,
+              pbIsdc.depthScaleId,
+              pbIsdc.depthScaleName,
+              pbIsdc.probabilityID,
+              pbIsdc.probabilityName,
+              pbIsdc.impact_area_active,
+              pbIsdc.active,
+              pbIsdc.dimensions
+            )
+          );
+        }
+      } else {
+        projectedBenefits.initvStgId = newInitStgId;
+
+        for (let index = 0; index < projectedBenefits.length; index++) {
+          const pb = projectedBenefits[index];
+
+          for (let index = 0; index < pb.dimensions.length; index++) {
+            const dimensions = pb.dimensions[index];
+
+            dimensions.id = null;
+          }
+
+          savedProjectedBenefits.push(
+            await fullPposalIsdc.upsertProjectionBenefits(
+              null,
+              pb.impactAreaId,
+              pb.impactAreaName,
+              pb.impactAreaIndicator,
+              pb.impactAreaIndicatorName,
+              pb.notes,
+              pb.depthScaleId,
+              pb.depthScaleName,
+              pb.probabilityID,
+              pb.probabilityName,
+              pb.impact_area_active,
+              pb.active,
+              pb.dimensions
+            )
+          );
+        }
+      }
+
+      return savedProjectedBenefits;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of context - Projected Benefits',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationWorkPackages(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedWorkPakages = [];
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const workPackages = await fullPposal.getWorkPackage();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const workPackagesIsdc = await fullPposalIsdc.getWorkPackage();
+
+      if (workPackagesIsdc.length > 0) {
+        for (let index = 0; index < workPackagesIsdc.length; index++) {
+          const wp = workPackagesIsdc[index];
+          savedWorkPakages.push(await fullPposalIsdc.upsertWorkPackages(wp));
+        }
+      } else {
+        workPackages.initvStgId = newInitStgId;
+        for (let index = 0; index < workPackages.length; index++) {
+          let wp = workPackages[index];
+          wp.id = null;
+          savedWorkPakages.push(await fullPposalIsdc.upsertWorkPackages(wp));
+        }
+      }
+
+      return savedWorkPakages;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Work packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationToC(currentInitvStgId: number, newInitStgId: number) {
+    try {
+      let savedToc;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const toc = await fullPposal.requestTocByInitiative();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const tocIsdc = await fullPposalIsdc.requestTocByInitiative();
+
+      if (tocIsdc.length > 0) {
+        savedToc = await fullPposalIsdc.upsertTocs(tocIsdc);
+      } else {
+        toc.initvStgId = newInitStgId;
+        savedToc = await fullPposalIsdc.upsertTocs(toc);
+      }
+
+      return savedToc;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of ToC (WP ToC and Full Initiative ToC)',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationInnovationPackages(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedInnovationPackages;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const innovationPackages = await fullPposal.requestInnovationPackages();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const innovationPackagesIsdc =
+        await fullPposalIsdc.requestInnovationPackages();
+
+      if (innovationPackagesIsdc) {
+        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
+          innovationPackagesIsdc.id,
+          innovationPackagesIsdc.key_principles,
+          innovationPackagesIsdc.active
+        );
+      } else {
+        innovationPackages.initvStgId = newInitStgId;
+        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
+          null,
+          innovationPackages.key_principles,
+          innovationPackages.active
+        );
+      }
+
+      return savedInnovationPackages;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Innovation Packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationImpactStatements(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedInnovationPackages;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const innovationPackages = await fullPposal.requestInnovationPackages();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const innovationPackagesIsdc =
+        await fullPposalIsdc.requestInnovationPackages();
+
+      if (innovationPackagesIsdc) {
+        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
+          innovationPackagesIsdc.id,
+          innovationPackagesIsdc.key_principles,
+          innovationPackagesIsdc.active
+        );
+      } else {
+        innovationPackages.initvStgId = newInitStgId;
+        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
+          null,
+          innovationPackages.key_principles,
+          innovationPackages.active
+        );
+      }
+
+      return savedInnovationPackages;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Innovation Packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
 }

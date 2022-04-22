@@ -1462,13 +1462,15 @@ export class ProposalHandler extends InitiativeStageHandler {
         // Geo Scope
         result.geo_scope =
           typeof result.geo_scope === 'undefined' ? [] : result.geo_scope;
-          result.geo_scope.regions =
-          typeof result.geo_scope.regions === 'undefined' ? [] : result.geo_scope.regions;
+        result.geo_scope.regions =
+          typeof result.geo_scope.regions === 'undefined'
+            ? []
+            : result.geo_scope.regions;
         for (let index = 0; index < result.geo_scope.regions.length; index++) {
           const regions = result.geo_scope.regions[index];
           let newResultsRegions = new entities.ResultsRegions();
 
-         // newResultsRegions.id = regions.id ? regions.id : null;
+          // newResultsRegions.id = regions.id ? regions.id : null;
           newResultsRegions.results_id = upsertResults.id;
           newResultsRegions.region_id = regions.region_id;
           newResultsRegions.active = regions.active;
@@ -1487,7 +1489,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
         result.geo_scope.countries =
-        typeof result.geo_scope.countries === 'undefined' ? [] : result.geo_scope.countries;
+          typeof result.geo_scope.countries === 'undefined'
+            ? []
+            : result.geo_scope.countries;
         for (
           let index = 0;
           index < result.geo_scope.countries.length;
@@ -1496,7 +1500,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           const countries = result.geo_scope.countries[index];
           let newResultsCountries = new entities.ResultsCountries();
 
-         // newResultsCountries.id = countries.id ? countries.id : null;
+          // newResultsCountries.id = countries.id ? countries.id : null;
           newResultsCountries.results_id = upsertResults.id;
           newResultsCountries.country_id = countries.country_id;
           newResultsCountries.active = countries.active;
@@ -2872,7 +2876,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           var newTocs = new entities.TOCs();
 
           newTocs.id = null;
-          newTocs.toc_id = element.tocId;
+          newTocs.toc_id = element.tocId ? element.tocId : element.toc_id;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
           newTocs.type = element.type; // 0 into wp and 1 to level initiative
@@ -2882,7 +2886,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.initvStgId = initvStg.id;
 
           var savedTocs: any = await tocsRepo.find({
-            where: {toc_id: newTocs.toc_id}
+            where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
           });
 
           if (savedTocs.length > 0) {
@@ -2917,13 +2921,42 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      console.log(results);
-
       return {savedTocs: results};
     } catch (error) {
       console.log(error);
       throw new BaseError(
         'Upsert TOC: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST FULL INITIATIVE TOC BY INITIATIVE
+   * @returns previewPartners
+   */
+  async requestFullInitiativeToc() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve preview partners
+      const tocQuery = `
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
+        FROM tocs
+       WHERE initvStgId = ${initvStg.id}
+        and active = 1
+        and type = 1
+      `;
+
+      const fullInitiativeToc = await this.queryRunner.query(tocQuery);
+
+      return fullInitiativeToc[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get full initiative ToC: Full proposal',
         400,
         error.message,
         false
@@ -2945,16 +2978,15 @@ export class ProposalHandler extends InitiativeStageHandler {
         FROM tocs
        WHERE initvStgId = ${initvStg.id}
         and active = 1
-        and type = 1
       `;
 
       const fullInitiativeToc = await this.queryRunner.query(tocQuery);
 
-      return fullInitiativeToc[0];
+      return fullInitiativeToc;
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get full initiative ToC: Full proposal',
+        'Get ToC By Initiative: Full proposal',
         400,
         error.message,
         false

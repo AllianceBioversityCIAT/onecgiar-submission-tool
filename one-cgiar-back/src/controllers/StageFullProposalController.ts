@@ -1657,7 +1657,7 @@ export async function getTocByInitiative(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const fullInitiativeToc = await fullPposal.requestTocByInitiative();
+    const fullInitiativeToc = await fullPposal.requestFullInitiativeToc();
 
     res.json(
       new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
