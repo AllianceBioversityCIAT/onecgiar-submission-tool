@@ -11,9 +11,10 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrls: ['./menu-dynamic-list.component.scss']
 })
 export class MenuDynamicListComponent implements OnInit {
-  @Input() subSection;
-  @Input() section;
-  @Input() stage;
+  // @Input() subSection;
+  // @Input() section;
+  // @Input() stage;
+  @Input() customRouterLink:string = '';
   constructor(
     public _menuService : MenuService,
     private _initiativesService:InitiativesService,

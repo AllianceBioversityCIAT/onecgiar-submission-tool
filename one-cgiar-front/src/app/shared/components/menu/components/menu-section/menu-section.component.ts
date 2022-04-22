@@ -19,6 +19,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class MenuSectionComponent implements OnInit {
   // @Input() sections;
   // @Input() stage;
+  @Input() customRouterLink:string = '';
   @Input() haveContent = false;
   @Input() collapse:boolean = true;
   constructor(
