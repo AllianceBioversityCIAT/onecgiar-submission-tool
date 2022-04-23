@@ -737,7 +737,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const impactStrategies = await fullPposal.requestImpactStrategies(
+    const impactStrategies = await fullPposal.requestImpactStrategiesByIA(
       impactAreaId
     );
 

@@ -116,6 +116,16 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const replicationInnovationPackages =
         await this.replicationInnovationPackages(initvStg.id, newInitvStg.id);
 
+      //6. Replicate Impact statements
+      const replicationImpactStatements =
+        await this.replicationImpactStatements(initvStg.id, newInitvStg.id);
+
+      //7. Replicate Melia (Melia Plan, Results Framework and Melia Studies and activities)
+      const replicationMelia = await this.replicationMelia(
+        initvStg.id,
+        newInitvStg.id
+      );
+
       return {
         changeStage,
         replicationGeneralInfo,
@@ -123,7 +133,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationProjectionBenefits,
         replicationWorkPackages,
         replicationToC,
-        replicationInnovationPackages
+        replicationInnovationPackages,
+        replicationImpactStatements,
+        replicationMelia
       };
     } catch (error) {
       throw new BaseError(
@@ -259,7 +271,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
           contextIsdc.comparative_advantage,
           contextIsdc.participatory_design
         );
-      } else {
+      } else if (context) {
         context.initvStgId = newInitStgId;
         savedContext = await fullPposalIsdc.upsertContext(
           null,
@@ -270,6 +282,11 @@ export class ReplicationDomain extends InitiativeStageHandler {
           context.comparative_advantage,
           context.participatory_design
         );
+      } else {
+        savedContext =
+          'The initiative does not have information in the context section stage ' +
+          currentInitvStgId +
+          'please validate';
       }
 
       return savedContext;
@@ -288,7 +305,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
     newInitStgId: number
   ) {
     try {
-      let savedProjectedBenefits = [];
+      let pbArray = [];
+      let savedProjectedBenefits;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
@@ -307,8 +325,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         for (let index = 0; index < projectedBenefitsIsdc.length; index++) {
           const pbIsdc = projectedBenefitsIsdc[index];
 
-          savedProjectedBenefits.push(
-            await fullPposalIsdc.upsertProjectionBenefits(
+          pbArray.push(
+            fullPposalIsdc.upsertProjectionBenefits(
               pbIsdc.id,
               pbIsdc.impactAreaId,
               pbIsdc.impactAreaName,
@@ -337,8 +355,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
             dimensions.id = null;
           }
 
-          savedProjectedBenefits.push(
-            await fullPposalIsdc.upsertProjectionBenefits(
+          pbArray.push(
+            fullPposalIsdc.upsertProjectionBenefits(
               null,
               pb.impactAreaId,
               pb.impactAreaName,
@@ -357,6 +375,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         }
       }
 
+      savedProjectedBenefits = await Promise.all(pbArray);
+
       return savedProjectedBenefits;
     } catch (error) {
       throw new BaseError(
@@ -373,7 +393,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
     newInitStgId: number
   ) {
     try {
-      let savedWorkPakages = [];
+      let wpArray = [];
+      let savedWorkPakages;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
@@ -390,16 +411,18 @@ export class ReplicationDomain extends InitiativeStageHandler {
       if (workPackagesIsdc.length > 0) {
         for (let index = 0; index < workPackagesIsdc.length; index++) {
           const wp = workPackagesIsdc[index];
-          savedWorkPakages.push(await fullPposalIsdc.upsertWorkPackages(wp));
+          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
         }
       } else {
         workPackages.initvStgId = newInitStgId;
         for (let index = 0; index < workPackages.length; index++) {
           let wp = workPackages[index];
           wp.id = null;
-          savedWorkPakages.push(await fullPposalIsdc.upsertWorkPackages(wp));
+          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
         }
       }
+
+      savedWorkPakages = await Promise.all(wpArray);
 
       return savedWorkPakages;
     } catch (error) {
@@ -472,13 +495,18 @@ export class ReplicationDomain extends InitiativeStageHandler {
           innovationPackagesIsdc.key_principles,
           innovationPackagesIsdc.active
         );
-      } else {
+      } else if (innovationPackages) {
         innovationPackages.initvStgId = newInitStgId;
         savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
           null,
           innovationPackages.key_principles,
           innovationPackages.active
         );
+      } else {
+        savedInnovationPackages =
+          'The initiative does not have information in the Innovation Packages section stage ' +
+          currentInitvStgId +
+          'please validate';
       }
 
       return savedInnovationPackages;
@@ -497,40 +525,76 @@ export class ReplicationDomain extends InitiativeStageHandler {
     newInitStgId: number
   ) {
     try {
-      let savedInnovationPackages;
+      let isArray = [];
+      let savedImpactStatements;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
       const fullPposal = new ProposalHandler(currentInitvStgId.toString());
       // get general information from proposal object
-      const innovationPackages = await fullPposal.requestInnovationPackages();
+      const impactStatements = await fullPposal.requestImpactStrategies();
 
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
       // create new full proposal object
       const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
       // get general information from proposal object
-      const innovationPackagesIsdc =
-        await fullPposalIsdc.requestInnovationPackages();
+      const impactStatementsIsdc =
+        await fullPposalIsdc.requestImpactStrategies();
 
-      if (innovationPackagesIsdc) {
-        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
-          innovationPackagesIsdc.id,
-          innovationPackagesIsdc.key_principles,
-          innovationPackagesIsdc.active
-        );
+      if (impactStatementsIsdc.length > 0) {
+        for (let index = 0; index < impactStatementsIsdc.length; index++) {
+          const isIsdc = impactStatementsIsdc[index];
+
+          isArray.push(
+            fullPposalIsdc.upsertImpactStrategies(
+              isIsdc.id,
+              isIsdc.active,
+              isIsdc.challenge_priorization,
+              isIsdc.research_questions,
+              isIsdc.component_work_package,
+              isIsdc.performance_results,
+              isIsdc.human_capacity,
+              isIsdc.impact_area_id,
+              isIsdc.impact_area_name,
+              isIsdc.partners
+            )
+          );
+        }
       } else {
-        innovationPackages.initvStgId = newInitStgId;
-        savedInnovationPackages = await fullPposalIsdc.upsertInnovationPackages(
-          null,
-          innovationPackages.key_principles,
-          innovationPackages.active
-        );
+        impactStatements.initvStgId = newInitStgId;
+
+        for (let index = 0; index < impactStatements.length; index++) {
+          const is = impactStatements[index];
+
+          for (let index = 0; index < is.partners.length; index++) {
+            const partners = is.partners[index];
+
+            partners.id = null;
+          }
+
+          isArray.push(
+            fullPposalIsdc.upsertImpactStrategies(
+              null,
+              is.active,
+              is.challenge_priorization,
+              is.research_questions,
+              is.component_work_package,
+              is.performance_results,
+              is.human_capacity,
+              is.impact_area_id,
+              is.impact_area_name,
+              is.partners
+            )
+          );
+        }
       }
 
-      return savedInnovationPackages;
+      savedImpactStatements = await Promise.all(isArray);
+
+      return savedImpactStatements;
     } catch (error) {
       throw new BaseError(
-        'Error replicating the information of Innovation Packages',
+        'Error replicating impact statements',
         400,
         error.message,
         false
@@ -538,4 +602,101 @@ export class ReplicationDomain extends InitiativeStageHandler {
     }
   }
 
+  async replicationMelia(currentInitvStgId: number, newInitStgId: number) {
+    try {
+      let savedMeliaPlan;
+      let savedMeliaResultsFramework;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const meiliaPlanResults = await fullPposal.requestMeliaFiles('melia');
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const meiliaPlanResultsIsdc = await fullPposalIsdc.requestMeliaFiles(
+        'melia'
+      );
+
+      // UPSERT MELIA PLAN
+      if (meiliaPlanResultsIsdc.meliaPlan) {
+        savedMeliaPlan = await fullPposalIsdc.upsertMeliaAndFiles(
+          null,
+          null,
+          null,
+          meiliaPlanResultsIsdc.meliaPlan
+        );
+      } else {
+        meiliaPlanResults.meliaPlan.id = null;
+        savedMeliaPlan = await fullPposalIsdc.upsertMeliaAndFiles(
+          null,
+          null,
+          null,
+          meiliaPlanResults.meliaPlan
+        );
+      }
+
+      // UPSERT RESULTS FRAMEWORK
+      if (
+        (meiliaPlanResultsIsdc.resultFramework.tableA.global_targets.length >
+          0 ||
+          meiliaPlanResultsIsdc.resultFramework.tableA.impact_areas_indicators
+            .length > 0 ||
+          meiliaPlanResultsIsdc.resultFramework.tableA.sdg_targets.length >
+            0) &&
+        meiliaPlanResultsIsdc.resultFramework.tableB
+          .action_areas_outcomes_indicators.length > 0 &&
+        meiliaPlanResultsIsdc.resultFramework.tableC.results.length > 0
+      ) {
+        savedMeliaResultsFramework =
+          await fullPposalIsdc.upsertResultsFramework(
+            meiliaPlanResultsIsdc.resultFramework.tableA,
+            meiliaPlanResultsIsdc.resultFramework.tableB,
+            meiliaPlanResultsIsdc.resultFramework.tableC
+          );
+      } else {
+        // Validation for insert new results and indicators
+        for (
+          let index = 0;
+          index < meiliaPlanResults.resultFramework.tableC.results.length;
+          index++
+        ) {
+          const results =
+            meiliaPlanResults.resultFramework.tableC.results[index];
+
+          results.id = null;
+
+          results.indicators =
+            typeof results.indicators === 'undefined' ? [] : results.indicators;
+
+          if (results.indicators) {
+            for (let index = 0; index < results.indicators.length; index++) {
+              const indicators = results.indicators[index];
+              indicators.id = null;
+              indicators.results_id = null;
+            }
+          }
+        }
+
+        savedMeliaResultsFramework =
+          await fullPposalIsdc.upsertResultsFramework(
+            meiliaPlanResults.resultFramework.tableA,
+            meiliaPlanResults.resultFramework.tableB,
+            meiliaPlanResults.resultFramework.tableC
+          );
+      }
+
+      return {savedMeliaPlan, savedMeliaResultsFramework};
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating MELIA (Melia Plan, Results framework and Melia Studies and activities)',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

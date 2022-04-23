@@ -941,9 +941,9 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST IMPACT STRATEGIES
+   ** REQUEST IMPACT STATEMENTS BY IMPACT AREA
    */
-  async requestImpactStrategies(impact_area_id) {
+  async requestImpactStrategiesByIA(impact_area_id) {
     const initvStg = await this.setInitvStage();
 
     try {
@@ -982,7 +982,56 @@ export class ProposalHandler extends InitiativeStageHandler {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get Impact Strategies: Full proposal',
+        'Get Impact Strategies by impact area: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+
+   /**
+   ** REQUEST IMPACT STATEMENTS BY INITIATIVE
+   */
+   async requestImpactStrategies() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve general information
+      const impStraQuery = ` 
+            SELECT *
+            FROM impact_strategies
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `,
+        partnersQuery = `
+                SELECT id,impact_strategies_id,institutions_id as code,
+                       institutions_name as name,tag_id,demand,innovation,scaling,type_id as institutionTypeId,
+                       type_name as institutionType,active,created_at,updated_at
+                FROM partners
+               WHERE impact_strategies_id in (SELECT id
+                FROM impact_strategies
+               WHERE initvStgId = ${initvStg.id}
+               AND active = 1
+               )
+                 AND active = 1
+                `;
+
+      const impactStrategies = await this.queryRunner.query(impStraQuery);
+      const partners = await this.queryRunner.query(partnersQuery);
+
+      impactStrategies.map((imp) => {
+        imp['partners'] = partners.filter((par) => {
+          return par.impact_strategies_id === imp.id;
+        });
+      });
+
+      return impactStrategies;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Impact Strategies by initiative: Full proposal',
         400,
         error.message,
         false
@@ -1617,7 +1666,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND outi.active =1;
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.name as type_name,re.result_type_id,re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.name as type_name,re.result_type_id as result_type,re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
@@ -1625,7 +1674,11 @@ export class ProposalHandler extends InitiativeStageHandler {
          AND re.active =1;
         `,
         resultsIndicatorsQuery = `
-        SELECT *
+        SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
+        ri.results_id, ri.baseline_value, ri.baseline_year,
+        ri.target_value, ri.target_year, ri.active, ri.data_source, 
+        ri.data_collection_method as data_collection, ri.frequency_data_collection,
+        ri.created_at, ri.updated_at
           FROM results_indicators ri
          WHERE ri.results_id in (SELECT re.id
           FROM results re
@@ -1666,14 +1719,14 @@ export class ProposalHandler extends InitiativeStageHandler {
         impactAreasIndicatorsQuery
       );
       const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
-      const tableA = {globalTargets, impactAreasIndicators, sdgTargets};
+      const tableA = {global_targets:globalTargets,impact_areas_indicators: impactAreasIndicators,sdg_targets: sdgTargets};
 
       //TABLE B
 
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const tableB = {actionAreasOutcomesIndicators};
+      const tableB = {action_areas_outcomes_indicators:actionAreasOutcomesIndicators};
 
       //TABLE C
 
