@@ -139,6 +139,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newInitvStg.id
       );
 
+      //9. Replication Policy and Compliance
+      const replicationPolicyCompliance =
+        await this.replicationPolicyCompliance(initvStg.id, newInitvStg.id);
+
       return {
         changeStage,
         replicationGeneralInfo,
@@ -150,7 +154,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationImpactStatements,
         replicationMelia,
         replicationMeliaStudiesActivities,
-        replicationManagementPlan
+        replicationManagementPlan,
+        replicationPolicyCompliance
       };
     } catch (error) {
       throw new BaseError(
@@ -791,9 +796,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const managementPlanRiskIsdc =
         await fullPposalIsdc.requestManagePlanFiles('managementPlanRisk');
 
-      // console.log('FULL PROPOSAL', managementPlanRisk);
-      // console.log('FULL PROPOSAL ISDC', managementPlanRiskIsdc);
-
       if (managementPlanRiskIsdc) {
         savedManagementPlan = await fullPposalIsdc.upsertManagePlanAndFiles(
           null,
@@ -848,7 +850,64 @@ export class ReplicationDomain extends InitiativeStageHandler {
       return {savedManagementPlan, savedRiskAssessment};
     } catch (error) {
       throw new BaseError(
-        'Error replicating the information of Melia Studies and Activities',
+        'Error replicating the information of Management Plan and Risk Assessment',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationPolicyCompliance(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedPolicyCompliance;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const policyCompliance =
+        await fullPposal.requestPolicyComplianceOversight();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const policyComplianceIsdc =
+        await fullPposalIsdc.requestPolicyComplianceOversight();
+
+      if (policyComplianceIsdc) {
+        savedPolicyCompliance =
+          await fullPposalIsdc.upsertPolicyComplianceOversight(
+            policyComplianceIsdc.id,
+            policyComplianceIsdc.research_governance_policy,
+            policyComplianceIsdc.open_fair_data_policy,
+            policyComplianceIsdc.open_fair_data_details,
+            policyComplianceIsdc.active
+          );
+      } else if (policyCompliance) {
+        savedPolicyCompliance =
+          await fullPposalIsdc.upsertPolicyComplianceOversight(
+            null,
+            policyCompliance.research_governance_policy,
+            policyCompliance.open_fair_data_policy,
+            policyCompliance.open_fair_data_details,
+            policyCompliance.active
+          );
+      } else {
+        savedPolicyCompliance =
+          'The initiative does not have information in the Policy and Compliance section stage ' +
+          currentInitvStgId +
+          'please validate';
+      }
+
+      return savedPolicyCompliance;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Policy and Compliance ',
         400,
         error.message,
         false
