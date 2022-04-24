@@ -990,11 +990,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-
-   /**
+  /**
    ** REQUEST IMPACT STATEMENTS BY INITIATIVE
    */
-   async requestImpactStrategies() {
+  async requestImpactStrategies() {
     const initvStg = await this.setInitvStage();
 
     try {
@@ -1719,14 +1718,20 @@ export class ProposalHandler extends InitiativeStageHandler {
         impactAreasIndicatorsQuery
       );
       const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
-      const tableA = {global_targets:globalTargets,impact_areas_indicators: impactAreasIndicators,sdg_targets: sdgTargets};
+      const tableA = {
+        global_targets: globalTargets,
+        impact_areas_indicators: impactAreasIndicators,
+        sdg_targets: sdgTargets
+      };
 
       //TABLE B
 
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const tableB = {action_areas_outcomes_indicators:actionAreasOutcomesIndicators};
+      const tableB = {
+        action_areas_outcomes_indicators: actionAreasOutcomesIndicators
+      };
 
       //TABLE C
 
@@ -1787,7 +1792,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     try {
       meliaStudiesActivitiesData =
-      typeof meliaStudiesActivitiesData === 'undefined' ? [] : meliaStudiesActivitiesData;
+        typeof meliaStudiesActivitiesData === 'undefined'
+          ? []
+          : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
@@ -2253,6 +2260,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       if (files) {
+        files = typeof files === 'undefined' ? [] : files;
         for (let index = 0; index < files.length; index++) {
           const file = files[index];
 
@@ -2275,7 +2283,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-
+      updateFiles = typeof updateFiles === 'undefined' ? [] : updateFiles;
       if (updateFiles.length > 0) {
         for (let index = 0; index < updateFiles.length; index++) {
           const updateFile = updateFiles[index];

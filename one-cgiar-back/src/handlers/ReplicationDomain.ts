@@ -143,6 +143,12 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const replicationPolicyCompliance =
         await this.replicationPolicyCompliance(initvStg.id, newInitvStg.id);
 
+      //10. Replication Human Resourches
+      const replicationHumanResources = await this.replicationHumanResources(
+        initvStg.id,
+        newInitvStg.id
+      );
+
       return {
         changeStage,
         replicationGeneralInfo,
@@ -155,7 +161,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationMelia,
         replicationMeliaStudiesActivities,
         replicationManagementPlan,
-        replicationPolicyCompliance
+        replicationPolicyCompliance,
+        replicationHumanResources
       };
     } catch (error) {
       throw new BaseError(
@@ -908,6 +915,90 @@ export class ReplicationDomain extends InitiativeStageHandler {
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Policy and Compliance ',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationHumanResources(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedHumanResources;
+      let savedInitiativeTeam;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const humanResources = await fullPposal.requestHumanResourcesFiles(
+        'humanResources'
+      );
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const humanResourcesIsdc =
+        await fullPposalIsdc.requestHumanResourcesFiles('humanResources');
+
+      console.log('FULL PROPOSAL: ', humanResources);
+      console.log('FULL PROPOSAL ISDC: ', humanResourcesIsdc);
+      console.log('LENGT',humanResources.initvTeam.length);
+      
+
+      if (humanResourcesIsdc) {
+        savedHumanResources = await fullPposalIsdc.upsertHumanResourcesAndFiles(
+          null,
+          null,
+          null,
+          humanResourcesIsdc.id,
+          humanResourcesIsdc.gender_diversity_inclusion,
+          humanResourcesIsdc.capacity_development,
+          humanResourcesIsdc.active
+        );
+
+        savedInitiativeTeam = await fullPposalIsdc.upsertInitiativeTeam(
+          savedHumanResources.upsertedHumanResources.id,
+          humanResourcesIsdc.initvTeam
+        );
+      } else if (humanResources) {
+        savedHumanResources = await fullPposalIsdc.upsertHumanResourcesAndFiles(
+          null,
+          null,
+          null,
+          null,
+          humanResources.gender_diversity_inclusion,
+          humanResources.capacity_development,
+          humanResources.active
+        );
+
+        humanResources.initvTeam =
+        typeof humanResources.initvTeam === 'undefined' ? [] : humanResources.initvTeam;
+        for (let index = 0; index < humanResources.initvTeam.length; index++) {
+          const initvTeam = humanResources.initvTeam[index];
+
+          initvTeam.id = null;
+        }
+
+        savedInitiativeTeam = await fullPposalIsdc.upsertInitiativeTeam(
+          savedHumanResources.upsertedHumanResources.id,
+          humanResources.initvTeam
+        );
+      } else {
+        savedHumanResources =
+          'The initiative does not have information in the Human Resources section stage ' +
+          currentInitvStgId +
+          'please validate';
+      }
+
+      return {savedHumanResources, savedInitiativeTeam};
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Human Resources ',
         400,
         error.message,
         false
