@@ -120,8 +120,21 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const replicationImpactStatements =
         await this.replicationImpactStatements(initvStg.id, newInitvStg.id);
 
-      //7. Replicate Melia (Melia Plan, Results Framework and Melia Studies and activities)
+      //7. Replicate Melia (Melia Plan and Results Framework)
       const replicationMelia = await this.replicationMelia(
+        initvStg.id,
+        newInitvStg.id
+      );
+
+      //7.1 Replication Melia Studies and Activities
+      const replicationMeliaStudiesActivities =
+        await this.replicationMeliaStudiesActivities(
+          initvStg.id,
+          newInitvStg.id
+        );
+
+      //8. Replication Management Plan and Risk
+      const replicationManagementPlan = await this.replicationManagementPlan(
         initvStg.id,
         newInitvStg.id
       );
@@ -135,7 +148,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationToC,
         replicationInnovationPackages,
         replicationImpactStatements,
-        replicationMelia
+        replicationMelia,
+        replicationMeliaStudiesActivities,
+        replicationManagementPlan
       };
     } catch (error) {
       throw new BaseError(
@@ -693,6 +708,147 @@ export class ReplicationDomain extends InitiativeStageHandler {
     } catch (error) {
       throw new BaseError(
         'Error replicating MELIA (Melia Plan, Results framework and Melia Studies and activities)',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationMeliaStudiesActivities(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedMeliaStudiesActivities;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const meliaStudiesActivities =
+        await fullPposal.requestMeliaStudiesActivities();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const meliaStudiesActivitiesIsdc =
+        await fullPposalIsdc.requestMeliaStudiesActivities();
+
+      if (meliaStudiesActivitiesIsdc.length > 0) {
+        savedMeliaStudiesActivities =
+          await fullPposalIsdc.upsertMeliaStudiesActivities(
+            meliaStudiesActivitiesIsdc
+          );
+      } else if (meliaStudiesActivities.length > 0) {
+        for (let index = 0; index < meliaStudiesActivities.length; index++) {
+          const melia = meliaStudiesActivities[index];
+          melia.id = null;
+        }
+        savedMeliaStudiesActivities =
+          await fullPposalIsdc.upsertMeliaStudiesActivities(
+            meliaStudiesActivities
+          );
+      } else {
+        savedMeliaStudiesActivities =
+          'The initiative does not have information in the Melia studies and activities section stage ' +
+          currentInitvStgId +
+          'please validate';
+      }
+
+      return savedMeliaStudiesActivities;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Melia Studies and Activities',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationManagementPlan(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedManagementPlan;
+      let savedRiskAssessment;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const managementPlanRisk = await fullPposal.requestManagePlanFiles(
+        'managementPlanRisk'
+      );
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const managementPlanRiskIsdc =
+        await fullPposalIsdc.requestManagePlanFiles('managementPlanRisk');
+
+      // console.log('FULL PROPOSAL', managementPlanRisk);
+      // console.log('FULL PROPOSAL ISDC', managementPlanRiskIsdc);
+
+      if (managementPlanRiskIsdc) {
+        savedManagementPlan = await fullPposalIsdc.upsertManagePlanAndFiles(
+          null,
+          null,
+          null,
+          managementPlanRiskIsdc.id,
+          managementPlanRiskIsdc.management_plan,
+          managementPlanRiskIsdc.active
+        );
+
+        savedRiskAssessment = await fullPposalIsdc.upsertRiskAssessment(
+          savedManagementPlan.upsertedManagePlan.id,
+          managementPlanRiskIsdc.riskassessment
+        );
+      } else if (managementPlanRisk) {
+        savedManagementPlan = await fullPposalIsdc.upsertManagePlanAndFiles(
+          null,
+          null,
+          null,
+          null,
+          managementPlanRisk.management_plan,
+          managementPlanRisk.active
+        );
+
+        for (
+          let index = 0;
+          index < managementPlanRisk.riskassessment.length;
+          index++
+        ) {
+          const risk = managementPlanRisk.riskassessment[index];
+
+          risk.id = null;
+
+          for (let index = 0; index < risk.opportinities.length; index++) {
+            const opportinities = risk.opportinities[index];
+
+            opportinities.id = null;
+          }
+        }
+
+        savedRiskAssessment = await fullPposalIsdc.upsertRiskAssessment(
+          savedManagementPlan.upsertedManagePlan.id,
+          managementPlanRisk.riskassessment
+        );
+      } else {
+        savedManagementPlan =
+          'The initiative does not have information in the Management Plan and Risk section stage ' +
+          currentInitvStgId +
+          'please validate';
+      }
+
+      return {savedManagementPlan, savedRiskAssessment};
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Melia Studies and Activities',
         400,
         error.message,
         false

@@ -1786,6 +1786,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     let meliaStudiesActivitiesArray = [];
 
     try {
+      meliaStudiesActivitiesData =
+      typeof meliaStudiesActivitiesData === 'undefined' ? [] : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
