@@ -15,21 +15,21 @@ router.get(
 
 // upsert initiative general information
 router.patch(
-  '/:initiativeId([0-9]+)/general-information',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/general-information',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.upsertGeneralInformation
 );
 
 // get initiative context
 router.get(
-  '/:initiativeId([0-9]+)/context',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/context',
   [checkJwt, checkRole('initiatives', 'readOwn')],
   stagefull.getContext
 );
 
 // upsert initiative context
 router.patch(
-  '/:initiativeId([0-9]+)/context',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/context',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.upsertContext
 );
