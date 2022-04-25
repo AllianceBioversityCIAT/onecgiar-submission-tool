@@ -2526,7 +2526,6 @@ export class ProposalHandler extends InitiativeStageHandler {
             LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
             
             WHERE initvStgId = ${initvStg.id}
-            AND fR.financial_type = "${sectionName}"
             AND fR.active = 1
             GROUP BY
                 fR.id;
@@ -2535,6 +2534,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const financialResources = await this.queryRunner.query(
         financialResourcesQuery
       );
+
       return financialResources;
     } catch (error) {
       console.log(error);
@@ -2696,12 +2696,12 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-    /**
+  /**
    ** REQUEST all Finanacial Resources
    * @param sectionName
    * @returns {financialResources}
    */
-   async requestFinancialResources() {
+  async requestFinancialResources() {
     const initvStg = await this.setInitvStage();
     try {
       const financialResourcesQuery = ` 
