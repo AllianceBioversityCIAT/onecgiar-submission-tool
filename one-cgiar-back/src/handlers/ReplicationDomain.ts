@@ -95,6 +95,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
       //2. Replicate General Information
       const replicationGeneralInfo = await this.replicateGeneralInformation(
+        initvStg,
+        newInitvStg,
         initvStg.id,
         newInitvStg.id
       );
@@ -252,6 +254,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
   }
 
   async replicateGeneralInformation(
+    initvStg,
+    newinitvStg,
     currentInitvStgId: number,
     newInitStgId: number
   ) {
@@ -259,35 +263,35 @@ export class ReplicationDomain extends InitiativeStageHandler {
       let savedGeneralInformation;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
-      // create new full proposal object
-      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+
+      // create initiative by stage handler object
+      const initiative = new InitiativeStageHandler();
       // get general information from proposal object
-      const generalInformation = await fullPposal.getGeneralInformation();
+      const generalInformation = await initiative.getSummary(initvStg);
 
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
-      // create new full proposal object
-      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      const initiativeIsdc = new InitiativeStageHandler();
       // get general information from proposal object
       const generalInformationIsdc =
-        await fullPposalIsdc.getGeneralInformation();
+        await initiative.getSummary(newinitvStg);
 
-      if (generalInformationIsdc.generalInformationId) {
-        savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
-          generalInformationIsdc.generalInformationId,
-          generalInformationIsdc.name,
-          generalInformationIsdc.action_area_id,
-          generalInformationIsdc.action_area_description
-        );
-      } else {
-        generalInformation.initvStgId = newInitStgId;
-        savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
-          null,
-          generalInformation.name,
-          generalInformation.action_area_id,
-          generalInformation.action_area_description,
-          ''
-        );
-      }
+      // if (generalInformationIsdc.generalInformationId) {
+      //   savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
+      //     generalInformationIsdc.generalInformationId,
+      //     generalInformationIsdc.name,
+      //     generalInformationIsdc.action_area_id,
+      //     generalInformationIsdc.action_area_description
+      //   );
+      // } else {
+      //   generalInformation.initvStgId = newInitStgId;
+      //   savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
+      //     null,
+      //     generalInformation.name,
+      //     generalInformation.action_area_id,
+      //     generalInformation.action_area_description,
+      //     ''
+      //   );
+      // }
 
       return savedGeneralInformation;
     } catch (error) {
