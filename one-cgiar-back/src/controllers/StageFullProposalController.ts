@@ -464,7 +464,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
  * @returns { projectionBenefits }
  */
 export async function patchProjectionBenefits(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
 
   // projection benefits section data
   const {
@@ -489,7 +489,7 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -542,14 +542,14 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
  * @returns { projectionBenefits }
  */
 export async function getProjectionBenefits(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -591,14 +591,14 @@ export async function getProjectionBenefitsByImpact(
   req: Request,
   res: Response
 ) {
-  const {initiativeId, impactId} = req.params;
+  const {stageId,initiativeId, impactId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
