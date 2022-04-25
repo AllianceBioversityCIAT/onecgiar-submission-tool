@@ -39,7 +39,7 @@
                 </div>
 
                 <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
-                    <router-outlet *ngIf="this.initiativesSvc.initiative.id"></router-outlet>
+                    <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId"></router-outlet>
                 </div>
    
             </div>

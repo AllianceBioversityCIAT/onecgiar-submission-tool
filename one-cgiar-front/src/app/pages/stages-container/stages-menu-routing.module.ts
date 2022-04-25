@@ -133,7 +133,53 @@ const fullProposalRoutes = [
   }
 ]
 
-
+const fullProposalISDCRoutes = [
+  {
+    path: 'full-proposal',
+    loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
+  },
+  {
+    path: 'full-proposal/general-information',
+    loadChildren: () => import('./stages/full-proposal/pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
+  },
+  ...contextRoutes,
+  {
+    path: 'full-proposal/innovation-packages-and-srp',
+    loadChildren: () => import('./stages/full-proposal/pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
+  },
+  {
+    path: 'full-proposal/impact-statements',
+    loadChildren: () => import('./stages/full-proposal/pages/impact-statements/impact-statements.module').then(mod => mod.ImpactStatementsModule),
+  },
+  {
+    path: 'full-proposal/work-package-research-plans-and-tocs',
+    loadChildren: () => import('./stages/full-proposal/pages/wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
+  },
+  {
+    path: 'full-proposal/melia',
+    loadChildren: () => import('./stages/full-proposal/pages/melia/melia.module').then(mod => mod.MeliaModule),
+  },
+  {
+    path: 'full-proposal/mpara',
+    loadChildren: () => import('./stages/full-proposal/pages/mpara/mpara.module').then(mod => mod.MparaModule),
+  },
+  {
+    path: 'full-proposal/human-resources',
+    loadChildren: () => import('./stages/full-proposal/pages/human-resources/human-resources.module').then(mod => mod.HumanResourcesModule),
+  },
+  {
+    path: 'full-proposal/financial-resources',
+    loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+  },
+  {
+    path: 'full-proposal/policy-compliance-and-oversight',
+    loadChildren: () => import('./stages/full-proposal/pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
+  },
+  {
+    path: 'under-construction-page',
+    component: UnderConstructionPageComponent,
+  }
+]
 
 const routes: Routes = [
   {
@@ -141,7 +187,8 @@ const routes: Routes = [
     component: StagesMenuComponent,
     children: [
       ...preConceptRoutes,
-      ...fullProposalRoutes
+      ...fullProposalRoutes,
+      ...fullProposalISDCRoutes,
     ],
   },
 ];

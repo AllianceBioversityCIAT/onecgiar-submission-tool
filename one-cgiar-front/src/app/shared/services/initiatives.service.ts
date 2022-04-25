@@ -98,8 +98,8 @@ export class InitiativesService {
  * @returns general-information data
  */
 
-  getGeneralInformation(initiativeId, stageName) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  getGeneralInformation(initiativeId, stageName, stageId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${stageId}/${initiativeId}/general-information`);
   }
 
   /**
