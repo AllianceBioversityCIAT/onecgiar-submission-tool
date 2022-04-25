@@ -22,7 +22,7 @@ import { ConceptService } from '../../../../../../shared/services/concept.servic
 })
 export class GeneralInformationComponent implements OnInit {
 
-  @Input() stageId: number = 0;
+  stageId: number = 0;
 
   public summaryForm: FormGroup;
   public actionAreas: any[];
@@ -73,6 +73,9 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.stageId =  this._initiativesService.initiative.stageId;
+    console.log(this.stageId)
+
     this.getActionAreas();
 
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
@@ -115,7 +118,7 @@ export class GeneralInformationComponent implements OnInit {
 
   getGeneralInformation(){
     // console.log("getGeneralInformation");
-    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath ).subscribe((resp:RootObject)=>{
+    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, this.stageId).subscribe((resp:RootObject)=>{
       this.body.generalInformation = resp.response.generalInformation;
     })
   }
