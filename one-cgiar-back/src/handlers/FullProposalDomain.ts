@@ -2658,11 +2658,11 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST Finanacial Resources
+   ** REQUEST Finanacial Resources by section
    * @param sectionName
    * @returns {financialResources}
    */
-  async requestFinancialResources(sectionName) {
+  async requestFinancialResourcesBySection(sectionName) {
     const initvStg = await this.setInitvStage();
     try {
       const financialResourcesQuery = ` 
@@ -2678,6 +2678,45 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND fR.active = 1
             GROUP BY
                 fR.id;
+            `;
+
+      const financialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+
+      return financialResources;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get financial resources and files: Full proposal.',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+    /**
+   ** REQUEST all Finanacial Resources
+   * @param sectionName
+   * @returns {financialResources}
+   */
+   async requestFinancialResources() {
+    const initvStg = await this.setInitvStage();
+    try {
+      const financialResourcesQuery = ` 
+            SELECT
+            fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
+            GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
+            FROM
+                financial_resources fR
+            LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
+            
+            WHERE initvStgId = ${initvStg.id}
+            AND fR.active = 1
+            GROUP BY
+                fR.id
+            ORDER BY fR.financial_type ;
             `;
 
       const financialResources = await this.queryRunner.query(
