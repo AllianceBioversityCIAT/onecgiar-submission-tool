@@ -71,6 +71,7 @@ export class StagesMenuComponent implements OnInit {
         this.initiativesSvc.initiative.official_code = sucP1.official_code;
         this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
         this.initiativesSvc.initiative.stageNameToServices = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
+        console.log("Change initiative" + this.initiativesSvc.initiative.stageId);
         // console.log(this.initiativesSvc.initiative.stageId);
         // console.log(this.initiativesSvc.initiative.stageNameToServices);
         this.initiativesSvc.initiative.users = sucP2;

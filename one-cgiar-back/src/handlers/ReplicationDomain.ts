@@ -149,6 +149,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newInitvStg.id
       );
 
+      //11. Replication Financial Resources
+      const replicationFinancialResources =
+        await this.replicationFinancialResources(initvStg.id, newInitvStg.id);
+
       return {
         changeStage,
         replicationGeneralInfo,
@@ -162,7 +166,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationMeliaStudiesActivities,
         replicationManagementPlan,
         replicationPolicyCompliance,
-        replicationHumanResources
+        replicationHumanResources,
+        replicationFinancialResources
       };
     } catch (error) {
       throw new BaseError(
@@ -945,11 +950,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const humanResourcesIsdc =
         await fullPposalIsdc.requestHumanResourcesFiles('humanResources');
 
-      console.log('FULL PROPOSAL: ', humanResources);
-      console.log('FULL PROPOSAL ISDC: ', humanResourcesIsdc);
-      console.log('LENGT',humanResources.initvTeam.length);
-      
-
       if (humanResourcesIsdc) {
         savedHumanResources = await fullPposalIsdc.upsertHumanResourcesAndFiles(
           null,
@@ -977,7 +977,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
 
         humanResources.initvTeam =
-        typeof humanResources.initvTeam === 'undefined' ? [] : humanResources.initvTeam;
+          typeof humanResources.initvTeam === 'undefined'
+            ? []
+            : humanResources.initvTeam;
         for (let index = 0; index < humanResources.initvTeam.length; index++) {
           const initvTeam = humanResources.initvTeam[index];
 
@@ -999,6 +1001,63 @@ export class ReplicationDomain extends InitiativeStageHandler {
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Human Resources ',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationFinancialResources(
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedFinancialResources;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const financialResources = await fullPposal.requestFinancialResources();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const financialResourcesIsdc =
+        await fullPposalIsdc.requestFinancialResources();
+
+      console.log('FULL PROPOSAL: ', financialResources);
+      console.log('FULL PROPOSAL ISDC: ', financialResourcesIsdc);
+
+      if (financialResourcesIsdc.length > 0) {
+        savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
+          financialResourcesIsdc,
+          newInitStgId,
+          financialResourcesIsdc.financial_type
+        );
+      } else if (financialResources.length > 0) {
+        for (let index = 0; index < financialResources.length; index++) {
+          const fn = financialResources[index];
+          fn.id = null;
+        }
+        savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
+          financialResources,
+          newInitStgId,
+          financialResourcesIsdc.financial_type
+        );
+      } else {
+        savedFinancialResources =
+          'The initiative does not have information in the Financial Resources section stage ' +
+          currentInitvStgId +
+          'please validate';
+      }
+
+      return savedFinancialResources;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Financial Resources ',
         400,
         error.message,
         false

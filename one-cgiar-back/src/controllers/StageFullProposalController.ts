@@ -23,13 +23,13 @@ import {WorkPackages} from '../entity/WorkPackages';
 
 export const getGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -269,7 +269,7 @@ export async function patchWorkPackage(req: Request, res: Response) {
  */
 export const upsertGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
   const {
     generalInformationId,
@@ -284,7 +284,7 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -337,13 +337,13 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
  */
 export const getContext = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -391,7 +391,7 @@ export const getContext = async (req: Request, res: Response) => {
 
 export const upsertContext = async (req: Request, res: Response, next) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
   const {
     contextId,
@@ -409,7 +409,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id:stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -1327,7 +1327,7 @@ export async function getFinancialResources(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const financialResourcesData = await fullPposal.requestFinancialResources(
+    const financialResourcesData = await fullPposal.requestFinancialResourcesBySection(
       sectionName
     );
 
