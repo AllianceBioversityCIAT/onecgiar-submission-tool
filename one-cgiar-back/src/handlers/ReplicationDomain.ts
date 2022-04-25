@@ -70,7 +70,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
       }
 
       // get new initiative by stage
-      const newInitvStg = await initvStgRepo.findOneInitiativeByStage(
+      let newInitvStg = await initvStgRepo.findOneInitiativeByStage(
         currentInitiativeId,
         newStage.id
       );
@@ -85,6 +85,13 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newInitvStg,
         newStage
       );
+
+      if (!newInitvStg) {
+        newInitvStg = await initvStgRepo.findOneInitiativeByStage(
+          currentInitiativeId,
+          newStage.id
+        );
+      }
 
       //2. Replicate General Information
       const replicationGeneralInfo = await this.replicateGeneralInformation(
@@ -150,8 +157,13 @@ export class ReplicationDomain extends InitiativeStageHandler {
       );
 
       //11. Replication Financial Resources
-      const replicationFinancialResources =
-        await this.replicationFinancialResources(initvStg.id, newInitvStg.id);
+      // const replicationFinancialResources =
+      //   await this.replicationFinancialResources(initvStg.id, newInitvStg.id);
+
+      //12. Inactive initiative in the previus stage
+      const inactivePreviusInitiative = await this.inactivePreviusInitiative(
+        initvStg
+      );
 
       return {
         changeStage,
@@ -167,7 +179,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationManagementPlan,
         replicationPolicyCompliance,
         replicationHumanResources,
-        replicationFinancialResources
+        // replicationFinancialResources
+        inactivePreviusInitiative
       };
     } catch (error) {
       throw new BaseError(
@@ -191,8 +204,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
       initvStg = initvStg;
     }
 
-    const newInitv = new InitiativesByStages();
     let savedInitiativeByStage: InitiativesByStages;
+    let updateOldInitiativeByStage;
 
     try {
       // Conditions to change stage a initiative
@@ -202,6 +215,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
         // If Initiative Not exists in New Stage
       } else if (newStage.id > initvStg.stageId) {
+        const newInitv = new InitiativesByStages();
         newInitv.active = true;
         newInitv.global_dimension = initvStg.global_dimension;
         newInitv.initiative = initvStg.initiativeId;
@@ -217,7 +231,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       }
 
-      return savedInitiativeByStage;
+      return {savedInitiativeByStage, updateOldInitiativeByStage};
     } catch (error) {
       throw new BaseError(
         'Error Change Stage by initiative - ' + initvStg.initiativeId,
@@ -316,9 +330,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedContext =
-          'The initiative does not have information in the context section stage ' +
+          '***ERROR*** The initiative does not have information in the context section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          ' - please validate';
       }
 
       return savedContext;
@@ -375,7 +389,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
-      } else {
+      } else if (projectedBenefits.length > 0) {
         projectedBenefits.initvStgId = newInitStgId;
 
         for (let index = 0; index < projectedBenefits.length; index++) {
@@ -405,6 +419,12 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
+      } else {
+        pbArray.push(
+          '***ERROR*** The initiative does not have information in the Projection benefits section, InitvStgId ' +
+            currentInitvStgId +
+            '- please validate'
+        );
       }
 
       savedProjectedBenefits = await Promise.all(pbArray);
@@ -485,9 +505,14 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
       if (tocIsdc.length > 0) {
         savedToc = await fullPposalIsdc.upsertTocs(tocIsdc);
-      } else {
+      } else if (toc.length > 0) {
         toc.initvStgId = newInitStgId;
         savedToc = await fullPposalIsdc.upsertTocs(toc);
+      } else {
+        savedToc =
+          '***ERROR*** The initiative does not have information in the ToC section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       return savedToc;
@@ -536,9 +561,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedInnovationPackages =
-          'The initiative does not have information in the Innovation Packages section stage ' +
+          '***ERROR*** The initiative does not have information in the Innovation Packages section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedInnovationPackages;
@@ -592,7 +617,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
-      } else {
+      } else if (impactStatements.length > 0) {
         impactStatements.initvStgId = newInitStgId;
 
         for (let index = 0; index < impactStatements.length; index++) {
@@ -619,6 +644,12 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
+      } else {
+        isArray.push(
+          '***ERROR*** The initiative does not have information in the Impact Statements section, InitvStgId ' +
+            currentInitvStgId +
+            '- please validate'
+        );
       }
 
       savedImpactStatements = await Promise.all(isArray);
@@ -661,7 +692,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
           null,
           meiliaPlanResultsIsdc.meliaPlan
         );
-      } else {
+      } else if (meiliaPlanResults.meliaPlan) {
         meiliaPlanResults.meliaPlan.id = null;
         savedMeliaPlan = await fullPposalIsdc.upsertMeliaAndFiles(
           null,
@@ -669,6 +700,11 @@ export class ReplicationDomain extends InitiativeStageHandler {
           null,
           meiliaPlanResults.meliaPlan
         );
+      } else {
+        savedMeliaPlan =
+          '***ERROR*** The initiative does not have information in the Melia Plan section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       // UPSERT RESULTS FRAMEWORK
@@ -689,7 +725,15 @@ export class ReplicationDomain extends InitiativeStageHandler {
             meiliaPlanResultsIsdc.resultFramework.tableB,
             meiliaPlanResultsIsdc.resultFramework.tableC
           );
-      } else {
+      } else if (
+        (meiliaPlanResults.resultFramework.tableA.global_targets.length > 0 ||
+          meiliaPlanResults.resultFramework.tableA.impact_areas_indicators
+            .length > 0 ||
+          meiliaPlanResults.resultFramework.tableA.sdg_targets.length > 0) &&
+        meiliaPlanResults.resultFramework.tableB
+          .action_areas_outcomes_indicators.length > 0 &&
+        meiliaPlanResults.resultFramework.tableC.results.length > 0
+      ) {
         // Validation for insert new results and indicators
         for (
           let index = 0;
@@ -719,6 +763,11 @@ export class ReplicationDomain extends InitiativeStageHandler {
             meiliaPlanResults.resultFramework.tableB,
             meiliaPlanResults.resultFramework.tableC
           );
+      } else {
+        savedMeliaResultsFramework =
+          '***ERROR*** The initiative does not have information in the Melia Results Framework section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       return {savedMeliaPlan, savedMeliaResultsFramework};
@@ -769,9 +818,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
           );
       } else {
         savedMeliaStudiesActivities =
-          'The initiative does not have information in the Melia studies and activities section stage ' +
+          '***ERROR*** The initiative does not have information in the Melia studies and activities section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedMeliaStudiesActivities;
@@ -854,9 +903,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedManagementPlan =
-          'The initiative does not have information in the Management Plan and Risk section stage ' +
+          '***ERROR*** The initiative does not have information in the Management Plan and Risk section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return {savedManagementPlan, savedRiskAssessment};
@@ -911,9 +960,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
           );
       } else {
         savedPolicyCompliance =
-          'The initiative does not have information in the Policy and Compliance section stage ' +
+          '***ERROR*** The initiative does not have information in the Policy and Compliance section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedPolicyCompliance;
@@ -992,9 +1041,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedHumanResources =
-          'The initiative does not have information in the Human Resources section stage ' +
+          '***ERROR*** The initiative does not have information in the Human Resources section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return {savedHumanResources, savedInitiativeTeam};
@@ -1049,15 +1098,35 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedFinancialResources =
-          'The initiative does not have information in the Financial Resources section stage ' +
+          '***ERROR*** The initiative does not have information in the Financial Resources section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedFinancialResources;
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Financial Resources ',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async inactivePreviusInitiative(initvStg) {
+    let updateOldInitiativeByStage;
+
+    try {
+      //Update Status Old Stage
+      initvStg.active = false;
+
+      updateOldInitiativeByStage = await this.initvStgRepo.save(initvStg);
+
+      return updateOldInitiativeByStage;
+    } catch (error) {
+      throw new BaseError(
+        'Error inactivating the initiative in the previous stage ',
         400,
         error.message,
         false

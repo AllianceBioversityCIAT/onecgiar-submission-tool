@@ -24,8 +24,8 @@ import {MetaDataHandler} from '../handlers/MetaDataDomain';
 import {Submissions} from '../entity/Submissions';
 import {SubmissionsStatus} from '../entity/SubmissionStatus';
 import {Statuses} from '../entity/Statuses';
-import { toInteger } from 'lodash';
-import { ReplicationDomain } from '../handlers/ReplicationDomain';
+import {toInteger} from 'lodash';
+import {ReplicationDomain} from '../handlers/ReplicationDomain';
 
 require('dotenv').config();
 
@@ -247,7 +247,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
  * @returns
  */
 export async function replicationProcess(req: Request, res: Response) {
-  const {initiativeId, stageId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const {newStageId} = req.body;
 
   // instantiate class InitiativeStageHandler (Domain)
