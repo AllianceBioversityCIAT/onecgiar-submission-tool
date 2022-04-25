@@ -2534,7 +2534,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const financialResources = await this.queryRunner.query(
         financialResourcesQuery
       );
-      
+
       return financialResources;
     } catch (error) {
       console.log(error);
@@ -2696,12 +2696,12 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-    /**
+  /**
    ** REQUEST all Finanacial Resources
    * @param sectionName
    * @returns {financialResources}
    */
-   async requestFinancialResources() {
+  async requestFinancialResources() {
     const initvStg = await this.setInitvStage();
     try {
       const financialResourcesQuery = ` 
