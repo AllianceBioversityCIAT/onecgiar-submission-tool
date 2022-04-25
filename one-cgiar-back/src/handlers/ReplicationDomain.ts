@@ -157,8 +157,13 @@ export class ReplicationDomain extends InitiativeStageHandler {
       );
 
       //11. Replication Financial Resources
-      // const replicationFinancialResources =
-      //   await this.replicationFinancialResources(initvStg.id, newInitvStg.id);
+      const replicationFinancialResources =
+        await this.replicationFinancialResources(
+          initvStg,
+          newInitvStg,
+          initvStg.id,
+          newInitvStg.id
+        );
 
       //12. Inactive initiative in the previus stage
       const inactivePreviusInitiative = await this.inactivePreviusInitiative(
@@ -179,7 +184,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationManagementPlan,
         replicationPolicyCompliance,
         replicationHumanResources,
-        // replicationFinancialResources
+        replicationFinancialResources,
         inactivePreviusInitiative
       };
     } catch (error) {
@@ -191,6 +196,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
       );
     }
   }
+
+  /**
+   * ******** STEPS REPLICATION FOR ISDC FEEDBACK ************
+   */
 
   /**
    ** 1. Change Stage by Initiative
@@ -1058,6 +1067,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
   }
 
   async replicationFinancialResources(
+    initvStg,
+    newinitvStg,
     currentInitvStgId: number,
     newInitStgId: number
   ) {
@@ -1077,13 +1088,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const financialResourcesIsdc =
         await fullPposalIsdc.requestFinancialResources();
 
-      console.log('FULL PROPOSAL: ', financialResources);
-      console.log('FULL PROPOSAL ISDC: ', financialResourcesIsdc);
-
       if (financialResourcesIsdc.length > 0) {
         savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
           financialResourcesIsdc,
-          newInitStgId,
+          newinitvStg,
           financialResourcesIsdc.financial_type
         );
       } else if (financialResources.length > 0) {
@@ -1093,7 +1101,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         }
         savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
           financialResources,
-          newInitStgId,
+          newinitvStg,
           financialResourcesIsdc.financial_type
         );
       } else {
