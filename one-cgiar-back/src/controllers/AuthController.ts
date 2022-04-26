@@ -215,7 +215,7 @@ export async function validateToCToken(req: Request, res: Response) {
   try {
     const userInfo = await validateToCtoken(token);
 
-    return res.json(userInfo);
+    return res.json({userInfo:userInfo});
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }
