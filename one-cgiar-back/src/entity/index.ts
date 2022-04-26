@@ -62,3 +62,4 @@ export {Users} from './Users';
 export {WorkPackages} from './WorkPackages';
 export {Highlights} from './Highlights';
 export {MeliaStudiesActivities} from './MeliaStudiesActivities';
+export {ISDCResponses} from './ISDCResponses';
