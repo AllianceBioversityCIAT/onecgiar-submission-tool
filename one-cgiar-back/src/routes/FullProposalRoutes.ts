@@ -312,21 +312,21 @@ router.patch(
 
 // upsert projection benefits to initiative
 router.patch(
-  '/projection-benefits/:initiativeId([0-9]+)',
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('benefits', 'updateOwn')],
   stagefull.patchProjectionBenefits
 );
 
 // get all projection benefits
 router.get(
-  '/projection-benefits/:initiativeId([0-9]+)',
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('benefits', 'readOwn')],
   stagefull.getProjectionBenefits
 );
 
 // get projection benefits per impact area
 router.get(
-  '/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)',
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)/:impactId([0-9]+)',
   [checkJwt, checkRole('benefits', 'readOwn')],
   stagefull.getProjectionBenefitsByImpact
 );

@@ -8,8 +8,7 @@ import {Stages} from '../entity/Stages';
 import {BaseError} from './BaseError';
 import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
-import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
-import {ProposalHandler} from './FullProposalDomain';
+import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -75,6 +74,31 @@ export class InitiativeStageHandler extends BaseValidation {
     } catch (error) {
       throw new BaseError(
         'Get initiative by stage object',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   *
+   * @param
+   * @returns summary
+   */
+  async getSummary(initvStg) {
+
+    try {
+      const generalInfoRepo = await getCustomRepository(
+        GeneralInformationRepository
+      );
+
+      const summary = await generalInfoRepo.requestSummary(initvStg);
+
+      return summary;
+    } catch (error) {
+      throw new BaseError(
+        'Request Summary link: Error',
         400,
         error.message,
         false
@@ -464,7 +488,6 @@ export class InitiativeStageHandler extends BaseValidation {
 
   /******* REPLICATION STEPS *********/
 
-  
   async forwardGeoScope(forwardStage: Stages | number) {
     // get initiative by stage id from initiative
     const initvStg = await this.initvStage;
