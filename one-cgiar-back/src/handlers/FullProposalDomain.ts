@@ -3057,5 +3057,27 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  async requestISDCResponses() {
+    const initvStg = await this.setInitvStage();
+    const ISDCResponsesRepo = getRepository(
+      entities.ISDCResponses
+    );
 
+    try {
+      const ISDCResponses = ISDCResponsesRepo.find({
+        where: {initvStgId: initvStg.id},
+        relations: ["user"]
+      });
+
+      return ISDCResponses;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'GET ISDC Responses: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

@@ -1711,7 +1711,7 @@ export async function patchISDCResponses(
       await fullPposal.upsertISDCResponses(ISDCResponsesData);
 
     res.json(
-      new ResponseHandler('Full Proposal: MELIA studies and activities.', {
+      new ResponseHandler('Full Proposal ISDC: Responses.', {
         ISDCResponses
       })
     );
@@ -1739,7 +1739,7 @@ export async function getISDCResponses(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {description: 'Full Proposal ISDC Feedback'}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
