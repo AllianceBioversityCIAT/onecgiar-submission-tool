@@ -3,11 +3,11 @@ import {getRepository, QueryFailedError} from 'typeorm';
 import {validate} from 'class-validator';
 import {Users} from '../entity/Users';
 import config from '../config/config';
-import {APIError} from '../handlers/BaseError';
+import {APIError, BaseError} from '../handlers/BaseError';
 import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
-import {utilLogin} from '../utils/auth-login';
+import {generateToCtoken, utilLogin, validateToCtoken} from '../utils/auth-login';
 
 require('dotenv').config();
 
@@ -195,3 +195,28 @@ const searchByEmail = (email) => {
     });
   });
 };
+
+export async function generateTocToken(req: Request, res: Response) {
+  const {userId} = req.body;
+
+  try {
+    const token = await generateToCtoken(userId);
+
+    return res.json(token);
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+export async function validateToCToken(req: Request, res: Response) {
+  const {token} = req.body;
+
+  try {
+    const userInfo = await validateToCtoken(token);
+
+    return res.json(userInfo);
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
