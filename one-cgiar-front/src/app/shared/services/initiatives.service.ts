@@ -399,8 +399,8 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}`);
   }
 
-  getPOBenefitsFpByImpactArea(initiativeId, impactId) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}/${impactId}`);
+  getPOBenefitsFpByImpactArea(stageId, initiativeId, impactId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${stageId}/${initiativeId}/${impactId}`);
   }
   // 
   getPOBenefitsTimetimeframes(benefitId) {

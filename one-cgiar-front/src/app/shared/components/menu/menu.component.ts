@@ -11,6 +11,7 @@ import { RequestsService } from '../../services/requests.service';
 import { UtilsHandler } from '../../utils/utils';
 import { map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { UtilsService } from '../../services/utils.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -48,15 +49,13 @@ export class MenuComponent implements OnInit {
     public stgMenuSvc: StagesMenuService,
     private spinnerService: NgxSpinnerService,
     public _interactionsService: InteractionsService,
-    public _dataControlService: DataControlService
+    public _dataControlService: DataControlService,
+    public _utilsService: UtilsService
   ) { }
 
 
 
   ngOnInit(): void {
-    setTimeout(() => {
-      console.log(this._dataControlService.userMenu)
-    }, 1000);
     let loadMenu$ = this._dataControlService.loadMenu$.subscribe(
       (stageName) => {
         this.currentStageName = stageName;
@@ -234,6 +233,8 @@ export class MenuComponent implements OnInit {
   }
 
   getMenu() {
+    // console.log(this.initiativesSvc.initiative.id);
+    // console.log("getMenu")
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).pipe(map(resp => resp.response.stages)).subscribe((userMenuResp: any) => {
 
       this._dataControlService.userMenu = userMenuResp;

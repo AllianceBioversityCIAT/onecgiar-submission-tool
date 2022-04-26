@@ -37,7 +37,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   }
 
   upserInfo(){
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Measurable three-year outcomes has been saved'):
@@ -47,7 +47,7 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       // console.log(resp);
       this.contextForm.controls['smart_objectives'].setValue(resp?.response?.context?.smart_objectives);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);

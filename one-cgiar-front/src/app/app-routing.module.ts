@@ -6,7 +6,7 @@ import { CheckLoginGuard } from './shared/guards/check-login.guard';
 
 const routes: Routes = [
   {
-    path: 'initiatives/:id/stages',
+    path: 'initiatives/:id/stages/:stageName',
     loadChildren: () => import('./pages/stages-container/stages-menu.module').then((m) => m.StagesMenuModule),
   },  
   {

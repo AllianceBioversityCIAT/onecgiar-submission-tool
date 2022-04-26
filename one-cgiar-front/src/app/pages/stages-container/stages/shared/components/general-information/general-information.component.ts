@@ -73,22 +73,24 @@ export class GeneralInformationComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // console.log("ngOnInit")
+
     this.stageId =  this._initiativesService.initiative.stageId;
-    console.log(this.stageId)
+    // console.log(this.stageId)
 
     this.getActionAreas();
 
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
 
-      switch (this.stageId) {
-        case 2:
-          this.getGeneralInformation();
-          break;
+      // switch (this.stageId) {
+      //   case 2:
+          // this.getGeneralInformation();
+        //   break;
 
-        case 3:
+        // case 3:
           this.getSummary();
-          break;
-      }
+      //     break;
+      // }
      
     })
     this._dataControlService.generalInfoChange$.emit();
@@ -116,15 +118,17 @@ export class GeneralInformationComponent implements OnInit {
   }
 
 
-  getGeneralInformation(){
-    // console.log("getGeneralInformation");
-    this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, this.stageId).subscribe((resp:RootObject)=>{
-      this.body.generalInformation = resp.response.generalInformation;
-    })
-  }
+  // getGeneralInformation(){
+  //   console.log("getGeneralInformation");
+  //   console.log(this._initiativesService.initiative.id)
+  //   this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, this.stageId).subscribe((resp:RootObject)=>{
+  //     this.body.generalInformation = resp.response.generalInformation;
+  //   })
+  // }
 
   getSummary() {
     // console.log("getSummary");
+    // console.log(this._initiativesService.initiative.id)
     this.spinnerService.show('general-information');
 
     this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageId).subscribe((resp:RootObject) => {
@@ -173,8 +177,9 @@ export class GeneralInformationComponent implements OnInit {
       table_name:"general_information",
     }
 
-    if (this.stageId == 2) this.saveGeneralInformation(patchBody);
-    if (this.stageId == 3) this.saveSummary(patchBody);
+    // if (this.stageId == 2) this.saveGeneralInformation(patchBody);
+    // if (this.stageId == 3) 
+    this.saveSummary(patchBody);
 
   }
 

@@ -52,6 +52,8 @@ export class DataControlService {
         return { route: 'pre-concept', name: 'pre-concept', ownPath: 'pre-concept' }
       case 3:
         return { route: 'full-proposal', name: 'full-proposal', ownPath: 'proposal' }
+      case 4:
+        return { route: 'full-proposal-isdc-feedback', name: 'full-proposal-isdc-feedback', ownPath: 'proposal' }
     }
   }
 

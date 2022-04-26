@@ -38,7 +38,7 @@ export class ChallengeStatementComponent implements OnInit {
 
   upserInfo(){
     //console.log(this.challengeStatementForm);
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?
       this._interactionsService.successMessage('Challenge statement has been saved'):
@@ -48,13 +48,14 @@ export class ChallengeStatementComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    console.log("getContext")
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       this.challengeStatementForm.controls['challenge_statement'].setValue(resp?.response?.context?.challenge_statement);
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showfrom = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      //console.log("errorerekkasssssssssssssssdasda");
+      console.log(err);
     })
   }
 

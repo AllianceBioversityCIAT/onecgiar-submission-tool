@@ -49,7 +49,7 @@ export class ImpactAreaComponent implements OnInit {
       if (reload){
         this.reloadComponent();
       }else{
-        this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+        this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
           this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
         })
       }
