@@ -46,27 +46,49 @@ export class GeneralInformationRepository extends Repository<GeneralInformation>
                    AND r.active = 1
                    AND r.wrkPkgId IS NOT NULL
                  GROUP BY r.region_id
-                `;
+                `,
+      bugetQuery = `
+        SELECT id, initvStgId, value, table_name, col_name, active, created_at, updated_at
+          FROM budget
+         WHERE initvStgId = ${initvStg.id}
+           AND table_name = 'general_information'
+           AND col_name = 'budget'
+           AND active = true
+        
+        `;
 
-    const gI = await this.query(GIquery);
+    const generalInformation = await this.query(GIquery);
     const regions = await this.query(REquery);
     const countries = await this.query(COquery);
+    let budget: any = await this.query(bugetQuery);
 
-    const generalInformation = gI[0];
-        
     const goblalDimension = initvStg.global_dimension;
 
     const geoScope = {regions, countries, goblalDimension};
-    
-    var budget: Budget = await budgetRepo.findOne({
-      where: {
-        initvStg: initvStg,
-        table_name: 'general_information',
-        col_name: 'budget',
-        active: true
-      }
-    });
 
-    return {generalInformation, budget, geoScope};
+    // var budget: Budget = await budgetRepo.findOne({
+    //   where: {
+    //     initvStg: initvStg,
+    //     table_name: 'general_information',
+    //     col_name: 'budget',
+    //     active: true
+    //   }
+    // });
+
+    console.log(generalInformation);
+    
+    console.log(budget);
+
+    if (budget.length <= 0) {
+      budget = {}
+    }else{
+      budget = budget[0]
+    }
+
+    return {
+      generalInformation: generalInformation[0],
+      budget: budget,
+      geoScope
+    };
   }
 }

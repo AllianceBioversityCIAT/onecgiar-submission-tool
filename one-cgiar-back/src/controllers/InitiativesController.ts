@@ -113,6 +113,18 @@ export const upsertSummary = async (req: Request, res: Response) => {
     is_global
   } = req.body;
 
+  console.log('aca',  generalInformationId,
+    name,
+    acronym,
+    action_area_id,
+    action_area_description,
+    budgetId,
+    budget_value,
+    regions,
+    countries,
+    is_global);
+  
+
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -135,7 +147,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
       );
     }
     initvStg.global_dimension = is_global;
-    initvStg = await initvStgRepo.save(initvStg);
+    // initvStg = await initvStgRepo.save(initvStg);
 
     // create initiative by stage handler object
     const initvStgObj = new InitiativeStageHandler(
@@ -144,36 +156,56 @@ export const upsertSummary = async (req: Request, res: Response) => {
       `${initvStg.initiative.id}`
     );
     // get current stage object
-    const currentStage = await initvStgObj.stage;
+    // const currentStage = await initvStgObj.stage;
 
     // create object for concept or full proposal
-    let dummyHandler;
-    if (currentStage[0].description === 'Full Proposal') {
-      dummyHandler = new ProposalHandler(initvStg.id.toString());
-    } else {
-      dummyHandler = new ConceptHandler(initvStg.id.toString());
-    }
+    // let dummyHandler;
+    // if (
+    //   currentStage[0].description === 'Full Proposal'
+    // ) {
+    //   dummyHandler = new ProposalHandler(initvStg.id.toString());
+    // } else {
+    //   dummyHandler = new ConceptHandler(initvStg.id.toString());
+    // }
 
-    // upsert geo scope, budget, general information
-    const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
+    const summary = await initvStgObj.upsertSummary(
+      generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym,
+      budgetId,
+      budget_value,
       regions,
       countries
     );
-    const upsertedBudget = await initvStgObj.addBudget(
-      budget_value,
-      'general_information',
-      'budget',
-      budgetId,
-      true
-    );
-    const upsertedGeneralInformation =
-      await dummyHandler.upsertGeneralInformation(
-        generalInformationId,
-        name,
-        action_area_id,
-        action_area_description,
-        acronym
-      );
+
+    const upsertedGeoScope = summary.upsertedGeoScope;
+
+    const upsertedBudget = summary.upsertedBudget;
+
+    const upsertedGeneralInformation = summary.upsertedGeneralInformation;
+
+    // // upsert geo scope, budget, general information
+    // const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
+    //   regions,
+    //   countries
+    // );
+    // const upsertedBudget = await initvStgObj.addBudget(
+    //   budget_value,
+    //   'general_information',
+    //   'budget',
+    //   budgetId,
+    //   true
+    // );
+    // const upsertedGeneralInformation =
+    //   await dummyHandler.upsertGeneralInformation(
+    //     generalInformationId,
+    //     name,
+    //     action_area_id,
+    //     action_area_description,
+    //     acronym
+    //   );
 
     res.json(
       new ResponseHandler('Initiatives: Summary.', {

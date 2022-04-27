@@ -3,12 +3,14 @@ import {Citations} from '../entity/Citatitions';
 import {CountriesByInitiativeByStage} from '../entity/CountriesByInitiativeByStage';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
+import * as entities from '../entity';
 import {RegionsByInitiativeByStage} from '../entity/RegionsByInitiativeByStage';
 import {Stages} from '../entity/Stages';
 import {BaseError} from './BaseError';
 import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
 import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
+import {InitiativeHandler} from './InitiativesDomain';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -103,24 +105,148 @@ export class InitiativeStageHandler extends BaseValidation {
   async upsertSummary(
     generalInformationId,
     name,
-    acronym,
     action_area_id,
     action_area_description,
+    acronym,
     budgetId,
     budget_value,
     regions,
-    countries,
-    is_global
+    countries
   ) {
-        // get current initiative by stage
-        const initvStg = await this.initvStage;
+
+    console.log( generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym,
+      budgetId,
+      budget_value,
+      regions,
+      countries);
+    
+
     try {
+      // upsert geo scope, budget, general information
+      const upsertedGeoScope = await this.upsertGeoScopes(regions, countries);
+      const upsertedBudget = await this.addBudget(
+        budget_value,
+        'general_information',
+        'budget',
+        budgetId,
+        true
+      );
+      const upsertedGeneralInformation = await this.upsertGeneralInformation(
+        generalInformationId,
+        name,
+        action_area_id,
+        action_area_description,
+        acronym
+      );
 
- 
-
-
+      return {upsertedGeoScope, upsertedBudget, upsertedGeneralInformation};
     } catch (error) {
       throw new BaseError('Upsert Summary: Error', 400, error.message, false);
+    }
+  }
+
+  /**
+   ** UPSERT GENERAL INFORMATION
+   * @param generalInformationId?
+   * @param name
+   * @param action_area_id
+   * @param action_area_description
+   * @returns generalInformation
+   */
+  async upsertGeneralInformation(
+    generalInformationId?,
+    name?,
+    action_area_id?,
+    action_area_description?,
+    acronym?
+  ) {
+    const gnralInfoRepo = getRepository(entities.GeneralInformation);
+
+    //  create empty object
+    let generalInformation: entities.GeneralInformation;
+    try {
+      // get current intiative by stage
+      // const initvStg = await this.initvStage;
+      const initvStg = await this.setInitvStage();
+
+      // get clarisa action action areas
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
+
+      // get select action areas for initiative
+      const selectedActionArea = actionAreas.find(
+        (area) => area.id == action_area_id
+      ) || {name: null};
+
+      // if null, create object
+      if (generalInformationId == null) {
+        generalInformation = new entities.GeneralInformation();
+        generalInformation.name = name;
+        generalInformation.acronym = acronym;
+        generalInformation.action_area_description =
+          action_area_description || selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id;
+        // assign initiative by stage
+        generalInformation.initvStg = initvStg.id;
+      } else {
+        generalInformation = await gnralInfoRepo.findOne(generalInformationId);
+        generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
+        generalInformation.action_area_description = selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id
+          ? action_area_id
+          : generalInformation.action_area_id;
+      }
+      // upserted data
+      let upsertedInfo = await gnralInfoRepo.save(generalInformation);
+
+      //    update initiative name
+      let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+      initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
+      initiative = await this.initiativeRepo.save(initiative);
+
+      // retrieve general information
+      const GIquery = ` 
+            SELECT
+            initvStgs.id AS initvStgId,
+            general.id AS generalInformationId,
+            IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+            IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+            (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+            (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+            
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                
+                general.action_area_description AS action_area_description,
+                general.action_area_id AS action_area_id
+                
+                FROM
+                initiatives_by_stages initvStgs
+            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+            
+            WHERE initvStgs.id = ${initvStg.id};
+            `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'General information : Full proposal',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
