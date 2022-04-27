@@ -1688,7 +1688,7 @@ export async function patchISDCResponses(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal ISDC Feedback'}
+      where: {description: 'Full Proposal'}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -1698,7 +1698,7 @@ export async function patchISDCResponses(
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
-        'Read melia and files: Error',
+        'Patch ISDC Responses: Error',
         400,
         `Initiative not found in stage: ${stage.description}`,
         false
@@ -1739,7 +1739,7 @@ export async function getISDCResponses(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal ISDC Feedback'}
+      where: {description: 'Full Proposal'}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({

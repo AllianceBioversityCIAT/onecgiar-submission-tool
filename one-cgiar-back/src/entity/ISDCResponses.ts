@@ -25,6 +25,10 @@ export class ISDCResponses extends UpdatedCreatedAt {
   
   @Column({type: 'text', default: null})
   updated_response: string;
+  
+  @Column({type: 'int'})
+  user_id: number;
+
 
   @Column({default: false})
   is_deleted: boolean;
@@ -32,7 +36,4 @@ export class ISDCResponses extends UpdatedCreatedAt {
   @ManyToOne(() => InitiativesByStages)
   initvStg!: InitiativesByStages;
 
-  @ManyToOne(() => Users)
-  @JoinColumn({ name: 'user_id' })
-  user!: Users;
 }
