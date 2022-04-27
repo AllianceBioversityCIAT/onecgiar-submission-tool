@@ -510,9 +510,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       // get general information from proposal object
       const workPackagesIsdc = await fullPposalIsdc.getWorkPackage();
 
-      console.log('FULL PROPOSAL', workPackages);
-      console.log('FULL PROPOSAL ISDC', workPackagesIsdc);
-
       if (workPackagesIsdc.length > 0) {
         for (let index = 0; index < workPackagesIsdc.length; index++) {
           const wp = workPackagesIsdc[index];
@@ -584,8 +581,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
           wpArray.push(newWp);
         }
 
-        console.log('aca', countriesArray);
-        console.log('fui', regionsArray);
       }
 
       savedGeoScope = await initvStgObjIsdc.upsertGeoScopes(
