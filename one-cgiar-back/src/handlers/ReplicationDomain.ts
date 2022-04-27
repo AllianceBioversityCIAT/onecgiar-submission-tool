@@ -1,5 +1,10 @@
 import {getCustomRepository, getRepository} from 'typeorm';
-import {InitiativesByStages, Stages} from '../entity';
+import {
+  CountriesByInitiativeByStage,
+  InitiativesByStages,
+  RegionsByInitiativeByStage,
+  Stages
+} from '../entity';
 import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
@@ -280,33 +285,39 @@ export class ReplicationDomain extends InitiativeStageHandler {
         `${newinitvStg.initiativeId}`
       );
       // get general information from proposal object
-      const generalInformationIsdc = await initiativeIsdc.getSummary(newinitvStg);
+      const generalInformationIsdc = await initiativeIsdc.getSummary(
+        newinitvStg
+      );
 
-      if (generalInformationIsdc) {
-
+      if (generalInformationIsdc.generalInformation.generalInformationId) {
         savedGeneralInformation = await initiativeIsdc.upsertSummary(
           generalInformationIsdc.generalInformation.generalInformationId,
           generalInformationIsdc.generalInformation.name,
           generalInformationIsdc.generalInformation.action_area_id,
           generalInformationIsdc.generalInformation.action_area_description,
           generalInformationIsdc.generalInformation.acronym,
-          generalInformationIsdc.budget.id?generalInformationIsdc.budget.id:"",
-          generalInformationIsdc.budget.value?generalInformationIsdc.budget.value:"",
-          generalInformationIsdc.geoScope.regions,
-          generalInformationIsdc.geoScope.countries
+          generalInformationIsdc.budget.id
+            ? generalInformationIsdc.budget.id
+            : '',
+          generalInformationIsdc.budget.value
+            ? generalInformationIsdc.budget.value
+            : '',
+          null,
+          null
         );
       } else {
-
-        savedGeneralInformation = await initiative.upsertSummary(
-          generalInformation.generalInformation.generalInformationId,
+        savedGeneralInformation = await initiativeIsdc.upsertSummary(
+          null,
           generalInformation.generalInformation.name,
           generalInformation.generalInformation.action_area_id,
           generalInformation.generalInformation.action_area_description,
           generalInformation.generalInformation.acronym,
-          generalInformation.budget.id?generalInformation.budget.id:"",
-          generalInformation.budget.value?generalInformation.budget.value:"",
-          generalInformation.geoScope.regions,
-          generalInformation.geoScope.countries
+          null,
+          generalInformation.budget.value
+            ? generalInformation.budget.value
+            : '',
+          null,
+          null
         );
       }
 
@@ -476,7 +487,13 @@ export class ReplicationDomain extends InitiativeStageHandler {
   ) {
     try {
       let wpArray = [];
+      let countriesArray = [];
+      let regionsArray = [];
       let savedWorkPakages;
+      let savedGeoScope;
+
+      let regions = new RegionsByInitiativeByStage();
+      let countries = new CountriesByInitiativeByStage();
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
@@ -487,26 +504,98 @@ export class ReplicationDomain extends InitiativeStageHandler {
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
       // create new full proposal object
       const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      const initvStgObjIsdc = new InitiativeStageHandler(
+        newInitStgId.toString()
+      );
       // get general information from proposal object
       const workPackagesIsdc = await fullPposalIsdc.getWorkPackage();
+
+      console.log('FULL PROPOSAL', workPackages);
+      console.log('FULL PROPOSAL ISDC', workPackagesIsdc);
 
       if (workPackagesIsdc.length > 0) {
         for (let index = 0; index < workPackagesIsdc.length; index++) {
           const wp = workPackagesIsdc[index];
-          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
+          let currentWp: any = fullPposalIsdc.upsertWorkPackages(wp);
+
+          if (wp.regions.length > 0) {
+            for (let index = 0; index < wp.regions.length; index++) {
+              const rg = wp.regions[index];
+
+              regions.id = rg.id;
+              regions.wrkPkg = currentWp.id;
+              regions.active = true;
+              regions.region_id = rg.region_id;
+
+              regionsArray.push(regions);
+            }
+          }
+
+          if (wp.countries.length > 0) {
+            for (let index = 0; index < wp.countries.length; index++) {
+              const co = wp.countries[index];
+
+              countries.id = co.id;
+              countries.wrkPkg = currentWp.id;
+              countries.country_id = co.country_id;
+              countries.active = true;
+
+              countriesArray.push(countries);
+            }
+          }
+
+          wpArray.push(currentWp);
         }
       } else {
         workPackages.initvStgId = newInitStgId;
+
         for (let index = 0; index < workPackages.length; index++) {
           let wp = workPackages[index];
           wp.id = null;
-          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
+
+          let newWp: any = await fullPposalIsdc.upsertWorkPackages(wp);
+
+          if (wp.regions.length > 0) {
+            for (let index = 0; index < wp.regions.length; index++) {
+              const rg = wp.regions[index];
+
+              regions.id = null;
+              regions.wrkPkg = newWp.id;
+              regions.active = true;
+              regions.region_id = rg.region_id;
+
+              regionsArray.push(regions);
+            }
+          }
+
+          if (wp.countries.length > 0) {
+            for (let index = 0; index < wp.countries.length; index++) {
+              const co = wp.countries[index];
+
+              countries.id = null;
+              countries.wrkPkg = newWp.id;
+              countries.country_id = co.country_id;
+              countries.active = true;
+
+              countriesArray.push(countries);
+            }
+          }
+
+          wpArray.push(newWp);
         }
+
+        console.log('aca', countriesArray);
+        console.log('fui', regionsArray);
       }
+
+      savedGeoScope = await initvStgObjIsdc.upsertGeoScopes(
+        regionsArray,
+        countriesArray
+      );
 
       savedWorkPakages = await Promise.all(wpArray);
 
-      return savedWorkPakages;
+      return {savedWorkPakages, savedGeoScope};
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Work packages',
