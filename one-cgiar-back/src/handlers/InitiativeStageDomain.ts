@@ -83,11 +83,10 @@ export class InitiativeStageHandler extends BaseValidation {
 
   /**
    *
-   * @param
+   * @param initvStg
    * @returns summary
    */
   async getSummary(initvStg) {
-
     try {
       const generalInfoRepo = await getCustomRepository(
         GeneralInformationRepository
@@ -97,12 +96,31 @@ export class InitiativeStageHandler extends BaseValidation {
 
       return summary;
     } catch (error) {
-      throw new BaseError(
-        'Request Summary link: Error',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Request Summary : Error', 400, error.message, false);
+    }
+  }
+
+  async upsertSummary(
+    generalInformationId,
+    name,
+    acronym,
+    action_area_id,
+    action_area_description,
+    budgetId,
+    budget_value,
+    regions,
+    countries,
+    is_global
+  ) {
+        // get current initiative by stage
+        const initvStg = await this.initvStage;
+    try {
+
+ 
+
+
+    } catch (error) {
+      throw new BaseError('Upsert Summary: Error', 400, error.message, false);
     }
   }
 

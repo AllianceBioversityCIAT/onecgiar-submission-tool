@@ -7,6 +7,7 @@ import config from '../config/config';
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
 const jwtSecret = process.env.jwtSecret;
+const jwtTocSecret = process.env.jwtTocSecret;
 
 export const utilLogin = async (email: string, password: string) => {
   const userRepository = getRepository(Users);
@@ -119,3 +120,56 @@ const validateAD = (one_user, password) => {
     });
   });
 };
+
+export async function generateToCtoken(userId) {
+  const userRepo = getRepository(Users);
+
+  try {
+    const user = await userRepo.findOne({id: userId});
+
+    if (!user) {
+      throw new BaseError('Read Context: Error', 400, `User not found`, false);
+    }
+
+    const token = jwt.sign({email: user.email}, jwtTocSecret, {
+      expiresIn: '5m'
+    });
+
+    return token;
+  } catch (error) {
+    throw new BaseError(
+      'Error generating ToC Token - Utils',
+      400,
+      error.message,
+      false
+    );
+  }
+}
+
+export async function validateToCtoken(Toctoken) {
+  const userRepo = getRepository(Users);
+
+  try {
+    const decodeToken: any = await jwt.decode(Toctoken);
+
+    const email = decodeToken.email;
+
+    const userInfo = await userRepo.findOne({
+      select: ['first_name', 'last_name', 'email'],
+      where: {email: email}
+    });
+
+    if (!userInfo) {
+      throw new BaseError('Read Context: Error', 400, `User not found`, false);
+    }
+
+    return userInfo;
+  } catch (error) {
+    throw new BaseError(
+      'Error validating ToC Token - Utils',
+      400,
+      error.message,
+      false
+    );
+  }
+}
