@@ -7,6 +7,7 @@ import { InitiativesService } from '../../../../../../../../../shared/services/i
 import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
 import Viewer from 'viewerjs';
+import { UtilsService } from '../../../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-wp-toc',
@@ -23,12 +24,14 @@ export class WpTocComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     private _wpDataControlService:WpDataControlService,
-    public http: HttpClient
+    public http: HttpClient,
+    public _utilsService:UtilsService
   ) { 
   }
 
   ngOnInit(): void {
     this.getWpById();
+  
   }
 
   getWpById(){

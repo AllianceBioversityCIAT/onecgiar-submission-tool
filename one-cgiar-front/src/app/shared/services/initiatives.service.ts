@@ -557,6 +557,11 @@ export class InitiativesService {
   submitInitiative(initiativeId, stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/submit/${initiativeId}/${stageId}`, {});
   }
+
+  authTocToken(userId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/toc/token`, {userId});
+  }
+
   getAssesssmentStatuses(initiativeId, stageId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/assessment/${initiativeId}/${stageId}/statuses`);
   }

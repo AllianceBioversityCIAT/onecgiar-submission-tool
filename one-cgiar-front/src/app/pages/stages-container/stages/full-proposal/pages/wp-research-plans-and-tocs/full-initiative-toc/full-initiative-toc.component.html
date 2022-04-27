@@ -1,6 +1,6 @@
 <section-title name="Full initiative Toc" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-  <app-edit-toc-button url="https://toc.mel.cgiar.org/"></app-edit-toc-button>
+  <app-edit-toc-button (click)="this._utilsService.goToEditToc(tocitem?.toc_id)"></app-edit-toc-button>
   <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert>
   <div class="toc_list">
     <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>

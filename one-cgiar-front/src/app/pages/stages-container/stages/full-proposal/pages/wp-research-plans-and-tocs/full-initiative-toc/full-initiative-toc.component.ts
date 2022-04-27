@@ -5,6 +5,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { environment } from '../../../../../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import Viewer from 'viewerjs';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-full-initiative-toc',
@@ -20,7 +21,8 @@ export class FullInitiativeTocComponent implements OnInit {
   serviceIsConsumed = false;
   constructor(
     public _initiativesService: InitiativesService,
-    public http: HttpClient
+    public http: HttpClient,
+    public _utilsService:UtilsService
   ) { 
   }
 
