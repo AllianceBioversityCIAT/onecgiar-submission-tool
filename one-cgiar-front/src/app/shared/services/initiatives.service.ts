@@ -19,7 +19,7 @@ export class InitiativesService {
     roleId: 4,
     readonly: true,
     stageId: null,
-    stageNameToServices: null,
+    stageName: null,
     name: null,
     users: [],
     status: null,
@@ -442,6 +442,7 @@ export class InitiativesService {
   }
   // get all work packages by initiative with stage full proposal
   getWpsFpByInititative(initiativeId:string, stageName:string) {
+    console.log(stageName)
     return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/packages/${initiativeId}`);
   }
 
@@ -486,7 +487,7 @@ export class InitiativesService {
   }
 
   saveWpFp(body: any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageNameToServices}/packages/${initiativeId}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${initiativeId}`, body);
   }
   // Query to create a work package
   createPartner(body: any): Observable<any> {

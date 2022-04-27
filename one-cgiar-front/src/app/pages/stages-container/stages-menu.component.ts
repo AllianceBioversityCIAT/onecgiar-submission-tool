@@ -106,10 +106,10 @@ export class StagesMenuComponent implements OnInit {
       })
 
       let currentStage:any = stagesList.find((stageItem:any) => stageItem?.stageNameKebabCase == resp?.stageName)
-
+      console.log(currentStage)
       // console.log(currentStage?.id)
       // console.log("Change initiative=> " , currentStage?.id);
-
+      this.initiativesSvc.initiative.stageName = currentStage.stageNameKebabCase == 'full-proposal' ? 'proposal' : currentStage.stageNameKebabCase;
       this.initiativesSvc.initiative.id = resp['id'];
 
       this.initiativesSvc.initiative.stageId = currentStage?.id
@@ -125,7 +125,7 @@ export class StagesMenuComponent implements OnInit {
         this.initiativesSvc.initiative.official_code = sucP1.official_code;
 
         // this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
-        // this.initiativesSvc.initiative.stageNameToServices = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
+        // this.initiativesSvc.initiative.stageName = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
         
 
         this.initiativesSvc.initiative.users = sucP2;

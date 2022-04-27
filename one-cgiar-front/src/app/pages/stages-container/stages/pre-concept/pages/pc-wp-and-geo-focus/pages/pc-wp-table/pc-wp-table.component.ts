@@ -14,7 +14,7 @@ export class PcWpTableComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this._initiativesService.initiative.stageNameToServices)
+    console.log(this._initiativesService.initiative.stageName)
   }
 
 }
