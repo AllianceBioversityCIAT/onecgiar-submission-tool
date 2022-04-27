@@ -794,14 +794,14 @@ router.get(
 // Upsert ISDC Responses
 router.patch(
   '/participatory-design/isdc-responses/:initiativeId([0-9]+)',
-  [ uploadFile.any()],
+  [ checkJwt, checkRole('initiatives', 'updateOwn'),uploadFile.any()],
   stagefull.patchISDCResponses
 );
 
 // Get ISDC Responses
 router.get(
   '/participatory-design/isdc-responses/:initiativeId([0-9]+)',
-  [ ],
+  [ checkJwt, checkRole('initiatives', 'readOwn')],
   stagefull.getISDCResponses
 );
 
