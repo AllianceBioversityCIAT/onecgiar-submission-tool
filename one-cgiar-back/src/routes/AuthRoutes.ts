@@ -20,7 +20,7 @@ router.post('/change-password', changePassword);
 router.get('/cgiar', [checkJwt], validateCGUser);
 
 //Generate ToC Token
-router.post('/toc/token', generateTocToken);
+router.post('/toc/token', [checkJwt], generateTocToken);
 
 //Management ToC Token
 router.post('/toc', validateToCToken);
