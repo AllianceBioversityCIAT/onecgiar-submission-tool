@@ -265,33 +265,50 @@ export class ReplicationDomain extends InitiativeStageHandler {
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
 
       // create initiative by stage handler object
-      const initiative = new InitiativeStageHandler();
+      const initiative = new InitiativeStageHandler(
+        `${initvStg.id}`,
+        `${initvStg.stageId}`,
+        `${initvStg.initiativeId}`
+      );
       // get general information from proposal object
       const generalInformation = await initiative.getSummary(initvStg);
 
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
-      const initiativeIsdc = new InitiativeStageHandler();
+      const initiativeIsdc = new InitiativeStageHandler(
+        `${newinitvStg.id}`,
+        `${newinitvStg.stageId}`,
+        `${newinitvStg.initiativeId}`
+      );
       // get general information from proposal object
-      const generalInformationIsdc =
-        await initiative.getSummary(newinitvStg);
+      const generalInformationIsdc = await initiativeIsdc.getSummary(newinitvStg);
 
-      // if (generalInformationIsdc.generalInformationId) {
-      //   savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
-      //     generalInformationIsdc.generalInformationId,
-      //     generalInformationIsdc.name,
-      //     generalInformationIsdc.action_area_id,
-      //     generalInformationIsdc.action_area_description
-      //   );
-      // } else {
-      //   generalInformation.initvStgId = newInitStgId;
-      //   savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
-      //     null,
-      //     generalInformation.name,
-      //     generalInformation.action_area_id,
-      //     generalInformation.action_area_description,
-      //     ''
-      //   );
-      // }
+      if (generalInformationIsdc) {
+
+        savedGeneralInformation = await initiativeIsdc.upsertSummary(
+          generalInformationIsdc.generalInformation.generalInformationId,
+          generalInformationIsdc.generalInformation.name,
+          generalInformationIsdc.generalInformation.action_area_id,
+          generalInformationIsdc.generalInformation.action_area_description,
+          generalInformationIsdc.generalInformation.acronym,
+          generalInformationIsdc.budget.id?generalInformationIsdc.budget.id:"",
+          generalInformationIsdc.budget.value?generalInformationIsdc.budget.value:"",
+          generalInformationIsdc.geoScope.regions,
+          generalInformationIsdc.geoScope.countries
+        );
+      } else {
+
+        savedGeneralInformation = await initiative.upsertSummary(
+          generalInformation.generalInformation.generalInformationId,
+          generalInformation.generalInformation.name,
+          generalInformation.generalInformation.action_area_id,
+          generalInformation.generalInformation.action_area_description,
+          generalInformation.generalInformation.acronym,
+          generalInformation.budget.id?generalInformation.budget.id:"",
+          generalInformation.budget.value?generalInformation.budget.value:"",
+          generalInformation.geoScope.regions,
+          generalInformation.geoScope.countries
+        );
+      }
 
       return savedGeneralInformation;
     } catch (error) {
