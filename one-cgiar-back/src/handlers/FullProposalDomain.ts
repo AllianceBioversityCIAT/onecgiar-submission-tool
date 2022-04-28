@@ -1468,6 +1468,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newResults.result_title = result.result_title;
         newResults.is_global = result.is_global;
         newResults.active = result.active;
+        newResults.work_package_id = result.wp_id;
 
         upsertResults = await resultsRepo.save(newResults);
 

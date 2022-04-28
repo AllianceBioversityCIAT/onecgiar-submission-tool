@@ -28,7 +28,7 @@ export class Results extends UpdatedCreatedAt {
   @Column({type: 'int'})
   initvStgId: number;
 
-  @OneToOne(() => InitiativesByStages)
-  @JoinColumn()
-  initvStg!: InitiativesByStages;
+  @Column({type: 'int'})
+  work_package_id: number;
+  
 }
