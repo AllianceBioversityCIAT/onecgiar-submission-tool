@@ -27,10 +27,10 @@ export class TaImpactAreaComponent implements OnInit {
     
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.currentImpactAreaId = routeResp.id;
-      this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(
+      this._initiativesService.getMeliaResultFramework().pipe(
         map(res=>res.response.melia.resultFramework.tableA),
         map((res:tableAData)=>{
-          res.globalTargets = res.globalTargets.filter(item=>item.impact_area_id == routeResp.id);
+          res.globalTargets = res?.globalTargets?.filter(item=>item.impact_area_id == routeResp.id);
           res.impactAreasIndicators = res.impactAreasIndicators.filter(item=>item.impact_area_id == routeResp.id);
           res.sdgTargets = res.sdgTargets.filter(item=>item.impact_area_id == routeResp.id);
           return res

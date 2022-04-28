@@ -87,7 +87,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   getmeliaStudActiByInitId(){
     console.log(this._initiativesService.initiative.id)
-    this._initiativesService.getmeliaStudActiByInitId(this._initiativesService.initiative.id).pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
+    this._initiativesService.getmeliaStudActiByInitId().pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
       console.log(resp)
       this.list = resp;
     })
@@ -95,7 +95,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   saveSection(){
     console.log(this.list)
-    this._initiativesService.patchmeliaStudActiByInitId(this._initiativesService.initiative.id,this.list).subscribe(resp=>{
+    this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp=>{
       console.log(resp)
       this.getmeliaStudActiByInitId();
     })

@@ -79,7 +79,7 @@ export class WorkPackageComponent implements OnInit {
     console.log('addWorkPackage()')
     // let body = {active:false,id:this._wpDataControlService.wpId}
     console.log(body)
-    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.saveWpFp(body).subscribe(resp => {
       console.log(resp)
       this._interactionsService.successMessage('Work package has been removed')
       this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])

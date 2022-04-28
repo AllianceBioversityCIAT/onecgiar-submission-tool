@@ -219,9 +219,9 @@ export class MenuComponent implements OnInit {
     // console.log(sectionFinded);
   }
 
-  mapWorkPackagesInStage({ stageName, stageId, sectionId, subSectionId }) {
+  mapWorkPackagesInStage({ stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
-      this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, stageName).subscribe((wpsResp) => {
+      this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
         let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
         this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
         this._dataControlService.wpMaped = true;

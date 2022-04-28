@@ -50,6 +50,7 @@ export class ImpactAreaComponent implements OnInit {
         this.reloadComponent();
       }else{
         this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+          console.log(resp)
           this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
         })
       }
@@ -70,7 +71,7 @@ export class ImpactAreaComponent implements OnInit {
     let cont = 0;
     let indicatorsSavedList:boolean[] = [];
     this.indicatorsListPOBSavedList.map(item=>{
-      this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
+      this._initiativesService.patchPOBenefitsFp(item).subscribe(resp=>{
         indicatorsSavedList.push(true);
         cont++
         if (cont == this.indicatorsListPOBSavedList.length) {
@@ -103,6 +104,7 @@ export class ImpactAreaComponent implements OnInit {
 
   getProjectedBenefitLists(impactAreaId){
     this._initiativesService.getProjectedBenefitLists().subscribe(resp=>{
+      console.log(resp)
       this.indicatorsList = resp.response.impactProjectedBenefitsRequested.filter(item=>item.impactAreaId == impactAreaId && item.isApplicableProjectedBenefits == true);
     },err=>{},()=>this.indicatorsListLoaded =  true)
     

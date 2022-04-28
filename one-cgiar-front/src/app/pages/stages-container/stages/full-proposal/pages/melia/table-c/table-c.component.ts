@@ -19,7 +19,7 @@ export class TableCComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
+    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);

@@ -39,7 +39,7 @@ export class MeliaPlanComponent implements OnInit {
   }
 
   getMelia(){
-    this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
+    this._initiativesService.getMelia('melia').subscribe(resp=>{
       let melia = resp?.response?.melia?.meliaPlan;
       this.data.id = melia?.id ? melia?.id : null;
       this.secionForm.controls['example'].setValue(melia?.melia_plan);
@@ -57,7 +57,7 @@ export class MeliaPlanComponent implements OnInit {
     let body = { melia_plan: this.data };
     console.log(body);
 
-    this._initiativesService.saveMelia(body,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
+    this._initiativesService.saveMelia(body).subscribe(resp=>{
       console.log("saveMelia");
       console.log(resp);
       this.getMelia();

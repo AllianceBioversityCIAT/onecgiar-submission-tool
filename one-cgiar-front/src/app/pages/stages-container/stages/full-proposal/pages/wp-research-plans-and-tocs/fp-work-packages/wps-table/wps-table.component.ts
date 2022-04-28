@@ -14,7 +14,7 @@ export class WpsTableComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this._initiativesService.initiative.stageName)
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id, this._initiativesService.initiative.stageName).subscribe(resp=>{
+    this._initiativesService.getWpsFpByInititative().subscribe(resp=>{
       this.workPackagesList = resp.response.workpackage;
     },err=>{console.log(err);});
     

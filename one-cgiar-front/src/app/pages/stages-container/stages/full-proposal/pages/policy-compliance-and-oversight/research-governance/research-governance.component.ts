@@ -29,7 +29,7 @@ export class ResearchGovernanceComponent implements OnInit {
 
   saveSection(){
     // console.log(this.sectionForm.value);
-    this._initiativesService.savePolicyCompliance(this.sectionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.savePolicyCompliance(this.sectionForm.value).subscribe(resp=>{
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
       this.sectionForm.valid?
       this._interactionsService.successMessage('Research governance has been saved'):
@@ -38,7 +38,7 @@ export class ResearchGovernanceComponent implements OnInit {
   }
 
   getPolicyCompliance(){
-    this._initiativesService.getPolicyCompliance(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getPolicyCompliance().subscribe(resp=>{
       let response = resp.response.policyComplianceData;
       // console.log(response);
       if (resp.response.policyComplianceData) {
