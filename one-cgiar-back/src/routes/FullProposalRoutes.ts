@@ -34,6 +34,29 @@ router.patch(
   stagefull.upsertContext
 );
 
+
+// upsert projection benefits to initiative
+router.patch(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'updateOwn')],
+  stagefull.patchProjectionBenefits
+);
+
+// get all projection benefits
+router.get(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefits
+);
+
+// get projection benefits per impact area
+router.get(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)/:impactId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefitsByImpact
+);
+
+
 // read work packages list
 /**
  * @api {get} stages-control/proposal/packages/:initiativeId Work package - Request workpackage
@@ -310,26 +333,6 @@ router.patch(
   stagefull.patchWorkPackage
 );
 
-// upsert projection benefits to initiative
-router.patch(
-  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'updateOwn')],
-  stagefull.patchProjectionBenefits
-);
-
-// get all projection benefits
-router.get(
-  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'readOwn')],
-  stagefull.getProjectionBenefits
-);
-
-// get projection benefits per impact area
-router.get(
-  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)/:impactId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'readOwn')],
-  stagefull.getProjectionBenefitsByImpact
-);
 
 // upsert impact strategies to initiative
 /**
@@ -601,12 +604,6 @@ router.get(
  *                                "indicator_name": "At least 80% user survey responses satisfied or very satisfied",
  *                                "unit_messurament": "Qualitative measure of satisfaction",
  *                                "active": true,
- *                            },
- *                            {
- *                                "indicator_id": 2,
- *                                "indicator_name": "No. of external user requests annually by CGIAR genebanks",
- *                                "unit_messurament": "Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)",
- *                                "active": true,
  *                            }
  *                        ],
  *                        "geo_scope": {
@@ -636,15 +633,6 @@ router.get(
  *                                "data_collection":"User surveys",
  *                                "frequency_data_collection":"Ongoing",
  *                                "active":true,
- *                            },
- *                            {
- *
- *                                "id":2,
- *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR.",
- *                                "data_collection":"Online reporting tool",
- *                                "frequency_data_collection":"Ongoing",
- *                                "active":true,
- *
  *                            }
  *                        ],
  *                        "base_line":[
@@ -653,13 +641,6 @@ router.get(
  *                                "active":true,
  *                                "base_line_value":"Customer satisfaction of 80% or higher",
  *                                "base_line_year":"2017"
- *                            },
- *                            {
- *                                "id":2,
- *                                "active":true,
- *                                "base_line_value":"601,811 accessions",
- *                                "base_line_year":"2020"
- *
  *                            }
  *                        ],
  *                        "target":[
@@ -667,13 +648,6 @@ router.get(
  *                                "id":1,
  *                                "active":true,
  *                                "target_value":"80% or higher",
- *                                "target_year":"2024"
- *
- *                            },
- *                            {
- *                                "id":2,
- *                                "active":true,
- *                                "target_value":"650,000",
  *                                "target_year":"2024"
  *
  *                            }
@@ -712,7 +686,7 @@ router.get(
  */
 router.patch(
   // '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
-  '/melia/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  '/melia/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
   stagefull.patchMeliaAndFiles
 );
