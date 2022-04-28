@@ -2,7 +2,7 @@
 
 <div class="section">
 
-    <div class="header section_title"  [ngClass]="{'active_route': !this.collapse && haveContent}" [routerLink]="this.customRouterLink" (click)="this.collapse = !this.collapse">
+    <div class="header section_title  {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }}" (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)">
         <div class="line"></div>
         <div class="title">
             <ng-content select="[title]"></ng-content>

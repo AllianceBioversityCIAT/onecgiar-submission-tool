@@ -98,7 +98,10 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.localEmitter.unsubscribe()
+    if (this.localEmitter) {
+      this.localEmitter.unsubscribe()
+    }
+   
   }
 
   getActionAreas(){

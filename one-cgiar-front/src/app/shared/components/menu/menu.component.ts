@@ -177,49 +177,45 @@ export class MenuComponent implements OnInit {
 
   }
 
-  mapReportInSubSectionMenu(stageId, sectionId, object) {
+  mapDataInMenu(list, attributeName:"subsections"|"dynamicList", stageId:number, sectionId?:number, subSectionId?:number ) {
     if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .previewButton = object);
-    // console.log(sectionFinded);
+    let elementFinded;
+    elementFinded = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId);
+    // console.log("Stage")
+    // console.log(elementFinded)
+    if (stageId && sectionId)
+    elementFinded = elementFinded.sections.find((section) => section.sectionId == sectionId);
+    // console.log("sections")
+    // console.log(elementFinded)
+    if (stageId && sectionId && subSectionId)
+    elementFinded =  elementFinded.subsections.find((subSection) => subSection.subSectionId == subSectionId);
+
+    console.log(list)
+
+    if (elementFinded[attributeName]?.length) {
+      list.map(item=>{
+        elementFinded[attributeName].push(item);
+      })
+   
+    }else{
+      elementFinded[attributeName] = list;
+    }
+    
+    console.log(elementFinded);
   }
 
-  mapDataInMenu(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).dynamicList = list);
-    // console.log(sectionFinded);
-  }
+  // mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
+  //   if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
+  //   let sectionFinded = (this._dataControlService.userMenu
+  //     .find((menuItem) => menuItem.stageId == stageId)
+  //     .sections.find((section) => section.sectionId == sectionId)
+  //     .subsections.find(
+  //       (subSection) => subSection.subSectionId == subSectionId
+  //     ).dynamicList = object);
+  //   // console.log(sectionFinded);
+  // }
 
-  mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).dynamicListSubSection = list);
-    // console.log(sectionFinded);
-  }
-
-  mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).previewButton = object);
-    // console.log(sectionFinded);
-  }
-
-  mapWorkPackagesInStage({ stageId, sectionId, subSectionId }) {
+  mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
         let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
@@ -263,53 +259,49 @@ export class MenuComponent implements OnInit {
         this.mapWorkPackagesInStage(fullProposalData);
 
         let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 1, 8, pobList);
+        this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
 
         let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 7, 16, impactStatementsList);
+        this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
 
         let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 8, 37, tableAImpactArea);
+        this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
 
-        let resultsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(2, 16, 29, resultsList);
+        this.mapDataInMenu( [{
+          display_name: 'Risk assessment preview',
+          description: '/mpara-reports'
+        }],"subsections",3, 9)
 
+        this.mapDataInMenu([{
+          display_name: 'Human Resources preview',
+          description: '/human-resources-reports'
+        }],"subsections",3, 15)
 
-        this.mapReportInSubSectionMenu(3, 9, {
-          showName: 'Risk assessment preview',
-          frontRoute: '/mpara-reports'
-        })
-
-        this.mapReportInSubSectionMenu(3, 15, {
-          showName: 'Human Resources preview',
-          frontRoute: '/human-resources-reports'
-        })
-
-        this.mapPreviewInDynamicListMenu(3, 7, 16, {
-          showName: 'Partners preview',
+        this.mapDataInMenu( [{
+          name: 'Partners preview',
           frontRoute: '/is-reports'
-        });
+        }],"dynamicList",3, 7, 16);
 
-        this.mapDataInMenuDynamicListSubSection(3, 4, 27,
-          [{
-            showName: '10.1.1 Activity breakdown',
-            frontRoute: '/budget/activity-breakdown/',
-          },
-          {
-            showName: '10.1.2 Geography breakdown',
-            frontRoute: '/budget/geography-breakdown/',
-          }]
+        this.mapDataInMenu(          [{
+          name: '10.1.1 Activity breakdown',
+          frontRoute: '/activity-breakdown/',
+        },
+        {
+          name: '10.1.2 Geography breakdown',
+          frontRoute: '/geography-breakdown/',
+        }],"dynamicList",3, 4, 27,
+
         );
 
-        this.mapPreviewInDynamicListMenu(3, 5, 12, {
-          showName: 'Geographic scope preview',
-          frontRoute: '/work-packages/wp-reports'
-        });
+        // this.mapDataInMenu(3, 5, 12, {
+        //   showName: 'Geographic scope preview',
+        //   frontRoute: '/work-packages/wp-reports'
+        // });
 
-        this.mapPreviewInDynamicListMenu(3, 1, 8, {
-          showName: 'Projection of benefits preview',
-          frontRoute: '/projection-of-benefits/pob-reports'
-        });
+        // this.mapDataInMenu(3, 1, 8, {
+        //   showName: 'Projection of benefits preview',
+        //   frontRoute: '/projection-of-benefits/pob-reports'
+        // });
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;

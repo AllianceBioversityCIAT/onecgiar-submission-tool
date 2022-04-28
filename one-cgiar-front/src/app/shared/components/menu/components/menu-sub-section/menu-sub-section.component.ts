@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MenuService } from '../../services/menu.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { UtilsService } from '../../../../services/utils.service';
 
 @Component({
   selector: 'app-menu-sub-section',
@@ -21,10 +22,11 @@ export class MenuSubSectionComponent implements OnInit {
   // @Input() stage;
   @Input() customRouterLink:string = '';
   @Input() haveContent = false;
-  @Input() collapse:boolean = true;
+  @Input() collapse:boolean = false;
   constructor(
     public _menuService:MenuService,
-    public router:Router
+    public router:Router,
+    public _utilsService:UtilsService
   ) { }
 
   ngOnInit(): void {

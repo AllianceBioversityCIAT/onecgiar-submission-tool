@@ -38,4 +38,13 @@ export class UtilsService {
     // return html.outerHTML
   }
 
+  validateCurrrentSection(route){    
+    if (!this.router.url.includes(route)) return false;
+    return true
+  }
+
+  navigate(route:string){
+    this.router.navigate([route])
+  }
+
 }

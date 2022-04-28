@@ -284,11 +284,11 @@ export class InitiativesService {
   }
 
   saveMelia(body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.stageId}/${this.initiative.id}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}`, body);
   }
 
   getMelia(section: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.stageId}/${this.initiative.id}/${section}`);
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}/${section}`);
   }
 
   saveManagePlan(body: any, location: string): Observable<any> {
