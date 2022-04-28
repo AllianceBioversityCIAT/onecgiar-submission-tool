@@ -79,7 +79,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
  * @returns
  */
 export async function getWorkPackages(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -194,7 +194,7 @@ export async function getAllWorkPackages(req: Request, res: Response) {
  * @returns
  */
 export async function patchWorkPackage(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const {
     acronym,
     name,
@@ -639,7 +639,7 @@ export async function getProjectionBenefitsByImpact(
  * @returns { impactStrategies }
  */
 export async function patchImpactStrategies(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   // impact strategies section data
   const {
@@ -711,7 +711,7 @@ export async function patchImpactStrategies(req: Request, res: Response) {
  * @returns { impactStrategies }
  */
 export async function getImpactStrategies(req: Request, res: Response) {
-  const {stageId,initiativeId, impactAreaId} = req.params;
+  const {stageId, initiativeId, impactAreaId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -759,7 +759,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
  * @returns melia
  */
 export async function patchMeliaAndFiles(req: Request, res: Response) {
-  const {stageId,initiativeId, ubication} = req.params;
+  const {initiativeId, ubication} = req.params;
 
   //melia section data
   // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
@@ -774,12 +774,15 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
+  let stage;
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({
-      where: {id: stageId}
+
+    stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
     });
+
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
@@ -830,7 +833,7 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
  * @returns meliaData
  */
 export async function getMeliaAndFiles(req: Request, res: Response) {
-  const {stageId,initiativeId, sectionName} = req.params;
+  const {stageId, initiativeId, sectionName} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -874,7 +877,7 @@ export async function patchMeliaStudiesActivities(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const meliaStudiesActivitiesData = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -926,7 +929,7 @@ export async function getMeliaStudiesActivities(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -974,7 +977,7 @@ export async function getMeliaStudiesActivities(
  * @returns managePlanRisk
  */
 export async function patchManagePlanAndFiles(req: Request, res: Response) {
-  const {stageId,initiativeId, ubication} = req.params;
+  const {stageId, initiativeId, ubication} = req.params;
 
   //melia section data
   const {id, management_plan, active, section, updateFiles, riskassessment} =
@@ -1043,7 +1046,7 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
  * @returns managePlanData
  */
 export async function getManagePlanAndFiles(req: Request, res: Response) {
-  const {stageId,initiativeId, sectionName} = req.params;
+  const {stageId, initiativeId, sectionName} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1089,7 +1092,7 @@ export async function getManagePlanAndFiles(req: Request, res: Response) {
  * @returns humanResources
  */
 export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
-  const {stageId,initiativeId, ubication} = req.params;
+  const {stageId, initiativeId, ubication} = req.params;
 
   //melia section data
   const {
@@ -1166,7 +1169,7 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
  * @returns humanResourcesData
  */
 export async function getHumanResources(req: Request, res: Response) {
-  const {stageId,initiativeId, sectionName} = req.params;
+  const {stageId, initiativeId, sectionName} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1214,7 +1217,7 @@ export async function getHumanResources(req: Request, res: Response) {
  * @returns financialResources
  */
 export async function patchFinancialResources(req: Request, res: Response) {
-  const {stageId,initiativeId, sectionName} = req.params;
+  const {stageId, initiativeId, sectionName} = req.params;
 
   //financial resources section data
   const fResources = req.body;
@@ -1301,7 +1304,7 @@ export async function patchFinancialResources(req: Request, res: Response) {
  * @returns financialResourcesData
  */
 export async function getFinancialResources(req: Request, res: Response) {
-  const {stageId,initiativeId, sectionName} = req.params;
+  const {stageId, initiativeId, sectionName} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1366,7 +1369,7 @@ export async function patchPolicyComplianceOversight(
   req: Request,
   res: Response
 ) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   //Policy compliance Oversight section data
   const {
@@ -1432,7 +1435,7 @@ export async function getPolicyComplianceOversight(
   req: Request,
   res: Response
 ) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1479,7 +1482,7 @@ export async function getPolicyComplianceOversight(
  * @returns
  */
 export async function patchInnovationPackages(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   //Policy compliance Oversight section data
   const {id, key_principles, active} = req.body;
@@ -1533,7 +1536,7 @@ export async function patchInnovationPackages(req: Request, res: Response) {
  * @returns
  */
 export async function getInnovationPackages(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1579,7 +1582,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
  * @returns tocs
  */
 export async function patchTocs(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const toc = req.body;
 
   //Validate stage
@@ -1627,7 +1630,7 @@ export async function patchTocs(req: Request, res: Response) {
  * @returns tocs
  */
 export async function getTocByInitiative(req: Request, res: Response) {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const toc = req.body;
 
   //Validate stage
