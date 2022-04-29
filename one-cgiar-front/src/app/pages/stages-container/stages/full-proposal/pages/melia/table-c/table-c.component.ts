@@ -40,7 +40,8 @@ export class TableCComponent implements OnInit {
       if (!result?.indicators?.length) return this.resultDataList.push(
         {
           result_title: result?.result_title,
-          type_name: result?.type_name, 
+          type_name: result?.type_name,
+          wp_acronym: result?.wp_acronym, 
           rowSpan: 1, 
           geo_scope: this.compactGeoData(result['geo_scope'])
         }) ;
@@ -52,6 +53,7 @@ export class TableCComponent implements OnInit {
             {
               result_title: result?.result_title,
               type_name: result?.type_name, 
+              wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
@@ -141,6 +143,8 @@ interface ResultData {
   id: number;
   result_type_id: number;
   result_title: string;
+  wp_name:string;
+  wp_acronym:string;
   is_global: number;
   active: number;
   type_name: string;
