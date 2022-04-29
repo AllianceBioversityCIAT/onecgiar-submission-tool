@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../services/initiatives.service';
 import { Router } from '@angular/router';
 import { InteractionsService } from '../../../../services/interactions.service';
 import { AuthService } from '../../../../services/auth.service';
+import { UtilsService } from '../../../../services/utils.service';
 
 @Component({
   selector: 'app-menu-dynamic-list',
@@ -17,9 +18,7 @@ export class MenuDynamicListComponent implements OnInit {
   @Input() customRouterLink:string = '';
   constructor(
     public _menuService : MenuService,
-    private _initiativesService:InitiativesService,
-    private router : Router,
-    private _interactionsService : InteractionsService,
+    public _utilsService:UtilsService,
     public _authService:AuthService
   ) { }
 

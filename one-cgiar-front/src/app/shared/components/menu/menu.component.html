@@ -11,7 +11,7 @@
                     <app-menu-sub-section [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  [haveContent]="subsections?.dynamicList?.length"  *ngFor="let subsections of sections?.subsections">
                         <div title>{{subsections.display_name}}</div>
                         <div content style="padding: 10px;" *ngIf="subsections?.dynamicList?.length">
-                            <app-menu-dynamic-list [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+'/'+(dynamicList?.id ? dynamicList?.id : '')" *ngFor="let dynamicList of subsections?.dynamicList">
+                            <app-menu-dynamic-list [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')" *ngFor="let dynamicList of subsections?.dynamicList">
                                 <div class="line ia-{{dynamicList?.id}}" title *ngIf="dynamicList?.subSectionName == 'impact-area'"></div>
                                 <div title>{{dynamicList.hasOwnProperty('acronym') ? dynamicList?.acronym : dynamicList?.name}}</div>
                             </app-menu-dynamic-list>
@@ -23,18 +23,14 @@
     </app-menu-stage>
 </div>
 
-<p-dialog class="center_flex" header="Initiative Assessment" [(visible)]="display" [modal]="true"
-[style]="{width: '50vw'}">
-<div>
-
-        Please assess this initiative submittion based on the <a
-            href="https://docs.google.com/document/d/1JYs7GOIqMbZHWdym5kNUfr7xc4y11vit/edit#"> proposal template</a> and
-        all guidances provided on it.
-        <a href="https://performance.cgiar.org/">More info click here</a>
+<p-dialog class="center_flex" header="Initiative Assessment" [(visible)]="display" [modal]="true" [style]="{width: '50vw'}">
+    <div>Please assess this initiative submittion based on the <a href="https://docs.google.com/document/d/1JYs7GOIqMbZHWdym5kNUfr7xc4y11vit/edit#"> proposal template
+    </a> and all guidances provided on it. <a href="https://performance.cgiar.org/">More info click here</a>
 
     </div>
     <div *ngIf="statuses " class="statuses-container">
-        <div class="status-card" *ngFor="let status of statuses " (click)="onStatusClick($event, status)" [class.clicked]="status.clicked" >
+        <div class="status-card" *ngFor="let status of statuses " (click)="onStatusClick($event, status)"
+            [class.clicked]="status.clicked">
             <div class="icon-container center_flex  {{status.status.toLowerCase().split(' ').join('_')}}">
                 <span class="material-icons material-icons-outlined">
                     {{status.icon}}
@@ -49,19 +45,17 @@
             </div>
         </div>
         <div>
-            <ibdc-text-area-field 
-                inputTitle="Comments"
-                inputDescription="If your assessment needs to be explained"
-                [inputRequired] = "false"
-                [objectItem]="this.statusTextObj" 
-                [objectAtributteName]="'description'">
+            <ibdc-text-area-field inputTitle="Comments" inputDescription="If your assessment needs to be explained"
+                [inputRequired]="false" [objectItem]="this.statusTextObj" [objectAtributteName]="'description'">
             </ibdc-text-area-field>
         </div>
     </div>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple type="button" (click)="changeHide(false)" label="Cancel" class="p-button-raised p-button-secondary"></button>
-        <button pButton pRipple type="button" (click)="onConfirmAssessment()" label="Confirm" [disabled]="validateDisabledStatusSelected()" class="p-button-raised p-button-success"></button>
+        <button pButton pRipple type="button" (click)="changeHide(false)" label="Cancel"
+            class="p-button-raised p-button-secondary"></button>
+        <button pButton pRipple type="button" (click)="onConfirmAssessment()" label="Confirm"
+            [disabled]="validateDisabledStatusSelected()" class="p-button-raised p-button-success"></button>
     </ng-template>
 </p-dialog>
 

@@ -181,27 +181,20 @@ export class MenuComponent implements OnInit {
     if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let elementFinded;
     elementFinded = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId);
-    // console.log("Stage")
-    // console.log(elementFinded)
+
     if (stageId && sectionId)
     elementFinded = elementFinded.sections.find((section) => section.sectionId == sectionId);
-    // console.log("sections")
-    // console.log(elementFinded)
     if (stageId && sectionId && subSectionId)
     elementFinded =  elementFinded.subsections.find((subSection) => subSection.subSectionId == subSectionId);
-
-    console.log(list)
 
     if (elementFinded[attributeName]?.length) {
       list.map(item=>{
         elementFinded[attributeName].push(item);
       })
-   
     }else{
       elementFinded[attributeName] = list;
     }
-    
-    console.log(elementFinded);
+ 
   }
 
   // mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
@@ -218,8 +211,10 @@ export class MenuComponent implements OnInit {
   mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
-        let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-        this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
+       
+        let wpss = new ListToMap(wpsResp.response.workpackage, 'work-package/', 'work-package', 'showName', 'acronym').getList();
+        console.log(wpss)
+        this.mapDataInMenu(wpss,"dynamicList",stageId, sectionId, subSectionId);
         this._dataControlService.wpMaped = true;
       }, (err) => {
         console.log(err);
@@ -258,7 +253,7 @@ export class MenuComponent implements OnInit {
 
         this.mapWorkPackagesInStage(fullProposalData);
 
-        let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
+        let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
 
         let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();

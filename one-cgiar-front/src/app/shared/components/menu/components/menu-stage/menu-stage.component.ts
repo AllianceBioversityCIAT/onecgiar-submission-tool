@@ -22,15 +22,7 @@ import { AuthService } from '../../../../services/auth.service';
   ],
 })
 export class MenuStageComponent implements OnInit {
-  // @Input() userMenu;
-
-  // @Output() onAssessSubmission = new EventEmitter<boolean>();
-
-
-
-  // currentUser;
-  // usrAvailableSubm: boolean;
-  // usrAssessSubm: boolean;
+  @Input() collapse:boolean = false;
   constructor(
     // private router: Router,
     // private auth: AuthService,
