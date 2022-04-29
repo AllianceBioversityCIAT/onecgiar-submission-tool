@@ -1571,7 +1571,7 @@ router.get(
  *     HTTP/1.1 400 Not Found
  *     {"name": "Upsert TOC: Full proposal","httpCode": 400,"isOperational": false}
  */
-router.patch('/toc/:stageId([0-9]+)/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
+router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
 router.get(
   '/toc/:stageId([0-9]+)/:initiativeId([0-9]+)',
