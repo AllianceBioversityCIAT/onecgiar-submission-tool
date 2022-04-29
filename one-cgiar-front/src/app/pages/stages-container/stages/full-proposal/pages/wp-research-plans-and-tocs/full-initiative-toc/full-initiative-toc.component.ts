@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
-import { environment } from '../../../../../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import Viewer from 'viewerjs';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
