@@ -22,7 +22,7 @@ import { AuthService } from '../../../../services/auth.service';
   ],
 })
 export class MenuStageComponent implements OnInit {
-  @Input() collapse:boolean = false;
+  @Input() collapse:boolean = true;
   constructor(
     // private router: Router,
     // private auth: AuthService,

@@ -21,6 +21,7 @@
             padding-left: 10px;
             align-self: center;
             border-radius: 10px;
+            font-weight: 300;
             &:hover{
                 background-color: var(--ibdc-black-2) !important; 
                 transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
