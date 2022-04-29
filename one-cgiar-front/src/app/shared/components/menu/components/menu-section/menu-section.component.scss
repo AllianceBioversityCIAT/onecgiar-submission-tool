@@ -5,6 +5,11 @@
     display: grid;
     grid-template-columns: 1fr auto;
     cursor: pointer;
+    transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    &:hover{
+        background-color: var(--ibdc-black-2) !important; 
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    }
     .title{
         align-self: center;
     }
