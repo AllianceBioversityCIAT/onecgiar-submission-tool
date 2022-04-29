@@ -3117,4 +3117,92 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+  /**
+   * * REQUEST EOI BY INITIATIVE
+   * @returns eoi
+   */
+
+  async requestEndofInitiativeOutcomes() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      const resultsQuery = `
+      SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,wp.acronym wp_acronym,re.result_type_id as result_type,re.result_title,re.is_global,re.active
+      FROM results re
+      join results_types rt 
+        on rt.id = re.result_type_id 
+  left join work_packages wp 
+        on wp.id = re.work_package_id 
+     WHERE re.initvStgId = ${initvStg.id}
+       AND rt.id  = 3
+       AND re.active =1
+      order by re.result_type_id,wp.id;
+    `,
+        resultsIndicatorsQuery = `
+    SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
+    ri.results_id, ri.baseline_value, ri.baseline_year,
+    ri.target_value, ri.target_year, ri.active, ri.data_source, 
+    ri.data_collection_method as data_collection, ri.frequency_data_collection,
+    ri.created_at, ri.updated_at
+      FROM results_indicators ri
+     WHERE ri.results_id in (SELECT re.id
+      FROM results re
+     WHERE re.initvStgId = ${initvStg.id}
+       AND re.active =1);
+    `,
+        resultsRegionsQuery = `SELECT reg.id,reg.region_id,cr.name as region_name,reg.results_id ,reg.active,reg.created_at,reg.updated_at 
+    FROM results_regions reg
+    join clarisa_regions cr 
+      on cr.um49Code  = reg.region_id 
+   WHERE reg.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`,
+        resultsCountriesQuery = `
+    SELECT co.id,co.country_id,cc.name as country_name,co.results_id ,co.active ,co.created_at, co.updated_at 
+    FROM results_countries co
+    join clarisa_countries cc 
+      on cc.code  = co.country_id 
+   WHERE co.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`;
+
+      const eoi = await this.queryRunner.query(resultsQuery);
+      const resultsIndicators = await this.queryRunner.query(
+        resultsIndicatorsQuery
+      );
+      const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const resultsCountries = await this.queryRunner.query(
+        resultsCountriesQuery
+      );
+
+      eoi.map((res) => {
+        res['indicators'] = resultsIndicators.filter((resi) => {
+          return res.id === resi.results_id;
+        });
+
+        const reg = resultsRegions.filter((reg) => {
+          return res.id === reg.results_id;
+        });
+
+        const cou = resultsCountries.filter((co) => {
+          return res.id === co.results_id;
+        });
+
+        res['geo_scope'] = {regions: reg, countries: cou};
+      });
+
+      return eoi;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Request EOI By Initiative: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

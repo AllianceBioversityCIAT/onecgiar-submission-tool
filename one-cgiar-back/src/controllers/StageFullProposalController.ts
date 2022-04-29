@@ -1582,7 +1582,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
  * @returns tocs
  */
 export async function patchTocs(req: Request, res: Response) {
-  const { initiativeId} = req.params;
+  const {initiativeId} = req.params;
   const toc = req.body;
 
   //Validate stage
@@ -1592,7 +1592,7 @@ export async function patchTocs(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: "Full Proposal"}
+      where: {description: 'Full Proposal'}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -1665,6 +1665,51 @@ export async function getTocByInitiative(req: Request, res: Response) {
       new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
         fullInitiativeToc
       })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function getEndofInitiativeOutcome(req: Request, res: Response) {
+  const {stageId, initiativeId} = req.params;
+
+  //Validate stage
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {id: stageId}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read policy compliance oversight: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const eoi = await fullPposal.requestEndofInitiativeOutcomes();
+
+    res.json(
+      new ResponseHandler(
+        'Full Proposal:Get End of Initiative Outcome for Initiativa',
+        {
+          eoi
+        }
+      )
     );
   } catch (error) {
     console.log(error);

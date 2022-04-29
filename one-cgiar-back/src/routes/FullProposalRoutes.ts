@@ -34,7 +34,6 @@ router.patch(
   stagefull.upsertContext
 );
 
-
 // upsert projection benefits to initiative
 router.patch(
   '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
@@ -55,7 +54,6 @@ router.get(
   [checkJwt, checkRole('benefits', 'readOwn')],
   stagefull.getProjectionBenefitsByImpact
 );
-
 
 // read work packages list
 /**
@@ -332,7 +330,6 @@ router.patch(
   [checkJwt, checkRole('packages', 'updateOwn')],
   stagefull.patchWorkPackage
 );
-
 
 // upsert impact strategies to initiative
 /**
@@ -1573,10 +1570,22 @@ router.get(
  */
 router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
+/**
+ * GET TOC
+ */
 router.get(
   '/toc/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt],
   stagefull.getTocByInitiative
+);
+
+/**
+ * GET END OF INITIATIVE OUTCOMES FROM TOC TOOL
+ */
+router.get(
+  '/eoi/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.getEndofInitiativeOutcome
 );
 
 export default router;
