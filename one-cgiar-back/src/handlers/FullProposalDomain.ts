@@ -3006,6 +3006,16 @@ export class ProposalHandler extends InitiativeStageHandler {
                 where: {initvStgId: newTocs.initvStgId, type: 1}
               });
 
+              if (savedTocsType.length > 0) {
+                throw new BaseError(
+                  'Upsert Full Initiative ToC: Full proposal',
+                  400,
+                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},ToC Id : ${savedTocsType[0].toc_id}`,
+                  false
+                );
+              }
+            } else {
+              //Validate WP ToC
               // Validate if exits WP for other initiative
               var savedTocsWP: any = await tocsRepo.find({
                 where: {
@@ -3014,20 +3024,11 @@ export class ProposalHandler extends InitiativeStageHandler {
                 }
               });
 
-              if (savedTocsType.length > 0) {
-                throw new BaseError(
-                  'Upsert Full Initiative ToC: Full proposal',
-                  400,
-                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},${savedTocsType[0].toc_id}`,
-                  false
-                );
-              }
-
               if (savedTocsWP.length > 0) {
                 throw new BaseError(
                   'Upsert Full Initiative ToC: Full proposal',
                   400,
-                  `The Work Package Id - ${newTocs.work_package_id}- was inserted in for the initiative - ${newTocs.initvStgId} - please validate,,${savedTocsType[0].toc_id}`,
+                  `The Work Package Id - ${savedTocsWP[0].work_package_id} - was inserted in the initiative - ${savedTocsWP[0].initvStgId} - please validate, ToC Id : ${savedTocsWP[0].toc_id}`,
                   false
                 );
               }
