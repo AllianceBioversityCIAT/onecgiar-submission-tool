@@ -1582,7 +1582,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
  * @returns tocs
  */
 export async function patchTocs(req: Request, res: Response) {
-  const {stageId, initiativeId} = req.params;
+  const { initiativeId} = req.params;
   const toc = req.body;
 
   //Validate stage
@@ -1592,7 +1592,7 @@ export async function patchTocs(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {id: stageId}
+      where: {description: "Full Proposal"}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
