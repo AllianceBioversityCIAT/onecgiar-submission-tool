@@ -18,13 +18,10 @@ import { UtilsService } from '../../../../services/utils.service';
   ],
 })
 export class MenuSectionComponent implements OnInit {
-  // @Input() sections;
-  // @Input() stage;
   @Input() customRouterLink:string = '';
   @Input() haveContent = false;
   @Input() collapse:boolean = false;
   constructor(
-    // public _menuService : MenuService,
     public router: Router,
     public _utilsService:UtilsService
   ) { }
