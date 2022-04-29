@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../../../../../../environments/environment';
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
@@ -45,19 +43,13 @@ export class WpTocComponent implements OnInit {
   getWpById(){
     this.serviceIsConsumed = false;
     this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
-      console.log(resp)
       this.tocList = resp;
       this.serviceIsConsumed = true;
-      // console.log( this.tocList)
     })
   }
 
   expandImage(htmlId){
     document.getElementById(htmlId).classList.toggle('expandImage')
-  }
-
-  saveSection(){
-
   }
 
   imageLoaded(htmlId,i){
@@ -90,9 +82,6 @@ export class WpTocComponent implements OnInit {
   getTocTxtDataByTocId(tocId){
     this.linkIsgenerated =  false;
     this.toctxtData = null;
-    // return this.http.get(`https://dev-toc.s3.us-east-2.amazonaws.com/toc_SmBQ1GfEjD/SmBQ1GfEjD.txt`,{ responseType: 'text'});
-    // return this.http.get(`/assets/test.txt`,{ responseType: 'text'});
-    // return this.http.get(`https://www.w3.org/TR/PNG/iso_8859-1.txt`,{ responseType: 'text'});
     this._initiativesService.getTocTxtDataByTocId(tocId).subscribe(resp=>{
       this.toctxtData = resp.TocNarrative;
       if (this.toctxtData) {
@@ -109,8 +98,6 @@ export class WpTocComponent implements OnInit {
       
       this.linkIsgenerated =  true;
     })
-
-
 
   }
   

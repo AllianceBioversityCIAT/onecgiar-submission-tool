@@ -48,28 +48,5 @@
     background-color: var(--ibdc-primary-color) !important;
     transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
     padding: 10px 10px 10px 0px;
+    color: var(--ibdc-active-color);
 }
-
-// .sub-section{
-//     position: relative;
-//     backdrop-filter: blur(3px);
-//     background-color: #5c5c5c5d;
-//     color: white !important;
-//     margin-bottom: 15px;
-//     padding: 7px 7px 7px 10px;
-//     border-radius: 5px;
-//     border-bottom: 1px solid rgb(168, 168, 168);
-//     padding-right: 2.5em;
-// }
-
-// .sub-section-with-dynamicList{
-//     position: relative;
-//     backdrop-filter: blur(3px);
-//     background-color: #5c5c5c5d;
-//     margin-bottom: 10px;
-//     color: white !important;
-//     padding: 5px 5px 5px 10px;
-//     border-radius: 5px;
-//     border-bottom: 1px solid rgb(168, 168, 168);
-//     padding-right: 2.5em;
-// }

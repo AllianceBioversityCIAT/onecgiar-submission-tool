@@ -197,17 +197,6 @@ export class MenuComponent implements OnInit {
  
   }
 
-  // mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
-  //   if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-  //   let sectionFinded = (this._dataControlService.userMenu
-  //     .find((menuItem) => menuItem.stageId == stageId)
-  //     .sections.find((section) => section.sectionId == sectionId)
-  //     .subsections.find(
-  //       (subSection) => subSection.subSectionId == subSectionId
-  //     ).dynamicList = object);
-  //   // console.log(sectionFinded);
-  // }
-
   mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
@@ -256,10 +245,10 @@ export class MenuComponent implements OnInit {
         let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
 
-        let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
+        let impactStatementsList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
 
-        let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
+        let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
 
         this.mapDataInMenu( [{
