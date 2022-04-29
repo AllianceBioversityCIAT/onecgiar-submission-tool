@@ -56,10 +56,10 @@
                         <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not available'}}</td>
                         <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not available'}}</td>
                         <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not available'"></td>
-                        <td class="t_col_2">{{resultData?.name || 'Not available'}}</td>
+                        <td class="t_col_2">{{resultData?.indicator_name || 'Not available'}}</td>
                         <td class="t_col_3">{{resultData?.unit_measurement  || 'Not available'}}</td>
                         <td class="t_col_4">{{resultData?.data_source || 'Not available'}}</td>
-                        <td class="t_col_5">{{resultData?.data_collection_method || 'Not available'}}</td>
+                        <td class="t_col_5">{{resultData?.data_collection || 'Not available'}}</td>
                         <td class="t_col_6">{{resultData?.frequency_data_collection || 'Not available'}}</td>
                         <td class="t_col_7">{{resultData?.baseline_value || 'Not available'}}</td>
                         <td class="t_col_8">{{resultData?.baseline_year || 'Not available'}}</td>
