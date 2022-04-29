@@ -21,6 +21,7 @@ export class WpTocComponent implements OnInit {
   txtIsLoaded=false;
   tocList = [];
   serviceIsConsumed = false;
+  toc_id:number|string;
   constructor(
     public _initiativesService: InitiativesService,
     private _wpDataControlService:WpDataControlService,
@@ -31,7 +32,14 @@ export class WpTocComponent implements OnInit {
 
   ngOnInit(): void {
     this.getWpById();
-  
+    this.getProposalTocByInitiativeId();
+  }
+
+  getProposalTocByInitiativeId(){
+    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((resp) => {
+      this.toc_id = resp;
+      console.log(this.toc_id)
+    })
   }
 
   getWpById(){
