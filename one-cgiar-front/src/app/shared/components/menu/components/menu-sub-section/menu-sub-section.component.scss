@@ -1,5 +1,5 @@
 .section{
-    margin-top: 8px;
+    margin-top: 2px;
     .header{
         display: grid;
         grid-template-columns: 20px 1fr auto;
@@ -7,15 +7,7 @@
         cursor: pointer;
         background-color: rgba(0, 0, 0, 0);
         transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
-        &:hover{
-            background-color: var(--ibdc-black-2) !important; 
-            transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
-            // padding: 10px 10px 10px 0px;
-            .line{
-                background-color: var(--ibdc-black-2)!important;
-                transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
-            }
-        }
+
         .line{
             height: 5px;
             width: auto;
@@ -25,7 +17,14 @@
             transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
         }
         .title{
+            padding: 4px 0px;
+            padding-left: 10px;
             align-self: center;
+            border-radius: 10px;
+            &:hover{
+                background-color: var(--ibdc-black-2) !important; 
+                transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+            }
         }
         .icon{
             display: flex;
@@ -39,6 +38,7 @@
         }
     }
     .content{
+        margin: 0px 10px;
         overflow: hidden;
         background-color: var(--ibdc-primary-color);
     }
