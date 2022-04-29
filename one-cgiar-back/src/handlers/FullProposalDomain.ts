@@ -1,6 +1,6 @@
 import {get} from 'https';
 import _ from 'lodash';
-import {getRepository, In} from 'typeorm';
+import {getRepository, In, Not} from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
@@ -3006,11 +3006,28 @@ export class ProposalHandler extends InitiativeStageHandler {
                 where: {initvStgId: newTocs.initvStgId, type: 1}
               });
 
+              // Validate if exits WP for other initiative
+              var savedTocsWP: any = await tocsRepo.find({
+                where: {
+                  work_package_id: newTocs.work_package_id,
+                  initvStgId: Not(newTocs.initvStgId)
+                }
+              });
+
               if (savedTocsType.length > 0) {
                 throw new BaseError(
                   'Upsert Full Initiative ToC: Full proposal',
                   400,
                   `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},${savedTocsType[0].toc_id}`,
+                  false
+                );
+              }
+
+              if (savedTocsWP.length > 0) {
+                throw new BaseError(
+                  'Upsert Full Initiative ToC: Full proposal',
+                  400,
+                  `The Work Package Id - ${newTocs.work_package_id}- was inserted in for the initiative - ${newTocs.initvStgId} - please validate,,${savedTocsType[0].toc_id}`,
                   false
                 );
               }
