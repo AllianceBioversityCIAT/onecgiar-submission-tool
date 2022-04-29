@@ -3,12 +3,18 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { InitiativesService } from './initiatives.service';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
 @Injectable()
 export class UtilsService {
   private sidebarOpened = new BehaviorSubject<boolean>(false);
   sidebarOpened$ = this.sidebarOpened.asObservable();
 
-  constructor(private router:Router, private _initiativesService:InitiativesService){
+  constructor(
+    private router:Router, 
+    private _initiativesService:InitiativesService,
+    private _authService:AuthService
+    
+    ){
 
   }
 
@@ -21,7 +27,7 @@ export class UtilsService {
   }
 
   goToEditToc(toc_id){
-    this._initiativesService.authTocToken(104).subscribe(token=>{
+    this._initiativesService.authTocToken(this._authService?.lsUserRoles?.id).subscribe(token=>{
       console.log(token)
       window.open(`${environment.tocUrl}?token=${token}&toc_id=${toc_id}`,"_blank");
     },err=>{
