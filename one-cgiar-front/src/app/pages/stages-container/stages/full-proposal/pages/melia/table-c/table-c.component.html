@@ -35,6 +35,7 @@
                 <thead>
                     <tr>
                         <th class="t_col_5">Result type</th>
+                        <th class="t_col_5">Wp Name</th>
                         <th class="t_col_1">Result title</th>
                         <th class="t_col_1">Geographic scope</th>
                         <th class="t_col_2">Indicator name</th>
@@ -54,6 +55,7 @@
                     <tr *ngFor="let resultData of resultDataList">
                         <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
                         <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not available'}}</td>
+                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.wp_name || 'Not available'}}</td>
                         <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not available'}}</td>
                         <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not available'"></td>
                         <td class="t_col_2">{{resultData?.indicator_name || 'Not available'}}</td>
