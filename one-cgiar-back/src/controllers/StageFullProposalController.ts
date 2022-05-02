@@ -753,21 +753,15 @@ export async function getImpactStrategies(req: Request, res: Response) {
 }
 
 /**
- * PATCH Melia and files
+ * PATCH MELIA PLAN and files
  * @param req { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas }
  * @param res {melia}
  * @returns melia
  */
-export async function patchMeliaAndFiles(req: Request, res: Response) {
+export async function patchMeliaPlan(req: Request, res: Response) {
   const {initiativeId, ubication} = req.params;
 
-  //melia section data
-  // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
-  //   req.body.data ? JSON.parse(req.body.data) : req.body;
-
-  const {melia_plan, tableA, tableB, tableC} = req.body.data
-    ? JSON.parse(req.body.data)
-    : req.body;
+  const {melia_plan} = req.body.data ? JSON.parse(req.body.data) : req.body;
 
   //melia section files
   const files = req['files'];
@@ -807,6 +801,58 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       files
     );
 
+    res.json(
+      new ResponseHandler('Full Proposal: Patch melia.', {
+        melia,
+        files
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * PATCH Melia RESULTS FRAMEWORK TABLES A, B AND C
+ * @param req { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas }
+ * @param res {melia}
+ * @returns melia
+ */
+export async function patchMeliaResultsFramework(req: Request, res: Response) {
+  const {initiativeId, ubication} = req.params;
+
+  const {melia_plan, tableA, tableB, tableC} = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+  let stage;
+
+  try {
+    // get stage
+
+    stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
+    });
+
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Patch Patch melia: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
     const resultFramework = await fullPposal.upsertResultsFramework(
       tableA,
       tableB,
@@ -815,8 +861,6 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 
     res.json(
       new ResponseHandler('Full Proposal: Patch melia.', {
-        melia,
-        files,
         resultFramework
       })
     );
@@ -841,6 +885,48 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
     // get stage
     const stage = await stageRepo.findOne({
       where: {id: stageId}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read melia and files: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const melia = await fullPposal.requestMeliaFiles(sectionName);
+
+    res.json(new ResponseHandler('Full Proposal: melia and files.', {melia}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET Melia and files data
+ * @param req
+ * @param res {meliaData}
+ * @returns meliaData
+ */
+export async function getMeliaResultsFramework(req: Request, res: Response) {
+  const {initiativeId, sectionName} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {description: 'Full Proposal'}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({

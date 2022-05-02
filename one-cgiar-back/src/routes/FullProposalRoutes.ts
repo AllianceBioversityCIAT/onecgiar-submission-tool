@@ -500,7 +500,23 @@ router.get(
   stagefull.getImpactStrategies
 );
 
-// upsert melia and files to initiative
+/**
+ * PATCH MELIA PLAN
+ */
+router.patch(
+  '/melia/plan/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
+  stagefull.patchMeliaPlan
+);
+
+//GET MELIA PLAN
+router.get(
+  '/melia/plan/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('melia', 'readOwn')],
+  stagefull.getMeliaAndFiles
+);
+
+// UPSERT MELIA RESULTS FRAMEWORK
 /**
  * @api {patch} stages-control/proposal/melia/:initiativeId/ MELIA - Create and update MELIA
  * @apiVersion 1.0.0
@@ -682,13 +698,12 @@ router.get(
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  // '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
   '/melia/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
-  stagefull.patchMeliaAndFiles
+  stagefull.patchMeliaResultsFramework
 );
 
-// Get melia and files to initiative
+// GET MELIA RESULTS FRAMEWORK
 /**
  * @api {get} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Request MELIA
  * @apiVersion 1.0.2
@@ -744,9 +759,9 @@ router.patch(
  *     { message: "Get melia and files: Full proposal", error }
  */
 router.get(
-  '/melia/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
+  '/melia/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('melia', 'readOwn')],
-  stagefull.getMeliaAndFiles
+  stagefull.getMeliaResultsFramework
 );
 
 // Upsert MELIA Studies and Activities
