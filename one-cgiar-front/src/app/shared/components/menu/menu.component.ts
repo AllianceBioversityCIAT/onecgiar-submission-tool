@@ -202,7 +202,7 @@ export class MenuComponent implements OnInit {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
        
         let wpss = new ListToMap(wpsResp.response.workpackage, 'work-package/', 'work-package', 'showName', 'acronym').getList();
-        console.log(wpss)
+        // console.log(wpss)
         this.mapDataInMenu(wpss,"dynamicList",stageId, sectionId, subSectionId);
         this._dataControlService.wpMaped = true;
       }, (err) => {
@@ -292,12 +292,11 @@ export class MenuComponent implements OnInit {
           this._dataControlService.impactStatementsMaped = true;
         }
 
-
         // this.getAssessmentStatuses();
 
         this._dataControlService.validateMenu$.emit();
       }
-      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

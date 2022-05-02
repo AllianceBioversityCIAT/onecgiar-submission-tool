@@ -2,6 +2,9 @@
     <!-- stages list -->
     <!-- <app-menu-stage (onAssessSubmission)="changeHide($event)" *ngIf="this._dataControlService.userMenu.length"
         [userMenu]="this._dataControlService.userMenu"></app-menu-stage> -->
+    <div class="menu-title">
+        Menu
+    </div>
     <app-menu-stage [hidden]="stage?.stageId === 2" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
@@ -10,10 +13,10 @@
                 <div content>
                     <app-menu-sub-section [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  [haveContent]="subsections?.dynamicList?.length"  *ngFor="let subsections of sections?.subsections">
                         <div title>{{subsections.display_name}}</div>
-                        <div content style="padding: 10px;" *ngIf="subsections?.dynamicList?.length">
+                        <div content *ngIf="subsections?.dynamicList?.length">
                             <app-menu-dynamic-list [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')" *ngFor="let dynamicList of subsections?.dynamicList">
                                 <div class="line ia-{{dynamicList?.id}}" title *ngIf="dynamicList?.subSectionName == 'impact-area'"></div>
-                                <div title>{{dynamicList.hasOwnProperty('acronym') ? dynamicList?.acronym : dynamicList?.name}}</div>
+                                <div title>{{dynamicList.hasOwnProperty('acronym') ? ( dynamicList?.acronym ? dynamicList?.acronym : 'Unnamed' ) : dynamicList?.name}}</div>
                             </app-menu-dynamic-list>
                         </div>
                     </app-menu-sub-section>
