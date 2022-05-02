@@ -26,7 +26,9 @@ export class MenuSectionComponent implements OnInit {
     public _utilsService:UtilsService
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.collapse = !this._utilsService.validateCurrrentSection(this.customRouterLink);
+  }
 
 
 

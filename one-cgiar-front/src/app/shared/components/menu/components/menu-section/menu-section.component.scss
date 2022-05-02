@@ -27,21 +27,27 @@
 }
 .body{
     display: grid;
-    grid-template-columns: 5px 1fr;
+    grid-template-columns:  1fr;
     overflow: hidden;
-    .line{
-        height: auto;
-        width: 5px;
-        background-color: var(--ibdc-primary-color);
-        justify-self: end;
-    }
+   margin-top: -2px;
+    // .line{
+    //     height: auto;
+    //     width: 5px;
+    //     // background-color: var(--ibdc-primary-color);
+    //     justify-self: end;
+    // }
     .content{
-
+        border: 5px solid var(--ibdc-primary-color);
+        padding-bottom: 5px;
+        padding-right: 5px;
+        border-radius: 0px 0px 4px 4px;
     }
 }
 
 .active_section{
-    background-color: var(--ibdc-primary-color);
     color: var(--ibdc-active-color);
 }
 
+.expanded{
+    background-color: var(--ibdc-primary-color);
+}
