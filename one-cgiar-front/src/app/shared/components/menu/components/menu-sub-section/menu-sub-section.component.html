@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div [hidden]="!this.haveContent && !this.collapse" class="content" [@expandable]="haveContent ? (this.collapse?'collapse':'expand') : null">
+    <div *ngIf="this.haveContent" class="content" [@expandable]="haveContent ? (this.collapse?'collapse':'expand') : null">
         <div style="padding: 0px 10px 10px 10px;">
             <ng-content select="[content]"></ng-content>
         </div>
