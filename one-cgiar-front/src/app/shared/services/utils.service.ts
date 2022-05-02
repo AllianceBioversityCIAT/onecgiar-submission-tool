@@ -27,7 +27,7 @@ export class UtilsService {
   }
 
   goToEditToc(toc_id){
-    this._initiativesService.authTocToken(this._authService?.lsUserRoles?.id).subscribe(token=>{
+    this._initiativesService.authTocToken(this._authService?.userValue?.id).subscribe(token=>{
       console.log(token)
       window.open(`${environment.tocUrl}?token=${token}&toc_id=${toc_id}`,"_blank");
     },err=>{
