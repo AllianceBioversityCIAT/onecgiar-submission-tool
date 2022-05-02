@@ -605,6 +605,9 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
+  getEndOfInitiativeOutcome(){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/eoi/${this.initiative.stageId}/${this.initiative.id}`);
+  }
   /*** submitt initiative */
 
 

@@ -20,13 +20,15 @@ import { UtilsService } from '../../../../services/utils.service';
 export class MenuSectionComponent implements OnInit {
   @Input() customRouterLink:string = '';
   @Input() haveContent = false;
-  @Input() collapse:boolean = false;
+  @Input() collapse:boolean = true;
   constructor(
     public router: Router,
     public _utilsService:UtilsService
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.collapse = !this._utilsService.validateCurrrentSection(this.customRouterLink);
+  }
 
 
 

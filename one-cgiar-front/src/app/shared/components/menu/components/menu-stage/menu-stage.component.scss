@@ -5,6 +5,8 @@
     display: grid;
     grid-template-columns: 1fr auto;
     cursor: pointer;
+    z-index: 1;
+    position: relative;
     .title{
         align-self: center;
     }
@@ -21,5 +23,11 @@
 }
 
 .body{
+    margin-top: -5px;
     overflow: hidden;
+    border: 3px solid rgb(91,189,147);
+    z-index: 0;
+    position: relative;
+    border-radius:0px 0px 5px 5px;
+    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
 }

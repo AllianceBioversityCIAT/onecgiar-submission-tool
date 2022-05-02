@@ -2,7 +2,7 @@
     <!-- stages list -->
     <!-- <app-menu-stage (onAssessSubmission)="changeHide($event)" *ngIf="this._dataControlService.userMenu.length"
         [userMenu]="this._dataControlService.userMenu"></app-menu-stage> -->
-    <app-menu-stage [hidden]="stage?.stageId === 2"  *ngFor="let stage of this._dataControlService.userMenu">
+    <app-menu-stage [hidden]="stage?.stageId === 2" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
             <app-menu-section [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description" [haveContent]="sections?.subsections?.length" *ngFor="let sections of stage?.sections">

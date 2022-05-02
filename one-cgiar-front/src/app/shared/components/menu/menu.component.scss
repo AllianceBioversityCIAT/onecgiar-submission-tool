@@ -22,9 +22,6 @@
     .right_container {
         padding: 5px 10px 0px;
     }
-    .menu {
-        padding: 50px 10px;
-    }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
@@ -32,18 +29,12 @@
     .right_container {
         padding: 10px 40px 0px;
     }
-    .menu {
-        padding: 50px 15px;
-    }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 1550px) {
     .right_container {
         padding: 10px 40px 0px;
-    }
-    .menu {
-        padding: 50px 18px;
     }
 }
 
@@ -54,6 +45,8 @@
     overflow-y: scroll;
     color: white;
     background-color: var(--ibdc-black-1);
+    padding: 50px 8px;
+
     .stages {
         height: auto;
         border: red 1px solid;
