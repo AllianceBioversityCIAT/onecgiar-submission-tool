@@ -30,9 +30,9 @@ export class TaImpactAreaComponent implements OnInit {
       this._initiativesService.getMeliaResultFramework().pipe(
         map(res=>res.response.melia.resultFramework.tableA),
         map((res:tableAData)=>{
-          res.globalTargets = res?.globalTargets?.filter(item=>item.impact_area_id == routeResp.id);
-          res.impactAreasIndicators = res.impactAreasIndicators.filter(item=>item.impact_area_id == routeResp.id);
-          res.sdgTargets = res.sdgTargets.filter(item=>item.impact_area_id == routeResp.id);
+          res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == routeResp.id);
+          res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == routeResp.id);
+          res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == routeResp.id);
           return res
         })
         ).subscribe((resp:tableAData)=>{
@@ -50,9 +50,9 @@ export class TaImpactAreaComponent implements OnInit {
 
 
 interface tableAData {
-  globalTargets: GlobalTarget[];
-  impactAreasIndicators: ImpactAreasIndicator[];
-  sdgTargets: SdgTarget[];
+  global_targets: GlobalTarget[];
+  impact_areas_indicators: ImpactAreasIndicator[];
+  sdg_targets: SdgTarget[];
 }
 
 interface SdgTarget {
