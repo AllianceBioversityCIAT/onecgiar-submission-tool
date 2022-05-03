@@ -12,8 +12,8 @@ import { UtilsService } from '../../../../services/utils.service';
     trigger('expandable', [
       state('expand', style({ height: '*' })),
       state('collapse', style({ height: '0' })),
-      transition('collapse => expand', animate('.3s ease-in')),
-      transition('expand => collapse', animate('.3s ease-out')),
+      transition('collapse => expand', animate('.1s ease-in')),
+      transition('expand => collapse', animate('.1s ease-out')),
     ]),
   ],
 })
