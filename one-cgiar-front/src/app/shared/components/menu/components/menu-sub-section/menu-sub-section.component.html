@@ -11,6 +11,9 @@
                 <ng-content select="[title]"></ng-content>
             </div>
             <div class="icons">
+                <div class="icon" *ngIf="this.showTocIcon">
+                    <img width="24px" src="/assets/images/ToC_Icon.png" alt="">
+                 </div>
                 <div class="icon">
                     <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': this.haveContent ? 1 : 0}">expand_more</i>
                 </div>
