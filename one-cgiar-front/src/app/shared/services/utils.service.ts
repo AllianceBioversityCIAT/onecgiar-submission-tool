@@ -13,10 +13,7 @@ export class UtilsService {
     private router:Router, 
     private _initiativesService:InitiativesService,
     private _authService:AuthService
-    
-    ){
-
-  }
+  ){}
 
   openSidebar(value: boolean): void {
     this.sidebarOpened.next(value);
@@ -28,8 +25,10 @@ export class UtilsService {
 
   goToEditToc(toc_id){
     this._initiativesService.authTocToken(this._authService?.userValue?.id).subscribe(token=>{
-      console.log(token)
-      window.open(`${environment.tocUrl}?token=${token}&toc_id=${toc_id}`,"_blank");
+      // window.open(`${environment.tocUrl}?token=${token}&toc_id=${toc_id}`,"_blank");
+      var w = window.innerWidth - window.innerWidth/3;
+      var h = window.innerHeight - window.innerHeight/3;
+      window.open(`${environment.tocUrl}?token=${token}&toc_id=${toc_id}`,'winname',`directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=${w},height=${h}`);
     },err=>{
       console.log(err)
     })
@@ -37,11 +36,6 @@ export class UtilsService {
 
   get stageBaseRoute(){
     return this.router.url.substring(0,this.router.url.lastIndexOf('stages')+7)
-  }
-
-  htmlToString(html:HTMLElement){
-    // console.log(html);
-    // return html.outerHTML
   }
 
   validateCurrrentSection(route){    
