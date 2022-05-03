@@ -15,14 +15,13 @@ export class TableBComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
       this.tableBData = resp;
-      // console.log(this.tableBData)
     })
   }
 
 }
 
 interface TableBData {
-  actionAreasOutcomesIndicators: ActionAreasOutcomesIndicator[];
+  action_areas_outcomes_indicators: ActionAreasOutcomesIndicator[];
 }
 
 interface ActionAreasOutcomesIndicator {
