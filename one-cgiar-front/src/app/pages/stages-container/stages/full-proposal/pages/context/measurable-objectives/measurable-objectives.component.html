@@ -1,8 +1,13 @@
 <section-title name="Measurable three-year outcomes" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-    <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form">
+ 
+    <div class="eoi-list" >
+        <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList"><app-eoi-card [eoiData]="eoiData"></app-eoi-card></div>
+    </div>
+ 
+    <!-- <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form"> -->
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-12">
                 <app-section-alerts-pack [sectionForm]="contextForm" [extraValidation]="this.extraValidation"></app-section-alerts-pack>
             </div>
@@ -12,14 +17,14 @@
                     description:'Update objective statement submitted in the pre-concept with clear 3-year measurable (SMART) outcomes. Ensure this is consistent with the ToC diagrams and narrative, and MELIA sections.'}">
                 </ibdc-textarea>
             </div>
-        </div>
+        </div> -->
 
-        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+        <!-- <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
         </div>
-    </form>
+    </form> -->
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
 </div>
 

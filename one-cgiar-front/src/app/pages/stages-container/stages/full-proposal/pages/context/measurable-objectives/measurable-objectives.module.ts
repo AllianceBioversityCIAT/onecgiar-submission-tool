@@ -8,6 +8,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
+import { EoiCardModule } from './components/eoi-card/eoi-card.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    EoiCardModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

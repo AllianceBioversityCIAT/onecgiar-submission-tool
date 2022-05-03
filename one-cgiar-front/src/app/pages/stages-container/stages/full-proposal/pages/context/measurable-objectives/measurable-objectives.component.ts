@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { map } from 'rxjs/operators';
+import { EOIData } from './interfaces/EOIData.interface';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -17,12 +17,12 @@ export class MeasurableObjectivesComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   extraValidation = false;
+  initiativeOutcomeList:EOIData;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService,
     private _dataValidatorsService:DataValidatorsService
   ) { 
     this.contextForm = new FormGroup({
@@ -32,8 +32,15 @@ export class MeasurableObjectivesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContext();
-    this.formChanges();
+    this.getEndOfInitiativeOutcome();
+  }
+
+  getEndOfInitiativeOutcome(){
+    console.log("getEndOfInitiativeOutcome")
+    this._initiativesService.getEndOfInitiativeOutcome().pipe(map(res=>res?.response)).subscribe(resp=>{
+      console.log(resp?.eoi);
+      this.initiativeOutcomeList = resp?.eoi;
+    })
   }
 
   upserInfo(){

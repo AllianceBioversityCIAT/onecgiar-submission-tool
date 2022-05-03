@@ -1,0 +1,32 @@
+<div class="local_container  {{expand ? 'expand-local-container' : 'no-expand-local-container'}}">
+  <div class="eoi_card {{expand ? 'expand-card' : 'no-expand-card'}}">
+    <div class="title_container"  [style.background]="this.colors['WP']">
+      <div class="title">{{this.eoiData?.result_title}}</div>
+      <div class="line_1"></div>
+      <div class="line_2"></div>
+      <div class="material-icons close_icon" *ngIf="expand" (click)="expand = !expand">cancel</div>
+    </div>
+    <div class="content">
+  
+      <div class="c-info" style="margin-top: 8px;">
+        <div class="c-title">Type name: </div>
+        <div [style.color]="this.colors['WP']">{{this.eoiData?.type_name}}</div>
+      </div>
+  
+      <div class="c-info">
+        <div class="c-title">Number of indicators</div>
+        <div class="c-value">{{this.eoiData?.indicators?.length}}</div>
+      </div>
+  
+      <div class="button_container" *ngIf="!expand">
+        <div class="expand_button" (click)="expand = !expand">
+          See more
+        </div>
+      </div>
+  
+    </div>
+  
+  
+  
+  </div>
+</div>
