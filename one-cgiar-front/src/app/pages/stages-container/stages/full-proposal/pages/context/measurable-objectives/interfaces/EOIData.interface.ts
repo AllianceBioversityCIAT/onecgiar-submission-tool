@@ -8,6 +8,7 @@ export interface EOIData {
     result_title: string;
     is_global: number;
     active: number;
+    result_description: string;
     indicators: Indicator[];
     geo_scope: Geoscope;
   }
