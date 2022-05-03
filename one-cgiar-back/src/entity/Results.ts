@@ -30,5 +30,7 @@ export class Results extends UpdatedCreatedAt {
 
   @Column({type: 'int'})
   work_package_id: number;
-  
+
+  @Column({type: 'text'})
+  result_description: string;
 }
