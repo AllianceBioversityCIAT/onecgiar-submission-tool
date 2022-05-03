@@ -1,6 +1,11 @@
 <div class="section">
     <div class="header {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }}" (click)="this._utilsService.navigate(this.customRouterLink)">
-        <ng-content select="[title]"></ng-content>
+        <div class="title">
+            <ng-content select="[title]"></ng-content>
+        </div>
+        <div class="icon">
+            <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">verified</i>
+        </div>
     </div>
     <ng-content select="[content]"></ng-content>
 </div>

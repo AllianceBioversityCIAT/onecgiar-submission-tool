@@ -296,7 +296,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

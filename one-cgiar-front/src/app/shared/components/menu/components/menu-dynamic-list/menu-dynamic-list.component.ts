@@ -16,6 +16,8 @@ export class MenuDynamicListComponent implements OnInit {
   // @Input() section;
   // @Input() stage;
   @Input() customRouterLink:string = '';
+  @Input() fieldsCompleted:boolean = false;
+
   constructor(
     public _menuService : MenuService,
     public _utilsService:UtilsService,

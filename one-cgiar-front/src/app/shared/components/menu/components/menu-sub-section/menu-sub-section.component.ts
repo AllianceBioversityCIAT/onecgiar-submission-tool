@@ -23,6 +23,8 @@ export class MenuSubSectionComponent implements OnInit {
   @Input() customRouterLink:string = '';
   @Input() haveContent = false;
   @Input() collapse:boolean = true;
+  @Input() fieldsCompleted:boolean = false;
+
   constructor(
     public _menuService:MenuService,
     public router:Router,

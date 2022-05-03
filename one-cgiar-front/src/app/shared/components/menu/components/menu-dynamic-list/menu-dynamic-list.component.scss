@@ -2,12 +2,23 @@
     margin-top: 10px;
 }
 .header{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
     cursor: pointer;
     transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
     font-weight: 300;
     font-size: .9em;
+    .title{
+        display: flex;
+        align-items: center;
+        // justify-content: center;
+    }
+    .icon{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     &:hover{
         background-color: rgb(17, 17, 17) !important; 
         border-radius: 0px 10px 10px 0px;

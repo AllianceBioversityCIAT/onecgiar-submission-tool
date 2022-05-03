@@ -10,8 +10,13 @@
             <div class="title">
                 <ng-content select="[title]"></ng-content>
             </div>
-            <div class="icon">
-                <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': this.haveContent ? 1 : 0}">expand_more</i>
+            <div class="icons">
+                <div class="icon">
+                    <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': this.haveContent ? 1 : 0}">expand_more</i>
+                </div>
+                <div class="icon">
+                    <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">check_circle</i>
+                </div>
             </div>
         </div>
     </div>

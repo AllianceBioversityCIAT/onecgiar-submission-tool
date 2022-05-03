@@ -8,13 +8,24 @@
     <app-menu-stage [hidden]="stage?.stageId === 2" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
-            <app-menu-section [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description" [haveContent]="sections?.subsections?.length" *ngFor="let sections of stage?.sections">
+            <app-menu-section 
+                *ngFor="let sections of stage?.sections"
+                [fieldsCompleted]="sections?.fieldsCompleted" 
+                [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description" 
+                [haveContent]="sections?.subsections?.length">
                 <div title>{{sections?.display_name}}</div>
                 <div content>
-                    <app-menu-sub-section [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  [haveContent]="subsections?.dynamicList?.length"  *ngFor="let subsections of sections?.subsections">
+                    <app-menu-sub-section 
+                    *ngFor="let subsections of sections?.subsections"
+                    [fieldsCompleted]="subsections?.fieldsCompleted" 
+                    [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  
+                    [haveContent]="subsections?.dynamicList?.length">
                         <div title>{{subsections.display_name}}</div>
                         <div content *ngIf="subsections?.dynamicList?.length">
-                            <app-menu-dynamic-list [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')" *ngFor="let dynamicList of subsections?.dynamicList">
+                            <app-menu-dynamic-list 
+                            *ngFor="let dynamicList of subsections?.dynamicList"
+                            [fieldsCompleted]="dynamicList?.fieldsCompleted" 
+                            [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')">
                                 <div class="line ia-{{dynamicList?.id}}" title *ngIf="dynamicList?.subSectionName == 'impact-area'"></div>
                                 <div title>{{dynamicList.hasOwnProperty('acronym') ? ( dynamicList?.acronym ? dynamicList?.acronym : 'Unnamed' ) : dynamicList?.name}}</div>
                             </app-menu-dynamic-list>
