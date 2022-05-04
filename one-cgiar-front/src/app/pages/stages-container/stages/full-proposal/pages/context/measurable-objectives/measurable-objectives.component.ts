@@ -7,6 +7,7 @@ import { FullProposalService } from '../../../../../../../shared/services/full-p
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { map } from 'rxjs/operators';
 import { EOIData } from './interfaces/EOIData.interface';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -18,12 +19,14 @@ export class MeasurableObjectivesComponent implements OnInit {
   showform = false;
   extraValidation = false;
   initiativeOutcomeList:EOIData []=[];
+  toc_id:number|string;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
+    public _utilsService:UtilsService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),
@@ -33,6 +36,13 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEndOfInitiativeOutcome();
+  }
+
+  getProposalTocByInitiativeId(){
+    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((resp) => {
+      this.toc_id = resp;
+      console.log(this.toc_id)
+    })
   }
 
   getEndOfInitiativeOutcome(){

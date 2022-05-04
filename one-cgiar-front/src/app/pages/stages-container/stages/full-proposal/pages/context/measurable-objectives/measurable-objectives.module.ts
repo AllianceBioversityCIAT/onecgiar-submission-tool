@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { EoiCardModule } from './components/eoi-card/eoi-card.module';
+import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { EoiCardModule } from './components/eoi-card/eoi-card.module';
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    EoiCardModule
+    EoiCardModule,
+    EditTocButtonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
