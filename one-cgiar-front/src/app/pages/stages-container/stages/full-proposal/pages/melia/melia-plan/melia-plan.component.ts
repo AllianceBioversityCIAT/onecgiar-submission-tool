@@ -34,12 +34,12 @@ export class MeliaPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMelia();
+    this.getMeliaPlan();
     this.formChanges();
   }
 
-  getMelia(){
-    this._initiativesService.getMelia('melia').subscribe(resp=>{
+  getMeliaPlan(){
+    this._initiativesService.getMeliaPlan('melia').subscribe(resp=>{
       let melia = resp?.response?.melia?.meliaPlan;
       this.data.id = melia?.id ? melia?.id : null;
       this.secionForm.controls['example'].setValue(melia?.melia_plan);
@@ -57,10 +57,10 @@ export class MeliaPlanComponent implements OnInit {
     let body = { melia_plan: this.data };
     console.log(body);
 
-    this._initiativesService.saveMelia(body).subscribe(resp=>{
-      console.log("saveMelia");
+    this._initiativesService.saveMeliaPlan(body).subscribe(resp=>{
+      console.log("saveMeliaPlan");
       console.log(resp);
-      this.getMelia();
+      this.getMeliaPlan();
       this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Melia plan has been saved'):
       this._interactionsService.warningMessage('Melia plan has been saved, but there are incomplete fields')

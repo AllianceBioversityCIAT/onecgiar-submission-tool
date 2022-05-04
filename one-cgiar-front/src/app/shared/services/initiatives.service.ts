@@ -291,6 +291,14 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}/${section}`);
   }
 
+  saveMeliaPlan(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/melia/plan/${this.initiative.stageId}/${this.initiative.id}`, body);
+  }
+
+  getMeliaPlan(section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/melia/plan/${this.initiative.stageId}/${this.initiative.id}/${section}`);
+  }
+
   saveManagePlan(body: any, location: string): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${this.initiative.stageId}/${this.initiative.id}/${location}/`, body);
   }
