@@ -65,8 +65,8 @@
                 margin-top: 5px;
 
                 .c-title {
-                    color: rgb(27, 27, 27);
-                    font-weight: 500;
+                    color: rgb(17, 17, 17);
+                    font-weight: 700;
                     margin-right: 5px;
                     width: max-content;
                 }
@@ -76,13 +76,31 @@
                 }
             }
 
+            .geoScope{
+                margin-top: 10px;
+                .title{
+                    margin-bottom: 10px;
+                }
+                .lists{
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    width: 100%;
+                    .list{
+                        max-height: 200px;
+                        overflow-y: scroll;
+                        padding: 10px;
+                    }
+                }
+            }
+
             .expanded_content {
                 .indicators {
                     margin-top: 5px;
 
                     .title {
-                        font-weight: 500;
                         margin-right: 5px;
+                        color: rgb(17, 17, 17);
+                        font-weight: 700;
                     }
 
                     .indicators_list {
@@ -92,6 +110,12 @@
                             border-radius: 5px;
                             margin-left: 10px;
                         }
+                    }
+                }
+                .geoScope{
+                    .title{
+                        color: rgb(17, 17, 17);
+                        font-weight: 700;
                     }
                 }
             }
@@ -122,8 +146,8 @@
 
 
 .expand-card {
-    width: 500px;
-    height: 500px;
+    width: 700px;
+    // height: 500px;
 }
 
 .no-expand-card {}

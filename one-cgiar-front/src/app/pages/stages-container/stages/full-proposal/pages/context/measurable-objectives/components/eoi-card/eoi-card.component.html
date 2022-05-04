@@ -15,10 +15,10 @@
             <div [style.color]="this.colors[this.eoiData?.result_type]">{{this.eoiData?.type_name}}</div>
           </div>
       
-          <!-- <div class="c-info" *ngIf="this.eoiData?.indicators?.length">
+          <div class="c-info" *ngIf="this.eoiData?.indicators?.length">
             <div class="c-title">Number of indicators: </div>
             <div class="c-value">{{this.eoiData?.indicators?.length}}</div>
-          </div> -->
+          </div>
     
           <div class="c-info" *ngIf="this.eoiData?.result_description">
             <div class="c-title">Result description: </div>
@@ -29,7 +29,7 @@
           </div>
         </div>
   
-        <div class="expanded_content" *ngIf="expand || true">
+        <div class="expanded_content" *ngIf="expand">
   
           <div class="c-info" *ngIf="this.eoiData?.wp_name">
             <div class="c-title">Work Package name: </div>
@@ -49,14 +49,38 @@
               </div>
             </div>
           </div>
+
+          <div class="geoScope">
+            <div class="title">Geographic scope: </div>
+
+            <div class="lists">
+
+              <div class="list custom_scroll">
+                <div class="title">Region</div>
+                <div class="item"  *ngFor="let region of this.eoiData?.geo_scope?.regions">
+                  <p>{{region?.region_name}}</p>
+                </div>
+              </div>
+
+              <div class="list custom_scroll">
+                <div class="title">Region</div>
+                <div class="item" *ngFor="let country of this.eoiData?.geo_scope?.countries">
+                  <p>{{country?.country_name}}</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
       </div>
   
-      <!-- <div class="button_container" *ngIf="!expand">
+      <div class="button_container" *ngIf="!expand">
         <div class="expand_button" (click)="expand = !expand" [style.background-color]="this.colors[this.eoiData?.result_type]">
           See more
         </div>
-      </div> -->
+      </div>
   
     </div>
   
