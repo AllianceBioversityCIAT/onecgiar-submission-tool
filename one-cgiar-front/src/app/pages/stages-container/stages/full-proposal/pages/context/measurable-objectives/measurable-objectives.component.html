@@ -4,7 +4,10 @@
     <div class="eoi-list" >
         <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList"><app-eoi-card [eoiData]="eoiData"></app-eoi-card></div>
     </div>
- 
+
+    <div class="no-data-text" *ngIf="!this.initiativeOutcomeList?.length">
+        <app-text-not-data  text="There are not data"></app-text-not-data>
+    </div>
     <!-- <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form"> -->
 
         <!-- <div class="row">

@@ -17,7 +17,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   extraValidation = false;
-  initiativeOutcomeList:EOIData;
+  initiativeOutcomeList:EOIData []=[];
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
