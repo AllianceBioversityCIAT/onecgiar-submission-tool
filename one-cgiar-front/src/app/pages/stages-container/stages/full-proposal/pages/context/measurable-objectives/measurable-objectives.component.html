@@ -3,7 +3,7 @@
 
 <div class="section-container animate__animated animate__fadeIn">
     <app-information-button></app-information-button>
-    <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc(tocitem?.toc_id)"></app-edit-toc-button>
+    <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc(toc_id)"></app-edit-toc-button>
 
     <div class="eoi-list" >
         <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList"><app-eoi-card [eoiData]="eoiData"></app-eoi-card></div>
