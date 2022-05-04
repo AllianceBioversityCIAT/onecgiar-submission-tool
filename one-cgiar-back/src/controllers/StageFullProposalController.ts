@@ -117,7 +117,7 @@ export async function getWorkPackages(req: Request, res: Response) {
 }
 
 /**
- * GET WORK PACKAGE
+ * GET WORK PACKAGE BY ID
  * @param req
  * @param res { workpackage }
  * @returns

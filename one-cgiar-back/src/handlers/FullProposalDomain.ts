@@ -269,8 +269,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND init.stageId = 3
+        WHERE init.stageId = 3
          AND wp.active = 1
         ORDER BY initiativeId asc
                     `;
@@ -323,8 +322,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND wp.active = 1
+        WHERE wp.active = 1
         ORDER BY initiativeId asc
                     `;
 
