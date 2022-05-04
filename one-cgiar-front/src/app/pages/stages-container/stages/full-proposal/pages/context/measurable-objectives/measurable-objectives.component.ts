@@ -36,6 +36,7 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEndOfInitiativeOutcome();
+    this.getProposalTocByInitiativeId();
   }
 
   getProposalTocByInitiativeId(){
