@@ -19,9 +19,9 @@ export class EoiCardComponent implements OnInit {
 
   initColors(){
     this.colors['WP'] = '#ed553b';
-    this.colors['OUTPUT'] = '#27bde2';
-    this.colors['OUTCOME'] = '#a21942';
-    this.colors['EOI-O'] = '#3caea3';
+    this.colors[1] = '#a21942';
+    this.colors[2] = '#27bde2';
+    this.colors[3] = '#3caea3';
   }
 
 
