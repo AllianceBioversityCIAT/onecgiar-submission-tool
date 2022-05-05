@@ -106,9 +106,17 @@
                     .indicators_list {
                         .indicator {
                             box-shadow: 0px 0px 8px rgb(209, 209, 209);
-                            padding: 5px;
+                            padding: 5px 10px;
                             border-radius: 5px;
                             margin-left: 10px;
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                        }
+                    }
+
+                    .data{
+                        strong{
+                            width: max-content;
                         }
                     }
                 }
@@ -146,8 +154,16 @@
 
 
 .expand-card {
-    width: 700px;
+    width: 50vw;
+    padding: 20px !important;
+    min-height: 70vh !important;
     // height: 500px;
+    .content{
+        overflow-y: scroll;
+        max-height: 90vh;
+        height: 100% !important;
+
+    }
 }
 
 .no-expand-card {}
