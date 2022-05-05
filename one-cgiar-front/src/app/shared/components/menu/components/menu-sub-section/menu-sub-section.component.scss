@@ -37,12 +37,41 @@
             .icons{
                 display: flex;
                 .icon{
+                    position: relative;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     .expand_more_icon{
                         transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
                         font-size: 25px;
+                    }
+                }
+                .icon_toc{
+                    position: relative;
+                    &:hover{
+                        .pop_text{
+                            width: max-content;
+                            padding: 3px 10px;
+                            transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+                            height: auto;
+                        }
+                    }
+                    .pop_text{
+                        opacity: .9;
+                        position: absolute;
+                        top: 15px;
+                        padding: 0px;
+                        height: 0px;
+                        right: 15px;
+                        background-color: white;
+                        color: rgb(77, 77, 77);
+                        border-radius: 3px;
+                        width: 0px;
+                        // z-index: 1000000;
+                        font-size: 12px;
+                        overflow: hidden;
+                        transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
                     }
                 }
             }
