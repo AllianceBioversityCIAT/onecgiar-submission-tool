@@ -5,7 +5,7 @@
     <div class="menu-title">
         Menu
     </div>
-    <app-menu-stage [hidden]="stage?.stageId === 2" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
+    <app-menu-stage [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
             <app-menu-section 
