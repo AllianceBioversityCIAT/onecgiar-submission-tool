@@ -30,14 +30,6 @@ export class WpTocComponent implements OnInit {
 
   ngOnInit(): void {
     this.getWpById();
-    this.getProposalTocByInitiativeId();
-  }
-
-  getProposalTocByInitiativeId(){
-    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((resp) => {
-      this.toc_id = resp;
-      console.log(this.toc_id)
-    })
   }
 
   getWpById(){

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
 import { ManageExcelService } from '../../../services/manage-excel.service';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-table-c',
@@ -12,10 +13,11 @@ export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
   listToSave : any[] = [];
-  htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
-    private _manageExcelService:ManageExcelService
+    private _manageExcelService:ManageExcelService,
+    public _utilsService:UtilsService
     ) { }
 
   ngOnInit(): void {

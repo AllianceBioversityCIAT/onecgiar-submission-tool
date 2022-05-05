@@ -1,7 +1,8 @@
 <section-title name="Table C" ></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <ibdc-alert [options]="{htmlText:this.htmlText, type:'info'}"></ibdc-alert>
+    <!-- <ibdc-alert [options]="{htmlText:this.htmlText, type:'info'}"></ibdc-alert> -->
+    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
 
 
 

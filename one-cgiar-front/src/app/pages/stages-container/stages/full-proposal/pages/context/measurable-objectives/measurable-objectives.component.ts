@@ -36,14 +36,6 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEndOfInitiativeOutcome();
-    this.getProposalTocByInitiativeId();
-  }
-
-  getProposalTocByInitiativeId(){
-    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((resp) => {
-      this.toc_id = resp;
-      console.log(this.toc_id)
-    })
   }
 
   getEndOfInitiativeOutcome(){

@@ -8,6 +8,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
 import {TableModule} from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ButtonModule } from 'primeng/button';
     IbdAngularComponentsModule,
     CollapsibleContainerModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    EditTocButtonModule
   ]
 })
 export class TableCModule { }

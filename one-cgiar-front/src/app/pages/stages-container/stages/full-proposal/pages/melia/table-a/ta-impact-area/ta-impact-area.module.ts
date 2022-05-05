@@ -7,6 +7,7 @@ import { UtilsModule } from '../../../../../../../../shared/components/utils/uti
 import { IaVisualReferenceModule } from '../../../../../../../../shared/components/ia-visual-reference/ia-visual-reference.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from './../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module'
+import { EditTocButtonModule } from '../../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 @NgModule({
   declarations: [TaImpactAreaComponent],
@@ -15,7 +16,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     TaImpactAreaRoutingModule,
     UtilsModule,
     IaVisualReferenceModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    EditTocButtonModule
   ]
 })
 export class TaImpactAreaModule { }
