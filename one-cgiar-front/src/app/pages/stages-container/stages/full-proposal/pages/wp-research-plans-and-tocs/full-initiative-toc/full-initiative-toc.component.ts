@@ -25,6 +25,17 @@ export class FullInitiativeTocComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getProposalTocByInitiativeId();
+  }
+
+  getProposalTocByInitiativeId(){
+    this.serviceIsConsumed = false;
+    console.log(this._initiativesService.initiative.id)
+    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res.response.fullInitiativeToc)).subscribe((resp) => {
+      console.log(resp)
+      this.tocitem = resp;
+      this.serviceIsConsumed = true;
+    })
   }
 
   expandImage(htmlId){
