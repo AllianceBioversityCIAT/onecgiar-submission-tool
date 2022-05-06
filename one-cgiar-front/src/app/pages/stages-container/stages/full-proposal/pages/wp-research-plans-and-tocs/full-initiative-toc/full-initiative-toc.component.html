@@ -10,7 +10,7 @@
         <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: tocitem?.narrative, required: false}">
         </ibdc-simple-text>
         <div class="updated_at">
-          <strong>Updated on:</strong> {{tocitem?.updated_at | date:'medium'}}
+          <strong>Updated on:</strong> {{tocitem?.updated_at | date:'d MMMM, y - h:mm:ss a':'UTC'}} - <strong>(UTC)</strong>
         </div>
       </div>
 
