@@ -41,6 +41,9 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    i{
+                        font-size: 21px;
+                    }
                     .expand_more_icon{
                         transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
                         font-size: 25px;
