@@ -209,15 +209,6 @@ export async function patchWorkPackage(req: Request, res: Response) {
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
-  var newWorkPackage = new WorkPackages();
-
-  newWorkPackage.id = id;
-  newWorkPackage.acronym = acronym;
-  newWorkPackage.name = name;
-  newWorkPackage.pathway_content = pathway_content;
-  newWorkPackage.is_global = is_global;
-  newWorkPackage.active = active;
-
   try {
     // get stage
     const stage = await stageRepo.findOne({
@@ -243,7 +234,14 @@ export async function patchWorkPackage(req: Request, res: Response) {
     const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
 
     // upsert workpackage from porposal object
-    const workpackage = await fullPposal.upsertWorkPackages(newWorkPackage);
+    const workpackage = await fullPposal.upsertWorkPackages(
+      acronym,
+      name,
+      pathway_content,
+      is_global,
+      id,
+      active
+    );
 
     const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
       regions,

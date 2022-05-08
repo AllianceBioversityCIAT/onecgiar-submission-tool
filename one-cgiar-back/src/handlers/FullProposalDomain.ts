@@ -531,26 +531,49 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @param newWP
    * @returns upsertedInfo
    */
-  async upsertWorkPackages(newWP?) {
+  async upsertWorkPackages(
+    acronym,
+    name,
+    pathway_content,
+    is_global,
+    id,
+    active
+  ) {
     const wpRepo = getRepository(entities.WorkPackages);
     // get current intiative by stage
     const initvStg = await this.initvStage;
 
     var upsertedInfo;
 
+    var newWorkPackage = new entities.WorkPackages();
+
+    newWorkPackage.id = id;
+    newWorkPackage.acronym = acronym;
+    newWorkPackage.name = name;
+    newWorkPackage.pathway_content = pathway_content;
+    newWorkPackage.is_global = is_global;
+    newWorkPackage.active = active;
+    newWorkPackage.wp_official_code = id;
+
     try {
-      if (newWP.id !== null) {
+      if (newWorkPackage.id !== null) {
         var savedWP = await this.queryRunner.query(` SELECT *
                 FROM work_packages 
-               WHERE id = ${newWP.id}`);
+               WHERE id = ${newWorkPackage.id}`);
 
-        wpRepo.merge(savedWP[0], newWP);
+        wpRepo.merge(savedWP[0], newWorkPackage);
 
         upsertedInfo = await wpRepo.save(savedWP[0]);
       } else {
-        newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id;
+        newWorkPackage.initvStgId = initvStg[0].id
+          ? initvStg[0].id
+          : initvStg.id;
 
-        upsertedInfo = await wpRepo.save(newWP);
+        upsertedInfo = await wpRepo.save(newWorkPackage);
+
+        //Insert Work Pakcage Official Code
+        upsertedInfo.wp_official_code = upsertedInfo.id;
+        await wpRepo.save(upsertedInfo);
       }
 
       return upsertedInfo;

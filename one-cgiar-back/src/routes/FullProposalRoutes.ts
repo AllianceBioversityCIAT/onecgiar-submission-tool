@@ -55,7 +55,7 @@ router.get(
   stagefull.getProjectionBenefitsByImpact
 );
 
-// read work packages list
+// Get work packages list
 /**
  * @api {get} stages-control/proposal/packages/:initiativeId Work package - Request workpackage
  * @apiVersion 1.0.2
@@ -109,7 +109,7 @@ router.get(
   stagefull.getWorkPackages
 );
 
-// read work package for id
+// Get work package for id
 /**
  * @api {get} stages-control/proposal/package/:wrkPkgId Work package - Request workpackage for id
  * @apiVersion 1.0.2
@@ -178,7 +178,7 @@ router.get(
   stagefull.getWorkPackage
 );
 
-// read all work package for Clarisas
+// Get all work package for CLARISA
 /**
  * @api {get} stages-control/proposal/packages Work package - Request All work packages
  * @apiVersion 1.0.2
@@ -228,7 +228,7 @@ router.get(
  */
 router.get('/packages', stagefull.getAllWorkPackagesProposal);
 
-// assign Work Package
+// PATCH Work Package
 /**
  * @api {patch} stages-control/proposal/packages/:wrkPkgId Work Package - Create and update WP
  * @apiVersion 1.0.0
