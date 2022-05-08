@@ -537,7 +537,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     pathway_content,
     is_global,
     id,
-    active
+    active,
+    wp_official_code?
   ) {
     const wpRepo = getRepository(entities.WorkPackages);
     // get current intiative by stage
@@ -553,7 +554,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     newWorkPackage.pathway_content = pathway_content;
     newWorkPackage.is_global = is_global;
     newWorkPackage.active = active;
-    newWorkPackage.wp_official_code = id;
+    newWorkPackage.wp_official_code = wp_official_code ? wp_official_code : id;
 
     try {
       if (newWorkPackage.id !== null) {
@@ -572,7 +573,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         upsertedInfo = await wpRepo.save(newWorkPackage);
 
         //Insert Work Pakcage Official Code
-        upsertedInfo.wp_official_code = upsertedInfo.id;
+        upsertedInfo.wp_official_code = wp_official_code
+          ? wp_official_code
+          : upsertedInfo.id;
         await wpRepo.save(upsertedInfo);
       }
 

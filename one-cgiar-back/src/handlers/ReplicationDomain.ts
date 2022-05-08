@@ -3,7 +3,8 @@ import {
   CountriesByInitiativeByStage,
   InitiativesByStages,
   RegionsByInitiativeByStage,
-  Stages
+  Stages,
+  WorkPackages
 } from '../entity';
 import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
 import {BaseError} from './BaseError';
@@ -492,9 +493,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       let savedWorkPakages;
       let savedGeoScope;
 
-      let regions = new RegionsByInitiativeByStage();
-      let countries = new CountriesByInitiativeByStage();
-
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
       const fullPposal = new ProposalHandler(currentInitvStgId.toString());
@@ -513,10 +511,19 @@ export class ReplicationDomain extends InitiativeStageHandler {
       if (workPackagesIsdc.length > 0) {
         for (let index = 0; index < workPackagesIsdc.length; index++) {
           const wp = workPackagesIsdc[index];
-          let currentWp: any = fullPposalIsdc.upsertWorkPackages(wp);
+          let currentWp: any = fullPposalIsdc.upsertWorkPackages(
+            wp.acronym,
+            wp.name,
+            wp.pathway_content,
+            wp.is_global,
+            wp.id,
+            wp.active,
+            wp.wp_official_code
+          );
 
           if (wp.regions.length > 0) {
             for (let index = 0; index < wp.regions.length; index++) {
+              let regions = new RegionsByInitiativeByStage();
               const rg = wp.regions[index];
 
               regions.id = rg.id;
@@ -530,6 +537,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
           if (wp.countries.length > 0) {
             for (let index = 0; index < wp.countries.length; index++) {
+              let countries = new CountriesByInitiativeByStage();
               const co = wp.countries[index];
 
               countries.id = co.id;
@@ -548,12 +556,22 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
         for (let index = 0; index < workPackages.length; index++) {
           let wp = workPackages[index];
+          wp.wp_official_code = wp.id;
           wp.id = null;
 
-          let newWp: any = await fullPposalIsdc.upsertWorkPackages(wp);
+          let newWp: any = await fullPposalIsdc.upsertWorkPackages(
+            wp.acronym,
+            wp.name,
+            wp.pathway_content,
+            wp.is_global,
+            wp.id,
+            wp.active,
+            wp.wp_official_code
+          );
 
           if (wp.regions.length > 0) {
             for (let index = 0; index < wp.regions.length; index++) {
+              let regions = new RegionsByInitiativeByStage();
               const rg = wp.regions[index];
 
               regions.id = null;
@@ -567,6 +585,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
           if (wp.countries.length > 0) {
             for (let index = 0; index < wp.countries.length; index++) {
+              let countries = new CountriesByInitiativeByStage();
               const co = wp.countries[index];
 
               countries.id = null;
@@ -580,7 +599,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
           wpArray.push(newWp);
         }
-
       }
 
       savedGeoScope = await initvStgObjIsdc.upsertGeoScopes(
