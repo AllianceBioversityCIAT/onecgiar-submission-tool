@@ -21,6 +21,19 @@
     grid-gap: 30px;
 }
 
+.partner_request{
+    color: rgb(29, 147, 243);
+    cursor: pointer;
+    font-style: italic;
+    transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    &:hover{
+        color: rgb(43, 174, 197);
+        border-bottom: 1px rgb(43, 174, 197);
+        text-decoration-line: underline;
+        transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+}
+
 .cont_color{
     font-weight: 500;
     color: var(--ibdc-tertiary-color);;

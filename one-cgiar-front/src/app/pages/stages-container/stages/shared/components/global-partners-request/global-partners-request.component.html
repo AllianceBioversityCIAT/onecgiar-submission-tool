@@ -24,9 +24,9 @@
                 <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
                     are looking for, request to have it added to the list.</a>
             </div> -->
-            <a (click)="openDialog()" target="_blank">
-                <ibdc-alert  [options]="{htmlText: this.partner_request_text, type:'info'}"></ibdc-alert>
-            </a>
+            <div class="partner_request" (click)="openDialog()">
+                If you don't find the partner you are looking for, request to have it added to the list.
+            </div>
         
             <div class="all_parners_saved">
                 <div class="partner_selected_container" *ngFor="let item of this.savedList"
