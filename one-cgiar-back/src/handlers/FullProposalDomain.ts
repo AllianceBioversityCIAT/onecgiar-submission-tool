@@ -885,6 +885,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     impact_area_name?,
     partners?
   ) {
+    console.log(partners);
+    
     const impactStrategiesRepo = getRepository(entities.ImpactStrategies);
     const partnersRepo = getRepository(entities.Partners);
     const initvStg = await this.setInitvStage();
@@ -931,9 +933,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newPartners.institutions_id = par.code;
           newPartners.institutions_name = par.name;
           newPartners.tag_id = par.tag_id ? par.tag_id : null;
-          newPartners.type_id = par.institutionTypeId
-            ? par.institutionTypeId
-            : null;
+          newPartners.type_id = par.institutionTypeId;
           newPartners.type_name = par.institutionType;
           newPartners.active = par.active;
           newPartners.demand = par.demand;

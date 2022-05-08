@@ -2,6 +2,7 @@ import {getCustomRepository, getRepository} from 'typeorm';
 import {
   CountriesByInitiativeByStage,
   InitiativesByStages,
+  Partners,
   RegionsByInitiativeByStage,
   Stages,
   WorkPackages
@@ -715,6 +716,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
   ) {
     try {
       let isArray = [];
+      let partnersArray = [];
       let savedImpactStatements;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
@@ -756,9 +758,22 @@ export class ReplicationDomain extends InitiativeStageHandler {
           const is = impactStatements[index];
 
           for (let index = 0; index < is.partners.length; index++) {
-            const partners = is.partners[index];
+            // let partners = new Partners();
+            const pts = is.partners[index];
+            pts.id = null;
+            // partners.id = null;
+            // partners.impact_strategies_id = pts.impact_strategies_id;
+            // partners.institutions_id = pts.code;
+            // partners.institutions_name = pts.name;
+            // partners.tag_id = pts.tag_id;
+            // partners.demand = pts.demand;
+            // partners.innovation = pts.innovation;
+            // partners.scaling = pts.scaling;
+            // partners.type_id = pts.institutionTypeId;
+            // partners.type_name = pts.institutionType;
+            // partners.active = pts.active;
 
-            partners.id = null;
+            partnersArray.push(pts);
           }
 
           isArray.push(
@@ -772,7 +787,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
               is.human_capacity,
               is.impact_area_id,
               is.impact_area_name,
-              is.partners
+              partnersArray
             )
           );
         }
