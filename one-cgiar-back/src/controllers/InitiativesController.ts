@@ -113,20 +113,6 @@ export const upsertSummary = async (req: Request, res: Response) => {
     is_global
   } = req.body;
 
-  console.log(
-    'aca',
-    generalInformationId,
-    name,
-    acronym,
-    action_area_id,
-    action_area_description,
-    budgetId,
-    budget_value,
-    regions,
-    countries,
-    is_global
-  );
-
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
