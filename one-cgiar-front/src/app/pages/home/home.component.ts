@@ -37,7 +37,9 @@ export class HomeComponent implements OnInit {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
         this.data = data;
-        // console.log(data);
+        data.map((initiative:any)=>{
+          initiative.acronym_and_name = initiative?.acronym ? (initiative.acronym +  ' - ' + initiative.name) : initiative.name; 
+        })
         // data.map(item=>{
         //   if (item.stageId == 3) {
         //     this.data.push(item)
