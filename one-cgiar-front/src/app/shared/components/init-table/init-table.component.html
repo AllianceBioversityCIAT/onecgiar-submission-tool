@@ -21,7 +21,7 @@
             <ng-container matColumnDef="initiativeName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-right: 20px;"> Initiative Name </th>
                 <td mat-cell *matCellDef="let initiative" style="padding-right: 20px;" class="inititiative_title" (click)="initiativesSvc.initvStgId = initiative.initvStgId">
-                    <a class="initiative_link" routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information">{{initiative.name}}</a>
+                    <a class="initiative_link" routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"> <strong>{{initiative?.acronym ? (initiative.acronym +  ' - ') : ''}}</strong> {{initiative.name}}</a>
                 </td>
             </ng-container>
 
