@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { StagesMenuService } from '../../shared/services/stages-menu.service';
 import { InteractionsService } from '../../shared/services/interactions.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
+import { UtilsService } from '../../shared/services/utils.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -28,7 +29,8 @@ export class StagesMenuComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
     private router: Router,
-    public _dataControlService: DataControlService
+    public _dataControlService: DataControlService,
+    private _utilsService:UtilsService
   ) { }
 
   openDialog(): void {
@@ -57,8 +59,60 @@ export class StagesMenuComponent implements OnInit {
       }
     })
     this._interactionsService.collapseHeader = true;
+
+    this.initiativesSvc.getStages().subscribe((resp:any)=>{
+      this.activedRouteEvent(resp?.stages);
+    })
+
+
+    // TODO stageId 3 condition
+    if (this.initiativesSvc.initiative.stageId === 3) {
+      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
+        this.initiativesSvc.initvStgId = resp.response;
+      })
+    }
+
+    // TODO stageId 3 condition
+    this._dataControlService.validateMenu$.subscribe(resp => {
+      // console.log(resp)
+      // if (this.initiativesSvc.initiative.stageId === 3) {
+        this.validateAllSections();
+      // }
+    })
+    this._dataControlService.loadMenu$.emit('full-proposal');
+
+  }
+
+  currentStageAux = '';
+  validateCurrentStageChange(stageName){
+    let currentRoute = this.router.url;
+    if (this.currentStageAux != stageName && this.currentStageAux != '') {
+          this.router.navigateByUrl('/').then(()=>{
+              this.router.navigateByUrl(currentRoute)
+        })
+    }
+    this.currentStageAux = stageName;
+  }
+
+  activedRouteEvent(stagesList:[]){
+   
     this.activatedRoute.params.subscribe(resp => {
+
+      
+      this.validateCurrentStageChange(resp?.stageName);
+      
+      stagesList.map((stageItem:any)=>{
+        stageItem.stageNameKebabCase = this._utilsService.convertToKebabCase(stageItem?.description)
+      })
+
+      let currentStage:any = stagesList.find((stageItem:any) => stageItem?.stageNameKebabCase == resp?.stageName)
+      // console.log(currentStage)
+      // console.log(currentStage?.id)
+      // console.log("Change initiative=> " , currentStage?.id);
+      this.initiativesSvc.initiative.stageName = currentStage.stageNameKebabCase != 'pre-concept' ? 'proposal' : currentStage.stageNameKebabCase;
       this.initiativesSvc.initiative.id = resp['id'];
+
+      this.initiativesSvc.initiative.stageId = currentStage?.id
 
       const promise1 = this.initiativesSvc.getInitiativeById(resp['id']);
       const promise2 = this.initiativesSvc.getUsersByInitiative(resp['id']);
@@ -69,10 +123,11 @@ export class StagesMenuComponent implements OnInit {
         const sucP2 = val[1].response.users;
         this.initiativesSvc.initiative.name = sucP1.name;
         this.initiativesSvc.initiative.official_code = sucP1.official_code;
-        this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
-        this.initiativesSvc.initiative.stageNameToServices = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
-        // console.log(this.initiativesSvc.initiative.stageId);
-        // console.log(this.initiativesSvc.initiative.stageNameToServices);
+
+        // this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
+        // this.initiativesSvc.initiative.stageName = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
+        
+
         this.initiativesSvc.initiative.users = sucP2;
         this.initiativesSvc.initiative.status = sucP1.status;
         this.getInitiativeReadOnlyValidation(this.initiativesSvc.initiative);
@@ -97,22 +152,6 @@ export class StagesMenuComponent implements OnInit {
 
     });
     
-    // TODO stageId 3 condition
-    if (this.initiativesSvc.initiative.stageId === 3) {
-      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-        this.initiativesSvc.initvStgId = resp.response;
-      })
-    }
-
-    // TODO stageId 3 condition
-    this._dataControlService.validateMenu$.subscribe(resp => {
-      // console.log(resp)
-      // if (this.initiativesSvc.initiative.stageId === 3) {
-        this.validateAllSections();
-      // }
-    })
-    this._dataControlService.loadMenu$.emit('full-proposal');
-
   }
 
   managerAccesible() {
@@ -140,27 +179,8 @@ export class StagesMenuComponent implements OnInit {
      */
 
      this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
-      console.log(resp?.response?.roles[0]?.roleId)
       this.initiativesSvc.initiative.readonly = resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined? false : this.user?.roles[0].id !== 4 &&  this.user?.roles[0].id != undefined ? false : true;
-      let read = null;
-
-      // if(resp?.response?.roles[0] !== 4){
-      //   console.log("es difere")
-      // }else if(this.user?.roles[0].id !== 4){
-
-      // }
-
-      // console.log(read)
      })
-
-    // if (this.user?.roles[0].id === 1) {
-    //   this.initiativesSvc.initiative.readonly = false;
-    //   return
-    // }
-    // if (this.user?.roles[0].id === 4) {
-    //   this.initiativesSvc.initiative.readonly = true;
-    //   return
-    // }
 
     /**
      * Validate by initative status
@@ -183,29 +203,12 @@ export class StagesMenuComponent implements OnInit {
         break;
     }
 
-
-
-    // this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp => {
-    //   let rol = resp.response.roles
-    //   let firstRol = rol[0]?.roleId
-    //   // console.log(this.initiativesSvc.initiative)
-    //   if(this.initiativesSvc.initiative.status != null && this.initiativesSvc.initiative.status != 'On hold'){
-    //     this._initiativesService.initiative.readonly = true;
-    //   }else{
-    //     if (rol.length) {
-    //       this._initiativesService.initiative.readonly = (firstRol === 1 || firstRol === 2 || firstRol === 3 || firstRol === 5 || this.user?.roles[0].id === 1) ? false : true;
-    //     } else {
-    //       this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1) ? false : true;
-    //     }
-    //   }
-
-    // });
   }
 
   validateAllSections() {
-    // console.log(this.initiativesSvc.initiative)
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
-      Object.keys(resp.response).map(key => {
+      if (!resp?.response) return;
+      Object.keys(resp?.response).map(key => {
         let stageId = this.initiativesSvc.initiative.stageId;
         if (!resp.response[key] || resp.response[key] == null) return;
         let sectionId = resp.response[key]?.sectionId;

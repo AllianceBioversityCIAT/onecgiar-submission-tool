@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataControlService } from '../../../../shared/services/data-control.service';
-import { InitiativesService } from '../../../../shared/services/initiatives.service';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({

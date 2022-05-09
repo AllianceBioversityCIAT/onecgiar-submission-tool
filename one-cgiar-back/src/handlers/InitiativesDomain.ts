@@ -61,7 +61,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
         (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
         initvStg.active AS active,
         initvStg.stageId AS stageId,
-        CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
+        (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
         FROM
             initiatives initiative
         LEFT JOIN initiatives_by_stages initvStg 

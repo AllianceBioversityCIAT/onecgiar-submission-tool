@@ -18,25 +18,9 @@
     background-color: cyan;
 }
 
-@media only screen and (max-width: 1000px) {
-    .menu {
-        background-color: #000000cc;
-    }
-}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 1000px) {
-    .menu {
-        background-color: #00000063;
-    }
-}
-
 @media only screen and (max-width: 1300px) {
     .right_container {
         padding: 5px 10px 0px;
-    }
-    .menu {
-        padding: 50px 10px;
     }
 }
 
@@ -45,18 +29,12 @@
     .right_container {
         padding: 10px 40px 0px;
     }
-    .menu {
-        padding: 50px 15px;
-    }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 1550px) {
     .right_container {
         padding: 10px 40px 0px;
-    }
-    .menu {
-        padding: 50px 25px;
     }
 }
 
@@ -66,7 +44,16 @@
     max-height: calc(100vh - 120px);
     overflow-y: scroll;
     color: white;
-
+    background-color: var(--ibdc-black-1);
+    padding: 8px 8px;
+    .menu-title {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        font-size: 1.5em;
+        font-weight: bold;
+        padding: 1rem 0;
+    }
     .stages {
         height: auto;
         border: red 1px solid;
@@ -152,15 +139,7 @@
     padding: 0 3rem;
 }
 
-.menu-title {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    font-size: 1.5em;
-    font-weight: bold;
-    padding: 1rem 0;
-}
+
 
 .mat-form-field + .mat-form-field {
     margin-left: 8px;

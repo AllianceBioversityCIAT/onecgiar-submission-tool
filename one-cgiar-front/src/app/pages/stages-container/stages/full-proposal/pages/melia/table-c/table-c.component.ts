@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
 import { ManageExcelService } from '../../../services/manage-excel.service';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-table-c',
@@ -12,14 +13,15 @@ export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
   listToSave : any[] = [];
-  htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
-    private _manageExcelService:ManageExcelService
+    private _manageExcelService:ManageExcelService,
+    public _utilsService:UtilsService
     ) { }
 
   ngOnInit(): void {
-    this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
+    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
@@ -40,7 +42,8 @@ export class TableCComponent implements OnInit {
       if (!result?.indicators?.length) return this.resultDataList.push(
         {
           result_title: result?.result_title,
-          type_name: result?.type_name, 
+          type_name: result?.type_name,
+          wp_acronym: result?.wp_acronym, 
           rowSpan: 1, 
           geo_scope: this.compactGeoData(result['geo_scope'])
         }) ;
@@ -52,6 +55,7 @@ export class TableCComponent implements OnInit {
             {
               result_title: result?.result_title,
               type_name: result?.type_name, 
+              wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
@@ -141,6 +145,8 @@ interface ResultData {
   id: number;
   result_type_id: number;
   result_title: string;
+  wp_name:string;
+  wp_acronym:string;
   is_global: number;
   active: number;
   type_name: string;

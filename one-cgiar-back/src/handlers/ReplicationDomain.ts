@@ -1,5 +1,12 @@
 import {getCustomRepository, getRepository} from 'typeorm';
-import {InitiativesByStages, Stages} from '../entity';
+import {
+  CountriesByInitiativeByStage,
+  InitiativesByStages,
+  Partners,
+  RegionsByInitiativeByStage,
+  Stages,
+  WorkPackages
+} from '../entity';
 import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
 import {BaseError} from './BaseError';
 import {ProposalHandler} from './FullProposalDomain';
@@ -70,7 +77,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
       }
 
       // get new initiative by stage
-      const newInitvStg = await initvStgRepo.findOneInitiativeByStage(
+      let newInitvStg = await initvStgRepo.findOneInitiativeByStage(
         currentInitiativeId,
         newStage.id
       );
@@ -86,8 +93,17 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newStage
       );
 
+      if (!newInitvStg) {
+        newInitvStg = await initvStgRepo.findOneInitiativeByStage(
+          currentInitiativeId,
+          newStage.id
+        );
+      }
+
       //2. Replicate General Information
       const replicationGeneralInfo = await this.replicateGeneralInformation(
+        initvStg,
+        newInitvStg,
         initvStg.id,
         newInitvStg.id
       );
@@ -149,6 +165,20 @@ export class ReplicationDomain extends InitiativeStageHandler {
         newInitvStg.id
       );
 
+      //11. Replication Financial Resources
+      const replicationFinancialResources =
+        await this.replicationFinancialResources(
+          initvStg,
+          newInitvStg,
+          initvStg.id,
+          newInitvStg.id
+        );
+
+      //12. Inactive initiative in the previus stage
+      const inactivePreviusInitiative = await this.inactivePreviusInitiative(
+        initvStg
+      );
+
       return {
         changeStage,
         replicationGeneralInfo,
@@ -162,7 +192,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationMeliaStudiesActivities,
         replicationManagementPlan,
         replicationPolicyCompliance,
-        replicationHumanResources
+        replicationHumanResources,
+        replicationFinancialResources,
+        inactivePreviusInitiative
       };
     } catch (error) {
       throw new BaseError(
@@ -173,6 +205,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
       );
     }
   }
+
+  /**
+   * ******** STEPS REPLICATION FOR ISDC FEEDBACK ************
+   */
 
   /**
    ** 1. Change Stage by Initiative
@@ -186,8 +222,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
       initvStg = initvStg;
     }
 
-    const newInitv = new InitiativesByStages();
     let savedInitiativeByStage: InitiativesByStages;
+    let updateOldInitiativeByStage;
 
     try {
       // Conditions to change stage a initiative
@@ -197,6 +233,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
         // If Initiative Not exists in New Stage
       } else if (newStage.id > initvStg.stageId) {
+        const newInitv = new InitiativesByStages();
         newInitv.active = true;
         newInitv.global_dimension = initvStg.global_dimension;
         newInitv.initiative = initvStg.initiativeId;
@@ -212,7 +249,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       }
 
-      return savedInitiativeByStage;
+      return {savedInitiativeByStage, updateOldInitiativeByStage};
     } catch (error) {
       throw new BaseError(
         'Error Change Stage by initiative - ' + initvStg.initiativeId,
@@ -224,6 +261,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
   }
 
   async replicateGeneralInformation(
+    initvStg,
+    newinitvStg,
     currentInitvStgId: number,
     newInitStgId: number
   ) {
@@ -231,33 +270,56 @@ export class ReplicationDomain extends InitiativeStageHandler {
       let savedGeneralInformation;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
-      // create new full proposal object
-      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+
+      // create initiative by stage handler object
+      const initiative = new InitiativeStageHandler(
+        `${initvStg.id}`,
+        `${initvStg.stageId}`,
+        `${initvStg.initiativeId}`
+      );
       // get general information from proposal object
-      const generalInformation = await fullPposal.getGeneralInformation();
+      const generalInformation = await initiative.getSummary(initvStg);
 
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
-      // create new full proposal object
-      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      const initiativeIsdc = new InitiativeStageHandler(
+        `${newinitvStg.id}`,
+        `${newinitvStg.stageId}`,
+        `${newinitvStg.initiativeId}`
+      );
       // get general information from proposal object
-      const generalInformationIsdc =
-        await fullPposalIsdc.getGeneralInformation();
+      const generalInformationIsdc = await initiativeIsdc.getSummary(
+        newinitvStg
+      );
 
-      if (generalInformationIsdc.generalInformationId) {
-        savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
-          generalInformationIsdc.generalInformationId,
-          generalInformationIsdc.name,
-          generalInformationIsdc.action_area_id,
-          generalInformationIsdc.action_area_description
+      if (generalInformationIsdc.generalInformation.generalInformationId) {
+        savedGeneralInformation = await initiativeIsdc.upsertSummary(
+          generalInformationIsdc.generalInformation.generalInformationId,
+          generalInformationIsdc.generalInformation.name,
+          generalInformationIsdc.generalInformation.action_area_id,
+          generalInformationIsdc.generalInformation.action_area_description,
+          generalInformationIsdc.generalInformation.acronym,
+          generalInformationIsdc.budget.id
+            ? generalInformationIsdc.budget.id
+            : '',
+          generalInformationIsdc.budget.value
+            ? generalInformationIsdc.budget.value
+            : '',
+          null,
+          null
         );
       } else {
-        generalInformation.initvStgId = newInitStgId;
-        savedGeneralInformation = await fullPposalIsdc.upsertGeneralInformation(
+        savedGeneralInformation = await initiativeIsdc.upsertSummary(
           null,
-          generalInformation.name,
-          generalInformation.action_area_id,
-          generalInformation.action_area_description,
-          ''
+          generalInformation.generalInformation.name,
+          generalInformation.generalInformation.action_area_id,
+          generalInformation.generalInformation.action_area_description,
+          generalInformation.generalInformation.acronym,
+          null,
+          generalInformation.budget.value
+            ? generalInformation.budget.value
+            : '',
+          null,
+          null
         );
       }
 
@@ -311,9 +373,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedContext =
-          'The initiative does not have information in the context section stage ' +
+          '***ERROR*** The initiative does not have information in the context section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          ' - please validate';
       }
 
       return savedContext;
@@ -370,7 +432,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
-      } else {
+      } else if (projectedBenefits.length > 0) {
         projectedBenefits.initvStgId = newInitStgId;
 
         for (let index = 0; index < projectedBenefits.length; index++) {
@@ -400,6 +462,12 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
+      } else {
+        pbArray.push(
+          '***ERROR*** The initiative does not have information in the Projection benefits section, InitvStgId ' +
+            currentInitvStgId +
+            '- please validate'
+        );
       }
 
       savedProjectedBenefits = await Promise.all(pbArray);
@@ -421,7 +489,10 @@ export class ReplicationDomain extends InitiativeStageHandler {
   ) {
     try {
       let wpArray = [];
+      let countriesArray = [];
+      let regionsArray = [];
       let savedWorkPakages;
+      let savedGeoScope;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
       // create new full proposal object
@@ -432,26 +503,113 @@ export class ReplicationDomain extends InitiativeStageHandler {
       //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
       // create new full proposal object
       const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      const initvStgObjIsdc = new InitiativeStageHandler(
+        newInitStgId.toString()
+      );
       // get general information from proposal object
       const workPackagesIsdc = await fullPposalIsdc.getWorkPackage();
 
       if (workPackagesIsdc.length > 0) {
         for (let index = 0; index < workPackagesIsdc.length; index++) {
           const wp = workPackagesIsdc[index];
-          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
+          let currentWp: any = fullPposalIsdc.upsertWorkPackages(
+            wp.acronym,
+            wp.name,
+            wp.pathway_content,
+            wp.is_global,
+            wp.id,
+            wp.active,
+            wp.wp_official_code
+          );
+
+          if (wp.regions.length > 0) {
+            for (let index = 0; index < wp.regions.length; index++) {
+              let regions = new RegionsByInitiativeByStage();
+              const rg = wp.regions[index];
+
+              regions.id = rg.id;
+              regions.wrkPkg = currentWp.id;
+              regions.active = true;
+              regions.region_id = rg.region_id;
+
+              regionsArray.push(regions);
+            }
+          }
+
+          if (wp.countries.length > 0) {
+            for (let index = 0; index < wp.countries.length; index++) {
+              let countries = new CountriesByInitiativeByStage();
+              const co = wp.countries[index];
+
+              countries.id = co.id;
+              countries.wrkPkg = currentWp.id;
+              countries.country_id = co.country_id;
+              countries.active = true;
+
+              countriesArray.push(countries);
+            }
+          }
+
+          wpArray.push(currentWp);
         }
       } else {
         workPackages.initvStgId = newInitStgId;
+
         for (let index = 0; index < workPackages.length; index++) {
           let wp = workPackages[index];
+          wp.wp_official_code = wp.id;
           wp.id = null;
-          wpArray.push(fullPposalIsdc.upsertWorkPackages(wp));
+
+          let newWp: any = await fullPposalIsdc.upsertWorkPackages(
+            wp.acronym,
+            wp.name,
+            wp.pathway_content,
+            wp.is_global,
+            wp.id,
+            wp.active,
+            wp.wp_official_code
+          );
+
+          if (wp.regions.length > 0) {
+            for (let index = 0; index < wp.regions.length; index++) {
+              let regions = new RegionsByInitiativeByStage();
+              const rg = wp.regions[index];
+
+              regions.id = null;
+              regions.wrkPkg = newWp.id;
+              regions.active = true;
+              regions.region_id = rg.region_id;
+
+              regionsArray.push(regions);
+            }
+          }
+
+          if (wp.countries.length > 0) {
+            for (let index = 0; index < wp.countries.length; index++) {
+              let countries = new CountriesByInitiativeByStage();
+              const co = wp.countries[index];
+
+              countries.id = null;
+              countries.wrkPkg = newWp.id;
+              countries.country_id = co.country_id;
+              countries.active = true;
+
+              countriesArray.push(countries);
+            }
+          }
+
+          wpArray.push(newWp);
         }
       }
 
+      savedGeoScope = await initvStgObjIsdc.upsertGeoScopes(
+        regionsArray,
+        countriesArray
+      );
+
       savedWorkPakages = await Promise.all(wpArray);
 
-      return savedWorkPakages;
+      return {savedWorkPakages, savedGeoScope};
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Work packages',
@@ -480,9 +638,14 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
       if (tocIsdc.length > 0) {
         savedToc = await fullPposalIsdc.upsertTocs(tocIsdc);
-      } else {
+      } else if (toc.length > 0) {
         toc.initvStgId = newInitStgId;
         savedToc = await fullPposalIsdc.upsertTocs(toc);
+      } else {
+        savedToc =
+          '***ERROR*** The initiative does not have information in the ToC section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       return savedToc;
@@ -531,9 +694,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedInnovationPackages =
-          'The initiative does not have information in the Innovation Packages section stage ' +
+          '***ERROR*** The initiative does not have information in the Innovation Packages section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedInnovationPackages;
@@ -553,6 +716,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
   ) {
     try {
       let isArray = [];
+      let partnersArray = [];
       let savedImpactStatements;
 
       // 1. Get current information from initiative in current stage "Use Get of full proposal"
@@ -587,16 +751,29 @@ export class ReplicationDomain extends InitiativeStageHandler {
             )
           );
         }
-      } else {
+      } else if (impactStatements.length > 0) {
         impactStatements.initvStgId = newInitStgId;
 
         for (let index = 0; index < impactStatements.length; index++) {
           const is = impactStatements[index];
 
           for (let index = 0; index < is.partners.length; index++) {
-            const partners = is.partners[index];
+            // let partners = new Partners();
+            const pts = is.partners[index];
+            pts.id = null;
+            // partners.id = null;
+            // partners.impact_strategies_id = pts.impact_strategies_id;
+            // partners.institutions_id = pts.code;
+            // partners.institutions_name = pts.name;
+            // partners.tag_id = pts.tag_id;
+            // partners.demand = pts.demand;
+            // partners.innovation = pts.innovation;
+            // partners.scaling = pts.scaling;
+            // partners.type_id = pts.institutionTypeId;
+            // partners.type_name = pts.institutionType;
+            // partners.active = pts.active;
 
-            partners.id = null;
+            partnersArray.push(pts);
           }
 
           isArray.push(
@@ -610,10 +787,16 @@ export class ReplicationDomain extends InitiativeStageHandler {
               is.human_capacity,
               is.impact_area_id,
               is.impact_area_name,
-              is.partners
+              partnersArray
             )
           );
         }
+      } else {
+        isArray.push(
+          '***ERROR*** The initiative does not have information in the Impact Statements section, InitvStgId ' +
+            currentInitvStgId +
+            '- please validate'
+        );
       }
 
       savedImpactStatements = await Promise.all(isArray);
@@ -656,7 +839,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
           null,
           meiliaPlanResultsIsdc.meliaPlan
         );
-      } else {
+      } else if (meiliaPlanResults.meliaPlan) {
         meiliaPlanResults.meliaPlan.id = null;
         savedMeliaPlan = await fullPposalIsdc.upsertMeliaAndFiles(
           null,
@@ -664,6 +847,11 @@ export class ReplicationDomain extends InitiativeStageHandler {
           null,
           meiliaPlanResults.meliaPlan
         );
+      } else {
+        savedMeliaPlan =
+          '***ERROR*** The initiative does not have information in the Melia Plan section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       // UPSERT RESULTS FRAMEWORK
@@ -684,7 +872,15 @@ export class ReplicationDomain extends InitiativeStageHandler {
             meiliaPlanResultsIsdc.resultFramework.tableB,
             meiliaPlanResultsIsdc.resultFramework.tableC
           );
-      } else {
+      } else if (
+        (meiliaPlanResults.resultFramework.tableA.global_targets.length > 0 ||
+          meiliaPlanResults.resultFramework.tableA.impact_areas_indicators
+            .length > 0 ||
+          meiliaPlanResults.resultFramework.tableA.sdg_targets.length > 0) &&
+        meiliaPlanResults.resultFramework.tableB
+          .action_areas_outcomes_indicators.length > 0 &&
+        meiliaPlanResults.resultFramework.tableC.results.length > 0
+      ) {
         // Validation for insert new results and indicators
         for (
           let index = 0;
@@ -714,6 +910,11 @@ export class ReplicationDomain extends InitiativeStageHandler {
             meiliaPlanResults.resultFramework.tableB,
             meiliaPlanResults.resultFramework.tableC
           );
+      } else {
+        savedMeliaResultsFramework =
+          '***ERROR*** The initiative does not have information in the Melia Results Framework section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
       }
 
       return {savedMeliaPlan, savedMeliaResultsFramework};
@@ -764,9 +965,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
           );
       } else {
         savedMeliaStudiesActivities =
-          'The initiative does not have information in the Melia studies and activities section stage ' +
+          '***ERROR*** The initiative does not have information in the Melia studies and activities section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedMeliaStudiesActivities;
@@ -849,9 +1050,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedManagementPlan =
-          'The initiative does not have information in the Management Plan and Risk section stage ' +
+          '***ERROR*** The initiative does not have information in the Management Plan and Risk section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return {savedManagementPlan, savedRiskAssessment};
@@ -906,9 +1107,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
           );
       } else {
         savedPolicyCompliance =
-          'The initiative does not have information in the Policy and Compliance section stage ' +
+          '***ERROR*** The initiative does not have information in the Policy and Compliance section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return savedPolicyCompliance;
@@ -945,11 +1146,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const humanResourcesIsdc =
         await fullPposalIsdc.requestHumanResourcesFiles('humanResources');
 
-      console.log('FULL PROPOSAL: ', humanResources);
-      console.log('FULL PROPOSAL ISDC: ', humanResourcesIsdc);
-      console.log('LENGT',humanResources.initvTeam.length);
-      
-
       if (humanResourcesIsdc) {
         savedHumanResources = await fullPposalIsdc.upsertHumanResourcesAndFiles(
           null,
@@ -977,7 +1173,9 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
 
         humanResources.initvTeam =
-        typeof humanResources.initvTeam === 'undefined' ? [] : humanResources.initvTeam;
+          typeof humanResources.initvTeam === 'undefined'
+            ? []
+            : humanResources.initvTeam;
         for (let index = 0; index < humanResources.initvTeam.length; index++) {
           const initvTeam = humanResources.initvTeam[index];
 
@@ -990,15 +1188,91 @@ export class ReplicationDomain extends InitiativeStageHandler {
         );
       } else {
         savedHumanResources =
-          'The initiative does not have information in the Human Resources section stage ' +
+          '***ERROR*** The initiative does not have information in the Human Resources section, InitvStgId ' +
           currentInitvStgId +
-          'please validate';
+          '- please validate';
       }
 
       return {savedHumanResources, savedInitiativeTeam};
     } catch (error) {
       throw new BaseError(
         'Error replicating the information of Human Resources ',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async replicationFinancialResources(
+    initvStg,
+    newinitvStg,
+    currentInitvStgId: number,
+    newInitStgId: number
+  ) {
+    try {
+      let savedFinancialResources;
+
+      // 1. Get current information from initiative in current stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposal = new ProposalHandler(currentInitvStgId.toString());
+      // get general information from proposal object
+      const financialResources = await fullPposal.requestFinancialResources();
+
+      //2. Validate if new stage is populated - Get information from initiative in new stage "Use Get of full proposal"
+      // create new full proposal object
+      const fullPposalIsdc = new ProposalHandler(newInitStgId.toString());
+      // get general information from proposal object
+      const financialResourcesIsdc =
+        await fullPposalIsdc.requestFinancialResources();
+
+      if (financialResourcesIsdc.length > 0) {
+        savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
+          financialResourcesIsdc,
+          newinitvStg,
+          financialResourcesIsdc.financial_type
+        );
+      } else if (financialResources.length > 0) {
+        for (let index = 0; index < financialResources.length; index++) {
+          const fn = financialResources[index];
+          fn.id = null;
+        }
+        savedFinancialResources = await fullPposalIsdc.upsertFinancialResources(
+          financialResources,
+          newinitvStg,
+          financialResourcesIsdc.financial_type
+        );
+      } else {
+        savedFinancialResources =
+          '***ERROR*** The initiative does not have information in the Financial Resources section, InitvStgId ' +
+          currentInitvStgId +
+          '- please validate';
+      }
+
+      return savedFinancialResources;
+    } catch (error) {
+      throw new BaseError(
+        'Error replicating the information of Financial Resources ',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async inactivePreviusInitiative(initvStg) {
+    let updateOldInitiativeByStage;
+
+    try {
+      //Update Status Old Stage
+      initvStg.active = false;
+
+      updateOldInitiativeByStage = await this.initvStgRepo.save(initvStg);
+
+      return updateOldInitiativeByStage;
+    } catch (error) {
+      throw new BaseError(
+        'Error inactivating the initiative in the previous stage ',
         400,
         error.message,
         false

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { UtilsService } from '../../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-ta-impact-area',
@@ -11,11 +12,12 @@ import { ActivatedRoute } from '@angular/router';
 export class TaImpactAreaComponent implements OnInit {
   tableAData:tableAData;
   currentImpactAreaId: number;
-  htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   
   constructor(
     private _initiativesService:InitiativesService,
-    private activatedRoute:ActivatedRoute
+    private activatedRoute:ActivatedRoute,
+    public _utilsService:UtilsService
     ) { }
 
   ngOnInit(): void {
@@ -27,12 +29,12 @@ export class TaImpactAreaComponent implements OnInit {
     
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.currentImpactAreaId = routeResp.id;
-      this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(
+      this._initiativesService.getMeliaResultFramework().pipe(
         map(res=>res.response.melia.resultFramework.tableA),
         map((res:tableAData)=>{
-          res.globalTargets = res.globalTargets.filter(item=>item.impact_area_id == routeResp.id);
-          res.impactAreasIndicators = res.impactAreasIndicators.filter(item=>item.impact_area_id == routeResp.id);
-          res.sdgTargets = res.sdgTargets.filter(item=>item.impact_area_id == routeResp.id);
+          res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == routeResp.id);
+          res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == routeResp.id);
+          res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == routeResp.id);
           return res
         })
         ).subscribe((resp:tableAData)=>{
@@ -50,9 +52,9 @@ export class TaImpactAreaComponent implements OnInit {
 
 
 interface tableAData {
-  globalTargets: GlobalTarget[];
-  impactAreasIndicators: ImpactAreasIndicator[];
-  sdgTargets: SdgTarget[];
+  global_targets: GlobalTarget[];
+  impact_areas_indicators: ImpactAreasIndicator[];
+  sdg_targets: SdgTarget[];
 }
 
 interface SdgTarget {

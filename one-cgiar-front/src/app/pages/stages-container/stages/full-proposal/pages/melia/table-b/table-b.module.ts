@@ -5,6 +5,7 @@ import { TableBRoutingModule } from './table-b-routing.module';
 import { TableBComponent } from './table-b.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     TableBRoutingModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    EditTocButtonModule
   ]
 })
 export class TableBModule { }

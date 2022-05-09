@@ -1,6 +1,6 @@
 import {get} from 'https';
 import _ from 'lodash';
-import {getRepository, In} from 'typeorm';
+import {getRepository, In, Not} from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
@@ -269,8 +269,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND init.stageId = 3
+        WHERE init.stageId = 3
          AND wp.active = 1
         ORDER BY initiativeId asc
                     `;
@@ -323,8 +322,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND wp.active = 1
+        WHERE wp.active = 1
         ORDER BY initiativeId asc
                     `;
 
@@ -533,26 +531,52 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @param newWP
    * @returns upsertedInfo
    */
-  async upsertWorkPackages(newWP?) {
+  async upsertWorkPackages(
+    acronym,
+    name,
+    pathway_content,
+    is_global,
+    id,
+    active,
+    wp_official_code?
+  ) {
     const wpRepo = getRepository(entities.WorkPackages);
     // get current intiative by stage
     const initvStg = await this.initvStage;
 
     var upsertedInfo;
 
+    var newWorkPackage = new entities.WorkPackages();
+
+    newWorkPackage.id = id;
+    newWorkPackage.acronym = acronym;
+    newWorkPackage.name = name;
+    newWorkPackage.pathway_content = pathway_content;
+    newWorkPackage.is_global = is_global;
+    newWorkPackage.active = active;
+    newWorkPackage.wp_official_code = wp_official_code ? wp_official_code : id;
+
     try {
-      if (newWP.id !== null) {
+      if (newWorkPackage.id !== null) {
         var savedWP = await this.queryRunner.query(` SELECT *
                 FROM work_packages 
-               WHERE id = ${newWP.id}`);
+               WHERE id = ${newWorkPackage.id}`);
 
-        wpRepo.merge(savedWP[0], newWP);
+        wpRepo.merge(savedWP[0], newWorkPackage);
 
         upsertedInfo = await wpRepo.save(savedWP[0]);
       } else {
-        newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id;
+        newWorkPackage.initvStgId = initvStg[0].id
+          ? initvStg[0].id
+          : initvStg.id;
 
-        upsertedInfo = await wpRepo.save(newWP);
+        upsertedInfo = await wpRepo.save(newWorkPackage);
+
+        //Insert Work Pakcage Official Code
+        upsertedInfo.wp_official_code = wp_official_code
+          ? wp_official_code
+          : upsertedInfo.id;
+        await wpRepo.save(upsertedInfo);
       }
 
       return upsertedInfo;
@@ -861,6 +885,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     impact_area_name?,
     partners?
   ) {
+    console.log(partners);
+    
     const impactStrategiesRepo = getRepository(entities.ImpactStrategies);
     const partnersRepo = getRepository(entities.Partners);
     const initvStg = await this.setInitvStage();
@@ -907,9 +933,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newPartners.institutions_id = par.code;
           newPartners.institutions_name = par.name;
           newPartners.tag_id = par.tag_id ? par.tag_id : null;
-          newPartners.type_id = par.institutionTypeId
-            ? par.institutionTypeId
-            : null;
+          newPartners.type_id = par.institutionTypeId;
           newPartners.type_name = par.institutionType;
           newPartners.active = par.active;
           newPartners.demand = par.demand;
@@ -1468,6 +1492,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         newResults.result_title = result.result_title;
         newResults.is_global = result.is_global;
         newResults.active = result.active;
+        newResults.work_package_id = result.wp_id;
+        newResults.result_description = result.result_description;
 
         upsertResults = await resultsRepo.save(newResults);
 
@@ -1665,12 +1691,15 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND outi.active =1;
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.name as type_name,re.result_type_id as result_type,re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,wp.acronym wp_acronym,re.result_type_id as result_type,re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
+   left join work_packages wp 
+          on wp.id = re.work_package_id 
        WHERE re.initvStgId = ${initvStg.id}
-         AND re.active =1;
+         AND re.active =1
+        order by re.result_type_id,wp.id;
         `,
         resultsIndicatorsQuery = `
         SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
@@ -2526,7 +2555,6 @@ export class ProposalHandler extends InitiativeStageHandler {
             LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
             
             WHERE initvStgId = ${initvStg.id}
-            AND fR.financial_type = "${sectionName}"
             AND fR.active = 1
             GROUP BY
                 fR.id;
@@ -2535,6 +2563,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const financialResources = await this.queryRunner.query(
         financialResourcesQuery
       );
+
       return financialResources;
     } catch (error) {
       console.log(error);
@@ -2658,11 +2687,11 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST Finanacial Resources
+   ** REQUEST Finanacial Resources by section
    * @param sectionName
    * @returns {financialResources}
    */
-  async requestFinancialResources(sectionName) {
+  async requestFinancialResourcesBySection(sectionName) {
     const initvStg = await this.setInitvStage();
     try {
       const financialResourcesQuery = ` 
@@ -2678,6 +2707,45 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND fR.active = 1
             GROUP BY
                 fR.id;
+            `;
+
+      const financialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+
+      return financialResources;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get financial resources and files: Full proposal.',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST all Finanacial Resources
+   * @param sectionName
+   * @returns {financialResources}
+   */
+  async requestFinancialResources() {
+    const initvStg = await this.setInitvStage();
+    try {
+      const financialResourcesQuery = ` 
+            SELECT
+            fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
+            GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
+            FROM
+                financial_resources fR
+            LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
+            
+            WHERE initvStgId = ${initvStg.id}
+            AND fR.active = 1
+            GROUP BY
+                fR.id
+            ORDER BY fR.financial_type ;
             `;
 
       const financialResources = await this.queryRunner.query(
@@ -2970,7 +3038,25 @@ export class ProposalHandler extends InitiativeStageHandler {
                 throw new BaseError(
                   'Upsert Full Initiative ToC: Full proposal',
                   400,
-                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},${savedTocsType[0].toc_id}`,
+                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},ToC Id : ${savedTocsType[0].toc_id}`,
+                  false
+                );
+              }
+            } else {
+              //Validate WP ToC
+              // Validate if exits WP for other initiative
+              var savedTocsWP: any = await tocsRepo.find({
+                where: {
+                  work_package_id: newTocs.work_package_id,
+                  initvStgId: Not(newTocs.initvStgId)
+                }
+              });
+
+              if (savedTocsWP.length > 0) {
+                throw new BaseError(
+                  'Upsert Full Initiative ToC: Full proposal',
+                  400,
+                  `The Work Package Id - ${savedTocsWP[0].work_package_id} - was inserted in the initiative - ${savedTocsWP[0].initvStgId} - please validate, ToC Id : ${savedTocsWP[0].toc_id}`,
                   false
                 );
               }
@@ -3158,6 +3244,96 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'GET ISDC Responses: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+    /**
+   * * REQUEST EOI BY INITIATIVE
+   * @returns eoi
+   */
+
+  async requestEndofInitiativeOutcomes() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      const resultsQuery = `
+      SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,
+             wp.acronym wp_acronym,re.result_type_id as result_type,
+             re.result_title,re.result_description,re.is_global,re.active
+      FROM results re
+      join results_types rt 
+        on rt.id = re.result_type_id 
+  left join work_packages wp 
+        on wp.id = re.work_package_id 
+     WHERE re.initvStgId = ${initvStg.id}
+       AND rt.id  = 3
+       AND re.active =1
+      order by re.result_type_id,wp.id;
+    `,
+        resultsIndicatorsQuery = `
+    SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
+    ri.results_id, ri.baseline_value, ri.baseline_year,
+    ri.target_value, ri.target_year, ri.active, ri.data_source, 
+    ri.data_collection_method as data_collection, ri.frequency_data_collection,
+    ri.created_at, ri.updated_at
+      FROM results_indicators ri
+     WHERE ri.results_id in (SELECT re.id
+      FROM results re
+     WHERE re.initvStgId = ${initvStg.id}
+       AND re.active =1);
+    `,
+        resultsRegionsQuery = `SELECT reg.id,reg.region_id,cr.name as region_name,reg.results_id ,reg.active,reg.created_at,reg.updated_at 
+    FROM results_regions reg
+    join clarisa_regions cr 
+      on cr.um49Code  = reg.region_id 
+   WHERE reg.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`,
+        resultsCountriesQuery = `
+    SELECT co.id,co.country_id,cc.name as country_name,co.results_id ,co.active ,co.created_at, co.updated_at 
+    FROM results_countries co
+    join clarisa_countries cc 
+      on cc.code  = co.country_id 
+   WHERE co.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`;
+
+      const eoi = await this.queryRunner.query(resultsQuery);
+      const resultsIndicators = await this.queryRunner.query(
+        resultsIndicatorsQuery
+      );
+      const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const resultsCountries = await this.queryRunner.query(
+        resultsCountriesQuery
+      );
+
+      eoi.map((res) => {
+        res['indicators'] = resultsIndicators.filter((resi) => {
+          return res.id === resi.results_id;
+        });
+
+        const reg = resultsRegions.filter((reg) => {
+          return res.id === reg.results_id;
+        });
+
+        const cou = resultsCountries.filter((co) => {
+          return res.id === co.results_id;
+        });
+
+        res['geo_scope'] = {regions: reg, countries: cou};
+      });
+
+      return eoi;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Request EOI By Initiative: Full proposal',
         400,
         error.message,
         false

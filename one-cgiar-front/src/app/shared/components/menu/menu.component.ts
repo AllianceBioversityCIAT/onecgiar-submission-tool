@@ -11,6 +11,7 @@ import { RequestsService } from '../../services/requests.service';
 import { UtilsHandler } from '../../utils/utils';
 import { map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { UtilsService } from '../../services/utils.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -48,7 +49,8 @@ export class MenuComponent implements OnInit {
     public stgMenuSvc: StagesMenuService,
     private spinnerService: NgxSpinnerService,
     public _interactionsService: InteractionsService,
-    public _dataControlService: DataControlService
+    public _dataControlService: DataControlService,
+    public _utilsService: UtilsService
   ) { }
 
 
@@ -175,53 +177,33 @@ export class MenuComponent implements OnInit {
 
   }
 
-  mapReportInSubSectionMenu(stageId, sectionId, object) {
+  mapDataInMenu(list, attributeName:"subsections"|"dynamicList", stageId:number, sectionId?:number, subSectionId?:number ) {
     if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .previewButton = object);
-    // console.log(sectionFinded);
+    let elementFinded;
+    elementFinded = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId);
+
+    if (stageId && sectionId)
+    elementFinded = elementFinded.sections.find((section) => section.sectionId == sectionId);
+    if (stageId && sectionId && subSectionId)
+    elementFinded =  elementFinded.subsections.find((subSection) => subSection.subSectionId == subSectionId);
+
+    if (elementFinded[attributeName]?.length) {
+      list.map(item=>{
+        elementFinded[attributeName].push(item);
+      })
+    }else{
+      elementFinded[attributeName] = list;
+    }
+ 
   }
 
-  mapDataInMenu(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).dynamicList = list);
-    // console.log(sectionFinded);
-  }
-
-  mapDataInMenuDynamicListSubSection(stageId, sectionId, subSectionId, list) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).dynamicListSubSection = list);
-    // console.log(sectionFinded);
-  }
-
-  mapPreviewInDynamicListMenu(stageId, sectionId, subSectionId, object) {
-    if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
-    let sectionFinded = (this._dataControlService.userMenu
-      .find((menuItem) => menuItem.stageId == stageId)
-      .sections.find((section) => section.sectionId == sectionId)
-      .subsections.find(
-        (subSection) => subSection.subSectionId == subSectionId
-      ).previewButton = object);
-    // console.log(sectionFinded);
-  }
-
-  mapWorkPackagesInStage({ stageName, stageId, sectionId, subSectionId }) {
+  mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
-      this.initiativesSvc.getWpsFpByInititative(this.initiativesSvc.initiative.id, stageName).subscribe((wpsResp) => {
-        let wpss = new ListToMap(wpsResp.response.workpackage, '/work-package/', 'work-package', 'showName', 'acronym').getList();
-        this.mapDataInMenu(stageId, sectionId, subSectionId, wpss);
+      this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
+       
+        let wpss = new ListToMap(wpsResp.response.workpackage, 'work-package/', 'work-package', 'showName', 'acronym').getList();
+        // console.log(wpss)
+        this.mapDataInMenu(wpss,"dynamicList",stageId, sectionId, subSectionId);
         this._dataControlService.wpMaped = true;
       }, (err) => {
         console.log(err);
@@ -231,6 +213,8 @@ export class MenuComponent implements OnInit {
   }
 
   getMenu() {
+    // console.log(this.initiativesSvc.initiative.id);
+    // console.log("getMenu")
     this.initiativesSvc.getMenu(this.initiativesSvc.initiative.id).pipe(map(resp => resp.response.stages)).subscribe((userMenuResp: any) => {
 
       this._dataControlService.userMenu = userMenuResp;
@@ -258,66 +242,61 @@ export class MenuComponent implements OnInit {
 
         this.mapWorkPackagesInStage(fullProposalData);
 
-        let pobList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 1, 8, pobList);
+        let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
 
-        let impactStatementsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 7, 16, impactStatementsList);
+        let impactStatementsList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
 
-        let tableAImpactArea = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(3, 8, 37, tableAImpactArea);
+        let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
 
-        let resultsList = new ListToMap(this.impacAreasList, '/impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(2, 16, 29, resultsList);
+        this.mapDataInMenu( [{
+          display_name: 'Risk assessment preview',
+          description: '/mpara-reports'
+        }],"subsections",3, 9)
 
+        this.mapDataInMenu([{
+          display_name: 'Human Resources preview',
+          description: '/human-resources-reports'
+        }],"subsections",3, 15)
 
-        this.mapReportInSubSectionMenu(3, 9, {
-          showName: 'Risk assessment preview',
-          frontRoute: '/mpara-reports'
-        })
-
-        this.mapReportInSubSectionMenu(3, 15, {
-          showName: 'Human Resources preview',
-          frontRoute: '/human-resources-reports'
-        })
-
-        this.mapPreviewInDynamicListMenu(3, 7, 16, {
-          showName: 'Partners preview',
+        this.mapDataInMenu( [{
+          name: 'Partners preview',
           frontRoute: '/is-reports'
-        });
+        }],"dynamicList",3, 7, 16);
 
-        this.mapDataInMenuDynamicListSubSection(3, 4, 27,
-          [{
-            showName: '10.1.1 Activity breakdown',
-            frontRoute: '/budget/activity-breakdown/',
-          },
-          {
-            showName: '10.1.2 Geography breakdown',
-            frontRoute: '/budget/geography-breakdown/',
-          }]
+        this.mapDataInMenu(          [{
+          name: '10.1.1 Activity breakdown',
+          frontRoute: '/activity-breakdown/',
+        },
+        {
+          name: '10.1.2 Geography breakdown',
+          frontRoute: '/geography-breakdown/',
+        }],"dynamicList",3, 4, 27,
+
         );
 
-        this.mapPreviewInDynamicListMenu(3, 5, 12, {
-          showName: 'Geographic scope preview',
-          frontRoute: '/work-packages/wp-reports'
-        });
+        // this.mapDataInMenu(3, 5, 12, {
+        //   showName: 'Geographic scope preview',
+        //   frontRoute: '/work-packages/wp-reports'
+        // });
 
-        this.mapPreviewInDynamicListMenu(3, 1, 8, {
-          showName: 'Projection of benefits preview',
-          frontRoute: '/projection-of-benefits/pob-reports'
-        });
+        // this.mapDataInMenu(3, 1, 8, {
+        //   showName: 'Projection of benefits preview',
+        //   frontRoute: '/projection-of-benefits/pob-reports'
+        // });
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;
           this._dataControlService.impactStatementsMaped = true;
         }
 
-
         // this.getAssessmentStatuses();
 
         this._dataControlService.validateMenu$.emit();
       }
-      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 

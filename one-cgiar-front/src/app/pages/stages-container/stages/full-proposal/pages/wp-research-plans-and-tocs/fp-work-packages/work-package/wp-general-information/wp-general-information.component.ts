@@ -87,7 +87,7 @@ export class WpGeneralInformationComponent implements OnInit {
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     // console.log(body);
-    this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveWpFp(body).subscribe(resp=>{
       // console.log(resp);
       // console.log(this.workPackageForm.valid?true:false);
       this.workPackageForm.valid?

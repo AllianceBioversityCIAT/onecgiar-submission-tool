@@ -3,7 +3,7 @@
     <div class="platform_backgorund"></div>
    
         <div class="left_menu" #menu>
-            <app-menu></app-menu>
+            <app-menu *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
             <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
                 <span class="open_menu_icon material-icons">
                     menu
@@ -39,7 +39,7 @@
                 </div>
 
                 <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
-                    <router-outlet *ngIf="this.initiativesSvc.initiative.id"></router-outlet>
+                    <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId"></router-outlet>
                 </div>
    
             </div>

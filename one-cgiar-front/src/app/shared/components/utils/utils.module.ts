@@ -7,13 +7,15 @@ import { SectionAlertsPackComponent } from './section-alerts-pack/section-alerts
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { TextNotDataComponent } from './text-not-data/text-not-data.component';
 // import { IbdAngularComponentsModule } from '../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+import { InformationButtonComponent } from './information-button/information-button.component';
 
 const mycomponents = [
   SectionTitleComponent,
   SectionSubTitleComponent,
   UnderConstructionPageComponent,
   SectionAlertsPackComponent,
-  TextNotDataComponent
+  TextNotDataComponent,
+  InformationButtonComponent
 ];
 const myModules = [
   IbdAngularComponentsModule

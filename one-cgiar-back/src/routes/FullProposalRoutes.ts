@@ -8,33 +8,54 @@ const router = Router();
 
 // get initiative general information
 router.get(
-  '/:initiativeId([0-9]+)/general-information',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/general-information',
   [checkJwt, checkRole('initiatives', 'readOwn')],
   stagefull.getGeneralInformation
 );
 
 // upsert initiative general information
 router.patch(
-  '/:initiativeId([0-9]+)/general-information',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/general-information',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.upsertGeneralInformation
 );
 
 // get initiative context
 router.get(
-  '/:initiativeId([0-9]+)/context',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/context',
   [checkJwt, checkRole('initiatives', 'readOwn')],
   stagefull.getContext
 );
 
 // upsert initiative context
 router.patch(
-  '/:initiativeId([0-9]+)/context',
+  '/:stageId([0-9]+)/:initiativeId([0-9]+)/context',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.upsertContext
 );
 
-// read work packages list
+// upsert projection benefits to initiative
+router.patch(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'updateOwn')],
+  stagefull.patchProjectionBenefits
+);
+
+// get all projection benefits
+router.get(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefits
+);
+
+// get projection benefits per impact area
+router.get(
+  '/projection-benefits/:stageId([0-9]+)/:initiativeId([0-9]+)/:impactId([0-9]+)',
+  [checkJwt, checkRole('benefits', 'readOwn')],
+  stagefull.getProjectionBenefitsByImpact
+);
+
+// Get work packages list
 /**
  * @api {get} stages-control/proposal/packages/:initiativeId Work package - Request workpackage
  * @apiVersion 1.0.2
@@ -83,12 +104,12 @@ router.patch(
  *     { message: "Get workpackage:", error }
  */
 router.get(
-  '/packages/:initiativeId([0-9]+)',
+  '/packages/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   stagefull.getWorkPackages
 );
 
-// read work package for id
+// Get work package for id
 /**
  * @api {get} stages-control/proposal/package/:wrkPkgId Work package - Request workpackage for id
  * @apiVersion 1.0.2
@@ -157,7 +178,7 @@ router.get(
   stagefull.getWorkPackage
 );
 
-// read all work package
+// Get all work package for CLARISA
 /**
  * @api {get} stages-control/proposal/packages Work package - Request All work packages
  * @apiVersion 1.0.2
@@ -207,7 +228,7 @@ router.get(
  */
 router.get('/packages', stagefull.getAllWorkPackagesProposal);
 
-// assign Work Package
+// PATCH Work Package
 /**
  * @api {patch} stages-control/proposal/packages/:wrkPkgId Work Package - Create and update WP
  * @apiVersion 1.0.0
@@ -305,30 +326,9 @@ router.get('/packages', stagefull.getAllWorkPackagesProposal);
  *     {"name": "Work Package: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/packages/:initiativeId([0-9]+)',
+  '/packages/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('packages', 'updateOwn')],
   stagefull.patchWorkPackage
-);
-
-// upsert projection benefits to initiative
-router.patch(
-  '/projection-benefits/:initiativeId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'updateOwn')],
-  stagefull.patchProjectionBenefits
-);
-
-// get all projection benefits
-router.get(
-  '/projection-benefits/:initiativeId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'readOwn')],
-  stagefull.getProjectionBenefits
-);
-
-// get projection benefits per impact area
-router.get(
-  '/projection-benefits/:initiativeId([0-9]+)/:impactId([0-9]+)',
-  [checkJwt, checkRole('benefits', 'readOwn')],
-  stagefull.getProjectionBenefitsByImpact
 );
 
 // upsert impact strategies to initiative
@@ -426,7 +426,7 @@ router.get(
  *     {"name": "Upsert Impact Strategies: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/impact-strategies/:initiativeId([0-9]+)',
+  '/impact-strategies/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('strategies', 'updateOwn')],
   stagefull.patchImpactStrategies
 );
@@ -495,12 +495,28 @@ router.patch(
  *     { message: "Get Impact Strategies: Full proposal.", error }
  */
 router.get(
-  '/impact-strategies/:initiativeId([0-9]+)/:impactAreaId([0-9]+)',
+  '/impact-strategies/:stageId([0-9]+)/:initiativeId([0-9]+)/:impactAreaId([0-9]+)',
   [checkJwt, checkRole('strategies', 'readOwn')],
   stagefull.getImpactStrategies
 );
 
-// upsert melia and files to initiative
+/**
+ * PATCH MELIA PLAN
+ */
+router.patch(
+  '/melia/plan/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
+  stagefull.patchMeliaPlan
+);
+
+//GET MELIA PLAN
+router.get(
+  '/melia/plan/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
+  [checkJwt, checkRole('melia', 'readOwn')],
+  stagefull.getMeliaAndFiles
+);
+
+// UPSERT MELIA RESULTS FRAMEWORK
 /**
  * @api {patch} stages-control/proposal/melia/:initiativeId/ MELIA - Create and update MELIA
  * @apiVersion 1.0.0
@@ -601,12 +617,6 @@ router.get(
  *                                "indicator_name": "At least 80% user survey responses satisfied or very satisfied",
  *                                "unit_messurament": "Qualitative measure of satisfaction",
  *                                "active": true,
- *                            },
- *                            {
- *                                "indicator_id": 2,
- *                                "indicator_name": "No. of external user requests annually by CGIAR genebanks",
- *                                "unit_messurament": "Nos. of external requests according to specific categories (e.g. NARS. NGOs, Farmers, etc.)",
- *                                "active": true,
  *                            }
  *                        ],
  *                        "geo_scope": {
@@ -636,15 +646,6 @@ router.get(
  *                                "data_collection":"User surveys",
  *                                "frequency_data_collection":"Ongoing",
  *                                "active":true,
- *                            },
- *                            {
- *
- *                                "id":2,
- *                                "data_source":"Annual reports on collection status gathered by Crop Trust/CGIAR.",
- *                                "data_collection":"Online reporting tool",
- *                                "frequency_data_collection":"Ongoing",
- *                                "active":true,
- *
  *                            }
  *                        ],
  *                        "base_line":[
@@ -653,13 +654,6 @@ router.get(
  *                                "active":true,
  *                                "base_line_value":"Customer satisfaction of 80% or higher",
  *                                "base_line_year":"2017"
- *                            },
- *                            {
- *                                "id":2,
- *                                "active":true,
- *                                "base_line_value":"601,811 accessions",
- *                                "base_line_year":"2020"
- *
  *                            }
  *                        ],
  *                        "target":[
@@ -667,13 +661,6 @@ router.get(
  *                                "id":1,
  *                                "active":true,
  *                                "target_value":"80% or higher",
- *                                "target_year":"2024"
- *
- *                            },
- *                            {
- *                                "id":2,
- *                                "active":true,
- *                                "target_value":"650,000",
  *                                "target_year":"2024"
  *
  *                            }
@@ -711,13 +698,12 @@ router.get(
  *     {"name": "Upsert melia: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  // '/melia/:initiativeId([0-9]+)/:ubication/:stageId',
   '/melia/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
-  stagefull.patchMeliaAndFiles
+  stagefull.patchMeliaResultsFramework
 );
 
-// Get melia and files to initiative
+// GET MELIA RESULTS FRAMEWORK
 /**
  * @api {get} stages-control/proposal/melia/:initiativeId/:ubication/:stageId MELIA - Request MELIA
  * @apiVersion 1.0.2
@@ -775,19 +761,19 @@ router.patch(
 router.get(
   '/melia/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('melia', 'readOwn')],
-  stagefull.getMeliaAndFiles
+  stagefull.getMeliaResultsFramework
 );
 
 // Upsert MELIA Studies and Activities
 router.patch(
-  '/melia/studies-activities/:initiativeId([0-9]+)',
+  '/melia/studies-activities/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'updateOwn'), uploadFile.any()],
   stagefull.patchMeliaStudiesActivities
 );
 
 // Get MELIA Studies and Activities
 router.get(
-  '/melia/studies-activities/:initiativeId([0-9]+)',
+  '/melia/studies-activities/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('melia', 'readOwn')],
   stagefull.getMeliaStudiesActivities
 );
@@ -931,7 +917,7 @@ router.get(
  *     {"name": "Upsert management plan risk: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/manage-plan/:initiativeId([0-9]+)/:ubication/:stageId',
+  '/manage-plan/:stageId([0-9]+)/:initiativeId([0-9]+)/:ubication',
   [checkJwt, checkRole('mpr', 'updateOwn'), uploadFile.any()],
   stagefull.patchManagePlanAndFiles
 );
@@ -999,7 +985,7 @@ router.patch(
  *     { message: "Get manage plan risk and files: Full proposal", error }
  */
 router.get(
-  '/manage-plan/:initiativeId([0-9]+)/:sectionName',
+  '/manage-plan/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('mpr', 'readOwn')],
   stagefull.getManagePlanAndFiles
 );
@@ -1109,7 +1095,7 @@ router.get(
  *     {"name": "Upsert human Resources: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/human-resources/:initiativeId([0-9]+)/:ubication/:stageId',
+  '/human-resources/:stageId([0-9]+)/:initiativeId([0-9]+)/:ubication',
   [checkJwt, checkRole('hr', 'updateOwn'), uploadFile.any()],
   stagefull.patchHumanResourcesAndFiles
 );
@@ -1183,7 +1169,7 @@ router.patch(
  *     { message: "Get human resources and files: Full proposal", error }
  */
 router.get(
-  '/human-resources/:initiativeId([0-9]+)/:sectionName',
+  '/human-resources/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('hr', 'readOwn')],
   stagefull.getHumanResources
 );
@@ -1257,7 +1243,7 @@ router.get(
  */
 
 router.patch(
-  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
+  '/financial-resources/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('fr', 'updateOwn')],
   stagefull.patchFinancialResources
 );
@@ -1308,7 +1294,7 @@ router.patch(
  *     { message: "Get financial resources: Full proposal.", error }
  */
 router.get(
-  '/financial-resources/:initiativeId([0-9]+)/:sectionName',
+  '/financial-resources/:stageId([0-9]+)/:initiativeId([0-9]+)/:sectionName',
   [checkJwt, checkRole('fr', 'readOwn')],
   stagefull.getFinancialResources
 );
@@ -1371,7 +1357,7 @@ router.get(
  *     {"name": "Upsert policy compliance oversight: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/policy-compliance/:initiativeId([0-9]+)',
+  '/policy-compliance/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('pco', 'updateOwn')],
   stagefull.patchPolicyComplianceOversight
 );
@@ -1418,7 +1404,7 @@ router.patch(
  *     { message: "Get policy compliance oversight.", error }
  */
 router.get(
-  '/policy-compliance/:initiativeId([0-9]+)',
+  '/policy-compliance/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('pco', 'readOwn')],
   stagefull.getPolicyComplianceOversight
 );
@@ -1475,7 +1461,7 @@ router.get(
  *     {"name": "Upsert Innovation Packages: Full proposal","httpCode": 400,"isOperational": false}
  */
 router.patch(
-  '/innovation-packages/:initiativeId([0-9]+)',
+  '/innovation-packages/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('ip', 'updateOwn')],
   stagefull.patchInnovationPackages
 );
@@ -1520,7 +1506,7 @@ router.patch(
  *     { message: "Get InnovationPackages.", error }
  */
 router.get(
-  '/innovation-packages/:initiativeId([0-9]+)',
+  '/innovation-packages/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('ip', 'readOwn')],
   stagefull.getInnovationPackages
 );
@@ -1612,10 +1598,22 @@ router.get(
  */
 router.patch('/toc/:initiativeId([0-9]+)', [checkJwt], stagefull.patchTocs);
 
+/**
+ * GET TOC
+ */
 router.get(
-  '/toc/:initiativeId([0-9]+)',
+  '/toc/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt],
   stagefull.getTocByInitiative
+);
+
+/**
+ * GET END OF INITIATIVE OUTCOMES FROM TOC TOOL
+ */
+router.get(
+  '/eoi/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.getEndofInitiativeOutcome
 );
 
 export default router;
