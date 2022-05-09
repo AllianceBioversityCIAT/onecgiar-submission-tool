@@ -53,8 +53,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       SELECT
       initvStg.id AS initvStgId,
       initiative.id AS id,
-      initiative.acronym,
-      initiative.name  AS name,
+      initiative.name AS name,
       initiative.official_code,
       -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
       (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
@@ -62,13 +61,14 @@ export class InitiativeHandler extends InitiativeStageHandler {
       (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
       initvStg.active AS active,
       initvStg.stageId AS stageId,
-      CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
+      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
       FROM
           initiatives initiative
       LEFT JOIN initiatives_by_stages initvStg 
       ON initvStg.initiativeId = initiative.id
       LEFT JOIN stages stage 
       ON stage.id = initvStg.stageId
+      WHERE  initvStg.active = 1
       ORDER BY id
         `,
       initvDetailSQL = `
@@ -110,8 +110,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       SELECT
       initvStg.id AS initvStgId,
       initiative.id AS id,
-      initiative.acronym,
-      IF(initiative.acronym = '',initiative.name,concat(initiative.acronym," - ",initiative.name))  AS name,
+      initiative.name AS name,
       initiative.official_code,
       -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
       (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
