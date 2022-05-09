@@ -3045,12 +3045,15 @@ export class ProposalHandler extends InitiativeStageHandler {
               });
 
               if (savedTocsType.length > 0) {
-                throw new BaseError(
-                  'Upsert Full Initiative ToC: Full proposal',
-                  400,
-                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},ToC Id : ${savedTocsType[0].toc_id}`,
-                  false
-                );
+                for (let index = 0; index < savedTocsType.length; index++) {
+                  const element = savedTocsType[index];
+
+                  console.log(element);
+
+                  element.active = 0;
+
+                  await tocsRepo.save(element);
+                }
               }
             } else {
               //Validate WP ToC
