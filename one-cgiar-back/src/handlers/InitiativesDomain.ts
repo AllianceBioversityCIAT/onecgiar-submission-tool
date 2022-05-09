@@ -54,7 +54,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       initvStg.id AS initvStgId,
       initiative.id AS id,
       initiative.acronym,
-      IF(initiative.acronym = '',initiative.name,concat(initiative.acronym," - ",initiative.name))  AS name,
+      initiative.name  AS name,
       initiative.official_code,
       -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
       (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
