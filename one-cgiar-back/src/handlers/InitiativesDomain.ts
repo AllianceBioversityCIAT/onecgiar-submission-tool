@@ -53,6 +53,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       SELECT
       initvStg.id AS initvStgId,
       initiative.id AS id,
+      initiative.acronym,
       initiative.name AS name,
       initiative.official_code,
       -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
@@ -110,6 +111,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       SELECT
       initvStg.id AS initvStgId,
       initiative.id AS id,
+      initiative.acronym,
       initiative.name AS name,
       initiative.official_code,
       -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
