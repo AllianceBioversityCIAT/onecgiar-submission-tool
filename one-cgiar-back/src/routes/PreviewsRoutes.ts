@@ -124,7 +124,7 @@ router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
  *     { message: "Get workpackage:", error }
  */
 router.get(
-  '/packages/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  '/packages/:initiativeId([0-9]+)',
   [checkJwt],
   previewController.getPreviewWorkPackages
 );
