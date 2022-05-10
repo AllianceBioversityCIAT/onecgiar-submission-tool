@@ -1,5 +1,15 @@
 <div class="all">
     <section-sub-title name="Partners"></section-sub-title>
+
+    <div class="part_button_container">
+        <app-animated-button title="If you don't find the partner you are looking for, request to have it added to the list." (click)="openDialog()"></app-animated-button>
+        <!-- <div class="partner_request" (click)="openDialog()">
+            If you don't find the partner you are looking for, request to have it added to the list.
+        </div> -->
+
+    </div>
+
+
     <div class="local_grid">
         <div class="listOne">
 
@@ -19,15 +29,7 @@
                     labelName:'Institutions'
                 }
             }"></ibdc-select-multiple>
-
-            <!-- <div class="partner_request_text_container" *ngIf="!this._initiativesService.initiative.readonly">
-                <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
-                    are looking for, request to have it added to the list.</a>
-            </div> -->
-            <div class="partner_request" (click)="openDialog()">
-                If you don't find the partner you are looking for, request to have it added to the list.
-            </div>
-        
+       
             <div class="all_parners_saved">
                 <div class="partner_selected_container" *ngFor="let item of this.savedList"
                     [hidden]="item.active === false || !item?.code">
