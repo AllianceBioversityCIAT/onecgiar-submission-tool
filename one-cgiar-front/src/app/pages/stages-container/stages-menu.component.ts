@@ -85,10 +85,13 @@ export class StagesMenuComponent implements OnInit {
 
   currentStageAux = '';
   validateCurrentStageChange(stageName){
+    console.log(this.initiativesSvc.initiative.exactStageName)
     let currentRoute = this.router.url;
     if (this.currentStageAux != stageName && this.currentStageAux != '') {
-          this.router.navigateByUrl('/').then(()=>{
-              this.router.navigateByUrl(currentRoute)
+          this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initiative.id}/stages/${this.initiativesSvc.initiative.exactStageName}`).then(()=>{
+              setTimeout(() => {
+                this.router.navigateByUrl(currentRoute)
+              }, 500);
         })
     }
     this.currentStageAux = stageName;
@@ -98,7 +101,6 @@ export class StagesMenuComponent implements OnInit {
    
     this.activatedRoute.params.subscribe(resp => {
 
-      
       this.validateCurrentStageChange(resp?.stageName);
       
       stagesList.map((stageItem:any)=>{
@@ -110,6 +112,7 @@ export class StagesMenuComponent implements OnInit {
       // console.log(currentStage?.id)
       // console.log("Change initiative=> " , currentStage?.id);
       this.initiativesSvc.initiative.stageName = currentStage.stageNameKebabCase != 'pre-concept' ? 'proposal' : currentStage.stageNameKebabCase;
+      this.initiativesSvc.initiative.exactStageName = currentStage.stageNameKebabCase == 'full-proposal' ? 'proposal' : currentStage.stageNameKebabCase;
       this.initiativesSvc.initiative.id = resp['id'];
 
       this.initiativesSvc.initiative.stageId = currentStage?.id
