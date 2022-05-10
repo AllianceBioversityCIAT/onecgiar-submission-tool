@@ -5,7 +5,9 @@
   <div class="toc_list">
     <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
     <div class="toc_item" *ngIf="tocitem">
-  
+      
+      <div><strong>ToC ID:</strong> {{tocitem?.toc_id}}</div>
+
       <div class="tex_container">
         <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: tocitem?.narrative, required: false}">
         </ibdc-simple-text>
