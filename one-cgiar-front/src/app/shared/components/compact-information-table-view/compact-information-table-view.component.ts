@@ -12,6 +12,7 @@ export class CompactInformationTableViewComponent implements OnInit {
   @Input() attr_list_config:AttributesListConfiguration[] = []; //? attribute omission list
   @Input() canDelete:boolean = true;
   @Input() tableTitle: string = "";
+  @Input() msgNoData: string = "";
   @Output() buttonViewEvent = new EventEmitter();
   @Output() onEdit = new EventEmitter();
   showTableViewVariable:boolean = true;
