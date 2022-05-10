@@ -1765,7 +1765,7 @@ export async function patchISDCResponses(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
   const ISDCResponsesData = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -1774,7 +1774,7 @@ export async function patchISDCResponses(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {id: 4}
+      where: {id: stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
@@ -1817,7 +1817,7 @@ export async function getISDCResponses(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {initiativeId} = req.params;
+  const {stageId,initiativeId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1825,7 +1825,7 @@ export async function getISDCResponses(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {id: 4}
+      where: {id: stageId}
     });
     // get intiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({

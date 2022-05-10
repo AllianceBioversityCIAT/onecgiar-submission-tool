@@ -618,11 +618,11 @@ export class InitiativesService {
   }
 
   getRecommendationsByInitId(): Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}`);
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`);
   }
 
   patchRecommendationByInitId(body){
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}`, body);
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
   }
   /*** submitt initiative */
 
