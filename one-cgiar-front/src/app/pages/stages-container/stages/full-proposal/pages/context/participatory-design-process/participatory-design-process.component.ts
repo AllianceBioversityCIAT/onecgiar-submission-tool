@@ -24,6 +24,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
   citationsList=[];
   extraValidation = false;
+  msgNoData = 'The initiative does not have feedback';
   list:ParticipatoryProcess[] = [];
   showTableViewVariable = true;
   attr_list_config: AttributesListConfiguration[] = [
