@@ -318,7 +318,36 @@ export class MenuComponent implements OnInit {
     });
   }
 
-
+  validateShowIcon(subsections) {
+    switch (subsections) {
+      case 2:
+        return true;
+      case 12:
+        return true;
+      case 37:
+        return true;
+      case 38:
+        return true;
+      case 39:
+        return true;
+      case 22:
+        return true;
+      case 41:
+        return true;
+      case 49:
+        return true;
+      case 56:
+        return true;
+      case 62:
+        return true;
+      case 63:
+        return true;
+      case 64:
+        return true;
+      default:
+        return false;
+    }
+  }
 
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';
