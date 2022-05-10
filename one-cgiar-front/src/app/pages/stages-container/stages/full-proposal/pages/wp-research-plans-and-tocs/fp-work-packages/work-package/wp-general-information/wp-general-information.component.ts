@@ -100,10 +100,11 @@ export class WpGeneralInformationComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
+    console.log(this._initiativesService.initiative.exactStageName)
     this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages/work-package`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
-    }, 10);
+    }, 500);
     
     //console.log("Reload");
   }

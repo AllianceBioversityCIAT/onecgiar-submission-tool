@@ -112,7 +112,7 @@ export class StagesMenuComponent implements OnInit {
       // console.log(currentStage?.id)
       // console.log("Change initiative=> " , currentStage?.id);
       this.initiativesSvc.initiative.stageName = currentStage.stageNameKebabCase != 'pre-concept' ? 'proposal' : currentStage.stageNameKebabCase;
-      this.initiativesSvc.initiative.exactStageName = currentStage.stageNameKebabCase == 'full-proposal' ? 'proposal' : currentStage.stageNameKebabCase;
+      this.initiativesSvc.initiative.exactStageName = currentStage.stageNameKebabCase;
       this.initiativesSvc.initiative.id = resp['id'];
 
       this.initiativesSvc.initiative.stageId = currentStage?.id
