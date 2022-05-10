@@ -266,6 +266,9 @@ export class MenuComponent implements OnInit {
         let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
 
+        let tableAISDCImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(tableAISDCImpactArea,'dynamicList', 4, 26, 62 );
+
         this.mapDataInMenu( [{
           display_name: 'Risk assessment preview',
           description: '/mpara-reports'
