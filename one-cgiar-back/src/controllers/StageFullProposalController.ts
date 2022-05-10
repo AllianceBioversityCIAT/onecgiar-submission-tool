@@ -203,7 +203,8 @@ export async function patchWorkPackage(req: Request, res: Response) {
     id,
     regions,
     countries,
-    active
+    active,
+    wp_official_code
   } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -240,7 +241,8 @@ export async function patchWorkPackage(req: Request, res: Response) {
       pathway_content,
       is_global,
       id,
-      active
+      active,
+      wp_official_code
     );
 
     const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
