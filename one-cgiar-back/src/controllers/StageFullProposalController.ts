@@ -1767,6 +1767,110 @@ export async function getTocByInitiative(req: Request, res: Response) {
   }
 }
 
+  /**
+ * UPSERT ISDC Responses
+ * @param req
+ * @param res
+ */
+export async function patchISDCResponses(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId,initiativeId} = req.params;
+  const ISDCResponsesData = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {id: stageId}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Patch ISDC Responses: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const ISDCResponses =
+      await fullPposal.upsertISDCResponses(ISDCResponsesData);
+
+    res.json(
+      new ResponseHandler('Full Proposal ISDC: Responses.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET ISDC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+export async function getISDCResponses(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId,initiativeId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {id: stageId}
+    });
+    // get intiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'ISDC Responses: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const ISDCResponses =
+      await fullPposal.requestISDCResponses();
+
+    res.json(
+      new ResponseHandler('Full Proposal: ISDC Responses.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+
+}
+
+
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
 

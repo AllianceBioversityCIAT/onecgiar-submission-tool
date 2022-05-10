@@ -28,9 +28,120 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
+        <!-- <div class="ta_container">
+            <p-table [value]="recomendationData" responsiveLayout="scroll"  
+                [paginator]="true"
+                [rows]="10"
+                scrollHeight="350px"
+                [scrollable]="true" 
+                [showCurrentPageReport]="true" 
+                [ngClass]="'algo'">
+                <ng-template pTemplate="caption">
+                    <div class="algo">
+                        <tr> 
+                            <th colspan="3"><span class="initiative_id">{{this._initiativesService.initiative.official_code}}:</span>{{this._initiativesService.initiative.name}}</th>
+                        </tr>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" [ngClass]="'algo'">
+                    <tr>
+                        <th>ISDC recommendation
+                            <mat-icon color="primary" class="is_edit_icon">
+                               remove_red_eye
+                            </mat-icon>
+                        </th>
+                        <th>ClimBeR responses
+                            <mat-icon color="primary" class="is_edit_icon">
+                                remove_red_eye
+                            </mat-icon>
+                        </th>
+                        <th><label>Q2 updated responses</label>
+                            <mat-icon color="primary" class="is_edit_icon" *ngIf="!_initiativesService.initiative.readonly; else readOlnyIcon">
+                                edit
+                            </mat-icon>
+                            <ng-template #readOlnyIcon>
+                                <mat-icon color="primary" class="is_edit_icon">
+                                    remove_red_eye
+                                </mat-icon>
+                            </ng-template>
+                        </th>
+                        <th style="width:8rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-recomendation>
+                    <tr>
+                        <td>{{recomendation.rec}}</td>
+                        <td>{{recomendation.res}}</td>
+                        <td pEditableColumn *ngIf="!_initiativesService.initiative.readonly; else elseBlock">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <textarea pInputTextarea 
+                                        [(ngModel)]="recomendation.resq2">
+                                    </textarea>
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{recomendation.resq2}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <ng-template #elseBlock>
+                            <td>
+                                {{recomendation.resq2}}
+                            </td> 
+                        </ng-template>
+                        <td style="text-align:center">
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div> -->
+<div *ngIf="!_initiativesService.initiative.stageId == 4">
+    <app-compact-information-table-view 
+    (buttonViewEvent)="this.getTabIndex($event)"
+    (onEdit)="this.getItemToExpand($event)"
+    [list]="this.list"
+    [attr_list_config]="this.attr_list_config"
+    [showTableViewVariable]="this.showTableViewVariable"
+    [canDelete]="false"
+    tableTitle="{{this._initiativesService.initiative.official_code + ': ' + this._initiativesService.initiative.name}}"
+    ></app-compact-information-table-view>
+
+    <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">No data</h1>
+
+    <div class="items animate__animated animate__fadeIn" *ngIf="!showTableViewVariable">
+        <div class="item" *ngFor="let item of list; let i=index">
+
+
+            <app-collapsible-container [collapse]="item?.collapse">
+                <div header>Recommendation and responses {{i+1}}</div>
+                <div content>
+                    <br><br>
+                    <div class="fields">
+                        <div class="field" *ngFor="let field of attr_list_config; let i = index">
+                            <ibdc-text-area-field 
+                            [inputTitle]="field.name" 
+                            [objectItem]="item"  
+                            [objectAtributteName]="field?.attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly || i !== 2"
+                            [maxWords]="50"
+                        ></ibdc-text-area-field>
+                        </div>
+                    </div>
+                </div>
+            </app-collapsible-container>
+
+
+
+        </div>
+    </div>
+</div>
+
     </form>
 
-    <div (click)="upserInfo()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+    <div (click)="upserInfo()" class="justify_content_end" *ngIf="_initiativesService.initiative.readonly">
         <ibdc-save-button  [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
     </div>
 

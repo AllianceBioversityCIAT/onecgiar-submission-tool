@@ -49,9 +49,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getdasd(e){
-    console.log("event")
-    console.log(e)
+  getTabIndex(e){
     this.showTableViewVariable = e;
   }
 

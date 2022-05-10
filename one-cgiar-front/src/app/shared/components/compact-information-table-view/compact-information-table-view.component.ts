@@ -10,6 +10,8 @@ import { InitiativesService } from '../../services/initiatives.service';
 export class CompactInformationTableViewComponent implements OnInit {
   @Input() list: any[] = []; //? list
   @Input() attr_list_config:AttributesListConfiguration[] = []; //? attribute omission list
+  @Input() canDelete:boolean = true;
+  @Input() tableTitle: string = "";
   @Output() buttonViewEvent = new EventEmitter();
   @Output() onEdit = new EventEmitter();
   showTableViewVariable:boolean = true;

@@ -3156,7 +3156,115 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  /**
+    /**
+   * UPSERT ISDC Responses
+   * @param ISDCResponsesData
+   * @returns ISDCResponsesSave
+   */
+  async upsertISDCResponses(ISDCResponsesData: any) {
+    const ISDCResponsesRepo = getRepository(
+      entities.ISDCResponses
+    );
+    const initvStg = await this.setInitvStage();
+    let toolsSbt = new ToolsSbt();
+    let ISDCResponsesArray = [];
+
+    try {
+      ISDCResponsesData =
+        typeof ISDCResponsesData === 'undefined'
+          ? []
+          : ISDCResponsesData;
+      for (let index = 0; index < ISDCResponsesData.length; index++) {
+        const element = ISDCResponsesData[index];
+
+        const newISDCResponse = new entities.ISDCResponses();
+
+        newISDCResponse.id = element.id ? element.id : null;
+        newISDCResponse.initvStgId = initvStg.id;
+        newISDCResponse.user_id = element.user_id;
+        newISDCResponse.isdc_recommendation = element.isdc_recommendation;
+        newISDCResponse.response = element.response;
+        newISDCResponse.updated_response = element.updated_response;
+        newISDCResponse.is_deleted = element.is_deleted;
+
+
+
+        ISDCResponsesArray.push(
+          toolsSbt.mergeData(
+            ISDCResponsesRepo,
+            ` 
+             SELECT *
+               FROM isdc_responses
+              WHERE id = ${newISDCResponse.id}
+                and initvStgId =${newISDCResponse.initvStgId}`
+                ,
+            newISDCResponse
+          )
+        );
+      }
+
+      const ISDCResponsesMerge = await Promise.all(
+        ISDCResponsesArray
+      );
+      const ISDCResponsesSave = await ISDCResponsesRepo.save(
+        ISDCResponsesMerge
+      );
+
+      return ISDCResponsesSave;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert ISDC Responses: Full proposal ISDC',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async requestISDCResponses() {
+    const initvStg = await this.setInitvStage();
+    const ISDCResponsesRepo = getRepository(
+      entities.ISDCResponses
+    );
+
+    try {
+      // const ISDCResponses = await ISDCResponsesRepo.find({
+      //   where: {initvStgId: initvStg.id, is_deleted: false}
+      // });
+      const queryISDCResponses = `
+      SELECT 
+      ir.id,
+      ir.initvStgId,
+      ir.isdc_recommendation,
+      ir.response,
+      ir.updated_response,
+      if(concat_ws(" ",u.first_name,u.last_name) = "", null, concat_ws(" ",u.first_name,u.last_name)) as username,
+      ir.created_at,
+      ir.updated_at
+      FROM isdc_responses ir
+      LEFT JOIN users u on ir.user_id = u.id
+      WHERE ir.initvStgId = ${initvStg.id}
+      AND ir.is_deleted = false;
+      `;
+
+
+      const ISDCResponses = await this.queryRunner.query(queryISDCResponses);
+
+
+      return ISDCResponses;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'GET ISDC Responses: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+    /**
    * * REQUEST EOI BY INITIATIVE
    * @returns eoi
    */
