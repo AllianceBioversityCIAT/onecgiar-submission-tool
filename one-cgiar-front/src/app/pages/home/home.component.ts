@@ -19,6 +19,11 @@ export class HomeComponent implements OnInit {
   constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
 
   ngOnInit(): void {    
+    this.initiativesSvc.initiative.id = null;
+    this.initiativesSvc.initiative.stageId = null;
+    this.initiativesSvc.initiative.stageName = null;
+    this.initiativesSvc.initiative.exactStageName = null;
+
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;
