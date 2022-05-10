@@ -17,6 +17,7 @@ export class MenuDynamicListComponent implements OnInit {
   // @Input() stage;
   @Input() customRouterLink:string = '';
   @Input() fieldsCompleted:boolean = false;
+  @Input() showTocIcon:boolean = false;
 
   constructor(
     public _menuService : MenuService,

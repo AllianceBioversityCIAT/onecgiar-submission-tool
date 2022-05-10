@@ -3,9 +3,18 @@
         <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
-        <div class="icon">
-            <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">task_alt</i>
+        <div class="icons">
+            <div class="icon icon_toc" *ngIf="this.showTocIcon">
+                <img width="24px" src="/assets/images/ToC_Icon.png" alt="Toc tool">
+                <div class="pop_text">
+                    Section related to "ToC Tool"
+                </div>
+             </div>
+            <div class="icon">
+                <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">task_alt</i>
+            </div>
         </div>
+
     </div>
     <ng-content select="[content]"></ng-content>
 </div>
