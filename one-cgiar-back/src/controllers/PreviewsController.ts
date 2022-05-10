@@ -365,9 +365,6 @@ export async function getPreviewFinancialResources(
       where: {initiative: initiativeId, active:1}
     });
 
-    console.log(initvStg);
-    
-
     // if not intitiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(

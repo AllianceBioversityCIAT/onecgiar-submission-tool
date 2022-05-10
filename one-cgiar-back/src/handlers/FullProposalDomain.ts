@@ -885,8 +885,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     impact_area_name?,
     partners?
   ) {
-    console.log(partners);
-    
     const impactStrategiesRepo = getRepository(entities.ImpactStrategies);
     const partnersRepo = getRepository(entities.Partners);
     const initvStg = await this.setInitvStage();
@@ -1494,8 +1492,18 @@ export class ProposalHandler extends InitiativeStageHandler {
         newResults.active = result.active;
         newResults.work_package_id = result.wp_id;
         newResults.result_description = result.result_description;
+        newResults.toc_result_id = result.toc_result_id;
 
-        upsertResults = await resultsRepo.save(newResults);
+        const mergeResult = await toolsSbt.mergeData(
+          resultsRepo,
+          ` 
+                  SELECT *
+                    FROM results
+                   WHERE toc_result_id = "${newResults.toc_result_id}"`,
+          newResults
+        );
+
+        upsertResults = await resultsRepo.save(mergeResult);
 
         resultsArray.push(upsertResults);
 
@@ -1519,6 +1527,8 @@ export class ProposalHandler extends InitiativeStageHandler {
           newResultsIndicators.target_year = indicators.target_year;
           newResultsIndicators.unit_measurement = indicators.unit_messurament;
           newResultsIndicators.name = indicators.indicator_name;
+          newResultsIndicators.toc_result_indicator_id =
+            indicators.toc_result_indicator_id;
 
           resultsIndicatorsArray.push(
             toolsSbt.mergeData(
@@ -1526,7 +1536,7 @@ export class ProposalHandler extends InitiativeStageHandler {
               ` 
                     SELECT *
                       FROM results_indicators
-                     WHERE id = ${newResultsIndicators.id} 
+                     WHERE toc_result_indicator_id = "${newResultsIndicators.toc_result_indicator_id}" 
                        and results_id = ${newResultsIndicators.results_id}`,
               newResultsIndicators
             )
@@ -2522,7 +2532,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
-              console.log(val);
+              // console.log(val);
               _year.active = true;
               _year.year = key;
               _year.value = val;
@@ -3035,12 +3045,15 @@ export class ProposalHandler extends InitiativeStageHandler {
               });
 
               if (savedTocsType.length > 0) {
-                throw new BaseError(
-                  'Upsert Full Initiative ToC: Full proposal',
-                  400,
-                  `Initiative already has information from full initiative ToC - ${savedTocsType[0].narrative},ToC Id : ${savedTocsType[0].toc_id}`,
-                  false
-                );
+                for (let index = 0; index < savedTocsType.length; index++) {
+                  const element = savedTocsType[index];
+
+                  console.log(element);
+
+                  element.active = 0;
+
+                  await tocsRepo.save(element);
+                }
               }
             } else {
               //Validate WP ToC
