@@ -242,11 +242,26 @@ export class MenuComponent implements OnInit {
 
         this.mapWorkPackagesInStage(fullProposalData);
 
+        const fullProposalISDCData = {
+          stageId: 4,
+          stageName: 'proposal-isdc',
+          sectionId: 23,
+          subSectionId: 49
+        }
+
+        this.mapWorkPackagesInStage(fullProposalISDCData);
+
         let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
 
+        let pobISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(pobISDCList,'dynamicList', 4, 21, 46 );
+
         let impactStatementsList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
+
+        let impactStatementsISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(impactStatementsISDCList,'dynamicList', 4, 25, 50 );
 
         let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
