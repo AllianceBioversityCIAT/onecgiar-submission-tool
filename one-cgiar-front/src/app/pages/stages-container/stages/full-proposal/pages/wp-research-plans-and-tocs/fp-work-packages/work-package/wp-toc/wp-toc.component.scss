@@ -11,30 +11,33 @@
     }
 }
 
-.toc_list{
-    // display: flex;
-    // flex-direction: column;
-    .toc_item{
-      position: relative;
-        border: 1px solid rgb(224, 224, 224);
-        border-radius: 10px;
-        padding: 10px;
-        margin-top: 20px;
-        .tex_container{
-          padding-top: 5px;
-          margin-bottom: 20px;
-          display: flex;
-          justify-content: space-between;
-            .updated_at{
-              color: rgb(63, 63, 63);
-              position: absolute;
-              top: 0;
-              right: 0;
-              margin-top: 10px;
-              margin-right: 10px;
-            }
-        }
+.toc_list {
+
+  // display: flex;
+  // flex-direction: column;
+  .toc_item {
+    position: relative;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    padding: 10px 30px;
+    margin-top: 20px;
+
+    .tex_container {
+      padding-top: 5px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+
+      .updated_at {
+        color: rgb(63, 63, 63);
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+      }
     }
+  }
 }
 
 .expandImage{
