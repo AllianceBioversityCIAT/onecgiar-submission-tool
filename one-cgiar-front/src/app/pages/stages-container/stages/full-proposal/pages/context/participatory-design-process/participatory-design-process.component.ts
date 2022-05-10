@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { ParticipatoryProcess } from './interfaces/Participatory-interface';
+import { AttributesListConfiguration } from '../../../../../../../shared/components/compact-information-table-view/CompactInformationTableView.interface';
+import { AuthService } from '../../../../../../../shared/services/auth.service';
 
 
 @Component({
@@ -20,13 +24,31 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
   citationsList=[];
   extraValidation = false;
+  list:ParticipatoryProcess[] = [];
+  showTableViewVariable = true;
+  attr_list_config: AttributesListConfiguration[] = [
+    {
+      attribute: 'isdc_recommendation',
+      name: "ISDC recommendation",
+    },
+    {
+      attribute: 'response',
+      name: "ClimBeR responses",
+    },
+    {
+      attribute: 'updated_response',
+      name: "Q2 update responses",
+    }
+  ];
+
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
     public _dataControlService:DataControlService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
+    private _authService:AuthService
 
   ) { 
     this.contextForm = new FormGroup({
@@ -39,6 +61,23 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     this.getContext();
     this.getLinks();
     this.formChanges();
+    this.getRecommendationsByInitId();
+  }
+
+  getTabIndex(e){
+    this.showTableViewVariable = e;
+  }
+
+  getItemToExpand(item){
+    console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
+  }
+
+  getRecommendationsByInitId(){
+    this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
+    this.list = resp.map(e => {
+      return {...e, user_id: this._authService.userValue.id};
+    });
+    })
   }
 
   getLinks(){
@@ -71,6 +110,10 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       })
       
     })
+    //save recommendations
+    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
+      this.getRecommendationsByInitId();
+    })
   }
 
   getContext(){
@@ -91,6 +134,13 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
+  }
+
+  saveSection(){
+    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
+      this.getRecommendationsByInitId();
+    })
+
   }
 
 }

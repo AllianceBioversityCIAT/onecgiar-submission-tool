@@ -8,7 +8,13 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
-
+import { TableModule } from 'primeng/table';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import { MaterialModule } from "../../../../../../../material.module";
+import { CompactInformationTableViewModule } from '../../../../../../../shared/components/compact-information-table-view/compact-information-table-view.module';
+import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
+import { AddButtonModule } from '../../../../../../../shared/components/add-button/add-button.module';
+import { ButtonEditOrDeleteModule } from '../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
 
 @NgModule({
   declarations: [ParticipatoryDesignProcessComponent],
@@ -19,7 +25,14 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
     IbdAngularComponentsModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    TableModule,
+    InputTextareaModule,
+    MaterialModule,
+    CompactInformationTableViewModule,
+    CollapsibleContainerModule,
+    AddButtonModule,
+    ButtonEditOrDeleteModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
