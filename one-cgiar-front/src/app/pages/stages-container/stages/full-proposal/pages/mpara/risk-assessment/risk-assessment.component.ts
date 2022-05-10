@@ -83,7 +83,7 @@ export class RiskAssessmentComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/mpara/management-plan`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/mpara/management-plan`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);

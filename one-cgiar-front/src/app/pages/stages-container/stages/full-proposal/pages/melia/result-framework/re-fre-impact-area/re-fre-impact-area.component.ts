@@ -58,7 +58,7 @@ export class ReFreImpactAreaComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/melia/result-framework`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/melia/result-framework`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);

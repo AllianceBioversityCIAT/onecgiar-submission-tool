@@ -47,7 +47,7 @@ export class WpGeneralInformationComponent implements OnInit {
       //console.log(this._wpDataControlService.wpId);
       this.wpID = this._wpDataControlService.wpId 
 
-      this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').subscribe(resp => {
+      this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
         //console.log(directResp);
         this.geographicScope.regions = directResp.regions;
@@ -100,7 +100,7 @@ export class WpGeneralInformationComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages/work-package`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);
