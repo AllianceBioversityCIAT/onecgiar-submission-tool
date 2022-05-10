@@ -9,7 +9,7 @@
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
   <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
   <!-- <button (click)="this._utilsService.goToEditToc()">Example Toc Button {{toc?.toc_id}}</button> -->
-
+    <div><strong>ToC ID:</strong> {{toc.toc_id}}</div>
     <div class="tex_container">
       <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}">
       </ibdc-simple-text>
