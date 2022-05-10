@@ -19,6 +19,11 @@ export class HomeComponent implements OnInit {
   constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
 
   ngOnInit(): void {    
+    this.initiativesSvc.initiative.id = null;
+    this.initiativesSvc.initiative.stageId = null;
+    this.initiativesSvc.initiative.stageName = null;
+    this.initiativesSvc.initiative.exactStageName = null;
+
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;
@@ -37,7 +42,9 @@ export class HomeComponent implements OnInit {
     this.spinnerService.show();
       this.initiativesSvc.getAllInitiatives().subscribe(data => {
         this.data = data;
-        // console.log(data);
+        data.map((initiative:any)=>{
+          initiative.acronym_and_name = initiative?.acronym ? (initiative.acronym +  ' - ' + initiative.name) : initiative.name; 
+        })
         // data.map(item=>{
         //   if (item.stageId == 3) {
         //     this.data.push(item)

@@ -81,7 +81,7 @@ export class GeneralInformationComponent implements OnInit {
     this.getActionAreas();
 
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
-
+      // console.log("emitido")
       // switch (this.stageId) {
       //   case 2:
           // this.getGeneralInformation();
@@ -130,13 +130,11 @@ export class GeneralInformationComponent implements OnInit {
   // }
 
   getSummary() {
-    // console.log("getSummary");
     // console.log(this._initiativesService.initiative.id)
     this.spinnerService.show('general-information');
 
-    this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageId).subscribe((resp:RootObject) => {
+    this._initiativesService.getSummary().subscribe((resp:RootObject) => {
       this.body = resp.response;
-      // console.log(this.body);
     },
       err => {
         console.log(err);

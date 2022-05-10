@@ -831,20 +831,26 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
   try {
     // get stage
 
-    stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
-    });
+    // stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
 
     // get intiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
+    // Get initiative with active stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: {initiative: initiativeId, active: 1}
     });
+
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch Patch melia: Error',
         400,
-        `Initiative not found in stage: ${stage.description}`,
+        `Initiative not found in stage: ${initvStg.stage}`,
         false
       );
     }
@@ -1675,19 +1681,24 @@ export async function patchTocs(req: Request, res: Response) {
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
-    });
+    // const stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
     // get intiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
+    // Get initiative with active stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: {initiative: initiativeId, active: 1}
     });
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read policy compliance oversight: Error',
         400,
-        `Initiative not found in stage: ${stage.description}`,
+        `Initiative not found in stage: ${initvStg.stage}`,
         false
       );
     }

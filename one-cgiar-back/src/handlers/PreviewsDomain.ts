@@ -375,12 +375,14 @@ export class PreviewsDomain {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
-         FROM work_packages wp
-         JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = ${initiativeId}
+
+        SELECT wp.initvStgId,init.initiativeId,init.stageId, wp.*
+        FROM initiatives_by_stages init
+   LEFT JOIN  work_packages wp
+          on wp.initvStgId  = init.id
+       WHERE init.id =  ${initiativeId}
          AND wp.active = 1
-        ORDER BY initiativeId asc
+    ORDER BY initiativeId asc
                     `;
 
       var workPackages = await this.queryRunner.query(WPquery);

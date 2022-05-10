@@ -59,7 +59,7 @@ export class PcWorkPackageComponent implements OnInit {
 
 
   getWpById(wpId) {
-    this._initiativesService.getWpById(wpId, 'pre-concept').pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
+    this._initiativesService.getWpById(wpId).pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
       console.log(resp);
       let {acronym, name, pathway_content, is_global, id, active,regionsSelectedList,countriesSelectedList} = resp;
 

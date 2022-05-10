@@ -242,14 +242,32 @@ export class MenuComponent implements OnInit {
 
         this.mapWorkPackagesInStage(fullProposalData);
 
+        const fullProposalISDCData = {
+          stageId: 4,
+          stageName: 'proposal-isdc',
+          sectionId: 23,
+          subSectionId: 49
+        }
+
+        this.mapWorkPackagesInStage(fullProposalISDCData);
+
         let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
+
+        let pobISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(pobISDCList,'dynamicList', 4, 21, 46 );
 
         let impactStatementsList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
 
+        let impactStatementsISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(impactStatementsISDCList,'dynamicList', 4, 25, 50 );
+
         let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
         this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
+
+        let tableAISDCImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
+        this.mapDataInMenu(tableAISDCImpactArea,'dynamicList', 4, 26, 62 );
 
         this.mapDataInMenu( [{
           display_name: 'Risk assessment preview',
@@ -300,7 +318,36 @@ export class MenuComponent implements OnInit {
     });
   }
 
-
+  validateShowIcon(subsections) {
+    switch (subsections) {
+      case 2:
+        return true;
+      case 12:
+        return true;
+      case 37:
+        return true;
+      case 38:
+        return true;
+      case 39:
+        return true;
+      case 22:
+        return true;
+      case 41:
+        return true;
+      case 49:
+        return true;
+      case 56:
+        return true;
+      case 62:
+        return true;
+      case 63:
+        return true;
+      case 64:
+        return true;
+      default:
+        return false;
+    }
+  }
 
   menuNavigation(active, stage: string, section: string, isSection: boolean, subsection?: string | []) {
     let baseUrl = this.router.routerState.snapshot.url.substring(0, this.router.routerState.snapshot.url.indexOf('stages/')) + 'stages/';

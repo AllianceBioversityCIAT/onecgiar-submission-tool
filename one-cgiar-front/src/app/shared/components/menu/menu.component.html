@@ -5,7 +5,7 @@
     <div class="menu-title">
         Menu
     </div>
-    <app-menu-stage [hidden]="stage?.stageId === 2" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
+    <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
         <div title>{{stage?.description}}</div>
         <div content>
             <app-menu-section 
@@ -17,7 +17,7 @@
                 <div content>
                     <app-menu-sub-section 
                     *ngFor="let subsections of sections?.subsections"
-                    [showTocIcon]="subsections?.subSectionId == 2 || subsections?.subSectionId == 12 || subsections?.subSectionId == 37 || subsections?.subSectionId == 38 || subsections?.subSectionId == 39 || subsections?.subSectionId == 22"
+                    [showTocIcon]="validateShowIcon(subsections?.subSectionId)"
                     [fieldsCompleted]="subsections?.fieldsCompleted" 
                     [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  
                     [haveContent]="subsections?.dynamicList?.length">

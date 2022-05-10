@@ -34,7 +34,7 @@ export class ImpactAreaComponent implements OnInit {
   currentRoute = this.router.routerState.snapshot.url;
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/context/projection-of-benefits`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/context/projection-of-benefits`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);

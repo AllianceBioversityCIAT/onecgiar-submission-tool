@@ -41,7 +41,7 @@ export class WorkPackageComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);
@@ -82,7 +82,7 @@ export class WorkPackageComponent implements OnInit {
     this._initiativesService.saveWpFp(body).subscribe(resp => {
       console.log(resp)
       this._interactionsService.successMessage('Work package has been removed')
-      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     })
     
   }

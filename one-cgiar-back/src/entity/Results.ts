@@ -33,4 +33,8 @@ export class Results extends UpdatedCreatedAt {
 
   @Column({type: 'text'})
   result_description: string;
+
+  @Column({type: 'text'})
+  toc_result_id: string;
+
 }

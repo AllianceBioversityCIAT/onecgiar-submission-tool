@@ -352,24 +352,25 @@ export async function getPreviewFinancialResources(
  * @returns previewHumanResources
  */
  export async function getPreviewWorkPackages(req: Request, res: Response) {
-  const {initiativeId, stageId} = req.params;
+  const {initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({where: {id: stageId}});
+    // const stage = await stageRepo.findOne({where: {id: stageId}});
 
     // get intiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: {initiative: initiativeId, active:1}
     });
+
     // if not intitiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(
         'Previews: Error',
         400,
-        `Previews not found in stage:` + stageId,
+        `Previews not found in stage:` + initvStg.stage,
         false
       );
     }
@@ -377,12 +378,12 @@ export async function getPreviewFinancialResources(
     // create new full proposal object
     const previewsdomain = new PreviewsDomain();
 
-    const previewHumanResources =
+    const previewWorkPackages =
       await previewsdomain.requestWorkPackages(initvStg.id.toString());
 
     res.json(
-      new ResponseHandler('Previews:Preview Human Resources', {
-        previewHumanResources
+      new ResponseHandler('Previews:Preview Work Packages', {
+        previewWorkPackages
       })
     );
   } catch (error) {
