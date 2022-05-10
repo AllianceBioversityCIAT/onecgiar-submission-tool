@@ -39,7 +39,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.savedList)
+    // console.log(this.savedList)
     this.mapInstitutionsTypes();
     this.institutions.map(item=>{
       item.id = null;

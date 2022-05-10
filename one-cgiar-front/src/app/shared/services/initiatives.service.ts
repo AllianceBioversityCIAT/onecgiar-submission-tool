@@ -20,6 +20,7 @@ export class InitiativesService {
     readonly: true,
     stageId: null,
     stageName: null,
+    exactStageName: null,
     name: null,
     users: [],
     status: null,
@@ -266,8 +267,9 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/roles`);
   }
 
-  getSummary(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`);
+  getSummary(): Observable<any> {
+    console.log(this.initiative.id)
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/${this.initiative.id}/summary/${this.initiative.stageId}`);
   }
 
   patchSummary(body: any, initiativeId, stageId): Observable<any> {
