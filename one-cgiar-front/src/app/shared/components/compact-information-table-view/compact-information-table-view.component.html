@@ -1,10 +1,12 @@
 <div class="toggle-view-button-container">
-    <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length; else noData">
+    <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length > 0; else noData">
         <span>{{this.showTableViewVariable ? 'Table view' : 'Editable view'}} </span>
      </div>
-     <div class="toggle-view-button" #noData>
-        <span>No data to display</span>
-     </div>
+     <ng-template #noData>
+        <div class="toggle-view-button">
+            <span>No data to display</span>
+         </div>
+     </ng-template>
 </div>
 
 <table class="animate__animated animate__fadeIn" *ngIf="this.list.length && this.showTableViewVariable; else noFeedback">
