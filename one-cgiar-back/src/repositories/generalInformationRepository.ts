@@ -76,13 +76,13 @@ export class GeneralInformationRepository extends Repository<GeneralInformation>
     // });
 
     console.log(generalInformation);
-    
+
     console.log(budget);
 
     if (budget.length <= 0) {
-      budget = {}
-    }else{
-      budget = budget[0]
+      budget = {};
+    } else {
+      budget = budget[0];
     }
 
     return {

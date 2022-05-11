@@ -7,7 +7,11 @@ import {APIError, BaseError} from '../handlers/BaseError';
 import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
-import {generateToCtoken, utilLogin, validateToCtoken} from '../utils/auth-login';
+import {
+  generateToCtoken,
+  utilLogin,
+  validateToCtoken
+} from '../utils/auth-login';
 
 require('dotenv').config();
 
@@ -208,7 +212,6 @@ export async function generateTocToken(req: Request, res: Response) {
   }
 }
 
-
 export async function validateToCToken(req: Request, res: Response) {
   const {token} = req.body;
 
@@ -216,9 +219,8 @@ export async function validateToCToken(req: Request, res: Response) {
     const userInfo = await validateToCtoken(token);
 
     console.log(userInfo);
-    
 
-    return res.json({response:{user_info:userInfo}});
+    return res.json({response: {user_info: userInfo}});
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }

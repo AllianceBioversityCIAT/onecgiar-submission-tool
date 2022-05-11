@@ -113,7 +113,6 @@ export class InitiativeStageHandler extends BaseValidation {
     regions,
     countries
   ) {
-
     try {
       // upsert geo scope, budget, general information
       const upsertedGeoScope = await this.upsertGeoScopes(regions, countries);
@@ -561,9 +560,7 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopes(regions?, countries?) {
-
     console.log(regions, countries);
-    
 
     let initvStgRegions, initvStgCountries;
 
