@@ -8,6 +8,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { TextNotDataComponent } from './text-not-data/text-not-data.component';
 // import { IbdAngularComponentsModule } from '../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { InformationButtonComponent } from './information-button/information-button.component';
+import { ItemInformationButtonComponent } from './item-information-button/item-information-button.component';
 
 const mycomponents = [
   SectionTitleComponent,
@@ -15,7 +16,8 @@ const mycomponents = [
   UnderConstructionPageComponent,
   SectionAlertsPackComponent,
   TextNotDataComponent,
-  InformationButtonComponent
+  InformationButtonComponent,
+  ItemInformationButtonComponent
 ];
 const myModules = [
   IbdAngularComponentsModule
