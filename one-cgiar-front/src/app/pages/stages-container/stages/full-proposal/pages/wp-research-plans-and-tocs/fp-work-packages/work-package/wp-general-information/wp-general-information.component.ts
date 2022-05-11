@@ -87,16 +87,16 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    console.log(body);
-    // this._initiativesService.saveWpFp(body).subscribe(resp=>{
-    //   // console.log(resp);
-    //   // console.log(this.workPackageForm.valid?true:false);
-    //   this.workPackageForm.valid?
-    //   this._interactionsService.successMessage('Work package has been saved'):
-    //   this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
-    //   this.reloadComponent();
+    // console.log(body);
+    this._initiativesService.saveWpFp(body).subscribe(resp=>{
+      // console.log(resp);
+      // console.log(this.workPackageForm.valid?true:false);
+      this.workPackageForm.valid?
+      this._interactionsService.successMessage('Work package has been saved'):
+      this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
+      this.reloadComponent();
 
-    // })
+    })
   }
 
   reloadComponent(){
