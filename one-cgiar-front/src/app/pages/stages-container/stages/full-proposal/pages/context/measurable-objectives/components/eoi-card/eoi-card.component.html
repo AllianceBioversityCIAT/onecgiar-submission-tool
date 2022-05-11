@@ -59,7 +59,7 @@
 
           <div class="geoScope">
             <div class="title">Geographic scope: </div>
-            <div *ngIf="!this.eoiData?.geo_scope?.regions?.length && !this.eoiData?.geo_scope?.countries?.length">Not available</div>
+            <div *ngIf="!this.eoiData?.geo_scope?.regions?.length && !this.eoiData?.geo_scope?.countries?.length">Not provided</div>
             <div class="lists">
 
               <div class="list custom_scroll" *ngIf="this.eoiData?.geo_scope?.regions?.length">

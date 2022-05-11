@@ -23,7 +23,7 @@
                     <tr>
                         <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
                             <div>
-                                <span>{{customer[item !== 'code'?item:'clarisa_country_code'] || 'not available'}}</span>
+                                <span>{{customer[item !== 'code'?item:'clarisa_country_code'] || 'Not provided'}}</span>
                             </div>
                             
                         </td>

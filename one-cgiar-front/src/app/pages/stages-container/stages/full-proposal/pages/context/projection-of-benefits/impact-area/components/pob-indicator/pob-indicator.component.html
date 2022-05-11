@@ -22,9 +22,9 @@
         </div>
         <div class="col-6 center_metadata">
             <div class="metada_data_box">
-                <p><span class="metadata-title">Target  year:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetYear || 'not available'}}</p>
-                <p><span class="metadata-title">Unit:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetUnit || 'not available'}}</p>
-                <p><span class="metadata-title">Target value:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.value || 'not available'}}</p>
+                <p><span class="metadata-title">Target  year:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetYear || 'Not provided'}}</p>
+                <p><span class="metadata-title">Unit:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetUnit || 'Not provided'}}</p>
+                <p><span class="metadata-title">Target value:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.value || 'Not provided'}}</p>
             </div>
         </div>
         <div class="col-12" *ngIf="showDepthScale && this.pobImpactAreaForm.value.impactAreaIndicator">
