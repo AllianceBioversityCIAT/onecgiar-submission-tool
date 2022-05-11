@@ -1416,6 +1416,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newActionAreasOutcomesIndicators.outcomes_indicators_id =
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
+        newActionAreasOutcomesIndicators.outcomes_id = element.outcome_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1497,11 +1498,13 @@ export class ProposalHandler extends InitiativeStageHandler {
         const mergeResult = await toolsSbt.mergeData(
           resultsRepo,
           ` 
-                  SELECT *
+                  SELECT  *
                     FROM results
                    WHERE toc_result_id = "${newResults.toc_result_id}"`,
           newResults
         );
+
+        console.log(mergeResult);
 
         upsertResults = await resultsRepo.save(mergeResult);
 
@@ -1638,7 +1641,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * REQUEST MELIA
+   ** REQUEST MELIA
    * @param sectionName
    * @returns {melia}
    */
@@ -1817,7 +1820,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT MELIA studies and activities
+   ** UPSERT MELIA studies and activities
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
@@ -2488,7 +2491,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** UPSERT Financial Resourches
+   ** UPSERT Financial Resources
    * @param initiativeId
    * @param ubication
    * @param stage
@@ -3027,6 +3030,17 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.initvStgId = initvStg.id;
 
           var savedTocs: any = await tocsRepo.find({
+            select: [
+              'id',
+              'initvStgId',
+              'narrative',
+              'diagram',
+              'type',
+              'active',
+              'toc_id',
+              'work_package',
+              'work_package_id'
+            ],
             where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
           });
 
@@ -3156,24 +3170,20 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-    /**
+  /**
    * UPSERT ISDC Responses
    * @param ISDCResponsesData
    * @returns ISDCResponsesSave
    */
   async upsertISDCResponses(ISDCResponsesData: any) {
-    const ISDCResponsesRepo = getRepository(
-      entities.ISDCResponses
-    );
+    const ISDCResponsesRepo = getRepository(entities.ISDCResponses);
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let ISDCResponsesArray = [];
 
     try {
       ISDCResponsesData =
-        typeof ISDCResponsesData === 'undefined'
-          ? []
-          : ISDCResponsesData;
+        typeof ISDCResponsesData === 'undefined' ? [] : ISDCResponsesData;
       for (let index = 0; index < ISDCResponsesData.length; index++) {
         const element = ISDCResponsesData[index];
 
@@ -3187,8 +3197,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         newISDCResponse.updated_response = element.updated_response;
         newISDCResponse.is_deleted = element.is_deleted;
 
-
-
         ISDCResponsesArray.push(
           toolsSbt.mergeData(
             ISDCResponsesRepo,
@@ -3196,16 +3204,13 @@ export class ProposalHandler extends InitiativeStageHandler {
              SELECT *
                FROM isdc_responses
               WHERE id = ${newISDCResponse.id}
-                and initvStgId =${newISDCResponse.initvStgId}`
-                ,
+                and initvStgId =${newISDCResponse.initvStgId}`,
             newISDCResponse
           )
         );
       }
 
-      const ISDCResponsesMerge = await Promise.all(
-        ISDCResponsesArray
-      );
+      const ISDCResponsesMerge = await Promise.all(ISDCResponsesArray);
       const ISDCResponsesSave = await ISDCResponsesRepo.save(
         ISDCResponsesMerge
       );
@@ -3224,9 +3229,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   async requestISDCResponses() {
     const initvStg = await this.setInitvStage();
-    const ISDCResponsesRepo = getRepository(
-      entities.ISDCResponses
-    );
+    const ISDCResponsesRepo = getRepository(entities.ISDCResponses);
 
     try {
       // const ISDCResponses = await ISDCResponsesRepo.find({
@@ -3248,9 +3251,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       AND ir.is_deleted = false;
       `;
 
-
       const ISDCResponses = await this.queryRunner.query(queryISDCResponses);
-
 
       return ISDCResponses;
     } catch (error) {
@@ -3264,7 +3265,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-    /**
+  /**
    * * REQUEST EOI BY INITIATIVE
    * @returns eoi
    */

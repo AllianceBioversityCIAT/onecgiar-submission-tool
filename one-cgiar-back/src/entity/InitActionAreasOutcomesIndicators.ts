@@ -22,6 +22,9 @@ export class InitActionAreasOutcomesIndicators extends UpdatedCreatedAt {
   @Column({type: 'int'})
   initvStgId: number;
 
+  @Column({type: 'int'})
+  outcomes_id: number;
+
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;
