@@ -1416,7 +1416,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newActionAreasOutcomesIndicators.outcomes_indicators_id =
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
-        newActionAreasOutcomesIndicators.outcomes_id = element.outcome_id;
+        newActionAreasOutcomesIndicators.outcome_id = element.outcome_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1503,8 +1503,6 @@ export class ProposalHandler extends InitiativeStageHandler {
                    WHERE toc_result_id = "${newResults.toc_result_id}"`,
           newResults
         );
-
-        console.log(mergeResult);
 
         upsertResults = await resultsRepo.save(mergeResult);
 
@@ -3079,14 +3077,14 @@ export class ProposalHandler extends InitiativeStageHandler {
                 }
               });
 
-              if (savedTocsWP.length > 0) {
-                throw new BaseError(
-                  'Upsert Full Initiative ToC: Full proposal',
-                  400,
-                  `The Work Package Id - ${savedTocsWP[0].work_package_id} - was inserted in the initiative - ${savedTocsWP[0].initvStgId} - please validate, ToC Id : ${savedTocsWP[0].toc_id}`,
-                  false
-                );
-              }
+              // if (savedTocsWP.length > 0) {
+              //   throw new BaseError(
+              //     'Upsert Full Initiative ToC: Full proposal',
+              //     400,
+              //     `The Work Package Id - ${savedTocsWP[0].work_package_id} - was inserted in the initiative - ${savedTocsWP[0].initvStgId} - please validate, ToC Id : ${savedTocsWP[0].toc_id}`,
+              //     false
+              //   );
+              // }
             }
 
             newTocs.initvStgId = initvStg.id;
