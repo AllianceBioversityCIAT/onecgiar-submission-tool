@@ -1769,7 +1769,7 @@ export async function getTocByInitiative(req: Request, res: Response) {
   }
 }
 
-  /**
+/**
  * UPSERT ISDC Responses
  * @param req
  * @param res
@@ -1778,7 +1778,7 @@ export async function patchISDCResponses(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
   const ISDCResponsesData = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -1806,8 +1806,9 @@ export async function patchISDCResponses(
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const ISDCResponses =
-      await fullPposal.upsertISDCResponses(ISDCResponsesData);
+    const ISDCResponses = await fullPposal.upsertISDCResponses(
+      ISDCResponsesData
+    );
 
     res.json(
       new ResponseHandler('Full Proposal ISDC: Responses.', {
@@ -1830,7 +1831,7 @@ export async function getISDCResponses(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {stageId,initiativeId} = req.params;
+  const {stageId, initiativeId} = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1857,8 +1858,7 @@ export async function getISDCResponses(
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const ISDCResponses =
-      await fullPposal.requestISDCResponses();
+    const ISDCResponses = await fullPposal.requestISDCResponses();
 
     res.json(
       new ResponseHandler('Full Proposal: ISDC Responses.', {
@@ -1869,9 +1869,7 @@ export async function getISDCResponses(
     console.log(error);
     return res.status(error.httpCode).json(error);
   }
-
 }
-
 
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;

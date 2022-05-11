@@ -48,6 +48,4 @@ export class ResultsIndicators extends UpdatedCreatedAt {
 
   @Column({type: 'text'})
   toc_result_indicator_id: string;
-
-
 }

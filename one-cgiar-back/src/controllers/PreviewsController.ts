@@ -344,14 +344,13 @@ export async function getPreviewFinancialResources(
   }
 }
 
-
 /**
  * GET PREVIEW WORK PACKAGE BY STAGE
  * @param req { initiativeId, stageId }
  * @param res { previewHumanResources }
  * @returns previewHumanResources
  */
- export async function getPreviewWorkPackages(req: Request, res: Response) {
+export async function getPreviewWorkPackages(req: Request, res: Response) {
   const {initiativeId} = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -362,7 +361,7 @@ export async function getPreviewFinancialResources(
 
     // get intiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, active:1}
+      where: {initiative: initiativeId, active: 1}
     });
 
     // if not intitiative by stage, throw error
@@ -378,8 +377,9 @@ export async function getPreviewFinancialResources(
     // create new full proposal object
     const previewsdomain = new PreviewsDomain();
 
-    const previewWorkPackages =
-      await previewsdomain.requestWorkPackages(initvStg.id.toString());
+    const previewWorkPackages = await previewsdomain.requestWorkPackages(
+      initvStg.id.toString()
+    );
 
     res.json(
       new ResponseHandler('Previews:Preview Work Packages', {
