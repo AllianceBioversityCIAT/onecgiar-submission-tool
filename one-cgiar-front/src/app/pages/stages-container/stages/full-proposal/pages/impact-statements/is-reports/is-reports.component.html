@@ -29,11 +29,11 @@
                             </div>
     
                             <div *ngIf="item ==='website'">
-                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'not available'}}</a>
+                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'Not provided'}}</a>
                             </div>
     
                             <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
-                                <span >{{customer[item] || 'not available'}}</span>
+                                <span >{{customer[item] || 'Not provided'}}</span>
                             </div>
                             
                         </td>
