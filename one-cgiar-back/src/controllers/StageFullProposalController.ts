@@ -930,13 +930,17 @@ export async function getMeliaResultsFramework(req: Request, res: Response) {
   const stageRepo = getRepository(Stages);
 
   try {
-    // get stage
-    const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
-    });
-    // get intiative by stage : proposal
+    // // get stage
+    // const stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
+    // // get intiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: {initiative: initiativeId, active: 1}
     });
 
     // if not intitiative by stage, throw error
@@ -944,7 +948,7 @@ export async function getMeliaResultsFramework(req: Request, res: Response) {
       throw new BaseError(
         'Read melia and files: Error',
         400,
-        `Initiative not found in stage: ${stage.description}`,
+        `Initiative not found in stage: ${initvStg.stage}`,
         false
       );
     }
