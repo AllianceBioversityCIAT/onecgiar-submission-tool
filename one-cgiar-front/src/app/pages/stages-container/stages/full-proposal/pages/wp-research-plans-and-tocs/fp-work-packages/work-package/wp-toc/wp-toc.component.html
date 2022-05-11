@@ -9,8 +9,9 @@
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
     <app-item-information-button>
       <div content>
+        
         <p><Strong>Extra data:</Strong></p>
-        <div><strong>ToC ID:</strong> {{toc.toc_id}}</div>
+        <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{toc.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="toc.toc_id"></app-clipboard-icon></div></div>
         <br>
       </div>
     </app-item-information-button>
