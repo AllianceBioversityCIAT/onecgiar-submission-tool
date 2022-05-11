@@ -35,6 +35,7 @@ export class WpGeneralInformationComponent implements OnInit {
       is_global: new FormControl(true),
       id: new FormControl(null),
       active: new FormControl(true),
+      wp_official_code: new FormControl(null),
     });
 
 
@@ -49,7 +50,7 @@ export class WpGeneralInformationComponent implements OnInit {
 
       this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
-        //console.log(directResp);
+        console.log(directResp);
         this.geographicScope.regions = directResp.regions;
         this.geographicScope.countries = directResp.countries;
         this.updateFields(directResp,this._wpDataControlService.wpId);
@@ -86,16 +87,16 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    // console.log(body);
-    this._initiativesService.saveWpFp(body).subscribe(resp=>{
-      // console.log(resp);
-      // console.log(this.workPackageForm.valid?true:false);
-      this.workPackageForm.valid?
-      this._interactionsService.successMessage('Work package has been saved'):
-      this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
-      this.reloadComponent();
+    console.log(body);
+    // this._initiativesService.saveWpFp(body).subscribe(resp=>{
+    //   // console.log(resp);
+    //   // console.log(this.workPackageForm.valid?true:false);
+    //   this.workPackageForm.valid?
+    //   this._interactionsService.successMessage('Work package has been saved'):
+    //   this._interactionsService.warningMessage('Work package has been saved, but there are incomplete fields')
+    //   this.reloadComponent();
 
-    })
+    // })
   }
 
   reloadComponent(){
@@ -111,11 +112,12 @@ export class WpGeneralInformationComponent implements OnInit {
 
   updateFields(directResp,id:number){
         // console.log(id);
-        this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
-        this.workPackageForm.controls['name'].setValue(directResp.name);
-        this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);
-        this.workPackageForm.controls['is_global'].setValue(directResp.is_global);
+        this.workPackageForm.controls['acronym'].setValue(directResp?.acronym);
+        this.workPackageForm.controls['name'].setValue(directResp?.name);
+        this.workPackageForm.controls['pathway_content'].setValue(directResp?.pathway_content);
+        this.workPackageForm.controls['is_global'].setValue(directResp?.is_global);
         this.workPackageForm.controls['id'].setValue(Number(id));
+        this.workPackageForm.controls['wp_official_code'].setValue(Number(directResp?.wp_official_code));
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;
