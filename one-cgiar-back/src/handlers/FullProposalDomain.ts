@@ -1503,7 +1503,8 @@ export class ProposalHandler extends InitiativeStageHandler {
           ` 
                   SELECT  *
                     FROM results
-                   WHERE toc_result_id = "${newResults.toc_result_id}"`,
+                   WHERE initvStgId = ${newResults.initvStgId}
+                     and toc_result_id = "${newResults.toc_result_id}"`,
           newResults
         );
 

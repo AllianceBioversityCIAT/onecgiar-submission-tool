@@ -159,7 +159,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
       const replicationPolicyCompliance =
         await this.replicationPolicyCompliance(initvStg.id, newInitvStg.id);
 
-      //10. Replication Human Resourches
+      //10. Replication Human Resources
       const replicationHumanResources = await this.replicationHumanResources(
         initvStg.id,
         newInitvStg.id
@@ -174,8 +174,8 @@ export class ReplicationDomain extends InitiativeStageHandler {
           newInitvStg.id
         );
 
-      //12. Inactive initiative in the previus stage
-      const inactivePreviusInitiative = await this.inactivePreviusInitiative(
+      //12. Inactive initiative in the previous stage
+      const inactivePreviousInitiative = await this.inactivePreviousInitiative(
         initvStg
       );
 
@@ -194,7 +194,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationPolicyCompliance,
         replicationHumanResources,
         replicationFinancialResources,
-        inactivePreviusInitiative
+        inactivePreviusInitiative: inactivePreviousInitiative
       };
     } catch (error) {
       throw new BaseError(
@@ -1260,7 +1260,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
     }
   }
 
-  async inactivePreviusInitiative(initvStg) {
+  async inactivePreviousInitiative(initvStg) {
     let updateOldInitiativeByStage;
 
     try {
