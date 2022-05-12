@@ -24,7 +24,14 @@
       <div class="col-12 toc_image" [id]="'diagram'">
         <div class="image_container">
           <section-sub-title name="Diagram"></section-sub-title>
-          <img id="image" (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
+          <div class="img_hover_info">
+            <img id="image" (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
+            <div class="info_to_open">
+              Click to see full image
+              <i class="material-icons">
+                aspect_ratio
+              </i>
+          </div>
         </div>
       </div>
   
