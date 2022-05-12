@@ -859,6 +859,15 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
+    /**
+     * Validate if the initiative has old information
+     * for MELIA result framework
+     */
+    const updateOldDataMeliaToc = await fullPposal.updateOldDataMeliaToC();
+
+    /**
+     * Upsert MELIA result framework
+     */
     const resultFramework = await fullPposal.upsertResultsFramework(
       tableA,
       tableB,

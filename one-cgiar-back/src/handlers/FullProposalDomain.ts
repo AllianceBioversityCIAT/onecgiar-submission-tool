@@ -1190,6 +1190,99 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  async updateOldDataMeliaToC() {
+    /**
+     * GET INITIATIVE BY STAGE CODE
+     */
+    const initvStg = await this.setInitvStage();
+
+    //**REPOSITORIES/
+    const initGlobalTargetsRepo = getRepository(
+      entities.InitImpactAreaGlobalTargets
+    );
+    const initImpactIndicatorsRepo = getRepository(
+      entities.InitImpactAreaImpactIndicators
+    );
+    const initSdgTargetsRepo = getRepository(entities.InitImpactAreaSdgTargets);
+    const initOutcomesIndicatorsRepo = getRepository(
+      entities.InitActionAreasOutcomesIndicators
+    );
+    const resultsRepo = getRepository(entities.Results);
+    const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
+    const resultsRegionsRepo = getRepository(entities.ResultsRegions);
+    const resultsCountriesRepo = getRepository(entities.ResultsCountries);
+
+    try {
+      /**
+       * Validate table A
+       */
+
+      const updatedInitGlobalTargets =
+        await initGlobalTargetsRepo.query(` update init_impact_area_global_targets set active = 0 
+      where initvStgId =${initvStg.id} `);
+      const updatedInitImpactIndicators = await initImpactIndicatorsRepo.query(
+        `update init_impact_area_impact_indicators set active = 0 
+        where initvStgId =${initvStg.id}`
+      );
+      const updatedInitSdgTargets =
+        await initSdgTargetsRepo.query(`update init_impact_area_sdg_targets set active = 0 
+      where initvStgId =${initvStg.id}`);
+
+      /**
+       * Validate table B
+       */
+
+      const updatedInitOutcomesIndicators =
+        await initOutcomesIndicatorsRepo.query(`update init_action_areas_out_indicators set active = 0 
+        where initvStgId =${initvStg.id}`);
+
+      /**
+       * Validate table C
+       */
+
+      const updatedResultsIndicators =
+        await resultsIndicatorsRepo.query(`update results_indicators set active = 0 
+      where  results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1)`);
+      const updatedResultsRegions =
+        await resultsRegionsRepo.query(`update results_regions set active = 0 
+        where  results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1)`);
+      const updatedResultsCountries =
+        await resultsCountriesRepo.query(`update results_countries set active = 0 
+        where  results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1)`);
+      const updatedResults =
+        await resultsRepo.query(`update results set active = 0 
+         where initvStgId =${initvStg.id}`);
+
+      return {
+        updatedInitGlobalTargets,
+        updatedInitImpactIndicators,
+        updatedInitSdgTargets,
+        updatedInitOutcomesIndicators,
+        updatedResults,
+        updatedResultsIndicators,
+        updatedResultsRegions,
+        updatedResultsCountries
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
   /**
    ** UPSERT MELIA RESULTS FRAMEWORK (TABLE A,B AND C)
    * @param initiativeId
@@ -1277,7 +1370,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      /*Init Impact Indicators */
+      /**Init Impact Indicators */
       tableA.impact_areas_indicators =
         typeof tableA.impact_areas_indicators === 'undefined'
           ? []
@@ -1334,7 +1427,12 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       /**
-       * SAVE Init Global Targets
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       * /
+       
+      /** SAVE Init Global Targets
        */
 
       // Execute all promises (mergeData)
@@ -1435,7 +1533,13 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       /**
-       * SAVE Init Outcomes Indicatos
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       * /
+
+      /**
+       * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
 
@@ -1613,7 +1717,12 @@ export class ProposalHandler extends InitiativeStageHandler {
       let mergeResultsRegions = await Promise.all(resultsRegionsArray);
       let mergeResultsCountries = await Promise.all(resultsCountriesArray);
 
-      // Save data
+      /**
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       */
+
       let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
@@ -3066,8 +3175,6 @@ export class ProposalHandler extends InitiativeStageHandler {
                 for (let index = 0; index < savedTocsType.length; index++) {
                   const element = savedTocsType[index];
 
-                  console.log(element);
-
                   element.active = 0;
 
                   await tocsRepo.save(element);
@@ -3175,7 +3282,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT ISDC Responses
+   ** UPSERT ISDC Responses
    * @param ISDCResponsesData
    * @returns ISDCResponsesSave
    */
