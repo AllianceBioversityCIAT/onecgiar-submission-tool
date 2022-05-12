@@ -1,7 +1,7 @@
 <div class="local_container  {{expand ? 'expand-local-container' : 'no-expand-local-container'}}">
   <div class="eoi_card  {{expand ? 'expand-card  animate__animated animate__bounceIn' : 'no-expand-card'}}" [style.height]="expand ? 'auto' : '100%'">
     <div class="title_container"  [style.background]="this.colors[this.eoiData?.result_type]">
-      <div class="title">{{this.eoiData?.result_title}}</div>
+      <div class="title"> {{this.eoiData?.type_name}} - {{this.eoiData?.result_title}}</div>
       <div class="line_1"></div>
       <div class="line_2"></div>
       <div class="material-icons close_icon" *ngIf="expand" (click)="expand = !expand">cancel</div>
