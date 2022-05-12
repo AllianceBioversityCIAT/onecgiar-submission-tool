@@ -380,7 +380,7 @@ export async function getActionAreasOutcomesIndicators() {
  * GET CLARISA SDG TARGETS
  * @returns clarisa SDG TARGETS
  */
-export const getClaSdgTargets = async () => {
+export async function getClaSdgTargets() {
   try {
     const sdgTargets = await axios.get(clarisaHost + 'allSDGTargets', {
       auth: {
@@ -398,13 +398,13 @@ export const getClaSdgTargets = async () => {
       error.message
     );
   }
-};
+}
 
 /**
  * GET CLARISA GLOBAL TARGETS
  * @returns clarisa GLOBAL TARGETS
  */
-export const getClaGlobalTargest = async () => {
+export async function getClaGlobalTargets() {
   try {
     const globalTargets = await axios.get(clarisaHost + 'globalTargets', {
       auth: {
@@ -422,14 +422,13 @@ export const getClaGlobalTargest = async () => {
       error.message
     );
   }
-};
-
+}
 
 /**
  * GET CLARISA STUDY TYPES
  * @returns clarisa SDG TARGETS
  */
- export const getClaMeliaStudyTypes = async () => {
+export async function getClaMeliaStudyTypes() {
   try {
     const sdgTargets = await axios.get(clarisaHost + 'MELIA/study-types', {
       auth: {
@@ -447,4 +446,4 @@ export const getClaGlobalTargest = async () => {
       error.message
     );
   }
-};
+}

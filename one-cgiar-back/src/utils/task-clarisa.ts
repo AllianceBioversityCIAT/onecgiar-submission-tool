@@ -551,7 +551,7 @@ export async function createGlobalTargets() {
 
   try {
     const clarisaRepo = getRepository(ClarisaGlobalTargets);
-    const globalTargets = await clarisa.getClaGlobalTargest();
+    const globalTargets = await clarisa.getClaGlobalTargets();
 
     if (globalTargets.length > 0) {
       await deleteGlobalTargets();

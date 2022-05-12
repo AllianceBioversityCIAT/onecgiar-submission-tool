@@ -1461,7 +1461,7 @@ export async function getDepthDescription(req: Request, res: Response) {
 }
 
 /**
- * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+ * PREVIEW PARTNERS
  * @param req
  * @param res
  * @returns
