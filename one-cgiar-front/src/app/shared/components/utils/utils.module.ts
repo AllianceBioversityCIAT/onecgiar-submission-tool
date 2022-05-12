@@ -13,6 +13,7 @@ import { ClipboardIconComponent } from './clipboard-icon/clipboard-icon.componen
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {ToastModule} from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ReadMoreContainerComponent } from './read-more-container/read-more-container.component';
 
 const mycomponents = [
   SectionTitleComponent,
@@ -22,7 +23,8 @@ const mycomponents = [
   TextNotDataComponent,
   InformationButtonComponent,
   ItemInformationButtonComponent,
-  ClipboardIconComponent
+  ClipboardIconComponent,
+  ReadMoreContainerComponent
 ];
 const myModules = [
   IbdAngularComponentsModule,
