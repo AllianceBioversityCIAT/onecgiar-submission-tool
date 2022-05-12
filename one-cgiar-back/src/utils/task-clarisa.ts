@@ -29,6 +29,7 @@ export async function Main() {
   await createSdgTargets();
   await createGlobalTargets();
   await createActionAreasOutIndicators();
+  await createMeliaStudyTypes();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -632,7 +633,7 @@ export async function createActionAreasOutIndicators() {
       console.log('Issues with Clarisa');
     }
   } catch (error) {
-    console.log('createSdgTargets', error);
+    console.log('createActionAreasOutcomes', error);
   }
 }
 
@@ -641,45 +642,42 @@ export async function createActionAreasOutIndicators() {
 export async function deleteMeliaStudyTypes() {
   try {
     const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
-    const clarisaMeliaStudyTypes =
-      new ClarisaActionAreasOutcomesIndicators();
+    const clarisaMeliaStudyTypes = new ClarisaMeliaStudyTypes();
     await clarisaRepo.delete(clarisaMeliaStudyTypes);
-    console.log('36.delete MELIA Study Types');
+    console.log('38.delete MELIA Study Types');
   } catch (error) {
-    console.log('deleteActionAreasOutIndicators', error);
+    console.log('deleteMeliaStudyTypes', error);
   }
 }
 
 export async function createMeliaStudyTypes() {
-  console.log('35.start create MELIA Study Types');
+  console.log('37.start create MELIA Study Types');
 
   try {
     const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
-    const clarisaMeliaStudyTypes =
-      await clarisa.getClaMeliaStudyTypes();
+    const clarisaMeliaStudyTypes = await clarisa.getClaMeliaStudyTypes();
 
     if (clarisaMeliaStudyTypes.length > 0) {
       await deleteMeliaStudyTypes();
 
       let meliaStudyTypesArray: ClarisaMeliaStudyTypes[] = [];
 
-
       for (let index = 0; index < clarisaMeliaStudyTypes.length; index++) {
         const element = clarisaMeliaStudyTypes[index];
         let cla = clarisaRepo.create({
           id: element.id,
-          name: element.actionAreaName
+          name: element.name
         });
         meliaStudyTypesArray.push(cla);
       }
 
       await clarisaRepo.save(meliaStudyTypesArray);
 
-      console.log('37.end Action Areas Outcomes Indicators');
+      console.log('39.end MELIA Study Types');
     } else {
       console.log('Issues with Clarisa');
     }
   } catch (error) {
-    console.log('createSdgTargets', error);
+    console.log('createMeliaStudyTypes', error);
   }
 }
