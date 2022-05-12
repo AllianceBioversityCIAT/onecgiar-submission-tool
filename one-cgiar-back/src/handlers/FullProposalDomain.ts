@@ -132,7 +132,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `,
         /*eslint-disable*/
         WPquery = `
-                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,wp_official_code,
                     IF (
                         name IS NULL
                         OR name = ''
@@ -3184,11 +3184,18 @@ export class ProposalHandler extends InitiativeStageHandler {
               //Validate WP ToC
               // Validate if exits WP for other initiative
               var savedTocsWP: any = await tocsRepo.find({
-                where: {
-                  work_package_id: newTocs.work_package_id,
-                  initvStgId: Not(newTocs.initvStgId)
-                }
+                where: {initvStgId: newTocs.initvStgId, type: 0}
               });
+
+              if (savedTocsWP.length > 0) {
+                for (let index = 0; index < savedTocsWP.length; index++) {
+                  const element = savedTocsWP[index];
+
+                  element.active = 0;
+
+                  await tocsRepo.save(element);
+                }
+              }
 
               // if (savedTocsWP.length > 0) {
               //   throw new BaseError(

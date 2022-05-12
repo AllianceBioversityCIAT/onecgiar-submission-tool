@@ -423,3 +423,28 @@ export const getClaGlobalTargest = async () => {
     );
   }
 };
+
+
+/**
+ * GET CLARISA STUDY TYPES
+ * @returns clarisa SDG TARGETS
+ */
+ export const getClaMeliaStudyTypes = async () => {
+  try {
+    const sdgTargets = await axios.get(clarisaHost + 'MELIA/study-types', {
+      auth: {
+        username: process.env['clarisa_user'],
+        password: process.env['clarisa_password']
+      }
+    });
+    return sdgTargets.data;
+  } catch (error) {
+    console.log(error);
+    throw new APIError(
+      'NOT FOUND',
+      HttpStatusCode.NOT_FOUND,
+      true,
+      error.message
+    );
+  }
+};

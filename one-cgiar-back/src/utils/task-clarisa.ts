@@ -12,6 +12,7 @@ import {ClarisaRegionsCgiar} from '../entity/ClarisaRegionsCgiar';
 import {ClarisaSdgTargets} from '../entity/ClarisaSdgTargets';
 import {ClarisaGlobalTargets} from '../entity/ClarisaGlobalTargets';
 import {ClarisaActionAreasOutcomesIndicators} from '../entity/ClarisaActionAreasOutcomesIndicators';
+import {ClarisaMeliaStudyTypes} from '../entity';
 
 /**MAIN FUNCTION*/
 
@@ -627,6 +628,54 @@ export async function createActionAreasOutIndicators() {
       await clarisaRepo.save(actionAreasOutIndicatorsArray);
 
       console.log('36.end Action Areas Outcomes Indicators');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createSdgTargets', error);
+  }
+}
+
+/**CLARISA MELIA STUDY TYPES*/
+
+export async function deleteMeliaStudyTypes() {
+  try {
+    const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
+    const clarisaMeliaStudyTypes =
+      new ClarisaActionAreasOutcomesIndicators();
+    await clarisaRepo.delete(clarisaMeliaStudyTypes);
+    console.log('36.delete MELIA Study Types');
+  } catch (error) {
+    console.log('deleteActionAreasOutIndicators', error);
+  }
+}
+
+export async function createMeliaStudyTypes() {
+  console.log('35.start create MELIA Study Types');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
+    const clarisaMeliaStudyTypes =
+      await clarisa.getClaMeliaStudyTypes();
+
+    if (clarisaMeliaStudyTypes.length > 0) {
+      await deleteMeliaStudyTypes();
+
+      let meliaStudyTypesArray: ClarisaMeliaStudyTypes[] = [];
+
+
+      for (let index = 0; index < clarisaMeliaStudyTypes.length; index++) {
+        const element = clarisaMeliaStudyTypes[index];
+        let cla = clarisaRepo.create({
+          id: element.id,
+          name: element.actionAreaName
+        });
+        meliaStudyTypesArray.push(cla);
+      }
+
+      await clarisaRepo.save(meliaStudyTypesArray);
+
+      console.log('37.end Action Areas Outcomes Indicators');
     } else {
       console.log('Issues with Clarisa');
     }
