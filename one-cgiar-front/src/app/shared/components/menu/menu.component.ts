@@ -200,6 +200,16 @@ export class MenuComponent implements OnInit {
   mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
+        console.log(wpsResp);
+        if (stageId == 4) {
+          wpsResp.response.workpackage.map(wpItem=>{            
+            wpItem.id = wpItem?.wp_official_code;
+
+            console.log(wpItem)
+          })
+          // wp_official_code
+        }
+        console.log(wpsResp);
        
         let wpss = new ListToMap(wpsResp.response.workpackage, 'work-package/', 'work-package', 'showName', 'acronym').getList();
         // console.log(wpss)
