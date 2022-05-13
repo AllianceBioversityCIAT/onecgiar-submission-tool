@@ -281,39 +281,86 @@ export class MenuComponent implements OnInit {
 
         this.mapDataInMenu( [{
           display_name: 'Risk assessment preview',
-          description: '/mpara-reports'
+          description: 'mpara-reports'
         }],"subsections",3, 9)
+
+        this.mapDataInMenu( [{
+          display_name: 'Risk assessment preview',
+          description: 'mpara-reports'
+        }],"subsections",4, 27)
 
         this.mapDataInMenu([{
           display_name: 'Human Resources preview',
-          description: '/human-resources-reports'
+          description: 'human-resources-reports'
         }],"subsections",3, 15)
 
-        this.mapDataInMenu( [{
-          name: 'Partners preview',
-          frontRoute: '/is-reports'
+        this.mapDataInMenu([{
+          display_name: 'Human Resources preview',
+          description: 'human-resources-reports'
+        }],"subsections",4, 29)
+
+
+        this.mapDataInMenu( [
+          {
+            name: 'Partners preview',
+            frontRoute: 'is-reports'
+          },
+          {
+          name: 'Partners not related to any Impact Area',
+          frontRoute: 'partners-no-impact-area'
         }],"dynamicList",3, 7, 16);
+
+        this.mapDataInMenu( [
+          {
+            name: 'Partners preview',
+            frontRoute: 'is-reports'
+          },
+          {
+          name: 'Partners not related to any Impact Area',
+          frontRoute: 'partners-no-impact-area'
+        }],"dynamicList",4, 25, 50);
 
         this.mapDataInMenu(          [{
           name: '10.1.1 Activity breakdown',
-          frontRoute: '/activity-breakdown/',
+          frontRoute: 'activity-breakdown',
         },
         {
           name: '10.1.2 Geography breakdown',
-          frontRoute: '/geography-breakdown/',
+          frontRoute: 'geography-breakdown',
         }],"dynamicList",3, 4, 27,
 
         );
 
-        // this.mapDataInMenu(3, 5, 12, {
-        //   showName: 'Geographic scope preview',
-        //   frontRoute: '/work-packages/wp-reports'
-        // });
+        this.mapDataInMenu(          [{
+          name: '10.1.1 Activity breakdown',
+          frontRoute: 'activity-breakdown',
+        },
+        {
+          name: '10.1.2 Geography breakdown',
+          frontRoute: 'geography-breakdown',
+        }],"dynamicList",4, 22, 61,
 
-        // this.mapDataInMenu(3, 1, 8, {
-        //   showName: 'Projection of benefits preview',
-        //   frontRoute: '/projection-of-benefits/pob-reports'
-        // });
+        );
+
+        this.mapDataInMenu( [{
+          name: 'Geographic scope preview',
+          frontRoute: 'wp-reports'
+        }],"dynamicList",3, 5, 12);
+
+        this.mapDataInMenu( [{
+          name: 'Geographic scope preview',
+          frontRoute: 'wp-reports'
+        }],"dynamicList",4, 23, 49);
+
+        this.mapDataInMenu( [{
+          name: 'Projection of benefits preview',
+          frontRoute: 'pob-reports'
+        }],"dynamicList",3, 1, 8);
+
+        this.mapDataInMenu( [{
+          name: 'Projection of benefits preview',
+          frontRoute: 'pob-reports'
+        }],"dynamicList",4, 21, 46);
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;

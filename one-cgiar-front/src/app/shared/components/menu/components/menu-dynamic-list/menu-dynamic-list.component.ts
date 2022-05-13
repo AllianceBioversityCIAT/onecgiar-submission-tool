@@ -26,6 +26,8 @@ export class MenuDynamicListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+    console.log(this.customRouterLink)
   }
 
   // addWorkPackage(stage){
