@@ -13,9 +13,10 @@ export class CompactInformationTableViewComponent implements OnInit {
   @Input() canDelete:boolean = true;
   @Input() tableTitle: string = "";
   @Input() msgNoData: string = "";
+  @Input() showTableViewVariable:boolean = true;
+  @Input() localId: boolean = false;
   @Output() buttonViewEvent = new EventEmitter();
   @Output() onEdit = new EventEmitter();
-  showTableViewVariable:boolean = true;
   
 
 
@@ -56,6 +57,17 @@ export class CompactInformationTableViewComponent implements OnInit {
     this.list.map((resp:any)=>{
       resp.collapse = true;
     })
+  }
+
+  setLocalId(){
+    if(this.localId){
+      return [{
+                attribute: 'local_id',
+                name: "ID",
+              },...this.attr_list_config];
+    }else{
+      return this.attr_list_config;
+    }
   }
 
 }
