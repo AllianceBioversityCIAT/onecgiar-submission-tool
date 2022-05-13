@@ -6,10 +6,16 @@
     <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
     <div class="toc_item" *ngIf="tocitem">
       
-      <div><strong>ToC ID:</strong> {{tocitem?.toc_id}}</div>
+      <app-item-information-button>
+        <div content>
+          <p><Strong>Extra data:</Strong></p>
+          <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{tocitem?.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="tocitem?.toc_id"></app-clipboard-icon></div></div>
+          <br>
+        </div>
+      </app-item-information-button>
 
       <div class="tex_container">
-        <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: tocitem?.narrative, required: false}">
+        <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: tocitem?.narrative, required: false}" textAlign='justify'>
         </ibdc-simple-text>
         <div class="updated_at">
           <strong>Updated on:</strong> {{tocitem?.updated_at | date:'d MMMM, y - h:mm:ss a':'UTC'}} - <strong>(UTC)</strong>

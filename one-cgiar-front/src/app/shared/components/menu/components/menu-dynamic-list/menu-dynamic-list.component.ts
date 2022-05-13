@@ -1,8 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MenuService } from '../../services/menu.service';
-import { InitiativesService } from '../../../../services/initiatives.service';
-import { Router } from '@angular/router';
-import { InteractionsService } from '../../../../services/interactions.service';
 import { AuthService } from '../../../../services/auth.service';
 import { UtilsService } from '../../../../services/utils.service';
 
