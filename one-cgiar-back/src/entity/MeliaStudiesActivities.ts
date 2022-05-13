@@ -3,8 +3,11 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany,
+  ManyToOne
 } from 'typeorm';
+import { ClarisaMeliaStudyTypes } from './ClarisaMeliaStudyTypes';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
 
@@ -18,6 +21,9 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
 
   @Column({type: 'text'})
   type_melia: string;
+
+  @Column({type: 'int'})
+  type_melia_id: number;
 
   @Column({type: 'text'})
   result_title: string;
@@ -33,6 +39,10 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
 
   @Column({type: 'tinyint'})
   active: boolean;
+
+  @ManyToOne(type => ClarisaMeliaStudyTypes)
+  @JoinColumn({name: 'type_melia_id'})
+  typeMelia: ClarisaMeliaStudyTypes;
 
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
