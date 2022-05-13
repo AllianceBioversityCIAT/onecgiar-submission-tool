@@ -63,7 +63,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     this.getLinks();
     this.getRecommendationsByInitId();
     document.addEventListener('keydown', () => {
-      this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
+      this.initExtraValidation();
     });
   }
 
@@ -71,11 +71,16 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     this.showTableViewVariable = e;
   }
 
+  initExtraValidation(){
+    this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
+  }
+
   getItemToExpand(item){
     console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
   }
 
   getRecommendationsByInitId(){
+    if(this._initiativesService.initiative.stageId !== 4) return;
     this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
     this.list = resp.map(e => {
       this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
@@ -123,6 +128,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   }
 
   valideteInputTable():boolean{
+    if(this._initiativesService.initiative.stageId !== 4) return true;
     let dataFilter:boolean = true;
     for (let index = 0; index < this.list.length; index++) {
       if(!this.list[index].updated_response?.length){
@@ -142,6 +148,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
+      this.initExtraValidation();
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
     })
