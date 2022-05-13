@@ -28,7 +28,7 @@
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
         
-<div *ngIf="_initiativesService.initiative.stageId == 3">
+<div *ngIf="_initiativesService.initiative.stageId == 4">
     <app-compact-information-table-view 
     (buttonViewEvent)="this.getTabIndex($event)"
     (onEdit)="this.getItemToExpand($event)"
