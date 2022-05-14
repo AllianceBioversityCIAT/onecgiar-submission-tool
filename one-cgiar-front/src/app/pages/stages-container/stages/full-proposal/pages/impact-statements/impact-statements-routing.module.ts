@@ -10,10 +10,6 @@ const routes: Routes = [
       {
         path: 'impact-areas',
         loadChildren: () => import('./impact-areas/impact-areas.module').then(mod => mod.ImpactAreasModule),
-      },
-      {
-        path: 'is-reports',
-        loadChildren: () => import('./is-reports/is-reports.module').then(mod => mod.IsReportsModule),
       }
     ],
   }
