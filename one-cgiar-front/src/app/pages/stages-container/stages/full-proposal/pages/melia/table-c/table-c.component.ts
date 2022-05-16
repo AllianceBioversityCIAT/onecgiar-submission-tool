@@ -26,7 +26,7 @@ export class TableCComponent implements OnInit {
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
       this.listToSave = resp;
-      // console.log(resp)
+      console.log(resp)
     })
   }
 
@@ -35,9 +35,9 @@ export class TableCComponent implements OnInit {
   }
 
   convertDataToUseInTable(resp:ResultData[]){
-    console.log(resp)
+    // console.log(resp)
     resp.map(result=>{
-      console.log(result)
+      // console.log(result)
 
       if (!result?.indicators?.length) return this.resultDataList.push(
         {
@@ -120,21 +120,22 @@ export class TableCComponent implements OnInit {
     this.listToSave.map(result=>{
       result.indicators.map((indicator)=>{
           list.push({
-            result_title: result?.result_title,
-            Result_type	: result?.type_name,
-            geo_scope: this.compactGeoDataToExport(result['geo_scope']),
-            indicator_name: indicator?.name,
-            unit_measurement: indicator?.unit_measurement,
-            data_source: indicator?.data_source,
-            data_collection_method: indicator?.data_collection_method,
-            frequency_data_collection: indicator?.frequency_data_collection,
-            baseline_value: indicator?.baseline_value,
-            baseline_year: indicator?.target_value,
-            target_year: indicator?.target_year
+            Result_type	: result?.type_name || 'Not provided',
+            Work_package:  result?.wp_acronym || 'Not provided',
+            result_title: result?.result_title || 'Not provided',
+            geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
+            indicator_name: indicator?.indicator_name || 'Not provided',
+            unit_measurement: indicator?.unit_measurement || 'Not provided',
+            data_source: indicator?.data_source || 'Not provided',
+            data_collection_method: indicator?.data_collection || 'Not provided',
+            frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
+            baseline_value: indicator?.baseline_value || 'Not provided',
+            baseline_year: indicator?.target_value || 'Not provided',
+            target_year: indicator?.target_year || 'Not provided'
             });
       })
     })
-    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:500},{wpx:100},{wpx:90},{wpx:100},{wpx:200},{wpx:200}])
+    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:100},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
   }
 
 }
@@ -155,7 +156,7 @@ interface ResultData {
 
 interface Indicator {
   id: number;
-  name: string;
+  indicator_name: string;
   unit_measurement: string;
   results_id: number;
   baseline_value: string;
@@ -164,7 +165,7 @@ interface Indicator {
   target_year: number;
   active: number;
   data_source: string;
-  data_collection_method: string;
+  data_collection: string;
   frequency_data_collection: string;
   created_at: string;
   updated_at: string;
