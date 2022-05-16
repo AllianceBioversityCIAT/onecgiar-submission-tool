@@ -109,9 +109,17 @@ table{
   td, th {
       border: 1px solid #dddddd;
       text-align: left;
-      padding: 8px !important;
+      padding: 8px;
     }
     
+  .delete-th{
+    border-left: none;
+  }
+
+  .edit-th{
+    border-right: none;
+  }
+
     tr:nth-child(even) {
       background-color: #eeeeee;
     }
