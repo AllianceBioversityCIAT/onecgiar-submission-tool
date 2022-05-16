@@ -122,8 +122,9 @@ export class PartnersRequestComponent implements OnInit {
     // this.spinnerService.show('partners-request');
 
     this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
-      console.log(resp);
-    this._interactionsService.successMessage(`Partner "${this.partnersRequestForm.value.name}" has been requested`);
+    this._interactionsService.simpleCustomConfirmModal({type:`success`, 
+                                                        title:`Success`,
+                                                        text:`Partner "${this.partnersRequestForm.value.name}" has been requested`});
     this.spinnerService.hide('partners-request');
     this.backAddNewKeyPartner();
     },err=>{
