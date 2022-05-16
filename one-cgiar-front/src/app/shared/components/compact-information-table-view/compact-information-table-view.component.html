@@ -13,7 +13,7 @@
     <thead>
         <tr *ngIf="tableTitle.length > 0"><th colspan="100%">{{tableTitle}}</th></tr>
         <tr>
-            <th *ngFor="let item of setLocalId()">{{item['name']}}</th> <th class="edit-th"></th>
+            <th *ngFor="let item of setLocalId()">{{item['name']}}<span *ngIf="item['required']" class="asterisk">* </span></th> <th class="edit-th"></th>
             <th *ngIf="this.canDelete" class="delete-th"></th>
         </tr>
     </thead>

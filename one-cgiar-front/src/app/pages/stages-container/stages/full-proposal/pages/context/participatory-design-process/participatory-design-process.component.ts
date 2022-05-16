@@ -39,6 +39,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     {
       attribute: 'updated_response',
       name: "Q2 update responses",
+      required: true
     }
   ];
 

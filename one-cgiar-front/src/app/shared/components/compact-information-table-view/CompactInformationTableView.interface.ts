@@ -1,4 +1,5 @@
 export interface AttributesListConfiguration{
   name:string,
-  attribute:string
+  attribute:string,
+  required?:null|boolean
 }
