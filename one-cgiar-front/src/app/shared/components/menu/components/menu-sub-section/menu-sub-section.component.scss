@@ -6,7 +6,8 @@
         cursor: pointer;
         background-color: rgba(0, 0, 0, 0);
         transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
-
+        text-decoration: none;
+        color: inherit;
         .line{
             height: 5px;
             width: auto;

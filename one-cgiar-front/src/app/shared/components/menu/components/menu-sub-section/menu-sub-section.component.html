@@ -2,7 +2,7 @@
 
 <div class="section">
 
-    <div class="header section_title" (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)">
+    <a [attr.href]="this.haveContent ? null : this.customRouterLink" class="header section_title" (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)">
         <div class="line"></div>
         <div class="button_information 
         {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_text active_section' : ''}}  
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </a>
 
     <div *ngIf="this.haveContent" class="content" [@expandable]="haveContent ? (this.collapse?'collapse':'expand') : null">
         <div style="padding: 0px 10px 10px 10px;">

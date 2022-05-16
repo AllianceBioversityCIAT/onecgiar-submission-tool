@@ -1,5 +1,5 @@
 <div class="section">
-    <div class="header {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }}" (click)="this._utilsService.navigate(this.customRouterLink)">
+    <a [attr.href]="this.customRouterLink" class="header {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }}" (click)="this._utilsService.navigate(this.customRouterLink)">
         <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
@@ -15,6 +15,6 @@
             </div>
         </div>
 
-    </div>
+    </a>
     <ng-content select="[content]"></ng-content>
 </div>

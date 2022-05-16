@@ -1,7 +1,7 @@
 
 <div>
 
-    <div class="header section_title {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }} {{ !this.collapse && this.haveContent || this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'expanded':''}}" (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)">
+    <a [attr.href]="this.haveContent ? null : this.customRouterLink" class="header section_title {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }} {{ !this.collapse && this.haveContent || this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'expanded':''}}" (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)">
         <div class="title">
             <ng-content select="[title]"></ng-content>
         </div>
@@ -13,7 +13,7 @@
                 <i class="material-icons-outlined material-icons"  [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">beenhere</i>
             </div>
         </div>
-    </div>
+    </a>
     
     <div class="body" [@expandable]="this.haveContent ? (this.collapse?'collapse':'expand') : null">
         <!-- <div class="line"></div> -->
