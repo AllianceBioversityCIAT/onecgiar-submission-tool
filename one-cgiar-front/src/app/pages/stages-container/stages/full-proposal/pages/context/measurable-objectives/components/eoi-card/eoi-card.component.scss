@@ -9,6 +9,9 @@
         min-height: 100px;
         height: 100%;
 
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+
         .title_container {
             position: relative;
             overflow: hidden;
@@ -59,7 +62,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: calc(100% - 35px);
+            height: auto;
             .c-info {
                 display: flex;
                 margin-top: 5px;
@@ -128,26 +131,29 @@
                 }
             }
 
-            .button_container {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                margin-top: 10px;
 
-                .expand_button {
-                    background-color: rgb(79, 79, 182);
-                    color: white;
-                    font-weight: 500;
-                    padding: 4px 8px;
-                    width: 100px;
-                    text-align: center;
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
+
+
+
+        }
+
+        .button_container {
+            align-self: flex-end;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 10px;
+
+            .expand_button {
+                background-color: rgb(79, 79, 182);
+                color: white;
+                font-weight: 500;
+                padding: 4px 8px;
+                width: 100px;
+                text-align: center;
+                border-radius: 5px;
+                cursor: pointer;
             }
-
-
-
         }
     }
 }
