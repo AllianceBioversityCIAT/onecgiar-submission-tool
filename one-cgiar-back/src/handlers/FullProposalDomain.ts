@@ -268,7 +268,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         WPquery = `
         SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
           wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
-          wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym 
+          wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+          wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
            on wp.initvStgId  = init.id
@@ -322,9 +323,13 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
+        wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+        wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
+           on wp.initvStgId  = init.id
         WHERE wp.active = 1
         ORDER BY initiativeId asc
                     `;
@@ -1562,6 +1567,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   /**
    ** UPSERT TABLE C (Results)
+   * TODO Validate update of information since it is being duplicated
+   * TODO Update with wp id for outcomes and outputs
    * @param tableC
    * @param initvStgId
    * @returns {upsertedOutcomesIndicators}
