@@ -1,10 +1,6 @@
 
 
 <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
-<div class="alert_container" style="margin: 20px 0 35px 0;">
-  <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
-                          type:'info'}"></ibdc-alert>
-</div>
 
 <div class="center_flex" style="margin-top: 35px;">
   <app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
