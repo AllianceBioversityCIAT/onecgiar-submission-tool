@@ -241,6 +241,7 @@ export class InitiativesService {
     }));
   }
 
+
   // Query to get all the initiatives
   getAllInitiatives(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
@@ -479,6 +480,11 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
   }
 
+  //getMeliaStudyTypes
+  getMeliaStudyTypes() {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/melia/study-types`);
+  }
+
   // 
   patchPOBenefitsFp(body: any): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${this.initiative.stageId}/${this.initiative.id}`, body);
@@ -626,6 +632,8 @@ export class InitiativesService {
   patchRecommendationByInitId(body){
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
   }
+
+  
   /*** submitt initiative */
 
 
