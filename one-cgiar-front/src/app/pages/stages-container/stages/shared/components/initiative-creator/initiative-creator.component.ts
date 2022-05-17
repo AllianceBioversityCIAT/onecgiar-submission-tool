@@ -9,7 +9,6 @@ import { InteractionsService } from '../../../../../../shared/services/interacti
   styleUrls: ['./initiative-creator.component.scss']
 })
 export class InitiativeCreatorComponent implements OnInit {
-  private user = JSON.parse(localStorage.getItem('user')) || null;
   renderDilog: boolean = false;
   display: boolean = false;
   isAdmin: boolean = false;
@@ -25,11 +24,11 @@ export class InitiativeCreatorComponent implements OnInit {
 
   constructor(
     private _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _dataControlService:DataControlService
   ) { }
 
   ngOnInit(): void {
-    this.isAdmin = this.user.roles[0]?.acronym == 'ADM' ? true : false;
     this.getActionAreas();
   }
 

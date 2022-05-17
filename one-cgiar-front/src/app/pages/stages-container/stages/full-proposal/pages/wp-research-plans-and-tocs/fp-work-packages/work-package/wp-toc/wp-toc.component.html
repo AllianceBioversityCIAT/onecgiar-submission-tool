@@ -28,7 +28,7 @@
       <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}" textAlign='justify'>
       </ibdc-simple-text>
       <div class="updated_at">
-        <strong>Updated on:</strong> {{toc?.updated_at | date:'d MMMM, y - h:mm:ss a':'UTC'}} - <strong>(UTC)</strong>
+        <app-toggle-format-date [date]="toc?.updated_at"></app-toggle-format-date>
       </div>
     </div>
 

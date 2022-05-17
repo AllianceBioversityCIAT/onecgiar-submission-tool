@@ -42,7 +42,25 @@ export class DataControlService {
   fieldAsteriskInfo = 'The fields that are marked with a red asterisk (<strong class="alert_text_red">*</strong>) are mandatory';
   incompleteFieldsText = 'Please make sure all required fields are completed accordingly';
   provideDocumentText = 'Provide link to any additional support document(s)';
-  constructor() { }
+
+  get isAdmin (){
+    return JSON.parse(localStorage.getItem('user')).roles[0]?.id == 1 ? true : false
+  }
+
+  EOIcolors = [];
+
+  initColors(){
+    this.EOIcolors['WP'] = '#ed553b';
+    this.EOIcolors[1] = '#a21942';
+    this.EOIcolors[2] = '#27bde2';
+    this.EOIcolors[3] = '#3caea3';
+    this.EOIcolors[4] = '#173f5f';
+    this.EOIcolors[5] = '#4d9f3b';
+  }
+
+  constructor() { 
+    this.initColors();
+  }
 
   getStageRouteByStageId(stageId): StageDescription {
     switch (stageId) {

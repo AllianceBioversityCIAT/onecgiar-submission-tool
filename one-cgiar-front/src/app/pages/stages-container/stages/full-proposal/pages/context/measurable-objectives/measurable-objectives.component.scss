@@ -1,10 +1,3 @@
-.eoi-list{
-    width: 100%;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
-}
-
 
 
 .no-data-text{
@@ -14,4 +7,54 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.geoScope{
+    margin-top: 10px;
+    .title{
+        margin-bottom: 10px;
+    }
+    .lists{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        .list{
+            max-height: 200px;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+    }
+}
+
+.indicators {
+    margin-top: 5px;
+
+    .title {
+        margin-right: 5px;
+        color: rgb(17, 17, 17);
+        font-weight: 700;
+    }
+
+    .indicators_list {
+        .indicator {
+            box-shadow: 0px 0px 8px rgb(209, 209, 209);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .data{
+        strong{
+            width: max-content;
+        }
+    }
+}
+.geoScope{
+    .title{
+        color: rgb(17, 17, 17);
+        font-weight: 700;
+    }
 }
