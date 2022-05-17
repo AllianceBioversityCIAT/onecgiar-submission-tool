@@ -7,6 +7,7 @@ import {TableModule} from 'primeng/table';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import {ButtonModule} from 'primeng/button';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module';
 
 
@@ -19,7 +20,8 @@ import { StagesPipesModule } from '../../../../shared/pipes/stages-pipes.module'
     UtilsModule,
     ButtonModule,
     ClipboardModule,
-    StagesPipesModule
+    StagesPipesModule,
+    IbdAngularComponentsModule
   ]
 })
 export class IsReportsModule { }

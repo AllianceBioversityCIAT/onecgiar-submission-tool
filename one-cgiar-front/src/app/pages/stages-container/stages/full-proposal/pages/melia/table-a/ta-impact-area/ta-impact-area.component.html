@@ -1,7 +1,9 @@
 <section-title name="Table A" ></section-title>
 <app-ia-visual-reference [impactAreId]="this.currentImpactAreaId" ></app-ia-visual-reference>
 <div class="section-container animate__animated animate__fadeIn">
-    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    <div class="center_flex" style="margin: 30px 0;">
+        <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    </div>
 
     <!-- <ibdc-alert [options]="{htmlText: this.htmlText, type:'info'}"></ibdc-alert> -->
     <br>

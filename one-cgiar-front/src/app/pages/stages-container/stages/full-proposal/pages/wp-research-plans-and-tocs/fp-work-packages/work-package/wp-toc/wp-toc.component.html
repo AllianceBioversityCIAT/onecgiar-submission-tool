@@ -1,7 +1,9 @@
 
 
 <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
-<app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+<div class="center_flex" style="margin-top: 35px;">
+  <app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+</div>
 
 <!-- <h1>dsd</h1>
 <app-read-more-container>

@@ -48,7 +48,7 @@ export class InteractionsService {
     Swal.fire({
       icon: type,
       title: title,
-      text: text,
+      html: text,
       confirmButtonText:confirmButtonText ? confirmButtonText:'Ok'
     });
   }
