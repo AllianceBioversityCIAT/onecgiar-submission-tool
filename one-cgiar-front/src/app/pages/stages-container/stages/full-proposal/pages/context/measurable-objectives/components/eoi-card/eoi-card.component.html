@@ -1,98 +1,37 @@
-<div class="local_container  {{expand ? 'expand-local-container' : 'no-expand-local-container'}}">
-  <div class="eoi_card  {{expand ? 'expand-card  animate__animated animate__bounceIn' : 'no-expand-card'}}" [style.height]="expand ? 'auto' : '100%'">
+<div class="local_container {{expand ? 'expand-local-container' : 'no-expand-local-container'}}">
+  <div class="eoi_card  {{expand ? 'expand-card  animate__animated animate__bounceIn' : 'no-expand-card'}}" [ngStyle]="{'z-index': expand ? 3 : 'unset', 'position': expand ? 'relative' : 'unset'}" [style.height]="expand ? 'auto' : '100%'">
     
-    <div class="title_container"  [style.background]="this.colors[this.eoiData?.result_type]">
-      <div class="title"> {{this.eoiData?.type_name}} - {{this.eoiData?.result_title}}</div>
+    <div class="title_container"  [style.background]="this._dataControlService.EOIcolors[this.eoiData?.result_type]">
+      <div class="title"><ng-content select="[title]"></ng-content></div>
       <div class="line_1"></div>
       <div class="line_2"></div>
-      <div class="material-icons close_icon" *ngIf="expand" (click)="expand = !expand">cancel</div>
+      <div class="icon_container"  *ngIf="expand" (click)="expand = !expand">
+        <i class="material-icons close_icon">cancel</i>
+      </div>
     </div>
 
     <div class="content custom_scroll" >
 
       <div style="height:auto">
         <div class="normal_content">
-          <div class="c-info" style="margin-top: 8px;">
-            <div class="c-title">Type name: </div>
-            <div [style.color]="this.colors[this.eoiData?.result_type]">{{this.eoiData?.type_name}}</div>
-          </div>
-      
-          <div class="c-info" *ngIf="this.eoiData?.indicators?.length">
-            <div class="c-title">Number of indicators: </div>
-            <div class="c-value">{{this.eoiData?.indicators?.length}}</div>
-          </div>
-    
-          <div class="c-info" *ngIf="this.eoiData?.result_description">
-            <div class="c-title">Result description: </div>
-          </div>
-    
-          <div class="c-info" style="margin-top: 0px;" *ngIf="this.eoiData?.result_description">
-            <div class="c-value">{{this.eoiData?.result_description}}</div>
-          </div>
+          <ng-content select="[visible-content]"></ng-content>
         </div>
   
         <div class="expanded_content" *ngIf="expand">
-  
-          <div class="c-info" *ngIf="this.eoiData?.wp_name">
-            <div class="c-title">Work Package name: </div>
-            <div class="c-value">{{this.eoiData?.wp_name}}</div>
-          </div>
-  
-          <div class="c-info" *ngIf="this.eoiData?.wp_acronym">
-            <div class="c-title">Work Package acronym: </div>
-            <div class="c-value">{{this.eoiData?.wp_acronym}}</div>
-          </div>
-  
-          <div class="indicators" *ngIf="this.eoiData?.indicators?.length">
-            <div class="title">Indicators: </div>
-            <div class="indicators_list">
-              <div class="indicator" *ngFor="let indicator of this.eoiData?.indicators">
-                  <div class="data"> <strong>Indicator name:</strong> {{indicator?.indicator_name}}</div> 
-                  <div class="data"> <strong>Unit measurement:</strong> {{indicator?.unit_measurement}}</div> 
-                  <div class="data"> <strong>Data source:</strong> {{indicator?.unit_measurement}}</div> 
-                  <div class="data"> <strong>Data collection:</strong> {{indicator?.unit_measurement}}</div> 
-                  <div class="data"> <strong>Frequency data collection:</strong> {{indicator?.unit_measurement}}</div> 
-                  <div class="data"> <strong>Baseline value:</strong> {{indicator?.unit_measurement}}</div> 
-                  <div class="data"> <strong>Baseline year:</strong> {{indicator?.baseline_year}}</div> 
-                  <div class="data"> <strong>Target value:</strong> {{indicator?.target_year}}</div> 
-              </div>
-            </div>
-          </div>
-
-          <div class="geoScope">
-            <div class="title">Geographic scope: </div>
-            <div *ngIf="!this.eoiData?.geo_scope?.regions?.length && !this.eoiData?.geo_scope?.countries?.length">Not provided</div>
-            <div class="lists">
-
-              <div class="list custom_scroll" *ngIf="this.eoiData?.geo_scope?.regions?.length">
-                <div class="title">Region</div>
-                <div class="item"  *ngFor="let region of this.eoiData?.geo_scope?.regions">
-                  <p>{{region?.region_name}}</p>
-                </div>
-              </div>
-
-              <div class="list custom_scroll" *ngIf="this.eoiData?.geo_scope?.countries?.length">
-                <div class="title">Countries</div>
-                <div class="item" *ngFor="let country of this.eoiData?.geo_scope?.countries">
-                  <p>{{country?.country_name}}</p>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
+          <ng-content select="[expanded-content]"></ng-content>
         </div>
       </div>
   
     </div>
   
     <div class="button_container" *ngIf="!expand">
-      <div class="expand_button" (click)="expand = !expand" [style.background-color]="this.colors[this.eoiData?.result_type]">
+      <div class="expand_button" (click)="expand = !expand" [style.background-color]="this._dataControlService.EOIcolors[this.eoiData?.result_type]">
         See more
       </div>
     </div>
   
   </div>
-</div>
+  <div class="bg-closer" *ngIf="expand" (click)="expand = !expand">
 
+  </div>
+</div>

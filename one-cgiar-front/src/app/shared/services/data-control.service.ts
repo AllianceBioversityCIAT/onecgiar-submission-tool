@@ -47,7 +47,18 @@ export class DataControlService {
     return JSON.parse(localStorage.getItem('user')).roles[0]?.id == 1 ? true : false
   }
 
-  constructor() { }
+  EOIcolors = [];
+
+  initColors(){
+    this.EOIcolors['WP'] = '#ed553b';
+    this.EOIcolors[1] = '#a21942';
+    this.EOIcolors[2] = '#27bde2';
+    this.EOIcolors[3] = '#3caea3';
+  }
+
+  constructor() { 
+    this.initColors();
+  }
 
   getStageRouteByStageId(stageId): StageDescription {
     switch (stageId) {

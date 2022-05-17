@@ -303,3 +303,18 @@ button {
   background: #555;
 }
 
+
+.eoi-item{
+  display: flex;
+  margin-top: 5px;
+  .eoi-item-title{
+    color: rgb(17, 17, 17);
+    font-weight: 700;
+    margin-right: 5px;
+    width: max-content;
+  }
+  
+  .eoi-item-description{
+    color: rgb(109, 109, 109);
+  }
+}

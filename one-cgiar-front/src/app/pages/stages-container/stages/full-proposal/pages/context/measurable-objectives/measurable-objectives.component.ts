@@ -8,6 +8,7 @@ import { InteractionsService } from '../../../../../../../shared/services/intera
 import { map } from 'rxjs/operators';
 import { EOIData } from './interfaces/EOIData.interface';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -26,7 +27,8 @@ export class MeasurableObjectivesComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
     private _dataValidatorsService:DataValidatorsService,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    public _dataControlService:DataControlService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),

@@ -11,11 +11,14 @@
 
         display: grid;
         grid-template-rows: auto auto 1fr;
+        position: relative;
+
 
         .title_container {
             position: relative;
             overflow: hidden;
-            padding: 8px 10px;
+            padding: 8px 50px 8px 8px;
+            // margin-right: 30px;
             border-radius: 5px;
             display: flex;
             align-items: center;
@@ -47,15 +50,25 @@
                 transform: rotate(330deg);
             }
 
-            .close_icon {
+            .icon_container{
                 position: absolute;
                 right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                margin-right: 8px;
-                color: rgb(230, 86, 86);
+                // top: 50%;
+                // transform: translateY(-50%);
+                background-color: rgb(83, 83, 83);
+                width: 50px;
+                height: 100%;
+                color: rgb(255, 255, 255);
                 cursor: pointer;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .close_icon {
+
+                }
             }
+
         }
 
         .content {
@@ -63,73 +76,7 @@
             flex-direction: column;
             justify-content: space-between;
             height: auto;
-            .c-info {
-                display: flex;
-                margin-top: 5px;
 
-                .c-title {
-                    color: rgb(17, 17, 17);
-                    font-weight: 700;
-                    margin-right: 5px;
-                    width: max-content;
-                }
-
-                .c-value {
-                    color: rgb(109, 109, 109);
-                }
-            }
-
-            .geoScope{
-                margin-top: 10px;
-                .title{
-                    margin-bottom: 10px;
-                }
-                .lists{
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    width: 100%;
-                    .list{
-                        max-height: 200px;
-                        overflow-y: scroll;
-                        padding: 10px;
-                    }
-                }
-            }
-
-            .expanded_content {
-                .indicators {
-                    margin-top: 5px;
-
-                    .title {
-                        margin-right: 5px;
-                        color: rgb(17, 17, 17);
-                        font-weight: 700;
-                    }
-
-                    .indicators_list {
-                        .indicator {
-                            box-shadow: 0px 0px 8px rgb(209, 209, 209);
-                            padding: 5px 10px;
-                            border-radius: 5px;
-                            margin-left: 10px;
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                        }
-                    }
-
-                    .data{
-                        strong{
-                            width: max-content;
-                        }
-                    }
-                }
-                .geoScope{
-                    .title{
-                        color: rgb(17, 17, 17);
-                        font-weight: 700;
-                    }
-                }
-            }
 
 
 
@@ -184,6 +131,15 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
+}
+
+.bg-closer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
     background-color: rgba(0, 0, 0, 0.514);
 }
 
