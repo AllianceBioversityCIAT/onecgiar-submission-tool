@@ -713,7 +713,7 @@ export class InitiativeStageHandler extends BaseValidation {
         ? existInitvStg[0]
         : new InitiativesByStages();
 
-      this.intvStage_.active = true;
+     // this.intvStage_.active = true;
       this.intvStage_.initiative = this.initiativeId_;
       this.intvStage_.stage = this.stageId_;
       // save initiative by stage
