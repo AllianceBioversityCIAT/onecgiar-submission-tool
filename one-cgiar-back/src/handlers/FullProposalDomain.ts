@@ -2012,9 +2012,21 @@ export class ProposalHandler extends InitiativeStageHandler {
     );
 
     try {
-      const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
-        initvStgId: initvStg.id
-      });
+      const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
+      msa.initvStgId,
+      type_melia_id,
+      cmst.name as type_melia,
+      msa.result_title,
+      msa.anticipated_year_completion,
+      msa.co_delivery,
+      msa.management_decisions_learning,
+      msa.active
+      FROM melia_studies_activities msa 
+      left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
+      WHERE msa.initvStgId = ${initvStg.id}`);
+      // const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
+      //   initvStgId: initvStg.id
+      // });
 
       return meliaStudiesActivities;
     } catch (error) {
