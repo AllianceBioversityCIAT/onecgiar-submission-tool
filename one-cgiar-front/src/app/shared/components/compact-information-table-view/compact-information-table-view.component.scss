@@ -88,3 +88,43 @@ tr:nth-child(even) {
 
   }
 }
+
+.warning{
+  background-color: rgba(255, 230, 0, 0.089);
+  &::after{
+    content: 'Data not provided';
+    font-style: italic;
+    font-size: smaller;
+    text-align: center;
+    display: block;
+  }
+}
+
+table{
+  thead{
+      position: sticky;
+      top: 0;
+      background-color: white;
+  }
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+  .delete-th{
+    border-left: none;
+  }
+
+  .edit-th{
+    border-right: none;
+  }
+
+    tr:nth-child(even) {
+      background-color: #eeeeee;
+    }
+}
+
+.asterisk{
+  color: #ff0000;
+}

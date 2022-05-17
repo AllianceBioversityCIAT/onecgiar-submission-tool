@@ -101,7 +101,8 @@ export class WorkPackageComponent implements OnInit {
    
     // select current wp
     if (wpId != -1 && allWp) {
-      let sectionFinded = allWp.find((wp) => wp.id == wpId).activeSection = true;
+      let sectionFinded = allWp.find((wp) => wp.id == wpId);
+      if (sectionFinded) sectionFinded.activeSection = true;
     }
      
   }

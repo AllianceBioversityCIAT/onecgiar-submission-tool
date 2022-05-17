@@ -3,6 +3,11 @@
 <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
 <app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
 
+<!-- <h1>dsd</h1>
+<app-read-more-container>
+  <div content></div>
+</app-read-more-container> -->
+
 <div class="toc_list">
 
   <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
@@ -18,7 +23,7 @@
   <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
   <!-- <button (click)="this._utilsService.goToEditToc()">Example Toc Button {{toc?.toc_id}}</button> -->
     <div class="tex_container">
-      <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}">
+      <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}" textAlign='justify'>
       </ibdc-simple-text>
       <div class="updated_at">
         <strong>Updated on:</strong> {{toc?.updated_at | date:'d MMMM, y - h:mm:ss a':'UTC'}} - <strong>(UTC)</strong>

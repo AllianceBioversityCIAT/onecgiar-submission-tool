@@ -9,6 +9,8 @@
     transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
     font-weight: 300;
     font-size: .9em;
+    text-decoration: none;
+    color: inherit;
     .title{
         display: flex;
         align-items: center;

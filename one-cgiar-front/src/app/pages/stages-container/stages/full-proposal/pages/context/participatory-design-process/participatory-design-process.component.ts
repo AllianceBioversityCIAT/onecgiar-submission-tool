@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { map } from 'rxjs/operators';
@@ -38,7 +38,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     },
     {
       attribute: 'updated_response',
-      name: "Q2 update responses",
+      name: "Updated Response based on progress after initial 6 month inception to 30 June",
+      required: true,
+      styles:{'min-width':'200px'}
     }
   ];
 
@@ -61,12 +63,18 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   ngOnInit(): void {
     this.getContext();
     this.getLinks();
-    this.formChanges();
     this.getRecommendationsByInitId();
+    document.addEventListener('keydown', () => {
+      this.initExtraValidation();
+    });
   }
 
   getTabIndex(e){
     this.showTableViewVariable = e;
+  }
+
+  initExtraValidation(){
+    this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
   }
 
   getItemToExpand(item){
@@ -74,10 +82,13 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   }
 
   getRecommendationsByInitId(){
+    if(this._initiativesService.initiative.stageId !== 4) return;
     this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
     this.list = resp.map(e => {
+      this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
       return {...e, user_id: this._authService.userValue.id};
     });
+    //this.extraValidation = this.extraValidation && this.filterIncompleteData();
     })
   }
 
@@ -100,7 +111,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid && this.extraValidation?
+      this.contextForm.valid && this.valideteInputTable() &&  this.extraValidation?
       this._interactionsService.successMessage('Participatory design process has been saved'):
       this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
     })
@@ -114,7 +125,21 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     //save recommendations
     this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
       this.getRecommendationsByInitId();
+      this.showTableViewVariable = true;
     })
+  }
+
+  valideteInputTable():boolean{
+    if(this._initiativesService.initiative.stageId !== 4) return true;
+    let dataFilter:boolean = true;
+    for (let index = 0; index < this.list.length; index++) {
+      if(!this.list[index].updated_response?.length){
+        dataFilter = false;
+        break;
+      } 
+    }
+
+    return dataFilter;
   }
 
   getContext(){
@@ -125,15 +150,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
+      this.initExtraValidation();
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
-    })
-  }
-
-  formChanges(){
-    this.contextForm.valueChanges.subscribe(resp=>{
-      //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
   }
 

@@ -132,7 +132,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `,
         /*eslint-disable*/
         WPquery = `
-                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,wp_official_code,
                     IF (
                         name IS NULL
                         OR name = ''
@@ -268,7 +268,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         WPquery = `
         SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
           wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
-          wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym 
+          wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+          wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
            on wp.initvStgId  = init.id
@@ -322,9 +323,13 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
+        wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+        wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
+           on wp.initvStgId  = init.id
         WHERE wp.active = 1
         ORDER BY initiativeId asc
                     `;
@@ -1562,6 +1567,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   /**
    ** UPSERT TABLE C (Results)
+   * TODO Validate update of information since it is being duplicated
+   * TODO Update with wp id for outcomes and outputs
    * @param tableC
    * @param initvStgId
    * @returns {upsertedOutcomesIndicators}
@@ -3120,11 +3127,12 @@ export class ProposalHandler extends InitiativeStageHandler {
    ** UPSERT TOCS
    */
   async upsertTocs(toc) {
-    const tocsRepo = getRepository(entities.TOCs);
     const initvStg = await this.setInitvStage();
 
     var results = [];
     var savedToc;
+    var savedFullInitiativeToc;
+    var savedWpToc;
 
     try {
       if (toc.length > 0) {
@@ -3142,68 +3150,15 @@ export class ProposalHandler extends InitiativeStageHandler {
           newTocs.active = element.active ? element.active : true;
           newTocs.initvStgId = initvStg.id;
 
-          var savedTocs: any = await tocsRepo.find({
-            select: [
-              'id',
-              'initvStgId',
-              'narrative',
-              'diagram',
-              'type',
-              'active',
-              'toc_id',
-              'work_package',
-              'work_package_id'
-            ],
-            where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
-          });
+          if (newTocs.type) {
+            savedFullInitiativeToc = await this.upsertFullInitiativeToC(
+              newTocs
+            );
 
-          if (savedTocs.length > 0) {
-            newTocs.id = savedTocs[0].id;
-            tocsRepo.merge(savedTocs[0], newTocs);
-
-            savedToc = await tocsRepo.save(savedTocs);
-
-            results.push(savedToc);
+            results.push(savedFullInitiativeToc);
           } else {
-            //Validate if the initiative has a Full initiative ToC
-            if (newTocs.type) {
-              var savedTocsType: any = await tocsRepo.find({
-                where: {initvStgId: newTocs.initvStgId, type: 1}
-              });
-
-              if (savedTocsType.length > 0) {
-                for (let index = 0; index < savedTocsType.length; index++) {
-                  const element = savedTocsType[index];
-
-                  element.active = 0;
-
-                  await tocsRepo.save(element);
-                }
-              }
-            } else {
-              //Validate WP ToC
-              // Validate if exits WP for other initiative
-              var savedTocsWP: any = await tocsRepo.find({
-                where: {
-                  work_package_id: newTocs.work_package_id,
-                  initvStgId: Not(newTocs.initvStgId)
-                }
-              });
-
-              // if (savedTocsWP.length > 0) {
-              //   throw new BaseError(
-              //     'Upsert Full Initiative ToC: Full proposal',
-              //     400,
-              //     `The Work Package Id - ${savedTocsWP[0].work_package_id} - was inserted in the initiative - ${savedTocsWP[0].initvStgId} - please validate, ToC Id : ${savedTocsWP[0].toc_id}`,
-              //     false
-              //   );
-              // }
-            }
-
-            newTocs.initvStgId = initvStg.id;
-
-            savedToc = await tocsRepo.save(newTocs);
-            results.push(savedToc);
+            savedWpToc = await this.upsertWorkPackageToC(newTocs);
+            results.push(savedFullInitiativeToc);
           }
         }
       }
@@ -3212,7 +3167,139 @@ export class ProposalHandler extends InitiativeStageHandler {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Upsert TOC: Full proposal',
+        'Upsert TOC: Full proposal Domain',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT FULL INITIATIVE TOC
+   */
+  async upsertFullInitiativeToC(newTocs) {
+    const tocsRepo = getRepository(entities.TOCs);
+    const initvStg = await this.setInitvStage();
+
+    var results = [];
+    var savedFullInitiativeToc;
+
+    try {
+      var savedTocs: any = await tocsRepo.find({
+        select: [
+          'id',
+          'initvStgId',
+          'narrative',
+          'diagram',
+          'type',
+          'active',
+          'toc_id',
+          'work_package',
+          'work_package_id'
+        ],
+        where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
+      });
+
+      // Validate if the initiative has saved information
+      if (savedTocs.length > 0) {
+        /**
+         * Old Data
+         */
+
+        newTocs.id = savedTocs[0].id;
+
+        tocsRepo.merge(savedTocs[0], newTocs);
+
+        savedFullInitiativeToc = await tocsRepo.save(savedTocs);
+
+        results.push(savedFullInitiativeToc);
+      } else {
+        /**
+         * New Data
+         */
+
+        var savedTocsType: any = await tocsRepo.find({
+          where: {initvStgId: newTocs.initvStgId, type: 1}
+        });
+
+        if (savedTocsType.length > 0) {
+          for (let index = 0; index < savedTocsType.length; index++) {
+            const element = savedTocsType[index];
+
+            element.active = 0;
+
+            await tocsRepo.save(element);
+          }
+        }
+
+        newTocs.initvStgId = initvStg.id;
+
+        savedFullInitiativeToc = await tocsRepo.save(newTocs);
+        results.push(savedFullInitiativeToc);
+      }
+
+      return results;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Full Initiative ToC: Full proposal Domain',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT WORK PACKAGE TOC
+   */
+  async upsertWorkPackageToC(newTocs) {
+    const tocsRepo = getRepository(entities.TOCs);
+    const initvStg = await this.setInitvStage();
+
+    var results = [];
+    var savedWorkPackageToc;
+
+    try {
+      var savedTocs: any = await tocsRepo.find({
+        select: [
+          'id',
+          'initvStgId',
+          'narrative',
+          'diagram',
+          'type',
+          'active',
+          'toc_id',
+          'work_package',
+          'work_package_id'
+        ],
+        where: {
+          work_package_id: newTocs.work_package_id,
+          initvStgId: newTocs.initvStgId
+        }
+      });
+
+      if (savedTocs.length > 0) {
+        newTocs.id = savedTocs[0].id;
+
+        tocsRepo.merge(savedTocs[0], newTocs);
+
+        savedWorkPackageToc = await tocsRepo.save(savedTocs[0]);
+
+        results.push(savedWorkPackageToc);
+      } else {
+        newTocs.initvStgId = initvStg.id;
+
+        savedWorkPackageToc = await tocsRepo.save(newTocs);
+        results.push(savedWorkPackageToc);
+      }
+
+      return results;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Work Package ToC: Full proposal Domain',
         400,
         error.message,
         false
