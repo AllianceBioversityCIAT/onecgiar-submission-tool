@@ -8,7 +8,8 @@ import { DataControlService } from '../../../../../../../../../shared/services/d
   styleUrls: ['./eoi-card.component.scss']
 })
 export class EoiCardComponent implements OnInit {
-  @Input() eoiData:EOIData;
+  @Input() result_type: string;
+  @Input() seemore: boolean = true;
   constructor(public _dataControlService:DataControlService) { }
 
   expand = false;

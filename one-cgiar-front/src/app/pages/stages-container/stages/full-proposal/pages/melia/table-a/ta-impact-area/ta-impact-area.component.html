@@ -7,42 +7,44 @@
     <br>
     <div class="local_grid">
 
-        <div class="box ibd-shadow-2">
-            <div class="title">
-                Collective global 2030 targets
+        <app-eoi-card [result_type]="5" [seemore]="false">
+            <div title>Collective global 2030 targets</div>
+            <div visible-content>
+                <div class="no-data" *ngIf="!tableAData?.global_targets?.length">
+                    No information
+                </div>
+                <div class="values">
+                    <div *ngFor="let globalTarget of tableAData?.global_targets" class="value-item box ibd-shadow-1">{{globalTarget?.target}}</div>
+                </div>
             </div>
-            <div class="no-data" *ngIf="!tableAData?.global_targets?.length">
-                No information
-            </div>
-            <div class="values">
-                <div *ngFor="let globalTarget of tableAData?.global_targets" class="value-item box ibd-shadow-1">{{globalTarget?.target}}</div>
-            </div>
-        </div>
-    
-        <div class="box ibd-shadow-2">
-            <div class="title">
-                Common impact indicators
-            </div>
-            <div class="no-data" *ngIf="!tableAData?.impact_areas_indicators?.length">
-                No information
-            </div>
-            <div class="values">
-                <div *ngFor="let impactAreasIndicator of tableAData?.impact_areas_indicators" class="value-item box ibd-shadow-1">{{impactAreasIndicator?.indicatorStatement}}</div>
-            </div>
-        </div>
-    
-        <div class="box ibd-shadow-2">
-            <div class="title">
-                SDG Targets
-            </div>
-            <div class="no-data" *ngIf="!tableAData?.sdg_targets?.length">
-                No information
-            </div>
-            <div class="values">
-                <div *ngFor="let sdgTarget of tableAData?.sdg_targets" class="value-item box ibd-shadow-1">{{sdgTarget?.sdg_target}}</div>
-            </div>
-        </div>
+        </app-eoi-card>
 
+        <app-eoi-card [result_type]="5" [seemore]="false">
+            <div title>Common impact indicators</div>
+            <div visible-content>
+                <div class="no-data" *ngIf="!tableAData?.impact_areas_indicators?.length">
+                    No information
+                </div>
+                <div class="values">
+                    <div *ngFor="let impactAreasIndicator of tableAData?.impact_areas_indicators" class="value-item box ibd-shadow-1">{{impactAreasIndicator?.indicatorStatement}}</div>
+                </div>
+            </div>
+        </app-eoi-card>
+
+    
+        <app-eoi-card [result_type]="5" [seemore]="false">
+            <div title>SDG Targets</div>
+            <div visible-content>
+
+                <div class="no-data" *ngIf="!tableAData?.sdg_targets?.length">
+                    No information
+                </div>
+                <div class="values">
+                    <div *ngFor="let sdgTarget of tableAData?.sdg_targets" class="value-item box ibd-shadow-1">{{sdgTarget?.sdg_target}}</div>
+                </div>
+            </div>
+        </app-eoi-card>
+    
     </div>
     
 </div>

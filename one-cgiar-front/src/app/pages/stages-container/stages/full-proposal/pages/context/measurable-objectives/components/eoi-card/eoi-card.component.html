@@ -1,7 +1,7 @@
 <div class="local_container {{expand ? 'expand-local-container' : 'no-expand-local-container'}}">
   <div class="eoi_card  {{expand ? 'expand-card  animate__animated animate__bounceIn' : 'no-expand-card'}}" [ngStyle]="{'z-index': expand ? 3 : 'unset', 'position': expand ? 'relative' : 'unset'}" [style.height]="expand ? 'auto' : '100%'">
     
-    <div class="title_container"  [style.background]="this._dataControlService.EOIcolors[this.eoiData?.result_type]">
+    <div class="title_container"  [style.background]="this._dataControlService.EOIcolors[this.result_type]">
       <div class="title"><ng-content select="[title]"></ng-content></div>
       <div class="line_1"></div>
       <div class="line_2"></div>
@@ -24,8 +24,8 @@
   
     </div>
   
-    <div class="button_container" *ngIf="!expand">
-      <div class="expand_button" (click)="expand = !expand" [style.background-color]="this._dataControlService.EOIcolors[this.eoiData?.result_type]">
+    <div class="button_container" *ngIf="!expand && this.seemore">
+      <div class="expand_button" (click)="expand = !expand" [style.background-color]="this._dataControlService.EOIcolors[this.result_type]">
         See more
       </div>
     </div>

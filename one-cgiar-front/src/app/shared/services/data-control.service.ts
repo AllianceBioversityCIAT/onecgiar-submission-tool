@@ -54,6 +54,8 @@ export class DataControlService {
     this.EOIcolors[1] = '#a21942';
     this.EOIcolors[2] = '#27bde2';
     this.EOIcolors[3] = '#3caea3';
+    this.EOIcolors[4] = '#173f5f';
+    this.EOIcolors[5] = '#4d9f3b';
   }
 
   constructor() { 
