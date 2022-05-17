@@ -15,7 +15,7 @@
                 inputTitle="Short name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly || !this._dataControlService.isAdmin"
                 [maxWords]="3"
                 ></ibdc-input-field>
             </div>
@@ -25,7 +25,7 @@
                 inputTitle="Initiative name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'name'"
-                [readOnlyVariable]="this._initiativesService?.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService?.initiative.readonly  || !this._dataControlService.isAdmin"
                 [maxWords]="50"
                 ></ibdc-text-area-field>
             </div>
