@@ -19,8 +19,8 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
   @Column({type: 'int'})
   initvStgId: number;
 
-  @Column({type: 'text'})
-  type_melia: string;
+  // @Column({type: 'text'})
+  // type_melia: string;
 
   @Column({type: 'int'})
   type_melia_id: number;

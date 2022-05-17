@@ -1964,7 +1964,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         newMeliaStudiesActivities.id = element.id ? element.id : null;
         newMeliaStudiesActivities.initvStgId = initvStg.id;
-        newMeliaStudiesActivities.type_melia = element.type_melia;
+        // newMeliaStudiesActivities.type_melia = element.type_melia;
+        newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
         newMeliaStudiesActivities.result_title = element.result_title;
         newMeliaStudiesActivities.anticipated_year_completion =
           element.anticipated_year_completion;
