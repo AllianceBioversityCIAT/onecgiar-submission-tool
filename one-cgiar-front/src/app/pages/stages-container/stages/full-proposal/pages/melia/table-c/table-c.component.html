@@ -2,6 +2,11 @@
 
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <ibdc-alert [options]="{htmlText:this.htmlText, type:'info'}"></ibdc-alert> -->
+    <div class="alert_container" style="margin: 20px 0 35px 0;">
+        <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                                type:'info'}"></ibdc-alert>
+    </div>
+      
     <div class="center_flex" style="margin: 30px 0;">
         <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
