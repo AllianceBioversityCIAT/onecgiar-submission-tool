@@ -38,7 +38,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     },
     {
       attribute: 'updated_response',
-      name: "Q2 update responses",
+      name: "Updated Response based on progress after initial 6 month inception to 30 June",
+      required: true,
+      styles:{'min-width':'200px'}
     }
   ];
 
