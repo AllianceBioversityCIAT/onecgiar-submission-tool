@@ -1,10 +1,7 @@
 <div class="section-container animate__animated animate__fadeIn" *ngIf="!showForm">
   <app-fp-work-package-sekelton></app-fp-work-package-sekelton>
 </div>
-    <div class="alert_container" style="margin: 0 0 35px 0;">
-      <ibdc-alert [options]="{text:'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new windows where you will be able to edit your ToC.', 
-                              type:'info'}"></ibdc-alert>
-    </div>
+
     <form  [formGroup]="workPackageForm" (ngSubmit)="updateWp()" class="general-information-form" *ngIf="showForm">
       <div class="row">
         <div class="col-sm-5">
