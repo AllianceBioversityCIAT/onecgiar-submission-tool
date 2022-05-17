@@ -7,7 +7,7 @@
     class="header section_title" 
     (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)" [routerLink]="this.haveContent ? null : this.customRouterLink">
         <div class="line"></div>
-        <div [ngStyle]="this.type == 'sub-section' ?'':{'background' : '#5cc5602e', 'border-radius':'10px'}" class="button_information 
+        <div [ngStyle]="this.type == 'sub-section' ?'':{'padding': '0px 5px', 'background' : '#5cc5602e', 'border-radius':'10px'}" class="button_information 
         {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_text active_section' : ''}}  
         {{ !this.collapse && this.haveContent ? 'active_section_content':''}}">
             <div class="title">
