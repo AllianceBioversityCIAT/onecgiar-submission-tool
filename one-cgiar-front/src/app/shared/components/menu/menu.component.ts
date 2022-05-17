@@ -177,7 +177,7 @@ export class MenuComponent implements OnInit {
 
   }
 
-  mapDataInMenu(list, attributeName:"subsections"|"dynamicList", stageId:number, sectionId?:number, subSectionId?:number ) {
+  mapDataInMenu(list, attributeName:"subsections"|"dynamicList"|"reports", stageId:number, sectionId?:number, subSectionId?:number ) {
     if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let elementFinded;
     elementFinded = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId);
@@ -282,43 +282,52 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu( [{
           display_name: 'Risk assessment preview',
           description: 'mpara-reports'
-        }],"subsections",3, 9)
+        }],"reports",3, 9)
 
         this.mapDataInMenu( [{
           display_name: 'Risk assessment preview',
           description: 'mpara-reports'
-        }],"subsections",4, 27)
+        }],"reports",4, 27)
 
         this.mapDataInMenu([{
           display_name: 'Human Resources preview',
           description: 'human-resources-reports'
-        }],"subsections",3, 15)
+        }],"reports",3, 15)
 
         this.mapDataInMenu([{
           display_name: 'Human Resources preview',
           description: 'human-resources-reports'
-        }],"subsections",4, 29)
-
+        }],"reports",4, 29)
 
         this.mapDataInMenu( [
-          {
-            name: 'Partners list summary report',
-            frontRoute: 'is-reports'
-          },
           {
           name: 'Partners not related to any Impact Area',
           frontRoute: 'partners-no-impact-area'
         }],"dynamicList",3, 7, 16);
 
+
         this.mapDataInMenu( [
           {
             name: 'Partners list summary report',
             frontRoute: 'is-reports'
-          },
+          }
+        ],"reports",3, 7, 16);
+
+
+        this.mapDataInMenu( [
+          {
+            name: 'Partners list summary report',
+            frontRoute: 'is-reports'
+          }
+        ],"reports",4, 25, 50);
+        
+        this.mapDataInMenu( [
           {
           name: 'Partners not related to any Impact Area',
           frontRoute: 'partners-no-impact-area'
         }],"dynamicList",4, 25, 50);
+
+
 
         this.mapDataInMenu(          [{
           name: '10.1.1 Activity breakdown',
@@ -345,12 +354,12 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu( [{
           name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
-        }],"dynamicList",3, 5, 12);
+        }],"reports",3, 5, 12);
 
         this.mapDataInMenu( [{
           name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
-        }],"dynamicList",4, 23, 49);
+        }],"reports",4, 23, 49);
 
         this.mapDataInMenu( [{
           name: 'Projection of benefits summary report',

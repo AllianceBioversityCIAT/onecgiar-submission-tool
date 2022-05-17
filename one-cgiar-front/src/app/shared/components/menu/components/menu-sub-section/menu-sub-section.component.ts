@@ -25,7 +25,8 @@ export class MenuSubSectionComponent implements OnInit {
   @Input() collapse:boolean = true;
   @Input() fieldsCompleted:boolean = false;
   @Input() showTocIcon:boolean = false;
-
+  @Input() type: "sub-section"|"reports" = "sub-section";
+  
   constructor(
     public _menuService:MenuService,
     public router:Router,
