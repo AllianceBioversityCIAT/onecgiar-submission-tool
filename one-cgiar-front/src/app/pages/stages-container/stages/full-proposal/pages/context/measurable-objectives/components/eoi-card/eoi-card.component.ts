@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { EOIData } from '../../interfaces/EOIData.interface';
+import { DataControlService } from '../../../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-eoi-card',
@@ -7,22 +8,15 @@ import { EOIData } from '../../interfaces/EOIData.interface';
   styleUrls: ['./eoi-card.component.scss']
 })
 export class EoiCardComponent implements OnInit {
-  @Input() eoiData:EOIData;
-  constructor() { }
+  @Input() result_type: string;
+  @Input() seemore: boolean = true;
+  constructor(public _dataControlService:DataControlService) { }
 
-  colors = [];
   expand = false;
 
   ngOnInit(): void {
-    this.initColors();
   }
 
-  initColors(){
-    this.colors['WP'] = '#ed553b';
-    this.colors[1] = '#a21942';
-    this.colors[2] = '#27bde2';
-    this.colors[3] = '#3caea3';
-  }
 
 
 }

@@ -1,7 +1,14 @@
 
 
 <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
-<app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+<div class="alert_container" style="margin: 20px 0 35px 0;">
+  <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                          type:'info'}"></ibdc-alert>
+</div>
+
+<div class="center_flex" style="margin-top: 35px;">
+  <app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+</div>
 
 <!-- <h1>dsd</h1>
 <app-read-more-container>
@@ -12,15 +19,16 @@
 
   <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
   <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
+
     <app-item-information-button>
       <div content>
-        
-        <p><Strong>Extra data:</Strong></p>
         <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{toc.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="toc.toc_id"></app-clipboard-icon></div></div>
-        <br>
       </div>
     </app-item-information-button>
-  <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  
+  <div class="center_flex">
+    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  </div>
   <!-- <button (click)="this._utilsService.goToEditToc()">Example Toc Button {{toc?.toc_id}}</button> -->
     <div class="tex_container">
       <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}" textAlign='justify'>

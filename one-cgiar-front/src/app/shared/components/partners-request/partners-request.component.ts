@@ -123,8 +123,11 @@ export class PartnersRequestComponent implements OnInit {
 
     this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
     this._interactionsService.simpleCustomConfirmModal({type:`success`, 
-                                                        title:`Success`,
-                                                        text:`Partner "${this.partnersRequestForm.value.name}" has been requested`});
+                                                        title:`Partner "${this.partnersRequestForm.value.name}" has been requested.`,
+                                                        text:`The partner request was sent successfully.<br> 
+                                                              You will receive a confirmation message as soon as it has been processed. <br><br> 
+
+                                                              The validation process usually takes 1 business day. In case of any questions, please contact the technical support.`});
     this.spinnerService.hide('partners-request');
     this.backAddNewKeyPartner();
     },err=>{

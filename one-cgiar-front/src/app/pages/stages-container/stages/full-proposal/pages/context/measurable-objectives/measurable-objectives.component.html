@@ -1,37 +1,110 @@
-<section-title name="Measurable three-year outcomes" ></section-title>
+<section-title name="Measurable three-year outcomes"></section-title>
 
 
 <div class="section-container animate__animated animate__fadeIn">
-    <app-information-button></app-information-button>
-    <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
 
-    <div class="eoi-list" >
-        <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList"><app-eoi-card [eoiData]="eoiData"></app-eoi-card></div>
+    <app-information-button></app-information-button>
+    <div class="alert_container">
+        <ibdc-alert [options]="{text: 'The End of Initiative Outcomes (EoI Outcomes) listed below are coming from the Theory of Change board. If you want to update them, please click the edit button below.', 
+                                type:'info'}"></ibdc-alert>
+    </div>
+    <div class="center_flex" style="margin-top: 35px;">
+        <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    </div>
+
+    <div class="eoi-list">
+        <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList">
+            <app-eoi-card [result_type]="this.eoiData?.result_type">
+                <div title>{{this.eoiData?.type_name}} - {{this.eoiData?.result_title}}</div>
+                <div visible-content>
+
+                    <div class="eoi-item" style="margin-top: 8px;">
+                        <div class="eoi-item-title">Type name: </div>
+                        <div [style.color]="this._dataControlService.EOIcolors[this.eoiData?.result_type]">
+                            {{this.eoiData?.type_name}}</div>
+                    </div>
+
+                    <div class="eoi-item" *ngIf="this.eoiData?.indicators?.length">
+                        <div class="eoi-item-title">Number of indicators: </div>
+                        <div class="eoi-item-description">{{this.eoiData?.indicators?.length}}</div>
+                    </div>
+
+                    <div class="eoi-item" *ngIf="this.eoiData?.result_description">
+                        <div class="eoi-item-title">Result description: </div>
+                    </div>
+
+                    <div class="eoi-item" style="margin-top: 0px;" *ngIf="this.eoiData?.result_description">
+                        <div class="eoi-item-description">{{this.eoiData?.result_description}}</div>
+                    </div>
+
+                </div>
+                <div expanded-content>
+
+                    <div class="c-info" *ngIf="this.eoiData?.wp_name">
+                        <div class="c-title">Work Package name: </div>
+                        <div class="c-value">{{this.eoiData?.wp_name}}</div>
+                    </div>
+
+                    <div class="c-info" *ngIf="this.eoiData?.wp_acronym">
+                        <div class="c-title">Work Package acronym: </div>
+                        <div class="c-value">{{this.eoiData?.wp_acronym}}</div>
+                    </div>
+
+                    <div class="indicators" *ngIf="this.eoiData?.indicators?.length">
+                        <div class="title">Indicators: </div>
+                        <div class="indicators_list">
+                            <div class="indicator" *ngFor="let indicator of this.eoiData?.indicators">
+                                <div class="data"> <strong>Indicator name:</strong> {{indicator?.indicator_name}}</div>
+                                <div class="data"> <strong>Unit measurement:</strong> {{indicator?.unit_measurement}}
+                                </div>
+                                <div class="data"> <strong>Data source:</strong> {{indicator?.unit_measurement}}</div>
+                                <div class="data"> <strong>Data collection:</strong> {{indicator?.unit_measurement}}
+                                </div>
+                                <div class="data"> <strong>Frequency data collection:</strong>
+                                    {{indicator?.unit_measurement}}</div>
+                                <div class="data"> <strong>Baseline value:</strong> {{indicator?.unit_measurement}}
+                                </div>
+                                <div class="data"> <strong>Baseline year:</strong> {{indicator?.baseline_year}}</div>
+                                <div class="data"> <strong>Target value:</strong> {{indicator?.target_year}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="geoScope">
+                        <div class="title">Geographic scope: </div>
+                        <div
+                            *ngIf="!this.eoiData?.geo_scope?.regions?.length && !this.eoiData?.geo_scope?.countries?.length">
+                            Not provided</div>
+                        <div class="lists">
+
+                            <div class="list custom_scroll" *ngIf="this.eoiData?.geo_scope?.regions?.length">
+                                <div class="title">Region</div>
+                                <div class="item" *ngFor="let region of this.eoiData?.geo_scope?.regions">
+                                    <p>{{region?.region_name}}</p>
+                                </div>
+                            </div>
+
+                            <div class="list custom_scroll" *ngIf="this.eoiData?.geo_scope?.countries?.length">
+                                <div class="title">Countries</div>
+                                <div class="item" *ngFor="let country of this.eoiData?.geo_scope?.countries">
+                                    <p>{{country?.country_name}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </app-eoi-card>
+        </div>
     </div>
 
     <div class="no-data-text" *ngIf="!this.initiativeOutcomeList?.length">
-        <app-text-not-data  text="There are not data"></app-text-not-data>
+        <app-text-not-data text="There are not data"></app-text-not-data>
     </div>
-    <!-- <form [formGroup]="contextForm" (ngSubmit)="upserInfo()" class="general-information-form"> -->
 
-        <!-- <div class="row">
-            <div class="col-12">
-                <app-section-alerts-pack [sectionForm]="contextForm" [extraValidation]="this.extraValidation"></app-section-alerts-pack>
-            </div>
-            <div class="col-sm-12" >
-                <ibdc-textarea *ngIf="showform"
-                    [options]="{inputTitle:'Measurable three-year (End of Initiative) outcomes',readOnlyVariable: _initiativesService.initiative.readonly, editText:true, form:contextForm, formControlName:'smart_objectives', maxWords:250,
-                    description:'Update objective statement submitted in the pre-concept with clear 3-year measurable (SMART) outcomes. Ensure this is consistent with the ToC diagrams and narrative, and MELIA sections.'}">
-                </ibdc-textarea>
-            </div>
-        </div> -->
-
-        <!-- <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
-
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
-        </div>
-    </form> -->
-    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
+    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br>
+        <p style="font-size: 20px; color: white">Loading data...</p>
+    </ngx-spinner>
 </div>
-

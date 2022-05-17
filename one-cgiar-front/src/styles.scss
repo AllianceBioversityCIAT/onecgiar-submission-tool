@@ -303,3 +303,25 @@ button {
   background: #555;
 }
 
+
+.eoi-item{
+  // display: flex;
+  margin-top: 12px;
+  .eoi-item-title{
+    color: rgb(17, 17, 17);
+    font-weight: 700;
+    margin-right: 5px;
+    width: max-content;
+  }
+  
+  .eoi-item-description{
+    color: rgb(109, 109, 109);
+  }
+}
+
+.eoi-list{
+  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
+}

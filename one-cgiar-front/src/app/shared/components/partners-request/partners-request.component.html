@@ -9,6 +9,8 @@
     <div class="container">
         <div class="row" *ngIf="showForm">
             <div class="col-12">
+                <ibdc-alert [options]="{htmlText:'Before requesting a new partner, please ensure it does not already exist in the list with another name. <br><br>Please also enter the institution as the legal entity. <br><br>The name of the institution should be in its official language. (e.g. For CIAT: Centro Internacional de Agricultura Tropical).', 
+                                        type:'info'}"></ibdc-alert>
                 <ibdc-alert *ngIf="partnersRequestForm.invalid" class="animate__animated animate__bounceIn"  [options]="{text: 'To send the partner request, all fields must be completed. ', type:'warning'}"></ibdc-alert> 
                 <ibdc-alert *ngIf="!partnersRequestForm.invalid" class="animate__animated animate__bounceIn"  [options]="{text: 'All fields are completed', type:'success'}"></ibdc-alert> 
                 <br>
