@@ -302,7 +302,7 @@ export class MenuComponent implements OnInit {
 
         this.mapDataInMenu( [
           {
-            name: 'Partners preview',
+            name: 'Partners list summary report',
             frontRoute: 'is-reports'
           },
           {
@@ -312,7 +312,7 @@ export class MenuComponent implements OnInit {
 
         this.mapDataInMenu( [
           {
-            name: 'Partners preview',
+            name: 'Partners list summary report',
             frontRoute: 'is-reports'
           },
           {
@@ -343,22 +343,22 @@ export class MenuComponent implements OnInit {
         );
 
         this.mapDataInMenu( [{
-          name: 'Geographic scope preview',
+          name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
         }],"dynamicList",3, 5, 12);
 
         this.mapDataInMenu( [{
-          name: 'Geographic scope preview',
+          name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
         }],"dynamicList",4, 23, 49);
 
         this.mapDataInMenu( [{
-          name: 'Projection of benefits preview',
+          name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
         }],"dynamicList",3, 1, 8);
 
         this.mapDataInMenu( [{
-          name: 'Projection of benefits preview',
+          name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
         }],"dynamicList",4, 21, 46);
 
