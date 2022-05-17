@@ -1878,3 +1878,26 @@ function getRepoConstStage(tableName: string) {
       break;
   }
 }
+
+/**
+ * CLARISA MELIA STUDY TYPES
+ * @param req
+ * @param res
+ * @returns meliaStudyTypes
+ */
+
+export const getMeliaStudyTypes = async (req: Request, res: Response) => {
+  try {
+    //Get MELIA Study Types from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let meliaStudyTypes = await initiativeshandler.requestMeliaStudyTypes();
+
+    res.json(new ResponseHandler('MELIA Study Types', {meliaStudyTypes}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+};

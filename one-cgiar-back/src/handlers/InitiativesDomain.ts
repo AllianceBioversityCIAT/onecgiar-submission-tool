@@ -422,4 +422,15 @@ export class InitiativeHandler extends InitiativeStageHandler {
       throw new BaseError('Get Preview Partners', 400, error.message, false);
     }
   }
+
+  requestMeliaStudyTypes() {
+    try {
+      const meliaStudyTypesQuery = `SELECT * FROM clarisa_melia_study_types`;
+      const meliaStudyTypes = this.queryRunner.query(meliaStudyTypesQuery);
+      return meliaStudyTypes;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
+    }
+  }
 }
