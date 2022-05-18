@@ -33,8 +33,14 @@
                             [selectableList]="this.meliaStudyTypes"
                             ></ibdc-select-field>
                         </div>
+                        <div class="mb-4" *ngIf="item.type_melia_id == 8">
+                            <ibdc-text-area-field inputTitle="Specify the MELIA study or activity" [objectItem]="item"
+                                [objectAtributteName]="'other_melia'"
+                                [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                            </ibdc-text-area-field>
+                        </div>
 
-                        <div class="field" *ngFor="let field of attr_list_config | slice:1">
+                        <div class="field" *ngFor="let field of attr_list_config | slice:2">
                             <ibdc-text-area-field [inputTitle]="field.name" [objectItem]="item"
                                 [objectAtributteName]="field?.attribute"
                                 [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">

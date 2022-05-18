@@ -2016,7 +2016,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
       msa.initvStgId,
       msa.type_melia_id,
-      concat(cmst.name,ifnull(concat(' - ', msa.other_melia), '')) as type_melia,
+      IF(msa.type_melia_id = 8,concat(cmst.name,ifnull(concat(' - ', if(msa.other_melia = '', null,msa.other_melia)), '')), cmst.name) as type_melia,
       msa.other_melia,
       msa.result_title,
       msa.anticipated_year_completion,

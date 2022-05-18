@@ -36,7 +36,6 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       name: "How the MELIA study or activity will inform management decisions and contribute to internal learning"
     },
   ]
-
   showTableViewVariable = true;
   meliaStudyTypes = [];
   constructor(
