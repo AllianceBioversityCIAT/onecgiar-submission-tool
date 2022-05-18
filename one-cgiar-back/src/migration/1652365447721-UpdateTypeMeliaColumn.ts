@@ -17,10 +17,14 @@ export class UpdateTypeMeliaColumn1652365447721 implements MigrationInterface {
     studyTypes = studyTypes;
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("ALTER TABLE `melia_studies_activities` ADD `type_melia_id` int after initvStgId");
-        await queryRunner.query("ALTER TABLE `melia_studies_activities` ADD CONSTRAINT `FK_fc24e5689ea5cc735ddbad7e99b` FOREIGN KEY (`type_melia_id`) REFERENCES `clarisa_melia_study_types`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        
+    
         const meliaRepository = await getRepository(MeliaStudiesActivities);
-        const allMeliaStudies: any = await meliaRepository.find();
+
+        const queryMelias = `SELECT id,
+        initvStgId,
+        type_melia
+        FROM melia_studies_activities`
+        const allMeliaStudies: any = await queryRunner.query(queryMelias);
 
         console.log(studyTypes);
         try {
@@ -41,7 +45,7 @@ export class UpdateTypeMeliaColumn1652365447721 implements MigrationInterface {
         }
 
 
-        // await queryRunner.query("ALTER TABLE `melia_studies_activities` DROP COLUMN `type_melia`");
+        await queryRunner.query("ALTER TABLE `melia_studies_activities` DROP COLUMN `type_melia`");
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {}

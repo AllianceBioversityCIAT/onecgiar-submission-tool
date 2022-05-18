@@ -40,10 +40,6 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
   @Column({type: 'tinyint'})
   active: boolean;
 
-  @ManyToOne(type => ClarisaMeliaStudyTypes)
-  @JoinColumn({name: 'type_melia_id'})
-  typeMelia: ClarisaMeliaStudyTypes;
-
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;

@@ -19,6 +19,7 @@
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "migrations:create": "npm run typeorm -- migration:create -n",
+        "migrations:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate -n",
         "docker:build": "docker build -t onecgiarback .",
         "docker:run": "docker run -dti --name onecgiarapi -p 3000:3300 onecgiarback"
     },
