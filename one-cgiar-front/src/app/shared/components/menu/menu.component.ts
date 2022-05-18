@@ -280,22 +280,22 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu(tableAISDCImpactArea,'dynamicList', 4, 26, 62 );
 
         this.mapDataInMenu( [{
-          display_name: 'Risk assessment preview',
+          display_name: 'Risk assessment report',
           description: 'mpara-reports'
         }],"reports",3, 9)
 
         this.mapDataInMenu( [{
-          display_name: 'Risk assessment preview',
+          display_name: 'Risk assessment report',
           description: 'mpara-reports'
         }],"reports",4, 27)
 
         this.mapDataInMenu([{
-          display_name: 'Human Resources preview',
+          display_name: 'Human Resources report',
           description: 'human-resources-reports'
         }],"reports",3, 15)
 
         this.mapDataInMenu([{
-          display_name: 'Human Resources preview',
+          display_name: 'Human Resources report',
           description: 'human-resources-reports'
         }],"reports",4, 29)
 
