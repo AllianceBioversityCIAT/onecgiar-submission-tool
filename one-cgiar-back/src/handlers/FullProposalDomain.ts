@@ -1964,8 +1964,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         newMeliaStudiesActivities.id = element.id ? element.id : null;
         newMeliaStudiesActivities.initvStgId = initvStg.id;
-        // newMeliaStudiesActivities.type_melia = element.type_melia;
         newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
+        newMeliaStudiesActivities.other_melia = element.other_melia;
         newMeliaStudiesActivities.result_title = element.result_title;
         newMeliaStudiesActivities.anticipated_year_completion =
           element.anticipated_year_completion;
@@ -2015,8 +2015,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
       msa.initvStgId,
-      type_melia_id,
-      cmst.name as type_melia,
+      msa.type_melia_id,
+      concat(cmst.name,ifnull(concat(' - ', msa.other_melia), '')) as type_melia,
+      msa.other_melia,
       msa.result_title,
       msa.anticipated_year_completion,
       msa.co_delivery,
