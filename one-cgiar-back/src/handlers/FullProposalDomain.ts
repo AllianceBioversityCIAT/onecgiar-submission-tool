@@ -1964,7 +1964,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         newMeliaStudiesActivities.id = element.id ? element.id : null;
         newMeliaStudiesActivities.initvStgId = initvStg.id;
-        newMeliaStudiesActivities.type_melia = element.type_melia;
+        newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
+        newMeliaStudiesActivities.other_melia = element.other_melia;
         newMeliaStudiesActivities.result_title = element.result_title;
         newMeliaStudiesActivities.anticipated_year_completion =
           element.anticipated_year_completion;
@@ -2012,9 +2013,22 @@ export class ProposalHandler extends InitiativeStageHandler {
     );
 
     try {
-      const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
-        initvStgId: initvStg.id
-      });
+      const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
+      msa.initvStgId,
+      msa.type_melia_id,
+      IF(msa.type_melia_id = 8,concat(cmst.name,ifnull(concat(' - ', if(msa.other_melia = '', null,msa.other_melia)), '')), cmst.name) as type_melia,
+      msa.other_melia,
+      msa.result_title,
+      msa.anticipated_year_completion,
+      msa.co_delivery,
+      msa.management_decisions_learning,
+      msa.active
+      FROM melia_studies_activities msa 
+      left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
+      WHERE msa.initvStgId = ${initvStg.id}`);
+      // const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
+      //   initvStgId: initvStg.id
+      // });
 
       return meliaStudiesActivities;
     } catch (error) {

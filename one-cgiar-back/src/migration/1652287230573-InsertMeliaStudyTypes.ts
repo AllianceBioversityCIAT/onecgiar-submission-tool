@@ -17,7 +17,7 @@ export class InsertMeliaStudyTypes1652287230573 implements MigrationInterface {
           name: 'Scaling readiness assessment'
         },
         {
-          name: 'Tracing of scaling activities, as base for long-term, large scale impact studies '
+          name: 'Tracing of scaling activities, as base for long-term, large scale impact studies'
         },
         {
           name: 'Causal Impact Assessment learning studies'
