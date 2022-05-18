@@ -26,6 +26,9 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
   type_melia_id: number;
 
   @Column({type: 'text'})
+  other_melia: string;
+
+  @Column({type: 'text'})
   result_title: string;
 
   @Column({type: 'text'})
