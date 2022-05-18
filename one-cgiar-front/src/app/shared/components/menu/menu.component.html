@@ -18,6 +18,7 @@
                     <div content>
                         <app-menu-sub-section 
                         *ngFor="let subsections of sections?.subsections"
+                        [noTitleDisplay]="subsections?.subSectionId == 16"
                         [showTocIcon]="validateShowIcon(subsections?.subSectionId)"
                         [fieldsCompleted]="subsections?.fieldsCompleted" 
                         [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  
