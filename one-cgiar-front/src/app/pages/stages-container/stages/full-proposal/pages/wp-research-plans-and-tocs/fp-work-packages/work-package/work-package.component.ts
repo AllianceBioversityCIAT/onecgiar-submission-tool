@@ -44,7 +44,7 @@ export class WorkPackageComponent implements OnInit {
     this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
-    }, 10);
+    }, 100);
     
   }
 
@@ -61,14 +61,8 @@ export class WorkPackageComponent implements OnInit {
   deleteCurrentWP() {
 
     let body = {
-      // acronym: "Nuevo y",
-      // name: "",
-      // pathway_content: "",
-      // is_global: false,
       id: Number(this._wpDataControlService.wpId),
       active: false,
-      // regions: [],
-      // countries: []
     }
 
     console.log(this._wpDataControlService.wpId)

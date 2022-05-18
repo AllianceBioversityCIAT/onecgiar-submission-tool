@@ -2,9 +2,17 @@
 
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <ibdc-alert [options]="{htmlText: this.htmlText, type:'info'}"></ibdc-alert> -->
-    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    <div class="alert_container" style="margin: 20px 0 10px 0;">
+        <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                                type:'info'}"></ibdc-alert>
+    </div>
+      
+    <div class="center_flex" style="margin: 30px 0 10px 0;">
+        <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    </div>
 
     <br>
+
     <div class="box ibd-shadow-2">
         <div class="title">
             Action Area outcomes
@@ -15,12 +23,28 @@
         <!-- <div class="result_title">
             <div style="font-size: 11px;"><strong style="margin-right: 5px; font-size: 14px;">Outcome name:</strong>Lorem ipsum</div>
        </div> -->
-        <div class="values">
-            <div *ngFor="let actionAreasOutcomesIndicator of tableBData?.action_areas_outcomes_indicators" class="value-item box ibd-shadow-1">
-                <div><strong>Action area name: </strong>{{actionAreasOutcomesIndicator?.action_area_name}}</div>
-                <div class="outcome_statement"><strong>Outcome statement: </strong>{{actionAreasOutcomesIndicator?.outcome_statement}}</div>
-                <div class="outcome_indicator_statement"><strong>Outcome indicator statement: </strong>{{actionAreasOutcomesIndicator?.outcome_indicator_statement}}</div>
-            </div>
+
+       <div class="eoi-list">
+        <div class="eoi-card"
+            *ngFor="let actionAreasOutcomesIndicator of this.tableBData?.action_areas_outcomes_indicators">
+            <app-eoi-card [result_type]="4" [seemore]="false">
+                <div title>{{this.actionAreasOutcomesIndicator.action_area_name}}</div>
+                <div visible-content>
+                    <div class="eoi-item">
+                        <div class="eoi-item-title">Outcome statement: </div>
+                        <div class="eoi-item-description">{{actionAreasOutcomesIndicator?.outcome_statement}}</div>
+                    </div>
+                    <div class="eoi-item">
+                        <div class="eoi-item-title">Outcome indicator statement:</div>
+                        <div class="eoi-item-description">{{actionAreasOutcomesIndicator?.outcome_indicator_statement}}</div>
+                    </div>
+                </div>
+            </app-eoi-card>
         </div>
     </div>
+
+    </div>
+    <br><br><br><br><br>
+
 </div>
+

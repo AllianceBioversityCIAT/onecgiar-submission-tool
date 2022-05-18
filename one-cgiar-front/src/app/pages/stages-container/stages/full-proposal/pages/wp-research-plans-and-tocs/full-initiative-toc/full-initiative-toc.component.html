@@ -1,6 +1,12 @@
 <section-title name="Full initiative Toc" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-  <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  <div class="alert_container" style="margin: 20px 0 35px 0;">
+    <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                            type:'info'}"></ibdc-alert>
+  </div>
+  <div class="center_flex" style="margin-top: 35px;">
+    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  </div>
   <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
   <div class="toc_list">
     <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
@@ -8,7 +14,6 @@
       
       <app-item-information-button>
         <div content>
-          <p><Strong>Extra data:</Strong></p>
           <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{tocitem?.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="tocitem?.toc_id"></app-clipboard-icon></div></div>
           <br>
         </div>

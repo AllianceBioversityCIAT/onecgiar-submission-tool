@@ -157,12 +157,12 @@ export class StagesMenuComponent implements OnInit {
     
   }
 
-  managerAccesible() {
-    const userLeadColead = this.initiativesSvc.initiative.users.find(usr => usr.userId == this.user.id);
-    if (this.user.roles.find(r => r.acronym === 'ADM')) return true;
-    if (userLeadColead == null) return false;
-    return !this.initiativesSvc.initiative.readonly;
-  }
+  // managerAccesible() {
+  //   const userLeadColead = this.initiativesSvc.initiative.users.find(usr => usr.userId == this.user.id);
+  //   if (this.user.roles.find(r => r.acronym === 'ADM')) return true;
+  //   if (userLeadColead == null) return false;
+  //   return !this.initiativesSvc.initiative.readonly;
+  // }
 
   toggleMenu(menu: HTMLElement) {
     menu.classList.toggle('showMenu');

@@ -7,7 +7,6 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class EditTocButtonComponent implements OnInit {
   @Input() title: string = 'Edit';
-  @Input() showAlert: boolean = true;
   imageLoad : boolean = false;
   constructor() { }
 

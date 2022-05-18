@@ -27,6 +27,11 @@
         </div>
 
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+
+        <div *ngIf="_initiativesService.initiative.stageId == 4" class="alert_container" style="margin: 20px 0 35px 0;">
+            <ibdc-alert [options]="{text: 'For each of the recommendations received by ISDC, please write a response based on progress after initial 6 months. Please make sure all recommendations are responded accordingly, in order to officially submit this initiative.', 
+                                    type:'info'}"></ibdc-alert>
+        </div>
         
 <div *ngIf="_initiativesService.initiative.stageId == 4">
     <app-compact-information-table-view 
