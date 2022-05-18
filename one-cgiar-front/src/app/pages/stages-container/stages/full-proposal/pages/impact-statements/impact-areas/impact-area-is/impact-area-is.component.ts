@@ -24,6 +24,9 @@ export class ImpactAreaIsComponent implements OnInit {
   savedList = [];
   iaID;
   extraValidation = false;
+
+  firstTab = true;
+
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
