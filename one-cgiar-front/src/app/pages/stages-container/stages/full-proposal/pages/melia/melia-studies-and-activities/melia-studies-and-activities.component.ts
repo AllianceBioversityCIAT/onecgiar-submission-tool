@@ -36,9 +36,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       name: "How the MELIA study or activity will inform management decisions and contribute to internal learning"
     },
   ]
-
   showTableViewVariable = true;
-
+  meliaStudyTypes = [];
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService
@@ -47,6 +46,11 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.getMeliaStudyTypes().subscribe(respMeliaStudyTypes => {
+      
+      this.meliaStudyTypes = respMeliaStudyTypes.response.meliaStudyTypes;
+      console.log(this.meliaStudyTypes);
+    });
   }
 
   getTabIndex(e){
@@ -63,6 +67,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
         id: null,
         type_melia: '',
+        type_melia_id: '',
         result_title: '',
         anticipated_year_completion: '',
         co_delivery: '',

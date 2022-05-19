@@ -26,6 +26,7 @@ export class MenuSubSectionComponent implements OnInit {
   @Input() fieldsCompleted:boolean = false;
   @Input() showTocIcon:boolean = false;
   @Input() type: "sub-section"|"reports" = "sub-section";
+  @Input() noTitleDisplay: boolean = false;
   
   constructor(
     public _menuService:MenuService,

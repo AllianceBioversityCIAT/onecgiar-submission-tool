@@ -1,18 +1,14 @@
-<section-title name="Melia studies and activities" ></section-title>
+<section-title name="Melia studies and activities"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    <app-compact-information-table-view 
-    (buttonViewEvent)="this.getTabIndex($event)"
-    (onEdit)="this.getItemToExpand($event)"
-    [list]="this.list"
-    [attr_list_config]="this.attr_list_config"
-    [showTableViewVariable]="this.showTableViewVariable"
-    
-    ></app-compact-information-table-view>
+    <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
+        (onEdit)="this.getItemToExpand($event)" [list]="this.list" [attr_list_config]="this.attr_list_config"
+        [showTableViewVariable]="this.showTableViewVariable"></app-compact-information-table-view>
 
 
-    <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">No data</h1>
+    <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">No data
+    </h1>
 
     <div class="items animate__animated animate__fadeIn" *ngIf="!showTableViewVariable">
         <div class="item" *ngFor="let item of list; let i=index">
@@ -21,17 +17,34 @@
             <app-collapsible-container [collapse]="item?.collapse">
                 <div header>Melia studies and activity {{i+1}}</div>
                 <div content>
-                    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly" [ngCustomStyle]="{'margin-top':'12px'}"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+                    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly"
+                        [ngCustomStyle]="{'margin-top':'12px'}" type="delete" (action)="deleteItem(item, i)"
+                        [confirmDeleteModal]="true"></app-button-edit-or-delete>
                     <br><br>
                     <div class="fields">
-                        <div class="field" *ngFor="let field of attr_list_config">
-                            <ibdc-text-area-field 
-                            [inputTitle]="field.name" 
-                            [objectItem]="item"  
-                            [objectAtributteName]="field?.attribute"
-                            [readOnlyVariable]="this._initiativesService?.initiative.readonly"
-                            [maxWords]="50"
-                        ></ibdc-text-area-field>
+                        
+                        <div class="mb-4">
+                            <ibdc-select-field class="field"
+                            [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                            [objectItem]="item"  [objectAtributteName]="'type_melia'"  [objectAtributteId]="'type_melia_id'"
+                            [inputTitle]="attr_list_config[0].name"
+                            selectableListAtributteName = 'name'
+                            selectableListAtributteId = 'id'
+                            [selectableList]="this.meliaStudyTypes"
+                            ></ibdc-select-field>
+                        </div>
+                        <div class="mb-4" *ngIf="item.type_melia_id == 8">
+                            <ibdc-text-area-field inputTitle="Specify the MELIA study or activity" [objectItem]="item"
+                                [objectAtributteName]="'other_melia'"
+                                [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                            </ibdc-text-area-field>
+                        </div>
+
+                        <div class="field" *ngFor="let field of attr_list_config | slice:2">
+                            <ibdc-text-area-field [inputTitle]="field.name" [objectItem]="item"
+                                [objectAtributteName]="field?.attribute"
+                                [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                            </ibdc-text-area-field>
                         </div>
                     </div>
                 </div>
@@ -43,12 +56,14 @@
     </div>
 
     <div style="margin-top: 20px;" *ngIf="!this._initiativesService.initiative.readonly">
-        <app-add-button  name="Add Melia studies and activity" (click)="addItem()"></app-add-button>
+        <app-add-button name="Add Melia studies and activity" (click)="addItem()"></app-add-button>
     </div>
 
 
     <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly" (click)="saveSection()">
-        <ibdc-save-button [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+        <ibdc-save-button
+            [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+        </ibdc-save-button>
     </div>
 
 </div>

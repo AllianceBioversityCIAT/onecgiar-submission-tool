@@ -282,6 +282,9 @@ router.get('/risks-theme', [checkJwt], initiatives.GetRisksTheme);
 //Get Projected Benefits
 router.get('/projected-benefits', [checkJwt], initiatives.getProjectedBenefits);
 
+//get Melia Study Types
+router.get('/melia/study-types', [checkJwt], initiatives.getMeliaStudyTypes);
+
 /**
  *
  * CLARISA
