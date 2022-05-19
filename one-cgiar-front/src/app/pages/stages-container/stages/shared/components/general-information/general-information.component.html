@@ -42,8 +42,8 @@
                                 <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not provided'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon *ngIf="this._dataControlService.isAdmin">edit</mat-icon>
+                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                                 
                             </div>
@@ -60,8 +60,8 @@
                                 <div style="min-width: max-content;">
                                     <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not provided'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon *ngIf="this._dataControlService.isAdmin">edit</mat-icon>
+                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                             </div>
                         </mat-card>

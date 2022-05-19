@@ -41,7 +41,7 @@ export class GeneralInformationComponent implements OnInit {
       acronym: null
     },
     budget:{
-     value: '' 
+     value: '0' 
     },
     geoScope:{
       countries:[],
@@ -170,7 +170,7 @@ export class GeneralInformationComponent implements OnInit {
       action_area_id: this.body.generalInformation.action_area_id,
       active: true,
       budgetId: this.body.budget.id,
-      budget_value: this.body.budget.value,
+      budget_value:  this.body.budget.value === null || this.body.budget.value === undefined ? '0' :this.body.budget.value,
       col_name: "budget",
       generalInformationId: this.body.generalInformation.generalInformationId,
       is_global: this.body.geoScope.goblalDimension,
