@@ -560,7 +560,7 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopes(regions?, countries?) {
-    console.log(regions, countries);
+
 
     let initvStgRegions, initvStgCountries;
 

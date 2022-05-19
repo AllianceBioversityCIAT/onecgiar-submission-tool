@@ -1,4 +1,3 @@
-import {get} from 'https';
 import _ from 'lodash';
 import {getRepository, In, Not} from 'typeorm';
 import * as entities from '../entity';
@@ -324,14 +323,14 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `,
         WPquery = `
         SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
-        wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
+        wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
         wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
         wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
            on wp.initvStgId  = init.id
         WHERE wp.active = 1
-        ORDER BY initiativeId asc
+        ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc
                     `;
 
       // var workPackages = await wpRepo.find({ where: { active: 1 } });
