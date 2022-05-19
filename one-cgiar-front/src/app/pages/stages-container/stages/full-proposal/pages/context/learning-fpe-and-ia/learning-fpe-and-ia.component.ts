@@ -57,6 +57,7 @@ export class LearningFpeAndIaComponent implements OnInit {
 
   upserInfo(){
     //save narrative
+    console.log(this.contextForm.value);
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid && this.extraValidation?
