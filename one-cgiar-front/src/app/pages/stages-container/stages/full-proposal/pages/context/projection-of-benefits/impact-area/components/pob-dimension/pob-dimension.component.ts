@@ -43,7 +43,7 @@ export class PobDimensionComponent implements OnInit {
     itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
     itemLink.addEventListener('animationend', () => {
       itemLink.style.maxHeight = '0px';
-      if (object.descriptionID) {
+      if (object.id) {
         object.edited = true;
         object.active = false;
         setTimeout(() => {
