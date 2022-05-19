@@ -756,11 +756,12 @@ export class ReplicationDomain extends InitiativeStageHandler {
 
         for (let index = 0; index < impactStatements.length; index++) {
           const is = impactStatements[index];
+          partnersArray = [];
 
           for (let index = 0; index < is.partners.length; index++) {
-            // let partners = new Partners();
-            const pts = is.partners[index];
-            pts.id = null;
+            let partners = new Partners();
+            partners = is.partners[index];
+            partners.id = null;
             // partners.id = null;
             // partners.impact_strategies_id = pts.impact_strategies_id;
             // partners.institutions_id = pts.code;
@@ -773,7 +774,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
             // partners.type_name = pts.institutionType;
             // partners.active = pts.active;
 
-            partnersArray.push(pts);
+            partnersArray.push(partners);
           }
 
           isArray.push(
