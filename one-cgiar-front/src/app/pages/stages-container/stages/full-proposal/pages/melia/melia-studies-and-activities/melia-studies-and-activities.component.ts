@@ -4,6 +4,7 @@ import { AttributesListConfiguration } from '../../../../../../../shared/compone
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activities.interface';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '@app/shared/services/interactions.service';
 
 
 @Component({
@@ -40,7 +41,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   meliaStudyTypes = [];
   constructor(
     public _initiativesService:InitiativesService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    private _interactionsService:InteractionsService,
     ){
     this.getmeliaStudActiByInitId();
   }
@@ -99,7 +101,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   saveSection(){
     console.log(this.list)
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp=>{
-      console.log(resp)
+      console.log(resp);
+      this._interactionsService.successMessage('MELIA studies and activities has been saved');
+      // this._interactionsService.warningMessage('MELIA studies and activities has been saved, but there are incomplete fields');
       this.getmeliaStudActiByInitId();
     })
 
