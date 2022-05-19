@@ -166,13 +166,13 @@ export class ReplicationDomain extends InitiativeStageHandler {
       );
 
       //11. Replication Financial Resources
-      const replicationFinancialResources =
+      /*const replicationFinancialResources =
         await this.replicationFinancialResources(
           initvStg,
           newInitvStg,
           initvStg.id,
           newInitvStg.id
-        );
+        );*/
 
       //12. Inactive initiative in the previous stage
       const inactivePreviousInitiative = await this.inactivePreviousInitiative(
@@ -193,8 +193,7 @@ export class ReplicationDomain extends InitiativeStageHandler {
         replicationManagementPlan,
         replicationPolicyCompliance,
         replicationHumanResources,
-        replicationFinancialResources,
-        inactivePreviusInitiative: inactivePreviousInitiative
+        inactivePreviousInitiative: inactivePreviousInitiative
       };
     } catch (error) {
       throw new BaseError(

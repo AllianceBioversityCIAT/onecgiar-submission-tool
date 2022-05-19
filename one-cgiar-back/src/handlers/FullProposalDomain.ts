@@ -2643,7 +2643,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertFRArr = [],
         finYearArr = [];
       upsertArray.forEach((upsEle) => {
-        // console.log(upsEle)
+        //console.log(upsEle)
         let objt = {
           id: null,
           yearsArray: []
@@ -2668,7 +2668,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
-              // console.log(val);
+              //console.log(val);
               _year.active = true;
               _year.year = key;
               _year.value = val;
@@ -2690,7 +2690,6 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       await Promise.all(upsertedYears);
-      // console.log(upsertedYears)
 
       const financialResourcesQuery = ` 
             SELECT
