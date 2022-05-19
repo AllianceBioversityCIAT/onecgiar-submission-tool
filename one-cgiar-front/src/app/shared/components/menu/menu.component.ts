@@ -329,27 +329,27 @@ export class MenuComponent implements OnInit {
 
 
 
-        this.mapDataInMenu(          [{
-          name: '10.1.1 Activity breakdown',
-          frontRoute: 'activity-breakdown',
-        },
-        {
-          name: '10.1.2 Geography breakdown',
-          frontRoute: 'geography-breakdown',
-        }],"dynamicList",3, 4, 27,
+        // this.mapDataInMenu(          [{
+        //   name: '10.1.1 Activity breakdown',
+        //   frontRoute: 'activity-breakdown',
+        // },
+        // {
+        //   name: '10.1.2 Geography breakdown',
+        //   frontRoute: 'geography-breakdown',
+        // }],"dynamicList",3, 4, 27,
 
-        );
+        // );
 
-        this.mapDataInMenu(          [{
-          name: '10.1.1 Activity breakdown',
-          frontRoute: 'activity-breakdown',
-        },
-        {
-          name: '10.1.2 Geography breakdown',
-          frontRoute: 'geography-breakdown',
-        }],"dynamicList",4, 22, 61,
+        // this.mapDataInMenu(          [{
+        //   name: '10.1.1 Activity breakdown',
+        //   frontRoute: 'activity-breakdown',
+        // },
+        // {
+        //   name: '10.1.2 Geography breakdown',
+        //   frontRoute: 'geography-breakdown',
+        // }],"dynamicList",4, 22, 61,
 
-        );
+        // );
 
         this.mapDataInMenu( [{
           name: 'Geographic scope summary report',

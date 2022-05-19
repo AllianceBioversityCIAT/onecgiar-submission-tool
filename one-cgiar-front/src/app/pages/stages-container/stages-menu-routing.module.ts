@@ -119,10 +119,10 @@ const fullProposalRoutes = [
     path: 'human-resources',
     loadChildren: () => import('./stages/full-proposal/pages/human-resources/human-resources.module').then(mod => mod.HumanResourcesModule),
   },
-  {
-    path: 'financial-resources',
-    loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
-  },
+  // {
+  //   path: 'financial-resources',
+  //   loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+  // },
   {
     path: 'policy-compliance-and-oversight',
     loadChildren: () => import('./stages/full-proposal/pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
