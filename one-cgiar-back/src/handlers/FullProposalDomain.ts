@@ -2024,7 +2024,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
-      WHERE msa.initvStgId = ${initvStg.id}`);
+      WHERE msa.initvStgId = ${initvStg.id}
+      and msa.active = 1`);
       // const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
       //   initvStgId: initvStg.id
       // });
