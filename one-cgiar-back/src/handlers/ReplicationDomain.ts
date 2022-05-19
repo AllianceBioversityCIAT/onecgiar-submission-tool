@@ -762,18 +762,6 @@ export class ReplicationDomain extends InitiativeStageHandler {
             let partners = new Partners();
             partners = is.partners[index];
             partners.id = null;
-            // partners.id = null;
-            // partners.impact_strategies_id = pts.impact_strategies_id;
-            // partners.institutions_id = pts.code;
-            // partners.institutions_name = pts.name;
-            // partners.tag_id = pts.tag_id;
-            // partners.demand = pts.demand;
-            // partners.innovation = pts.innovation;
-            // partners.scaling = pts.scaling;
-            // partners.type_id = pts.institutionTypeId;
-            // partners.type_name = pts.institutionType;
-            // partners.active = pts.active;
-
             partnersArray.push(partners);
           }
 
