@@ -19,8 +19,8 @@ export interface TableData {
 })
 export class InitTableComponent {
   @Input() data: any;
-
-  displayedColumns: string[] = ['official_code', 'initiativeName', 'initvStageStatus', 'action_area_description', 'currentStage'];
+  // , 'initvStageStatus'
+  displayedColumns: string[] = ['official_code', 'initiativeName', 'action_area_description', 'currentStage'];
   dataSource: MatTableDataSource<TableData>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -82,14 +82,14 @@ export class InitTableComponent {
     this.dataSource.sort = this.matSort;
   }
 
-  parseCurrentStageColor(description:string){
-    if (description.indexOf('1')>-1) {
+  parseCurrentStageColor(stageId:string | number){
+    if (stageId == 4) {
       return '#3d85c6ff';
     }
-    if (description.indexOf('2')>-1) {
+    if (stageId == 2) {
       return '#6aa84fff';
     }
-    if (description.indexOf('3')>-1) {
+    if (stageId == 3) {
       return '#a64d79ff';
     }
     return 'gray'

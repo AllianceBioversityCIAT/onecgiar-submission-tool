@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, UpdateDateColumn} from 'typeorm';
 
 export abstract class UpdatedCreatedAt {
   @Column()
@@ -7,6 +7,11 @@ export abstract class UpdatedCreatedAt {
 
   @Column()
   @CreateDateColumn({
+    type: 'timestamp',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    nullable: true
+  })
+  @UpdateDateColumn({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true

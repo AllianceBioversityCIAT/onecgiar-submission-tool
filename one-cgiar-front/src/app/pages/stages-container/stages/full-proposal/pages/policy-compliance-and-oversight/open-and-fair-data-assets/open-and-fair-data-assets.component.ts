@@ -36,7 +36,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
     console.log(this.sectionForm.value);
     let body = this.sectionForm.value;
     if (body.open_fair_data_policy !== true ) body.open_fair_data_policy = false;
-    this._initiativesService.savePolicyCompliance(body,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.savePolicyCompliance(body).subscribe(resp=>{
       console.log(resp);
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
       this.sectionForm.valid && this.extraValidation?
@@ -46,7 +46,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
   }
 
   getPolicyCompliance(){
-    this._initiativesService.getPolicyCompliance(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getPolicyCompliance().subscribe(resp=>{
       let response = resp.response.policyComplianceData
       // console.log(response);
       if (resp.response.policyComplianceData) {

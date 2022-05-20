@@ -19,6 +19,7 @@
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "migrations:create": "npm run typeorm -- migration:create -n",
+        "migrations:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate -n",
         "docker:build": "docker build -t onecgiarback .",
         "docker:run": "docker run -dti --name onecgiarapi -p 3000:3300 onecgiarback"
     },
@@ -49,6 +50,7 @@
         "nodemailer-express-handlebars": "^4.0.0",
         "reflect-metadata": "^0.1.13",
         "supertest": "^6.1.6",
+        "tx2": "^1.0.5",
         "typeorm": "^0.2.29",
         "winston": "^3.3.3"
     },
@@ -61,7 +63,7 @@
         "@types/jsonwebtoken": "^8.5.0",
         "@types/lodash": "^4.14.170",
         "@types/mocha": "^7.0.2",
-        "@types/morgan": "^1.9.2",
+        "@types/morgan": "^1.9.3",
         "@types/node": "^14.14.7",
         "@typescript-eslint/eslint-plugin": "^2.25.0",
         "@typescript-eslint/parser": "^2.25.0",

@@ -83,7 +83,7 @@ export class RiskAssessmentComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/mpara/management-plan`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/mpara/management-plan`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);
@@ -101,7 +101,7 @@ export class RiskAssessmentComponent implements OnInit {
 
 
   getManagePlan() {
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id, 'risk_assessment').subscribe(resp => {
+    this._initiativesService.getManagePlan('risk_assessment').subscribe(resp => {
       // console.log(resp)
       let response: managementPlan = resp.response.managePlanData;
       this.steperValidation(response?.riskassessment?.length);
@@ -130,7 +130,7 @@ export class RiskAssessmentComponent implements OnInit {
 
     console.log(this.managementPlan);
 
-    this._initiativesService.saveManagePlan(formData, this._initiativesService.initiative.id, '7.management-plan', 3).subscribe(resp => {
+    this._initiativesService.saveManagePlan(formData,'7.management-plan').subscribe(resp => {
 
       this.getManagePlan();
       this.managementPlan.riskassessment.length ?

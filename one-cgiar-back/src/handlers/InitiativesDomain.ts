@@ -1,8 +1,9 @@
 import {getConnection, getRepository} from 'typeorm';
 import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
-export class InitiativeHandler {
+export class InitiativeHandler extends InitiativeStageHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
 
   async createInitiativesByStage(name?, acronym?, stage?) {
@@ -49,26 +50,27 @@ export class InitiativeHandler {
     let allInitiatives,
       stagesInitiatives,
       initvActiveSQL = ` 
-        SELECT
-        initvStg.id AS initvStgId,
-        initiative.id AS id,
-        initiative.name AS name,
-        initiative.official_code,
-        -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-        (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
-        (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-        (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-        initvStg.active AS active,
-        initvStg.stageId AS stageId,
-        CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
-        FROM
-            initiatives initiative
-        LEFT JOIN initiatives_by_stages initvStg 
-        ON initvStg.initiativeId = initiative.id
-        LEFT JOIN stages stage 
-        ON stage.id = initvStg.stageId
-        WHERE  initvStg.active = 1
-        ORDER BY id
+      SELECT
+      initvStg.id AS initvStgId,
+      initiative.id AS id,
+      initiative.acronym,
+      initiative.name AS name,
+      initiative.official_code,
+      -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+      (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
+      (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+      (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+      initvStg.active AS active,
+      initvStg.stageId AS stageId,
+      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
+      FROM
+          initiatives initiative
+      LEFT JOIN initiatives_by_stages initvStg 
+      ON initvStg.initiativeId = initiative.id
+      LEFT JOIN stages stage 
+      ON stage.id = initvStg.stageId
+      WHERE  initvStg.active = 1
+      ORDER BY id
         `,
       initvDetailSQL = `
         SELECT
@@ -97,7 +99,64 @@ export class InitiativeHandler {
 
       return allInitiatives;
     } catch (error) {
-      throw new BaseError('Get Inititives', 400, error.message, false);
+      throw new BaseError('Get initiatives', 400, error.message, false);
+    }
+  }
+
+  /** Get all initiatives Whit all status */
+  async getAllInitiativesAllStatus() {
+    let allInitiatives,
+      stagesInitiatives,
+      initvActiveSQL = ` 
+      SELECT
+      initvStg.id AS initvStgId,
+      initiative.id AS id,
+      initiative.acronym,
+      initiative.name AS name,
+      initiative.official_code,
+      -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+      (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
+      (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+      (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+      initvStg.active AS active,
+      initvStg.stageId AS stageId,
+      CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
+      FROM
+          initiatives initiative
+      LEFT JOIN initiatives_by_stages initvStg 
+      ON initvStg.initiativeId = initiative.id
+      LEFT JOIN stages stage 
+      ON stage.id = initvStg.stageId
+      ORDER BY id
+          `,
+      initvDetailSQL = `
+          SELECT
+          initiative.id AS id,
+          initvStg.id AS initvStgId,
+          initvStg.stageId AS stageId,
+          initvStg.active AS active
+          FROM
+              initiatives initiative
+          LEFT JOIN initiatives_by_stages initvStg 
+          ON initvStg.initiativeId = initiative.id
+          LEFT JOIN stages stage 
+          ON stage.id = initvStg.stageId
+          `;
+
+    try {
+      allInitiatives = await this.queryRunner.query(initvActiveSQL);
+      stagesInitiatives = await this.queryRunner.query(initvDetailSQL);
+
+      // Map Initiatives
+      allInitiatives.map((active) => {
+        active['stages'] = stagesInitiatives.filter((detail) => {
+          return detail.id === active.id;
+        });
+      });
+
+      return allInitiatives;
+    } catch (error) {
+      throw new BaseError('Get initiatives', 400, error.message, false);
     }
   }
 
@@ -126,7 +185,7 @@ export class InitiativeHandler {
   }
 
   /**
-   * GET METADATA (CLARISA) FROM SUBMISSION TOOL
+   ** GET METADATA (CLARISA) FROM SUBMISSION TOOL
    */
 
   async requestDepthScale(impactIndicatorId) {
@@ -215,28 +274,120 @@ export class InitiativeHandler {
     const querySql = `
         SELECT code,isoAlpha2,name,regionDTO
         FROM clarisa_countries`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
   }
 
   async requestRegions() {
     const querySql = `
         SELECT name,parentRegion,um49Code
         FROM clarisa_regions`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
   }
 
   async requestRegionsCgiar() {
     const querySql = `
         SELECT id,name,acronym
         FROM clarisa_regions_cgiar`;
-    const countires = await this.queryRunner.query(querySql);
-    return countires;
+    const countries = await this.queryRunner.query(querySql);
+    return countries;
+  }
+
+  async requestRisks() {
+    try {
+      const querySql = `
+      SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme as risks_theme
+      FROM clarisa_risks ri
+      JOIN clarisa_risk_theme th
+        ON ri.clarisa_risks_theme_id = th.id;`;
+      const risks = await this.queryRunner.query(querySql);
+      return risks;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Risks', 400, error.message, false);
+    }
+  }
+
+  async requestRisksTheme() {
+    try {
+      const querySql = `
+      SELECT * 
+      FROM clarisa_risk_theme;`;
+      const risks = await this.queryRunner.query(querySql);
+      return risks;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Risks Theme', 400, error.message, false);
+    }
+  }
+
+  async requestProjectedBenefits() {
+    try {
+      const querySql = `
+            SELECT id as impactAreaId,impactAreaName,impactAreaIndicator,
+                   impactAreaIndicatorName,isApplicableProjectedBenefits,
+                   targetYear,targetUnit,value,depthScales,weightingValues
+              FROM clarisa_projected_benefits`;
+      const projectedBenefits = await this.queryRunner.query(querySql);
+
+      try {
+        projectedBenefits.map((pb) => {
+          pb.depthScales = JSON.parse(
+            JSON.parse(JSON.stringify(pb.depthScales))
+          );
+          pb.weightingValues = JSON.parse(
+            JSON.parse(JSON.stringify(pb.weightingValues))
+          );
+        });
+      } catch (error) {
+        projectedBenefits;
+      }
+
+      return projectedBenefits;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get Projected benefits', 400, error.message, false);
+    }
+  }
+
+  async requestSdgTargets() {
+    try {
+      const querySql = `
+      SELECT id, sdg_target_code,sdg_target,sdg
+        FROM clarisa_sdg_targets`;
+      const sdgTargets = await this.queryRunner.query(querySql);
+
+      return sdgTargets;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get SDG Targets', 400, error.message, false);
+    }
+  }
+
+  async requestActionAreasOutIndicators() {
+    try {
+      const querySql = `
+      SELECT id,action_area_id,action_area_name,
+	           outcome_id,outcome_indicator_smo_code,outcome_indicator_statement,
+             outcome_indicator_id,outcome_indicator_smo_code,outcome_indicator_statement
+       FROM clarisa_action_areas_outcomes_indicators`;
+      const actionAreasOutIndicators = await this.queryRunner.query(querySql);
+
+      return actionAreasOutIndicators;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Action Areas Outcomes Indicators',
+        400,
+        error.message,
+        false
+      );
+    }
   }
 
   /**
-   * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+   ** PREVIEW PARTNERS FOR IMPACT STRATEGIES
    */
   async requestPreviewPartners() {
     try {
@@ -272,95 +423,14 @@ export class InitiativeHandler {
     }
   }
 
-  async requestRisks() {
+  requestMeliaStudyTypes() {
     try {
-      const querySql = `
-      SELECT ri.id,ri.generic_risks,ri.clarisa_risks_theme_id,th.risk_theme as risks_theme
-      FROM clarisa_risks ri
-      JOIN clarisa_risk_theme th
-        ON ri.clarisa_risks_theme_id = th.id;`;
-      const risks = await this.queryRunner.query(querySql);
-      return risks;
+      const meliaStudyTypesQuery = `SELECT * FROM clarisa_melia_study_types`;
+      const meliaStudyTypes = this.queryRunner.query(meliaStudyTypesQuery);
+      return meliaStudyTypes;
     } catch (error) {
       console.log(error);
-      throw new BaseError('Get Risks', 400, error.message, false);
-    }
-  }
-
-  async requestRisksTheme() {
-    try {
-      const querySql = `
-      SELECT * 
-      FROM clarisa_risk_theme;`;
-      const risks = await this.queryRunner.query(querySql);
-      return risks;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError('Get Risks Theme', 400, error.message, false);
-    }
-  }
-
-  async requesProjectedBenefits() {
-    try {
-      const querySql = `
-            SELECT id as impactAreaId,impactAreaName,impactAreaIndicator,
-                   impactAreaIndicatorName,isApplicableProjectedBenefits,
-                   targetYear,targetUnit,value,depthScales,weightingValues
-              FROM clarisa_projected_benefits`;
-      const projectedBenefits = await this.queryRunner.query(querySql);
-
-      try {
-        projectedBenefits.map((pb) => {
-          pb.depthScales = JSON.parse(
-            JSON.parse(JSON.stringify(pb.depthScales))
-          );
-          pb.weightingValues = JSON.parse(
-            JSON.parse(JSON.stringify(pb.weightingValues))
-          );
-        });
-      } catch (error) {
-        projectedBenefits;
-      }
-
-      return projectedBenefits;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError('Get Projected benefits', 400, error.message, false);
-    }
-  }
-
-  async requesSdgTargets() {
-    try {
-      const querySql = `
-      SELECT id, sdg_target_code,sdg_target,sdg
-        FROM clarisa_sdg_targets`;
-      const sdgTargets = await this.queryRunner.query(querySql);
-
-      return sdgTargets;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError('Get SDG Targets', 400, error.message, false);
-    }
-  }
-
-  async requestActionAreasOutIndicators() {
-    try {
-      const querySql = `
-      SELECT id,action_area_id,action_area_name,
-	           outcome_id,outcome_indicator_smo_code,outcome_indicator_statement,
-             outcome_indicator_id,outcome_indicator_smo_code,outcome_indicator_statement
-       FROM clarisa_action_areas_outcomes_indicators`;
-      const actionAreasOutIndicators = await this.queryRunner.query(querySql);
-
-      return actionAreasOutIndicators;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError(
-        'Get Action Areas Outcomes Indicators',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
     }
   }
 }

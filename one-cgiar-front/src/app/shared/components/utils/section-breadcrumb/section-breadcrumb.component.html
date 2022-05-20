@@ -5,7 +5,7 @@
 </div>
 <br> -->
 <div class="custom_breadcrumb">
-    <div class="items animate__animated animate__fadeInDown" *ngFor="let section of sectionsData; let i = index">
+    <div class="items animate__animated animate__fadeInDown" [hidden]="section.name === null" *ngFor="let section of sectionsData; let i = index">
         <div class="text" [ngStyle]="{'color': i==0?'#ffffffa6':'white','cursor':i==0?'default':'pointer'}">{{section.name}}</div>
         <span *ngIf="i < sectionsData?.length-1" class="material-icons">chevron_right</span>
     </div>

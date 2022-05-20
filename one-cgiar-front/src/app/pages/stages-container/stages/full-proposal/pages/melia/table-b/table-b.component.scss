@@ -1,0 +1,41 @@
+.box{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 10px;
+    .title{
+        padding: 10px 0px;
+        background-color: rgb(75, 75, 75);
+        color: white;
+        text-align: center;
+        font-weight: 500;
+        font-size: 1.3em;
+        margin-bottom: 10px;
+    }
+    .no-data{
+        text-align: center;
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
+    .result_title{
+        font-weight: 500;
+        background-color: rgb(156, 156, 156);
+        padding: 5px 10px;
+        text-align: center;
+        color: white;
+    }
+    .values{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .value-item{
+            padding: 7px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+}

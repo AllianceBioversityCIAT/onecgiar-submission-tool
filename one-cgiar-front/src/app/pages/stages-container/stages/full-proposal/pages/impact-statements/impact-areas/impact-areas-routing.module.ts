@@ -18,6 +18,10 @@ const routes: Routes = [
       {
         path: 'partners-no-impact-area',
         loadChildren: () => import('./partners-no-impact-area/partners-no-impact-area.module').then(mod => mod.PartnersNoImpactAreaModule),
+      },
+      {
+        path: 'is-reports',
+        loadChildren: () => import('./../is-reports/is-reports.module').then(mod => mod.IsReportsModule),
       }
     ],
   }

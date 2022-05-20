@@ -8,6 +8,7 @@ import {
   Narratives,
   WorkPackages
 } from '../entity/index';
+import {ResultsNarratives} from '../entity/ResultsNarratives';
 import {ConceptSections} from '../interfaces/ConceptSectionsInterface';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
@@ -42,66 +43,66 @@ export class ConceptHandler extends ConceptValidation {
 
   /***** REPLICATION PROCESS - forward *******/
 
-  async forwardStage() {
-    try {
-      // current intiative by stage entity
-      const curruentInitvByStg = await this.initvStage;
-      // get full proposal stage id
-      const pplStage = await this.queryRunner.query(
-        `SELECT * FROM stages WHERE description LIKE 'Full Proposal'`
-      );
+  // async forwardStage() {
+  //   try {
+  //     // current intiative by stage entity
+  //     const curruentInitvByStg = await this.initvStage;
+  //     // get full proposal stage id
+  //     const pplStage = await this.queryRunner.query(
+  //       `SELECT * FROM stages WHERE description LIKE 'Full Proposal'`
+  //     );
 
-      // create proposal (next stage) object
+  //     // create proposal (next stage) object
 
-      const proposalObject = new ProposalHandler(
-        null,
-        pplStage[0].id,
-        curruentInitvByStg[0].initiativeId
-      );
+  //     const proposalObject = new ProposalHandler(
+  //       null,
+  //       pplStage[0].id,
+  //       curruentInitvByStg[0].initiativeId
+  //     );
 
-      /**GENERAL INFORMATION */
+  //     /**GENERAL INFORMATION */
 
-      // get concept general information data
-      const conceptGeneralInformation = await this.getGeneralInformation();
+  //     // get concept general information data
+  //     const conceptGeneralInformation = await this.getGeneralInformation();
 
-      // get general information if exists from proposalObject
-      const proposalGI = await proposalObject.getGeneralInformation();
+  //     // get general information if exists from proposalObject
+  //     const proposalGI = await proposalObject.getGeneralInformation();
 
-      // upsert full proposal general infomation
-      const pplGeneralInformation =
-        await proposalObject.upsertGeneralInformation(
-          proposalGI ? proposalGI.generalInformationId : null,
-          conceptGeneralInformation.name,
-          conceptGeneralInformation.action_area_id,
-          conceptGeneralInformation.action_area_description
-        );
+  //     // upsert full proposal general infomation
+  //     const pplGeneralInformation =
+  //       await proposalObject.upsertGeneralInformation(
+  //         proposalGI ? proposalGI.generalInformationId : null,
+  //         conceptGeneralInformation.name,
+  //         conceptGeneralInformation.action_area_id,
+  //         conceptGeneralInformation.action_area_description
+  //       );
 
-      /**WORK PACKAGES*/
+  //     /**WORK PACKAGES*/
 
-      //get concept  work packages information data
-      const conceptWorkPackagesInformation = await this.getWorkPackages();
+  //     //get concept  work packages information data
+  //     const conceptWorkPackagesInformation = await this.getWorkPackages();
 
-      // get  work packages if exists from proposalObject
-      const proposalWP = await proposalObject.getWorkPackage();
+  //     // get  work packages if exists from proposalObject
+  //     const proposalWP = await proposalObject.getWorkPackage();
 
-      // upsert full proposal work Package
-      const pplWorkPackageInformation =
-        await proposalObject.upsertWorkPackagesRepl(
-          proposalWP,
-          conceptWorkPackagesInformation
-        );
+  //     // upsert full proposal work Package
+  //     const pplWorkPackageInformation =
+  //       await proposalObject.upsertWorkPackagesRepl(
+  //         proposalWP,
+  //         conceptWorkPackagesInformation
+  //       );
 
-      /**GEOGRAPHIC SCOPE*/
+  //     /**GEOGRAPHIC SCOPE*/
 
-      await this.forwardGeoScope(pplStage[0]);
-      const pplGeoScope = await proposalObject.getGeoScope();
+  //     await this.forwardGeoScope(pplStage[0]);
+  //     const pplGeoScope = await proposalObject.getGeoScope();
 
-      // return null;
-      return {pplGeneralInformation, pplGeoScope, pplWorkPackageInformation};
-    } catch (error) {
-      throw new BaseError('Concept: Forward', 400, error.message, false);
-    }
-  }
+  //     // return null;
+  //     return {pplGeneralInformation, pplGeoScope, pplWorkPackageInformation};
+  //   } catch (error) {
+  //     throw new BaseError('Concept: Forward', 400, error.message, false);
+  //   }
+  // }
 
   /**
    *
@@ -816,6 +817,57 @@ export class ConceptHandler extends ConceptValidation {
       return workPackages[0];
     } catch (error) {
       throw new BaseError('Get workpackage', 400, error.message, false);
+    }
+  }
+
+  /**
+   * UPSERT RESULTS NARRATIVES
+   * @param resultsNarratives
+   * @returns
+   */
+  async upsertResultsNarratives(resultsNarratives: any) {
+    const initvStgId = this.initvStgId_;
+
+    const resultsNarrativesRepo = getRepository(ResultsNarratives);
+    const toolsSbt = new ToolsSbt();
+    const newResultsNarratives = new ResultsNarratives();
+    const resultsNarrativesArray = [];
+
+    try {
+      newResultsNarratives.id = resultsNarratives.id;
+      newResultsNarratives.initvStgId = initvStgId;
+      newResultsNarratives.active;
+      newResultsNarratives.impact_area_contribution =
+        resultsNarratives.impact_area_contribution;
+      newResultsNarratives.end_init_outcomes =
+        resultsNarratives.end_init_outcomes;
+
+      resultsNarrativesArray.push(
+        toolsSbt.mergeData(
+          resultsNarrativesRepo,
+          `SELECT * 
+             FROM results_narratives
+            WHERE id = ${newResultsNarratives.id}
+              and initvStgId = ${initvStgId}`,
+          newResultsNarratives
+        )
+      );
+
+      let mergeResultsNarratives = await Promise.all(resultsNarrativesArray);
+
+      let upsertResultsNarratives = await resultsNarrativesRepo.save(
+        mergeResultsNarratives
+      );
+
+      return upsertResultsNarratives;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Results Narratives: Pre Concept',
+        400,
+        error.message,
+        false
+      );
     }
   }
 }

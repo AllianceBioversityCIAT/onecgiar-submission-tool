@@ -9,8 +9,10 @@
         // max-width: 100px;
         // overflow: hidden;
         .text{
-            text-overflow: ellipsis;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
         }
         .icon{
             width: auto;

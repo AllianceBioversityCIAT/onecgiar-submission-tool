@@ -1,50 +1,52 @@
 <section-title name="Full initiative Toc" ></section-title>
 <div class="section-container animate__animated animate__fadeIn">
-<!-- <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
-        *ngIf="showForm"> -->
+  <div class="alert_container" style="margin: 20px 0 35px 0;">
+    <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                            type:'info'}"></ibdc-alert>
+  </div>
+  <div class="center_flex" style="margin-top: 35px;">
+    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  </div>
+  <!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
+  <div class="toc_list">
+    <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocitem">No information saved</p>
+    <div class="toc_item" *ngIf="tocitem">
+      
+      <app-item-information-button>
+        <div content>
+          <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{tocitem?.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="tocitem?.toc_id"></app-clipboard-icon></div></div>
+          <br>
+        </div>
+      </app-item-information-button>
 
-        <form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row">
-            <!-- <div class="col-12">
-              <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
-              <br>
-            </div> -->
-            <div class="col-8">
-              <ibdc-textarea
-              [options]="{inputTitle:'TOC ID', form:wpTocForm, formControlName:'TocId'
-              ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
-              </ibdc-textarea>
-            </div>
-        
-            <div class="col-4">
-              <button *ngIf="!this._initiativesService.initiative.readonly" pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
-            </div>
-        
-            <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="txtIsLoaded">
-                <ibdc-simple-text [options]="{inputTitle:'The Science narrative', value:toctxtData}"></ibdc-simple-text>
-            </div>
-        
-        
-            <div class="col-12 toc_image" style="display: flex; justify-content: center;" [hidden]="!imageIsLoaded" *ngIf="linkIsgenerated">
-              <div class="image_container">
-                <section-sub-title name="Diagram"></section-sub-title>
-                <img (load)="imageLoaded()" (error)="imageError()" [src]="this.wpTocForm.value['imageUrl']+'.png'" alt="" srcset="" width="100%">
-              </div>
-            </div>
-        
-            <div class="col-12">
-              <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!txtIsLoaded" [options]="{text: 'The TOC narrative is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
-            </div>
-        
-            <div class="col-12">
-              <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!imageIsLoaded" [options]="{text: 'The TOC diagram is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
-            </div>
-            
-            <p class="toc_id toc id toc-id" [hidden]="true">SmBQ1GfEjD</p>
-        
-            
-        
-            <!-- <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
-                <img src="https://cdn.pixabay.com/photo/2017/05/14/03/45/gui-2311261_960_720.png" alt="" sizes="100%" srcset="">
-            </div> -->
-        </form>
+      <div class="tex_container">
+        <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: tocitem?.narrative, required: false}" textAlign='justify'>
+        </ibdc-simple-text>
+        <div class="updated_at">
+          <strong>Updated on:</strong> {{tocitem?.updated_at | date:'d MMMM, y - h:mm:ss a':'UTC'}} - <strong>(UTC)</strong>
+        </div>
+      </div>
+
+      <div class="loading-container rotating" [id]="'loading'">
+        <div class="material-icons">cached</div>
+      </div>
+  
+  
+      <div class="col-12 toc_image" [id]="'diagram'">
+        <div class="image_container">
+          <section-sub-title name="Diagram"></section-sub-title>
+          <div class="img_hover_info">
+            <img id="image" (load)="imageLoaded('diagram')" (error)="imageError()" [src]="this.tocitem?.diagram" alt="" srcset="" width="100%">
+            <div class="info_to_open">
+              Click to see full image
+              <i class="material-icons">
+                aspect_ratio
+              </i>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
 </div>

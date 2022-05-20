@@ -1,4 +1,5 @@
 import {getConnection, getRepository} from 'typeorm';
+import {Stages} from '../entity';
 import {Statuses} from '../entity/Statuses';
 import {Submissions} from '../entity/Submissions';
 import {SubmissionsStatus} from '../entity/SubmissionStatus';
@@ -151,7 +152,278 @@ export class MetaDataHandler extends InitiativeStageHandler {
   }
 
   /**
-   * VALIDATIONS (GREEN CHECKS)
+   * VALIDATIONS (GREEN CHECKS) PRE CONCEPT
+   * SECTIONS:
+   * 1. General Information.
+   * 2. Initial Theory Change.
+   * 3. Initiative Statements.
+   * 4. Work Packges Geo Scope. - validation Level WP
+   * 5. Results.
+   * 6. Innovations.
+   * 7. Key Partners.
+   * 8. Global Budget.
+   */
+
+  /**
+   * Validation General Information (Summary Table)
+   * @returns pre_validationGI (True or False)
+   *
+   */
+  async pre_validationGI() {
+    try {
+      /* eslint-disable */
+      let validationGISQL = `
+   SELECT sec.id as sectionId,sec.description, 
+     CASE
+      WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
+		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+        OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM general_information WHERE initvStgId = ini.id) > 50
+	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
+        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1)) IS NULL
+        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1) ) IS NULL
+        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1) ) IS NULL
+        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1)) IS NULL
+        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1) ) IS NULL
+        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1) ) IS NULL
+    THEN FALSE
+      ELSE TRUE
+      END AS validation
+    FROM initiatives_by_stages ini
+    JOIN sections_meta sec
+   WHERE ini.id = ${this.initvStgId_}
+     AND sec.stageId= ini.stageId
+     AND sec.description='general-information'`;
+      var validationGI = await this.queryRunner.query(validationGISQL);
+
+      validationGI[0].validation = parseInt(validationGI[0].validation);
+
+      return validationGI[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations pre concept GI',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * Validation Initial Theory of Change
+   * @returns pre_validationInitialTOC (True or False)
+   *
+   */
+  async pre_validationInitialTOC() {
+    try {
+      /* eslint-disable */
+      let initialTOCSQL = ` 
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+      WHEN (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) IS NULL
+      OR (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) = ''
+      OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>','')) 
+          - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+          FROM tocs WHERE initvStgId = ini.id) > 250
+      OR (SELECT max(id) FROM files WHERE tocsId in (SELECT id FROM tocs
+        WHERE initvStgId = ini.id
+          AND active = 1)
+          AND active = 1 ) = ''
+      OR (SELECT max(id) FROM files WHERE tocsId in (SELECT id FROM tocs
+            WHERE initvStgId = ini.id
+              AND active = 1)
+              AND active = 1 ) IS NULL
+      THEN FALSE
+        ELSE TRUE
+        END AS validation
+      FROM initiatives_by_stages ini
+      JOIN sections_meta sec
+      WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='initial-theory-of-change'
+      `;
+      var validationInitTOC = await this.queryRunner.query(initialTOCSQL);
+
+      validationInitTOC[0].validation = parseInt(
+        validationInitTOC[0].validation
+      );
+
+      return validationInitTOC[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations pre concept initial ToC',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * Validation Initiative statements
+   * @returns pre_validationInitiativeStatements (True or False)
+   *
+   */
+
+  async pre_validationInitiativeStatements() {
+    try {
+      /* eslint-disable */
+      let validationInitStatmntsSQL = `
+     SELECT sec.id as sectionId,sec.description, 
+    CASE
+-- CHALLENGE STATEMENT (CONTEXT)
+    WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) IS NULL
+    OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) = ''
+    OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM context WHERE initvStgId = ini.id) > 250
+-- HIGHLIGHTS
+		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1') > 250
+
+		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2') > 250
+		
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3') > 250
+    
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4') > 250
+    
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) IS NULL
+    OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) = ''
+		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
+        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5') > 250
+
+    THEN FALSE
+    ELSE TRUE
+    END AS validation
+    FROM initiatives_by_stages ini
+    JOIN sections_meta sec
+    WHERE ini.id =  ${this.initvStgId_}
+    AND sec.stageId= ini.stageId
+    AND sec.description='initiative-statements'`;
+      var validationInitStatments = await this.queryRunner.query(
+        validationInitStatmntsSQL
+      );
+
+      validationInitStatments[0].validation = parseInt(
+        validationInitStatments[0].validation
+      );
+
+      return validationInitStatments[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get validations pre concept intiatives statements',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * Validation Work paclagaes and geographic scope
+   * @returns pre_validationWorkPackagesGeoScope (True or False)
+   *
+   */
+
+  async pre_validationWorkPackagesGeoScope() {
+    try {
+      let getAllWpSQL = `
+      SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
+      `;
+
+      var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
+      var workPackage = {
+        validation: null,
+        sectionId: null,
+        description: null
+      };
+      if (allWorkPackages.length > 0) {
+        // Get Work packages per initiative
+        for (let index = 0; index < allWorkPackages.length; index++) {
+          const wpId = allWorkPackages[index].id;
+
+          var multi = 1;
+
+          let validationWPSQL = `
+          SELECT sec.id as sectionId,sec.description, 
+          CASE
+        WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
+          OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+          OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
+		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
+        OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
+        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
+	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
+		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
+         THEN FALSE
+           ELSE TRUE
+           END AS validation
+         FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+        WHERE ini.id = ${this.initvStgId_}
+          AND sec.stageId= ini.stageId
+          AND sec.description='wp-and-geo-focus';
+          `;
+
+          let workPackageArr = await this.queryRunner.query(validationWPSQL);
+
+          if (workPackageArr.length > 0) {
+            workPackage['validation'] = parseInt(workPackageArr[0].validation);
+            workPackage['description'] = workPackageArr[0].description;
+            workPackage['sectionId'] = workPackageArr[0].sectionId;
+
+            multi = multi * workPackage.validation;
+
+            workPackage.validation = multi;
+          } else {
+            workPackage = null;
+          }
+        }
+      } else {
+        workPackage = null;
+      }
+
+      return workPackage;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * VALIDATIONS (GREEN CHECKS) FULL PROPOSAL
    * SECTIONS:
    * 1. General Information.
    * 2. Context.
@@ -168,6 +440,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
   /**
    * Validation General Information (Summary Table)
    * @returns validationGI (True or False)
+   *
    */
   async validationGI() {
     try {
@@ -1648,40 +1921,98 @@ export class MetaDataHandler extends InitiativeStageHandler {
    *
    **/
 
-  async validationSubmissionStatuses(initvStg) {
+  async validationSubmissionStatuses() {
+    let initvStg = await this.initvStage;
+    initvStg = initvStg[0];
     const usersRepo = getRepository(Users);
     const subStsRepo = getRepository(SubmissionsStatus);
     const submissionRepo = getRepository(Submissions);
+    const stageRepo = getRepository(Stages);
     const statusesRepo = getRepository(Statuses);
     const queryRunner = getConnection().createQueryBuilder();
+    const handler = this;
     try {
-      const submission = await submissionRepo.findOne({
+      let submission = await submissionRepo.findOne({
         where: {initvStg, active: 1}
       });
 
       return {
-        isComplete: function () {
-          if (submission == null) {
+        isComplete: async function () {
+          try {
+            // Get current stage
+            const currentStage = await stageRepo.findOne(initvStg.stageId);
+
+            // Validated sections object
+            let validatedSections;
+            switch (currentStage.description) {
+              case 'Pre Concept':
+                validatedSections = {
+                  GeneralInformation: (await handler.pre_validationGI())
+                    .validation,
+                  InitialTheoryChange: (
+                    await handler.pre_validationInitialTOC()
+                  ).validation,
+                  InitiativeStatements: (
+                    await handler.pre_validationInitiativeStatements()
+                  ).validation,
+                  WorkPackgesGeoScope: 1
+                  // WorkPackgesGeoScope: (await handler.pre_validationWorkPackagesGeoScope()).validation,
+                  // missing section validations
+                  // Results: 0,
+                  // Innovations: 0,
+                  // KeyPartners: 0,
+                  // GlobalBudget: 0
+                };
+                if (
+                  Object.keys(validatedSections).length !==
+                  Object.values(validatedSections).reduce(
+                    (a: any, b: any) => a + b
+                  )
+                ) {
+                  throw new APIError(
+                    'Unauthorized',
+                    HttpStatusCode.UNAUTHORIZED,
+                    true,
+                    'Initiattive is not completed yet. Unavailable to assess.'
+                  );
+                }
+                break;
+              case 'Full Proposal':
+                console.log('proposal');
+                break;
+
+              default:
+                throw new APIError(
+                  'NOT_FOUND',
+                  HttpStatusCode.NOT_FOUND,
+                  true,
+                  'Initiattive by stage null'
+                );
+                break;
+            }
+          } catch (error) {
+            console.log(error);
+            throw new APIError(
+              'Bad request',
+              HttpStatusCode.BAD_REQUEST,
+              true,
+              error.message
+            );
+          }
+        },
+        validateStatus: async (newStatusId: any) => {
+          // if intiative not submitted throw error
+          if (!submission) {
             throw new APIError(
               'Bad request',
               HttpStatusCode.BAD_REQUEST,
               true,
               'Initiative not submitted yet.'
             );
-          } else if (submission.complete) {
-            throw new APIError(
-              'Unauthorized',
-              HttpStatusCode.UNAUTHORIZED,
-              true,
-              'Initiative already approved.'
-            );
           }
-        },
-        validateStatus: async (newStatusId: any) => {
+          // get new status for initiative
           const newStatusxInitv = await statusesRepo.findOne(newStatusId);
-          const currentInitvSubStatuses = await subStsRepo.find({
-            where: {submission}
-          });
+          // if new status not found, throw error
           if (newStatusxInitv == null) {
             throw new APIError(
               'Bad request',
@@ -1690,20 +2021,42 @@ export class MetaDataHandler extends InitiativeStageHandler {
               'Status not found.'
             );
           }
+
+          // get current submussion statuses by initiative
+          const currentInitvSubStatuses = await subStsRepo.find({
+            where: {submission}
+          });
+          // get new status if already exists in submission
           const foundSubStatus = currentInitvSubStatuses.find(
             (stses) => stses.statusId == newStatusxInitv.id
           );
+          // if exists, respond: submission, new submission status, new status for initiative (global status)
           if (foundSubStatus) {
             return {
               submission,
               newSubStatus: foundSubStatus,
               newStatusxInitv
             };
-          } else {
-            const subStatus = new SubmissionsStatus();
+          }
+          // if not
+          else {
+            // create a new submission with new status
+            let subStatus = new SubmissionsStatus();
             subStatus.statusId = newStatusxInitv.id;
             subStatus.submission = submission;
+            // if new status equals to approved, mark as completed submission
+            if (newStatusxInitv.status == 'Approved') {
+              // update submission to complete
+              submission.complete = true;
+              submission = await submissionRepo.save(submission);
 
+              // and start replication procces if available if stage == PreConcept
+              if (initvStg.stageId == 2) {
+              }
+            }
+            // update submission status
+            subStatus = await subStsRepo.save(subStatus);
+            // respond: submission, new submission status, new status for initiative (global status)
             return {
               submission,
               newSubStatus: subStatus,
@@ -1712,45 +2065,57 @@ export class MetaDataHandler extends InitiativeStageHandler {
           }
         },
         isAssessor: async function (userId) {
-          const user = await usersRepo.findOne(userId);
+          const user = await usersRepo.findOne(userId, {relations: ['roles']});
           if (!user) {
             throw new APIError(
-              'User bot found',
+              'User not found',
               HttpStatusCode.BAD_REQUEST,
               false,
               'Bad request'
             );
           }
-          const assessSQL = `
-        SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
-      `;
-
-          /** validate if user is assessor **/
-
-          const [query, parameters] =
-            await queryRunner.connection.driver.escapeQueryWithParameters(
-              assessSQL,
-              {userId},
-              {}
-            );
-
-          const userAvailable = await queryRunner.connection.query(
-            query,
-            parameters
-          );
-          if (userAvailable.length == 0) {
-            throw new APIError(
-              'User does not have permission to do this action',
-              HttpStatusCode.UNAUTHORIZED,
-              false,
-              'Unauthorized'
-            );
+          if (user.roles.find((r) => r.acronym == 'ADM')) {
+            return {
+              available: true,
+              user
+            };
+          } else {
+            return {
+              available: false,
+              user: null
+            };
           }
 
-          return {
-            available: true,
-            user
-          };
+          //   const assessSQL = `
+          //   SELECT * FROM roles_by_users WHERE user_id = :userId AND role_id = (SELECT id FROM roles WHERE acronym = 'ASSESS' )
+          // `;
+
+          //   /** validate if user is assessor **/
+
+          //   const [query, parameters] =
+          //     await queryRunner.connection.driver.escapeQueryWithParameters(
+          //       assessSQL,
+          //       { userId },
+          //       {}
+          //     );
+
+          //   const userAvailable = await queryRunner.connection.query(
+          //     query,
+          //     parameters
+          //   );
+          //   if (userAvailable.length == 0) {
+          //     throw new APIError(
+          //       'User does not have permission to do this action',
+          //       HttpStatusCode.UNAUTHORIZED,
+          //       false,
+          //       'Unauthorized'
+          //     );
+          //   }
+
+          //   return {
+          //     available: true,
+          //     user
+          //   };
         }
       };
     } catch (error) {

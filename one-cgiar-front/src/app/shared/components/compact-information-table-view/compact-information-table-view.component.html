@@ -1,0 +1,33 @@
+<div class="toggle-view-button-container">
+    <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length; else noData">
+        <span>{{this.showTableViewVariable ? 'Table view' : 'Editable view'}} </span>
+     </div>
+     <ng-template #noData>
+        <div class="toggle-view-button">
+            <span>No data to display</span>
+         </div>
+     </ng-template>
+</div>
+
+<table class="animate__animated animate__fadeIn" *ngIf="this.list.length && this.showTableViewVariable">
+    <thead>
+        <tr *ngIf="tableTitle.length > 0"><th colspan="100%">{{tableTitle}}</th></tr>
+        <tr>
+            <th *ngFor="let item of setLocalId()" [ngStyle]="item['styles']">{{item['name']}}<span *ngIf="item['required']" class="asterisk">* </span></th> <th class="edit-th"></th>
+            <th *ngIf="this.canDelete" class="delete-th"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of this.list; let i=index" [hidden]="item?.active === false" style="position: relative;">
+            <td *ngIf="this.localId"><strong>{{i+1}}</strong></td> 
+            <td *ngFor="let key of this.attr_list_config" [innerHTML]="item[key?.attribute]" [ngClass]="{'warning': !item[key?.attribute]?.length}"></td> 
+            <td *ngIf="!this._initiativesService.initiative.readonly" class="edit-th"><div class="material-icons editable-icon" (click)="editItem(item)">edit</div></td>
+            <td *ngIf="!this._initiativesService.initiative.readonly && this.canDelete" style="padding-left: 70px;" class="delete-th"></td>
+            <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly && this.canDelete"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+        </tr>
+    </tbody>
+</table>
+
+<div class="noDataInfo" *ngIf="this.list.length === 0 && this.showTableViewVariable">
+    <span>{{this.msgNoData}}</span>
+</div>

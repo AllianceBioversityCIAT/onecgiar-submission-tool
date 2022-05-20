@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="_interactionsService.showHeader" class="one-header" [ngClass]="{'collapseHeader': _interactionsService.collapseHeader,'noCollapseHeader':!_interactionsService.collapseHeader}">
+<!-- <mat-toolbar *ngIf="_interactionsService.showHeader" class="one-header" [ngClass]="{'collapseHeader': _interactionsService.collapseHeader,'noCollapseHeader':!_interactionsService.collapseHeader}">
   <ng-container *ngIf="isAdmin === 'admin'">
     <button mat-icon-button (click)="onToggleSidenav()">
       <mat-icon>menu</mat-icon>
@@ -7,6 +7,6 @@
   <span routerLink="/home" class="pointer" (click)="_interactionsService.collapseHeader = false"><strong>One CGIAR </strong><span class="outline-font">Submission Tool</span></span>
   <span class="spacer"></span>
   <i class="cgiar-logo"></i>
-</mat-toolbar>
+</mat-toolbar> -->
 
-<!-- <app-tawk-to *ngIf="_interactionsService.showHeader"></app-tawk-to> -->
+<app-tawk-to *ngIf="_interactionsService.showHeader && validateUser()"></app-tawk-to>

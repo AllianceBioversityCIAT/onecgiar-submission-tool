@@ -14,7 +14,7 @@ import {Users} from '../entity/Users';
 import {APIError, BaseError} from '../handlers/BaseError';
 import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
-import {forwardStage, validatedSection} from '../utils/section-validation';
+import {validatedSection} from '../utils/section-validation';
 import * as clarisa from './Clarisa';
 import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
 import {InitiativeHandler} from '../handlers/InitiativesDomain';
@@ -24,6 +24,9 @@ import {MetaDataHandler} from '../handlers/MetaDataDomain';
 import {Submissions} from '../entity/Submissions';
 import {SubmissionsStatus} from '../entity/SubmissionStatus';
 import {Statuses} from '../entity/Statuses';
+import {toInteger} from 'lodash';
+import {ReplicationDomain} from '../handlers/ReplicationDomain';
+import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
 
 require('dotenv').config();
 
@@ -37,14 +40,13 @@ require('dotenv').config();
 /** TEMPORAL */
 /**
  *
- * @param req paramas: { initiativeId, stageId }
+ * @param req params: { initiativeId, stageId }
  * @param res
  * @returns
  */
 export const getSummary = async (req: Request, res: Response) => {
   const {initiativeId, stageId} = req.params;
 
-  const queryRunner = getConnection().createQueryRunner().connection;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -52,11 +54,12 @@ export const getSummary = async (req: Request, res: Response) => {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
 
-    // get intiative by stage
+    // get initiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: {initiative: initiativeId, stage},
+      relations: ['stage', 'initiative']
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(
         'Summary: Error',
@@ -66,66 +69,13 @@ export const getSummary = async (req: Request, res: Response) => {
       );
     }
 
-    const initiative = new InitiativeStageHandler(initvStg.id + '');
+    const initiative = new InitiativeStageHandler();
 
-    let GIquery = ` 
-                SELECT
-                    initvStgs.id AS initvStgId,
-                    general.id AS generalInformationId,
-                    IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
-                    IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
-                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
-                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
-                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
-                
-                    (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
-                    (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
-                    (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
-                                            
-                    general.action_area_description AS action_area_description,
-                    general.action_area_id AS action_area_id
-                
-                FROM
-                    initiatives_by_stages initvStgs
-                LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
-                
-                WHERE initvStgs.id = ${initvStg.id};
-            `,
-      COquery = ` SELECT DISTINCT(co.country_id),
-                (SELECT cc.name FROM  clarisa_countries cc WHERE cc.code = co.country_id) as name,
-               co.initvStgId
-               FROM countries_by_initiative_by_stage co
-              WHERE co.initvStgId = ${initvStg.id}
-                AND co.active = 1
-                AND co.wrkPkgId IS NOT NULL
-             GROUP BY co.id,co.country_id`,
-      REquery = `
-                SELECT DISTINCT (r.region_id),
-                (SELECT cr.name FROM  clarisa_regions_cgiar cr WHERE cr.id = r.region_id) as name
-                ,r.initvStgId
-                  FROM regions_by_initiative_by_stage r
-                 WHERE r.initvStgId = ${initvStg.id}
-                   AND r.active = 1
-                   AND r.wrkPkgId IS NOT NULL
-                 GROUP BY r.region_id
-                `;
+    const summary = await initiative.getSummary(initvStg);
 
-    const gI = await queryRunner.query(GIquery);
-    const generalInformation = gI[0];
-
-    // get geo scope from initiative
-    // const regions = await regionsInitvStgRepo.find({ where: { initvStg: initvStg.id } });
-    // const countries = await countriesInitvStgRepo.find({ where: { initvStg: initvStg.id } });
-    const regions = await queryRunner.query(REquery);
-    const countries = await queryRunner.query(COquery);
-    const budget = await initiative.getBudget(
-      'general_information',
-      'budget',
-      true
-    );
-    const goblalDimension = initvStg.global_dimension;
-
-    const geoScope = {regions, countries, goblalDimension};
+    const generalInformation = summary.generalInformation;
+    const budget = summary.budget;
+    const geoScope = summary.geoScope;
 
     res.json(
       new ResponseHandler('Initiatives: Summary.', {
@@ -142,7 +92,7 @@ export const getSummary = async (req: Request, res: Response) => {
 
 /**
  *
- * @param req paramas: { initiativeId, stageId }
+ * @param req params: { initiativeId, stageId }
  * @param res
  * @returns
  */
@@ -169,13 +119,13 @@ export const upsertSummary = async (req: Request, res: Response) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
-    // get intiative by stage
+    // get initiatives by stage
     let initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage},
       relations: ['stage', 'initiative']
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Summary: Error',
@@ -185,7 +135,7 @@ export const upsertSummary = async (req: Request, res: Response) => {
       );
     }
     initvStg.global_dimension = is_global;
-    initvStg = await initvStgRepo.save(initvStg);
+    // initvStg = await initvStgRepo.save(initvStg);
 
     // create initiative by stage handler object
     const initvStgObj = new InitiativeStageHandler(
@@ -194,36 +144,56 @@ export const upsertSummary = async (req: Request, res: Response) => {
       `${initvStg.initiative.id}`
     );
     // get current stage object
-    const currentStage = await initvStgObj.stage;
+    // const currentStage = await initvStgObj.stage;
 
     // create object for concept or full proposal
-    let dummyHandler;
-    if (currentStage[0].description === 'Full Proposal') {
-      dummyHandler = new ProposalHandler(initvStg.id.toString());
-    } else {
-      dummyHandler = new ConceptHandler(initvStg.id.toString());
-    }
+    // let dummyHandler;
+    // if (
+    //   currentStage[0].description === 'Full Proposal'
+    // ) {
+    //   dummyHandler = new ProposalHandler(initvStg.id.toString());
+    // } else {
+    //   dummyHandler = new ConceptHandler(initvStg.id.toString());
+    // }
 
-    // upsert geo scope, budget, general information
-    const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
+    const summary = await initvStgObj.upsertSummary(
+      generalInformationId,
+      name,
+      action_area_id,
+      action_area_description,
+      acronym,
+      budgetId,
+      budget_value,
       regions,
       countries
     );
-    const upsertedBudget = await initvStgObj.addBudget(
-      budget_value,
-      'general_information',
-      'budget',
-      budgetId,
-      true
-    );
-    const upsertedGeneralInformation =
-      await dummyHandler.upsertGeneralInformation(
-        generalInformationId,
-        name,
-        action_area_id,
-        action_area_description,
-        acronym
-      );
+
+    const upsertedGeoScope = summary.upsertedGeoScope;
+
+    const upsertedBudget = summary.upsertedBudget;
+
+    const upsertedGeneralInformation = summary.upsertedGeneralInformation;
+
+    // // upsert geo scope, budget, general information
+    // const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
+    //   regions,
+    //   countries
+    // );
+    // const upsertedBudget = await initvStgObj.addBudget(
+    //   budget_value,
+    //   'general_information',
+    //   'budget',
+    //   budgetId,
+    //   true
+    // );
+    // const upsertedGeneralInformation =
+    //   await dummyHandler.upsertGeneralInformation(
+    //     generalInformationId,
+    //     name,
+    //     action_area_id,
+    //     action_area_description,
+    //     acronym
+    //   );
 
     res.json(
       new ResponseHandler('Initiatives: Summary.', {
@@ -239,24 +209,27 @@ export const upsertSummary = async (req: Request, res: Response) => {
 };
 
 /**
- *
- * @param req paramas: { currentInitiativeId }
- * @param res
+ ** REPLICATION PROCESS
+ * @param req params: { initiativeId,stageId, newStageId}
+ * @param res replicationProcess
  * @returns
  */
-export const replicationProcess = async (req: Request, res: Response) => {
-  const {currentInitiativeId} = req.params;
-  const {replicationStageId} = req.body;
-  const stageRepo = getRepository(Stages);
+export async function replicationProcess(req: Request, res: Response) {
+  const {stageId, initiativeId} = req.params;
+  const {newStageId} = req.body;
+
+  // instantiate class InitiativeStageHandler (Domain)
+  const replication = new ReplicationDomain();
 
   try {
-    // get replicate to stage
-    const stage = await stageRepo.findOne(replicationStageId);
-    // get replicate to stage description
-    const stgDesc = stage.description.split(' ').join('_').toLocaleLowerCase();
-    // data pushed to next stage
-    const fordwarded = await forwardStage(stgDesc, currentInitiativeId);
-    res.json(new ResponseHandler('Replication data', fordwarded));
+    // Call replication Process from Domain
+    const replicationProcess = await replication.replicationProcess(
+      toInteger(initiativeId),
+      toInteger(stageId),
+      newStageId
+    );
+
+    return res.json(replicationProcess);
   } catch (error) {
     console.log(error);
     if (
@@ -272,7 +245,7 @@ export const replicationProcess = async (req: Request, res: Response) => {
     }
     return res.status(error.httpCode).json(error);
   }
-};
+}
 
 /**
  *
@@ -290,11 +263,11 @@ export const addLink = async (req: Request, res: Response) => {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -337,11 +310,11 @@ export async function getInitvStgId(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -374,11 +347,11 @@ export async function getLink(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add link: Error',
@@ -415,11 +388,11 @@ export async function addBudget(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Add Budget: Error',
@@ -463,11 +436,11 @@ export async function getBudget(req: Request, res: Response) {
 
   try {
     const stage = await stageRepo.findOne(stageId);
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Get budget: Error',
@@ -504,22 +477,12 @@ export async function removeBudget(req: Request, res: Response) {
 }
 
 /**
- * All Initiatives
+ * All Initiatives actives
  * @param req
  * @param res
  */
 export async function getInitiatives(req: Request, res: Response) {
   try {
-    // const [query, parameters] = await queryRunner.connection.driver.escapeQueryWithParameters(
-    //     initvSQL,
-    //     { userId },
-    //     {}
-    // );
-
-    // let initvs:Initiatives = new Initiatives();
-    // initvs = await queryRunner.connection.query(query, parameters);
-    // initiatives = await queryRunner.query(initvSQL);
-
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
 
@@ -527,9 +490,58 @@ export async function getInitiatives(req: Request, res: Response) {
     let initiatives = await initiativeshandler.getAllInitiatives();
 
     if (initiatives.length == 0)
-      res.json(new ResponseHandler('All Initiatives.', {initiatives: []}));
+      res.json(
+        new ResponseHandler('All Initiatives whit status active.', {
+          initiatives: []
+        })
+      );
     else {
-      res.json(new ResponseHandler('All Initiatives.', {initiatives}));
+      res.json(
+        new ResponseHandler('All Initiatives whit status active.', {
+          initiatives
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * All Initiatives whit all status
+ * @param req
+ * @param res
+ */
+export async function getInitiativesAllStatus(req: Request, res: Response) {
+  try {
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    // Get active initiatives and detail
+    let initiatives = await initiativeshandler.getAllInitiativesAllStatus();
+
+    if (initiatives.length == 0)
+      res.json(
+        new ResponseHandler('All Initiatives whit all status.', {
+          initiatives: []
+        })
+      );
+    else {
+      res.json(
+        new ResponseHandler('All Initiatives whit all status.', {initiatives})
+      );
     }
   } catch (error) {
     console.log(error);
@@ -740,7 +752,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
         'UNAUTHORIZED',
         HttpStatusCode.UNAUTHORIZED,
         true,
-        'Role not accesible.'
+        'Role not accessible.'
       );
     }
 
@@ -799,7 +811,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     }
 
     res.json(
-      new ResponseHandler('Assigned user to intiative', {
+      new ResponseHandler('Assigned user to initiative', {
         assignedUser: newUsrByInitv
       })
     );
@@ -832,6 +844,7 @@ export const createInitiative = async (req: Request, res: Response) => {
   const initiativesByUsersRepository = getRepository(InitiativesByUsers);
   const initiativesByStagesRepository = getRepository(InitiativesByStages);
   const stageRepository = getRepository(Stages);
+  const statusesRepo = getRepository(Statuses);
 
   const initiative = new Initiatives();
   const initByUsr = new InitiativesByUsers();
@@ -858,7 +871,12 @@ export const createInitiative = async (req: Request, res: Response) => {
       // initByUsr.is_lead = is_lead;
       // initByUsr.is_owner = is_owner;
       if (current_stage) {
+        // set editing as current status
+        const editingStatus = await statusesRepo.findOne({
+          where: {status: 'Editing'}
+        });
         let sltdStage = await stageRepository.findOne(current_stage);
+        newInitStg.status = editingStatus;
         newInitStg.initiative = createdInitiative;
         newInitStg.stage = sltdStage;
         await initiativesByStagesRepository.save(newInitStg);
@@ -1007,6 +1025,101 @@ export const createStage = async (req: Request, res: Response) => {
  * @param req params:{ initiativeId, stageId }
  * @param res
  */
+export const submitInitiative = async (req: Request, res: Response) => {
+  // console.log(req.params, req.body)
+
+  const {initiativeId, stageId} = req.params;
+  // const { description, active, start_date, end_date } = req.body;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const usersRepo = getRepository(Users);
+  const submissionStatusRepo = getRepository(SubmissionsStatus);
+  const submissionRepo = getRepository(Submissions);
+  const statusesRepo = getRepository(Statuses);
+
+  try {
+    // get initiative by stage
+    const initvStg = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage: stageId}
+    });
+    // get current user
+    const {userId} = res.locals.jwtPayload;
+
+    // get current user
+    const user = await usersRepo.findOne(userId, {relations: ['roles']});
+    // get editing status
+    const submittedStatus = await statusesRepo.findOne({
+      where: {status: 'Submitted', active: 1}
+    });
+    // create new Meta Data object
+    const metaData = new MetaDataHandler(initvStg.id.toString());
+    const validateSbSts = await metaData.validationSubmissionStatuses();
+
+    let submissionObject = await submissionRepo.findOne({
+      where: {initvStg, active: 1}
+    });
+
+    // validate if initiative is completed
+    await validateSbSts.isComplete();
+    // validate if initiative in this stage is already submitted
+    if (submissionObject) {
+      const sts = await submissionStatusRepo.find({
+        where: {submission: submissionObject},
+        relations: ['submission']
+      });
+      return res.json(
+        new ResponseHandler('Initiative already submitted', {
+          submission: sts
+        })
+      );
+    } else {
+      // create new submission object
+      let submission = new Submissions();
+      submission.initvStg = initvStg;
+      submission.active = true;
+      submission.first_name = user.first_name;
+      submission.last_name = user.last_name;
+      submission.userId = user.id;
+
+      submission = await submissionRepo.save(submission);
+      initvStg.status = submittedStatus;
+      const initvStgUpd = await initvStgRepo.save(initvStg);
+
+      // create submission status
+      const submissionStatus = new SubmissionsStatus();
+      submissionStatus.active = true;
+      submissionStatus.submission = submission;
+      submissionStatus.statusId = submittedStatus.id;
+      const evaluatedSubmission = await submissionStatusRepo.save(
+        submissionStatus
+      );
+      return res.json(
+        new ResponseHandler('Initiative submitted', {
+          submission: evaluatedSubmission
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+/**
+ *
+ * @param req params:{ initiativeId, stageId }
+ * @param res
+ */
 export const getAssessmentStatus = async (req: Request, res: Response) => {
   const statusesRepo = getRepository(Statuses);
   const stagesRepo = getRepository(Stages);
@@ -1020,19 +1133,22 @@ export const getAssessmentStatus = async (req: Request, res: Response) => {
     // get current stage
     // const stage = await stagesRepo.findOne(stageId);
     // get statuses
-    const statuses = await statusesRepo.find();
-    // get initiaitive by stage
+    const statuses = await statusesRepo.find({where: {active: true}});
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
     const metaData = new MetaDataHandler(initvStg.id.toString());
-    const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
+    const validateSbSts = await metaData.validationSubmissionStatuses();
+    // const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
 
     const assessmentValidation = await validateSbSts.isAssessor(userId);
 
     const statusesAvailable = statuses.filter((status) => {
-      const stsArray = Object.values(status.stagesAvailables);
-      return stsArray.find((sts) => sts == stageId);
+      if (status.stagesAvailables) {
+        const stsArray = Object.values(status.stagesAvailables);
+        return stsArray.find((sts) => sts == stageId);
+      }
     });
 
     return res.json(
@@ -1067,7 +1183,7 @@ export const getSubmission = async (req: Request, res: Response) => {
   const initvStgRepo = getRepository(InitiativesByStages);
   const submissionRepo = getRepository(Submissions);
   try {
-    // get initiaitive by stage
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
@@ -1095,136 +1211,6 @@ export const getSubmission = async (req: Request, res: Response) => {
 /**
  *
  * @param req params:{ initiativeId, stageId }
- * @param res
- */
-export const submitInitiative = async (req: Request, res: Response) => {
-  // console.log(req.params, req.body)
-
-  const {initiativeId, stageId} = req.params;
-  // const { description, active, start_date, end_date } = req.body;
-  const initvStgRepo = getRepository(InitiativesByStages);
-  const usersRepo = getRepository(Users);
-  const submissionStatusRepo = getRepository(SubmissionsStatus);
-  const submissionRepo = getRepository(Submissions);
-  const statusesRepo = getRepository(Statuses);
-
-  try {
-    const initvStg = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage: stageId}
-    });
-    // get pending status
-    const pendingStatus = await statusesRepo.findOne({
-      where: {status: 'Pending', active: 1}
-    });
-    // create new Meta Data object
-    const metaData = new MetaDataHandler(initvStg.id.toString());
-
-    const alreadySub = await submissionRepo.findOne({
-      where: {initvStg, active: 1}
-    });
-
-    if (alreadySub) {
-      const sts = await submissionStatusRepo.find({
-        where: {submission: alreadySub},
-        relations: ['submission']
-      });
-      return res.json(
-        new ResponseHandler('Initiative already submitted', {
-          submittedStatus: sts
-        })
-      );
-    }
-
-    // get validation by sections
-    const validatedSections = {
-      GeneralInformation: await metaData.validationGI(),
-      InnovationPackages: await metaData.validationInnovationPackages(),
-      Melia: await metaData.validationMelia(),
-      ManagePlan: await metaData.validationManagementPlan(),
-      HumanResources: await metaData.validationHumanResources(),
-      FinancialResources: await metaData.validationFinancialResources(),
-      PolicyCompliance: await metaData.validationPolicyCompliance(),
-      ImpactStrategies: await metaData.validationImpactStrategies(),
-      WorkPackages: await metaData.validationWorkPackages(),
-      Context: await metaData.validationContext()
-    };
-    // validate if initiative is already submitted
-    let missingSections = '';
-    for (const key in validatedSections) {
-      if (
-        Object.prototype.hasOwnProperty.call(validatedSections, key) &&
-        validatedSections[key].validation == 0
-      ) {
-        missingSections += `${key.split(/(?=[A-Z])/).join(' ')}, `;
-      }
-    }
-    if (missingSections != '') {
-      throw new APIError(
-        'Bad Request',
-        HttpStatusCode.BAD_REQUEST,
-        true,
-        `Initiative not completed yet. Missing: ${missingSections}`
-      );
-    }
-
-    // get current user
-    const {userId} = res.locals.jwtPayload;
-
-    if (!userId) {
-      throw new APIError(
-        'Bad Request',
-        HttpStatusCode.BAD_REQUEST,
-        true,
-        'User not found'
-      );
-    }
-    const user = await usersRepo.findOne(userId);
-
-    // create new submission object
-    const submission = new Submissions();
-    submission.initvStg = initvStg;
-    submission.active = true;
-    // submission.complete = true;
-    submission.first_name = user.first_name;
-    submission.last_name = user.last_name;
-    submission.userId = user.id;
-
-    // save submission
-    const submitted = await submissionRepo.save(submission);
-    initvStg.status = pendingStatus;
-    const initvStgUpd = await initvStgRepo.save(initvStg);
-
-    // create submission status
-    const submissionStatus = new SubmissionsStatus();
-    submissionStatus.active = true;
-    submissionStatus.submission = submitted;
-    submissionStatus.statusId = pendingStatus.id;
-
-    const submittedStatus = await submissionStatusRepo.save(submissionStatus);
-
-    return res.json(
-      new ResponseHandler('Initiative submitted', {submittedStatus})
-    );
-  } catch (error) {
-    console.log(error);
-    if (
-      error instanceof QueryFailedError ||
-      error instanceof EntityNotFoundError
-    ) {
-      new APIError(
-        'Bad Request',
-        HttpStatusCode.BAD_REQUEST,
-        true,
-        error.message
-      );
-    }
-    return res.status(error.httpCode).json(error);
-  }
-};
-
-/**
- *
- * @param req params:{ initiativeId, stageId }
  * @param body params:{ description, statusId }
  * @param res
  */
@@ -1236,27 +1222,25 @@ export const updateSubmissionStatusByInitiative = async (
   const {description, statusId} = req.body;
   const initvStgRepo = getRepository(InitiativesByStages);
   const submissionStatusRepo = getRepository(SubmissionsStatus);
-  // const submissionRepo = getRepository(Submissions);
-  // const statusesRepo = getRepository(Statuses);
 
   try {
-    // get initiaitive by stage
+    // get initiative by stage
     const initvStg = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage: stageId}
     });
     const metaData = new MetaDataHandler(initvStg.id.toString());
-    const validateSbSts = await metaData.validationSubmissionStatuses(initvStg);
+    const validateSbSts = await metaData.validationSubmissionStatuses();
 
     // get current user
     const {userId} = res.locals.jwtPayload;
 
+    //validate if **assessor** or admin is doing assessment
     const assessmentUser = await validateSbSts.isAssessor(userId);
-
+    // validate if initiative by stage is completed
+    await validateSbSts.isComplete();
+    // validate  if status is available or submission is not completed yet
     const {submission, newSubStatus, newStatusxInitv} =
       await validateSbSts.validateStatus(statusId);
-
-    validateSbSts.isComplete();
-    console.log(newSubStatus);
 
     newSubStatus.submission = submission;
     newSubStatus.description = description;
@@ -1270,9 +1254,10 @@ export const updateSubmissionStatusByInitiative = async (
     await initvStgRepo.save(initvStg);
 
     const statusS = await submissionStatusRepo.findOne({
-      where: {id: updatedStatus.id, active: 1},
+      where: {id: newSubStatus.id, active: 1},
       relations: ['submission']
     });
+
     return res.json(
       new ResponseHandler('Initiative submission status updated', {
         updatedSubmission: statusS
@@ -1476,7 +1461,7 @@ export async function getDepthDescription(req: Request, res: Response) {
 }
 
 /**
- * PREVIEW PARTNERS FOR IMPACT STRATEGIES
+ * PREVIEW PARTNERS
  * @param req
  * @param res
  * @returns
@@ -1815,7 +1800,7 @@ export async function getProjectedBenefits(req: Request, res: Response) {
     const initiativeshandler = new InitiativeHandler();
 
     let impactProjectedBenefitsRequested =
-      await initiativeshandler.requesProjectedBenefits();
+      await initiativeshandler.requestProjectedBenefits();
 
     res.json(
       new ResponseHandler('Requested projected benefits.', {
@@ -1847,7 +1832,7 @@ export async function getProjectedProbabilities(req: Request, res: Response) {
 export async function getSdgTargets(req: Request, res: Response) {
   try {
     const initiativeshandler = new InitiativeHandler();
-    const sdgTargets = await initiativeshandler.requesSdgTargets();
+    const sdgTargets = await initiativeshandler.requestSdgTargets();
     res.json(new ResponseHandler('Requested SDG Targets.', {sdgTargets}));
   } catch (error) {
     console.log(error);
@@ -1893,3 +1878,26 @@ function getRepoConstStage(tableName: string) {
       break;
   }
 }
+
+/**
+ * CLARISA MELIA STUDY TYPES
+ * @param req
+ * @param res
+ * @returns meliaStudyTypes
+ */
+
+export const getMeliaStudyTypes = async (req: Request, res: Response) => {
+  try {
+    //Get MELIA Study Types from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let meliaStudyTypes = await initiativeshandler.requestMeliaStudyTypes();
+
+    res.json(new ResponseHandler('MELIA Study Types', {meliaStudyTypes}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+};

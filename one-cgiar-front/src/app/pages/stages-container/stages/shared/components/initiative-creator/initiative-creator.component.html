@@ -1,4 +1,4 @@
-<div class="button_container" *ngIf="isAdmin">
+<div class="button_container" *ngIf="this._dataControlService.isAdmin">
     <app-add-button name="Create initiative" (click)="showDialog()"></app-add-button>
 </div>
 

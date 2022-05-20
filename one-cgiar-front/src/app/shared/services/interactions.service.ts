@@ -42,6 +42,16 @@ export class InteractionsService {
       timer: seconds ? seconds : 3000
     })
   }
+
+  simpleCustomConfirmModal(messageObj){
+    const {type, title, text, confirmButtonText} = messageObj;
+    Swal.fire({
+      icon: type,
+      title: title,
+      html: text,
+      confirmButtonText:confirmButtonText ? confirmButtonText:'Ok'
+    });
+  }
   /***
    * custom confirmation
    * 

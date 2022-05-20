@@ -27,7 +27,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { InitiativeCreatorModule } from './pages/stages-container/stages/shared/components/initiative-creator/initiative-creator.module';
 
 //? Others
-import { TawkToComponent } from './shared/components/tawk-to/tawk-to.component';
 import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
@@ -52,7 +51,6 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
     CreateUserModalComponent,
-    TawkToComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

@@ -1,28 +1,14 @@
-<div class="stage" *ngFor="let stage of this.userMenu; let i=index" [hidden]="!stage.active">
-    <div class="stage-title"
-        [ngClass]="{'activeSection': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
-        (click)="this._menuService.toggleExpand(sectionsList)">
-        <span>{{stage.description}}</span>
+
+<div>
+    <div class="header section_title ibdc_green_gradient" (click)="this.collapse = !this.collapse">
+        <div class="title">
+            <ng-content select="[title]"></ng-content>
+        </div>
+        <div class="icon">
+            <i class="material-icons expand_more_icon" [style.transform]="'rotate('+(this.collapse?0:180)+'deg)'" [ngStyle]="{'opacity': 1}">expand_more</i>
+        </div>
     </div>
-
-    <div #sectionsList class="stage-sections"
-        [ngClass]="{'expandIbd': this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url),'collapseIbd': !this._menuService.activeClassByRoute([stage.description],this.router.routerState.snapshot.url)}"
-        [@expandable]="sectionsList.classList.contains('collapseIbd')?'collapse':'expand'">
-        <br>
-        <app-menu-section *ngIf="stage?.sections?.length" [stage]="stage" [sections]="stage.sections">
-        </app-menu-section>
+    <div class="body" [style.padding]="this.collapse?'0px':'5px'" [@expandable]="(this.collapse?'collapse':'expand')">
+        <ng-content select="[content]"></ng-content>
     </div>
-
-    <br>
-
-
-
-</div>
-<div class="submitButtonInitiative" *ngIf="usrAvailableSubm">
-    <button pButton type="button" (click)="onAssess()" label="Submit Initiative"
-        class="p-button-rounded p-button-success"></button>
-</div>
-<div class="submitButtonInitiative" *ngIf="usrAssessSubm" style="margin-top: 10px;">
-    <button pButton type="button" (click)="showDialogSubStasModal()" label="Stage gating"
-        class="p-button-rounded p-button-info"></button>
 </div>

@@ -4,10 +4,19 @@ import helmet from 'helmet';
 import {startAccsCtrl} from '../middlewares/access-control';
 import {startMulter} from '../middlewares/multer';
 import Routes from '../routes';
+import morgan from 'morgan';
+import tx2 from 'tx2';
+let meter = tx2.meter({
+  name: 'req/sec',
+  samples: 1,
+  timeframe: 60
+});
 
 export default ({app}: {app: express.Application}) => {
   const parentDir = require('path').resolve(process.cwd(), '../');
 
+  meter.mark();
+  app.use(morgan('dev'));
   app.use(express.urlencoded({extended: true}));
   app.use(express.json());
   // middlewares

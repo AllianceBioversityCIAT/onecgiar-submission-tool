@@ -17,12 +17,12 @@ export class FullProposalService {
    * @param id 
    * @returns general-informatio
    */
-  patchContext(initiativeId,body: any): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/${initiativeId}/context`, body);
+  patchContext(stageId, initiativeId,body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/${stageId}/${initiativeId}/context`, body);
   }
 
-  getContext(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/${initiativeId}/context`);
+  getContext(stageId, initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/${stageId}/${initiativeId}/context`);
   }
 
 

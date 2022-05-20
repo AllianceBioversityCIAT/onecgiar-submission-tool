@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { map } from 'rxjs/operators';
+import { EOIData } from './interfaces/EOIData.interface';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -17,13 +19,16 @@ export class MeasurableObjectivesComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   extraValidation = false;
+  initiativeOutcomeList:EOIData []=[];
+  toc_id:number|string;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _dataControlService:DataControlService,
-    private _dataValidatorsService:DataValidatorsService
+    private _dataValidatorsService:DataValidatorsService,
+    public _utilsService:UtilsService,
+    public _dataControlService:DataControlService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),
@@ -32,12 +37,19 @@ export class MeasurableObjectivesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContext();
-    this.formChanges();
+    this.getEndOfInitiativeOutcome();
+  }
+
+  getEndOfInitiativeOutcome(){
+    console.log("getEndOfInitiativeOutcome")
+    this._initiativesService.getEndOfInitiativeOutcome().pipe(map(res=>res?.response)).subscribe(resp=>{
+      console.log(resp?.eoi);
+      this.initiativeOutcomeList = resp?.eoi;
+    })
   }
 
   upserInfo(){
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Measurable three-year outcomes has been saved'):
@@ -47,7 +59,7 @@ export class MeasurableObjectivesComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       // console.log(resp);
       this.contextForm.controls['smart_objectives'].setValue(resp?.response?.context?.smart_objectives);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);

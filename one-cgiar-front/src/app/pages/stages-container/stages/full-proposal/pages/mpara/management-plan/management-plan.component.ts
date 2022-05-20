@@ -41,7 +41,7 @@ export class ManagementPlanComponent implements OnInit {
   }
 
   getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'management-plan').subscribe(resp=>{
+    this._initiativesService.getManagePlan('management-plan').subscribe(resp=>{
       // console.log(resp);
       let mpara = resp.response.managePlanData;
       this.data.id = mpara?.id;
@@ -62,7 +62,7 @@ export class ManagementPlanComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'7.management-plan',3).subscribe(resp=>{
+    this._initiativesService.saveManagePlan(formData,'7.management-plan').subscribe(resp=>{
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();

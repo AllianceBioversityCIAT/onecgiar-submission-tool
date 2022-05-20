@@ -1,14 +1,14 @@
 
 <div class="elements_container">
-    <div class="platform_backgorund"></div>
+    <!-- <div class="platform_backgorund"></div> -->
    
         <div class="left_menu" #menu>
-            <app-menu></app-menu>
-            <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
+            <app-menu *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
+            <!-- <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
                 <span class="open_menu_icon material-icons">
                     menu
                 </span>
-            </div>
+            </div> -->
         </div>
         <div class="right_container">
             <div class="capsule-header">
@@ -20,22 +20,16 @@
                         <span class="initiative-id">{{this.initiativesSvc.initiative.official_code}}</span>
                         <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
                     </div>
-                    <div class="initIdContainer" *ngIf="this.initiativesSvc.initiative.status != null">
-                        <span class="text-description">
-                            Status: 
-                        </span>
-                        <span class="initiative-id"  pTooltip="{{toolTipText}}"  tooltipPosition="top" placeholder="Top">{{this.initiativesSvc.initiative.status}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-                    
+                                      
                 </div>
-                    <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="managerAccesible()">
+                    <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin">
                         Manage access
                         <mat-icon>settings</mat-icon>
                     </button>
             </div>
-            <div class="card-container" style="position: relative;">
-                <div class="initiative-identification ibdc_bg_secondary_color" style="position: relative; z-index: 10;">
+            <div class="card-container">
+
+                <div class="initiative-identification ibdc_bg_secondary_color">
                     <app-section-breadcrumb *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;" [sectionsList]="sectionsList"></app-section-breadcrumb>              
                     <!-- <div>
                         
@@ -43,8 +37,11 @@
                         <span class="initiative-id" *ngIf="this._dataControlService.breadcrumbItemTwo">{{this._dataControlService.breadcrumbItemTwo}}</span>
                     </div> -->
                 </div>
-                <!-- *ngIf="this._dataControlService.userMenu.length && this._dataControlService.wpMaped && this._dataControlService.pobMaped" -->
-                <router-outlet></router-outlet>
+
+                <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
+                    <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId"></router-outlet>
+                </div>
+   
             </div>
         </div>
   

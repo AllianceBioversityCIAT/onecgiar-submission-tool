@@ -52,4 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onLogout(): void {
     this.authSvc.logout();
   }
+
+  validateUser(){
+    return localStorage.getItem('user')
+  }
+
 }

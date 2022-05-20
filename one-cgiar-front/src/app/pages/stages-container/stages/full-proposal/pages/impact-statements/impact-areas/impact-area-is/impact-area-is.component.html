@@ -1,8 +1,26 @@
 <section-title name="Impact area" ></section-title>
+<app-ia-visual-reference [impactAreId]="this.iaID" ></app-ia-visual-reference>
 <div class="section-container animate__animated animate__fadeIn">
-    <form (ngSubmit)="saveSection()">
 
-        <div class="row" *ngIf="showForm">
+
+    <div class="ibdc-tabs">
+        <div class="ibdc-tab" (click)="firstTab = true;">
+          <div class="ibdc-tab_name notSelected" [ngClass]="{'selected': firstTab}">
+            Narratives
+          </div>
+        </div>
+        <div class="ibdc-tab" (click)="firstTab = false;">
+          <div class="ibdc-tab_name notSelected " [ngClass]="{'selected': !firstTab}">
+            Partners
+          </div>
+        </div>
+      </div>
+    
+      <div class="ibdc-tabs_container">
+        
+    <form>
+
+        <div class="row animate__animated animate__fadeIn" *ngIf="showForm && firstTab">
             <div class="col-12">
                 <app-section-alerts-pack [sectionForm]="sectionForm" [extraValidation]="this._dataValidatorsService.validateIfArrayHasActiveFalseEstrict(this.savedList,'code') * this.extraValidation"></app-section-alerts-pack>
             </div>
@@ -36,6 +54,9 @@
                     description:'Highlight dedicated human resources to achieve the Work Package components and targets for this Impact Area. Refer/link to any strategy to improve capacity via internal capacity-building or through partnership'}">
                 </ibdc-textarea>
             </div>
+        </div>
+
+        <div class="row animate__animated animate__fadeIn" *ngIf="showForm && !firstTab">
             <div class="col-sm-12" *ngIf="this.institutionsLoaded && this.typesLoaded">
                 <app-global-partners-request 
                 [institutions]="this.institutionsList" 
@@ -45,14 +66,19 @@
                 [institutionsTypesDisableList]="this.institutionsTypesDisableList"
                 ></app-global-partners-request>
             </div>
-
         </div>
         
         <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
 
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
-        </div>
-
     </form>
+      </div>
+      
+    
+    
+
+
+    <div class="justify_content_end" (click)="saveSection()" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}"></ibdc-save-button>
+    </div>
+
 </div>

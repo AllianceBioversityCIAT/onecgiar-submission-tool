@@ -33,11 +33,12 @@ export class ActivityBreakdownComponent implements OnInit {
 
   onSave() {
     this.spinnerService.show('activity-breakdown');
-    console.log('financial resources', this.fixedData.list);
+    // console.log('financial resources', this.fixedData.list);
     this._initiativesService.saveFinancialResources(this.fixedData.list, this._initiativesService.initiative.id, 'activity_breakdown').subscribe(
-      res => {
-        console.log('financial resources response', res);
-        this.getActivityBreakdown();
+        res => {
+        this.spinnerService.hide('activity-breakdown');
+            console.log('financial resources response', res);
+        // this.getActivityBreakdown();
       },
       error => {
         console.log(error);
@@ -47,7 +48,7 @@ export class ActivityBreakdownComponent implements OnInit {
   }
   createMatrix() {
     this.spinnerService.show('activity-breakdown');
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id,'proposal').subscribe(resp => {
+    this._initiativesService.getWpsFpByInititative().subscribe(resp => {
       this.WP = resp.response.workpackage;
       this.COLUMNS = [...this.COLUMNS, ...this.WP.map(wp => wp.acronym)];
       let initialMtrx = [

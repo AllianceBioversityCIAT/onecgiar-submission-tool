@@ -8,7 +8,7 @@
             {{this.riskAssessment.risks_achieving_impact}}
             <h5>Risk theme: <strong>{{this.riskAssessment.risks_theme}}</strong> </h5>
         </div>
-        <div class="edit_button" *ngIf="!riskTitleEditableIsActive">
+        <div class="edit_button" *ngIf="!riskTitleEditableIsActive && !this._initiativesService?.initiative.readonly">
             <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
         </div>
 
@@ -26,7 +26,7 @@
         <div *ngIf="selectList === true" class="animate__animated animate__fadeInLeftBig">
             <br>
             <ibdc-select-field
-            [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
+            [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"  frontendSearchAttribute="risks_achieving_impact" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
             [selectableList]="this.risksList"
           ></ibdc-select-field>
         </div>
@@ -76,7 +76,7 @@
     <hr>
     <div class="row">
         <div class="col-12">
-            <ibdc-text-area-field  [objectItem]="this.riskAssessment" [objectAtributteName]="'description_risk'" inputTitle="Detailed description"></ibdc-text-area-field>
+            <ibdc-text-area-field [readOnlyVariable]="this._initiativesService?.initiative.readonly"  [objectItem]="this.riskAssessment" [objectAtributteName]="'description_risk'" inputTitle="Detailed description"></ibdc-text-area-field>
         </div>
         <div class="col-6 margin-top-15">
             <ibdc-select-field
@@ -115,7 +115,7 @@
             <div *ngFor="let opportunity of this.riskAssessment.opportinities">
                 <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
             </div>
-            <button pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
+            <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
 
         </div>
         

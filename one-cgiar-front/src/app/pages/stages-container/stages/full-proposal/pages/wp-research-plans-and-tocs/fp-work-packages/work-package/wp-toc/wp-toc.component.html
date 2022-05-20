@@ -1,47 +1,61 @@
-<!-- <form [formGroup]="summaryForm" (ngSubmit)="upsertGeneralInfo()" class="general-information-form"
-        *ngIf="showForm"> -->
-
-<form [formGroup]="wpTocForm" (ngSubmit)="saveSection()" class="row">
-    <!-- <div class="col-12">
-      <ibdc-alert [options]="{text: 'This section is an example', type:'info'}"></ibdc-alert>
-      <br>
-    </div> -->
-    <div class="col-8">
-      <ibdc-textarea
-      [options]="{inputTitle:'TOC ID', form:wpTocForm, formControlName:'TocId'
-      ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
-      </ibdc-textarea>
-    </div>
-
-    <div class="col-4">
-      <button *ngIf="!this._initiativesService.initiative.readonly" pButton type="button" label="Generate data" class="p-button-info" (click)="generateUrl()" style="margin-top: 24px;"></button>
-    </div>
-
-    <div class="col-sm-12" style="margin: 30px 0px;" *ngIf="txtIsLoaded">
-        <ibdc-simple-text [options]="{inputTitle:'The Science narrative', value:toctxtData}"></ibdc-simple-text>
-    </div>
 
 
-    <div class="col-12 toc_image" style="display: flex; justify-content: center;" [hidden]="!imageIsLoaded" *ngIf="linkIsgenerated">
-      <div class="image_container">
-        <section-sub-title name="Diagram"></section-sub-title>
-        <img (load)="imageLoaded()" (error)="imageError()" [src]="this.wpTocForm.value['imageUrl']+'.png'" alt="" srcset="" width="100%">
+<!-- <ibdc-alert [options]="{text: 'This information is provided by the ToC tool', type:'info'}"></ibdc-alert> -->
+<div class="alert_container" style="margin: 0 0 35px 0;">
+  <ibdc-alert [options]="{text:'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new windows where you will be able to edit your ToC.', 
+                          type:'info'}"></ibdc-alert>
+</div>
+<div class="center_flex" style="margin-top: 35px;">
+  <app-edit-toc-button *ngIf="!this.tocList.length" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+</div>
+
+<!-- <h1>dsd</h1>
+<app-read-more-container>
+  <div content></div>
+</app-read-more-container> -->
+
+<div class="toc_list">
+
+  <p class="no-data-text" *ngIf="serviceIsConsumed && !this.tocList.length">No information saved</p>
+  <div class="toc_item" *ngFor="let toc of this.tocList; let i=index">
+
+    <app-item-information-button>
+      <div content>
+        <div style="display: flex; align-items: center;"><strong style="margin-right: 5px;">ToC ID:</strong> {{toc.toc_id}} <div style="margin-left: 8px;"><app-clipboard-icon [value]="toc.toc_id"></app-clipboard-icon></div></div>
+      </div>
+    </app-item-information-button>
+  
+  <div class="center_flex">
+    <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+  </div>
+  <!-- <button (click)="this._utilsService.goToEditToc()">Example Toc Button {{toc?.toc_id}}</button> -->
+    <div class="tex_container">
+      <ibdc-simple-text [options]="{inputTitle:'ToC narrative',value: toc.narrative, required: false}" textAlign='justify'>
+      </ibdc-simple-text>
+      <div class="updated_at">
+        <app-toggle-format-date [date]="toc?.updated_at"></app-toggle-format-date>
       </div>
     </div>
 
-    <div class="col-12">
-      <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!txtIsLoaded" [options]="{text: 'The TOC narrative is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
+    <div class="loading-container rotating" [id]="'loading'+i">
+      <div class="material-icons">cached</div>
     </div>
 
-    <div class="col-12">
-      <ibdc-alert [hidden]="!linkIsgenerated" *ngIf="!imageIsLoaded" [options]="{text: 'The TOC diagram is not found, please validate whit TOC admin.', type:'danger'}"></ibdc-alert> 
+    <div class="col-12 toc_image" [id]="'diagram'+i">
+      <div class="image_container">
+        <section-sub-title name="Diagram"></section-sub-title>
+        <div class="img_hover_info">
+          <img [id]="'image'+i" (load)="imageLoaded('diagram'+i,i)" (error)="imageError(i)" [src]="this.toc.diagram" alt="" srcset="" width="100%">
+          <div class="info_to_open">
+            Click to see full image
+            <i class="material-icons">
+              aspect_ratio
+            </i>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <p class="toc_id toc id toc-id" [hidden]="true">SmBQ1GfEjD</p>
 
-    
-
-    <!-- <div class="col-12" style="display: flex; justify-content: center; margin-top: 30px;">
-        <img src="https://cdn.pixabay.com/photo/2017/05/14/03/45/gui-2311261_960_720.png" alt="" sizes="100%" srcset="">
-    </div> -->
-</form>
+  </div>
+  
+</div>

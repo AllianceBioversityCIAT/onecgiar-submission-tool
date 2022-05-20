@@ -35,11 +35,11 @@ export class InitiativeTeamComponent implements OnInit {
 
 
   getHumanResources(){
-    this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'initiative_team').subscribe(resp=>{
+    this._initiativesService.getHumanResources('initiative_team').subscribe(resp=>{
 
       this.initiativeTeamData = resp.response.humanResourcesData;
-      console.log(this.initiativeTeamData);
-      console.log(this.initiativeTeamData?.initvTeam);
+      // console.log(this.initiativeTeamData);
+      // console.log(this.initiativeTeamData?.initvTeam);
       if (!this.initiativeTeamData) this.initiativeTeamData = {active:true,capacity_development:'',id:null,gender_diversity_inclusion:'',initvTeam:[],section:'9.human-resources',updateFiles:[]};
       this.initiativeTeamData.updateFiles = [];
       this.dataLoaded = true;
@@ -58,7 +58,7 @@ export class InitiativeTeamComponent implements OnInit {
     console.log(this.initiativeTeamData);
 
     formData.append('data', JSON.stringify(this.initiativeTeamData));
-    this._initiativesService.saveHumanResources(formData, this._initiativesService.initiative.id, '9.human-resources', 3).subscribe(resp => {
+    this._initiativesService.saveHumanResources(formData,'9.human-resources').subscribe(resp => {
       console.log("saveHumanResources");
       console.log(resp);
       true?

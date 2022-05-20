@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { InitiativeTeamList } from '../../models/initiativeTeamList.interface';
+import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-initiative-team-item',
@@ -9,7 +10,9 @@ import { InitiativeTeamList } from '../../models/initiativeTeamList.interface';
 export class InitiativeTeamItemComponent implements OnInit {
   @Input() initiativeTeamItem : InitiativeTeamList;
   @Input() index : number;
-  constructor() { }
+  constructor(
+    public _initiativesService:InitiativesService
+  ) { }
 
   ngOnInit(): void {
   }

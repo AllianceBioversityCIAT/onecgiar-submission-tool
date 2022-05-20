@@ -6,6 +6,7 @@ p{
 
 .cont{
     position: fixed;
+    top: 50px;
     background-color: white;
     border-radius: 5px;
     z-index: 1000;
@@ -22,7 +23,7 @@ p{
 }
 
 .rigth{
-    right: 0;
+    left: calc(100vw - 210px);
     transition: all .3s ease-in-out;
 }
 

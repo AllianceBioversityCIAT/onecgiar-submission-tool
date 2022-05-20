@@ -1,13 +1,16 @@
-import {getConnection, getRepository} from 'typeorm';
+import {getConnection, getCustomRepository, getRepository} from 'typeorm';
 import {Citations} from '../entity/Citatitions';
 import {CountriesByInitiativeByStage} from '../entity/CountriesByInitiativeByStage';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
+import * as entities from '../entity';
 import {RegionsByInitiativeByStage} from '../entity/RegionsByInitiativeByStage';
 import {Stages} from '../entity/Stages';
 import {BaseError} from './BaseError';
 import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
+import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
+import {InitiativeHandler} from './InitiativesDomain';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -22,7 +25,11 @@ export class InitiativeStageHandler extends BaseValidation {
   private regionsRepo = getRepository(RegionsByInitiativeByStage);
   private countriesRepo = getRepository(CountriesByInitiativeByStage);
 
-  constructor(initvStgId?: string, stageId?: string, initiativeId?: string) {
+  constructor(
+    initvStgId?: string | number,
+    stageId?: string | number,
+    initiativeId?: string | number
+  ) {
     super();
     this.initvStgId_ = initvStgId;
     this.stageId_ = stageId;
@@ -68,7 +75,162 @@ export class InitiativeStageHandler extends BaseValidation {
       return this.intvStage_;
     } catch (error) {
       throw new BaseError(
-        'Get intitative by stage object',
+        'Get initiative by stage object',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   *
+   * @param initvStg
+   * @returns summary
+   */
+  async getSummary(initvStg) {
+    try {
+      const generalInfoRepo = await getCustomRepository(
+        GeneralInformationRepository
+      );
+
+      const summary = await generalInfoRepo.requestSummary(initvStg);
+
+      return summary;
+    } catch (error) {
+      throw new BaseError('Request Summary : Error', 400, error.message, false);
+    }
+  }
+
+  async upsertSummary(
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym,
+    budgetId,
+    budget_value,
+    regions,
+    countries
+  ) {
+    try {
+      // upsert geo scope, budget, general information
+      const upsertedGeoScope = await this.upsertGeoScopes(regions, countries);
+      const upsertedBudget = await this.addBudget(
+        budget_value,
+        'general_information',
+        'budget',
+        budgetId,
+        true
+      );
+      const upsertedGeneralInformation = await this.upsertGeneralInformation(
+        generalInformationId,
+        name,
+        action_area_id,
+        action_area_description,
+        acronym
+      );
+
+      return {upsertedGeoScope, upsertedBudget, upsertedGeneralInformation};
+    } catch (error) {
+      throw new BaseError('Upsert Summary: Error', 400, error.message, false);
+    }
+  }
+
+  /**
+   ** UPSERT GENERAL INFORMATION
+   * @param generalInformationId?
+   * @param name
+   * @param action_area_id
+   * @param action_area_description
+   * @returns generalInformation
+   */
+  async upsertGeneralInformation(
+    generalInformationId?,
+    name?,
+    action_area_id?,
+    action_area_description?,
+    acronym?
+  ) {
+    const gnralInfoRepo = getRepository(entities.GeneralInformation);
+
+    //  create empty object
+    let generalInformation: entities.GeneralInformation;
+    try {
+      // get current intiative by stage
+      // const initvStg = await this.initvStage;
+      const initvStg = await this.setInitvStage();
+
+      // get clarisa action action areas
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
+
+      // get select action areas for initiative
+      const selectedActionArea = actionAreas.find(
+        (area) => area.id == action_area_id
+      ) || {name: null};
+
+      // if null, create object
+      if (generalInformationId == null) {
+        generalInformation = new entities.GeneralInformation();
+        generalInformation.name = name;
+        generalInformation.acronym = acronym;
+        generalInformation.action_area_description =
+          action_area_description || selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id;
+        // assign initiative by stage
+        generalInformation.initvStg = initvStg.id;
+      } else {
+        generalInformation = await gnralInfoRepo.findOne(generalInformationId);
+        generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
+        generalInformation.action_area_description = selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id
+          ? action_area_id
+          : generalInformation.action_area_id;
+      }
+      // upserted data
+      let upsertedInfo = await gnralInfoRepo.save(generalInformation);
+
+      //    update initiative name
+      let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+      initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
+      initiative = await this.initiativeRepo.save(initiative);
+
+      // retrieve general information
+      const GIquery = ` 
+            SELECT
+            initvStgs.id AS initvStgId,
+            general.id AS generalInformationId,
+            IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+            IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+            (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+            (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+            
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                
+                general.action_area_description AS action_area_description,
+                general.action_area_id AS action_area_id
+                
+                FROM
+                initiatives_by_stages initvStgs
+            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+            
+            WHERE initvStgs.id = ${initvStg.id};
+            `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'General information : Full proposal',
         400,
         error.message,
         false
@@ -268,7 +430,7 @@ export class InitiativeStageHandler extends BaseValidation {
    * @returns { geoScope }
    */
   async getGeoScope() {
-    // get initiative by stage id from intitiative
+    // get initiative by stage id from initiative
     const initvStgId: string = this.initvStgId_;
     try {
       // get initiative regions data
@@ -352,7 +514,7 @@ export class InitiativeStageHandler extends BaseValidation {
 
   async upsertGeoScope(region_id?, country_id?) {
     try {
-      // get current intiative by stage
+      // get current initiative by stage
       const initvStg = await this.initvStage;
       // get geo scope from initiative by stage
       let initvStgRegions = await this.regionsRepo.findOne({
@@ -362,7 +524,7 @@ export class InitiativeStageHandler extends BaseValidation {
         where: {initvStg: initvStg}
       });
 
-      // if not exists, createe new element
+      // if not exists, create new element
       if (initvStgRegions == null) {
         initvStgRegions = new RegionsByInitiativeByStage();
       }
@@ -398,10 +560,12 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopes(regions?, countries?) {
+
+
     let initvStgRegions, initvStgCountries;
 
     try {
-      // get current intiative by stage
+      // get current initiative by stage
       const initvStg = await this.initvStage;
       // get geo scope from initiative by stage
       initvStgRegions = await this.regionsRepo.find({
@@ -459,13 +623,13 @@ export class InitiativeStageHandler extends BaseValidation {
   /******* REPLICATION STEPS *********/
 
   async forwardGeoScope(forwardStage: Stages | number) {
-    // get initiative by stage id from intitiative
+    // get initiative by stage id from initiative
     const initvStg = await this.initvStage;
     try {
       // get geo scope from initiative by stage
       const currentInitvStgGeoScope = await this.getGeoScope();
 
-      // find intitiative by stage object from stage and initiative
+      // find initiative by stage object from stage and initiative
       let forwardInitvStg = await this.initvStgRepo.findOne({
         where: {stage: forwardStage, initiative: initvStg[0].initiativeId}
       });
@@ -549,10 +713,10 @@ export class InitiativeStageHandler extends BaseValidation {
         ? existInitvStg[0]
         : new InitiativesByStages();
 
-      this.intvStage_.active = true;
+     // this.intvStage_.active = true;
       this.intvStage_.initiative = this.initiativeId_;
       this.intvStage_.stage = this.stageId_;
-      // save intiative by stage
+      // save initiative by stage
       this.intvStage_ = await this.initvStgRepo.save(this.intvStage_);
       this.initvStgId_ = this.intvStage_.id;
 
@@ -579,7 +743,7 @@ export class InitiativeStageHandler extends BaseValidation {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Set intitative by stage object',
+        'Set initiative by stage object',
         400,
         error.message,
         false

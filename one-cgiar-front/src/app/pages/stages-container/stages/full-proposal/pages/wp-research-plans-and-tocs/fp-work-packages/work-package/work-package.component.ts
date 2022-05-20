@@ -4,6 +4,7 @@ import { WpDataControlService } from '../services/wp-data-control.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { AuthService } from '../../../../../../../../shared/services/auth.service';
 
 
 @Component({
@@ -18,8 +19,9 @@ export class WorkPackageComponent implements OnInit {
     private _wpDataControlService:WpDataControlService,
     private _dataControlService:DataControlService,
     private router:Router,
-    private _initiativesService:InitiativesService,
-    private _interactionsService : InteractionsService
+    public _initiativesService:InitiativesService,
+    private _interactionsService : InteractionsService,
+    public _authService: AuthService
   ){
 
   }
@@ -39,10 +41,10 @@ export class WorkPackageComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
-    }, 10);
+    }, 100);
     
   }
 
@@ -59,14 +61,8 @@ export class WorkPackageComponent implements OnInit {
   deleteCurrentWP() {
 
     let body = {
-      // acronym: "Nuevo y",
-      // name: "",
-      // pathway_content: "",
-      // is_global: false,
       id: Number(this._wpDataControlService.wpId),
       active: false,
-      // regions: [],
-      // countries: []
     }
 
     console.log(this._wpDataControlService.wpId)
@@ -77,10 +73,10 @@ export class WorkPackageComponent implements OnInit {
     console.log('addWorkPackage()')
     // let body = {active:false,id:this._wpDataControlService.wpId}
     console.log(body)
-    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.saveWpFp(body).subscribe(resp => {
       console.log(resp)
       this._interactionsService.successMessage('Work package has been removed')
-      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     })
     
   }
@@ -99,7 +95,8 @@ export class WorkPackageComponent implements OnInit {
    
     // select current wp
     if (wpId != -1 && allWp) {
-      let sectionFinded = allWp.find((wp) => wp.id == wpId).activeSection = true;
+      let sectionFinded = allWp.find((wp) => wp.id == wpId);
+      if (sectionFinded) sectionFinded.activeSection = true;
     }
      
   }

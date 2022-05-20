@@ -39,6 +39,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // console.log(this.savedList)
     this.mapInstitutionsTypes();
     this.institutions.map(item=>{
       item.id = null;
@@ -84,9 +85,17 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   onSelectTag(item,attributeName){
+    console.log(item)
+    console.log(attributeName)
+    console.log( !item.hasOwnProperty(attributeName))
     if (this._initiativesService.initiative.readonly) return;
-    if ( typeof item[attributeName]  === 'undefined')item[attributeName] = true;
+    if ( !item.hasOwnProperty(attributeName)) return item[attributeName] = true;
+    console.log("inverso")
+    console.log("item[attributeName] = " + item[attributeName])
+    console.log("!item[attributeName] = " + !item[attributeName] )
     item[attributeName] = !item[attributeName] 
+    console.log(item[attributeName])
+    console.log(item)
   }
 
   countDuplicates(originalArray) {
@@ -132,6 +141,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 }
 
   onSelectOption(option:any){
+    console.log("onSelectOption")
     // console.log(this.savedList);
     console.log(option);
     // encontrar en lista de guardados la opcion seleccionada
@@ -140,25 +150,30 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // console.log(itemFinded);
     // toggle de seleccion (quitar / poner)
     // Eliminado logico o eliminar de elementos de un array que no están en la bd
+    
     option.selected = false;
     this.institutions.find((savedItem:any)=>savedItem.code == option.code).selected = false;
     this.institutionsTypes.find((savedItem:any)=>savedItem.code == itemFinded.institutionTypeId).disabled = false
       //formas de borrar
       if (itemFinded) {
         // si tiene id de la bd pero de guardado
-        if (itemFinded.id) {
+        if (itemFinded.hasOwnProperty('id')) {
+          console.log("borrado logico=> "+itemFinded.id)
           //borrado logico
           itemFinded.active = false;
         }else{
           //borrado de array
+          console.log("borrado de array")
           this.savedList.splice(itemFindedIndex, 1)
         }
         
       }
     // console.log(option);
+    console.log(this.savedList)
   }
 
   onDeleteInstitutionType(option){
+    console.log("onDeleteInstitutionType")
     // console.log("_______________________________");
     // console.log(option);
     // console.log(this.institutionsTypesSavedList);
@@ -172,14 +187,16 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // console.log(finisd);
 
     if (itemFinded) {
-      if (itemFinded.id) {
+      if (itemFinded.hasOwnProperty('id')) {
+        console.log("borrado logico")
         itemFinded.active = false;
       }else{
+        console.log("borrado de array")
         this.institutionsTypesSavedList.splice(itemFindedIndex, 1);
       }
     }
 
-    // console.log(this.savedList);
+    console.log(this.savedList);
     // console.log(this.institutionsTypesSavedList);
 
   }

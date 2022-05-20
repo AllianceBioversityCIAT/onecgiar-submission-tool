@@ -31,7 +31,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
     this.formChanges();
   }
   getInnovationPackages(){
-    this._initiativesService.getInnovationPackages(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getInnovationPackages().subscribe(resp=>{
       console.log(resp.response.innovationPackagesData);
       if (resp.response.innovationPackagesData) {
         this.secionForm.controls['key_principles'].setValue(resp.response.innovationPackagesData.key_principles);
@@ -42,7 +42,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   }
 
   saveSection(){
-    this._initiativesService.saveInnovationPackages(this.secionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveInnovationPackages(this.secionForm.value).subscribe(resp=>{
       this.secionForm.controls['id'].setValue(resp.response.innovationPackages.upsertedInnovationPackages.id);
       this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Innovation Packages and Scaling Readiness Plan has been saved'):

@@ -6,6 +6,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from '../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { DialogModule } from 'primeng/dialog';
 import { PartnersRequestModule } from '../../../../../../shared/components/partners-request/partners-request.module';
+import { AnimatedButtonModule } from '../animated-button/animated-button.module';
 
 
 
@@ -17,7 +18,8 @@ import { PartnersRequestModule } from '../../../../../../shared/components/partn
     UtilsModule,
     IbdAngularComponentsModule,
     DialogModule,
-    PartnersRequestModule
+    PartnersRequestModule,
+    AnimatedButtonModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

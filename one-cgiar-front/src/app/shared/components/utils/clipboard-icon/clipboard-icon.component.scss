@@ -1,0 +1,16 @@
+.clipboard{
+    display: inline;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(43, 43, 43);
+    color: rgb(255, 255, 255);
+    border-radius: 100px;
+    padding: 5px;
+    .text{
+
+    }
+    .icon{
+        font-size: 18px;
+    }
+}

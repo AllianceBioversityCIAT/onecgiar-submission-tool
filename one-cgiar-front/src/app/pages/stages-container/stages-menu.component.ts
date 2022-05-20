@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { StagesMenuService } from '../../shared/services/stages-menu.service';
 import { InteractionsService } from '../../shared/services/interactions.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
+import { UtilsService } from '../../shared/services/utils.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -28,7 +29,8 @@ export class StagesMenuComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public dialog: MatDialog,
     private router: Router,
-    public _dataControlService: DataControlService
+    public _dataControlService: DataControlService,
+    private _utilsService:UtilsService
   ) { }
 
   openDialog(): void {
@@ -57,21 +59,78 @@ export class StagesMenuComponent implements OnInit {
       }
     })
     this._interactionsService.collapseHeader = true;
+
+    this.initiativesSvc.getStages().subscribe((resp:any)=>{
+      this.activedRouteEvent(resp?.stages);
+    })
+
+
+    // TODO stageId 3 condition
+    if (this.initiativesSvc.initiative.stageId === 3) {
+      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
+        this.initiativesSvc.initvStgId = resp.response;
+      })
+    }
+
+    // TODO stageId 3 condition
+    this._dataControlService.validateMenu$.subscribe(resp => {
+      // console.log(resp)
+      // if (this.initiativesSvc.initiative.stageId === 3) {
+        this.validateAllSections();
+      // }
+    })
+    this._dataControlService.loadMenu$.emit('full-proposal');
+
+  }
+
+  currentStageAux = '';
+  validateCurrentStageChange(stageName){
+    console.log(this.initiativesSvc.initiative.exactStageName)
+    let currentRoute = this.router.url;
+    if (this.currentStageAux != stageName && this.currentStageAux != '') {
+          this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initiative.id}/stages/${this.initiativesSvc.initiative.exactStageName}`).then(()=>{
+              setTimeout(() => {
+                this.router.navigateByUrl(currentRoute)
+              }, 500);
+        })
+    }
+    this.currentStageAux = stageName;
+  }
+
+  activedRouteEvent(stagesList:[]){
+   
     this.activatedRoute.params.subscribe(resp => {
+
+      this.validateCurrentStageChange(resp?.stageName);
+      
+      stagesList.map((stageItem:any)=>{
+        stageItem.stageNameKebabCase = this._utilsService.convertToKebabCase(stageItem?.description)
+      })
+
+      let currentStage:any = stagesList.find((stageItem:any) => stageItem?.stageNameKebabCase == resp?.stageName)
+      // console.log(currentStage)
+      // console.log(currentStage?.id)
+      // console.log("Change initiative=> " , currentStage?.id);
+      this.initiativesSvc.initiative.stageName = currentStage.stageNameKebabCase != 'pre-concept' ? 'proposal' : currentStage.stageNameKebabCase;
+      this.initiativesSvc.initiative.exactStageName = currentStage.stageNameKebabCase;
       this.initiativesSvc.initiative.id = resp['id'];
+
+      this.initiativesSvc.initiative.stageId = currentStage?.id
 
       const promise1 = this.initiativesSvc.getInitiativeById(resp['id']);
       const promise2 = this.initiativesSvc.getUsersByInitiative(resp['id']);
 
       forkJoin([promise1, promise2]).subscribe(val => {
+        // console.log(val)
         const sucP1 = val[0];
         const sucP2 = val[1].response.users;
         this.initiativesSvc.initiative.name = sucP1.name;
         this.initiativesSvc.initiative.official_code = sucP1.official_code;
-        this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
-        this.initiativesSvc.initiative.stageNameToServices = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
-        // console.log(this.initiativesSvc.initiative.stageId);
-        // console.log(this.initiativesSvc.initiative.stageNameToServices);
+
+        // this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
+        // this.initiativesSvc.initiative.stageName = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
+        
+
         this.initiativesSvc.initiative.users = sucP2;
         this.initiativesSvc.initiative.status = sucP1.status;
         this.getInitiativeReadOnlyValidation(this.initiativesSvc.initiative);
@@ -96,29 +155,14 @@ export class StagesMenuComponent implements OnInit {
 
     });
     
-    // TODO stageId 3 condition
-    if (this.initiativesSvc.initiative.stageId === 3) {
-      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-        this.initiativesSvc.initvStgId = resp.response;
-      })
-    }
-
-    // TODO stageId 3 condition
-    this._dataControlService.validateMenu$.subscribe(resp => {
-      if (this.initiativesSvc.initiative.stageId === 3) {
-        this.validateAllSections();
-      }
-    })
-    this._dataControlService.loadMenu$.emit('full-proposal');
-
   }
 
-  managerAccesible() {
-    const userLeadColead = this.initiativesSvc.initiative.users.find(usr => usr.userId == this.user.id);
-    if (this.user.roles.find(r => r.acronym === 'ADM')) return true;
-    if (userLeadColead == null) return false;
-    return !this.initiativesSvc.initiative.readonly;
-  }
+  // managerAccesible() {
+  //   const userLeadColead = this.initiativesSvc.initiative.users.find(usr => usr.userId == this.user.id);
+  //   if (this.user.roles.find(r => r.acronym === 'ADM')) return true;
+  //   if (userLeadColead == null) return false;
+  //   return !this.initiativesSvc.initiative.readonly;
+  // }
 
   toggleMenu(menu: HTMLElement) {
     menu.classList.toggle('showMenu');
@@ -136,14 +180,10 @@ export class StagesMenuComponent implements OnInit {
     /**
      * Validate by roles
      */
-    if (this.user?.roles[0].id === 1) {
-      this.initiativesSvc.initiative.readonly = false;
-      return
-    }
-    if (this.user?.roles[0].id === 4) {
-      this.initiativesSvc.initiative.readonly = true;
-      return
-    }
+
+     this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
+      this.initiativesSvc.initiative.readonly = resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined? false : this.user?.roles[0].id !== 4 &&  this.user?.roles[0].id != undefined ? false : true;
+     })
 
     /**
      * Validate by initative status
@@ -166,36 +206,17 @@ export class StagesMenuComponent implements OnInit {
         break;
     }
 
-
-
-    // this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp => {
-    //   let rol = resp.response.roles
-    //   let firstRol = rol[0]?.roleId
-    //   // console.log(this.initiativesSvc.initiative)
-    //   if(this.initiativesSvc.initiative.status != null && this.initiativesSvc.initiative.status != 'On hold'){
-    //     this._initiativesService.initiative.readonly = true;
-    //   }else{
-    //     if (rol.length) {
-    //       this._initiativesService.initiative.readonly = (firstRol === 1 || firstRol === 2 || firstRol === 3 || firstRol === 5 || this.user?.roles[0].id === 1) ? false : true;
-    //     } else {
-    //       this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1) ? false : true;
-    //     }
-    //   }
-
-    // });
   }
 
   validateAllSections() {
-
-    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
-      // console.log("%c Green check: ",  'color: #f4f814',resp.response);
-
-      Object.keys(resp.response).map(key => {
-        let stageId = 3;
-        if (!resp.response[key]) return null;
+    this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
+      if (!resp?.response) return;
+      Object.keys(resp?.response).map(key => {
+        let stageId = this.initiativesSvc.initiative.stageId;
+        if (!resp.response[key] || resp.response[key] == null) return;
         let sectionId = resp.response[key]?.sectionId;
         let ValidateGI = resp.response[key]?.validation;
-        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId).sections.find(item => item.sectionId == sectionId)
+        let result = this._dataControlService?.userMenu.find(item => item.stageId == stageId)?.sections.find(item => item.sectionId == sectionId)
         result.fieldsCompleted = ValidateGI;
         let subSectionsToMap = resp.response[key].subSections;
         if (!subSectionsToMap) return;

@@ -79,62 +79,45 @@ export async function getValidations(req: Request, res: Response) {
 
     // create new Meta Data object
     const metaData = new MetaDataHandler(initvStg.id.toString());
+    let validatorsObject: {};
 
-    // Get validations for general information
-    let generalInformation = await metaData.validationGI();
+    // switch validators by stages
+    switch (stage.description) {
+      case 'Pre Concept':
+        validatorsObject = {
+          generalInformation: await metaData.pre_validationGI(),
+          initialTheoryChange: await metaData.pre_validationInitialTOC(),
+          initiativeStatements:
+            await metaData.pre_validationInitiativeStatements(),
+          workPackgesGeoScope:
+            await metaData.pre_validationWorkPackagesGeoScope()
+          // results: null,
+          // innovations: null,
+          // keyPartners: null,
+          // globalBudget: null
+        };
+        break;
+      case 'Full Proposal':
+        validatorsObject = {
+          generalInformation: await metaData.validationGI(),
+          innovationPackages: await metaData.validationInnovationPackages(),
+          melia: await metaData.validationMelia(),
+          managePlan: await metaData.validationManagementPlan(),
+          humanResources: await metaData.validationHumanResources(),
+         // financialResources: await metaData.validationFinancialResources(),
+          policyCompliance: await metaData.validationPolicyCompliance(),
+          impactStrategies: await metaData.validationImpactStrategies(),
+          workPackages: await metaData.validationWorkPackages(),
+          context: await metaData.validationContext()
+        };
+        break;
 
-    // Get validations for general information
-
-    let innovationPackages = await metaData.validationInnovationPackages();
-
-    // Get validations for MELIA
-
-    let melia = await metaData.validationMelia();
-
-    // Get validations for Manage Plan
-
-    let managePlan = await metaData.validationManagementPlan();
-
-    // Get validations human resources
-
-    let humanResources = await metaData.validationHumanResources();
-
-    // Get validations financial resources
-
-    let financialResources = await metaData.validationFinancialResources();
-
-    // Get validations financial resources
-
-    let policyCompliance = await metaData.validationPolicyCompliance();
-
-    // Get validations impact strategies
-
-    let impactStrategies = await metaData.validationImpactStrategies();
-
-    // Get validations Work packages
-
-    let workPackages = await metaData.validationWorkPackages();
-
-    // Get validations Context
-
-    let conext = await metaData.validationContext();
+      default:
+        break;
+    }
 
     /*******************************************/
-
-    res.json(
-      new ResponseHandler('Green Checks:Menu', {
-        generalInformation,
-        innovationPackages,
-        melia,
-        managePlan,
-        humanResources,
-        financialResources,
-        policyCompliance,
-        impactStrategies,
-        workPackages,
-        conext
-      })
-    );
+    res.json(new ResponseHandler('Green Checks:Menu', validatorsObject));
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }

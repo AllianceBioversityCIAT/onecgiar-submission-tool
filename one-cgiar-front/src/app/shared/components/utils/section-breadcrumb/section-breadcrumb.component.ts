@@ -32,22 +32,67 @@ export class SectionBreadcrumbComponent implements OnInit {
     this.getRouteDataSubscription();
   }
 
-  mapToSectionData(url:string){
+  mapToSectionData(url: string) {
     let urlBase = '';
     this.sectionsData = [];
-    url.split('/').map((resp,i)=>{
-      if (i>=1) {
-        urlBase +='/'+resp;
+
+    url.split('/').map((resp, i) => {
+      if (i >= 1) {
+        urlBase += '/' + resp;
       }
-      if (i>=4) {
+      if (i >= 4) {
         this.sectionsData.push(
           {
-            url:urlBase,
-            name:resp
+            url: urlBase,
+            name: this.findTitle(i,resp)
           }
         )
       }
     })
+ 
+  }
+
+  findTitle(i, name: string) {
+
+    switch (i) {
+      case 4:
+        if (name === 'full-proposal') return 'Full Proposal';
+        if (name === 'pre-concept') return 'Pre Concept';
+        return name;
+      // case 5:
+      //   console.log(first)
+      // return this._dataControlService.userMenu.find(item=>item.description == name)
+      default:
+        let currentNameFinded = '';
+
+        //? impact areas no bd
+        if (name === 'impact-area') {
+          return 'Impact Area'
+        };
+        if (name === 'work-packages') {
+          return 'Work package';
+        };
+        if (name === 'work-package') {
+          return null
+        };
+        if (Number(name)) {
+          return this._dataControlService.impacAreas?.find(ia=> ia.id == name )?.name || name;
+        }
+        //? find descriptions
+        this._dataControlService.userMenu.map(stage => {
+          stage.sections.map(section => {
+            if (section.description === name) return currentNameFinded = section.display_name;
+            section.subsections.map(subsections => {
+              if (subsections.description === name) return currentNameFinded = subsections.display_name;
+            })
+          })
+        })
+
+        return currentNameFinded || name;
+    }
+
+
+
   }
 
   getRouteDataSubscription(){
@@ -66,14 +111,7 @@ export class SectionBreadcrumbComponent implements OnInit {
     this.routerEvents.unsubscribe();
   }
 
-  // navigate(path:string){
-  //   // console.log(path)
-  //   // if (!path)return;
-  //   // this.router.navigate([this.urlBase+path]);
-  // }
-
 }
-
 
 interface sectionData{
   url:string,
