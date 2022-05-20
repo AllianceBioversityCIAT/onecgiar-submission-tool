@@ -88,6 +88,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
       return {...e, user_id: this._authService.userValue.id};
     });
+    this.initExtraValidation();
     //this.extraValidation = this.extraValidation && this.filterIncompleteData();
     })
   }
@@ -150,7 +151,6 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
-      this.initExtraValidation();
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
     })

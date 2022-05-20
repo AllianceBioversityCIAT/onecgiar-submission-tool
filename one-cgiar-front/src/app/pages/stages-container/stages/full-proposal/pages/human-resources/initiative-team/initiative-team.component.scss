@@ -13,6 +13,8 @@
 
   .te_content {
     box-sizing: border-box;
+    max-height: 450px;
+    overflow-y: scroll;
   }
 
   border-radius: 10px;
@@ -23,4 +25,31 @@
 
 .addItiativeTeamItem {
   padding: 10px;
+}
+
+:host ::ng-deep ibdc-input-field {
+  .ta_container {
+    border: unset !important;
+    border-radius: unset !important;
+    box-shadow: unset;
+    transition: box-shadow ease 0.2s;
+
+    &:hover {
+      box-shadow: 0 10px 10px hsl(0deg 0% 67% / 19%), 0 6px 6px hsl(0deg 0% 67% / 19%);
+    }
+  }
+
+}
+
+:host ::ng-deep ibdc-select-field {
+  div div .ta_container {
+    border: unset !important;
+    border-radius: unset !important;
+    box-shadow: unset;
+    transition: box-shadow ease 0.2s;
+
+    &:hover {
+      box-shadow: 0 10px 10px hsl(0deg 0% 67% / 19%), 0 6px 6px hsl(0deg 0% 67% / 19%);
+    }
+  }
 }
