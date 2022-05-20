@@ -285,6 +285,9 @@ router.get('/projected-benefits', [checkJwt], initiatives.getProjectedBenefits);
 //get Melia Study Types
 router.get('/melia/study-types', [checkJwt], initiatives.getMeliaStudyTypes);
 
+//get Years
+router.get('/years', [checkJwt], initiatives.getYears);
+
 /**
  *
  * CLARISA
