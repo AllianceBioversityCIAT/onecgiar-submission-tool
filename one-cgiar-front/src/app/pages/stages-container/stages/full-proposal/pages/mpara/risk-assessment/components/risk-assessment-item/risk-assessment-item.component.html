@@ -26,7 +26,7 @@
         <div *ngIf="selectList === true" class="animate__animated animate__fadeInLeftBig">
             <br>
             <ibdc-select-field
-            [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
+            [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"  frontendSearchAttribute="risks_achieving_impact" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
             [selectableList]="this.risksList"
           ></ibdc-select-field>
         </div>

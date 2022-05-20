@@ -8,7 +8,7 @@ import { withLatestFrom } from 'rxjs/operators';
 })
 export class DevTagComponent implements OnInit {
   show=false;
-  horizonalPosition=true;
+  horizonalPosition=false;
   constructor() { }
 
   ngOnInit(): void {

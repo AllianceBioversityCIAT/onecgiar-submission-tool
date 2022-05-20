@@ -39,9 +39,8 @@
 }
 
 .menu {
-    width: 400px;
-    max-height: calc(100vh - 120px);
-    height: calc(100vh - 120px);
+    height: 100%;
+    max-height: calc(100vh - 50px);
     color: white;
     background-color: var(--ibdc-black-1);
     padding: 8px 0px 8px 8px;
@@ -77,7 +76,6 @@
             }
         }
     }
-
     .sections {
         // height: 0px;
         max-height: 0;
@@ -104,14 +102,6 @@
         }
     }
 
-    // .subSections{
-    //     height: 0px;
-    //     overflow: hidden;
-    //     .subSection_title{
-    //         margin-left: 10px;
-    //         font-weight: 400;
-    //     }
-    // }
 }
 
 /* width */
