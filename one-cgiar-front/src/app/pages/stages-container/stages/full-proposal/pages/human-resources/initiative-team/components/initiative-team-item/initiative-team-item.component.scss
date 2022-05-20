@@ -20,4 +20,8 @@ textarea{
     outline: none;
     padding: 5px 0 5px 5px;
     width: 100%;
+
+    &:hover {
+        box-shadow: 0 10px 10px hsl(0deg 0% 67% / 19%), 0 6px 6px hsl(0deg 0% 67% / 19%);
+      }
 }
