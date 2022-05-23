@@ -43,12 +43,24 @@ export class NavbarComponent implements OnInit {
     // Set route and user for identify users online
     this.pusherService.start('init1general', this.user.id);
     // This only for validate presence channels
+    // this.pusherService.presenceChannel.bind(
+    //   'pusher:subscription_succeeded',
+    //   function () {
+    //     console.log('presence channel'); // TODO: Remove this. Just for checking purposes.
+    //   }
+    // );
+
     this.pusherService.presenceChannel.bind(
-      'pusher:subscription_succeeded',
-      function () {
-        console.log('presence channel'); // TODO: Remove this. Just for checking purposes.
+      'change-user',
+      (data) => {
+        console.log(data);
+        
+        this.count = this.pusherService.presenceChannel.members.count;
+        
       }
     );
+
+
     // Get data from event socket
     this.pusherService.channel.bind('new-status', (data) => {
       console.log(data);

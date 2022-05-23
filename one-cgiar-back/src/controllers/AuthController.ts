@@ -256,6 +256,11 @@ export async function pusherAuth(req: Request, res: Response) {
       user_id: userId
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
+
+    pusher.trigger(channel,'change-user',{
+      user: `${userId}`
+    });
+
     res.send(auth);
   } catch (error) {
     return res.status(error.httpCode).json(error);
