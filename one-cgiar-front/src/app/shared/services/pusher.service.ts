@@ -21,23 +21,28 @@ export class PusherService {
 
   }
 
- 
+  beforeRoute = null;
+
  start(OSTRoute:string, userId){
+  if (this.beforeRoute) this.pusher.unsubscribe('presence-ost'+this.beforeRoute);
+  console.log("cerrar: " + this.beforeRoute)
     
-    console.log(userId);
     OSTRoute = OSTRoute.split('/').join("").split("-").join("");
-    console.log(OSTRoute)
     this.pusher = new Pusher(environment.pusher.key, {
       authEndpoint: `${environment.apiUrl}/auth/pusherauth/${userId}`,
       cluster: environment.pusher.cluster,
       encrypted: true,
     });
-    this.channel = this.pusher.subscribe('events-channel');
+    // this.channel = this.pusher.subscribe('events-channel');
     this.presenceChannel = this.pusher.subscribe('presence-ost'+OSTRoute);
-    setTimeout(() => {
-      console.log("cerrar")
-      // this.pusher.unsubscribe('presence-ost'+OSTRoute);
-    }, 5000);
+    console.log("canal: "+ OSTRoute)
+
+    this.beforeRoute = OSTRoute; 
+
+    // setTimeout(() => {
+    //   console.log("cerrar: " + OSTRoute)
+    //  
+    // }, 5000);
 
  }
 
