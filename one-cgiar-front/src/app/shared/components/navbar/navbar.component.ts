@@ -3,6 +3,7 @@ import { InteractionsService } from '../../services/interactions.service';
 import { AuthService } from '../../services/auth.service';
 import { PusherService } from '../../services/pusher.service';
 import { DataControlService } from '../../services/data-control.service';
+import { NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -23,7 +24,8 @@ export class NavbarComponent implements OnInit {
     public authSvc: AuthService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService,
-    public pusherService: PusherService
+    public pusherService: PusherService,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -41,37 +43,31 @@ export class NavbarComponent implements OnInit {
      ** START SOCKET PRESENCE CHANEL
      */
     // Set route and user for identify users online
-    this.pusherService.start('init1general', this.user.id);
-    // This only for validate presence channels
-    // this.pusherService.presenceChannel.bind(
-    //   'pusher:subscription_succeeded',
-    //   function (data) {
-    //    console.log( data.count);
-    //     console.log('presence channel'); // TODO: Remove this. Just for checking purposes.
-    //   }
-    // );
+    // /initiatives/1/stages/full-proposal/general-information
+    //  setTimeout(() => {
+      console.log(this.router.url)
+    //  }, 1000);
+  
+    this.router.events.subscribe((event: NavigationEvent) => {
+      if (event instanceof NavigationStart) {
 
-    // this.pusherService.presenceChannel.bind('change-user', (data) => {
-    //   console.log(data);
+        console.log("first")
+        console.log(event.url)
+        this.pusherService.start(event.url,this.user.id);
 
-    //   this.count = this.pusherService.presenceChannel.members.count;
-    // });
+      }
+    })
 
-    // this.pusherService.presenceChannel.bind(
-    //   'pusher:member_removed',
-    //   (member) => {
-    //     console.log(member);
 
-    //     this.count = this.pusherService.presenceChannel.members.count;
-    //   }
-    // );
+
 
     // Get data from event socket
-    this.pusherService.channel.bind('new-status', (data) => {
-      console.log(data);
+    // this.pusherService.channel.bind('new-status', (data) => {
+    //   console.log(data);
 
-      this.tocStatus = data.status;
-    });
+    //   this.tocStatus = data.status;
+    // });
+
   }
 
   onExit(): void {
