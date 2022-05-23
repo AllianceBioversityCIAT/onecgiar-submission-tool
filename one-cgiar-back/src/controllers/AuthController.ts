@@ -257,9 +257,9 @@ export async function pusherAuth(req: Request, res: Response) {
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
-    pusher.trigger(channel,'change-user',{
-      user: `${userId}`
-    });
+    // pusher.trigger(channel,'change-user',{
+    //   user: `${userId}`
+    // });
 
     res.send(auth);
   } catch (error) {

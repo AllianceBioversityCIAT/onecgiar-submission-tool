@@ -45,21 +45,26 @@ export class NavbarComponent implements OnInit {
     // This only for validate presence channels
     // this.pusherService.presenceChannel.bind(
     //   'pusher:subscription_succeeded',
-    //   function () {
+    //   function (data) {
+    //    console.log( data.count);
     //     console.log('presence channel'); // TODO: Remove this. Just for checking purposes.
     //   }
     // );
 
-    this.pusherService.presenceChannel.bind(
-      'change-user',
-      (data) => {
-        console.log(data);
-        
-        this.count = this.pusherService.presenceChannel.members.count;
-        
-      }
-    );
+    // this.pusherService.presenceChannel.bind('change-user', (data) => {
+    //   console.log(data);
 
+    //   this.count = this.pusherService.presenceChannel.members.count;
+    // });
+
+    // this.pusherService.presenceChannel.bind(
+    //   'pusher:member_removed',
+    //   (member) => {
+    //     console.log(member);
+
+    //     this.count = this.pusherService.presenceChannel.members.count;
+    //   }
+    // );
 
     // Get data from event socket
     this.pusherService.channel.bind('new-status', (data) => {
