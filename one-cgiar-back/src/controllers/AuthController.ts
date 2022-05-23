@@ -251,9 +251,11 @@ export async function pusherAuth(req: Request, res: Response) {
   const socketId = req.body.socket_id;
   let channel = req.body.channel_name;
   let userId= req.params.userId;
+  var today = new Date();
   try {
     const presenceData = {
-      user_id: userId
+      user_id: userId,
+      user_info:[today,userId]
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
