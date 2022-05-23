@@ -255,7 +255,7 @@ export async function pusherAuth(req: Request, res: Response) {
   try {
     const presenceData = {
       user_id: userId,
-      user_info:{userId}
+      user_info:{userId,today}
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
