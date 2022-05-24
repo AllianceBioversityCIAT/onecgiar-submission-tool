@@ -19,7 +19,6 @@ export class NavbarComponent implements OnInit {
   tocStatus: any = true;
   count: any;
   messages = [];
-
   constructor(
     public authSvc: AuthService,
     public _interactionsService: InteractionsService,
@@ -47,7 +46,6 @@ export class NavbarComponent implements OnInit {
     //  setTimeout(() => {
       console.log(this.router.url)
     //  }, 1000);
-  
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
 
@@ -69,6 +67,8 @@ export class NavbarComponent implements OnInit {
     // });
 
   }
+
+
 
   onExit(): void {
     this.authSvc.logout();
