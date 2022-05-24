@@ -1987,7 +1987,8 @@ export class ProposalHandler extends InitiativeStageHandler {
           )
         );
 
-        countriesMeliaStd = countriesMeliaStd.concat(element.countries);
+        countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+        regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
       }
 
       console.log(countriesMeliaStd);
