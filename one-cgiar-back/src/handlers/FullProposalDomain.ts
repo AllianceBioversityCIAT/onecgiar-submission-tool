@@ -1950,7 +1950,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
-
+    let regionsMeliaStd = [];
+    let countriesMeliaStd = [];
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -1971,6 +1972,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newMeliaStudiesActivities.co_delivery = element.co_delivery;
         newMeliaStudiesActivities.management_decisions_learning =
           element.management_decisions_learning;
+        newMeliaStudiesActivities.is_global = element.is_global;
         newMeliaStudiesActivities.active = element.active;
 
         meliaStudiesActivitiesArray.push(
@@ -1984,8 +1986,16 @@ export class ProposalHandler extends InitiativeStageHandler {
             newMeliaStudiesActivities
           )
         );
+
+        countriesMeliaStd = countriesMeliaStd.concat(element.countries);
       }
 
+      console.log(countriesMeliaStd);
+      
+        const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
+        regionsMeliaStd,
+        countriesMeliaStd
+      );
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
       );

@@ -11,6 +11,7 @@ import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
 import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
 import {InitiativeHandler} from './InitiativesDomain';
+import { CountriesByMeliaStudy } from '../entity/CountriesByMeliaStudy';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -24,6 +25,8 @@ export class InitiativeStageHandler extends BaseValidation {
   public stageRepo = getRepository(Stages);
   private regionsRepo = getRepository(RegionsByInitiativeByStage);
   private countriesRepo = getRepository(CountriesByInitiativeByStage);
+  // private regionsMeliaStdRepo = getRepository();
+  private countriesMeliaStdRepo = getRepository(CountriesByMeliaStudy);
 
   constructor(
     initvStgId?: string | number,
@@ -552,6 +555,7 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
+
   /**
    *
    * @param region?
@@ -613,6 +617,81 @@ export class InitiativeStageHandler extends BaseValidation {
       console.log(error);
       throw new BaseError(
         'Geographic scope : Initiative by stage - Update',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+   /**
+   *
+   * @param region?
+   * @param countries?
+   * @returns { regions , countries }
+   */
+
+  async upsertGeoScopesMeliaStudies(regions?, countries?) {
+
+    console.log('upsertGeoScopesMeliaStudies service...');
+
+    let initvStgRegions, initvStgCountries;
+
+    try {
+      // get current initiative by stage
+      const initvStg = await this.initvStage;
+      // get geo scope from initiative by stage
+      // initvStgRegions = await this.regionsRepo.find({
+      //   where: {initvStg: initvStg[0]}
+      // });
+      initvStgCountries = await this.countriesMeliaStdRepo.find({
+        where: {initvStg: initvStg[0]}
+      });
+      console.log({initvStg, initvStgCountries});
+      
+      // if (regions) {
+      //   const uniqueRegions = [].concat(
+      //     regions.filter((obj1) =>
+      //       initvStgRegions.every(
+      //         (obj2) =>
+      //           obj1.region_id !== obj2.region_id || obj1.active !== obj2.active
+      //       )
+      //     )
+      //   );
+      //   uniqueRegions.every((uA) => (uA['initvStg'] = initvStg[0].id));
+
+      //   // save geo scope
+      //   initvStgRegions = await this.regionsRepo.save(uniqueRegions);
+      // }
+
+
+      if (countries) {
+        const uniqueCountries = [].concat(
+          countries.filter((obj1) =>
+            initvStgCountries.every(
+              (obj2) =>
+                obj1.meliaStudyId !== obj2.meliaStudyId ||
+                obj1.country_id !== obj2.country_id ||
+                obj1.active !== obj2.active
+            )
+          )
+        );
+        uniqueCountries.every((uA) => (uA['initvStgId'] = initvStg[0].id));
+        console.log({uniqueCountries, initvStg: initvStg[0].id});
+
+        
+        // save geo scope
+        initvStgCountries = await this.countriesMeliaStdRepo.save(uniqueCountries);
+      }
+
+      // const regions_ = await this.regionsRepo.find({ where: { initvStg: initvStg[0] } });
+      // const countries_ = await this.countriesRepo.find({ where: { initvStg: initvStg[0] } });
+
+      return {regions: [], countries: initvStgCountries};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Geographic scope : Melia studies - Update',
         400,
         error.message,
         false
