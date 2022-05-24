@@ -48,14 +48,20 @@
         justify-content: center;
         // background-color: yellow;
         width: 100%;
+        max-width: 100%;
+        overflow: hidden;
         .users_online{
+            max-height: 100%;
             width: 100%;
+            max-width: 100%;
             display: flex;
             gap: 5px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             // background-color: red;
             .description{
-                width: 120px;
+                min-width: 120px;
+                max-width: 120px;
                 line-height: 1;
                 padding-left: 10px;
                 color: #696969;
@@ -68,6 +74,7 @@
                 border-radius: 3px;
                 display: flex;
                 overflow: hidden;
+                min-width: max-content;
                 .index{
                     height: 100%;
                     // width: 10px;
@@ -254,7 +261,26 @@
 // @media only screen and (min-width: 600px) {
 
 // }
-
+.users_online::-webkit-scrollbar {
+    // width: 5px;
+    height: 5px;
+  }
+  
+  .users_online::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  /* Handle */
+  .users_online::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .users_online::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 
 
 /* Extra small devices (phones, 600px and down) */

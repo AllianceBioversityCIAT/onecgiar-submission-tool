@@ -9,7 +9,7 @@
         <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
             <div title>{{stage?.description}}</div>
             <div content>
-                <div *ngIf="stage?.stageId === 4" class="isdc_feedback_section">
+                <div *ngIf="stage?.stageId === 4" class="isdc_feedback_section" [routerLink]="this._utilsService.stageBaseRoute + this._utilsService.convertToKebabCase(stage?.description)+ '/isdc-feedback-responses'">
                     <div class="name">ISDC Feedback responses</div>
                     <i class="material-icons">forum</i>
                 </div>
