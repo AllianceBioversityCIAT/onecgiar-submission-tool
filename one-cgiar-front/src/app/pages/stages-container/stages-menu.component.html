@@ -43,7 +43,7 @@
                         </div>
                         <div class="user" *ngFor="let item of this._pusherService.membersList; let i=index">
                             <div class="index">{{i+1}}</div>
-                            <div class="name">SDG</div>
+                            <div class="name">{{item["role"]}}</div>
                         </div>
                     </div>
 

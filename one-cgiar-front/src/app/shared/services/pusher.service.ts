@@ -30,13 +30,13 @@ export class PusherService {
     let {members, myID} = this.presenceChannel?.members;
 
     if (!Object.keys(members).length) return true;
-    console.log(members)
+    // console.log(members)
 
     let membersList:any = []
 
     Object.keys(members).map(item=>{
       const date = new Date(members[item]?.today);
-      membersList.push({userId:item, date})
+      membersList.push({userId:item, date,role:members[item]?.roles[0]['name']})
     })
 
     const sortByDate = arr => {
@@ -48,6 +48,7 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
+    // console.log(this.membersList)
     return membersList[0]?.userId == myID
   }
 
