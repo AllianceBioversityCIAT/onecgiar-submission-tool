@@ -23,9 +23,36 @@ export class PusherService {
 
   beforeRoute = null;
 
+  membersList = [];
+  continueEditing = false;
+  firstUser = false;
+  validaeFirstUserToEdit(){
+    let {members, myID} = this.presenceChannel?.members;
+
+    if (!Object.keys(members).length) return true;
+    console.log(members)
+
+    let membersList:any = []
+
+    Object.keys(members).map(item=>{
+      const date = new Date(members[item]?.today);
+      membersList.push({userId:item, date})
+    })
+
+    const sortByDate = arr => {
+      const sorter = (a, b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+      arr.sort(sorter);
+    };
+
+    sortByDate(membersList);
+    this.membersList = membersList;
+    return membersList[0]?.userId == myID
+  }
+
  start(OSTRoute:string, userId){
   if (this.beforeRoute) this.pusher.unsubscribe('presence-ost'+this.beforeRoute);
-  console.log("cerrar: " + this.beforeRoute)
     
     OSTRoute = OSTRoute.split('/').join("").split("-").join("");
     this.pusher = new Pusher(environment.pusher.key, {
@@ -35,7 +62,6 @@ export class PusherService {
     });
     // this.channel = this.pusher.subscribe('events-channel');
     this.presenceChannel = this.pusher.subscribe('presence-ost'+OSTRoute);
-    console.log("canal: "+ OSTRoute)
 
     this.beforeRoute = OSTRoute; 
 
