@@ -10,8 +10,8 @@ import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
 import { MeliaStudiesActivities } from './MeliaStudiesActivities';
 
-@Entity('countries_by_melia_study')
-export class CountriesByMeliaStudy extends UpdatedCreatedAt {
+@Entity('regions_by_melia_study')
+export class RegionsByMeliaStudy extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,5 +33,5 @@ export class CountriesByMeliaStudy extends UpdatedCreatedAt {
   initvStg!: InitiativesByStages;
 
   @Column({type: 'int'})
-  country_id: number;
+  region_id: number;
 }
