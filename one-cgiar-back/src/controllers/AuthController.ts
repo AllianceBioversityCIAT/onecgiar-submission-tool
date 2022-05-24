@@ -250,24 +250,23 @@ export async function pusherUpdate(req: Request, res: Response) {
 export async function pusherAuth(req: Request, res: Response) {
   const socketId = req.body.socket_id;
   let channel = req.body.channel_name;
-  let userId= req.params.userId;
+  let userId = req.params.userId;
   var today = new Date();
 
   const userRepo = getRepository(Users);
 
   try {
-
-
     let userInfo = await userRepo.findOne({
-      where: {id: userId}, relations: ['roles']
+      where: {id: userId},
+      relations: ['roles']
     });
 
-    let name = userInfo.first_name+" "+userInfo.last_name;
+    let name = userInfo.first_name + ' ' + userInfo.last_name;
     let roles = userInfo.roles;
 
     const presenceData = {
       user_id: userId,
-      user_info:{name,roles,today}
+      user_info: {name, roles, today}
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
