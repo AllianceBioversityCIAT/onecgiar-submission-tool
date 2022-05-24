@@ -2,5 +2,59 @@
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    
+    <form [formGroup]="contextForm" class="general-information-form">
+        <div class="col-12">
+            <app-section-alerts-pack [sectionForm]="contextForm" [extraValidation]="this.extraValidation"></app-section-alerts-pack>
+        </div>
+        <div *ngIf="_initiativesService.initiative.stageId == 4" class="alert_container" style="margin: 20px 0 35px 0;">
+            <ibdc-alert [options]="{text: 'For each of the recommendations received by ISDC, please write a response based on progress after initial 6 months. Please make sure all recommendations are responded accordingly, in order to officially submit this initiative.', 
+                                type:'info'}"></ibdc-alert>
+        </div>
+
+        <div *ngIf="_initiativesService.initiative.stageId == 4">
+            <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
+                (onEdit)="this.getItemToExpand($event)" [list]="this.list" [attr_list_config]="this.attr_list_config"
+                [showTableViewVariable]="this.showTableViewVariable" [canDelete]="false" [msgNoData]="this.msgNoData"
+                [localId]="true"
+                tableTitle="{{this._initiativesService.initiative.official_code + ': ' + this._initiativesService.initiative.name}}">
+            </app-compact-information-table-view>
+
+            <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">
+                No
+                data</h1>
+
+            <div class="items animate__animated animate__fadeIn" *ngIf="!showTableViewVariable">
+                <div class="item" *ngFor="let item of list; let i=index">
+
+
+                    <app-collapsible-container [collapse]="item?.collapse">
+                        <div header>Recommendation and responses {{i+1}}</div>
+                        <div content>
+                            <br><br>
+                            <div class="fields">
+                                <div class="field" *ngFor="let field of attr_list_config; let i = index">
+                                    <ibdc-text-area-field [inputTitle]="field.name" [objectItem]="item"
+                                        [objectAtributteName]="field?.attribute"
+                                        [readOnlyVariable]="this._initiativesService?.initiative.readonly || i !== 2"
+                                        [maxWords]="250" [editText]="true"></ibdc-text-area-field>
+                                </div>
+                            </div>
+                        </div>
+                    </app-collapsible-container>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <div (click)="upserInfo()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button
+            [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+        </ibdc-save-button>
+    </div>
+
+    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br>
+        <p style="font-size: 20px; color: white">Loading data...</p>
+    </ngx-spinner>
+
 </div>
