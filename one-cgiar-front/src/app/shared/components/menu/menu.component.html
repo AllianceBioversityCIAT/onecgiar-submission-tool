@@ -41,7 +41,7 @@
                                 <app-menu-dynamic-list type="reports"
                                 *ngFor="let report of subsections?.reports"
                                 [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+report.frontRoute+(report?.id ? report?.id : '')">
-                                    <div title>{{report?.name}} as</div>
+                                    <div title>{{report?.name}}</div>
                                 </app-menu-dynamic-list>
     
                             </div>
