@@ -37,6 +37,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       attribute: 'management_decisions_learning',
       name: "How the MELIA study or activity will inform management decisions and contribute to internal learning"
     },
+    {
+      attribute: 'geographic_scope',
+      name: "Geographic Scope"
+    },
   ]
   showTableViewVariable = true;
   meliaStudyTypes = [];
@@ -135,6 +139,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         })
       });
 
+      this.formatGeographicScope(this.list);
         this._dataControlService.showCountries = true;
       })
       ;
@@ -164,5 +169,14 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   }
  
+  formatGeographicScope(arrayMelias: MeliaStudiesAndActivities[]) {
+    for (const melia of arrayMelias) {
+      melia['geographic_scope'] = `
+      <p><strong>Is global: </strong>${melia.is_global ? 'Yes' : 'No'}</p>
+      ${melia.countries.length ? `<p><strong>Countries: </strong>${melia.countries.map((coun:any) => coun.name).join(', ')}</p>` : ''}
+      ${melia.regions.length ? `<p><strong>Regions: </strong>${melia.regions.map((coun:any) => coun.name).join(', ')}</p>` : ''}
+      `
+    }
+  }
 
 }

@@ -2066,6 +2066,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         });
       }
 
+
       return meliaStudiesActivities;
     } catch (error) {
       console.log(error);
