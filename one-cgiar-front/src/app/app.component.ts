@@ -1,7 +1,7 @@
 import { takeUntil } from 'rxjs/operators';
 import { UtilsService } from './shared/services/utils.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from '../environments/environment';
 import { NgxHotjarService } from 'ngx-hotjar';

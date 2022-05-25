@@ -10,6 +10,7 @@ import { StagesMenuService } from '../../shared/services/stages-menu.service';
 import { InteractionsService } from '../../shared/services/interactions.service';
 import { InitiativesService } from '../../shared/services/initiatives.service';
 import { UtilsService } from '../../shared/services/utils.service';
+import { PusherService } from '../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -30,7 +31,8 @@ export class StagesMenuComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     public _dataControlService: DataControlService,
-    private _utilsService:UtilsService
+    private _utilsService:UtilsService,
+    public _pusherService: PusherService
   ) { }
 
   openDialog(): void {
@@ -53,9 +55,10 @@ export class StagesMenuComponent implements OnInit {
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-
         this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo = event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
+        this._pusherService.firstUser = false;
+        this._pusherService.continueEditing = false;
       }
     })
     this._interactionsService.collapseHeader = true;
@@ -156,6 +159,8 @@ export class StagesMenuComponent implements OnInit {
     });
     
   }
+
+
 
   // managerAccesible() {
   //   const userLeadColead = this.initiativesSvc.initiative.users.find(usr => usr.userId == this.user.id);

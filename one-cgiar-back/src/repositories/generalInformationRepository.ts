@@ -66,19 +66,6 @@ export class GeneralInformationRepository extends Repository<GeneralInformation>
 
     const geoScope = {regions, countries, goblalDimension};
 
-    // var budget: Budget = await budgetRepo.findOne({
-    //   where: {
-    //     initvStg: initvStg,
-    //     table_name: 'general_information',
-    //     col_name: 'budget',
-    //     active: true
-    //   }
-    // });
-
-    console.log(generalInformation);
-
-    console.log(budget);
-
     if (budget.length <= 0) {
       budget = {};
     } else {

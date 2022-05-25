@@ -3,6 +3,7 @@ import {getRepository, QueryFailedError} from 'typeorm';
 import {validate} from 'class-validator';
 import {Users} from '../entity/Users';
 import config from '../config/config';
+import Pusher from 'pusher';
 import {APIError, BaseError} from '../handlers/BaseError';
 import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
@@ -14,7 +15,13 @@ import {
 } from '../utils/auth-login';
 
 require('dotenv').config();
-
+const pusher = new Pusher({
+  appId: `${process.env.PUSHER_APP_ID}`,
+  key: `${process.env.PUSHER_API_KEY}`,
+  secret: `${process.env.PUSHER_API_SECRET}`,
+  cluster: `${process.env.PUSHER_APP_CLUSTER}`,
+  useTLS: true
+});
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
 
@@ -221,6 +228,53 @@ export async function validateToCToken(req: Request, res: Response) {
     console.log(userInfo);
 
     return res.json({response: {user_info: userInfo}});
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function pusherUpdate(req: Request, res: Response) {
+  const tocStatus = req.body.tocStatus;
+
+  try {
+    pusher.trigger('events-channel', 'new-status', {
+      tocStatus: `${tocStatus}`
+    });
+
+    // res.send(authResponse);
+  } catch (error) {
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function pusherAuth(req: Request, res: Response) {
+  const socketId = req.body.socket_id;
+  let channel = req.body.channel_name;
+  let userId = req.params.userId;
+  var today = new Date();
+
+  const userRepo = getRepository(Users);
+
+  try {
+    let userInfo = await userRepo.findOne({
+      where: {id: userId},
+      relations: ['roles']
+    });
+
+    let name = userInfo.first_name + ' ' + userInfo.last_name;
+    let roles = userInfo.roles;
+
+    const presenceData = {
+      user_id: userId,
+      user_info: {name, roles, today}
+    };
+    const auth = pusher.authenticate(socketId, channel, presenceData);
+
+    // pusher.trigger(channel,'change-user',{
+    //   user: `${userId}`
+    // });
+
+    res.send(auth);
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }

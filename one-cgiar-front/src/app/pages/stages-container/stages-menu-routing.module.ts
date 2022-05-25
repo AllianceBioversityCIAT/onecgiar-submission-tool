@@ -91,6 +91,10 @@ const fullProposalRoutes = [
     loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
   },
   {
+    path: 'isdc-feedback-responses',
+    loadChildren: () => import('./stages/full-proposal/pages/isdc-feedback-responses/isdc-feedback-responses.module').then(mod => mod.IsdcFeedbackResponsesModule),
+  },
+  {
     path: 'general-information',
     loadChildren: () => import('./stages/full-proposal/pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
   },

@@ -10,8 +10,20 @@
                 </span>
             </div> -->
         </div>
-        <div class="right_container">
+        <div class="right_container" [ngStyle]="{'overflow-y': !this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing?'hidden':'scroll'}" >
+            <div class="no-edit-container" *ngIf="!this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing">
+                <div class="alert  animate__animated  animate__tada">
+                    <div class="icon"><i class="material-icons">lock</i></div>
+                    <div class="description animate__animated animate__delay-2s animate__heartBeat">
+                        You may not edit this section at the moment because someone is working on it. <strong>click here</strong> to continue.
+                    </div>
+                    <br>
+                    <button pButton type="button" label="Edit" (click)="this._pusherService.continueEditing = true"></button>
+                </div>
+            </div>
+
             <div class="capsule-header">
+
                 <div class="inner-capsule ibdc_bg_secondary_color">
                     <div class="initIdContainer">
                         <span class="text-description">
@@ -22,11 +34,32 @@
                     </div>
                                       
                 </div>
-                    <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin">
-                        Manage access
-                        <mat-icon>settings</mat-icon>
-                    </button>
+
+                <div class="capsule_right_content">
+                   
+                    <div class="users_online">
+                        <div class="description">
+                            <strong>{{this._pusherService.presenceChannel?.members.count}}</strong> user(s) online on this section
+                        </div>
+                        <div class="user" *ngFor="let item of this._pusherService.membersList; let i=index">
+                            <div class="index">{{i+1}}</div>
+                            <div class="name">{{item["role"]}}</div>
+                        </div>
+                    </div>
+
+                    <div class="manage_access_button_container">
+                        <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin">
+                            Manage access
+                            <mat-icon>settings</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+
+
+
             </div>
+            
             <div class="card-container">
 
                 <div class="initiative-identification ibdc_bg_secondary_color">
@@ -39,6 +72,9 @@
                 </div>
 
                 <div style="overflow: hidden; position: relative; min-height: calc(100vh - 340px);">
+                    <!-- <div >
+                        <h1 *ngIf="this._pusherService.validaeFirstUserToEdit()">Soy el primero</h1>
+                    </div> -->
                     <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId"></router-outlet>
                 </div>
    
