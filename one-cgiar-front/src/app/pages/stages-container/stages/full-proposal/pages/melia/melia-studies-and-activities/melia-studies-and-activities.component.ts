@@ -74,7 +74,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         anticipated_year_completion: '',
         co_delivery: '',
         management_decisions_learning: '',
-        active: true
+        active: true,
+        countries: [],
+        regions: []
       }
     )
     console.log(this.list)
@@ -95,6 +97,33 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     this._initiativesService.getmeliaStudActiByInitId().pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
       console.log(resp)
       this.list = resp;
+
+      //MAP REGIONS
+      this._initiativesService.getCLARISARegions('').subscribe(regions=>{
+        this.list.map((melia:any) => {
+          melia.regions.map(mapReg=>{
+            regions.response.regions.forEach(regionItem=>{
+              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
+            })
+          })
+          this._dataControlService.showRegions = true;
+        })
+      });
+
+      //MAP COUNTRIES
+      this._initiativesService.getCLARISACountries().subscribe(countries=>{   
+        this.list.map((melia:any) => {    
+        melia.countries.map(mapCoun=>{
+          countries.response.countries.forEach(countryItem=>{
+            if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
+          })
+          
+        })
+      });
+
+        this._dataControlService.showCountries = true;
+      })
+      ;
     })
   }
 

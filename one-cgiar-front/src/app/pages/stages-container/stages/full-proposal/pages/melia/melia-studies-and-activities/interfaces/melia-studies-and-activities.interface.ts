@@ -10,4 +10,6 @@ export interface MeliaStudiesAndActivities {
   co_delivery: string;
   management_decisions_learning: string;
   active: boolean;
+  countries: [];
+  regions: [];
 }

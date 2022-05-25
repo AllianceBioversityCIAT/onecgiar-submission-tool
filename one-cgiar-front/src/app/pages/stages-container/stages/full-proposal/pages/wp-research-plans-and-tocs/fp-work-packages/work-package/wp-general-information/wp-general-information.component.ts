@@ -50,7 +50,7 @@ export class WpGeneralInformationComponent implements OnInit {
 
       this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
-        // console.log(directResp);
+        console.log(directResp);
         this.geographicScope.regions = directResp.regions;
         this.geographicScope.countries = directResp.countries;
         this.updateFields(directResp,this._wpDataControlService.wpId);
