@@ -657,7 +657,7 @@ export class InitiativeStageHandler extends BaseValidation {
           )
         );
         uniqueRegions.every((uA) => (uA['initvStgId'] = initvStg[0].id));
-        console.log({uniqueRegions, initvStg: initvStg[0].id});
+        // console.log({uniqueRegions, initvStg: initvStg[0].id});
 
         // save geo scope - regions
         initvStgRegions = await this.regionsMeliaStdRepo.save(uniqueRegions);
@@ -676,7 +676,7 @@ export class InitiativeStageHandler extends BaseValidation {
           )
         );
         uniqueCountries.every((uA) => (uA['initvStgId'] = initvStg[0].id));
-        console.log({uniqueCountries, initvStg: initvStg[0].id});
+        // console.log({uniqueCountries, initvStg: initvStg[0].id});
 
         
         // save geo scope - countries

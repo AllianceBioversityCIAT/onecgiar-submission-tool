@@ -5,6 +5,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activities.interface';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   list:MeliaStudiesAndActivities[] = [];
-
+ 
   attr_list_config: AttributesListConfiguration[] = [
     {
       attribute: 'type_melia',
@@ -39,6 +40,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   ]
   showTableViewVariable = true;
   meliaStudyTypes = [];
+  geographicScopes: FormGroup[] = [];
+
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -75,6 +78,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         co_delivery: '',
         management_decisions_learning: '',
         active: true,
+        is_global: null,
         countries: [],
         regions: []
       }
@@ -97,6 +101,16 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     this._initiativesService.getmeliaStudActiByInitId().pipe(map(res=>res?.response?.meliaStudiesActivities)).subscribe((resp:MeliaStudiesAndActivities[])=>{
       console.log(resp)
       this.list = resp;
+
+      this.list.forEach(melia => {
+        this.geographicScopes.push(new FormGroup({
+          is_global: new FormControl(melia.is_global),
+        })
+        );
+      });
+
+      console.log(this.geographicScopes);
+      
 
       //MAP REGIONS
       this._initiativesService.getCLARISARegions('').subscribe(regions=>{
@@ -129,6 +143,18 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   saveSection(){
     console.log(this.list)
+
+    //Update is global from formControl to body
+    for (let i = 0; i < this.list.length; i++) {
+      const element = this.list[i];
+      element.is_global = this.geographicScopes[i].controls['is_global'].value;
+    }
+
+    //Add meliaStudyId to countries and regions
+    for (const melia of this.list) {
+      melia.regions.map((reg:any)=> reg.meliaStudyId = Number(melia.id));
+      melia.countries.map((coun:any)=> coun.meliaStudyId = Number(melia.id));
+    }
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp=>{
       console.log(resp);
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
