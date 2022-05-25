@@ -8,6 +8,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
+import { ToggleFormatDateModule } from '../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { EditTocButtonModule } from '../../../../../../../shared/components/edit
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
-    EditTocButtonModule
+    EditTocButtonModule,
+    ToggleFormatDateModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -122,6 +122,25 @@
 
 }
 
+.approve_button_container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .approve_button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+        background-color: #4caf50;
+        border-radius: 5px;
+        padding: 10px 40px;
+        color: white;
+        font-size: 14px;
+        gap: 10px;
+    }
+}
+
 /* width */
 .menu_content::-webkit-scrollbar {
     width: 10px;

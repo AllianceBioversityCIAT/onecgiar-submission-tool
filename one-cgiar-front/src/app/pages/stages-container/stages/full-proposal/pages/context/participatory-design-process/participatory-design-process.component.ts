@@ -24,25 +24,6 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
   citationsList=[];
   extraValidation = false;
-  msgNoData = 'The initiative does not have feedback';
-  list:ParticipatoryProcess[] = [];
-  showTableViewVariable = true;
-  attr_list_config: AttributesListConfiguration[] = [
-    {
-      attribute: 'isdc_recommendation',
-      name: "ISDC recommendation",
-    },
-    {
-      attribute: 'response',
-      name: "ClimBeR responses",
-    },
-    {
-      attribute: 'updated_response',
-      name: "Updated Response based on progress after initial 6 month inception to 30 June",
-      required: true,
-      styles:{'min-width':'200px'}
-    }
-  ];
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -50,8 +31,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
     public _dataControlService:DataControlService,
-    private _dataValidatorsService:DataValidatorsService,
-    private _authService:AuthService
+    private _dataValidatorsService:DataValidatorsService
 
   ) { 
     this.contextForm = new FormGroup({
@@ -62,35 +42,8 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
 
   ngOnInit(): void {
     this.getContext();
+    this.formChanges();
     this.getLinks();
-    this.getRecommendationsByInitId();
-    document.addEventListener('keydown', () => {
-      this.initExtraValidation();
-    });
-  }
-
-  getTabIndex(e){
-    this.showTableViewVariable = e;
-  }
-
-  initExtraValidation(){
-    this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
-  }
-
-  getItemToExpand(item){
-    console.log(this.list.find(meliaItem=>meliaItem?.id == item?.id)['collapse'] = false)
-  }
-
-  getRecommendationsByInitId(){
-    if(this._initiativesService.initiative.stageId !== 4) return;
-    this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
-    this.list = resp.map(e => {
-      this.extraValidation = this.valideteInputTable() && this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
-      return {...e, user_id: this._authService.userValue.id};
-    });
-    this.initExtraValidation();
-    //this.extraValidation = this.extraValidation && this.filterIncompleteData();
-    })
   }
 
   getLinks(){
@@ -112,9 +65,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid && this.valideteInputTable() &&  this.extraValidation?
+      this.contextForm.valid  &&  this.extraValidation?
       this._interactionsService.successMessage('Participatory design process has been saved'):
-      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
+      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields');
     })
     //save links
     this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
@@ -123,24 +76,6 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       })
       
     })
-    //save recommendations
-    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
-      this.getRecommendationsByInitId();
-      this.showTableViewVariable = true;
-    })
-  }
-
-  valideteInputTable():boolean{
-    if(this._initiativesService.initiative.stageId !== 4) return true;
-    let dataFilter:boolean = true;
-    for (let index = 0; index < this.list.length; index++) {
-      if(!this.list[index].updated_response?.length){
-        dataFilter = false;
-        break;
-      } 
-    }
-
-    return dataFilter;
   }
 
   getContext(){
@@ -156,11 +91,11 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     })
   }
 
-  saveSection(){
-    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
-      this.getRecommendationsByInitId();
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      //console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
-
   }
 
 }
