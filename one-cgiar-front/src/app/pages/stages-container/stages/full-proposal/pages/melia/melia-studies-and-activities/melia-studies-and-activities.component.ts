@@ -165,6 +165,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
       // this._interactionsService.warningMessage('MELIA studies and activities has been saved, but there are incomplete fields');
       this.getmeliaStudActiByInitId();
+      this.showTableViewVariable = true;
     })
 
   }
