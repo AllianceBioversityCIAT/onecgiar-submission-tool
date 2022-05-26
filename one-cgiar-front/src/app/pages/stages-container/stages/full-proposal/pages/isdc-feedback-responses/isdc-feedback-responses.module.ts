@@ -12,6 +12,7 @@ import { AddButtonModule } from '../../../../../../shared/components/add-button/
 import { ButtonEditOrDeleteModule } from '../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
 import { CompactInformationTableViewModule } from '../../../../../../shared/components/compact-information-table-view/compact-information-table-view.module';
 import { CollapsibleContainerModule } from '../../../../../../shared/components/collapsible-container/collapsible-container.module';
+import {ButtonModule} from 'primeng/button';
 
 @NgModule({
   declarations: [IsdcFeedbackResponsesComponent],
@@ -26,7 +27,8 @@ import { CollapsibleContainerModule } from '../../../../../../shared/components/
     AddButtonModule,
     ButtonEditOrDeleteModule,
     CompactInformationTableViewModule,
-    CollapsibleContainerModule
+    CollapsibleContainerModule,
+    ButtonModule
   ]
 })
 export class IsdcFeedbackResponsesModule { }

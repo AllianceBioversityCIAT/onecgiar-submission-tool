@@ -76,6 +76,11 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     })
   }
 
+  onSubmitRecommendations(){
+    if(this.extraValidation){
+      console.log('set function')
+    }
+  }
 
   getTabIndex(e){
     this.showTableViewVariable = e;
