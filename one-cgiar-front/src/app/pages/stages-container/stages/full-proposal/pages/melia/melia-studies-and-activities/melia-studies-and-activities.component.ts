@@ -172,9 +172,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   formatGeographicScope(arrayMelias: MeliaStudiesAndActivities[]) {
     for (const melia of arrayMelias) {
       melia['geographic_scope'] = `
-      <p><strong>Is global: </strong>${melia.is_global ? 'Yes' : 'No'}</p>
-      ${melia.countries.length ? `<p><strong>Countries: </strong>${melia.countries.map((coun:any) => coun.name).join(', ')}</p>` : ''}
+      <p><strong>Global scope: </strong>${melia.is_global ? 'Yes' : 'No'}</p>
       ${melia.regions.length ? `<p><strong>Regions: </strong>${melia.regions.map((coun:any) => coun.name).join(', ')}</p>` : ''}
+      ${melia.countries.length ? `<p><strong>Countries: </strong>${melia.countries.map((coun:any) => coun.name).join(', ')}</p>` : ''}
       `
     }
   }
