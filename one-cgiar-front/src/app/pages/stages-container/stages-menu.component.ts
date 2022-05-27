@@ -57,8 +57,6 @@ export class StagesMenuComponent implements OnInit {
       if (event instanceof NavigationStart) {
         this.sectionsList = event.url.substring(event.url.indexOf('stages/')).split('/');
         this._dataControlService.breadcrumbItemTwo = event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
-        this._pusherService.firstUser = false;
-        this._pusherService.continueEditing = false;
       }
     })
     this._interactionsService.collapseHeader = true;
@@ -185,32 +183,19 @@ export class StagesMenuComponent implements OnInit {
     /**
      * Validate by roles
      */
-
      this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
+      //  console.log(resp)
+       this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
+      //  console.log(this.initiativesSvc.initiative.userRoleName)
       this.initiativesSvc.initiative.readonly = resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined? false : this.user?.roles[0].id !== 4 &&  this.user?.roles[0].id != undefined ? false : true;
      })
 
-    /**
-     * Validate by initative status
-     */
-    switch (this.initiativesSvc.initiative.status) {
-      case 'On hold':
-        this.initiativesSvc.initiative.readonly = false;
-        break;
-      case 'Pending':
-        this.initiativesSvc.initiative.readonly = true;
-        break;
-      case 'Steped up':
-        this.initiativesSvc.initiative.readonly = true;
-        break;
-      case 'Approved':
-        this.initiativesSvc.initiative.readonly = true;
-        break;
-      default:
-        this.initiativesSvc.initiative.readonly = false;
-        break;
-    }
+  }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.initiativesSvc.initiative.userRoleName = null;
   }
 
   validateAllSections() {

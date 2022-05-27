@@ -15,7 +15,8 @@
         <div class="user-information">
             <i class="material-icons">account_circle</i>
             <div class="navbar-name">{{name}}</div>
-            <div class="navbar-role ibdc_bg_secondary_color">{{role?.toUpperCase()}}</div>
+            <div *ngIf="!this._initiativesService.initiative.userRoleName" style="padding-right: 30px;"></div>
+            <div class="navbar-role ibdc_bg_secondary_color" *ngIf="this._initiativesService.initiative.userRoleName">{{ this._initiativesService.initiative.userRoleName}}</div>
         </div>
         <div class="navbar-logout" (click)="onExit()">
             <div class="text">Logout</div>

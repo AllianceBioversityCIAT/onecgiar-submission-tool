@@ -24,7 +24,9 @@ export class InitiativesService {
     name: null,
     users: [],
     status: null,
-    submission: {}
+    submission: {},
+    userRoleId: null,
+    userRoleName: null
   }
 
   actionAreas: [];
