@@ -61,8 +61,9 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
-    // console.log(this.membersList)
+    console.log(this.membersList)
     this.firstUser = membersList[0]?.userId == myID;
+    console.log(this.firstUser +' - '+this.secondUser)
     if (!this.firstUser)this.secondUser = true;
     if (this.firstUser && this.secondUser) {
       let currentUrl = this.router.url;
@@ -74,7 +75,7 @@ export class PusherService {
 
     }
     // console.log(this.firstUser +' -- '+this.secondUser)
-    return this._authService.lsUserRoles.id === 4 ? true : membersList[0]?.userId == myID;
+    return membersList[0]?.userId == myID;
   }
 
   textToinitials(text){
