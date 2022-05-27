@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../..//environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
+import { InitiativesService } from './initiatives.service';
 
 declare const Pusher: any;
 
@@ -15,10 +17,10 @@ export class PusherService {
 
   constructor(
     private http: HttpClient,
-    private router:Router
+    private router:Router,
+    private _authService:AuthService,
+    private _initiativesService:InitiativesService
     ) {
-
-
   }
 
   beforeRoute = null;
@@ -26,9 +28,11 @@ export class PusherService {
   membersList = [];
   continueEditing = false;
   firstUser = false;
+  secondUser = null;
   validaeFirstUserToEdit(){
     let {members, myID} = this.presenceChannel?.members;
 
+    // if (this.firstUser) return true;
     if (!Object.keys(members).length) return true;
     // console.log(members)
 
@@ -36,7 +40,16 @@ export class PusherService {
 
     Object.keys(members).map(item=>{
       const date = new Date(members[item]?.today);
-      membersList.push({userId:item, date,role:members[item]?.roles[0]['name']})
+      // console.log(membersList);
+      membersList.push(
+        {
+          userId:item, 
+          date:members[item]?.roles[0]['name'] !== "Guest" ? date : undefined,
+          role:members[item]?.roles[0]['name'],
+          name:members[item]['name'],
+          nameinitials: this.textToinitials(members[item]['name'])
+        }
+      );
     })
 
     const sortByDate = arr => {
@@ -49,7 +62,23 @@ export class PusherService {
     sortByDate(membersList);
     this.membersList = membersList;
     // console.log(this.membersList)
-    return membersList[0]?.userId == myID
+    this.firstUser = membersList[0]?.userId == myID;
+    if (!this.firstUser)this.secondUser = true;
+    if (this.firstUser && this.secondUser) {
+      let currentUrl = this.router.url;
+      this.router.navigateByUrl(`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}`).then(()=>{
+        setTimeout(() => {
+          this.router.navigateByUrl(currentUrl)
+        }, 100);
+      });
+
+    }
+    // console.log(this.firstUser +' -- '+this.secondUser)
+    return this._authService.lsUserRoles.id === 4 ? true : membersList[0]?.userId == myID;
+  }
+
+  textToinitials(text){
+    return text.split(' ').map(item=>item[0]).join('');
   }
 
  start(OSTRoute:string, userId){
@@ -57,20 +86,12 @@ export class PusherService {
     
     OSTRoute = OSTRoute.split('/').join("").split("-").join("");
     this.pusher = new Pusher(environment.pusher.key, {
-      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${userId}`,
+      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${this._initiativesService.initiative.id}/${userId}`,
       cluster: environment.pusher.cluster,
       encrypted: true,
     });
-    // this.channel = this.pusher.subscribe('events-channel');
     this.presenceChannel = this.pusher.subscribe('presence-ost'+OSTRoute);
-
     this.beforeRoute = OSTRoute; 
-
-    // setTimeout(() => {
-    //   console.log("cerrar: " + OSTRoute)
-    //  
-    // }, 5000);
-
  }
 
  stop(){
