@@ -11,6 +11,7 @@ import { InteractionsService } from '../../shared/services/interactions.service'
 import { InitiativesService } from '../../shared/services/initiatives.service';
 import { UtilsService } from '../../shared/services/utils.service';
 import { PusherService } from '../../shared/services/pusher.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-stages-menu',
@@ -32,7 +33,8 @@ export class StagesMenuComponent implements OnInit {
     private router: Router,
     public _dataControlService: DataControlService,
     private _utilsService:UtilsService,
-    public _pusherService: PusherService
+    public _pusherService: PusherService,
+    public _authService:AuthService
   ) { }
 
   openDialog(): void {
@@ -51,6 +53,7 @@ export class StagesMenuComponent implements OnInit {
   sectionsList = [];
 
   ngOnInit(): void {
+    console.log(this._authService.lsUserRoles.name)
     this.sectionsList = this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent) => {
