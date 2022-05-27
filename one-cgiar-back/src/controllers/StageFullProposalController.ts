@@ -1944,3 +1944,33 @@ export async function postInitiativeApproval(
     return res.status(error.httpCode).json(error);
   }
 }
+
+export async function patchTracksYears(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const body = req.body;
+
+  try {
+    
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initiativeId.toString());
+
+    const newInitvApproval = await fullPposal.insertInitiativeApproval(
+      user_id,
+      initiativeId,
+      is_approved
+    );
+
+    console.log(newInitvApproval);
+    
+    res.json(
+      new ResponseHandler('Full Proposal: Initiative Approved.', {
+        newInitvApproval
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}

@@ -3688,11 +3688,14 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      tracksYearsInitiativesRepo.save(tracksRows);
+      const response =  await tracksYearsInitiativesRepo.save(tracksRows);
+      return tracksRows;
+
+
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Insert iniative approval error',
+        'Upsert Tracks error',
         400,
         error.message,
         false
