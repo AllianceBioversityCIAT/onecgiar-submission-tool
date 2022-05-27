@@ -325,4 +325,14 @@ router.post(
   stagefull.postInitiativeApproval
 );
 
+
+/**
+ ** POST INITIATIVES APPROVAL
+ */
+router.patch(
+  '/tracks/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.patchTracksYears
+);
+
 export default router;

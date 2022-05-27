@@ -1950,23 +1950,19 @@ export async function patchTracksYears(
   res: Response
 ): Promise<Response> {
   const body = req.body;
-
+  const {initiativeId, stageId} = req.params;
   try {
     
     // create new full proposal object
     const fullPposal = new ProposalHandler(initiativeId.toString());
 
-    const newInitvApproval = await fullPposal.insertInitiativeApproval(
-      user_id,
-      initiativeId,
-      is_approved
-    );
+    const tracksAdded = await fullPposal.upsertTracks(initiativeId,stageId);
 
-    console.log(newInitvApproval);
+    console.log(tracksAdded);
     
     res.json(
       new ResponseHandler('Full Proposal: Initiative Approved.', {
-        newInitvApproval
+        tracksAdded
       })
     );
   } catch (error) {

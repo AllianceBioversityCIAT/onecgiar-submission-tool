@@ -3645,7 +3645,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   }
 
-  async upsertTracks() {
+  async upsertTracks(initiativeId, stageId) {
     const tracksRepo = await getRepository(entities.Tracks);
     const tracksYearsRepo = await getRepository(entities.TracksYears);
     const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
@@ -3653,6 +3653,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     try {
       const tracks = await tracksRepo.find();
       const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
       const body = 
         {
           LT: {
@@ -3681,7 +3683,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             id: body[track][year]['id'] ? body[track][year]['id'] : null,
             track_id: tracks.find(tr => tr.acronym = track).id,
             track_year_id: tracksYears.find(ty => ty.year = year).id,
-            initvStage: this.initvStage.id,
+            initvStage: initvStg.id,
             value: track[year]['value']
           }
           tracksRows.push(newValue);
