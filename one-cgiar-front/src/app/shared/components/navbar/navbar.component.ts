@@ -51,10 +51,12 @@ export class NavbarComponent implements OnInit {
     //  }, 1000);
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-        this.pusherService.start(event.url,this.user.id);
+        console.log(event.url.split('/')[2])
+        if (!(event.url.split('/')[2])) return;
+        this.pusherService.start(event.url, this.user.id, event.url.split('/')[2]);
         this._pusherService.continueEditing = false;
         this._pusherService.firstUser = false;
-        this._pusherService.secondUser = false;
+        this._pusherService.secondUser = null;
       }
     })
 

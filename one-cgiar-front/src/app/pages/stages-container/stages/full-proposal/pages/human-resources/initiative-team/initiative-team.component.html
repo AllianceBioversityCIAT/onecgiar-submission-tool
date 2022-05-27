@@ -18,7 +18,7 @@
                     <app-initiative-team-item [initiativeTeamItem]="iniItem" [index]="i" [all]="this.initiativeTeamData?.initvTeam"></app-initiative-team-item>
                 </div>
             </div>
-            <div class="center_flex addItiativeTeamItem">
+            <div class="center_flex addItiativeTeamItem" *ngIf="!_initiativesService.initiative.readonly">
                 <button pButton type="button" label="Add initiative team item" icon="pi pi-plus-circle"  (click)="addInitiativeTeamItem()"></button>
             </div>
             
