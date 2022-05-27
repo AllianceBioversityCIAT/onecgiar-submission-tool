@@ -18,8 +18,8 @@ export class WpGeneralInformationComponent implements OnInit {
   workPackageForm: FormGroup;
   wpID;
   geographicScope = {
-    regions: [],
-    countries: []
+    regions: null,
+    countries: null
   }
   constructor(
     public _initiativesService: InitiativesService,
@@ -60,7 +60,7 @@ export class WpGeneralInformationComponent implements OnInit {
               if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
-          this._dataControlService.showRegions = true;
+          // this._dataControlService.showRegions = true;
         })
   
         this._initiativesService.getCLARISACountries().subscribe(countries=>{       
@@ -70,7 +70,7 @@ export class WpGeneralInformationComponent implements OnInit {
             })
             
           })
-          this._dataControlService.showCountries = true;
+          // this._dataControlService.showCountries = true;
         })
         // console.log(directResp);
       })

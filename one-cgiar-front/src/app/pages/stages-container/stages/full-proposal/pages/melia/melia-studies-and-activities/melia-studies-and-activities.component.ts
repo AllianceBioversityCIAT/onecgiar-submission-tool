@@ -124,7 +124,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
               if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
-          this._dataControlService.showRegions = true;
+          // this._dataControlService.showRegions = true;
         })
       });
 
@@ -140,7 +140,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       });
 
       this.formatGeographicScope(this.list);
-        this._dataControlService.showCountries = true;
+        // this._dataControlService.showCountries = true;
       })
       ;
     })

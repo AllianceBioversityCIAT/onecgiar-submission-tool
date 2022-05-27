@@ -24,8 +24,8 @@ export class DataControlService {
   impactStatementsMaped = false;
   userMenu = [];
   WorkPackageID:number=null;
-  showRegions=false;
-  showCountries=false;
+  // showRegions=false;
+  // showCountries=false;
   impacAreas = [];
 
   // events to reload info in sections

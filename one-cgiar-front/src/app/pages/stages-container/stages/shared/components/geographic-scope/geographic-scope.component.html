@@ -29,10 +29,10 @@
             </div>
             <br>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showRegions">
+        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
+        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList != null">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required: !this.localForm.value.is_global,
@@ -57,10 +57,10 @@
             </div>
 
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showCountries">
+        <div class="col-6 horizontal_padding" *ngIf="this.countriesSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
+        <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList != null">
             <div class="box_container">
             <ibdc-select-multiple [options]="{
                 required: !this.localForm.value.is_global,
