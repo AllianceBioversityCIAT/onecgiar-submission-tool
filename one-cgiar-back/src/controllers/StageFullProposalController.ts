@@ -1956,7 +1956,7 @@ export async function patchTracksYears(
     // create new full proposal object
     const fullPposal = new ProposalHandler(initiativeId.toString());
 
-    const tracksAdded = await fullPposal.upsertTracks(initiativeId,stageId);
+    const tracksAdded = await fullPposal.upsertTracks(initiativeId,stageId, body);
 
     console.log(tracksAdded);
     

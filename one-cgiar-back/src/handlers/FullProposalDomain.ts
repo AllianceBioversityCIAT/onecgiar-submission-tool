@@ -3645,7 +3645,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   }
 
-  async upsertTracks(initiativeId, stageId) {
+  async upsertTracks(initiativeId, stageId, body) {
     const tracksRepo = await getRepository(entities.Tracks);
     const tracksYearsRepo = await getRepository(entities.TracksYears);
     const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
@@ -3655,24 +3655,6 @@ export class ProposalHandler extends InitiativeStageHandler {
       const tracksYears = await tracksYearsRepo.find();
 
       const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
-      const body = 
-        {
-          LT: {
-            2022: { value: 0, id: null},
-            2023: { value: 0, id: null},
-            2024: { value: 0, id: null}
-          },
-          ST: {
-            2022: { value: 0, id: null},
-            2023: { value: 0, id: null},
-            2024: { value: 0, id: null}
-          },
-          AT: {
-            2022: { value: 0, id: null},
-            2023: { value: 0, id: null},
-            2024: { value: 0, id: null}
-          }
-        }
   
 
       let tracksRows = [];
@@ -3683,8 +3665,8 @@ export class ProposalHandler extends InitiativeStageHandler {
             id: body[track][year]['id'] ? body[track][year]['id'] : null,
             track_id: tracks.find(tr => tr.acronym = track).id,
             track_year_id: tracksYears.find(ty => ty.year = year).id,
-            initvStage: initvStg.id,
-            value: track[year]['value']
+            initvStgId: initvStg.id,
+            value: body[track][year]['value']
           }
           tracksRows.push(newValue);
         }
