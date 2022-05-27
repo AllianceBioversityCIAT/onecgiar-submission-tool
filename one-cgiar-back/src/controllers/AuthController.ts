@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getRepository, QueryFailedError} from 'typeorm';
+import {getCustomRepository, getRepository, QueryFailedError} from 'typeorm';
 import {validate} from 'class-validator';
 import {Users} from '../entity/Users';
 import config from '../config/config';
@@ -13,6 +13,7 @@ import {
   utilLogin,
   validateToCtoken
 } from '../utils/auth-login';
+import {UsersRepository} from '../repositories/usersRepository';
 
 require('dotenv').config();
 const pusher = new Pusher({
@@ -251,15 +252,23 @@ export async function pusherAuth(req: Request, res: Response) {
   const socketId = req.body.socket_id;
   let channel = req.body.channel_name;
   let userId = req.params.userId;
+  let initiativeId = req.params.initiativeId;
   var today = new Date();
 
-  const userRepo = getRepository(Users);
+  const userRepo = getCustomRepository(UsersRepository);
 
   try {
-    let userInfo = await userRepo.findOne({
+    /*    let userInfo = await userRepo.findOne({
       where: {id: userId},
       relations: ['roles']
-    });
+    }); */
+
+    let userInfo = await userRepo.findOneUserByRoleAndInitRole(
+      initiativeId,
+      userId
+    );
+
+    console.log(userInfo);
 
     let name = userInfo.first_name + ' ' + userInfo.last_name;
     let roles = userInfo.roles;

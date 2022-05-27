@@ -28,7 +28,7 @@ router.post('/toc/token', [checkJwt], generateTocToken);
 router.post('/toc', validateToCToken);
 
 //Authentication Pusher
-router.post('/pusherauth/:userId', pusherAuth);
+router.post('/pusherauth/:initiativeId([0-9]+)/:userId', pusherAuth);
 
 //Authentication Pusher
 router.post('/pusher/update', pusherUpdate);
