@@ -40,14 +40,14 @@ export class PusherService {
 
     Object.keys(members).map(item=>{
       const date = new Date(members[item]?.today);
-      // console.log(membersList);
+
       membersList.push(
         {
           userId:item, 
-          date:members[item]?.roles[0]['name'] !== "Guest" ? date : undefined,
-          role:members[item]?.roles[0]['name'],
-          name:members[item]['name'],
-          nameinitials: this.textToinitials(members[item]['name'])
+          date:members[item]?.initiativeRoles?.length ?  (members[item]?.initiativeRoles[0]?.name !== "Guest" ? date : undefined) : undefined,
+          role: members[item]?.initiativeRoles?.length ? members[item]?.initiativeRoles[0]?.name : null,
+          name:members[item]?.name,
+          nameinitials: this.textToinitials(members[item]?.name)
         }
       );
     })
@@ -61,8 +61,9 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
-    // console.log(this.membersList)
+    console.log(this.membersList)
     this.firstUser = membersList[0]?.userId == myID;
+    console.log(this.firstUser +' - '+this.secondUser)
     if (!this.firstUser)this.secondUser = true;
     if (this.firstUser && this.secondUser) {
       let currentUrl = this.router.url;
@@ -74,19 +75,19 @@ export class PusherService {
 
     }
     // console.log(this.firstUser +' -- '+this.secondUser)
-    return this._authService.lsUserRoles.id === 4 ? true : membersList[0]?.userId == myID;
+    return membersList[0]?.userId == myID;
   }
 
   textToinitials(text){
     return text.split(' ').map(item=>item[0]).join('');
   }
 
- start(OSTRoute:string, userId){
+ start(OSTRoute:string, userId, initiativeId){
   if (this.beforeRoute) this.pusher.unsubscribe('presence-ost'+this.beforeRoute);
     
     OSTRoute = OSTRoute.split('/').join("").split("-").join("");
     this.pusher = new Pusher(environment.pusher.key, {
-      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${this._initiativesService.initiative.id}/${userId}`,
+      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${initiativeId}/${userId}`,
       cluster: environment.pusher.cluster,
       encrypted: true,
     });

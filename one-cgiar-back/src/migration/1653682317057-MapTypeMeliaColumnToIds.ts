@@ -1,6 +1,5 @@
-import {MigrationInterface, QueryRunner, getConnection, getRepository} from "typeorm";
-import { MeliaStudiesActivities } from "../entity";
-
+import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
+import { MeliaStudiesActivities } from "../entity/MeliaStudiesActivities";
 const studyTypes = [
     {id:1, name: 'Ex-ante, baseline and/or foresight study'},
     {id:2, name: 'Adoption or diffusion studies addressing learning questions on the TOC'},
@@ -11,10 +10,8 @@ const studyTypes = [
     {id:7, name: 'Qualitative outcome study'},
     {id:8, name: 'Other MELIA activity'}
 ]
+export class MapTypeMeliaColumnToIds1653682317057 implements MigrationInterface {
 
-export class UpdateTypeMeliaColumn1652365447721 implements MigrationInterface {
-    name = 'UpdateTypeMeliaColumn1652365447721'
-    studyTypes = studyTypes;
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("ALTER TABLE `melia_studies_activities` ADD `type_melia_id` int after initvStgId");
     
@@ -48,6 +45,7 @@ export class UpdateTypeMeliaColumn1652365447721 implements MigrationInterface {
         await queryRunner.query("ALTER TABLE `melia_studies_activities` DROP COLUMN `type_melia`");
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {}
+    public async down(queryRunner: QueryRunner): Promise<void> {
+    }
 
 }

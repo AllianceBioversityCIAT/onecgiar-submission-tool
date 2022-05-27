@@ -258,7 +258,7 @@ export async function pusherAuth(req: Request, res: Response) {
   const userRepo = getCustomRepository(UsersRepository);
 
   try {
-    /*    let userInfo = await userRepo.findOne({
+    /*  let userInfo = await userRepo.findOne({
       where: {id: userId},
       relations: ['roles']
     }); */
@@ -272,10 +272,11 @@ export async function pusherAuth(req: Request, res: Response) {
 
     let name = userInfo.first_name + ' ' + userInfo.last_name;
     let roles = userInfo.roles;
+    let initiativeRoles = userInfo.userInitRole;
 
     const presenceData = {
       user_id: userId,
-      user_info: {name, roles, today}
+      user_info: {name, roles,initiativeRoles, today}
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
