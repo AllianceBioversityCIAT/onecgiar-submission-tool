@@ -433,4 +433,12 @@ export class InitiativeHandler extends InitiativeStageHandler {
       throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
     }
   }
+
+  async requestYears() {
+    const querySql = `
+        SELECT year
+        FROM years`;
+    const years = await this.queryRunner.query(querySql);
+    return years;
+  }
 }

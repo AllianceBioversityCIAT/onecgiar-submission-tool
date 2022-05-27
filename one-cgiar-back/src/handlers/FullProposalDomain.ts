@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import {getRepository, In, Not} from 'typeorm';
+import { getRepository, In, Not } from 'typeorm';
 import * as entities from '../entity';
-import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
-import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import {ToolsSbt} from '../utils/toolsSbt';
-import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
-import {InitiativeStageHandler} from './InitiativeStageDomain';
+import { MeliaStudiesActivities } from '../entity/MeliaStudiesActivities';
+import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
+import { ToolsSbt } from '../utils/toolsSbt';
+import { BaseError } from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
+import { InitiativeStageHandler } from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -123,9 +123,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${
-                   initvStg.id ? initvStg.id : initvStg[0].id
-                 }
+                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -151,9 +150,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${
-                    initvStg.id ? initvStg.id : initvStg[0].id
-                  }
+                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -215,7 +213,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                   and work_package_id = ${id}
                 `;
 
-      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
+      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -392,7 +390,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || {name: null};
+      ) || { name: null };
 
       // if null, create object
       if (generalInformationId == null) {
@@ -759,7 +757,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedPjectionBenefits, upsertedDimensions};
+      return { upsertedPjectionBenefits, upsertedDimensions };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -957,7 +955,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedImpactStrategies, upsertedPartners};
+      return { upsertedImpactStrategies, upsertedPartners };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1182,7 +1180,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedMelia, upsertedFile};
+      return { upsertedMelia, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1309,7 +1307,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
       let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return {upsertedTableA, upsertedTableB, upsertedTableC};
+      return { upsertedTableA, upsertedTableB, upsertedTableC };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1552,7 +1550,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      return {upsertedOutcomesIndicators};
+      return { upsertedOutcomesIndicators };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1918,14 +1916,14 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = {regions: reg, countries: cou};
+        res['geo_scope'] = { regions: reg, countries: cou };
       });
 
-      const tableC = {results: results};
+      const tableC = { results: results };
 
       return {
         meliaPlan: meliaPlan[0],
-        resultFramework: {tableA, tableB, tableC}
+        resultFramework: { tableA, tableB, tableC }
       };
     } catch (error) {
       console.log(error);
@@ -1950,7 +1948,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
-
+    let regionsMeliaStd = [];
+    let countriesMeliaStd = [];
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -1971,6 +1970,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newMeliaStudiesActivities.co_delivery = element.co_delivery;
         newMeliaStudiesActivities.management_decisions_learning =
           element.management_decisions_learning;
+        newMeliaStudiesActivities.is_global = element.is_global;
         newMeliaStudiesActivities.active = element.active;
 
         meliaStudiesActivitiesArray.push(
@@ -1984,8 +1984,15 @@ export class ProposalHandler extends InitiativeStageHandler {
             newMeliaStudiesActivities
           )
         );
-      }
 
+        countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+        regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+      }
+      
+        const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
+        regionsMeliaStd,
+        countriesMeliaStd
+      );
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
       );
@@ -2012,7 +2019,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     );
 
     try {
-      const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
+      let meliaStudiesActivities = await this.queryRunner.query(`SELECT msa.id,
       msa.initvStgId,
       msa.type_melia_id,
       IF(msa.type_melia_id = 8,concat(cmst.name,ifnull(concat(' - ', if(msa.other_melia = '', null,msa.other_melia)), '')), cmst.name) as type_melia,
@@ -2021,14 +2028,42 @@ export class ProposalHandler extends InitiativeStageHandler {
       msa.anticipated_year_completion,
       msa.co_delivery,
       msa.management_decisions_learning,
+      msa.is_global,
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1`);
-      // const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
-      //   initvStgId: initvStg.id
-      // });
+
+      let countries = await this.queryRunner.query(`SELECT id,country_id,initvStgId,meliaStudyId
+      FROM countries_by_melia_study 
+      WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+      AND active = 1
+      GROUP BY id,country_id`);
+
+      let regions = await this.queryRunner.query(`
+      SELECT id,region_id,initvStgId,meliaStudyId
+        FROM regions_by_melia_study
+       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+        }
+         AND active = 1
+      GROUP BY id,region_id`);
+
+      if (meliaStudiesActivities == undefined || meliaStudiesActivities.length == 0) {
+        meliaStudiesActivities = [];
+      } else {
+        // Map Initiatives
+        meliaStudiesActivities.map((melia) => {
+          melia['regions'] = regions.filter((reg) => {
+            return reg.meliaStudyId === melia.id;
+          });
+
+          melia['countries'] = countries.filter((cou) => {
+            return cou.meliaStudyId === melia.id;
+          });
+        });
+      }
+
 
       return meliaStudiesActivities;
     } catch (error) {
@@ -2148,7 +2183,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedManagePlan, upsertedFile};
+      return { upsertedManagePlan, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2350,12 +2385,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-            return op.risk_assessment_id === risk.id;
-          }))
+        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+          return op.risk_assessment_id === risk.id;
+        }))
       );
 
-      return {upsertedRiskAssessment};
+      return { upsertedRiskAssessment };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2483,7 +2518,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedHumanResources, upsertedFile};
+      return { upsertedHumanResources, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2504,7 +2539,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async upsertInitiativeTeam(
     humanResourcesId,
     initvTeam
-  ): Promise<{upsertedInitiativeTeam: any}> {
+  ): Promise<{ upsertedInitiativeTeam: any }> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
     const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
@@ -2552,7 +2587,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedInitiativeTeam};
+      return { upsertedInitiativeTeam };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2745,7 +2780,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             : financialRSObject.id;
         fResource.financial_type_id =
           financialRSObject.financial_type_id == null ||
-          financialRSObject.financial_type_id == ''
+            financialRSObject.financial_type_id == ''
             ? null
             : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
@@ -2961,7 +2996,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedPolicyCompliance};
+      return { upsertedPolicyCompliance };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3051,7 +3086,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedInnovationPackages};
+      return { upsertedInnovationPackages };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3176,7 +3211,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {savedTocs: results};
+      return { savedTocs: results };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3211,7 +3246,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           'work_package',
           'work_package_id'
         ],
-        where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
+        where: { toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId }
       });
 
       // Validate if the initiative has saved information
@@ -3233,7 +3268,7 @@ export class ProposalHandler extends InitiativeStageHandler {
          */
 
         var savedTocsType: any = await tocsRepo.find({
-          where: {initvStgId: newTocs.initvStgId, type: 1}
+          where: { initvStgId: newTocs.initvStgId, type: 1 }
         });
 
         if (savedTocsType.length > 0) {
@@ -3551,7 +3586,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = {regions: reg, countries: cou};
+        res['geo_scope'] = { regions: reg, countries: cou };
       });
 
       return eoi;

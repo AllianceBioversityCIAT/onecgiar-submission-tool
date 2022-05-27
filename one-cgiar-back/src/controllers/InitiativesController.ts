@@ -1885,7 +1885,6 @@ function getRepoConstStage(tableName: string) {
  * @param res
  * @returns meliaStudyTypes
  */
-
 export const getMeliaStudyTypes = async (req: Request, res: Response) => {
   try {
     //Get MELIA Study Types from submission
@@ -1896,6 +1895,29 @@ export const getMeliaStudyTypes = async (req: Request, res: Response) => {
     let meliaStudyTypes = await initiativeshandler.requestMeliaStudyTypes();
 
     res.json(new ResponseHandler('MELIA Study Types', {meliaStudyTypes}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns Years
+ */
+
+export const getYears = async (req: Request, res: Response) => {
+  try {
+    //Get Years from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let years = await initiativeshandler.requestYears();
+
+    res.json(new ResponseHandler('Years', {years}));
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);

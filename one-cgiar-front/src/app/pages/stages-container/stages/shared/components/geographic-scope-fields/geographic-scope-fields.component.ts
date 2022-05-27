@@ -32,11 +32,6 @@ export class GeographicScopeFieldsComponent implements OnInit {
     // console.log(this.localForm.value.is_global);
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this._dataControlService.showCountries = false;
-    this._dataControlService.showRegions = false;
-  }
+
 
 }

@@ -9,5 +9,8 @@ export interface MeliaStudiesAndActivities {
   anticipated_year_completion: string;
   co_delivery: string;
   management_decisions_learning: string;
+  is_global?: boolean;
   active: boolean;
+  countries: [];
+  regions: [];
 }

@@ -985,8 +985,11 @@ export async function patchMeliaStudiesActivities(
   const {stageId, initiativeId} = req.params;
   const meliaStudiesActivitiesData = req.body;
 
+  
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
+
+
 
   try {
     // get stage
@@ -1009,9 +1012,12 @@ export async function patchMeliaStudiesActivities(
     }
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
+    const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
+
 
     const meliaStudiesActivities =
       await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData);
+
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {

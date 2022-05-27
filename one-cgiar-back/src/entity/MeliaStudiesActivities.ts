@@ -40,6 +40,9 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
   @Column({type: 'text'})
   management_decisions_learning: string;
 
+  @Column({type: 'boolean', default: null})
+  is_global: boolean;
+
   @Column({type: 'tinyint'})
   active: boolean;
 

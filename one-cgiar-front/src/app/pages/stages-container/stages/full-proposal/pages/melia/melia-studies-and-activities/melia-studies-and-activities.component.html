@@ -22,16 +22,14 @@
                         [confirmDeleteModal]="true"></app-button-edit-or-delete>
                     <br><br>
                     <div class="fields">
-                        
+
                         <div class="mb-4">
                             <ibdc-select-field class="field"
-                            [readOnlyVariable]="this._initiativesService.initiative.readonly"
-                            [objectItem]="item"  [objectAtributteName]="'type_melia'"  [objectAtributteId]="'type_melia_id'"
-                            [inputTitle]="attr_list_config[0].name"
-                            selectableListAtributteName = 'name'
-                            selectableListAtributteId = 'id'
-                            [selectableList]="this.meliaStudyTypes"
-                            ></ibdc-select-field>
+                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
+                                [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
+                                [inputTitle]="attr_list_config[0].name" selectableListAtributteName='name'
+                                selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes">
+                            </ibdc-select-field>
                         </div>
                         <div class="mb-4" *ngIf="item.type_melia_id == 8">
                             <ibdc-text-area-field inputTitle="Specify the MELIA study or activity" [objectItem]="item"
@@ -40,11 +38,16 @@
                             </ibdc-text-area-field>
                         </div>
 
-                        <div class="field" *ngFor="let field of attr_list_config | slice:2">
+                        <div class="field" *ngFor="let field of attr_list_config | slice:2 | slice:0:3">
                             <ibdc-text-area-field [inputTitle]="field.name" [objectItem]="item"
                                 [objectAtributteName]="field?.attribute"
                                 [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                             </ibdc-text-area-field>
+                        </div>
+                        <div class="col-sm-12">
+                            <app-geographic-scope [localForm]="this.geographicScopes[i]"
+                                [regionsSelectedList]="item.regions"
+                                [countriesSelectedList]="item.countries"></app-geographic-scope>
                         </div>
                     </div>
                 </div>
