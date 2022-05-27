@@ -68,6 +68,10 @@
                 font-style: italic;
             }
 
+            .firstUser{
+                background-color: #965cc57c !important;
+            }
+
             .user{
                 // width: 50px;
                 background-color: #5cc5607c ;
@@ -75,6 +79,24 @@
                 display: flex;
                 overflow: hidden;
                 min-width: max-content;
+                .nameinitials{
+                        overflow: hidden;
+                }
+                .fullName{
+                    overflow: hidden;
+                    width: 0px;
+                    height: 0px;
+                }
+                &:hover{
+                    .nameinitials{
+                        width: 0px;
+                        height: 0px;
+                    }
+                    .fullName{
+                        width: max-content;
+                        height: auto;
+                    }
+                }
                 .index{
                     height: 100%;
                     // width: 10px;
@@ -90,7 +112,13 @@
                     align-items: center;
                     justify-content: center;
                     color: rgb(58, 58, 58);
-                    padding: 0px 10px;
+                    padding: 0px 5px;
+                    font-size: 13px;
+                    i{
+                        position: relative;
+                        font-size: 18px;
+                        animation: example 1s infinite;
+                    }
                 }
    
             }
@@ -109,6 +137,12 @@
     
 
 
+}
+
+@keyframes example {
+    0% {left: 2px;}
+    50% {left: -2px;}
+    100% {left: 2px;}
 }
 
 .submission-container{
