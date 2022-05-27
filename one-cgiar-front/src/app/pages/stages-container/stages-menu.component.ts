@@ -183,13 +183,26 @@ export class StagesMenuComponent implements OnInit {
     /**
      * Validate by roles
      */
+    console.log(initiative?.status)
      this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
       //  console.log(resp)
        this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
        this.initiativesSvc.initiative.userRoleId = resp?.response?.roles[0]?.roleId;
       //  console.log(this.initiativesSvc.initiative.userRoleName)
-      this.initiativesSvc.initiative.readonly = resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined? false : this.user?.roles[0].id !== 4 &&  this.user?.roles[0].id != undefined ? false : true;
-     })
+      let validations = ()=>{
+        console.log(resp?.response?.roles[0]?.roleId)
+        if (this.user?.roles[0].id === 1 &&  this.user?.roles[0].id != undefined && initiative?.status == 'Editing') return false
+        if (resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined && initiative?.status == 'Editing') return false
+        if (resp?.response?.roles[0]?.roleId !== undefined ) return false
+   
+        return true;
+ 
+      }
+      this.initiativesSvc.initiative.readonly = validations();
+      console.log(this.initiativesSvc.initiative.readonly)
+      console.log(resp?.response?.roles[0]?.roleId)
+   
+    })
 
   }
 
@@ -200,7 +213,10 @@ export class StagesMenuComponent implements OnInit {
   }
 
   validateAllSections() {
+    console.log('stageId ',this.initiativesSvc.initiative.stageId)
+    console.log('id ',this.initiativesSvc.initiative.id)
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
+      console.log(resp)
       if (!resp?.response) return;
       Object.keys(resp?.response).map(key => {
         let stageId = this.initiativesSvc.initiative.stageId;
