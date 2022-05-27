@@ -316,5 +316,13 @@ router.get(
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.getEndofInitiativeOutcome
 );
+/**
+ ** POST INITIATIVES APPROVAL
+ */
+router.post(
+  '/approve-initiative',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.postInitiativeApproval
+);
 
 export default router;
