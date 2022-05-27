@@ -61,9 +61,9 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
-    console.log(this.membersList)
+    // console.log(this.membersList)
     this.firstUser = membersList[0]?.userId == myID;
-    console.log(this.firstUser +' - '+this.secondUser)
+    // console.log(this.firstUser +' - '+this.secondUser)
     if (!this.firstUser)this.secondUser = true;
     if (this.firstUser && this.secondUser) {
       let currentUrl = this.router.url;
