@@ -1944,3 +1944,29 @@ export async function postInitiativeApproval(
     return res.status(error.httpCode).json(error);
   }
 }
+
+export async function patchTracksYears(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const body = req.body;
+  const {initiativeId, stageId} = req.params;
+  try {
+    
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initiativeId.toString());
+
+    const tracksAdded = await fullPposal.upsertTracks(initiativeId,stageId, body);
+
+    console.log(tracksAdded);
+    
+    res.json(
+      new ResponseHandler('Full Proposal: Initiative Approved.', {
+        tracksAdded
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}

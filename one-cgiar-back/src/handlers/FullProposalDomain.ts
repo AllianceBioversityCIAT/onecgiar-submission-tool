@@ -1988,8 +1988,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
         regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
       }
-      
-        const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
+
+      const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
         regionsMeliaStd,
         countriesMeliaStd
       );
@@ -3605,15 +3605,15 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
-      const newInitvApproval =  await initvApprovalRepo.create({user_id, initiativeId, is_approved})
+      const newInitvApproval = await initvApprovalRepo.create({ user_id, initiativeId, is_approved })
       await initvApprovalRepo.save(newInitvApproval);
-  
-      console.log({newInitvApproval});
-      
-      const initvStage: any = await initvStageRepo.findOne({where: {initiative: initiativeId, active: true}});
-      
-      if(newInitvApproval) {
-  
+
+      console.log({ newInitvApproval });
+
+      const initvStage: any = await initvStageRepo.findOne({ where: { initiative: initiativeId, active: true } });
+
+      if (newInitvApproval) {
+
         if (initvStage == null) {
           throw new BaseError(
             'Post Initiative Approval: Error',
@@ -3624,10 +3624,10 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
         // Set status approved on Initiative by stage
         initvStage.status = 4;
-        console.log({initvStage});
+        console.log({ initvStage });
         const savedInitvStage = await initvStageRepo.save(initvStage);
-        console.log({savedInitvStage});
-        
+        console.log({ savedInitvStage });
+
         return newInitvApproval;
       }
       return newInitvApproval;
@@ -3635,6 +3635,51 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Insert iniative approval error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
+  }
+
+  async upsertTracks(initiativeId, stageId, body) {
+    const tracksRepo = await getRepository(entities.Tracks);
+    const tracksYearsRepo = await getRepository(entities.TracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const tracks = await tracksRepo.find();
+      const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
+  
+
+      let tracksRows = [];
+
+      for (const track in body) {
+        for (const year in body[track]) {
+          let newValue = {
+            id: body[track][year]['id'] ? body[track][year]['id'] : null,
+            track_id: tracks.find(tr => tr.acronym = track).id,
+            track_year_id: tracksYears.find(ty => ty.year = year).id,
+            initvStgId: initvStg.id,
+            value: body[track][year]['value']
+          }
+          tracksRows.push(newValue);
+        }
+      }
+
+      const response =  await tracksYearsInitiativesRepo.save(tracksRows);
+      return tracksRows;
+
+
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Tracks error',
         400,
         error.message,
         false
