@@ -263,8 +263,6 @@ export async function pusherAuth(req: Request, res: Response) {
       relations: ['roles']
     }); */
 
-
-  
     let userInfo = await userRepo.findOneUserByRoleAndInitRole(
       initiativeId,
       userId
@@ -274,10 +272,11 @@ export async function pusherAuth(req: Request, res: Response) {
 
     let name = userInfo.first_name + ' ' + userInfo.last_name;
     let roles = userInfo.roles;
+    let initiativeRoles = userInfo.userInitRole;
 
     const presenceData = {
       user_id: userId,
-      user_info: {name, roles, today}
+      user_info: {name, roles,initiativeRoles, today}
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 
