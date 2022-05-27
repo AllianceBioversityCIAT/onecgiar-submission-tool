@@ -9,12 +9,13 @@
         <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
             <div title>{{stage?.description}}</div>
             <div content>
-                <div *ngIf="stage?.stageId === 4" class="isdc_feedback_section" [routerLink]="this._utilsService.stageBaseRoute + this._utilsService.convertToKebabCase(stage?.description)+ '/isdc-feedback-responses'">
+                <!-- <div *ngIf="stage?.stageId === 4" class="isdc_feedback_section" [routerLink]="this._utilsService.stageBaseRoute + this._utilsService.convertToKebabCase(stage?.description)+ '/isdc-feedback-responses'">
                     <div class="name">ISDC Feedback responses</div>
                     <i class="material-icons">forum</i>
-                </div>
+                </div> -->
                 <app-menu-section 
                     *ngFor="let sections of stage?.sections"
+                    [sectionId]="sections?.sectionId"
                     [fieldsCompleted]="sections?.fieldsCompleted" 
                     [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description" 
                     [haveContent]="sections?.subsections?.length">
@@ -56,8 +57,8 @@
                 </app-menu-section>
             </div>
         </app-menu-stage>
-        <div class="approve_button_container">
-            <div class="approve_button"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
+        <div *ngIf="this.btnSubmitIsEnable" class="approve_button_container" (click)="this.submitBtn()">
+            <div class="approve_button" [ngClass]="{'active': this._dataControlService.isdcFeedbackValidation?.validation }"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
           
         </div>
 

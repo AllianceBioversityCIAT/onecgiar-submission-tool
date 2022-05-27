@@ -637,6 +637,9 @@ export class InitiativesService {
 
   
   /*** submitt initiative */
+  postApproveInitiative(body){
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/proposal/approve-initiative`, body);
+  }
 
 
 }

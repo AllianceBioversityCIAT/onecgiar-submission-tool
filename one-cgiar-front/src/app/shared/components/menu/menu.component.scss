@@ -128,16 +128,30 @@
     align-items: center;
     justify-content: center;
     .approve_button{
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 30px;
-        background-color: #4caf50;
         border-radius: 5px;
         padding: 10px 40px;
         color: white;
         font-size: 14px;
         gap: 10px;
+        transition: background-color ease .3s;
+        background-color: #727272;
+    }
+
+    .active{
+        background-color: #4caf50;
+
+        &:hover{
+            background-color: #3c993f;
+        }
+
+        &:active{
+            background-color: #2a702d;
+        }
     }
 }
 

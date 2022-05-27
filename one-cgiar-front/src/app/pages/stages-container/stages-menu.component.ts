@@ -11,6 +11,7 @@ import { InteractionsService } from '../../shared/services/interactions.service'
 import { InitiativesService } from '../../shared/services/initiatives.service';
 import { UtilsService } from '../../shared/services/utils.service';
 import { PusherService } from '../../shared/services/pusher.service';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-stages-menu',
@@ -201,6 +202,8 @@ export class StagesMenuComponent implements OnInit {
 
   validateAllSections() {
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
+      if (this.initiativesSvc.initiative.stageId == 4) this._dataControlService.isdcFeedbackValidation = resp?.response.isdcFeedBack;
+       console.log(resp?.response.isdcFeedBack)
       if (!resp?.response) return;
       Object.keys(resp?.response).map(key => {
         let stageId = this.initiativesSvc.initiative.stageId;
