@@ -3600,4 +3600,48 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+  async insertInitiativeApproval(user_id, initiativeId, is_approved) {
+    const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const newInitvApproval =  await initvApprovalRepo.create({user_id, initiativeId, is_approved})
+      await initvApprovalRepo.save(newInitvApproval);
+  
+      console.log({newInitvApproval});
+      
+      const initvStage: any = await initvStageRepo.findOne({where: {initiative: initiativeId, active: true}});
+      
+      if(newInitvApproval) {
+  
+        if (initvStage == null) {
+          throw new BaseError(
+            'Post Initiative Approval: Error',
+            400,
+            `Initiative not found`,
+            false
+          );
+        }
+        // Set status approved on Initiative by stage
+        initvStage.status = 4;
+        console.log({initvStage});
+        const savedInitvStage = await initvStageRepo.save(initvStage);
+        console.log({savedInitvStage});
+        
+        return newInitvApproval;
+      }
+      return newInitvApproval;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Insert iniative approval error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
+  }
 }

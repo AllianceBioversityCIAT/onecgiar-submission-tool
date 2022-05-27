@@ -64,3 +64,4 @@ export {Highlights} from './Highlights';
 export {MeliaStudiesActivities} from './MeliaStudiesActivities';
 export {ISDCResponses} from './ISDCResponses';
 export {ClarisaMeliaStudyTypes} from './ClarisaMeliaStudyTypes';
+export {InitiativesApproval}from './InitiativesApproval';
