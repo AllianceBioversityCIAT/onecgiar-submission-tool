@@ -660,9 +660,9 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
             initiatives_by_users initvUsr
         LEFT JOIN users users ON users.id = initvUsr.userId
         LEFT JOIN roles role ON role.id = initvUsr.roleId
-        WHERE initvUsr.initiativeId = :initiativeId
+        WHERE initvUsr.initiativeId = ${initiativeId}
         AND initvUsr.active = TRUE
-        AND initvUsr.userId = :userId
+        AND initvUsr.userId = ${userId}
     `;
 
   let roles;
