@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { PusherService } from '../../services/pusher.service';
 import { DataControlService } from '../../services/data-control.service';
 import { NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
+import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +25,9 @@ export class NavbarComponent implements OnInit {
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService,
     public pusherService: PusherService,
-    private router:Router
+    private router:Router,
+    private _pusherService:PusherService,
+    public _initiativesService:InitiativesService
   ) {}
 
   ngOnInit(): void {
@@ -48,11 +51,10 @@ export class NavbarComponent implements OnInit {
     //  }, 1000);
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-
-        console.log("first")
-        console.log(event.url)
         this.pusherService.start(event.url,this.user.id);
-
+        this._pusherService.continueEditing = false;
+        this._pusherService.firstUser = false;
+        this._pusherService.secondUser = false;
       }
     })
 
