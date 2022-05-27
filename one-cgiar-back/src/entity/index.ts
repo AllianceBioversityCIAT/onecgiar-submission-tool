@@ -67,3 +67,4 @@ export {ClarisaMeliaStudyTypes} from './ClarisaMeliaStudyTypes';
 export {InitiativesApproval}from './InitiativesApproval';
 export {Tracks}from './Tracks';
 export {TracksYears} from './TracksYears';
+export {InitiativesTracksYears} from './InitiativesTracksYears';
