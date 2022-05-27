@@ -111,8 +111,8 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid && this.valideteInputTable() &&  this.extraValidation?
-      this._interactionsService.successMessage('Participatory design process has been saved'):
-      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
+      this._interactionsService.successMessage('The information in this section has been saved'):
+      this._interactionsService.warningMessage('The information in this section has been saved, but there are incomplete fields.', 6000)
     })
     //save recommendations
     this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{

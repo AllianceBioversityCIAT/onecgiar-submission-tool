@@ -47,14 +47,6 @@
 
     </form>
 
-    <p-button   
-                label="Submit"
-                icon="pi pi-check" iconPos="right" 
-                class="submit"
-                [disabled]="!this.extraValidation"
-                (click)="this.onSubmitRecommendations()"
-                ></p-button>
-
     <div (click)="upserInfo()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
         <ibdc-save-button
             [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
