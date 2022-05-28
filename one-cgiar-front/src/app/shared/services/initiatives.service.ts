@@ -635,6 +635,10 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
   }
 
+  patchTracksByInitiativeAndStageId(body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
+  }
+
   
   /*** submitt initiative */
   postApproveInitiative(body){
