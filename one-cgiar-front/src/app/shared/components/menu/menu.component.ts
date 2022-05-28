@@ -498,7 +498,10 @@ export class MenuComponent implements OnInit {
           "initiativeId": this.initiativesSvc.initiative.id,
           "is_approved": true
         };
-        this.initiativesSvc.postApproveInitiative(body);
+        this.initiativesSvc.postApproveInitiative(body).subscribe(res => {
+          this.initiativesSvc.initiative.readonly = true;
+          this.initiativesSvc.initiative.status = 'Approved';
+        });
         this._interactionsService.simpleCustomConfirmModal({type:'success', title:'Success', text:'The initiative was approved correctly', confirmButtonText:'Ok'});
       })
     }
