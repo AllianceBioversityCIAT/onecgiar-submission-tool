@@ -34,7 +34,7 @@ export class ImpactAreaComponent implements OnInit {
   currentRoute = this.router.routerState.snapshot.url;
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/context/projection-of-benefits`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/context/projection-of-benefits`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);
@@ -49,7 +49,7 @@ export class ImpactAreaComponent implements OnInit {
       if (reload){
         this.reloadComponent();
       }else{
-        this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
+        this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
           this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
         })
       }
@@ -70,7 +70,7 @@ export class ImpactAreaComponent implements OnInit {
     let cont = 0;
     let indicatorsSavedList:boolean[] = [];
     this.indicatorsListPOBSavedList.map(item=>{
-      this._initiativesService.patchPOBenefitsFp(item,this._initiativesService.initiative.id).subscribe(resp=>{
+      this._initiativesService.patchPOBenefitsFp(item).subscribe(resp=>{
         indicatorsSavedList.push(true);
         cont++
         if (cont == this.indicatorsListPOBSavedList.length) {

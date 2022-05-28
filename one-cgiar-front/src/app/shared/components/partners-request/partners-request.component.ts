@@ -91,7 +91,7 @@ export class PartnersRequestComponent implements OnInit {
     this.partnersRequestForm.get("hqCountryIso").setValue("");
     this.partnersRequestForm.get("externalUserMail").setValue(userData.email);
     this.partnersRequestForm.get("externalUserName").setValue(userData.name);
-    this.partnersRequestForm.get("externalUserComments").setValue(`${this._initiativesService.initiative.official_code} - ${this._initiativesService.initiative.name}`);
+    this.partnersRequestForm.get("externalUserComments").setValue(this.setComment());
     console.log( this.partnersRequestForm.controls["websiteLink"].valid);
     console.log(this.partnersRequestForm.get("websiteLink").valid);
   }
@@ -103,14 +103,14 @@ export class PartnersRequestComponent implements OnInit {
     let userData:any= JSON.parse(localStorage.getItem('user')) ;
     let commentArray = [
       'From: Submission Tool',
-      `InitiativeID: ${this._initiativesService?.initvStgId}`,
-      `InitiativeName: ${this.conceptInfo?.conceptName}`,
-      `Stage: ${this.conceptInfo?.stageDesc}`,
+      `Initiative ID: ${this._initiativesService?.initiative.official_code} \n`,
+      // `InitiativeName: ${this.conceptInfo?.conceptName}`,
+      `Stage: ${this._initiativesService?.initiative.stageName} \n`,
       `Section: Key Partners`
     ]
     let result='';
     commentArray.forEach(text => {
-      result += text + ' ; ';
+      result += text + ';\n ';
     });
     return result
   }
@@ -122,8 +122,12 @@ export class PartnersRequestComponent implements OnInit {
     // this.spinnerService.show('partners-request');
 
     this._initiativesService.createPartner(this.partnersRequestForm.value).subscribe(resp=>{
-      console.log(resp);
-    this._interactionsService.successMessage(`Partner "${this.partnersRequestForm.value.name}" has been requested`);
+    this._interactionsService.simpleCustomConfirmModal({type:`success`, 
+                                                        title:`Partner "${this.partnersRequestForm.value.name}" has been requested.`,
+                                                        text:`The partner request was sent successfully.<br> 
+                                                              You will receive a confirmation message as soon as it has been processed. <br><br> 
+
+                                                              The validation process usually takes 1 business day. In case of any questions, please contact the technical support.`});
     this.spinnerService.hide('partners-request');
     this.backAddNewKeyPartner();
     },err=>{

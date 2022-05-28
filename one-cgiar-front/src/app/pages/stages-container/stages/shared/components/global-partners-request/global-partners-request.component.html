@@ -1,5 +1,15 @@
 <div class="all">
     <section-sub-title name="Partners"></section-sub-title>
+
+    <div class="part_button_container">
+        <app-animated-button title="If you don't find the partner you are looking for, request to have it added to the list." (click)="openDialog()"></app-animated-button>
+        <!-- <div class="partner_request" (click)="openDialog()">
+            If you don't find the partner you are looking for, request to have it added to the list.
+        </div> -->
+
+    </div>
+
+
     <div class="local_grid">
         <div class="listOne">
 
@@ -19,22 +29,16 @@
                     labelName:'Institutions'
                 }
             }"></ibdc-select-multiple>
-            <div class="partner_request_text_container" *ngIf="!this._initiativesService.initiative.readonly">
-                <a (click)="openDialog()" target="_blank" class="partner_request_text">If you don't find the partner you
-                    are looking for, request to have it added to the list.</a>
-            </div>
-    
-        
+       
             <div class="all_parners_saved">
                 <div class="partner_selected_container" *ngFor="let item of this.savedList"
-                    [hidden]="item.active === false" [hidden]="!item.code">
+                    [hidden]="item.active === false || !item?.code">
                     <div class="partner_name">{{item.name}}</div>
                     <p><span class="institutionTypeLabel">Institution type:</span><span
                             class="partner_type">{{item.institutionType}}</span></p>
                     <div class="buttons_changing">
                         <!-- [ngClass]="{'button_changing_active': (item.tag_id == button_item.id),'button_changing_inactive': (item.tag_id != button_item.id)}" -->
                         <div class="button_changing {{item[button_item.attributeName]?'button_changing_active':'button_changing_inactive'}}" *ngFor="let button_item of button_changing;let i=index"
-                            
                             (click)="onSelectTag(item,button_item.attributeName)">
                             {{button_item.name}}
                         </div>
@@ -67,14 +71,11 @@
                     <div class="institution_types_container" *ngIf="countDuplicates(this.savedList).length">
                         <div *ngFor="let item of countDuplicates(this.savedList)" class="type_item"
                             [hidden]="item.active">
-                            <span class="material-icons close_icon" (click)="onDeleteInstitutionType(item)"
-                                *ngIf="item.manual && item.cont == 0 && !this._initiativesService.initiative.readonly">delete</span>
-                            <p>{{item.name}} - <span
-                                    class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
+                            <span class="material-icons close_icon" (click)="onDeleteInstitutionType(item)" *ngIf="item.manual && item.cont == 0 && !this._initiativesService.initiative.readonly">delete</span>
+                            <p>{{item.name}} - <span class="{{item.cont>0?'cont_color':'cont_extra_color'}}">({{item.cont}})</span></p>
                         </div>
                     </div>
-                    <p *ngIf="!countDuplicates(this.savedList).length" class="empy_list_title">No institutions types
-                        maped</p>
+                    <p *ngIf="!countDuplicates(this.savedList).length" class="empy_list_title">No institutions types maped</p>
         </div>
 
     </div>

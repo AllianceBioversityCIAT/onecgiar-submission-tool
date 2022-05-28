@@ -12,6 +12,7 @@ import {ClarisaRegionsCgiar} from '../entity/ClarisaRegionsCgiar';
 import {ClarisaSdgTargets} from '../entity/ClarisaSdgTargets';
 import {ClarisaGlobalTargets} from '../entity/ClarisaGlobalTargets';
 import {ClarisaActionAreasOutcomesIndicators} from '../entity/ClarisaActionAreasOutcomesIndicators';
+import {ClarisaMeliaStudyTypes} from '../entity';
 
 /**MAIN FUNCTION*/
 
@@ -28,6 +29,7 @@ export async function Main() {
   await createSdgTargets();
   await createGlobalTargets();
   await createActionAreasOutIndicators();
+  await createMeliaStudyTypes();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -549,7 +551,7 @@ export async function createGlobalTargets() {
 
   try {
     const clarisaRepo = getRepository(ClarisaGlobalTargets);
-    const globalTargets = await clarisa.getClaGlobalTargest();
+    const globalTargets = await clarisa.getClaGlobalTargets();
 
     if (globalTargets.length > 0) {
       await deleteGlobalTargets();
@@ -631,6 +633,51 @@ export async function createActionAreasOutIndicators() {
       console.log('Issues with Clarisa');
     }
   } catch (error) {
-    console.log('createSdgTargets', error);
+    console.log('createActionAreasOutcomes', error);
+  }
+}
+
+/**CLARISA MELIA STUDY TYPES*/
+
+export async function deleteMeliaStudyTypes() {
+  try {
+    const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
+    const clarisaMeliaStudyTypes = new ClarisaMeliaStudyTypes();
+    await clarisaRepo.delete(clarisaMeliaStudyTypes);
+    console.log('38.delete MELIA Study Types');
+  } catch (error) {
+    console.log('deleteMeliaStudyTypes', error);
+  }
+}
+
+export async function createMeliaStudyTypes() {
+  console.log('37.start create MELIA Study Types');
+
+  try {
+    const clarisaRepo = getRepository(ClarisaMeliaStudyTypes);
+    const clarisaMeliaStudyTypes = await clarisa.getClaMeliaStudyTypes();
+
+    if (clarisaMeliaStudyTypes.length > 0) {
+      await deleteMeliaStudyTypes();
+
+      let meliaStudyTypesArray: ClarisaMeliaStudyTypes[] = [];
+
+      for (let index = 0; index < clarisaMeliaStudyTypes.length; index++) {
+        const element = clarisaMeliaStudyTypes[index];
+        let cla = clarisaRepo.create({
+          id: element.id,
+          name: element.name
+        });
+        meliaStudyTypesArray.push(cla);
+      }
+
+      await clarisaRepo.save(meliaStudyTypesArray);
+
+      console.log('39.end MELIA Study Types');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createMeliaStudyTypes', error);
   }
 }

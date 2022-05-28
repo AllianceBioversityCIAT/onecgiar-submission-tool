@@ -2,10 +2,9 @@
 <app-ia-visual-reference [impactAreId]="this.pobIaID" ></app-ia-visual-reference>
 <div class="section-container animate__animated animate__fadeIn">
     <!-- <div class="top_bar"></div> -->
-    <form (ngSubmit)="saveForm()">
+    <form>
   
         <!-- <app-section-alerts-pack  [extraValidation]="false"></app-section-alerts-pack> -->
-  
         <div *ngIf="indicatorsListLoaded">
             <div *ngFor="let item of indicatorsListPOBSavedList; let i=index"
                 [hidden]="item.impact_area_active === false">
@@ -23,13 +22,13 @@
         <div class="sekeletons_load" *ngIf="!indicatorsListLoaded">
             <app-general-information-skeleton></app-general-information-skeleton>
         </div>
-
-
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button
-                [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:this._dataControlService.minutesToRemeberSave}">
-            </ibdc-save-button>
-        </div>
         
     </form>
+
+    <div (click)="saveForm()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button 
+            [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:this._dataControlService.minutesToRemeberSave}">
+        </ibdc-save-button>
+    </div>
+
 </div>

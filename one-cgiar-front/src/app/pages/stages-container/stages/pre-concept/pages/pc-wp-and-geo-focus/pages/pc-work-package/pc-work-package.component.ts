@@ -45,8 +45,8 @@ export class PcWorkPackageComponent implements OnInit {
       this.getWpById(params['id']);
     });
 
-    this._dataControlService.showCountries = true;
-    this._dataControlService.showRegions = true;
+    // this._dataControlService.showCountries = true;
+    // this._dataControlService.showRegions = true;
     // this.getWpById();
 
   }
@@ -59,7 +59,7 @@ export class PcWorkPackageComponent implements OnInit {
 
 
   getWpById(wpId) {
-    this._initiativesService.getWpById(wpId, 'pre-concept').pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
+    this._initiativesService.getWpById(wpId).pipe(map((resp:any)=>resp?.response?.workpackage)).subscribe(resp => {
       console.log(resp);
       let {acronym, name, pathway_content, is_global, id, active,regionsSelectedList,countriesSelectedList} = resp;
 
@@ -83,7 +83,7 @@ export class PcWorkPackageComponent implements OnInit {
 
   saveWpFp() {
 
-    this._initiativesService.saveWpFp(this.workPackageBody, this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.saveWpFp(this.workPackageBody).subscribe(resp => {
 
       console.log(resp)
     })
@@ -101,7 +101,7 @@ export class PcWorkPackageComponent implements OnInit {
     console.log('addWorkPackage()')
 
     console.log(body)
-    this._initiativesService.saveWpFp(body, this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.saveWpFp(body).subscribe(resp => {
       console.log(resp)
       this._interactionsService.successMessage('Work package has been removed')
       this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/pre-concept/wp-and-geo-focus/work-packages-table`])

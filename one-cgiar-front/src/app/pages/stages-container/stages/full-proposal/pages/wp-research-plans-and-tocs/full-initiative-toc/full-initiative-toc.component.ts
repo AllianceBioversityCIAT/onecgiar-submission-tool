@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
-import { environment } from '../../../../../../../../environments/environment';
 import { map } from 'rxjs/operators';
+import Viewer from 'viewerjs';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-full-initiative-toc',
@@ -19,7 +19,8 @@ export class FullInitiativeTocComponent implements OnInit {
   serviceIsConsumed = false;
   constructor(
     public _initiativesService: InitiativesService,
-    public http: HttpClient
+    public http: HttpClient,
+    public _utilsService:UtilsService
   ) { 
   }
 
@@ -30,7 +31,8 @@ export class FullInitiativeTocComponent implements OnInit {
   getProposalTocByInitiativeId(){
     this.serviceIsConsumed = false;
     console.log(this._initiativesService.initiative.id)
-    this._initiativesService.getProposalTocByInitiativeId(this._initiativesService.initiative.id).pipe(map(res=> res.response.fullInitiativeToc)).subscribe((resp) => {
+    this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res.response.fullInitiativeToc)).subscribe((resp) => {
+      console.log(resp)
       this.tocitem = resp;
       this.serviceIsConsumed = true;
     })
@@ -47,11 +49,21 @@ export class FullInitiativeTocComponent implements OnInit {
   imageLoaded(htmlId){
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
+    document.getElementById('loading').style.display = 'none'
+    new Viewer(document.getElementById('image'), {
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
+      navbar: 0
+    });
     this.imageIsLoaded=true;
   }
 
   imageError(){
     console.log("errorrer");
+    document.getElementById('loading').style.display = 'none';
     this.imageIsLoaded=false;
   }
 

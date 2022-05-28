@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../../../../../../environments/environment';
 import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
 import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
+import Viewer from 'viewerjs';
+import { UtilsService } from '../../../../../../../../../shared/services/utils.service';
+
 @Component({
   selector: 'app-wp-toc',
   templateUrl: './wp-toc.component.html',
@@ -14,14 +15,16 @@ declare var $
 export class WpTocComponent implements OnInit {
   toctxtData:string;
   linkIsgenerated=false;
-  imageIsLoaded=false;
+  // imageIsLoaded=false;
   txtIsLoaded=false;
   tocList = [];
   serviceIsConsumed = false;
+  toc_id:number|string;
   constructor(
     public _initiativesService: InitiativesService,
     private _wpDataControlService:WpDataControlService,
-    public http: HttpClient
+    public http: HttpClient,
+    public _utilsService:UtilsService
   ) { 
   }
 
@@ -31,11 +34,9 @@ export class WpTocComponent implements OnInit {
 
   getWpById(){
     this.serviceIsConsumed = false;
-    this._initiativesService.getWpById(this._wpDataControlService.wpId, 'proposal').pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
-      
+    this._initiativesService.getWpById(this._wpDataControlService.wpId).pipe(map(res=> res.response.workpackage.toc)).subscribe((resp) => {
       this.tocList = resp;
       this.serviceIsConsumed = true;
-      // console.log( this.tocList)
     })
   }
 
@@ -43,19 +44,23 @@ export class WpTocComponent implements OnInit {
     document.getElementById(htmlId).classList.toggle('expandImage')
   }
 
-  saveSection(){
-
-  }
-
-  imageLoaded(htmlId){
+  imageLoaded(htmlId,i){
     console.log("loaded");
     document.getElementById(htmlId).style.display = 'flex';
-    this.imageIsLoaded=true;
+    document.getElementById('loading'+i).style.display = 'none'
+    new Viewer(document.getElementById('image'+i), {
+      toolbar: {
+        zoomIn: 4,
+        zoomOut: 4,
+        reset: 4,
+      },
+      navbar: 0
+    });
   }
 
-  imageError(){
+  imageError(i){
     console.log("errorrer");
-    this.imageIsLoaded=false;
+    document.getElementById('loading'+i).style.display = 'none'
   }
 
   checkExpandClass(htmlId){
@@ -69,9 +74,6 @@ export class WpTocComponent implements OnInit {
   getTocTxtDataByTocId(tocId){
     this.linkIsgenerated =  false;
     this.toctxtData = null;
-    // return this.http.get(`https://dev-toc.s3.us-east-2.amazonaws.com/toc_SmBQ1GfEjD/SmBQ1GfEjD.txt`,{ responseType: 'text'});
-    // return this.http.get(`/assets/test.txt`,{ responseType: 'text'});
-    // return this.http.get(`https://www.w3.org/TR/PNG/iso_8859-1.txt`,{ responseType: 'text'});
     this._initiativesService.getTocTxtDataByTocId(tocId).subscribe(resp=>{
       this.toctxtData = resp.TocNarrative;
       if (this.toctxtData) {
@@ -88,8 +90,6 @@ export class WpTocComponent implements OnInit {
       
       this.linkIsgenerated =  true;
     })
-
-
 
   }
   

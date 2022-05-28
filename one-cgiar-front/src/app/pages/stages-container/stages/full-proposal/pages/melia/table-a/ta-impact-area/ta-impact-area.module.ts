@@ -6,7 +6,9 @@ import { TaImpactAreaComponent } from './ta-impact-area.component';
 import { UtilsModule } from '../../../../../../../../shared/components/utils/utils.module';
 import { IaVisualReferenceModule } from '../../../../../../../../shared/components/ia-visual-reference/ia-visual-reference.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-
+// import { IbdAngularComponentsModule } from './../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module'
+import { EditTocButtonModule } from '../../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
+import { EoiCardModule } from '../../../context/measurable-objectives/components/eoi-card/eoi-card.module';
 
 @NgModule({
   declarations: [TaImpactAreaComponent],
@@ -15,7 +17,9 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     TaImpactAreaRoutingModule,
     UtilsModule,
     IaVisualReferenceModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    EditTocButtonModule,
+    EoiCardModule
   ]
 })
 export class TaImpactAreaModule { }

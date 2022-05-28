@@ -28,8 +28,8 @@
 }
 
 .table-container {
-  margin: 20px 0px 100px 0px;
-  padding: 20px 150px;
+  margin: 12px 0px 100px 0px;
+  padding: 20px 80px;
 }
 .chip_stage{
   padding: 7px 10px;
@@ -44,8 +44,6 @@
 .searchField{
   max-height: 70vh; 
   border-radius: 10px;
-  // border: 2px solid white;
-  // background-color: white;
 }
 
 .initiative_link{
@@ -130,8 +128,7 @@ th {
   }
 
   .with_scroll{
-    max-height: 70vh; 
-    // overflow: hidden;
+    max-height: calc(80vh - 50px); 
     border-radius: 10px;
     border: 2px solid white;
     overflow: auto;

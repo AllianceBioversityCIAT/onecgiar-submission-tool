@@ -343,3 +343,51 @@ export async function getPreviewFinancialResources(
     return res.status(error.httpCode).json(error);
   }
 }
+
+/**
+ * GET PREVIEW WORK PACKAGE BY STAGE
+ * @param req { initiativeId, stageId }
+ * @param res { previewHumanResources }
+ * @returns previewHumanResources
+ */
+export async function getPreviewWorkPackages(req: Request, res: Response) {
+  const {initiativeId} = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    // const stage = await stageRepo.findOne({where: {id: stageId}});
+
+    // get intiative by stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, active: 1}
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null || initvStg == undefined) {
+      throw new BaseError(
+        'Previews: Error',
+        400,
+        `Previews not found in stage:` + initvStg.stage,
+        false
+      );
+    }
+
+    // create new full proposal object
+    const previewsdomain = new PreviewsDomain();
+
+    const previewWorkPackages = await previewsdomain.requestWorkPackages(
+      initvStg.id.toString()
+    );
+
+    res.json(
+      new ResponseHandler('Previews:Preview Work Packages', {
+        previewWorkPackages
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}

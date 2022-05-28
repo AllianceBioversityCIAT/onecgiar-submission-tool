@@ -9,3 +9,16 @@ mat-sidenav-content {
 mat-sidenav-container {
   height: 100%;
 }
+
+.local_grid{
+  height: 100vh;
+  max-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  .router_container{
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+  }
+}

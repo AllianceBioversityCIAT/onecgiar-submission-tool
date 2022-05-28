@@ -1,13 +1,12 @@
-import {get} from 'https';
 import _ from 'lodash';
-import { getRepository, In } from 'typeorm';
+import { getRepository, In, Not } from 'typeorm';
 import * as entities from '../entity';
-import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
-import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import {ToolsSbt} from '../utils/toolsSbt';
-import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
-import {InitiativeStageHandler} from './InitiativeStageDomain';
+import { MeliaStudiesActivities } from '../entity/MeliaStudiesActivities';
+import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
+import { ToolsSbt } from '../utils/toolsSbt';
+import { BaseError } from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
+import { InitiativeStageHandler } from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -46,7 +45,7 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { generalInfo }
    */
   async getGeneralInformation() {
-    // get initiative by stage id from intitiative
+    // get initiative by stage id from initiative
     const initvStg = await this.initvStage;
 
     let generalInfo;
@@ -131,7 +130,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `,
         /*eslint-disable*/
         WPquery = `
-                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,
+                    SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,wp_official_code,
                     IF (
                         name IS NULL
                         OR name = ''
@@ -207,7 +206,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         tocQuery = `
-                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+                SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
                   FROM tocs
                  WHERE active = 1
                   and type = 0
@@ -264,13 +263,16 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+          wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
+          wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+          wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND init.stageId = 3
+           on wp.initvStgId  = init.id
+        WHERE init.stageId = 3
          AND wp.active = 1
-        ORDER BY initiativeId asc
+        ORDER BY initiativeId asc;
                     `;
 
       var workPackages = await this.queryRunner.query(WPquery);
@@ -318,12 +320,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT wp.initvStgId,init.initiativeId,init.stageId,wp.*
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
+        wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+        wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
-        WHERE wp.initvStgId = 33
-         AND wp.active = 1
-        ORDER BY initiativeId asc
+           on wp.initvStgId  = init.id
+        WHERE wp.active = 1
+        ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc
                     `;
 
       // var workPackages = await wpRepo.find({ where: { active: 1 } });
@@ -531,26 +536,52 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @param newWP
    * @returns upsertedInfo
    */
-  async upsertWorkPackages(newWP?) {
+  async upsertWorkPackages(
+    acronym,
+    name,
+    pathway_content,
+    is_global,
+    id,
+    active,
+    wp_official_code?
+  ) {
     const wpRepo = getRepository(entities.WorkPackages);
     // get current intiative by stage
     const initvStg = await this.initvStage;
 
     var upsertedInfo;
 
+    var newWorkPackage = new entities.WorkPackages();
+
+    newWorkPackage.id = id;
+    newWorkPackage.acronym = acronym;
+    newWorkPackage.name = name;
+    newWorkPackage.pathway_content = pathway_content;
+    newWorkPackage.is_global = is_global;
+    newWorkPackage.active = active;
+    newWorkPackage.wp_official_code = wp_official_code ? wp_official_code : id;
+
     try {
-      if (newWP.id !== null) {
+      if (newWorkPackage.id !== null) {
         var savedWP = await this.queryRunner.query(` SELECT *
                 FROM work_packages 
-               WHERE id = ${newWP.id}`);
+               WHERE id = ${newWorkPackage.id}`);
 
-        wpRepo.merge(savedWP[0], newWP);
+        wpRepo.merge(savedWP[0], newWorkPackage);
 
         upsertedInfo = await wpRepo.save(savedWP[0]);
       } else {
-        newWP.initvStgId = initvStg[0].id ? initvStg[0].id : initvStg.id;
+        newWorkPackage.initvStgId = initvStg[0].id
+          ? initvStg[0].id
+          : initvStg.id;
 
-        upsertedInfo = await wpRepo.save(newWP);
+        upsertedInfo = await wpRepo.save(newWorkPackage);
+
+        //Insert Work Pakcage Official Code
+        upsertedInfo.wp_official_code = wp_official_code
+          ? wp_official_code
+          : upsertedInfo.id;
+        await wpRepo.save(upsertedInfo);
       }
 
       return upsertedInfo;
@@ -579,7 +610,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     //  create empty object
     var workPackage = [];
     try {
-      // get current intiative by stage
+      // get current initiative by stage
       const initvStg = await this.setInitvStage();
 
       if (fullProposalWP.length > 0) {
@@ -905,9 +936,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           newPartners.institutions_id = par.code;
           newPartners.institutions_name = par.name;
           newPartners.tag_id = par.tag_id ? par.tag_id : null;
-          newPartners.type_id = par.institutionTypeId
-            ? par.institutionTypeId
-            : null;
+          newPartners.type_id = par.institutionTypeId;
           newPartners.type_name = par.institutionType;
           newPartners.active = par.active;
           newPartners.demand = par.demand;
@@ -939,9 +968,9 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST IMPACT STRATEGIES
+   ** REQUEST IMPACT STATEMENTS BY IMPACT AREA
    */
-  async requestImpactStrategies(impact_area_id) {
+  async requestImpactStrategiesByIA(impact_area_id) {
     const initvStg = await this.setInitvStage();
 
     try {
@@ -980,7 +1009,55 @@ export class ProposalHandler extends InitiativeStageHandler {
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Get Impact Strategies: Full proposal',
+        'Get Impact Strategies by impact area: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST IMPACT STATEMENTS BY INITIATIVE
+   */
+  async requestImpactStrategies() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve general information
+      const impStraQuery = ` 
+            SELECT *
+            FROM impact_strategies
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1;
+            `,
+        partnersQuery = `
+                SELECT id,impact_strategies_id,institutions_id as code,
+                       institutions_name as name,tag_id,demand,innovation,scaling,type_id as institutionTypeId,
+                       type_name as institutionType,active,created_at,updated_at
+                FROM partners
+               WHERE impact_strategies_id in (SELECT id
+                FROM impact_strategies
+               WHERE initvStgId = ${initvStg.id}
+               AND active = 1
+               )
+                 AND active = 1
+                `;
+
+      const impactStrategies = await this.queryRunner.query(impStraQuery);
+      const partners = await this.queryRunner.query(partnersQuery);
+
+      impactStrategies.map((imp) => {
+        imp['partners'] = partners.filter((par) => {
+          return par.impact_strategies_id === imp.id;
+        });
+      });
+
+      return impactStrategies;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Impact Strategies by initiative: Full proposal',
         400,
         error.message,
         false
@@ -1024,11 +1101,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       melia_plan = typeof melia_plan === 'undefined' ? false : melia_plan;
 
       if (melia_plan) {
-        newMelia.id = melia_plan.meliaId;
+        newMelia.id = melia_plan.id;
         newMelia.melia_plan = melia_plan.melia_plan;
-        newMelia.active = melia_plan.meliaActive
-          ? melia_plan.meliaActive
-          : true;
+        newMelia.active = melia_plan.active ? melia_plan.active : true;
 
         if (newMelia.id !== null) {
           var savedMelia = await meliaRepo.findOne(newMelia.id);
@@ -1106,6 +1181,99 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       return { upsertedMelia, upsertedFile };
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert melia: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async updateOldDataMeliaToC() {
+    /**
+     * GET INITIATIVE BY STAGE CODE
+     */
+    const initvStg = await this.setInitvStage();
+
+    //**REPOSITORIES/
+    const initGlobalTargetsRepo = getRepository(
+      entities.InitImpactAreaGlobalTargets
+    );
+    const initImpactIndicatorsRepo = getRepository(
+      entities.InitImpactAreaImpactIndicators
+    );
+    const initSdgTargetsRepo = getRepository(entities.InitImpactAreaSdgTargets);
+    const initOutcomesIndicatorsRepo = getRepository(
+      entities.InitActionAreasOutcomesIndicators
+    );
+    const resultsRepo = getRepository(entities.Results);
+    const resultsIndicatorsRepo = getRepository(entities.ResultsIndicators);
+    const resultsRegionsRepo = getRepository(entities.ResultsRegions);
+    const resultsCountriesRepo = getRepository(entities.ResultsCountries);
+
+    try {
+      /**
+       * Validate table A
+       */
+
+      const updatedInitGlobalTargets =
+        await initGlobalTargetsRepo.query(` update init_impact_area_global_targets set active = 0 
+      where initvStgId =${initvStg.id} `);
+      const updatedInitImpactIndicators = await initImpactIndicatorsRepo.query(
+        `update init_impact_area_impact_indicators set active = 0 
+        where initvStgId =${initvStg.id}`
+      );
+      const updatedInitSdgTargets =
+        await initSdgTargetsRepo.query(`update init_impact_area_sdg_targets set active = 0 
+      where initvStgId =${initvStg.id}`);
+
+      /**
+       * Validate table B
+       */
+
+      const updatedInitOutcomesIndicators =
+        await initOutcomesIndicatorsRepo.query(`update init_action_areas_out_indicators set active = 0 
+        where initvStgId =${initvStg.id}`);
+
+      /**
+       * Validate table C
+       */
+
+      const updatedResultsIndicators =
+        await resultsIndicatorsRepo.query(`update results_indicators set active = 0 
+      where  results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1)`);
+      const updatedResultsRegions =
+        await resultsRegionsRepo.query(`update results_regions set active = 0 
+        where  results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1)`);
+      const updatedResultsCountries =
+        await resultsCountriesRepo.query(`update results_countries set active = 0 
+        where  results_id in (SELECT re.id
+          FROM results re
+         WHERE re.initvStgId = ${initvStg.id}
+           AND re.active =1)`);
+      const updatedResults =
+        await resultsRepo.query(`update results set active = 0 
+         where initvStgId =${initvStg.id}`);
+
+      return {
+        updatedInitGlobalTargets,
+        updatedInitImpactIndicators,
+        updatedInitSdgTargets,
+        updatedInitOutcomesIndicators,
+        updatedResults,
+        updatedResultsIndicators,
+        updatedResultsRegions,
+        updatedResultsCountries
+      };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1204,7 +1372,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      /*Init Impact Indicators */
+      /**Init Impact Indicators */
       tableA.impact_areas_indicators =
         typeof tableA.impact_areas_indicators === 'undefined'
           ? []
@@ -1261,7 +1429,12 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       /**
-       * SAVE Init Global Targets
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       * /
+       
+      /** SAVE Init Global Targets
        */
 
       // Execute all promises (mergeData)
@@ -1346,6 +1519,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         newActionAreasOutcomesIndicators.outcomes_indicators_id =
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
+        newActionAreasOutcomesIndicators.outcome_id = element.outcome_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1361,7 +1535,13 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       /**
-       * SAVE Init Outcomes Indicatos
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       * /
+
+      /**
+       * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
 
@@ -1384,6 +1564,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
   /**
    ** UPSERT TABLE C (Results)
+   * TODO Validate update of information since it is being duplicated
+   * TODO Update with wp id for outcomes and outputs
    * @param tableC
    * @param initvStgId
    * @returns {upsertedOutcomesIndicators}
@@ -1406,22 +1588,40 @@ export class ProposalHandler extends InitiativeStageHandler {
 
     try {
       let upsertResults: any;
+      tableC.results =
+        typeof tableC.results === 'undefined' ? [] : tableC.results;
 
       for (let index = 0; index < tableC.results.length; index++) {
         const result = tableC.results[index];
 
         let newResults = new entities.Results();
 
+        newResults.id = result.id ? result.id : null;
         newResults.initvStgId = initvStgId;
         newResults.result_type_id = result.result_type;
         newResults.result_title = result.result_title;
         newResults.is_global = result.is_global;
         newResults.active = result.active;
+        newResults.work_package_id = result.wp_id;
+        newResults.result_description = result.result_description;
+        newResults.toc_result_id = result.toc_result_id;
 
-        upsertResults = await resultsRepo.save(newResults);
+        const mergeResult = await toolsSbt.mergeData(
+          resultsRepo,
+          ` 
+                  SELECT  *
+                    FROM results
+                   WHERE initvStgId = ${newResults.initvStgId}
+                     and toc_result_id = "${newResults.toc_result_id}"`,
+          newResults
+        );
+
+        upsertResults = await resultsRepo.save(mergeResult);
 
         resultsArray.push(upsertResults);
 
+        result.indicators =
+          typeof result.indicators === 'undefined' ? [] : result.indicators;
         for (let index = 0; index < result.indicators.length; index++) {
           const indicators = result.indicators[index];
           let newResultsIndicators = new entities.ResultsIndicators();
@@ -1440,6 +1640,8 @@ export class ProposalHandler extends InitiativeStageHandler {
           newResultsIndicators.target_year = indicators.target_year;
           newResultsIndicators.unit_measurement = indicators.unit_messurament;
           newResultsIndicators.name = indicators.indicator_name;
+          newResultsIndicators.toc_result_indicator_id =
+            indicators.toc_result_indicator_id;
 
           resultsIndicatorsArray.push(
             toolsSbt.mergeData(
@@ -1447,7 +1649,7 @@ export class ProposalHandler extends InitiativeStageHandler {
               ` 
                     SELECT *
                       FROM results_indicators
-                     WHERE id = ${newResultsIndicators.id} 
+                     WHERE toc_result_indicator_id = "${newResultsIndicators.toc_result_indicator_id}" 
                        and results_id = ${newResultsIndicators.results_id}`,
               newResultsIndicators
             )
@@ -1455,24 +1657,93 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
 
         // Geo Scope
-        for (let index = 0; index < result.geo_scope.regions.length; index++) {}
+        result.geo_scope =
+          typeof result.geo_scope === 'undefined' ? [] : result.geo_scope;
+        result.geo_scope.regions =
+          typeof result.geo_scope.regions === 'undefined'
+            ? []
+            : result.geo_scope.regions;
+        for (let index = 0; index < result.geo_scope.regions.length; index++) {
+          const regions = result.geo_scope.regions[index];
+          let newResultsRegions = new entities.ResultsRegions();
 
+          // newResultsRegions.id = regions.id ? regions.id : null;
+          newResultsRegions.results_id = upsertResults.id;
+          newResultsRegions.region_id = regions.region_id;
+          newResultsRegions.active = regions.active;
+
+          resultsRegionsArray.push(
+            toolsSbt.mergeData(
+              resultsRegionsRepo,
+              ` 
+                    SELECT *
+                      FROM results_regions
+                     WHERE  region_id = ${newResultsRegions.region_id} 
+                       and results_id = ${newResultsRegions.results_id}`,
+              newResultsRegions
+            )
+          );
+        }
+
+        result.geo_scope.countries =
+          typeof result.geo_scope.countries === 'undefined'
+            ? []
+            : result.geo_scope.countries;
         for (
           let index = 0;
           index < result.geo_scope.countries.length;
           index++
-        ) {}
+        ) {
+          const countries = result.geo_scope.countries[index];
+          let newResultsCountries = new entities.ResultsCountries();
+
+          // newResultsCountries.id = countries.id ? countries.id : null;
+          newResultsCountries.results_id = upsertResults.id;
+          newResultsCountries.country_id = countries.country_id;
+          newResultsCountries.active = countries.active;
+
+          resultsCountriesArray.push(
+            toolsSbt.mergeData(
+              resultsCountriesRepo,
+              ` 
+                    SELECT *
+                      FROM results_countries
+                     WHERE country_id = ${newResultsCountries.country_id} 
+                       and results_id = ${newResultsCountries.results_id}`,
+              newResultsCountries
+            )
+          );
+        }
       }
 
       //Merge and Save ResultsIndicators
       let mergeResultsIndicators = await Promise.all(resultsIndicatorsArray);
+      let mergeResultsRegions = await Promise.all(resultsRegionsArray);
+      let mergeResultsCountries = await Promise.all(resultsCountriesArray);
 
-      // Save data
+      /**
+       * ****************************************************************
+       *                           SAVE DATA
+       * ****************************************************************
+       */
+
       let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
 
-      return {upsertResults: resultsArray, upsertResultsIndicators};
+      let upsertResultsRegions: any = await resultsRegionsRepo.save(
+        mergeResultsRegions
+      );
+      let upsertResultsCountries: any = await resultsCountriesRepo.save(
+        mergeResultsCountries
+      );
+
+      return {
+        upsertResults: resultsArray,
+        upsertResultsIndicators,
+        upsertResultsRegions,
+        upsertResultsCountries
+      };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1485,7 +1756,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * REQUEST MELIA
+   ** REQUEST MELIA
    * @param sectionName
    * @returns {melia}
    */
@@ -1538,29 +1809,57 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-          SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.action_area_name,
-          couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
-          couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
-           FROM init_action_areas_out_indicators outi
-           JOIN clarisa_action_areas_outcomes_indicators couti
-             ON outi.outcomes_indicators_id = couti.id
-          WHERE outi.initvStgId =${initvStg.id}
-            AND outi.active =1;
+        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.outcome_id,couti.action_area_name,
+        couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+        couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+         FROM init_action_areas_out_indicators outi
+    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
+           ON outi.outcomes_indicators_id = couti.outcome_indicator_id
+          and outi.outcome_id  = couti.outcome_id 
+        WHERE outi.initvStgId =${initvStg.id}
+          AND outi.active =1;
+          
         `,
         resultsQuery = `
-     SELECT re.initvStgId,re.id,re.result_type_id,re.result_title,re.is_global,re.active
-       FROM results re
-      WHERE re.initvStgId = ${initvStg.id}
-        AND re.active =1;
+        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,wp.acronym wp_acronym,re.result_type_id as result_type,re.result_title,re.is_global,re.active
+        FROM results re
+        join results_types rt 
+          on rt.id = re.result_type_id 
+   left join work_packages wp 
+          on wp.id = re.work_package_id 
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1
+        order by re.result_type_id,wp.id;
         `,
         resultsIndicatorsQuery = `
-        SELECT *
+        SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
+        ri.results_id, ri.baseline_value, ri.baseline_year,
+        ri.target_value, ri.target_year, ri.active, ri.data_source, 
+        ri.data_collection_method as data_collection, ri.frequency_data_collection,
+        ri.created_at, ri.updated_at
           FROM results_indicators ri
          WHERE ri.results_id in (SELECT re.id
           FROM results re
          WHERE re.initvStgId = ${initvStg.id}
            AND re.active =1);
-        `;
+        `,
+        resultsRegionsQuery = `SELECT reg.id,reg.region_id,cr.name as region_name,reg.results_id ,reg.active,reg.created_at,reg.updated_at 
+        FROM results_regions reg
+        join clarisa_regions cr 
+          on cr.um49Code  = reg.region_id 
+       WHERE reg.results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1);`,
+        resultsCountriesQuery = `
+        SELECT co.id,co.country_id,cc.name as country_name,co.results_id ,co.active ,co.created_at, co.updated_at 
+        FROM results_countries co
+        join clarisa_countries cc 
+          on cc.code  = co.country_id 
+       WHERE co.results_id in (SELECT re.id
+        FROM results re
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1);`;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
@@ -1578,14 +1877,20 @@ export class ProposalHandler extends InitiativeStageHandler {
         impactAreasIndicatorsQuery
       );
       const sdgTargets = await this.queryRunner.query(sdgTargetsQuery);
-      const tableA = { globalTargets, impactAreasIndicators, sdgTargets };
+      const tableA = {
+        global_targets: globalTargets,
+        impact_areas_indicators: impactAreasIndicators,
+        sdg_targets: sdgTargets
+      };
 
       //TABLE B
 
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const tableB = { actionAreasOutcomesIndicators };
+      const tableB = {
+        action_areas_outcomes_indicators: actionAreasOutcomesIndicators
+      };
 
       //TABLE C
 
@@ -1593,14 +1898,28 @@ export class ProposalHandler extends InitiativeStageHandler {
       const resultsIndicators = await this.queryRunner.query(
         resultsIndicatorsQuery
       );
+      const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const resultsCountries = await this.queryRunner.query(
+        resultsCountriesQuery
+      );
 
       results.map((res) => {
         res['indicators'] = resultsIndicators.filter((resi) => {
           return res.id === resi.results_id;
         });
+
+        const reg = resultsRegions.filter((reg) => {
+          return res.id === reg.results_id;
+        });
+
+        const cou = resultsCountries.filter((co) => {
+          return res.id === co.results_id;
+        });
+
+        res['geo_scope'] = { regions: reg, countries: cou };
       });
 
-      const tableC = {results: results};
+      const tableC = { results: results };
 
       return {
         meliaPlan: meliaPlan[0],
@@ -1618,7 +1937,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   * UPSERT MELIA studies and activities
+   ** UPSERT MELIA studies and activities
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
@@ -1629,8 +1948,13 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
-
+    let regionsMeliaStd = [];
+    let countriesMeliaStd = [];
     try {
+      meliaStudiesActivitiesData =
+        typeof meliaStudiesActivitiesData === 'undefined'
+          ? []
+          : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
@@ -1638,13 +1962,15 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         newMeliaStudiesActivities.id = element.id ? element.id : null;
         newMeliaStudiesActivities.initvStgId = initvStg.id;
-        newMeliaStudiesActivities.type_melia = element.type_melia;
+        newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
+        newMeliaStudiesActivities.other_melia = element.other_melia;
         newMeliaStudiesActivities.result_title = element.result_title;
         newMeliaStudiesActivities.anticipated_year_completion =
           element.anticipated_year_completion;
         newMeliaStudiesActivities.co_delivery = element.co_delivery;
         newMeliaStudiesActivities.management_decisions_learning =
           element.management_decisions_learning;
+        newMeliaStudiesActivities.is_global = element.is_global;
         newMeliaStudiesActivities.active = element.active;
 
         meliaStudiesActivitiesArray.push(
@@ -1658,8 +1984,15 @@ export class ProposalHandler extends InitiativeStageHandler {
             newMeliaStudiesActivities
           )
         );
+
+        countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+        regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
       }
 
+      const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
+        regionsMeliaStd,
+        countriesMeliaStd
+      );
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
       );
@@ -1686,9 +2019,51 @@ export class ProposalHandler extends InitiativeStageHandler {
     );
 
     try {
-      const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
-        initvStgId: initvStg.id
-      });
+      let meliaStudiesActivities = await this.queryRunner.query(`SELECT msa.id,
+      msa.initvStgId,
+      msa.type_melia_id,
+      IF(msa.type_melia_id = 8,concat(cmst.name,ifnull(concat(' - ', if(msa.other_melia = '', null,msa.other_melia)), '')), cmst.name) as type_melia,
+      msa.other_melia,
+      msa.result_title,
+      msa.anticipated_year_completion,
+      msa.co_delivery,
+      msa.management_decisions_learning,
+      msa.is_global,
+      msa.active
+      FROM melia_studies_activities msa 
+      left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
+      WHERE msa.initvStgId = ${initvStg.id}
+      and msa.active = 1`);
+
+      let countries = await this.queryRunner.query(`SELECT id,country_id,initvStgId,meliaStudyId
+      FROM countries_by_melia_study 
+      WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+      AND active = 1
+      GROUP BY id,country_id`);
+
+      let regions = await this.queryRunner.query(`
+      SELECT id,region_id,initvStgId,meliaStudyId
+        FROM regions_by_melia_study
+       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+        }
+         AND active = 1
+      GROUP BY id,region_id`);
+
+      if (meliaStudiesActivities == undefined || meliaStudiesActivities.length == 0) {
+        meliaStudiesActivities = [];
+      } else {
+        // Map Initiatives
+        meliaStudiesActivities.map((melia) => {
+          melia['regions'] = regions.filter((reg) => {
+            return reg.meliaStudyId === melia.id;
+          });
+
+          melia['countries'] = countries.filter((cou) => {
+            return cou.meliaStudyId === melia.id;
+          });
+        });
+      }
+
 
       return meliaStudiesActivities;
     } catch (error) {
@@ -2096,6 +2471,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       if (files) {
+        files = typeof files === 'undefined' ? [] : files;
         for (let index = 0; index < files.length; index++) {
           const file = files[index];
 
@@ -2118,7 +2494,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         }
       }
-
+      updateFiles = typeof updateFiles === 'undefined' ? [] : updateFiles;
       if (updateFiles.length > 0) {
         for (let index = 0; index < updateFiles.length; index++) {
           const updateFile = updateFiles[index];
@@ -2284,7 +2660,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** UPSERT Financial Resourches
+   ** UPSERT Financial Resources
    * @param initiativeId
    * @param ubication
    * @param stage
@@ -2303,7 +2679,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertFRArr = [],
         finYearArr = [];
       upsertArray.forEach((upsEle) => {
-        // console.log(upsEle)
+        //console.log(upsEle)
         let objt = {
           id: null,
           yearsArray: []
@@ -2328,7 +2704,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             if (Object.prototype.hasOwnProperty.call(upsEle.valuesList, key)) {
               const _year = new entities.FinancialResourcesYears();
               const val = upsEle.valuesList[key];
-              console.log(val)
+              //console.log(val);
               _year.active = true;
               _year.year = key;
               _year.value = val;
@@ -2350,7 +2726,6 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       await Promise.all(upsertedYears);
-      // console.log(upsertedYears)
 
       const financialResourcesQuery = ` 
             SELECT
@@ -2361,7 +2736,6 @@ export class ProposalHandler extends InitiativeStageHandler {
             LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
             
             WHERE initvStgId = ${initvStg.id}
-            AND fR.financial_type = "${sectionName}"
             AND fR.active = 1
             GROUP BY
                 fR.id;
@@ -2370,6 +2744,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       const financialResources = await this.queryRunner.query(
         financialResourcesQuery
       );
+
       return financialResources;
     } catch (error) {
       console.log(error);
@@ -2437,7 +2812,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           financialResources: financialResource
         }));
 
-        console.log(yearsUpsert.map((y) => y.year))
+        console.log(yearsUpsert.map((y) => y.year));
         const foundYears = await financialResourcesYearRepo.find({
           where: {
             year: In(yearsUpsert.map((y) => y.year)),
@@ -2445,28 +2820,25 @@ export class ProposalHandler extends InitiativeStageHandler {
           }
         });
 
-
         for (let index = 0; index < yearsUpsert.length; index++) {
           const yUpsert = yearsUpsert[index];
 
-          if (foundYears.find(fY => fY.year == yUpsert.year)) {
-            let fYearIndex = foundYears.findIndex(fY => fY.year == yUpsert.year);
+          if (foundYears.find((fY) => fY.year == yUpsert.year)) {
+            let fYearIndex = foundYears.findIndex(
+              (fY) => fY.year == yUpsert.year
+            );
             foundYears[fYearIndex].active = yUpsert.active;
             foundYears[fYearIndex].value = yUpsert.value;
             upsertedYears.push(foundYears[fYearIndex]);
-          }
-          else {
+          } else {
             upsertedYears.push(yUpsert);
             // const uY = yearsUpsert[index];
             // for (let index = 0; index < yearsUpsert.length; index++) {
             // }
           }
-
         }
 
         upsertedYears = await financialResourcesYearRepo.save(upsertedYears);
-
-
 
         // if (foundYears.length > 0) {
         //   for (let index = 0; index < foundYears.length; index++) {
@@ -2496,11 +2868,11 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST Finanacial Resources
+   ** REQUEST Finanacial Resources by section
    * @param sectionName
    * @returns {financialResources}
    */
-  async requestFinancialResources(sectionName) {
+  async requestFinancialResourcesBySection(sectionName) {
     const initvStg = await this.setInitvStage();
     try {
       const financialResourcesQuery = ` 
@@ -2516,6 +2888,45 @@ export class ProposalHandler extends InitiativeStageHandler {
             AND fR.active = 1
             GROUP BY
                 fR.id;
+            `;
+
+      const financialResources = await this.queryRunner.query(
+        financialResourcesQuery
+      );
+
+      return financialResources;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get financial resources and files: Full proposal.',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST all Finanacial Resources
+   * @param sectionName
+   * @returns {financialResources}
+   */
+  async requestFinancialResources() {
+    const initvStg = await this.setInitvStage();
+    try {
+      const financialResourcesQuery = ` 
+            SELECT
+            fR.*, GROUP_CONCAT(fRY. YEAR SEPARATOR ';') AS years,
+            GROUP_CONCAT(fRY.value SEPARATOR ';') AS values_
+            FROM
+                financial_resources fR
+            LEFT JOIN financial_resources_years fRY ON fR.id = fRY.financialResourcesId
+            
+            WHERE initvStgId = ${initvStg.id}
+            AND fR.active = 1
+            GROUP BY
+                fR.id
+            ORDER BY fR.financial_type ;
             `;
 
       const financialResources = await this.queryRunner.query(
@@ -2764,51 +3175,47 @@ export class ProposalHandler extends InitiativeStageHandler {
    ** UPSERT TOCS
    */
   async upsertTocs(toc) {
-    const tocsRepo = getRepository(entities.TOCs);
     const initvStg = await this.setInitvStage();
 
-    var newTocs = new entities.TOCs();
     var results = [];
     var savedToc;
+    var savedFullInitiativeToc;
+    var savedWpToc;
 
     try {
       if (toc.length > 0) {
         for (let index = 0; index < toc.length; index++) {
           const element = toc[index];
+          var newTocs = new entities.TOCs();
 
           newTocs.id = null;
-          newTocs.toc_id = element.tocId;
+          newTocs.toc_id = element.tocId ? element.tocId : element.toc_id;
           newTocs.narrative = element.narrative;
           newTocs.diagram = element.diagram;
           newTocs.type = element.type; // 0 into wp and 1 to level initiative
           newTocs.work_package = element.work_package_acronym;
           newTocs.work_package_id = element.work_package_id;
           newTocs.active = element.active ? element.active : true;
-
           newTocs.initvStgId = initvStg.id;
 
-          var savedInnovationPackages: any = await tocsRepo.find({
-            where: { toc_id: newTocs.toc_id }
-          });
-          if (savedInnovationPackages.length > 0) {
-            tocsRepo.merge(savedInnovationPackages, newTocs);
+          if (newTocs.type) {
+            savedFullInitiativeToc = await this.upsertFullInitiativeToC(
+              newTocs
+            );
 
-            savedToc = await tocsRepo.save(savedInnovationPackages);
-
-            results[index] = savedToc;
+            results.push(savedFullInitiativeToc);
           } else {
-            newTocs.initvStgId = initvStg.id;
-
-            savedToc = await tocsRepo.save(newTocs);
-            results[index] = savedToc;
+            savedWpToc = await this.upsertWorkPackageToC(newTocs);
+            results.push(savedFullInitiativeToc);
           }
         }
       }
+
       return { savedTocs: results };
     } catch (error) {
       console.log(error);
       throw new BaseError(
-        'Upsert TOC: Full proposal',
+        'Upsert TOC: Full proposal Domain',
         400,
         error.message,
         false
@@ -2817,16 +3224,148 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /**
-   ** REQUEST TOC BY INITIATIVE
+   ** UPSERT FULL INITIATIVE TOC
+   */
+  async upsertFullInitiativeToC(newTocs) {
+    const tocsRepo = getRepository(entities.TOCs);
+    const initvStg = await this.setInitvStage();
+
+    var results = [];
+    var savedFullInitiativeToc;
+
+    try {
+      var savedTocs: any = await tocsRepo.find({
+        select: [
+          'id',
+          'initvStgId',
+          'narrative',
+          'diagram',
+          'type',
+          'active',
+          'toc_id',
+          'work_package',
+          'work_package_id'
+        ],
+        where: { toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId }
+      });
+
+      // Validate if the initiative has saved information
+      if (savedTocs.length > 0) {
+        /**
+         * Old Data
+         */
+
+        newTocs.id = savedTocs[0].id;
+
+        tocsRepo.merge(savedTocs[0], newTocs);
+
+        savedFullInitiativeToc = await tocsRepo.save(savedTocs);
+
+        results.push(savedFullInitiativeToc);
+      } else {
+        /**
+         * New Data
+         */
+
+        var savedTocsType: any = await tocsRepo.find({
+          where: { initvStgId: newTocs.initvStgId, type: 1 }
+        });
+
+        if (savedTocsType.length > 0) {
+          for (let index = 0; index < savedTocsType.length; index++) {
+            const element = savedTocsType[index];
+
+            element.active = 0;
+
+            await tocsRepo.save(element);
+          }
+        }
+
+        newTocs.initvStgId = initvStg.id;
+
+        savedFullInitiativeToc = await tocsRepo.save(newTocs);
+        results.push(savedFullInitiativeToc);
+      }
+
+      return results;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Full Initiative ToC: Full proposal Domain',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT WORK PACKAGE TOC
+   */
+  async upsertWorkPackageToC(newTocs) {
+    const tocsRepo = getRepository(entities.TOCs);
+    const initvStg = await this.setInitvStage();
+
+    var results = [];
+    var savedWorkPackageToc;
+
+    try {
+      var savedTocs: any = await tocsRepo.find({
+        select: [
+          'id',
+          'initvStgId',
+          'narrative',
+          'diagram',
+          'type',
+          'active',
+          'toc_id',
+          'work_package',
+          'work_package_id'
+        ],
+        where: {
+          work_package_id: newTocs.work_package_id,
+          initvStgId: newTocs.initvStgId
+        }
+      });
+
+      if (savedTocs.length > 0) {
+        newTocs.id = savedTocs[0].id;
+
+        tocsRepo.merge(savedTocs[0], newTocs);
+
+        savedWorkPackageToc = await tocsRepo.save(savedTocs[0]);
+
+        results.push(savedWorkPackageToc);
+      } else {
+        newTocs.initvStgId = initvStg.id;
+
+        savedWorkPackageToc = await tocsRepo.save(newTocs);
+        results.push(savedWorkPackageToc);
+      }
+
+      return results;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Work Package ToC: Full proposal Domain',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** REQUEST FULL INITIATIVE TOC BY INITIATIVE
    * @returns previewPartners
    */
-  async requestTocByInitiative() {
+  async requestFullInitiativeToc() {
     const initvStg = await this.setInitvStage();
 
     try {
       // retrieve preview partners
       const tocQuery = `
-      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
         FROM tocs
        WHERE initvStgId = ${initvStg.id}
         and active = 1
@@ -2845,5 +3384,309 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
+  }
+
+  /**
+   ** REQUEST TOC BY INITIATIVE
+   * @returns previewPartners
+   */
+  async requestTocByInitiative() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      // retrieve preview partners
+      const tocQuery = `
+      SELECT id, initvStgId,narrative,diagram,type,toc_id,work_package,work_package_id,created_at,updated_at
+        FROM tocs
+       WHERE initvStgId = ${initvStg.id}
+        and active = 1
+      `;
+
+      const fullInitiativeToc = await this.queryRunner.query(tocQuery);
+
+      return fullInitiativeToc;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get ToC By Initiative: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   ** UPSERT ISDC Responses
+   * @param ISDCResponsesData
+   * @returns ISDCResponsesSave
+   */
+  async upsertISDCResponses(ISDCResponsesData: any) {
+    const ISDCResponsesRepo = getRepository(entities.ISDCResponses);
+    const initvStg = await this.setInitvStage();
+    let toolsSbt = new ToolsSbt();
+    let ISDCResponsesArray = [];
+
+    try {
+      ISDCResponsesData =
+        typeof ISDCResponsesData === 'undefined' ? [] : ISDCResponsesData;
+      for (let index = 0; index < ISDCResponsesData.length; index++) {
+        const element = ISDCResponsesData[index];
+
+        const newISDCResponse = new entities.ISDCResponses();
+
+        newISDCResponse.id = element.id ? element.id : null;
+        newISDCResponse.initvStgId = initvStg.id;
+        newISDCResponse.user_id = element.user_id;
+        newISDCResponse.isdc_recommendation = element.isdc_recommendation;
+        newISDCResponse.response = element.response;
+        newISDCResponse.updated_response = element.updated_response;
+        newISDCResponse.is_deleted = element.is_deleted;
+
+        ISDCResponsesArray.push(
+          toolsSbt.mergeData(
+            ISDCResponsesRepo,
+            ` 
+             SELECT *
+               FROM isdc_responses
+              WHERE id = ${newISDCResponse.id}
+                and initvStgId =${newISDCResponse.initvStgId}`,
+            newISDCResponse
+          )
+        );
+      }
+
+      const ISDCResponsesMerge = await Promise.all(ISDCResponsesArray);
+      const ISDCResponsesSave = await ISDCResponsesRepo.save(
+        ISDCResponsesMerge
+      );
+
+      return ISDCResponsesSave;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert ISDC Responses: Full proposal ISDC',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async requestISDCResponses() {
+    const initvStg = await this.setInitvStage();
+    const ISDCResponsesRepo = getRepository(entities.ISDCResponses);
+
+    try {
+      // const ISDCResponses = await ISDCResponsesRepo.find({
+      //   where: {initvStgId: initvStg.id, is_deleted: false}
+      // });
+      const queryISDCResponses = `
+      SELECT 
+      ir.id,
+      ir.initvStgId,
+      ir.isdc_recommendation,
+      ir.response,
+      ir.updated_response,
+      if(concat_ws(" ",u.first_name,u.last_name) = "", null, concat_ws(" ",u.first_name,u.last_name)) as username,
+      ir.created_at,
+      ir.updated_at
+      FROM isdc_responses ir
+      LEFT JOIN users u on ir.user_id = u.id
+      WHERE ir.initvStgId = ${initvStg.id}
+      AND ir.is_deleted = false;
+      `;
+
+      const ISDCResponses = await this.queryRunner.query(queryISDCResponses);
+
+      return ISDCResponses;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'GET ISDC Responses: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   * * REQUEST EOI BY INITIATIVE
+   * @returns eoi
+   */
+
+  async requestEndofInitiativeOutcomes() {
+    const initvStg = await this.setInitvStage();
+
+    try {
+      const resultsQuery = `
+      SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,
+             wp.acronym wp_acronym,re.result_type_id as result_type,
+             re.result_title,re.result_description,re.is_global,re.active
+      FROM results re
+      join results_types rt 
+        on rt.id = re.result_type_id 
+  left join work_packages wp 
+        on wp.id = re.work_package_id 
+     WHERE re.initvStgId = ${initvStg.id}
+       AND rt.id  = 3
+       AND re.active =1
+      order by re.result_type_id,wp.id;
+    `,
+        resultsIndicatorsQuery = `
+    SELECT ri.id, ri.name as indicator_name, ri.unit_measurement, 
+    ri.results_id, ri.baseline_value, ri.baseline_year,
+    ri.target_value, ri.target_year, ri.active, ri.data_source, 
+    ri.data_collection_method as data_collection, ri.frequency_data_collection,
+    ri.created_at, ri.updated_at
+      FROM results_indicators ri
+     WHERE ri.results_id in (SELECT re.id
+      FROM results re
+     WHERE re.initvStgId = ${initvStg.id}
+       AND re.active =1);
+    `,
+        resultsRegionsQuery = `SELECT reg.id,reg.region_id,cr.name as region_name,reg.results_id ,reg.active,reg.created_at,reg.updated_at 
+    FROM results_regions reg
+    join clarisa_regions cr 
+      on cr.um49Code  = reg.region_id 
+   WHERE reg.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`,
+        resultsCountriesQuery = `
+    SELECT co.id,co.country_id,cc.name as country_name,co.results_id ,co.active ,co.created_at, co.updated_at 
+    FROM results_countries co
+    join clarisa_countries cc 
+      on cc.code  = co.country_id 
+   WHERE co.results_id in (SELECT re.id
+    FROM results re
+   WHERE re.initvStgId = ${initvStg.id}
+     AND re.active =1);`;
+
+      const eoi = await this.queryRunner.query(resultsQuery);
+      const resultsIndicators = await this.queryRunner.query(
+        resultsIndicatorsQuery
+      );
+      const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const resultsCountries = await this.queryRunner.query(
+        resultsCountriesQuery
+      );
+
+      eoi.map((res) => {
+        res['indicators'] = resultsIndicators.filter((resi) => {
+          return res.id === resi.results_id;
+        });
+
+        const reg = resultsRegions.filter((reg) => {
+          return res.id === reg.results_id;
+        });
+
+        const cou = resultsCountries.filter((co) => {
+          return res.id === co.results_id;
+        });
+
+        res['geo_scope'] = { regions: reg, countries: cou };
+      });
+
+      return eoi;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Request EOI By Initiative: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async insertInitiativeApproval(user_id, initiativeId, is_approved) {
+    const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const newInitvApproval = await initvApprovalRepo.create({ user_id, initiativeId, is_approved })
+      await initvApprovalRepo.save(newInitvApproval);
+
+      console.log({ newInitvApproval });
+
+      const initvStage: any = await initvStageRepo.findOne({ where: { initiative: initiativeId, active: true } });
+
+      if (newInitvApproval) {
+
+        if (initvStage == null) {
+          throw new BaseError(
+            'Post Initiative Approval: Error',
+            400,
+            `Initiative not found`,
+            false
+          );
+        }
+        // Set status approved on Initiative by stage
+        initvStage.status = 4;
+        console.log({ initvStage });
+        const savedInitvStage = await initvStageRepo.save(initvStage);
+        console.log({ savedInitvStage });
+
+        return newInitvApproval;
+      }
+      return newInitvApproval;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Insert iniative approval error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
+  }
+
+  async upsertTracks(initiativeId, stageId, body) {
+    const tracksRepo = await getRepository(entities.Tracks);
+    const tracksYearsRepo = await getRepository(entities.TracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const tracks = await tracksRepo.find();
+      const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
+  
+
+      let tracksRows = [];
+
+      for (const track in body) {
+        for (const year in body[track]) {
+          let newValue = {
+            id: body[track][year]['id'] ? body[track][year]['id'] : null,
+            track_id: tracks.find(tr => tr.acronym = track).id,
+            track_year_id: tracksYears.find(ty => ty.year = year).id,
+            initvStgId: initvStg.id,
+            value: body[track][year]['value']
+          }
+          tracksRows.push(newValue);
+        }
+      }
+
+      const response =  await tracksYearsInitiativesRepo.save(tracksRows);
+      return tracksRows;
+
+
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Tracks error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
   }
 }

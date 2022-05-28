@@ -1,71 +1,71 @@
-.dynamicList_block_container{
-    padding: 2px 0px 10px 10px;
-    position: relative;
-    border-radius: 0px 0px 5px 5px;
-    .left_line{
-        position: absolute;
-        left: 3px;
-        width: 6px;
-        height: calc(100% - 23px);
-        background-color: #7a78785d;
-        border-radius: 5px;
-    }
-    .order_first{
-        background-color: rgba(5, 77, 96, 0.49);
-    }
-    .order_second{
-        background-color: rgba(163, 80, 3, 0.37);
-    }
-
-    .dynamicListPreviewButton{
+.section{
+    margin-top: 10px;
+}
+.header{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    cursor: pointer;
+    transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    font-weight: 300;
+    font-size: .9em;
+    text-decoration: none;
+    color: inherit;
+    .title{
         display: flex;
-        justify-content: space-between;
-        // border: 1px solid red;
-        
-        border-radius: 100px;
-        padding: 5px 0px;
-        margin-left: 7px;
-        margin-bottom: 10px;
-        width: calc(100% - 7px);
-        // margin-left: auto;
-        box-sizing: border-box;
-        // margin-right: auto;
-        .dynamicListButton_texts{
-            display: flex;
-            font-weight: 500;
-            align-items: center;
-            .point{
-                margin-right: 7px;
-                width: 9px;
-                height: 9px;
-                border-radius: 10px;
+        align-items: center;
+        // justify-content: center;
+    }
+    .icon{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i{
+            font-size: 21px;
+        }
+    }
+    .icons{
+        display: flex;
+        .icon_toc{
+            position: relative;
+            margin-right: 5px;
+            &:hover{
+                .pop_text{
+                    width: max-content;
+                    padding: 3px 10px;
+                    transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+                    height: auto;
+                }
+            }
+            .pop_text{
+                opacity: .9;
+                position: absolute;
+                top: 15px;
+                padding: 0px;
+                height: 0px;
+                right: 15px;
+                background-color: white;
+                color: rgb(77, 77, 77);
+                border-radius: 3px;
+                width: 0px;
+                // z-index: 1000000;
+                font-size: 12px;
+                overflow: hidden;
+                transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    
             }
         }
     }
-    .dynamicListButton{
-        display: flex;
-        justify-content: space-between;
-        // border: 1px solid red;
-        
-        border-radius: 5px;
-        padding: 5px 0px;
-        margin-left: 7px;
-        margin-bottom: 10px;
-        .dynamicListButton_texts{
-            display: flex;
-            font-weight: 500;
-            align-items: center;
-            .point{
-                margin-right: 7px;
-                width: 9px;
-                height: 9px;
-                border-radius: 10px;
-            }
-        }
-
+    &:hover{
+        background-color: rgb(17, 17, 17) !important; 
+        border-radius: 0px 10px 10px 0px;
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
     }
 }
 
-.preview{
-    background-color: #31c9965e;
+.active_section{
+    background-color: var( --ibdc-black-1) !important; 
+    border-radius: 0px 10px 10px 0px;
+    transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    color: var(--ibdc-active-color);
 }

@@ -28,7 +28,7 @@
                         <!-- [style]="getKeys(customer).length <=1?'width:700px':'width:auto'" -->
                         <td *ngFor="let item of getKeys(customer); let i=index" style="text-align: center;"
                             [attr.rowspan]="((i == 0 && item =='a') && customer.rowspan)?customer.rowspan:1">
-                            {{customer[item] || 'not available'}}
+                            {{customer[item] || 'Not provided'}}
                         </td>
                     </tr>
 

@@ -2,13 +2,30 @@
     display: flex;
     flex-direction: column;
     border-radius: 5px;
-    overflow: hidden;
+    position: relative;
+    padding: 10px;
+    .table_buttons{
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .box_container{
+        overflow: hidden;
+        overflow-x: scroll;
+        overflow-y: scroll;
+        max-height: 50vh !important;
+        margin-bottom: 20px;
+    }
     .title{
-        padding: 7px 0px;
+        padding: 10px 0px;
         background-color: rgb(75, 75, 75);
         color: white;
         text-align: center;
         font-weight: 500;
+        position: sticky;
+        top: 0;
+        left: 0;
+        font-size: 1.3em;
     }
     .no-data{
         text-align: center;
@@ -44,6 +61,96 @@
             }
         }
     }
+}
+
+.boxExpanded{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-image: url('/assets/images/platform_background.jpg');
+    height: 100vh;
+    width: 100vw;
+    .close_button{
+        background-color: var(--ibdc-secondary-color);
+        width: 75px;
+        height: 75px;
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        z-index: 1000;
+        padding: 14px;
+        display: flex;
+        align-items: flex-end;
+        border-radius: 200px;
+        cursor: pointer;
+        i{
+            color: white;
+        }
+    }
+    .title{
+        position: relative;
+    }
+    .box_container{
+        background-color: white;
+        max-height: none !important;
+    }
+}
+
+table{
+    thead{
+        position: sticky;
+        top: 0;
+        background-color: white;
+    }
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #eeeeee;
+      }
+}
+
+.t_col_1{
+    min-width: 300px;
+}
+
+.t_col_2{
+    min-width: 300px;
+}
+
+.t_col_3{
+    min-width: 300px;
+}
+
+.t_col_4{
+    min-width: 200px;
+}
+
+.t_col_5{
+    min-width: 100px;
+}
+
+.t_col_6{
+    min-width: 100px;
+}
+
+.t_col_7{
+    min-width: 200px;
+}
+
+.t_col_8{
+    min-width: 100px;
+}
+
+.t_col_9{
+    min-width: 100px;
+}
+
+.t_col_10{
+    min-width: 100px;
 }
 
 .orange, .blue, .green{

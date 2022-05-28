@@ -46,7 +46,7 @@ export class GeographyBreakdownComponent implements OnInit {
 
   createMatrix() {
     this.spinnerService.show('geographic-breakdown');
-    this._initiativesService.getSummary(this._initiativesService.initiative.id, 3).subscribe(resp => {
+    this._initiativesService.getSummary().subscribe(resp => {
       this.REGIONS = resp.response.geoScope.regions;
       this.COUNTRIES = resp.response.geoScope.countries;
       this.COLUMNS = [...this.COLUMNS, ...this.REGIONS.map(r => r.name), ...this.COUNTRIES.map(c => c.name)]

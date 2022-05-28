@@ -13,7 +13,7 @@ export class PctablecompComponent implements OnInit {
   constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id, this._initiativesService.initiative.stageNameToServices).subscribe(resp=>{
+    this._initiativesService.getWpsFpByInititative().subscribe(resp=>{
       console.log(resp.response.workpackage);
       this.workPackagesList = resp.response.workpackage;
     })

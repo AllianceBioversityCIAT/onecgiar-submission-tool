@@ -23,6 +23,10 @@ export class AuthService {
     return this.user.asObservable();
   }
 
+  get lsUserRoles(){
+    return JSON.parse(localStorage.getItem('user'))?.roles[0]
+  }
+
   get userValue(): ServerResponse {
     return this.user.getValue();
   }

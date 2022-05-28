@@ -21,8 +21,4 @@ export class ResultsRegions extends UpdatedCreatedAt {
 
   @Column({type: 'tinyint'})
   active: boolean;
-
-  @OneToOne(() => Results)
-  @JoinColumn()
-  resultsId!: Results;
 }

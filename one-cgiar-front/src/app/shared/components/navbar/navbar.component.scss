@@ -2,11 +2,11 @@
     align-items: center;
     display: flex;
     width: 100%;
-    height: 65px;
+    height: 50px;
     font-size: 1.2em;
     justify-content: space-between;
     padding: 0 3rem 0 5rem;
-    background-color: #898e8966;
+    background-color: #00000083;
     .navbar-options{
         display: flex;
         gap: 10px;
@@ -16,19 +16,23 @@
     background-color: #4f9e52b0 !important;
 }
 .navbar-title {
+
     border-radius: 3px;
     color: #fff;
-    display: flex;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 1.1em;
+    font-weight: 400;
+    font-size: 15px;
+    height: 40px;
     outline: none;
     padding: 1.3rem 1rem;
     transition: all ease .3s;
-    background-color: rgba(180, 180, 180, 0.26);
+    background-color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &:hover{
         transition: all ease .3s;
-        background-color: #3d3d3d71;
+        background-color: rgb(68, 68, 68);
         border-radius: 3px;
     }
 }
@@ -43,42 +47,82 @@
     background: #066D94; 
 }
 
+.navbar-options{
+    color: white;
+    .platform-name{
+        cursor: pointer;
+        margin-right: 50px;
+        margin-left: 0px;
+        .outline-font {
+            font-weight: 200;
+        }
+    }
+    .cgiar-logo {
+        cursor: pointer;
+    }
+}
+
+
+  
+
 .navbar-opt {
     display: flex;
     align-items: center;
+    justify-content: center;
     color: #fff;
+    .user-information {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // padding: 0.7rem 3.5rem;
+        background-color: white;
+        border-radius: 30px 100px 100px 30px;
+        padding-left: 15px;
+        color: rgb(61, 61, 61);
+        i{
+            margin-right: 7px;
+        }
+        .navbar-name {
+            font-size: 0.80em;
+        }
+        .navbar-role {
+            transform: scale(1.1);
+            border-radius: 15px 10px 15px 8px;
+            font-size: 0.80em;
+            padding: 5px 20px;
+            margin-left: 20px;
+            color: #fff;
+        }
+        
+    }
+    
 }
 
-.user-information {
-    display: block;
-    text-align: center;
-    padding: 0.7rem 3.5rem;
-    background-color: #313131a8;
-    border-radius: 5px;
-}
 
-.navbar-name {
-    margin: 0;
-    font-size: 0.80em;
-}
 
-.navbar-role {
-    border-radius: 20px;
-    margin: 0;
-    font-size: 0.80em;
-}
+
 
 .navbar-logout {
-    color: #fff;
+    cursor: pointer;
+    color: white;
     text-decoration: none;
-    background: #444;
-    padding: 0 1rem;
+    background: #666;
+    padding: 5px 10px;
     font-size: 0.9em;
-    font-weight: lighter;
-    border-radius: 10px;
+    font-weight: 300;
+    border-radius: 5px;
     margin: 0 0 0 1rem;
+    display: flex;
+    align-items: center;
+    transition: all ease .3s;
+    // justify-content: center;
+    i{
+        font-size: 1.2em;
+        margin-left: 5px;
+    }
 }
 
 .navbar-logout:hover {
-    background: #666;
+    transition: all ease .3s;
+    background: rgb(68, 68, 68);
 }

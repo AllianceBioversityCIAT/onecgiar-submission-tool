@@ -57,7 +57,8 @@ export class LearningFpeAndIaComponent implements OnInit {
 
   upserInfo(){
     //save narrative
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    console.log(this.contextForm.value);
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
@@ -75,7 +76,7 @@ export class LearningFpeAndIaComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       this.contextForm.controls['key_learnings'].setValue(resp?.response?.context?.key_learnings);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
