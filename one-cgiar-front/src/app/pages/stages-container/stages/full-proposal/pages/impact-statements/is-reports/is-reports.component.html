@@ -1,10 +1,12 @@
-<section-title name="Partners preview" ></section-title>
+<section-title name="Partners list summary report" ></section-title>
 
-<div class="section-container-for-previews animate__animated animate__fadeIn">
+<div class="section-container-for-previews animate__animated animate__fadeIn">  
     <div class="card-for-preview ibd-shadow-2">
         <!-- <h5>Horizontal and Vertical</h5> -->
-        <section-sub-title name="Partners table"></section-sub-title>
-
+        <div class="alert_container" style="margin: 0 0 25px 10px;">
+            <ibdc-alert [options]="{htmlText:'The list of partner below corresponds to the ones entered in the previous sections (Per impact Area or the ones not related to any IA). If you see partners repeated, it may happen that they are coming from more than one Impact Area.  <br><br>Please feel free to download the list of partner using the Excel icon below. They are already aligned with CLARISA.', 
+                                    type:'info'}"></ibdc-alert>
+        </div>
         <div class="card-content">
             <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
             sortMode="multiple"
@@ -29,11 +31,11 @@
                             </div>
     
                             <div *ngIf="item ==='website'">
-                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'not available'}}</a>
+                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'Not provided'}}</a>
                             </div>
     
                             <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
-                                <span >{{customer[item] || 'not available'}}</span>
+                                <span >{{customer[item] || 'Not provided'}}</span>
                             </div>
                             
                         </td>

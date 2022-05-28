@@ -48,35 +48,35 @@ const preConceptRoutes = [
 
 const contextRoutes = [
   {
-    path: 'full-proposal/context',
+    path: 'context',
     loadChildren: () => import('./stages/full-proposal/pages/context/context.module').then(mod => mod.ContextModule),
   },
   {
-    path: 'full-proposal/context/challenge-statement',
+    path: 'context/challenge-statement',
     loadChildren: () => import('./stages/full-proposal/pages/context/challenge-statement/challenge-statement.module').then(mod => mod.ChallengeStatementModule),
   },
   {
-    path: 'full-proposal/context/comparative-advantage',
+    path: 'context/comparative-advantage',
     loadChildren: () => import('./stages/full-proposal/pages/context/comparative-advantage/comparative-advantage.module').then(mod => mod.ComparativeAdvantageModule),
   },
   {
-    path: 'full-proposal/context/learning-fpe-and-ia',
+    path: 'context/learning-fpe-and-ia',
     loadChildren: () => import('./stages/full-proposal/pages/context/learning-fpe-and-ia/learning-fpe-and-ia.module').then(mod => mod.LearningFpeAndIaModule),
   },
   {
-    path: 'full-proposal/context/measurable-objectives',
+    path: 'context/measurable-objectives',
     loadChildren: () => import('./stages/full-proposal/pages/context/measurable-objectives/measurable-objectives.module').then(mod => mod.MeasurableObjectivesModule),
   },
   {
-    path: 'full-proposal/context/participatory-design-process',
+    path: 'context/participatory-design-process',
     loadChildren: () => import('./stages/full-proposal/pages/context/participatory-design-process/participatory-design-process.module').then(mod => mod.ParticipatoryDesignProcessModule),
   },
   {
-    path: 'full-proposal/context/priority-setting',
+    path: 'context/priority-setting',
     loadChildren: () => import('./stages/full-proposal/pages/context/priority-setting/priority-setting.module').then(mod => mod.PrioritySettingModule),
   },
   {
-    path: 'full-proposal/context/projection-of-benefits',
+    path: 'context/projection-of-benefits',
     loadChildren: () => import('./stages/full-proposal/pages/context/projection-of-benefits/projection-of-benefits.module').then(mod => mod.ProjectionOfBenefitsModule),
   },
   // {
@@ -87,44 +87,48 @@ const contextRoutes = [
 
 const fullProposalRoutes = [
   {
-    path: 'full-proposal',
+    path: '',
     loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
   },
   {
-    path: 'full-proposal/general-information',
+    path: 'isdc-feedback-responses',
+    loadChildren: () => import('./stages/full-proposal/pages/isdc-feedback-responses/isdc-feedback-responses.module').then(mod => mod.IsdcFeedbackResponsesModule),
+  },
+  {
+    path: 'general-information',
     loadChildren: () => import('./stages/full-proposal/pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
   },
   ...contextRoutes,
   {
-    path: 'full-proposal/innovation-packages-and-srp',
+    path: 'innovation-packages-and-srp',
     loadChildren: () => import('./stages/full-proposal/pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
   },
   {
-    path: 'full-proposal/impact-statements',
+    path: 'impact-statements',
     loadChildren: () => import('./stages/full-proposal/pages/impact-statements/impact-statements.module').then(mod => mod.ImpactStatementsModule),
   },
   {
-    path: 'full-proposal/work-package-research-plans-and-tocs',
+    path: 'work-package-research-plans-and-tocs',
     loadChildren: () => import('./stages/full-proposal/pages/wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
   },
   {
-    path: 'full-proposal/melia',
+    path: 'melia',
     loadChildren: () => import('./stages/full-proposal/pages/melia/melia.module').then(mod => mod.MeliaModule),
   },
   {
-    path: 'full-proposal/mpara',
+    path: 'mpara',
     loadChildren: () => import('./stages/full-proposal/pages/mpara/mpara.module').then(mod => mod.MparaModule),
   },
   {
-    path: 'full-proposal/human-resources',
+    path: 'human-resources',
     loadChildren: () => import('./stages/full-proposal/pages/human-resources/human-resources.module').then(mod => mod.HumanResourcesModule),
   },
+  // {
+  //   path: 'financial-resources',
+  //   loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+  // },
   {
-    path: 'full-proposal/financial-resources',
-    loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
-  },
-  {
-    path: 'full-proposal/policy-compliance-and-oversight',
+    path: 'policy-compliance-and-oversight',
     loadChildren: () => import('./stages/full-proposal/pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
   },
   {
@@ -133,7 +137,53 @@ const fullProposalRoutes = [
   }
 ]
 
-
+// const fullProposalISDCRoutes = [
+//   {
+//     path: 'full-proposal-isdc-feedback',
+//     loadChildren: () => import('./stages/full-proposal/full-proposal.module').then(mod => mod.FullProposalModule),
+//   },
+//   {
+//     path: 'full-proposal-isdc-feedback/general-information',
+//     loadChildren: () => import('./stages/full-proposal/pages/general-info-f-proposal/general-info-f-proposal.module').then(mod => mod.GeneralInfoFProposalModule),
+//   },
+//   ...contextRoutes,
+//   {
+//     path: 'full-proposal/innovation-packages-and-srp',
+//     loadChildren: () => import('./stages/full-proposal/pages/innovation-packages-and-srp/innovation-packages-and-srp.module').then(mod => mod.InnovationPackagesAndSrpModule),
+//   },
+//   {
+//     path: 'full-proposal/impact-statements',
+//     loadChildren: () => import('./stages/full-proposal/pages/impact-statements/impact-statements.module').then(mod => mod.ImpactStatementsModule),
+//   },
+//   {
+//     path: 'full-proposal/work-package-research-plans-and-tocs',
+//     loadChildren: () => import('./stages/full-proposal/pages/wp-research-plans-and-tocs/wp-research-plans-and-tocs.module').then(mod => mod.WpResearchPlansAndTocsModule),
+//   },
+//   {
+//     path: 'full-proposal/melia',
+//     loadChildren: () => import('./stages/full-proposal/pages/melia/melia.module').then(mod => mod.MeliaModule),
+//   },
+//   {
+//     path: 'full-proposal/mpara',
+//     loadChildren: () => import('./stages/full-proposal/pages/mpara/mpara.module').then(mod => mod.MparaModule),
+//   },
+//   {
+//     path: 'full-proposal/human-resources',
+//     loadChildren: () => import('./stages/full-proposal/pages/human-resources/human-resources.module').then(mod => mod.HumanResourcesModule),
+//   },
+//   {
+//     path: 'full-proposal/financial-resources',
+//     loadChildren: () => import('./stages/full-proposal/pages/financial-resources/financial-resources.module').then(mod => mod.FinancialResourcesModule),
+//   },
+//   {
+//     path: 'full-proposal/policy-compliance-and-oversight',
+//     loadChildren: () => import('./stages/full-proposal/pages/policy-compliance-and-oversight/policy-compliance-and-oversight.module').then(mod => mod.PolicyComplianceAndOversightModule),
+//   },
+//   {
+//     path: 'under-construction-page',
+//     component: UnderConstructionPageComponent,
+//   }
+// ]
 
 const routes: Routes = [
   {
@@ -141,7 +191,8 @@ const routes: Routes = [
     component: StagesMenuComponent,
     children: [
       ...preConceptRoutes,
-      ...fullProposalRoutes
+      ...fullProposalRoutes,
+      // ...fullProposalISDCRoutes,
     ],
   },
 ];

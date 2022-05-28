@@ -56,7 +56,7 @@ export class PrioritySettingComponent implements OnInit {
   }
 
   upserInfo(){
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.contextForm.valid  && this.extraValidation?
       this._interactionsService.successMessage('Priority setting has been saved'):
@@ -73,7 +73,7 @@ export class PrioritySettingComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       //console.log(resp);
       this.contextForm.controls['priority_setting'].setValue(resp?.response?.context?.priority_setting);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);

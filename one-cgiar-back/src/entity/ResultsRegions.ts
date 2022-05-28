@@ -21,5 +21,4 @@ export class ResultsRegions extends UpdatedCreatedAt {
 
   @Column({type: 'tinyint'})
   active: boolean;
-
 }

@@ -48,7 +48,7 @@ export class ActivityBreakdownComponent implements OnInit {
   }
   createMatrix() {
     this.spinnerService.show('activity-breakdown');
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id,'proposal').subscribe(resp => {
+    this._initiativesService.getWpsFpByInititative().subscribe(resp => {
       this.WP = resp.response.workpackage;
       this.COLUMNS = [...this.COLUMNS, ...this.WP.map(wp => wp.acronym)];
       let initialMtrx = [

@@ -11,7 +11,9 @@
         <ibdc-input-field [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'area_expertise'"></ibdc-input-field>
     </div>
     <div class="row-key_accountabilities">
-        <ibdc-input-field [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'key_accountabilities'"></ibdc-input-field>
+        <!-- <ibdc-input-field [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="this.initiativeTeamItem"  [objectAtributteName]="'key_accountabilities'"></ibdc-input-field> -->
+        <textarea *ngIf="!this._initiativesService.initiative.readonly" [(ngModel)]="this.initiativeTeamItem['key_accountabilities']" rows="2"></textarea>
+        <p *ngIf="this._initiativesService.initiative.readonly">{{this.initiativeTeamItem['key_accountabilities']}}</p>
     </div>
 
  

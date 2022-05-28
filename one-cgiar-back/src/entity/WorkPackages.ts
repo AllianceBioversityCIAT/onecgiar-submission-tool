@@ -34,6 +34,9 @@ export class WorkPackages extends UpdatedCreatedAt {
   @Column({type: 'int'})
   initvStgId: number;
 
+  @Column({type: 'int'})
+  wp_official_code: number;
+
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;

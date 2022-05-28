@@ -3,12 +3,16 @@ import {Citations} from '../entity/Citatitions';
 import {CountriesByInitiativeByStage} from '../entity/CountriesByInitiativeByStage';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
+import * as entities from '../entity';
 import {RegionsByInitiativeByStage} from '../entity/RegionsByInitiativeByStage';
 import {Stages} from '../entity/Stages';
 import {BaseError} from './BaseError';
 import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
-import {InitiativesByStagesRepository} from '../repositories/initiativesByStageRepository';
+import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
+import {InitiativeHandler} from './InitiativesDomain';
+import { CountriesByMeliaStudy } from '../entity/CountriesByMeliaStudy';
+import { RegionsByMeliaStudy } from '../entity/RegionsByMeliaStudy';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -22,6 +26,8 @@ export class InitiativeStageHandler extends BaseValidation {
   public stageRepo = getRepository(Stages);
   private regionsRepo = getRepository(RegionsByInitiativeByStage);
   private countriesRepo = getRepository(CountriesByInitiativeByStage);
+  private regionsMeliaStdRepo = getRepository(RegionsByMeliaStudy);
+  private countriesMeliaStdRepo = getRepository(CountriesByMeliaStudy);
 
   constructor(
     initvStgId?: string | number,
@@ -74,6 +80,161 @@ export class InitiativeStageHandler extends BaseValidation {
     } catch (error) {
       throw new BaseError(
         'Get initiative by stage object',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  /**
+   *
+   * @param initvStg
+   * @returns summary
+   */
+  async getSummary(initvStg) {
+    try {
+      const generalInfoRepo = await getCustomRepository(
+        GeneralInformationRepository
+      );
+
+      const summary = await generalInfoRepo.requestSummary(initvStg);
+
+      return summary;
+    } catch (error) {
+      throw new BaseError('Request Summary : Error', 400, error.message, false);
+    }
+  }
+
+  async upsertSummary(
+    generalInformationId,
+    name,
+    action_area_id,
+    action_area_description,
+    acronym,
+    budgetId,
+    budget_value,
+    regions,
+    countries
+  ) {
+    try {
+      // upsert geo scope, budget, general information
+      const upsertedGeoScope = await this.upsertGeoScopes(regions, countries);
+      const upsertedBudget = await this.addBudget(
+        budget_value,
+        'general_information',
+        'budget',
+        budgetId,
+        true
+      );
+      const upsertedGeneralInformation = await this.upsertGeneralInformation(
+        generalInformationId,
+        name,
+        action_area_id,
+        action_area_description,
+        acronym
+      );
+
+      return {upsertedGeoScope, upsertedBudget, upsertedGeneralInformation};
+    } catch (error) {
+      throw new BaseError('Upsert Summary: Error', 400, error.message, false);
+    }
+  }
+
+  /**
+   ** UPSERT GENERAL INFORMATION
+   * @param generalInformationId?
+   * @param name
+   * @param action_area_id
+   * @param action_area_description
+   * @returns generalInformation
+   */
+  async upsertGeneralInformation(
+    generalInformationId?,
+    name?,
+    action_area_id?,
+    action_area_description?,
+    acronym?
+  ) {
+    const gnralInfoRepo = getRepository(entities.GeneralInformation);
+
+    //  create empty object
+    let generalInformation: entities.GeneralInformation;
+    try {
+      // get current intiative by stage
+      // const initvStg = await this.initvStage;
+      const initvStg = await this.setInitvStage();
+
+      // get clarisa action action areas
+      const initiativeshandler = new InitiativeHandler();
+      const actionAreas = await initiativeshandler.requestActionAreas();
+
+      // get select action areas for initiative
+      const selectedActionArea = actionAreas.find(
+        (area) => area.id == action_area_id
+      ) || {name: null};
+
+      // if null, create object
+      if (generalInformationId == null) {
+        generalInformation = new entities.GeneralInformation();
+        generalInformation.name = name;
+        generalInformation.acronym = acronym;
+        generalInformation.action_area_description =
+          action_area_description || selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id;
+        // assign initiative by stage
+        generalInformation.initvStg = initvStg.id;
+      } else {
+        generalInformation = await gnralInfoRepo.findOne(generalInformationId);
+        generalInformation.name = name ? name : generalInformation.name;
+        generalInformation.acronym = acronym
+          ? acronym
+          : generalInformation.acronym;
+        generalInformation.action_area_description = selectedActionArea.name;
+        generalInformation.action_area_id = action_area_id
+          ? action_area_id
+          : generalInformation.action_area_id;
+      }
+      // upserted data
+      let upsertedInfo = await gnralInfoRepo.save(generalInformation);
+
+      //    update initiative name
+      let initiative = await this.initiativeRepo.findOne(initvStg.initiativeId);
+      initiative.name = upsertedInfo.name;
+      initiative.acronym = upsertedInfo.acronym;
+      initiative = await this.initiativeRepo.save(initiative);
+
+      // retrieve general information
+      const GIquery = ` 
+            SELECT
+            initvStgs.id AS initvStgId,
+            general.id AS generalInformationId,
+            IF(general.name IS NULL OR general.name = '' , (SELECT name FROM initiatives WHERE id = initvStgs.initiativeId ), general.name) AS name,
+            IF(general.acronym IS NULL OR general.acronym = '' , (SELECT acronym FROM initiatives WHERE id = initvStgs.initiativeId ), general.acronym) AS acronym,
+            (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS lead_id,
+            (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS first_name,
+            (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS email,
+            
+                (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1)  ) AS co_lead_id,
+                (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_first_name,
+                (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') AND active = TRUE AND initiativeId = initvStgs.initiativeId LIMIT 1) ) AS co_email,
+                
+                general.action_area_description AS action_area_description,
+                general.action_area_id AS action_area_id
+                
+                FROM
+                initiatives_by_stages initvStgs
+            LEFT JOIN general_information general ON general.initvStgId = initvStgs.id
+            
+            WHERE initvStgs.id = ${initvStg.id};
+            `;
+      const generalInfo = await this.queryRunner.query(GIquery);
+
+      return generalInfo[0];
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'General information : Full proposal',
         400,
         error.message,
         false
@@ -395,6 +556,7 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
+
   /**
    *
    * @param region?
@@ -403,6 +565,8 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopes(regions?, countries?) {
+
+
     let initvStgRegions, initvStgCountries;
 
     try {
@@ -461,135 +625,77 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
-  /******* REPLICATION STEPS *********/
-
-  async replicationProcess(
-    currentInitiativeId: number,
-    currentStageId: number,
-    newStageId: number
-  ) {
-    const initvStgRepo = getCustomRepository(InitiativesByStagesRepository);
-    const stageRepo = getRepository(Stages);
-
-    try {
-      // Validation between current stage and new stage
-      if (currentStageId > newStageId) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `The current stage cannot be less than the new stage`,
-          false
-        );
-      }
-      /**
-       ** VALIDATION CURRENT INITIATIVE */
-
-      // Get current stage
-      const stage: Stages = await stageRepo.findOne(currentStageId);
-      // get current initiative by stage
-      let initvStg = await initvStgRepo.findOneInitiativeByStage(
-        currentInitiativeId,
-        stage.id
-      );
-
-      // if not initiative by stage, throw error
-      if (initvStg == null) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `Initiative not found in stage: ${stage.description}`,
-          false
-        );
-      }
-
-      /**
-       ** VALIDATION NEW STAGE BY INITIATIVE */
-
-      // Validate new stage
-      const newStage: Stages = await stageRepo.findOne(newStageId);
-
-      // if not exists stage, throw error
-      if (newStage == null) {
-        throw new BaseError(
-          'Read Context: Error',
-          400,
-          `Stage not found : ${stage.description}`,
-          false
-        );
-      }
-
-      // get new initiative by stage
-      const newInitvStg = await initvStgRepo.findOneInitiativeByStage(
-        currentInitiativeId,
-        newStage.id
-      );
-
-      if (newInitvStg) {
-        initvStg = newInitvStg;
-      } else {
-        initvStg = initvStg;
-      }
-
-      /**
-       * STEPS
-       */
-
-      // 1. Change Stage by Initiative
-      const changeStage = await this.changeStageInitiative(initvStg, newStage);
-
-      return changeStage;
-    } catch (error) {
-      throw new BaseError(
-        'Error Replication Process',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  /**
-   ** 1. Change Stage by Initiative
-   * @param initvStg
-   * @param newStage
+   /**
+   *
+   * @param region?
+   * @param countries?
+   * @returns { regions , countries }
    */
-  async changeStageInitiative(initvStg, newStage) {
-    const newInitvStg = new InitiativesByStages();
-    let savedInitiativeByStage: InitiativesByStages;
+
+  async upsertGeoScopesMeliaStudies(regions?, countries?) {
+
+    let initvStgRegions, initvStgCountries;
 
     try {
-      // Conditions to change stage a initiative
-      // If Initiative exists in New Stage
-      if (initvStg.stageId === newStage.id) {
-        savedInitiativeByStage = await this.initvStgRepo.save(initvStg);
-
-        // If Initiative Not exists in New Stage
-      } else if (newStage.id > initvStg.stageId) {
-        newInitvStg.active = true;
-        newInitvStg.global_dimension = initvStg.global_dimension;
-        newInitvStg.initiative = initvStg.initiativeId;
-        newInitvStg.stage = newStage.id;
-
-        savedInitiativeByStage = await this.initvStgRepo.save(newInitvStg);
-      } else {
-        throw new BaseError(
-          'Error Change Stage by initiative - ' + initvStg.initiativeId,
-          400,
-          'Please validate the parameters and try again',
-          false
+      // get current initiative by stage
+      const initvStg = await this.initvStage;
+      // get geo scope from melia study and initiative by stage
+      initvStgRegions = await this.regionsMeliaStdRepo.find({
+        where: {initvStg: initvStg[0]}
+      });
+      initvStgCountries = await this.countriesMeliaStdRepo.find({
+        where: {initvStg: initvStg[0]}
+      });
+      
+      if (regions.length) {
+        const uniqueRegions = [].concat(
+          regions.filter((obj1) =>
+            initvStgRegions.every(
+              (obj2) =>
+                obj1.region_id !== obj2.region_id || obj1.active !== obj2.active
+            )
+          )
         );
+        uniqueRegions.every((uA) => (uA['initvStgId'] = initvStg[0].id));
+        // console.log({uniqueRegions, initvStg: initvStg[0].id});
+
+        // save geo scope - regions
+        initvStgRegions = await this.regionsMeliaStdRepo.save(uniqueRegions);
       }
 
-      return savedInitiativeByStage;
+
+      if (countries.length) {
+        const uniqueCountries = [].concat(
+          countries.filter((obj1) =>
+            initvStgCountries.every(
+              (obj2) =>
+                // obj1.meliaStudyId !== obj2.meliaStudyId ||
+                obj1.country_id !== obj2.country_id ||
+                obj1.active !== obj2.active
+            )
+          )
+        );
+        uniqueCountries.every((uA) => (uA['initvStgId'] = initvStg[0].id));
+        // console.log({uniqueCountries, initvStg: initvStg[0].id});
+
+        
+        // save geo scope - countries
+        initvStgCountries = await this.countriesMeliaStdRepo.save(uniqueCountries);
+      }
+
+      return {regions: initvStgRegions, countries: initvStgCountries};
     } catch (error) {
+      console.log(error);
       throw new BaseError(
-        'Error Change Stage by initiative - ' + initvStg.initiativeId,
+        'Geographic scope : Melia studies - Update',
         400,
         error.message,
         false
       );
     }
   }
+
+  /******* REPLICATION STEPS *********/
 
   async forwardGeoScope(forwardStage: Stages | number) {
     // get initiative by stage id from initiative
@@ -682,7 +788,7 @@ export class InitiativeStageHandler extends BaseValidation {
         ? existInitvStg[0]
         : new InitiativesByStages();
 
-      this.intvStage_.active = true;
+     // this.intvStage_.active = true;
       this.intvStage_.initiative = this.initiativeId_;
       this.intvStage_.stage = this.stageId_;
       // save initiative by stage

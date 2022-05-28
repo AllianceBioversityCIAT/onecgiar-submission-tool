@@ -104,13 +104,28 @@ export async function getValidations(req: Request, res: Response) {
           melia: await metaData.validationMelia(),
           managePlan: await metaData.validationManagementPlan(),
           humanResources: await metaData.validationHumanResources(),
-          financialResources: await metaData.validationFinancialResources(),
+         // financialResources: await metaData.validationFinancialResources(),
           policyCompliance: await metaData.validationPolicyCompliance(),
           impactStrategies: await metaData.validationImpactStrategies(),
           workPackages: await metaData.validationWorkPackages(),
           context: await metaData.validationContext()
         };
         break;
+        case 'Full Proposal ISDC Feedback':
+          validatorsObject = {
+            isdcFeedBack: await metaData.validationISDCFeedback(),
+            generalInformation: await metaData.validationGI(),
+            innovationPackages: await metaData.validationInnovationPackages(),
+            melia: await metaData.validationMelia(),
+            managePlan: await metaData.validationManagementPlan(),
+            humanResources: await metaData.validationHumanResources(),
+           // financialResources: await metaData.validationFinancialResources(),
+            policyCompliance: await metaData.validationPolicyCompliance(),
+            impactStrategies: await metaData.validationImpactStrategies(),
+            workPackages: await metaData.validationWorkPackages(),
+            context: await metaData.validationContext()
+          };
+          break;
 
       default:
         break;

@@ -25,10 +25,10 @@
                 </div>
                 <br>
             </div>
-            <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showRegions">
+            <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList == null">
                 <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
             </div>
-            <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
+            <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList != null">
                 <div class="box_container">
                     <ibdc-select-multiple [options]="{
                         required: !this.objectItem[this.objectAtributteName],
@@ -53,10 +53,10 @@
                 </div>
     
             </div>
-            <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showCountries">
+            <div class="col-6 horizontal_padding" *ngIf="!this.countriesSelectedList">
                 <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
             </div>
-            <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
+            <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList">
                 <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required: !this.objectItem[this.objectAtributteName],

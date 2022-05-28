@@ -50,26 +50,27 @@ export class InitiativeHandler extends InitiativeStageHandler {
     let allInitiatives,
       stagesInitiatives,
       initvActiveSQL = ` 
-        SELECT
-        initvStg.id AS initvStgId,
-        initiative.id AS id,
-        initiative.name AS name,
-        initiative.official_code,
-        -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-        (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
-        (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-        (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-        initvStg.active AS active,
-        initvStg.stageId AS stageId,
-        CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
-        FROM
-            initiatives initiative
-        LEFT JOIN initiatives_by_stages initvStg 
-        ON initvStg.initiativeId = initiative.id
-        LEFT JOIN stages stage 
-        ON stage.id = initvStg.stageId
-        WHERE  initvStg.active = 1
-        ORDER BY id
+      SELECT
+      initvStg.id AS initvStgId,
+      initiative.id AS id,
+      initiative.acronym,
+      initiative.name AS name,
+      initiative.official_code,
+      -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+      (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
+      (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+      (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+      initvStg.active AS active,
+      initvStg.stageId AS stageId,
+      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
+      FROM
+          initiatives initiative
+      LEFT JOIN initiatives_by_stages initvStg 
+      ON initvStg.initiativeId = initiative.id
+      LEFT JOIN stages stage 
+      ON stage.id = initvStg.stageId
+      WHERE  initvStg.active = 1
+      ORDER BY id
         `,
       initvDetailSQL = `
         SELECT
@@ -107,25 +108,26 @@ export class InitiativeHandler extends InitiativeStageHandler {
     let allInitiatives,
       stagesInitiatives,
       initvActiveSQL = ` 
-          SELECT
-          initvStg.id AS initvStgId,
-          initiative.id AS id,
-          initiative.name AS name,
-          initiative.official_code,
-          -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
-          (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
-          (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
-          (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
-          initvStg.active AS active,
-          initvStg.stageId AS stageId,
-          CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
-          FROM
-              initiatives initiative
-          LEFT JOIN initiatives_by_stages initvStg 
-          ON initvStg.initiativeId = initiative.id
-          LEFT JOIN stages stage 
-          ON stage.id = initvStg.stageId
-          ORDER BY id
+      SELECT
+      initvStg.id AS initvStgId,
+      initiative.id AS id,
+      initiative.acronym,
+      initiative.name AS name,
+      initiative.official_code,
+      -- IF( initvStg.status IS NULL, 'Editing', initvStg.status) AS status,
+      (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS status,
+      (SELECT action_area_id FROM general_information WHERE initvStgId = initvStg.id) AS action_area_id,
+      (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
+      initvStg.active AS active,
+      initvStg.stageId AS stageId,
+      CONCAT("Stage ", initvStg.stageId,': ', (SELECT description FROM stages WHERE id = initvStg.stageId) ) AS description
+      FROM
+          initiatives initiative
+      LEFT JOIN initiatives_by_stages initvStg 
+      ON initvStg.initiativeId = initiative.id
+      LEFT JOIN stages stage 
+      ON stage.id = initvStg.stageId
+      ORDER BY id
           `,
       initvDetailSQL = `
           SELECT
@@ -419,5 +421,24 @@ export class InitiativeHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError('Get Preview Partners', 400, error.message, false);
     }
+  }
+
+  requestMeliaStudyTypes() {
+    try {
+      const meliaStudyTypesQuery = `SELECT * FROM clarisa_melia_study_types`;
+      const meliaStudyTypes = this.queryRunner.query(meliaStudyTypesQuery);
+      return meliaStudyTypes;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
+    }
+  }
+
+  async requestYears() {
+    const querySql = `
+        SELECT year
+        FROM years`;
+    const years = await this.queryRunner.query(querySql);
+    return years;
   }
 }

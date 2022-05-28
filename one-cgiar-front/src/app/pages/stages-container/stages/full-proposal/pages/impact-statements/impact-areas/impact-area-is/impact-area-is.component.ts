@@ -24,6 +24,9 @@ export class ImpactAreaIsComponent implements OnInit {
   savedList = [];
   iaID;
   extraValidation = false;
+
+  firstTab = true;
+
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
@@ -47,7 +50,7 @@ export class ImpactAreaIsComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/impact-statements/impact-areas`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/impact-statements/impact-areas`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
     }, 10);
@@ -92,7 +95,7 @@ export class ImpactAreaIsComponent implements OnInit {
 
 
   getImpactStrategies(){
-    this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, this.iaID).subscribe(resp=>{
+    this._initiativesService.getImpactStrategies(this.iaID).subscribe(resp=>{
       // console.log(resp?.response?.impactStrategies?.partners);
 
       if (!resp?.response?.impactStrategies) return;
@@ -204,7 +207,7 @@ export class ImpactAreaIsComponent implements OnInit {
     })
     body.partners = this.savedList;
     // console.log(body?.partners);
-    this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveImpactStrategies(body).subscribe(resp=>{
       // console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
       this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);

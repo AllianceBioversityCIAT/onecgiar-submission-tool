@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-table-b',
@@ -9,20 +10,23 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 })
 export class TableBComponent implements OnInit {
   tableBData:TableBData;
-  htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
-  constructor( private _initiativesService:InitiativesService) { }
+  // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  constructor( 
+    private _initiativesService:InitiativesService,
+    public _utilsService:UtilsService
+
+    ) { }
 
   ngOnInit(): void {
-    this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
+    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
       this.tableBData = resp;
-      // console.log(this.tableBData)
     })
   }
 
 }
 
 interface TableBData {
-  actionAreasOutcomesIndicators: ActionAreasOutcomesIndicator[];
+  action_areas_outcomes_indicators: ActionAreasOutcomesIndicator[];
 }
 
 interface ActionAreasOutcomesIndicator {

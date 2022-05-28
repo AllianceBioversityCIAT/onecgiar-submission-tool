@@ -12,7 +12,7 @@
                     description:'Provide evidence of why and how CGIAR and the partnership arrangement will deliver a unique or more cost-effective set of results compared to other credible partnerships or service provider.'}">
                 </ibdc-textarea>
             </div>
-            <div class="col-sm-12">
+            <!-- <div class="col-sm-12">
                 <ibdc-link-list [options]="{
                     inputTitle: this._dataControlService.provideDocumentText,
                     descriptions:'Add urls',
@@ -24,7 +24,7 @@
                         attributeLink:'link'
                     }
                 }"></ibdc-link-list>
-            </div>
+            </div> -->
 
 
         </div>
@@ -33,8 +33,8 @@
 
     </form>
 
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button (click)="upserInfo()" [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    <div (click)="upserInfo()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button  [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
     </div>
 
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='spinner'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

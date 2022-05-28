@@ -19,12 +19,14 @@
         "typeorm": "ts-node ./node_modules/typeorm/cli.js",
         "migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
         "migrations:create": "npm run typeorm -- migration:create -n",
+        "migrations:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate -n",
         "docker:build": "docker build -t onecgiarback .",
         "docker:run": "docker run -dti --name onecgiarapi -p 3000:3300 onecgiarback"
     },
     "author": "f.elvira@cgiar.org",
     "license": "ISC",
     "dependencies": {
+        "@types/pusher-js": "^5.1.0",
         "@types/supertest": "^2.0.11",
         "accesscontrol": "^2.2.1",
         "activedirectory": "^0.7.2",
@@ -47,6 +49,7 @@
         "node-cron": "^3.0.0",
         "nodemailer": "^6.6.1",
         "nodemailer-express-handlebars": "^4.0.0",
+        "pusher": "^5.1.0-beta",
         "reflect-metadata": "^0.1.13",
         "supertest": "^6.1.6",
         "tx2": "^1.0.5",

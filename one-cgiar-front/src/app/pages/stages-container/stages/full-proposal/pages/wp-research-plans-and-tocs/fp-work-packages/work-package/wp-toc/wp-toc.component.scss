@@ -3,31 +3,74 @@
     display: none;
     justify-content: center;
     .image_container{
-        // border: 1px solid gray;
         overflow: hidden;
         border-radius: 20px 20px 0px 0px;
-    
         box-shadow: 0 10px 20px #72727230, 0 6px 6px #72727230;
+        .img_hover_info{
+          position: relative;
+          transition: cubic-bezier(0.075, 0.82, 0.165, 1) .3s all;
+          img{
+            cursor: pointer;
+          }
+          .info_to_open{
+            transition: cubic-bezier(0.075, 0.82, 0.165, 1) .3s all;
+            background-color: rgba(88, 88, 88, 0);
+            color: #ffffff00;
+            flex-direction: column;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+          }
+          &:hover {
+            .info_to_open{
+              color: #ffffff;
+              font-size: 1.5em;
+              font-weight: 300;
+              background-color: rgba(0, 0, 0, 0.521);
+              // cursor: pointer;
+              pointer-events: none;
+              i{
+                margin-top: 10px;
+                font-size: 2em;
+              }
+            }
+          }
+        }
     }
 }
 
-.toc_list{
-    // display: flex;
-    // flex-direction: column;
-    .toc_item{
-        border: 1px solid rgb(224, 224, 224);
-        border-radius: 10px;
-        padding: 10px;
-        margin-top: 20px;
-        .tex_container{
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            .updated_at{
-              color: rgb(63, 63, 63);
-            }
-        }
+.toc_list {
+
+  // display: flex;
+  // flex-direction: column;
+  .toc_item {
+    position: relative;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    padding: 10px 30px;
+    margin-top: 20px;
+
+    .tex_container {
+      padding-top: 5px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+
+      .updated_at {
+        color: rgb(63, 63, 63);
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+      }
     }
+  }
 }
 
 .expandImage{

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({
   selector: 'app-edit-toc-button',
@@ -7,9 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class EditTocButtonComponent implements OnInit {
   @Input() title: string = 'Edit';
-  @Input() url: string = null;
   imageLoad : boolean = false;
-  constructor() { }
+  constructor( public _initiativesService:InitiativesService ) { }
 
   ngOnInit(): void {
   }

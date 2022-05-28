@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { WpTocRoutingModule } from './wp-toc-routing.module';
 import { WpTocComponent } from './wp-toc.component';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import { UtilsModule } from '../../../../../../../../../shared/components/utils/utils.module';
 import { SkeletonsModule } from '../../../../../../../../../shared/components/skeletons/skeletons.module';
 import { EditTocButtonModule } from '../../../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
+import { ToggleFormatDateModule } from '../../../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -22,7 +24,8 @@ import { EditTocButtonModule } from '../../../../../../../../../shared/component
     ReactiveFormsModule,
     ButtonModule,
     UtilsModule,
-    EditTocButtonModule
+    EditTocButtonModule,
+    ToggleFormatDateModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })

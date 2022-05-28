@@ -355,4 +355,64 @@ export class PreviewsDomain {
       );
     }
   }
+
+  /**
+   * REQUEST PREVIEW WORK PACKAGES
+   * @param initiativeId
+   * @returns previewHumanResources
+   */
+  async requestWorkPackages(initiativeId: string) {
+    try {
+      let COquery = `
+              SELECT id,country_id,initvStgId,wrkPkgId
+                FROM countries_by_initiative_by_stage 
+               WHERE active = 1
+               GROUP BY id,country_id`,
+        REquery = `
+                SELECT id,region_id,initvStgId,wrkPkgId
+                  FROM regions_by_initiative_by_stage
+                 WHERE active = 1
+                GROUP BY id,region_id
+                `,
+        WPquery = `
+
+        SELECT wp.initvStgId,init.initiativeId,init.stageId, wp.*
+        FROM initiatives_by_stages init
+   LEFT JOIN  work_packages wp
+          on wp.initvStgId  = init.id
+       WHERE init.id =  ${initiativeId}
+         AND wp.active = 1
+    ORDER BY initiativeId asc
+                    `;
+
+      var workPackages = await this.queryRunner.query(WPquery);
+      const regions = await this.queryRunner.query(REquery);
+      const countries = await this.queryRunner.query(COquery);
+
+      if (workPackages == undefined || workPackages.length == 0) {
+        workPackages = [];
+      } else {
+        // Map Initiatives
+        workPackages.map((wp) => {
+          wp['regions'] = regions.filter((reg) => {
+            return reg.wrkPkgId === wp.id;
+          });
+
+          wp['countries'] = countries.filter((cou) => {
+            return cou.wrkPkgId === wp.id;
+          });
+        });
+      }
+
+      return workPackages;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'ERROR Get Preview Human Resources: Previews General',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 }

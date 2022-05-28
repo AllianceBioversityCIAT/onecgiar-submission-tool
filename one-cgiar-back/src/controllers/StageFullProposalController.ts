@@ -1,12 +1,13 @@
-import {Request, Response} from 'express';
-import {getRepository} from 'typeorm';
-import {InitiativesByStages} from '../entity/InititativesByStages';
-import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
-import {Stages} from '../entity/Stages';
-import {BaseError} from '../handlers/BaseError';
-import {ProposalHandler} from '../handlers/FullProposalDomain';
-import {ResponseHandler} from '../handlers/Response';
-import {WorkPackages} from '../entity/WorkPackages';
+import { Request, Response } from 'express';
+import { getRepository } from 'typeorm';
+import { InitiativesByStages } from '../entity/InititativesByStages';
+import { InitiativeStageHandler } from '../handlers/InitiativeStageDomain';
+import { Stages } from '../entity/Stages';
+import { BaseError } from '../handlers/BaseError';
+import { ProposalHandler } from '../handlers/FullProposalDomain';
+import { ResponseHandler } from '../handlers/Response';
+import { WorkPackages } from '../entity/WorkPackages';
+import { InitiativesApproval } from '../entity';
 
 /**
  * ***************************
@@ -23,19 +24,19 @@ import {WorkPackages} from '../entity/WorkPackages';
 
 export const getGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read General information: Error',
@@ -48,7 +49,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    // get general information from porposal object
+    // get general information from proposal object
     const generalInformation = await fullPposal.getGeneralInformation();
 
     //set metadata
@@ -79,7 +80,7 @@ export const getGeneralInformation = async (req: Request, res: Response) => {
  * @returns
  */
 export async function getWorkPackages(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -87,14 +88,14 @@ export async function getWorkPackages(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Workpackage: Error',
@@ -107,33 +108,33 @@ export async function getWorkPackages(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    // get workpackage from porposal object
+    // get workpackage from proposal object
     const workpackage = await fullPposal.getWorkPackage();
 
-    res.json(new ResponseHandler('Full Proposal: Workpackage.', {workpackage}));
+    res.json(new ResponseHandler('Full Proposal: Workpackage.', { workpackage }));
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }
 }
 
 /**
- * GET WORK PACKAGE
+ * GET WORK PACKAGE BY ID
  * @param req
  * @param res { workpackage }
  * @returns
  */
 export async function getWorkPackage(req: Request, res: Response) {
-  const {wrkPkgId} = req.params;
+  const { wrkPkgId } = req.params;
 
   try {
     // create new full proposal object
     const fullPposal = new ProposalHandler();
 
-    // get workpackage from porposal object
+    // get workpackage from proposal object
     const workpackage = await fullPposal.getWorkPackageId(wrkPkgId);
 
     res.json(
-      new ResponseHandler('Full Proposal: Workpackage id.', {workpackage})
+      new ResponseHandler('Full Proposal: Workpackage id.', { workpackage })
     );
   } catch (error) {
     return res.status(error.httpCode).json(error);
@@ -151,7 +152,7 @@ export async function getAllWorkPackagesProposal(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler();
 
-    // get ALL workpackage from porposal
+    // get ALL workpackage from proposal
     const workPackagesProposal =
       await fullPposal.requestAllWorkPackagesProposal();
 
@@ -176,11 +177,11 @@ export async function getAllWorkPackages(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler();
 
-    // get ALL workpackage from porposal
+    // get ALL workpackage from proposal
     const workpackages = await fullPposal.requestAllWorkPackages();
 
     res.json(
-      new ResponseHandler('Full Proposal: All Work Package.', {workpackages})
+      new ResponseHandler('Full Proposal: All Work Package.', { workpackages })
     );
   } catch (error) {
     return res.status(error.httpCode).json(error);
@@ -194,7 +195,7 @@ export async function getAllWorkPackages(req: Request, res: Response) {
  * @returns
  */
 export async function patchWorkPackage(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const {
     acronym,
     name,
@@ -203,32 +204,24 @@ export async function patchWorkPackage(req: Request, res: Response) {
     id,
     regions,
     countries,
-    active
+    active,
+    wp_official_code
   } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
-  var newWorkPackage = new WorkPackages();
-
-  newWorkPackage.id = id;
-  newWorkPackage.acronym = acronym;
-  newWorkPackage.name = name;
-  newWorkPackage.pathway_content = pathway_content;
-  newWorkPackage.is_global = is_global;
-  newWorkPackage.active = active;
-
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Workpackage: Error',
@@ -242,8 +235,16 @@ export async function patchWorkPackage(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
     const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
 
-    // upsert workpackage from porposal object
-    const workpackage = await fullPposal.upsertWorkPackages(newWorkPackage);
+    // upsert workpackage from proposal object
+    const workpackage = await fullPposal.upsertWorkPackages(
+      acronym,
+      name,
+      pathway_content,
+      is_global,
+      id,
+      active,
+      wp_official_code
+    );
 
     const upsertedGeoScope = await initvStgObj.upsertGeoScopes(
       regions,
@@ -269,7 +270,7 @@ export async function patchWorkPackage(req: Request, res: Response) {
  */
 export const upsertGeneralInformation = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
   const {
     generalInformationId,
@@ -284,11 +285,11 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
     if (initvStg == null) {
       throw new BaseError(
@@ -337,19 +338,19 @@ export const upsertGeneralInformation = async (req: Request, res: Response) => {
  */
 export const getContext = async (req: Request, res: Response) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Context: Error',
@@ -362,7 +363,7 @@ export const getContext = async (req: Request, res: Response) => {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    // get context from porposal object
+    // get context from proposal object
     const context = await fullPposal.getContext();
 
     //set metadata
@@ -374,7 +375,7 @@ export const getContext = async (req: Request, res: Response) => {
     // metadata = metadata.filter(meta => meta.group_by == 'Context');
 
     res.json(
-      new ResponseHandler('Full Proposal: Context.', {context, metadata})
+      new ResponseHandler('Full Proposal: Context.', { context, metadata })
     );
   } catch (error) {
     console.log(error);
@@ -391,7 +392,7 @@ export const getContext = async (req: Request, res: Response) => {
 
 export const upsertContext = async (req: Request, res: Response, next) => {
   // get initiative by stage id from client
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   // get generalInformationId, name, action_area_id, action_area_description by stage id from client
   const {
     contextId,
@@ -409,13 +410,13 @@ export const upsertContext = async (req: Request, res: Response, next) => {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Upsert Context: Error',
@@ -447,7 +448,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
     // metadata = metadata.filter(meta => meta.group_by == 'Context');
 
     res.json(
-      new ResponseHandler('Full Proposal: Context.', {context, metadata})
+      new ResponseHandler('Full Proposal: Context.', { context, metadata })
     );
     next();
   } catch (error) {
@@ -464,7 +465,7 @@ export const upsertContext = async (req: Request, res: Response, next) => {
  * @returns { projectionBenefits }
  */
 export async function patchProjectionBenefits(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   // projection benefits section data
   const {
@@ -489,14 +490,14 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Projection of benefits: Error',
@@ -542,21 +543,21 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
  * @returns { projectionBenefits }
  */
 export async function getProjectionBenefits(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Projection of benefits: Error',
@@ -591,21 +592,21 @@ export async function getProjectionBenefitsByImpact(
   req: Request,
   res: Response
 ) {
-  const {initiativeId, impactId} = req.params;
+  const { stageId, initiativeId, impactId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Projection of benefits: Error',
@@ -623,7 +624,7 @@ export async function getProjectionBenefitsByImpact(
     res.json(
       new ResponseHandler(
         'Full Proposal: Get Projection of benefits by impact area.',
-        {projectionBenefitsByImpact}
+        { projectionBenefitsByImpact }
       )
     );
   } catch (error) {
@@ -639,7 +640,7 @@ export async function getProjectionBenefitsByImpact(
  * @returns { impactStrategies }
  */
 export async function patchImpactStrategies(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   // impact strategies section data
   const {
@@ -661,14 +662,14 @@ export async function patchImpactStrategies(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch Patch Impact Strategies: Error',
@@ -711,21 +712,21 @@ export async function patchImpactStrategies(req: Request, res: Response) {
  * @returns { impactStrategies }
  */
 export async function getImpactStrategies(req: Request, res: Response) {
-  const {initiativeId, impactAreaId} = req.params;
+  const { stageId, initiativeId, impactAreaId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read Impact Stretegies: Error',
@@ -737,7 +738,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const impactStrategies = await fullPposal.requestImpactStrategies(
+    const impactStrategies = await fullPposal.requestImpactStrategiesByIA(
       impactAreaId
     );
 
@@ -753,38 +754,35 @@ export async function getImpactStrategies(req: Request, res: Response) {
 }
 
 /**
- * PATCH Melia and files
+ * PATCH MELIA PLAN and files
  * @param req { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas }
  * @param res {melia}
  * @returns melia
  */
-export async function patchMeliaAndFiles(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+export async function patchMeliaPlan(req: Request, res: Response) {
+  const { initiativeId, ubication } = req.params;
 
-  //melia section data
-  // const {id, melia_plan, active, section, updateFiles, tableA, tableB, tableC} =
-  //   req.body.data ? JSON.parse(req.body.data) : req.body;
-
-  const {melia_plan, tableA, tableB, tableC} = req.body.data
-    ? JSON.parse(req.body.data)
-    : req.body;
+  const { melia_plan } = req.body.data ? JSON.parse(req.body.data) : req.body;
 
   //melia section files
   const files = req['files'];
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
+  let stage;
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+
+    stage = await stageRepo.findOne({
+      where: { description: 'Full Proposal' }
     });
-    // get intiative by stage : proposal
+
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch Patch melia: Error',
@@ -804,6 +802,73 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
       files
     );
 
+    res.json(
+      new ResponseHandler('Full Proposal: Patch melia.', {
+        melia,
+        files
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * PATCH Melia RESULTS FRAMEWORK TABLES A, B AND C
+ * @param req { id, melia_plan, active, section, updateFiles, resultFramework, impactAreas }
+ * @param res {melia}
+ * @returns melia
+ */
+export async function patchMeliaResultsFramework(req: Request, res: Response) {
+  const { initiativeId, ubication } = req.params;
+
+  const { melia_plan, tableA, tableB, tableC } = req.body.data
+    ? JSON.parse(req.body.data)
+    : req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+  let stage;
+
+  try {
+    // get stage
+
+    // stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
+
+    // get initiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
+    // Get initiative with active stage
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, active: 1 }
+    });
+
+    // if not initiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Patch Patch melia: Error',
+        400,
+        `Initiative not found in stage: ${initvStg.stage}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    /**
+     * Validate if the initiative has old information
+     * for MELIA result framework
+     */
+    const updateOldDataMeliaToc = await fullPposal.updateOldDataMeliaToC();
+
+    /**
+     * Upsert MELIA result framework
+     */
     const resultFramework = await fullPposal.upsertResultsFramework(
       tableA,
       tableB,
@@ -812,8 +877,6 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
 
     res.json(
       new ResponseHandler('Full Proposal: Patch melia.', {
-        melia,
-        files,
         resultFramework
       })
     );
@@ -830,21 +893,21 @@ export async function patchMeliaAndFiles(req: Request, res: Response) {
  * @returns meliaData
  */
 export async function getMeliaAndFiles(req: Request, res: Response) {
-  const {initiativeId, sectionName} = req.params;
+  const { stageId, initiativeId, sectionName } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read melia and files: Error',
@@ -858,7 +921,53 @@ export async function getMeliaAndFiles(req: Request, res: Response) {
 
     const melia = await fullPposal.requestMeliaFiles(sectionName);
 
-    res.json(new ResponseHandler('Full Proposal: melia and files.', {melia}));
+    res.json(new ResponseHandler('Full Proposal: melia and files.', { melia }));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET Melia and files data
+ * @param req
+ * @param res {meliaData}
+ * @returns meliaData
+ */
+export async function getMeliaResultsFramework(req: Request, res: Response) {
+  const { initiativeId, sectionName } = req.params;
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // // get stage
+    // const stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
+    // // get initiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, active: 1 }
+    });
+
+    // if not initiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read melia and files: Error',
+        400,
+        `Initiative not found in stage: ${initvStg.stage}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const melia = await fullPposal.requestMeliaFiles(sectionName);
+
+    res.json(new ResponseHandler('Full Proposal: melia and files.', { melia }));
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);
@@ -874,23 +983,26 @@ export async function patchMeliaStudiesActivities(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const meliaStudiesActivitiesData = req.body;
+
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
+
+
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read melia and files: Error',
@@ -901,9 +1013,12 @@ export async function patchMeliaStudiesActivities(
     }
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
+    const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
+
 
     const meliaStudiesActivities =
       await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData);
+
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
@@ -926,7 +1041,7 @@ export async function getMeliaStudiesActivities(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -934,14 +1049,14 @@ export async function getMeliaStudiesActivities(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read melia and files: Error',
@@ -974,10 +1089,10 @@ export async function getMeliaStudiesActivities(
  * @returns managePlanRisk
  */
 export async function patchManagePlanAndFiles(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+  const { stageId, initiativeId, ubication } = req.params;
 
   //melia section data
-  const {id, management_plan, active, section, updateFiles, riskassessment} =
+  const { id, management_plan, active, section, updateFiles, riskassessment } =
     req.body.data ? JSON.parse(req.body.data) : req.body;
 
   //melia section files
@@ -989,13 +1104,13 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch Patch management plan and risk: Error',
@@ -1043,21 +1158,21 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
  * @returns managePlanData
  */
 export async function getManagePlanAndFiles(req: Request, res: Response) {
-  const {initiativeId, sectionName} = req.params;
+  const { stageId, initiativeId, sectionName } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read manage plan risk and files: Error',
@@ -1089,7 +1204,7 @@ export async function getManagePlanAndFiles(req: Request, res: Response) {
  * @returns humanResources
  */
 export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+  const { stageId, initiativeId, ubication } = req.params;
 
   //melia section data
   const {
@@ -1110,13 +1225,13 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch Patch human resources: Error',
@@ -1166,21 +1281,21 @@ export async function patchHumanResourcesAndFiles(req: Request, res: Response) {
  * @returns humanResourcesData
  */
 export async function getHumanResources(req: Request, res: Response) {
-  const {initiativeId, sectionName} = req.params;
+  const { stageId, initiativeId, sectionName } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read human resources and files: Error',
@@ -1214,7 +1329,7 @@ export async function getHumanResources(req: Request, res: Response) {
  * @returns financialResources
  */
 export async function patchFinancialResources(req: Request, res: Response) {
-  const {initiativeId, sectionName} = req.params;
+  const { stageId, initiativeId, sectionName } = req.params;
 
   //financial resources section data
   const fResources = req.body;
@@ -1229,14 +1344,14 @@ export async function patchFinancialResources(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Patch financial resources: Error',
@@ -1267,33 +1382,6 @@ export async function patchFinancialResources(req: Request, res: Response) {
   }
 }
 //     // create new full proposal object
-//     const fullPposal = new ProposalHandler(initvStg.id.toString());
-
-//     const financialResources =
-//       await fullPposal.upsertFinancialResourcesAndFiles(
-//         initiativeId,
-//         ubication,
-//         stage,
-//         id,
-//         detailed_budget,
-//         active,
-//         section,
-//         files,
-//         updateFiles
-//       );
-
-//     res.json(
-//       new ResponseHandler('Full Proposal: Patch financial resources.', {
-//         financialResources,
-//         files
-//       })
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(error.httpCode).json(error);
-//   }
-// }
-
 /**
  * GET Financial Resources
  * @param req
@@ -1301,18 +1389,18 @@ export async function patchFinancialResources(req: Request, res: Response) {
  * @returns financialResourcesData
  */
 export async function getFinancialResources(req: Request, res: Response) {
-  const {initiativeId, sectionName} = req.params;
+  const { stageId, initiativeId, sectionName } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1327,9 +1415,8 @@ export async function getFinancialResources(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const financialResourcesData = await fullPposal.requestFinancialResources(
-      sectionName
-    );
+    const financialResourcesData =
+      await fullPposal.requestFinancialResourcesBySection(sectionName);
 
     res.json(
       new ResponseHandler('Full Proposal:financial resources.', {
@@ -1367,7 +1454,7 @@ export async function patchPolicyComplianceOversight(
   req: Request,
   res: Response
 ) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   //Policy compliance Oversight section data
   const {
@@ -1384,11 +1471,11 @@ export async function patchPolicyComplianceOversight(
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1433,18 +1520,18 @@ export async function getPolicyComplianceOversight(
   req: Request,
   res: Response
 ) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1480,10 +1567,10 @@ export async function getPolicyComplianceOversight(
  * @returns
  */
 export async function patchInnovationPackages(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
 
   //Policy compliance Oversight section data
-  const {id, key_principles, active} = req.body;
+  const { id, key_principles, active } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1491,11 +1578,11 @@ export async function patchInnovationPackages(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1534,18 +1621,18 @@ export async function patchInnovationPackages(req: Request, res: Response) {
  * @returns
  */
 export async function getInnovationPackages(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1580,7 +1667,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
  * @returns tocs
  */
 export async function patchTocs(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { initiativeId } = req.params;
   const toc = req.body;
 
   //Validate stage
@@ -1589,19 +1676,24 @@ export async function patchTocs(req: Request, res: Response) {
 
   try {
     // get stage
-    const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
-    });
-    // get intiative by stage : proposal
+    // const stage = await stageRepo.findOne({
+    //   where: {description: 'Full Proposal'}
+    // });
+    // get initiative by stage : proposal
+    // const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+    //   where: {initiative: initiativeId, stage}
+    // });
+
+    // Get initiative with active stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, active: 1 }
     });
     // if not intitiative by stage, throw error
     if (initvStg == null) {
       throw new BaseError(
         'Read policy compliance oversight: Error',
         400,
-        `Initiative not found in stage: ${stage.description}`,
+        `Initiative not found in stage: ${initvStg.stage}`,
         false
       );
     }
@@ -1628,7 +1720,7 @@ export async function patchTocs(req: Request, res: Response) {
  * @returns tocs
  */
 export async function getTocByInitiative(req: Request, res: Response) {
-  const {initiativeId} = req.params;
+  const { stageId, initiativeId } = req.params;
   const toc = req.body;
 
   //Validate stage
@@ -1638,11 +1730,11 @@ export async function getTocByInitiative(req: Request, res: Response) {
   try {
     // get stage
     const stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: { id: stageId }
     });
-    // get intiative by stage : proposal
+    // get initiative by stage : proposal
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
-      where: {initiative: initiativeId, stage}
+      where: { initiative: initiativeId, stage }
     });
 
     // if not intitiative by stage, throw error
@@ -1657,11 +1749,220 @@ export async function getTocByInitiative(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const fullInitiativeToc = await fullPposal.requestTocByInitiative();
+    const fullInitiativeToc = await fullPposal.requestFullInitiativeToc();
 
     res.json(
       new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
         fullInitiativeToc
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * UPSERT ISDC Responses
+ * @param req
+ * @param res
+ */
+export async function patchISDCResponses(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { stageId, initiativeId } = req.params;
+  const ISDCResponsesData = req.body;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: { id: stageId }
+    });
+    // get initiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, stage }
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Patch ISDC Responses: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const ISDCResponses = await fullPposal.upsertISDCResponses(
+      ISDCResponsesData
+    );
+
+    res.json(
+      new ResponseHandler('Full Proposal ISDC: Responses.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET ISDC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+export async function getISDCResponses(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { stageId, initiativeId } = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: { id: stageId }
+    });
+    // get initiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, stage }
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'ISDC Responses: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const ISDCResponses = await fullPposal.requestISDCResponses();
+
+    res.json(
+      new ResponseHandler('Full Proposal: ISDC Responses.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function getEndofInitiativeOutcome(req: Request, res: Response) {
+  const { stageId, initiativeId } = req.params;
+
+  //Validate stage
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
+
+  try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: { id: stageId }
+    });
+    // get initiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: { initiative: initiativeId, stage }
+    });
+
+    // if not intitiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read policy compliance oversight: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const eoi = await fullPposal.requestEndofInitiativeOutcomes();
+
+    res.json(
+      new ResponseHandler(
+        'Full Proposal:Get End of Initiative Outcome for Initiativa',
+        {
+          eoi
+        }
+      )
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+
+/**
+ * INSERT Initiatives Approval
+ * @param req
+ * @param res
+ */
+export async function postInitiativeApproval(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { user_id, initiativeId, is_approved } = req.body;
+
+  try {
+
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initiativeId.toString());
+
+    const newInitvApproval = await fullPposal.insertInitiativeApproval(
+      user_id,
+      initiativeId,
+      is_approved
+    );
+
+    console.log(newInitvApproval);
+    
+    res.json(
+      new ResponseHandler('Full Proposal: Initiative Approved.', {
+        newInitvApproval
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function patchTracksYears(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const body = req.body;
+  const {initiativeId, stageId} = req.params;
+  try {
+    
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initiativeId.toString());
+
+    const tracksAdded = await fullPposal.upsertTracks(initiativeId,stageId, body);
+
+    console.log(tracksAdded);
+    
+    res.json(
+      new ResponseHandler('Full Proposal: Initiative Approved.', {
+        tracksAdded
       })
     );
   } catch (error) {

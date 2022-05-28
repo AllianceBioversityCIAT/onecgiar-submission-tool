@@ -15,7 +15,7 @@
                 inputTitle="Short name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService.initiative.readonly || !this._dataControlService.isAdmin"
                 [maxWords]="3"
                 ></ibdc-input-field>
             </div>
@@ -25,7 +25,7 @@
                 inputTitle="Initiative name" 
                 [objectItem]="this.body?.generalInformation"  
                 [objectAtributteName]="'name'"
-                [readOnlyVariable]="this._initiativesService?.initiative.readonly"
+                [readOnlyVariable]="this._initiativesService?.initiative.readonly  || !this._dataControlService.isAdmin"
                 [maxWords]="50"
                 ></ibdc-text-area-field>
             </div>
@@ -37,13 +37,13 @@
                         <mat-card>
                             <div class="lead_content_grid">
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Lead name', value:this.body?.generalInformation.first_name||'Not available'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Lead name', value:this.body?.generalInformation.first_name||'Not provided'}"></ibdc-simple-text>
                                 </div>
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not available'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not provided'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon >edit</mat-icon>
+                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                                 
                             </div>
@@ -55,13 +55,13 @@
                         <mat-card>
                             <div class="lead_content_grid">
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Deputy name', value: this.body?.generalInformation.co_first_name||'Not available'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Deputy name', value: this.body?.generalInformation.co_first_name||'Not provided'}"></ibdc-simple-text>
                                 </div>
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not available'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not provided'}"></ibdc-simple-text>
                                 </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon >edit</mat-icon>
+                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                             </div>
                         </mat-card>
@@ -93,7 +93,8 @@
                 <div class="blue_border">
                     <section-sub-title name="Geographic scope summary"></section-sub-title>
                     <div class="alert_container">
-                        <ibdc-alert [options]="{text: 'This information is read-only', type:'info'}"></ibdc-alert>
+                        <ibdc-alert [options]="{text: 'The geographic information that is being presented here is aggregated from the geographic scope entered for each of your work-packages. As a result, if you would like to edit the regions and countries, please go to the work-packages section.', 
+                                                type:'info'}"></ibdc-alert>
                     </div>
                     <div class="local_container">
                         <div class="data_list">
@@ -130,8 +131,8 @@
 
     </form>
 
-    <div class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button (click)="upsertSection()" [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    <div (click)="upsertSection()" class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button  [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
     </div>
 
     <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>

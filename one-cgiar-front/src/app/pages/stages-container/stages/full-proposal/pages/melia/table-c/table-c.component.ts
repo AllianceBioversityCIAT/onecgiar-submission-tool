@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { map } from 'rxjs/operators';
 import { ManageExcelService } from '../../../services/manage-excel.service';
+import { UtilsService } from '../../../../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-table-c',
@@ -12,18 +13,20 @@ export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
   listToSave : any[] = [];
-  htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
+  // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
-    private _manageExcelService:ManageExcelService
+    private _manageExcelService:ManageExcelService,
+    public _utilsService:UtilsService
     ) { }
 
   ngOnInit(): void {
-    this._initiativesService.getMeliaResultFramework(this._initiativesService.initiative.id).pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
+    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
       this.listToSave = resp;
+      console.log(resp)
     })
   }
 
@@ -32,14 +35,27 @@ export class TableCComponent implements OnInit {
   }
 
   convertDataToUseInTable(resp:ResultData[]){
-    console.log(resp)
+    // console.log(resp)
     resp.map(result=>{
-      result.indicators.map((indicator,index)=>{
+      // console.log(result)
+
+      if (!result?.indicators?.length) return this.resultDataList.push(
+        {
+          result_title: result?.result_title,
+          type_name: result?.type_name,
+          wp_acronym: result?.wp_acronym, 
+          rowSpan: 1, 
+          geo_scope: this.compactGeoData(result['geo_scope'])
+        }) ;
+
+      result?.indicators.map((indicator,index)=>{
+        
         if (index == 0) {
           this.resultDataList.push(
             {
               result_title: result?.result_title,
               type_name: result?.type_name, 
+              wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
@@ -72,7 +88,7 @@ export class TableCComponent implements OnInit {
       textResult+= `${item?.country_name}${index+1 == countries.length ? '' : ', '}`
     })
 
-    console.log(geo_scope)
+    // console.log(geo_scope)
     return textResult;
     
   }
@@ -104,21 +120,22 @@ export class TableCComponent implements OnInit {
     this.listToSave.map(result=>{
       result.indicators.map((indicator)=>{
           list.push({
-            result_title: result?.result_title,
-            Result_type	: result?.type_name,
-            geo_scope: this.compactGeoDataToExport(result['geo_scope']),
-            indicator_name: indicator?.name,
-            unit_measurement: indicator?.unit_measurement,
-            data_source: indicator?.data_source,
-            data_collection_method: indicator?.data_collection_method,
-            frequency_data_collection: indicator?.frequency_data_collection,
-            baseline_value: indicator?.baseline_value,
-            baseline_year: indicator?.target_value,
-            target_year: indicator?.target_year
+            Result_type	: result?.type_name || 'Not provided',
+            Work_package:  result?.wp_acronym || 'Not provided',
+            result_title: result?.result_title || 'Not provided',
+            geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
+            indicator_name: indicator?.indicator_name || 'Not provided',
+            unit_measurement: indicator?.unit_measurement || 'Not provided',
+            data_source: indicator?.data_source || 'Not provided',
+            data_collection_method: indicator?.data_collection || 'Not provided',
+            frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
+            baseline_value: indicator?.baseline_value || 'Not provided',
+            baseline_year: indicator?.target_value || 'Not provided',
+            target_year: indicator?.target_year || 'Not provided'
             });
       })
     })
-    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:500},{wpx:100},{wpx:90},{wpx:100},{wpx:200},{wpx:200}])
+    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:100},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
   }
 
 }
@@ -129,6 +146,8 @@ interface ResultData {
   id: number;
   result_type_id: number;
   result_title: string;
+  wp_name:string;
+  wp_acronym:string;
   is_global: number;
   active: number;
   type_name: string;
@@ -137,7 +156,7 @@ interface ResultData {
 
 interface Indicator {
   id: number;
-  name: string;
+  indicator_name: string;
   unit_measurement: string;
   results_id: number;
   baseline_value: string;
@@ -146,7 +165,7 @@ interface Indicator {
   target_year: number;
   active: number;
   data_source: string;
-  data_collection_method: string;
+  data_collection: string;
   frequency_data_collection: string;
   created_at: string;
   updated_at: string;

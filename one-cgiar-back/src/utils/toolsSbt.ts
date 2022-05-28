@@ -16,10 +16,6 @@ export class ToolsSbt {
     let mergeData;
     let savedData;
 
-    // var savedData1 = await repo.findOne({
-    //   where: {initvStgId: initvStgId, global_target_id: data.global_target_id}
-    // });
-
     //Find record in DB with SQL query
     let findOneSql = await this.queryRunner.query(query);
     // Get one record
@@ -36,8 +32,6 @@ export class ToolsSbt {
 
           return mergeData;
         } else {
-          //Return new data
-          //return (data = Object.assign({}, data));
           return data;
         }
       }

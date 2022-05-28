@@ -17,19 +17,17 @@
                 <div *ngFor="let iniItem of this.initiativeTeamData?.initvTeam; let i=index" [hidden]="!iniItem.active">
                     <app-initiative-team-item [initiativeTeamItem]="iniItem" [index]="i" [all]="this.initiativeTeamData?.initvTeam"></app-initiative-team-item>
                 </div>
-    
-                <div class="center_flex addItiativeTeamItem">
-                    <button pButton type="button" label="Add initiative team item" icon="pi pi-plus-circle"  (click)="addInitiativeTeamItem()"></button>
-                </div>
-
+            </div>
+            <div class="center_flex addItiativeTeamItem" *ngIf="!_initiativesService.initiative.readonly">
+                <button pButton type="button" label="Add initiative team item" icon="pi pi-plus-circle"  (click)="addInitiativeTeamItem()"></button>
             </div>
             
         </div>
 
     </form>
 
-    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button (click)="saveSection()"
+    <div (click)="saveSection()" class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button
             [options]="{readOnlyVariable: _initiativesService.initiative.readonly, remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
         </ibdc-save-button>
     </div>

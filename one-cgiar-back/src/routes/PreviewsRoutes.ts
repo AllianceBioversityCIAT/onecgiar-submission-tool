@@ -74,7 +74,7 @@ const router = Router();
  */
 router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
 
-// GET WORK PACKAGES PER INITIATIVE
+// GET WORK PACKAGES PER INITIATIVE WITH ACTIVE STAGE
 /**
  * @api {get} previews/packages/:initiativeId 2. Get Work Packages per Initiative
  * @apiVersion 1.0.2
@@ -126,7 +126,7 @@ router.get('/initiatives/', [checkJwt], initiatives.getInitiatives);
 router.get(
   '/packages/:initiativeId([0-9]+)',
   [checkJwt],
-  stagefull.getWorkPackages
+  previewController.getPreviewWorkPackages
 );
 
 /**

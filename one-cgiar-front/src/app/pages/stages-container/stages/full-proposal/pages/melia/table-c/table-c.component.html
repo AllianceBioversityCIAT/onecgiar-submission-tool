@@ -1,7 +1,15 @@
 <section-title name="Table C" ></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <ibdc-alert [options]="{htmlText:this.htmlText, type:'info'}"></ibdc-alert>
+    <!-- <ibdc-alert [options]="{htmlText:this.htmlText, type:'info'}"></ibdc-alert> -->
+    <div class="alert_container" style="margin: 20px 0 30px 0;">
+        <ibdc-alert [options]="{text: 'The narrative and diagram displayed below is coming from the Theory of Change (ToC) board. If you want to adjust it, please click in the “Edit” button below. It will promp a new window where you will be able to edit your ToC.', 
+                                type:'info'}"></ibdc-alert>
+    </div>
+      
+    <div class="center_flex" style="margin: 10px 0;">
+        <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
+    </div>
 
 
 
@@ -35,6 +43,7 @@
                 <thead>
                     <tr>
                         <th class="t_col_5">Result type</th>
+                        <th class="t_col_5">Work package</th>
                         <th class="t_col_1">Result title</th>
                         <th class="t_col_1">Geographic scope</th>
                         <th class="t_col_2">Indicator name</th>
@@ -53,18 +62,19 @@
                 <tbody>
                     <tr *ngFor="let resultData of resultDataList">
                         <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
-                        <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not available'}}</td>
-                        <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not available'}}</td>
-                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not available'"></td>
-                        <td class="t_col_2">{{resultData?.name || 'Not available'}}</td>
-                        <td class="t_col_3">{{resultData?.unit_measurement  || 'Not available'}}</td>
-                        <td class="t_col_4">{{resultData?.data_source || 'Not available'}}</td>
-                        <td class="t_col_5">{{resultData?.data_collection_method || 'Not available'}}</td>
-                        <td class="t_col_6">{{resultData?.frequency_data_collection || 'Not available'}}</td>
-                        <td class="t_col_7">{{resultData?.baseline_value || 'Not available'}}</td>
-                        <td class="t_col_8">{{resultData?.baseline_year || 'Not available'}}</td>
-                        <td class="t_col_9">{{resultData?.target_value || 'Not available'}}</td>
-                        <td class="t_col_10">{{resultData?.target_year || 'Not available'}}</td>
+                        <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not provided'}}</td>
+                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.wp_acronym || 'Not provided'}}</td>
+                        <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not provided'}}</td>
+                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not provided'"></td>
+                        <td class="t_col_2">{{resultData?.indicator_name || 'Not provided'}}</td>
+                        <td class="t_col_3">{{resultData?.unit_measurement  || 'Not provided'}}</td>
+                        <td class="t_col_4">{{resultData?.data_source || 'Not provided'}}</td>
+                        <td class="t_col_5">{{resultData?.data_collection || 'Not provided'}}</td>
+                        <td class="t_col_6">{{resultData?.frequency_data_collection || 'Not provided'}}</td>
+                        <td class="t_col_7">{{resultData?.baseline_value || 'Not provided'}}</td>
+                        <td class="t_col_8">{{resultData?.baseline_year || 'Not provided'}}</td>
+                        <td class="t_col_9">{{resultData?.target_value || 'Not provided'}}</td>
+                        <td class="t_col_10">{{resultData?.target_year || 'Not provided'}}</td>
                       </tr>
                 </tbody>
     

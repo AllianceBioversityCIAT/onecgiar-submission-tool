@@ -15,7 +15,9 @@
         "Inititatives",
         "Initv",
         "intv",
+        "ISDC",
         "middlewares",
+        "Pposal",
         "satatements",
         "sltd",
         "Statusx",
@@ -24,6 +26,7 @@
         "typeorm",
         "upsert",
         "upserted",
-        "Usrs"
+        "Usrs",
+        "workpackage"
     ]
 }
