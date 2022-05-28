@@ -327,12 +327,21 @@ router.post(
 
 
 /**
- ** POST INITIATIVES APPROVAL
+ ** PATCH TRACKS
  */
 router.patch(
   '/tracks/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.patchTracksYears
+);
+
+/**
+ ** GET TRACKS
+ */
+router.get(
+  '/tracks/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.getTracksYears
 );
 
 export default router;

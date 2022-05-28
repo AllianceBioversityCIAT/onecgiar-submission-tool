@@ -3661,6 +3661,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       for (const track in body) {
         for (const year in body[track]) {
+          console.log(tracks.find(tr => tr.acronym = track));
+          console.log(tracksYears.find(ty => ty.year = year));
           let newValue = {
             id: body[track][year]['id'] ? body[track][year]['id'] : null,
             track_id: tracks.find(tr => tr.acronym = track).id,
@@ -3680,6 +3682,46 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'Upsert Tracks error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+  }
+
+  async getTracks(initiativeId, stageId) {
+    const tracksRepo = await getRepository(entities.Tracks);
+    const tracksYearsRepo = await getRepository(entities.TracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const tracks = await tracksRepo.find();
+      const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
+  
+      let tracksRows = await tracksYearsInitiativesRepo.find({where: {initvStgId:initvStg.id}, relations: ['track','trackYear']});
+      
+      let responseTracks = {};
+
+      for (const track of tracks) {
+        responseTracks[track.acronym] = {}
+        for (const ty of tracksYears) {
+          responseTracks[track.acronym][ty.year] = {}
+        }
+      }
+
+      for (const tr of tracksRows) {
+        responseTracks[tr.track.acronym][tr.trackYear.year] = {value: tr.value, id: tr.id}
+      }
+      return tracksRows;
+
+
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Tracks error',
         400,
         error.message,
         false

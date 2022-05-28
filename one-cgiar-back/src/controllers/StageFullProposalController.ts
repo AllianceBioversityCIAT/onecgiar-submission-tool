@@ -1970,3 +1970,28 @@ export async function patchTracksYears(
     return res.status(error.httpCode).json(error);
   }
 }
+
+export async function getTracksYears(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {initiativeId, stageId} = req.params;
+  try {
+    
+    // create new full proposal object
+    const fullPposal = new ProposalHandler(initiativeId.toString());
+
+    const tracksByInitiative = await fullPposal.getTracks(initiativeId,stageId);
+
+    console.log(tracksByInitiative);
+    
+    res.json(
+      new ResponseHandler('Full Proposal: Initiative Approved.', {
+        tracksByInitiative
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
