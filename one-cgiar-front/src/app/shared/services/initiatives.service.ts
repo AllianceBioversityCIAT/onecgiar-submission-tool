@@ -645,5 +645,9 @@ export class InitiativesService {
     return this.http.post<any>(`${environment.apiUrl}/stages-control/proposal/approve-initiative`, body);
   }
 
+  getYears(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/years`);
+  }
+
 
 }

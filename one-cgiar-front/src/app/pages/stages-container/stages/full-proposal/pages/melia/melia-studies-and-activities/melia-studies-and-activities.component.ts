@@ -45,13 +45,14 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   showTableViewVariable = true;
   meliaStudyTypes = [];
   geographicScopes: FormGroup[] = [];
-
+  years: [];
   constructor(
     public _initiativesService: InitiativesService,
     public _dataControlService: DataControlService,
     private _interactionsService: InteractionsService,
   ) {
     this.getmeliaStudActiByInitId();
+
   }
 
   ngOnInit(): void {
@@ -60,6 +61,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       this.meliaStudyTypes = respMeliaStudyTypes.response.meliaStudyTypes;
       console.log(this.meliaStudyTypes);
     });
+    this._initiativesService.getYears().subscribe( res => {
+      this.years = res.response.years;
+      console.log('Years', this.years);
+    })
   }
 
   getTabIndex(e) {

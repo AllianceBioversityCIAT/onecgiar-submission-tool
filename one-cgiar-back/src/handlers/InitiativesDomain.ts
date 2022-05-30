@@ -438,7 +438,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
     const querySql = `
         SELECT year
         FROM years`;
-    const years = await this.queryRunner.query(querySql);
+    let years = await this.queryRunner.query(querySql);
     return years;
   }
 }
