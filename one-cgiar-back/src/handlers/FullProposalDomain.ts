@@ -3652,6 +3652,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const tracks = await tracksRepo.find();
+      console.log({tracks});
+      
       const tracksYears = await tracksYearsRepo.find();
 
       const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
@@ -3661,12 +3663,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       for (const track in body) {
         for (const year in body[track]) {
-          console.log(tracks.find(tr => tr.acronym = track));
-          console.log(tracksYears.find(ty => ty.year = year));
+          console.log(tracks.find(tr => tr.acronym == track));
+          console.log(tracksYears.find(ty => ty.year == year));
           let newValue = {
             id: body[track][year]['id'] ? body[track][year]['id'] : null,
-            track_id: tracks.find(tr => tr.acronym = track).id,
-            track_year_id: tracksYears.find(ty => ty.year = year).id,
+            track_id: tracks.find(tr => tr.acronym == track).id,
+            track_year_id: tracksYears.find(ty => ty.year == year).id,
             initvStgId: initvStg.id,
             value: body[track][year]['value']
           }
