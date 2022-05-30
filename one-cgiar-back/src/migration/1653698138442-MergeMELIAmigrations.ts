@@ -10,9 +10,10 @@ const studyTypes = [
     {id:7, name: 'Qualitative outcome study'},
     {id:8, name: 'Other MELIA activity'}
 ]
-export class MapTypeMeliaColumnToIds1653682317057 implements MigrationInterface {
+export class MergeMELIAmigrations1653698138442 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query("ALTER TABLE `melia_studies_activities` ADD `other_melia` TEXT DEFAULT NULL");
         await queryRunner.query("ALTER TABLE `melia_studies_activities` ADD `type_melia_id` int after initvStgId");
     
         const meliaRepository = await getRepository(MeliaStudiesActivities);

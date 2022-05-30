@@ -13,10 +13,41 @@
             </div>
 
         </div>
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+        
+    </div>
+
+    <div class="section-container">
+        <div class="row">
+            <div class="col-12">
+                <ibdc-alert [options]="{text: 'The following table summarizes the expected Innovation Packages and Scaling Readiness Tracks. ', 
+                                        type:'info'}"></ibdc-alert>
+            </div>
         </div>
     </div>
     
-    
+    <div class="section-container animate__animated animate__fadeIn">
+        <div class="card-for-preview ibd-shadow-2">
+            <div class="card">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 150px;"></th>
+                            <th *ngFor="let th of configAtribute">{{th.name}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of this.body[0] | keyvalue">
+                            <td>{{this.configIndex[item.key]}}</td>
+                            <td *ngFor="let element of item.value | keyvalue">
+                                <p-inputNumber [(ngModel)]="this.body[0][item.key][element.key].value" [ngModelOptions]="{standalone: true}" [showButtons]="true" [min]="0" [max]="100"></p-inputNumber>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
+        <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    </div>
 </form>
