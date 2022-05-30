@@ -1958,6 +1958,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
+        if(element.id) {
+        
         const newMeliaStudiesActivities = new MeliaStudiesActivities();
 
         newMeliaStudiesActivities.id = element.id ? element.id : null;
@@ -1987,6 +1989,28 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
         regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+        } else {
+          const newMeliaStudy = new MeliaStudiesActivities();
+
+          newMeliaStudy.id = null;
+          newMeliaStudy.initvStgId = initvStg.id;
+          newMeliaStudy.type_melia_id = element.type_melia_id;
+          newMeliaStudy.other_melia = element.other_melia;
+          newMeliaStudy.result_title = element.result_title;
+          newMeliaStudy.anticipated_year_completion =
+            element.anticipated_year_completion;
+          newMeliaStudy.co_delivery = element.co_delivery;
+          newMeliaStudy.management_decisions_learning =
+            element.management_decisions_learning;
+          newMeliaStudy.is_global = element.is_global;
+          newMeliaStudy.active = element.active;
+
+          const newMeliaResponse = await meliaStudiesActivitiesRepo.save(newMeliaStudy);
+          element.countries.map(coun => {coun.meliaStudyId = newMeliaResponse.id});
+          element.regions.map(reg => {reg.meliaStudyId = newMeliaResponse.id});
+          countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+          regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+        }
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
