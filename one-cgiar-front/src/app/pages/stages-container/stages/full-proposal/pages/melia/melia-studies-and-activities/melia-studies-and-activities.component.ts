@@ -77,6 +77,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         id: null,
         type_melia: '',
         type_melia_id: '',
+        other_melia: '',
         result_title: '',
         anticipated_year_completion: '',
         co_delivery: '',
@@ -87,6 +88,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         regions: []
       }
     )
+
+    this.geographicScopes.push(new FormGroup({is_global: new FormControl(this.list[this.list.length - 1].is_global)}));
     console.log(this.list)
   }
 
