@@ -3717,7 +3717,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       for (const tr of tracksRows) {
         responseTracks[tr.track.acronym][tr.trackYear.year] = {value: tr.value, id: tr.id}
       }
-      return tracksRows;
+      return responseTracks;
 
 
     } catch (error) {

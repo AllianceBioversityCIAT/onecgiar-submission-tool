@@ -1961,7 +1961,7 @@ export async function patchTracksYears(
     console.log(tracksAdded);
     
     res.json(
-      new ResponseHandler('Full Proposal: Initiative Approved.', {
+      new ResponseHandler('Full Proposal: Tracks per year.', {
         tracksAdded
       })
     );
@@ -1986,7 +1986,7 @@ export async function getTracksYears(
     console.log(tracksByInitiative);
     
     res.json(
-      new ResponseHandler('Full Proposal: Initiative Approved.', {
+      new ResponseHandler('Full Proposal: Tracks per year', {
         tracksByInitiative
       })
     );
