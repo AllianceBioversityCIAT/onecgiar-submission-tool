@@ -30,10 +30,9 @@ export class TawkToComponent implements OnInit {
   }
 
   initializeTawkIo(){
-    console.log("initializeTawkIo");
-  
+    // console.log("initializeTawkIo");
     if (this.currentUser && this.currentUser.roles[0].id != 3) {
-      console.log("Tawk_API")
+      // console.log("Tawk_API")
       this.script.text = `
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
       (()=>{
