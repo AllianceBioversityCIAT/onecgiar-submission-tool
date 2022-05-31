@@ -29,23 +29,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
         name: 'Year 3',
       }
     ];
-  body = [{
-      LT: {
-        2022: { value: 6, id: 1 },
-        2023: { value: 0, id: 2 },
-        2024: { value: 0, id: 3 }
-      },
-      ST: {
-        2022: { value: 0, id: 4 },
-        2023: { value: 0, id: 5 },
-        2024: { value: 0, id: 6 }
-      },
-      AT: {
-        2022: { value: 0, id: 7 },
-        2023: { value: 0, id: 8 },
-        2024: { value: 0, id: 9 }
-      }
-}];
+  body = [];
   configIndex = {
       "LT":'Light Track',
       "ST":'Standard Track',
@@ -66,6 +50,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   ngOnInit(): void {
     this.getInnovationPackages()
     this.formChanges();
+    this.getTracks();
   }
   getInnovationPackages(){
     this._initiativesService.getInnovationPackages().subscribe(resp=>{
@@ -94,9 +79,22 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
     })
   }
 
+  getTracks(){
+    this._initiativesService.getTracksByInitiativeAndStageId().subscribe(({response}) => {
+      this.body = response;
+      for (const key in this.body['tracksByInitiative']) {
+        for (const year in this.body['tracksByInitiative'][key]) {
+          if(!this.body['tracksByInitiative'][key][year]?.value){
+            this.body['tracksByInitiative'][key][year].value = 0;
+            this.body['tracksByInitiative'][key][year].id = null;
+          }
+        }
+      }
+    })
+  }
+
   updateTracks(){
-    console.log("esto es", this.body);
-    this._initiativesService.patchTracksByInitiativeAndStageId(this.body).subscribe(res => {
+    this._initiativesService.patchTracksByInitiativeAndStageId([this.body['tracksByInitiative']]).subscribe(res => {
       console.log(res);
     });
   }

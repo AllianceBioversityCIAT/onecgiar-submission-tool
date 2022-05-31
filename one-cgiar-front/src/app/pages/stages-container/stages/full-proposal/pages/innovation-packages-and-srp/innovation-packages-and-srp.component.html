@@ -19,7 +19,7 @@
     <div class="section-container">
         <div class="row">
             <div class="col-12">
-                <ibdc-alert [options]="{text: 'The following table summarizes the expected Innovation Packages and Scaling Readiness Tracks. ', 
+                <ibdc-alert [options]="{htmlText: 'The following table summarizes the expected Innovation Packages and Scaling Readiness Tracks. <br>Please fill in the number of tracks that you are expecting to conduct during the 3-year life of your initiative. For more information please visit <a href=https://docs.google.com/document/d/1V3x1yJdTJlXfWx-lGlo2zT6PqSgekwdc/edit>this document.<a>', 
                                         type:'info'}"></ibdc-alert>
             </div>
         </div>
@@ -36,10 +36,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of this.body[0] | keyvalue">
+                        <tr *ngFor="let item of this.body['tracksByInitiative'] | keyvalue">
                             <td>{{this.configIndex[item.key]}}</td>
                             <td *ngFor="let element of item.value | keyvalue">
-                                <p-inputNumber [(ngModel)]="this.body[0][item.key][element.key].value" [ngModelOptions]="{standalone: true}" [showButtons]="true" [min]="0" [max]="100"></p-inputNumber>
+                                <div class="center_flex">
+                                    <p-inputNumber [(ngModel)]="this.body['tracksByInitiative'][item.key][element.key].value" [ngModelOptions]="{standalone: true}" [min]="0" [max]="100"></p-inputNumber>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

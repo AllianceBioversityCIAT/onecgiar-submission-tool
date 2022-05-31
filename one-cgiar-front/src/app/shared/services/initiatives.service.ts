@@ -649,6 +649,10 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
   }
 
+  getTracksByInitiativeAndStageId(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
   
   /*** submitt initiative */
   postApproveInitiative(body){
