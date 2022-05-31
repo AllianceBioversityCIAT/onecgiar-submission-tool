@@ -14,4 +14,5 @@ export interface MeliaStudiesAndActivities {
   active: boolean;
   countries: [];
   regions: [];
+  initiatives: [];
 }

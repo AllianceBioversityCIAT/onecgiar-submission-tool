@@ -52,19 +52,31 @@
                             </ibdc-select-field>
                         </div>
 
-                        <div class="mb-4">
-                            <ibdc-select-field class="field"
-                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
-                                [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
-                                [inputTitle]="attr_list_config[3].name" selectableListAtributteName='name'
-                                selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes" frontendSearchAttribute="name">
-                            </ibdc-select-field>
-                        </div>
-
                         <ibdc-text-area-field [inputTitle]="attr_list_config[4].name" [objectItem]="item"
                         [objectAtributteName]="attr_list_config[4].attribute"
                         [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                         </ibdc-text-area-field>
+
+                        <ibdc-select-multiple [options]="{
+                            required: null,
+                            inputTitle: attr_list_config[3].name,
+                            selectItemName:'name',
+                            selectItemId:'initiativeId',
+                            frontendSearchAttribute:'name',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list:item.initiatives,
+                                selectItemName:'name',
+                                selectItemId:'initiativeId',
+                                idToSave:'id',
+                                labelName:'initiatives'
+                            },
+                            service:{
+                                serviceTS:this._initiativesService,
+                                functionName:'getInitiativesList',
+                                objectName:['response','initiatives']
+                            }
+                           }"></ibdc-select-multiple>
 
                         <div class="col-sm-12">
                             <app-geographic-scope [localForm]="this.geographicScopes[i]"
@@ -81,7 +93,7 @@
     </div>
 
     <div style="margin-top: 20px;" *ngIf="!this._initiativesService.initiative.readonly">
-        <app-add-button name="Add Melia studies and activity" (7click)="addItem()"></app-add-button>
+        <app-add-button name="Add Melia studies and activity" (click)="addItem()"></app-add-button>
     </div>
 
 

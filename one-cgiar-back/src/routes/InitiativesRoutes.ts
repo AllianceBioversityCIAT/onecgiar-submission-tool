@@ -13,6 +13,11 @@ const router = Router();
 router.get('/', [checkJwt], initiatives.getInitiatives);
 
 /**
+ ** GET INITIATIVES ACTIVES
+ */
+router.get('/list', [checkJwt], initiatives.getInitiativesList);
+
+/**
  ** GET INITIATIVES ALL STATUS
  */
 router.get('/all-status', [checkJwt], initiatives.getInitiativesAllStatus);

@@ -68,3 +68,4 @@ export {InitiativesApproval}from './InitiativesApproval';
 export {Tracks}from './Tracks';
 export {TracksYears} from './TracksYears';
 export {InitiativesTracksYears} from './InitiativesTracksYears';
+export {InitiativesByMeliaStudy} from './InitiativesByMeliaStudy';

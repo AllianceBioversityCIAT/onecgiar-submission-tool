@@ -518,6 +518,48 @@ export async function getInitiatives(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
+/**
+ * All Initiatives actives
+ * @param req
+ * @param res
+ */
+export async function getInitiativesList(req: Request, res: Response) {
+  try {
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    // Get active initiatives and detail
+    let initiatives = await initiativeshandler.getInitiativesList();
+
+    if (initiatives.length == 0)
+      res.json(
+        new ResponseHandler('There are no initiatives', {
+          initiatives: []
+        })
+      );
+    else {
+      res.json(
+        new ResponseHandler('Initiatives list', {
+          initiatives
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+}
 
 /**
  * All Initiatives whit all status

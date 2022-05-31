@@ -244,6 +244,16 @@ export class InitiativesService {
   }
 
 
+  // Query to get initiatves list
+  getInitiativesList(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/list`).pipe(map(res => {
+      res.response.initiatives.map(initiatives => {
+        initiatives.initiativeId = initiatives.id;
+        delete initiatives.id;
+      })
+      return res;
+    }));
+  }
   // Query to get all the initiatives
   getAllInitiatives(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {

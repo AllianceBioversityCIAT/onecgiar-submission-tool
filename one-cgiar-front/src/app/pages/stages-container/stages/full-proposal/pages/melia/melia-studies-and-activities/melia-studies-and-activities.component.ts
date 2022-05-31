@@ -78,7 +78,6 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   addItem() {
     this.list.push(
       {
-
         id: null,
         type_melia: null,
         type_melia_id: null,
@@ -90,7 +89,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         active: true,
         is_global: null,
         countries: [],
-        regions: []
+        regions: [],
+        initiatives: []
       }
     )
     this.geographicScopes.push(new FormGroup({ is_global: new FormControl(this.list[this.list.length - 1].is_global) }));
@@ -129,6 +129,17 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       console.log(this.geographicScopes);
 
 
+      //MAP INITIATIVES
+      this._initiativesService.getInitiativesList().subscribe(initiatives => {
+        this.list.map((melia: any) => {
+          melia.initiatives.map(mapInit => {
+            initiatives.response.initiatives.forEach(initItem => {
+              if (initItem.initiativeId == mapInit.initiativeId) mapInit.name = initItem.name;
+            })
+          })
+          // this._dataControlService.showinitiatives = true;
+        })
+      });
       //MAP REGIONS
       this._initiativesService.getCLARISARegions('').subscribe(regions => {
         this.list.map((melia: any) => {
@@ -172,6 +183,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     for (const melia of this.list) {
       melia.regions.map((reg: any) => reg.meliaStudyId = Number(melia.id));
       melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
+      melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
       console.log(resp);

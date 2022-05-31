@@ -1950,6 +1950,7 @@ export class ProposalHandler extends InitiativeStageHandler {
     let meliaStudiesActivitiesArray = [];
     let regionsMeliaStd = [];
     let countriesMeliaStd = [];
+    let initiativesMeliaStd = [];
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -1958,37 +1959,38 @@ export class ProposalHandler extends InitiativeStageHandler {
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
-        if(element.id) {
-        
-        const newMeliaStudiesActivities = new MeliaStudiesActivities();
+        if (element.id) {
 
-        newMeliaStudiesActivities.id = element.id ? element.id : null;
-        newMeliaStudiesActivities.initvStgId = initvStg.id;
-        newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
-        newMeliaStudiesActivities.other_melia = element.other_melia;
-        newMeliaStudiesActivities.result_title = element.result_title;
-        newMeliaStudiesActivities.anticipated_year_completion =
-          element.anticipated_year_completion;
-        newMeliaStudiesActivities.co_delivery = element.co_delivery;
-        newMeliaStudiesActivities.management_decisions_learning =
-          element.management_decisions_learning;
-        newMeliaStudiesActivities.is_global = element.is_global;
-        newMeliaStudiesActivities.active = element.active;
+          const newMeliaStudiesActivities = new MeliaStudiesActivities();
 
-        meliaStudiesActivitiesArray.push(
-          toolsSbt.mergeData(
-            meliaStudiesActivitiesRepo,
-            ` 
+          newMeliaStudiesActivities.id = element.id ? element.id : null;
+          newMeliaStudiesActivities.initvStgId = initvStg.id;
+          newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
+          newMeliaStudiesActivities.other_melia = element.other_melia;
+          newMeliaStudiesActivities.result_title = element.result_title;
+          newMeliaStudiesActivities.anticipated_year_completion =
+            element.anticipated_year_completion;
+          newMeliaStudiesActivities.co_delivery = element.co_delivery;
+          newMeliaStudiesActivities.management_decisions_learning =
+            element.management_decisions_learning;
+          newMeliaStudiesActivities.is_global = element.is_global;
+          newMeliaStudiesActivities.active = element.active;
+
+          meliaStudiesActivitiesArray.push(
+            toolsSbt.mergeData(
+              meliaStudiesActivitiesRepo,
+              ` 
              SELECT *
                FROM melia_studies_activities
               WHERE id = ${newMeliaStudiesActivities.id}
                 and initvStgId =${newMeliaStudiesActivities.initvStgId}`,
-            newMeliaStudiesActivities
-          )
-        );
+              newMeliaStudiesActivities
+            )
+          );
 
-        countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
-        regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+          countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+          regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
         } else {
           const newMeliaStudy = new MeliaStudiesActivities();
 
@@ -2005,17 +2007,25 @@ export class ProposalHandler extends InitiativeStageHandler {
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
 
+          //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(newMeliaStudy);
-          element.countries.map(coun => {coun.meliaStudyId = newMeliaResponse.id});
-          element.regions.map(reg => {reg.meliaStudyId = newMeliaResponse.id});
+          element.countries.map(coun => { coun.meliaStudyId = newMeliaResponse.id });
+          element.regions.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
+          element.initiatives.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
+
           countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
           regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
         }
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
         regionsMeliaStd,
         countriesMeliaStd
+      );
+
+      const upsertedInitiativesByMelia = await this.upsertInitiativesByMeliaStudies(
+        initiativesMeliaStd
       );
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
@@ -2073,17 +2083,36 @@ export class ProposalHandler extends InitiativeStageHandler {
          AND active = 1
       GROUP BY id,region_id`);
 
+
+
       if (meliaStudiesActivities == undefined || meliaStudiesActivities.length == 0) {
         meliaStudiesActivities = [];
       } else {
-        // Map Initiatives
+        // get Initiatives by melias
+        const meliaIds = meliaStudiesActivities.map(mel => mel.id);
+        console.log({meliaIds});
+        
+        let initiatives = await this.queryRunner.query(`
+      SELECT id,initiativeId,meliaStudyId
+        FROM initiatives_by_melia_study
+       WHERE meliaStudyId in (${meliaIds})
+         AND active = 1
+      GROUP BY id`,);
+
         meliaStudiesActivities.map((melia) => {
+
+          // Map regions
           melia['regions'] = regions.filter((reg) => {
             return reg.meliaStudyId === melia.id;
           });
-
+          // Map countries
           melia['countries'] = countries.filter((cou) => {
             return cou.meliaStudyId === melia.id;
+          });
+
+          //Map initiatives
+          melia['initiatives'] = initiatives.filter((init) => {
+            return init.meliaStudyId === melia.id;
           });
         });
       }
@@ -3676,12 +3705,12 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const tracks = await tracksRepo.find();
-      console.log({tracks});
-      
+      console.log({ tracks });
+
       const tracksYears = await tracksYearsRepo.find();
 
-      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
-  
+      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
+
 
       let tracksRows = [];
 
@@ -3700,7 +3729,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      const response =  await tracksYearsInitiativesRepo.save(tracksRows);
+      const response = await tracksYearsInitiativesRepo.save(tracksRows);
       return tracksRows;
 
 
@@ -3725,10 +3754,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       const tracks = await tracksRepo.find();
       const tracksYears = await tracksYearsRepo.find();
 
-      const initvStg = await initvStageRepo.findOne({where: {stage: stageId, initiative: initiativeId}});
-  
-      let tracksRows = await tracksYearsInitiativesRepo.find({where: {initvStgId:initvStg.id}, relations: ['track','trackYear']});
-      
+      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
+
+      let tracksRows = await tracksYearsInitiativesRepo.find({ where: { initvStgId: initvStg.id }, relations: ['track', 'trackYear'] });
+
       let responseTracks = {};
 
       for (const track of tracks) {
@@ -3739,7 +3768,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       }
 
       for (const tr of tracksRows) {
-        responseTracks[tr.track.acronym][tr.trackYear.year] = {value: tr.value, id: tr.id}
+        responseTracks[tr.track.acronym][tr.trackYear.year] = { value: tr.value, id: tr.id }
       }
       return responseTracks;
 

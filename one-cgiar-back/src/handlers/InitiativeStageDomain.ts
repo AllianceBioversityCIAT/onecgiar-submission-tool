@@ -695,6 +695,31 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
+     /**
+   *
+   * @param initiatives?
+   * @returns { initiativesByMeliaStudy }
+   */
+
+  async upsertInitiativesByMeliaStudies(initiatives?) {
+
+    const intvByMeliaStudyRepository = getRepository(entities.InitiativesByMeliaStudy)
+    try {
+
+      const initiativesByMelia = intvByMeliaStudyRepository.save(initiatives);
+      
+      return {initiativesByMelia};
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Initiatives By Melia Studies - Update',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
   /******* REPLICATION STEPS *********/
 
   async forwardGeoScope(forwardStage: Stages | number) {
