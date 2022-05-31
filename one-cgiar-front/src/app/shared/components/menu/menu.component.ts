@@ -473,9 +473,9 @@ export class MenuComponent implements OnInit {
   isValidRol(){
     setTimeout(() => {
       [1,2,3].forEach(el => {
-        const data = this.initiativesSvc?.initiative;
         if(el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
       });
+      if(this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
     },1000);
      
     
