@@ -30,7 +30,7 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     },
     {
       attribute: 'response',
-      name: "ClimBeR responses",
+      name: "Initiative response",
     },
     {
       attribute: 'updated_response',
