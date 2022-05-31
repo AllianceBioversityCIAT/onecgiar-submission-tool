@@ -62,7 +62,7 @@
           
         </div>
 
-        <div style="padding: 10px 15px; margin-top: 10px;" *ngIf="this.btnSubmitIsEnable && !this._dataControlService.isdcFeedbackValidation?.validation" ngClass="animate__animated animate__bounceIn ng-star-inserted">
+        <div style="padding: 10px 15px; margin-top: 10px;" *ngIf="this.btnSubmitIsEnable && !this._dataControlService.isdcFeedbackValidation?.validation && this.initiativesSvc?.initiative.status != 'Approved'" ngClass="animate__animated animate__bounceIn ng-star-inserted">
             <p-card [style]="{'background-color': '#ee3838',
                                 'color': '#FFFFFF',
                                 'border-radius': '10px'}">
