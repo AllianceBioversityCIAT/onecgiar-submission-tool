@@ -531,6 +531,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
                                     FROM isdc_responses 
                                   WHERE initvStgId = ${this.initvStgId_}) as num ) = 0
                                             THEN TRUE
+                                    WHEN
+                                    (SELECT ISNULL(SUM(1))
+                                  FROM isdc_responses 
+                                  WHERE initvStgId = ${this.initvStgId_}) = 1
+                                            THEN TRUE
                                               ELSE FALSE
                                               END AS validation
                                               FROM initiatives_by_stages ini
