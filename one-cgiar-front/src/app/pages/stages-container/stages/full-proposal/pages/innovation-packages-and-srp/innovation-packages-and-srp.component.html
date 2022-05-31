@@ -38,10 +38,13 @@
                     <tbody>
                         <tr *ngFor="let item of this.body['tracksByInitiative'] | keyvalue; let i = index">
                             <td>{{this.configIndex[i == 0? 'LT': i == 1?'ST':'AT']}}</td>
-                            <td *ngFor="let element of item.value | keyvalue">
-                                <div class="center_flex">
+                            <td *ngFor="let element of item.value | keyvalue" style="text-align: center;">
+                                <div class="center_flex" *ngIf="!this._initiativesService.initiative.readonly">
                                     <p-inputNumber [(ngModel)]="this.body['tracksByInitiative'][i == 0? 'LT': i == 1?'ST':'AT'][element.key].value" [ngModelOptions]="{standalone: true}" [min]="0"></p-inputNumber>
                                 </div>
+                                <span *ngIf="this._initiativesService.initiative.readonly">
+                                    {{this.body['tracksByInitiative'][i == 0? 'LT': i == 1?'ST':'AT'][element.key].value | number}}
+                                </span>
                             </td>
                         </tr>
                     </tbody>

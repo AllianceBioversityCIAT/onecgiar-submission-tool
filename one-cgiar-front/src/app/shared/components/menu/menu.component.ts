@@ -473,10 +473,9 @@ export class MenuComponent implements OnInit {
   isValidRol(){
     setTimeout(() => {
       [1,2,3].forEach(el => {
-        const data = this.initiativesSvc?.initiative;
-        console.dir(data)
         if(el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
       });
+      if(this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
     },1000);
      
     
@@ -489,7 +488,7 @@ export class MenuComponent implements OnInit {
         text:`The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> initiative is about to be approved. No changes can be made once approved.`,
         icon:'warning',
         confirmButtonColor:'#4caf50',
-        confirmText:'Yes, approval it!'
+        confirmText:'Yes, approve it!'
       }
       this._interactionsService.customConfirmationModal(configAlert,(decision) => {
         if(!decision) return;

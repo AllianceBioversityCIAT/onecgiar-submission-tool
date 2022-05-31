@@ -47,11 +47,11 @@ export class NavbarComponent implements OnInit {
     // Set route and user for identify users online
     // /initiatives/1/stages/full-proposal/general-information
     //  setTimeout(() => {
-      console.log(this.router.url)
+      // console.log(this.router.url)
     //  }, 1000);
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
-        console.log(event.url.split('/')[2])
+        // console.log(event.url.split('/')[2])
         if (!(event.url.split('/')[2])) return;
         this.pusherService.start(event.url, this.user.id, event.url.split('/')[2]);
         this._pusherService.continueEditing = false;

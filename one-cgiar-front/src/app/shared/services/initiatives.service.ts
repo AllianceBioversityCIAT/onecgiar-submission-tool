@@ -281,7 +281,6 @@ export class InitiativesService {
   }
 
   getSummary(): Observable<any> {
-    console.log(this.initiative.id)
     return this.http.get<any>(`${environment.apiUrl}/initiatives/${this.initiative.id}/summary/${this.initiative.stageId}`);
   }
 

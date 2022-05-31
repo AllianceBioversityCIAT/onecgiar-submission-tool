@@ -54,7 +54,7 @@ export class StagesMenuComponent implements OnInit {
   sectionsList = [];
 
   ngOnInit(): void {
-    console.log(this._authService.lsUserRoles.name)
+    // console.log(this._authService.lsUserRoles.name)
     this.sectionsList = this.router.routerState.snapshot.url.substring(this.router.routerState.snapshot.url.indexOf('stages/')).split('/');
     let testi = 1;
     this.router.events.subscribe((event: NavigationEvent) => {
@@ -90,7 +90,7 @@ export class StagesMenuComponent implements OnInit {
 
   currentStageAux = '';
   validateCurrentStageChange(stageName){
-    console.log(this.initiativesSvc.initiative.exactStageName)
+    // console.log(this.initiativesSvc.initiative.exactStageName)
     let currentRoute = this.router.url;
     if (this.currentStageAux != stageName && this.currentStageAux != '') {
           this.router.navigateByUrl(`/initiatives/${this.initiativesSvc.initiative.id}/stages/${this.initiativesSvc.initiative.exactStageName}`).then(()=>{
@@ -187,14 +187,14 @@ export class StagesMenuComponent implements OnInit {
     /**
      * Validate by roles
      */
-    console.log(initiative?.status)
+    // console.log(initiative?.status)
      this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
       //  console.log(resp)
        this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
        this.initiativesSvc.initiative.userRoleId = resp?.response?.roles[0]?.roleId;
       //  console.log(this.initiativesSvc.initiative.userRoleName)
       let validations = ()=>{
-        console.log(resp?.response?.roles[0]?.roleId)
+        // console.log(resp?.response?.roles[0]?.roleId)
         if (this.user?.roles[0].id === 1 && initiative?.status == 'Editing') return false
         if (resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined && initiative?.status == 'Editing') return false
 
@@ -203,8 +203,8 @@ export class StagesMenuComponent implements OnInit {
  
       }
       this.initiativesSvc.initiative.readonly = validations();
-      console.log(this.initiativesSvc.initiative.readonly)
-      console.log(resp?.response?.roles[0]?.roleId)
+      // console.log(this.initiativesSvc.initiative.readonly)
+      // console.log(resp?.response?.roles[0]?.roleId)
    
     })
 
@@ -217,12 +217,12 @@ export class StagesMenuComponent implements OnInit {
   }
 
   validateAllSections() {
-    console.log('stageId ',this.initiativesSvc.initiative.stageId)
-    console.log('id ',this.initiativesSvc.initiative.id)
+    // console.log('stageId ',this.initiativesSvc.initiative.stageId)
+    // console.log('id ',this.initiativesSvc.initiative.id)
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
       if (this.initiativesSvc.initiative.stageId == 4) this._dataControlService.isdcFeedbackValidation = resp?.response.isdcFeedBack;
-       console.log(resp?.response.isdcFeedBack)
-      console.log(resp)
+      //  console.log(resp?.response.isdcFeedBack)
+      // console.log(resp)
       if (!resp?.response) return;
       Object.keys(resp?.response).map(key => {
         let stageId = this.initiativesSvc.initiative.stageId;
