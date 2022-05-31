@@ -62,6 +62,14 @@
           
         </div>
 
+        <div style="padding: 10px 15px; margin-top: 10px;" *ngIf="this.btnSubmitIsEnable && !this._dataControlService.isdcFeedbackValidation?.validation" ngClass="animate__animated animate__bounceIn ng-star-inserted">
+            <p-card [style]="{'background-color': '#ee3838',
+                                'color': '#FFFFFF',
+                                'border-radius': '10px'}">
+                This button will be avaliable once the section <strong>"ISDC Feedback responses"</strong> is complete (<i>see the top of the left menu</i>)           
+            </p-card>
+        </div>
+
     </div>
 
 
