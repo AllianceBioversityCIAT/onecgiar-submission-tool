@@ -2060,14 +2060,17 @@ export class ProposalHandler extends InitiativeStageHandler {
       msa.other_melia,
       msa.result_title,
       msa.anticipated_year_completion,
-      msa.co_delivery,
+      IF(group_concat(i.name) is null,msa.co_delivery,concat('<ul class="pl-3">',group_concat(concat('<li>',i.name, '</li>') separator ''), '</ul>')) as co_delivery,
       msa.management_decisions_learning,
       msa.is_global,
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
+      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id
+      left join initiatives i on i.id = ibms.initiativeId 
       WHERE msa.initvStgId = ${initvStg.id}
-      and msa.active = 1`);
+      and msa.active = 1
+      group by id`);
 
       let countries = await this.queryRunner.query(`SELECT id,country_id,initvStgId,meliaStudyId
       FROM countries_by_melia_study 
