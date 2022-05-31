@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { InitiativesService } from './initiatives.service';
+import { DataControlService } from './data-control.service';
 
 declare const Pusher: any;
 
@@ -19,7 +20,8 @@ export class PusherService {
     private http: HttpClient,
     private router:Router,
     private _authService:AuthService,
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    private _dataControlService:DataControlService
     ) {
   }
 
@@ -34,22 +36,33 @@ export class PusherService {
 
     // if (this.firstUser) return true;
     if (!Object.keys(members).length) return true;
-    // console.log(members)
+    console.log(members)
 
     let membersList:any = []
 
     Object.keys(members).map(item=>{
       const date = new Date(members[item]?.today);
+      let initiativeRoles:any[] = [];
+      initiativeRoles = members[item]?.initiativeRoles;
 
-      membersList.push(
-        {
-          userId:item, 
-          date:members[item]?.initiativeRoles?.length ?  (members[item]?.initiativeRoles[0]?.name !== "Guest" ? date : undefined) : undefined,
-          role: members[item]?.initiativeRoles?.length ? members[item]?.initiativeRoles[0]?.name : null,
-          name:members[item]?.name,
-          nameinitials: this.textToinitials(members[item]?.name)
-        }
-      );
+      let generalRoles:any[] = [];
+      generalRoles = members[item]?.roles;
+
+        // TODO: Tener ene cuenta estado de la iniciativa
+
+      console.log(members)
+
+        membersList.push(
+          {
+            userId:item, 
+            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : undefined) :  generalRoles?.length ? (generalRoles[0]?.name !== "Guest" ? date : undefined) : undefined,
+            role: initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name: null,
+            name: members[item]?.name,
+            nameinitials: this.textToinitials(members[item]?.name)
+          }
+        );
+     
+
     })
 
     const sortByDate = arr => {
@@ -61,7 +74,7 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
-    // console.log(this.membersList)
+    console.log(this.membersList)
     this.firstUser = membersList[0]?.userId == myID;
     // console.log(this.firstUser +' - '+this.secondUser)
     if (!this.firstUser)this.secondUser = true;

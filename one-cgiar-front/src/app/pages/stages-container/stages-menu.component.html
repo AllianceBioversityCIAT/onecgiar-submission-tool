@@ -44,8 +44,7 @@
                         </div>
                         <div class="user" [ngClass]="{'firstUser': !i && item.role !='Guest' && item.role}" *ngFor="let item of this._pusherService.membersList; let i=index">
                             <div class="index">{{i+1}}</div>
-                            <div class="name"><strong class="nameinitials">{{item['nameinitials']}}</strong><strong class="fullName">{{item['name']}}</strong>&nbsp; <span *ngIf="item['role']">{{' - '+item['role']}}</span>&nbsp;<i *ngIf="!i && item.role !='Guest' && item.role" class="material-icons">edit</i></div>
-                         
+                            <div class="name"><strong class="nameinitials">{{item['nameinitials']}}</strong><strong class="fullName">{{item['name']}}</strong>&nbsp; <span *ngIf="item['role']">{{' - '+item['role']}}</span>&nbsp;<i *ngIf="!i && item.role !='Guest' && item.role" class="material-icons">edit</i></div>                    
                         </div>
                     </div>
 
