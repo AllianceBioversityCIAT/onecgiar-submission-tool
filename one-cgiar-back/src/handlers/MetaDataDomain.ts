@@ -661,17 +661,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.description='melia'
     AND subsec.description = 'melia-studies-and-activities';`;
 
-      var validationResultFramework = await this.queryRunner.query(
-        validateResultFrmwkSQL
-      );
+      // var validationResultFramework = await this.queryRunner.query(
+      //   validateResultFrmwkSQL
+      // );
       var validationMeliaPlan = await this.queryRunner.query(
         validateMeliaPlanSQL
       );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
 
-      validationResultFramework[0].validation = parseInt(
-        validationResultFramework[0].validation
-      );
+      // validationResultFramework[0].validation = parseInt(
+      //   validationResultFramework[0].validation
+      // );
       validationMeliaPlan[0].validation = parseInt(
         validationMeliaPlan[0].validation
       );
@@ -681,9 +681,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       validationMelia.map((me) => {
         me['subSections'] = [
-          validationResultFramework.find((rf) => {
-            return (rf.sectionId = me.sectionId);
-          }),
+          // validationResultFramework.find((rf) => {
+          //   return (rf.sectionId = me.sectionId);
+          // }),
 
           validationMeliaPlan.find((mep) => {
             return (mep.sectionId = me.sectionId);
