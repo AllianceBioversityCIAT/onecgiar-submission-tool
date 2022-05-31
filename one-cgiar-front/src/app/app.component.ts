@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from '../environments/environment';
-import { NgxHotjarService } from 'ngx-hotjar';
+// import { NgxHotjarService } from 'ngx-hotjar';
 
 @Component({
   selector: 'app-root',
@@ -18,12 +18,12 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private utilsSvc: UtilsService, 
     public router: Router,
-    public hjService:NgxHotjarService
+    // public hjService:NgxHotjarService
     ) {}
 
   ngOnInit(): void {
     // console.log("get route");
-    this.hjService.virtualPageView('/test/example')
+    // this.hjService.virtualPageView('/test/example')
 
     this.isDevModeToShowTag = environment.production;
     this.utilsSvc.sidebarOpened$

@@ -27,7 +27,7 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { InitiativeCreatorModule } from './pages/stages-container/stages/shared/components/initiative-creator/initiative-creator.module';
 
 //? Others
-import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
+// import { NgxHotjarRouterModule, NgxHotjarModule } from 'ngx-hotjar';
 import { environment } from '../environments/environment';
 import { CurrencyPipe } from '@angular/common';
 import { LoginModule } from './pages/login/login.module';
@@ -63,8 +63,8 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
     FormsModule,
     SweetAlert2Module.forRoot(),
     QuillModule.forRoot(),
-    NgxHotjarModule.forRoot(environment.hotjar),
-    NgxHotjarRouterModule,
+    // NgxHotjarModule.forRoot(environment.hotjar),
+    // NgxHotjarRouterModule,
     MaterialModule,
     MatTableModule,
     MatSortModule,
