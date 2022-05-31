@@ -72,6 +72,13 @@ export class NavbarComponent implements OnInit {
 
   }
 
+  getCurrentRole(){
+    let initRole = this._initiativesService.initiative.userRoleName;
+    let generalRole = this.authSvc.lsUserRoles.name;
+    let role = initRole ? initRole : ( this.authSvc.lsUserRoles.id == 1 ? this.authSvc.lsUserRoles.name : '')
+    return  role
+  }
+
 
 
   onExit(): void {
