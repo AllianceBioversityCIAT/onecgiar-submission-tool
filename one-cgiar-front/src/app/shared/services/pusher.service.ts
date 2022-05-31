@@ -46,7 +46,7 @@ export class PusherService {
       initiativeRoles = members[item]?.initiativeRoles;
 
       let generalRoles:any[] = [];
-      generalRoles = members[item]?.roles;
+      generalRoles = members[item]?.roles; 
 
         // TODO: Tener ene cuenta estado de la iniciativa
 
@@ -55,7 +55,7 @@ export class PusherService {
         membersList.push(
           {
             userId:item, 
-            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : undefined) :  generalRoles?.length ? (generalRoles[0]?.name == "Admin" ? date : undefined) : undefined,
+            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : new Date("3000-05-31T20:40:34.081Z")) :  generalRoles?.length ? (generalRoles[0]?.name == "Admin" ? date :  new Date("3000-05-31T20:40:34.081Z")) : new Date("3000-05-31T20:40:34.081Z"),
             role: initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name == "Admin" ? generalRoles[0]?.name:'Guest': 'Guest',
             name: members[item]?.name,
             nameinitials: this.textToinitials(members[item]?.name)
