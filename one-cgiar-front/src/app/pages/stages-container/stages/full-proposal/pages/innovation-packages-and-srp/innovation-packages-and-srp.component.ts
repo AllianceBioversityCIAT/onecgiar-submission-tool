@@ -29,7 +29,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
         name: 'Year 3',
       }
     ];
-  body = [];
+  body = {};
   configIndex = {
       "LT":'Light Track',
       "ST":'Standard Track',
@@ -54,7 +54,6 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   }
   getInnovationPackages(){
     this._initiativesService.getInnovationPackages().subscribe(resp=>{
-      console.log(resp.response.innovationPackagesData);
       if (resp.response.innovationPackagesData) {
         this.secionForm.controls['key_principles'].setValue(resp.response.innovationPackagesData.key_principles);
         this.secionForm.controls['id'].setValue(resp.response.innovationPackagesData.id);
@@ -94,8 +93,8 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   }
 
   updateTracks(){
-    this._initiativesService.patchTracksByInitiativeAndStageId([this.body['tracksByInitiative']]).subscribe(res => {
-      console.log(res);
+    this._initiativesService.patchTracksByInitiativeAndStageId(this.body['tracksByInitiative']).subscribe(res => {
+      /** */
     });
   }
 
