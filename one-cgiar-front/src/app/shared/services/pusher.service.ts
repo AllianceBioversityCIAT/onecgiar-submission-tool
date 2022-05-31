@@ -55,8 +55,8 @@ export class PusherService {
         membersList.push(
           {
             userId:item, 
-            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : undefined) :  generalRoles?.length ? (generalRoles[0]?.name !== "Guest" ? date : undefined) : undefined,
-            role: initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name: null,
+            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : undefined) :  generalRoles?.length ? (generalRoles[0]?.name == "Admin" ? date : undefined) : undefined,
+            role: initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name == "Admin" ? generalRoles[0]?.name:'Guest': 'Guest',
             name: members[item]?.name,
             nameinitials: this.textToinitials(members[item]?.name)
           }

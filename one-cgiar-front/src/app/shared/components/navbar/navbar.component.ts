@@ -54,6 +54,7 @@ export class NavbarComponent implements OnInit {
         // console.log(event.url.split('/')[2])
         if (!(event.url.split('/')[2])) return;
         this.pusherService.start(event.url, this.user.id, event.url.split('/')[2]);
+        this.pusherService.membersList = [];
         this._pusherService.continueEditing = false;
         this._pusherService.firstUser = false;
         this._pusherService.secondUser = null;

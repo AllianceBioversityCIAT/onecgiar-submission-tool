@@ -1,9 +1,9 @@
 
-<div class="elements_container">
+<div class="elements_container animate__animated animate__fadeIn">
     <!-- <div class="platform_backgorund"></div> -->
    
         <div class="left_menu" #menu>
-            <app-menu *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
+            <app-menu class="animate__animated animate__fadeIn" *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
             <!-- <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
                 <span class="open_menu_icon material-icons">
                     menu
@@ -42,7 +42,7 @@
                         <div class="description">
                             <strong>{{this._pusherService.presenceChannel?.members.count}}</strong> user(s) online on this section
                         </div>
-                        <div class="user" [ngClass]="{'firstUser': !i && item.role !='Guest' && item.role}" *ngFor="let item of this._pusherService.membersList; let i=index">
+                        <div class="user animate__animated  animate__bounceInLeft" [ngClass]="{'firstUser': !i && item.role !='Guest' && item.role}" *ngFor="let item of this._pusherService.membersList; let i=index">
                             <div class="index">{{i+1}}</div>
                             <div class="name"><strong class="nameinitials">{{item['nameinitials']}}</strong><strong class="fullName">{{item['name']}}</strong>&nbsp; <span *ngIf="item['role']">{{' - '+item['role']}}</span>&nbsp;<i *ngIf="!i && item.role !='Guest' && item.role" class="material-icons">edit</i></div>                    
                         </div>
