@@ -19,9 +19,7 @@
                 tableTitle="{{this._initiativesService.initiative.official_code + ': ' + this._initiativesService.initiative.name}}">
             </app-compact-information-table-view>
 
-            <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">
-                No
-                data</h1>
+                <app-text-not-data *ngIf="!this.list?.length && this._initiativesService.initiative.readonly" [text]="'No data'"></app-text-not-data>
 
             <div class="items animate__animated animate__fadeIn" *ngIf="!showTableViewVariable">
                 <div class="item" *ngFor="let item of list; let i=index">
