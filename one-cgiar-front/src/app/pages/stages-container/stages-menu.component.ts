@@ -190,6 +190,7 @@ export class StagesMenuComponent implements OnInit {
     // console.log(initiative?.status)
      this.initiativesSvc.getRolefromInitiativeById(this.initiativesSvc.initiative.id).subscribe(resp => {
       //  console.log(resp)
+      console.log(resp?.response?.roles[0]?.name)
        this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
        this.initiativesSvc.initiative.userRoleId = resp?.response?.roles[0]?.roleId;
       //  console.log(this.initiativesSvc.initiative.userRoleName)

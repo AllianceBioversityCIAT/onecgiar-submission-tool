@@ -36,7 +36,7 @@ export class PusherService {
 
     // if (this.firstUser) return true;
     if (!Object.keys(members).length) return true;
-    console.log(members)
+    // console.log(members)
 
     let membersList:any = []
 
@@ -50,7 +50,7 @@ export class PusherService {
 
         // TODO: Tener ene cuenta estado de la iniciativa
 
-      console.log(members)
+      // console.log(members)
 
         membersList.push(
           {
@@ -74,7 +74,7 @@ export class PusherService {
 
     sortByDate(membersList);
     this.membersList = membersList;
-    console.log(this.membersList)
+    // console.log(this.membersList)
     this.firstUser = membersList[0]?.userId == myID;
     // console.log(this.firstUser +' - '+this.secondUser)
     if (!this.firstUser)this.secondUser = true;
@@ -88,7 +88,13 @@ export class PusherService {
 
     }
     // console.log(this.firstUser +' -- '+this.secondUser)
-    return membersList[0]?.userId == myID;
+    // console.log(this._initiativesService.initiative.userRoleName)
+    // console.log(" ")
+    // console.log(!!this._initiativesService.initiative.userRoleName)
+    // console.log(this._authService.lsUserRoles.name)
+    // console.log('--')
+    // console.log(!this._initiativesService.initiative.userRoleName && this._authService.lsUserRoles.name == "Guest")
+    return membersList[0]?.userId == myID || (!this._initiativesService.initiative.userRoleName && !this._authService.lsUserRoles.name) || (!this._initiativesService.initiative.userRoleName && this._authService.lsUserRoles.name == "Guest");
   }
 
   textToinitials(text){

@@ -12,7 +12,8 @@
         </div>
         <!-- [ngStyle]="{'overflow-y': !this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing?'hidden':'scroll'}" -->
         <div class="right_container {{this._pusherService.validaeFirstUserToEdit()}}" style="overflow-y: scroll;">
-            <!-- <div class="no-edit-container" *ngIf="!this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing">
+            
+            <div class="no-edit-container" *ngIf="!this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing">
                 <div class="alert  animate__animated  animate__tada">
                     <div class="icon"><i class="material-icons">lock</i></div>
                     <div class="description animate__animated animate__delay-2s animate__heartBeat">
@@ -21,7 +22,7 @@
                     <br>
                     <button pButton type="button" label="Edit" (click)="this._pusherService.continueEditing = true"></button>
                 </div>
-            </div> -->
+            </div>
 
             <div class="capsule-header">
 
