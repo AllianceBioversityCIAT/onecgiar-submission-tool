@@ -48,6 +48,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Innovation Packages and Scaling Readiness Plan')
     this.getInnovationPackages()
     this.formChanges();
     this.getTracks();

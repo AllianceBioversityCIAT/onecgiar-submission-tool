@@ -18,6 +18,7 @@ export class TableBComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Table B')
     this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
       this.tableBData = resp;
     })
