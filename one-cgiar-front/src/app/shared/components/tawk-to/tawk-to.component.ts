@@ -47,13 +47,16 @@ export class TawkToComponent implements OnInit {
       this._renderer.appendChild(document.querySelector('.Tawk_API_container'), this.script);
 
       setTimeout(() => {
-        window['Tawk_API'].onLoad = () => {
-          window['Tawk_API']?.setAttributes({
-            'name': this.getUserInfo.name,
-            'email': this.getUserInfo.email,
-            // 'hash'  : 'hash value'
-          }, (error) => { console.log(error) });
+        if (window['Tawk_API']) {
+          window['Tawk_API'].onLoad = () => {
+            window['Tawk_API']?.setAttributes({
+              'name': this.getUserInfo.name,
+              'email': this.getUserInfo.email,
+              // 'hash'  : 'hash value'
+            }, (error) => { console.log(error) });
+          }
         }
+
       }, 500);
 
     }

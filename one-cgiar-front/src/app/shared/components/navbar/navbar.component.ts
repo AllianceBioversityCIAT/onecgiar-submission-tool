@@ -83,7 +83,7 @@ export class NavbarComponent implements OnInit {
 
 
   onExit(): void {
-    window['Tawk_API'].minimize();
+    if (window['Tawk_API']) window['Tawk_API'].minimize();
     this.authSvc.logout();
     this.cleanTWKCookies();
     // document.querySelector('.Tawk_API_container').innerHTML = "";
