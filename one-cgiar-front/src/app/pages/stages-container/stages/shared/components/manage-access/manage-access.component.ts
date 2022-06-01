@@ -26,7 +26,7 @@ export class ManageAccessComponent implements OnInit {
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
-
+    private _initiativesService:InitiativesService
   ) { }
 
   ngOnInit(): void {
@@ -113,6 +113,24 @@ export class ManageAccessComponent implements OnInit {
   assignRolesOrUpdate(){
     
     console.log(this.selectedUsers)
+    let usersToUpdate = [];
+
+    this.selectedUsers.map(user=>{
+      // console.log(user)
+      let {userId, roleId, active} = user
+      let body = {
+        active,
+        userId,
+        roleId: roleId ? roleId:5
+      }
+      console.log(body)
+
+      this._initiativesService.assignUserToInitiative(body,this._initiativesService.initiative.id).subscribe(resp=>{
+        console.log(resp);
+      });
+
+    })
+
   }
 
   firstTab(){

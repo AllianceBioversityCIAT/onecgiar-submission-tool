@@ -1,5 +1,5 @@
 <div class="user-card {{this.user.invalid === true ? 'invalid' : 'valid'}}">
-    <app-button-edit-or-delete  type="delete" [confirmDeleteModal]="true"></app-button-edit-or-delete>
+    <app-button-edit-or-delete  type="delete" (action)="removeUser(this.user)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
     <div class="header {{this.user.invalid === true ? 'header-invalid' : 'header-valid'}}">{{checkRoleId()}}</div>
     <div class="card_container {{this._maVariablesService.orderBox ? 'card_container_box' : 'card_container_list' }}">
         <div class="user_personal_info">
