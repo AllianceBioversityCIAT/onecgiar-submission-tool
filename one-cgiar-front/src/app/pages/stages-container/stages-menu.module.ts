@@ -14,9 +14,10 @@ import { MenuModule } from '../../shared/components/menu/menu.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
 import { MaterialModule } from '../../material.module';
+import { InitiativeStatusInformationComponent } from './stages/components/initiative-status-information/initiative-status-information.component';
 
 @NgModule({
-  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent],
+  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, InitiativeStatusInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
