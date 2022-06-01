@@ -24,6 +24,7 @@ export class ResearchGovernanceComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Research governance');
     this.getPolicyCompliance();
   }
 

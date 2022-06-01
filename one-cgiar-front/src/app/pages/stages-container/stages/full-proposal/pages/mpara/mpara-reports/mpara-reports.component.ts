@@ -44,7 +44,7 @@ export class MparaReportsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    this._initiativesService.setTitle('Risk assessment preview');
     this._initiativesService.getPreviewRiskAssessment(this._initiativesService.initiative.id,3).subscribe(resp=>{
       console.log(resp.response?.previewRiskAssessment?.managePlan?.riskassessment);
       if (!resp.response?.previewRiskAssessment?.managePlan?.riskassessment) return;

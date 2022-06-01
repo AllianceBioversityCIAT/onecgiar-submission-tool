@@ -38,7 +38,7 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getManagePlan();
+    this._initiativesService.setTitle('Risk assessment');
     this.getRisksList();
     this.getRisksTheme();
   }

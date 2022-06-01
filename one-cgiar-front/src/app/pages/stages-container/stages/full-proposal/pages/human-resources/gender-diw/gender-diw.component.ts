@@ -33,6 +33,7 @@ export class GenderDiwComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Gender, diversity and inclusion in the workplace');
     this.getHumanResources();
     this.formChanges();
   }

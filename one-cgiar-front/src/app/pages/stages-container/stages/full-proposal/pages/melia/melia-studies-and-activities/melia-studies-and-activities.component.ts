@@ -56,6 +56,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Melia studies and activities');
     this._initiativesService.getMeliaStudyTypes().subscribe(respMeliaStudyTypes => {
 
       this.meliaStudyTypes = respMeliaStudyTypes.response.meliaStudyTypes;
