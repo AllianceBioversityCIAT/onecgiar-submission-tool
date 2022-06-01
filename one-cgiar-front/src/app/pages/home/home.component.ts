@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
         // })
         this.showTable = true;
         
-      },err=>{console.log(err);},
+      },err=>{console.log(err);this.spinnerService.hide();},
       ()=>{this.spinnerService.hide();});
 
   }

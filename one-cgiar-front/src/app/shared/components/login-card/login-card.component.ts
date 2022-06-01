@@ -46,12 +46,10 @@ export class LoginCardComponent implements OnInit {
   }
 
   jwtExpirationLogin(){
+    // console.log(this._dataControlService.currentRequestMethod)
     if (!this.modeJwtExpired) return;
     // console.log("emit");
     this._dataControlService.jwtExpirationSubscription$.emit(false);
-    console.log(this._dataControlService.currentRequestMethod);
-    // console.log('GET');
-    // console.log(this._dataControlService.currentRequestMethod === 'GET');
     if (!this._dataControlService.currentRequestMethod) window.location.reload(); //console.log("reload");
     this._dataControlService.currentRequestMethod = null;
     // window.location.reload();

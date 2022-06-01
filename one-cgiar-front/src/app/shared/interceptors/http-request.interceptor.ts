@@ -39,7 +39,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   excludeLoginService(request:HttpRequest<any>){
 
     if (request.url.search('/api/auth/login') >= 1 || request.url.search('/api/meta/validations/menu/') >= 1 || request.url.search(/\/api\/meta\/menu\/\d*/gi) >= 1) return;
-    this._dataControlService.currentRequestMethod = request.method === 'POST' || request.method === 'PATCH' ? request.method : null;
+    this._dataControlService.currentRequestMethod = request.method === 'POST' || request.method === 'PATCH' ? request.method : this._dataControlService.currentRequestMethod;
   }
 
   setHeadersSubmission(request:HttpRequest<any>){

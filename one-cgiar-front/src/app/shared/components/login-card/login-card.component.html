@@ -14,7 +14,6 @@
 
       <div class="card-body">
         <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <!-- <h1>{{this._dataControlService.currentRequestMethod}}</h1> -->
           <mat-form-field class="full-width-input">
             <input text="text" formControlName="email" matInput placeholder="Email" required />
             <mat-error *ngIf="loginForm.get('email').hasError('email')">
