@@ -62,11 +62,14 @@
           
         </div>
 
-        <div style="padding: 10px 15px; margin-top: 10px;" *ngIf="this.btnSubmitIsEnable && !this._dataControlService.isdcFeedbackValidation?.validation && this.initiativesSvc?.initiative.status != 'Approved'" ngClass="animate__animated animate__bounceIn ng-star-inserted">
-            <p-card [style]="{'background-color': '#ee3838',
+        <div style="padding: 5px 10px;" *ngIf="this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved'" ngClass="animate__animated animate__bounceIn ng-star-inserted">
+            <p-card [style]="{'background-color': 'unset',
                                 'color': '#FFFFFF',
-                                'border-radius': '10px'}">
-                This button will be avaliable once the section <strong>"ISDC Feedback responses"</strong> is complete (<i>see the top of the left menu</i>)           
+                                'border-radius': '10px',
+                                'box-shadow':'unset',
+                                'text-align':'center'}">
+                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation">This button will be avaliable once the section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete (<i>see the top of the left menu</i>)</p>            
+                <p *ngIf="this._dataControlService.isdcFeedbackValidation?.validation">The section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete. Now you can approve the initiative</p>            
             </p-card>
         </div>
 
