@@ -316,5 +316,32 @@ router.get(
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.getEndofInitiativeOutcome
 );
+/**
+ ** POST INITIATIVES APPROVAL
+ */
+router.post(
+  '/approve-initiative',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.postInitiativeApproval
+);
+
+
+/**
+ ** PATCH TRACKS
+ */
+router.patch(
+  '/tracks/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.patchTracksYears
+);
+
+/**
+ ** GET TRACKS
+ */
+router.get(
+  '/tracks/:stageId([0-9]+)/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.getTracksYears
+);
 
 export default router;

@@ -8,12 +8,15 @@
 
         <div class="navbar-title" routerLink="/home" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Initiatives</div>
         <div class="navbar-title" routerLink="/bi" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">BI</div>
+        <!-- <div class="navbar-title">Users online {{ this.pusherService.presenceChannel?.members.count}}</div> -->
     </div>
     <div class="navbar-opt">
+        
         <div class="user-information">
             <i class="material-icons">account_circle</i>
             <div class="navbar-name">{{name}}</div>
-            <div class="navbar-role ibdc_bg_secondary_color">{{role?.toUpperCase()}}</div>
+            <div *ngIf="!this._initiativesService.initiative.userRoleName" style="padding-right: 30px;"></div>
+            <div class="navbar-role ibdc_bg_secondary_color">{{getCurrentRole() || 'Guest'}}</div>
         </div>
         <div class="navbar-logout" (click)="onExit()">
             <div class="text">Logout</div>

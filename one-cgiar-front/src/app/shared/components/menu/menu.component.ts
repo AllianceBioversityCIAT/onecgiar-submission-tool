@@ -39,6 +39,7 @@ export class MenuComponent implements OnInit {
   statuses: any[];
   statusTextObj = {};
   currentUser;
+  btnSubmitIsEnable:boolean = false;
 
   // stageUrl;
   constructor(
@@ -83,6 +84,7 @@ export class MenuComponent implements OnInit {
       this._dataControlService.menuChange$.emit();
     });
 
+    this.isValidRol();
 
   }
 
@@ -380,7 +382,7 @@ export class MenuComponent implements OnInit {
 
         this._dataControlService.validateMenu$.emit();
       }
-      console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
+      // console.log("%c menu: ",  'color: #00ccff',this._dataControlService.userMenu);
     });
   }
 
@@ -466,5 +468,41 @@ export class MenuComponent implements OnInit {
     stageName = stageName.toLowerCase().split(' ').join('_');
     subMenu = subMenu.toLowerCase().split(' ').join('_');
     return this.subMenusFormValidation[stageName][subMenu];
+  }
+
+  isValidRol(){
+    setTimeout(() => {
+      [1,2,3].forEach(el => {
+        if(el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
+      });
+      if(this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
+    },1000);
+     
+    
+  }
+
+  submitBtn(){
+    if(this._dataControlService.isdcFeedbackValidation?.validation){
+      const configAlert = {
+        title:'',
+        text:`The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> initiative is about to be approved. No changes can be made once approved.`,
+        icon:'warning',
+        confirmButtonColor:'#4caf50',
+        confirmText:'Yes, approve it!'
+      }
+      this._interactionsService.customConfirmationModal(configAlert,(decision) => {
+        if(!decision) return;
+        const body = {
+          "user_id": this.auth.userValue.id,
+          "initiativeId": this.initiativesSvc.initiative.id,
+          "is_approved": true
+        };
+        this.initiativesSvc.postApproveInitiative(body).subscribe(res => {
+          this.initiativesSvc.initiative.readonly = true;
+          this.initiativesSvc.initiative.status = 'Approved';
+        });
+        this._interactionsService.simpleCustomConfirmModal({type:'success', title:'Success', text:'The initiative was approved correctly', confirmButtonText:'Ok'});
+      })
+    }
   }
 }

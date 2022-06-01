@@ -32,7 +32,7 @@ export class AppErrorHandler implements ErrorHandler {
                 message = errorService.getServerMessage(error);
                 stackTrace = errorService.getServerStack(error);
             }
-            notifier.showError(message);
+            //notifier.showError(message);
         } else {
             // Client Error
             console.log('client err', error)

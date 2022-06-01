@@ -521,6 +521,36 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
+ async validationISDCFeedback() {
+   try{
+    let validationISDCFeedbackSQL = `SELECT sec.id as sectionId,sec.description,
+                                      CASE
+                                  WHEN 
+                                      (SELECT  SUM(num) - count(num)     
+                                  FROM (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(updated_response,'<(\/?p)>',' '),'<([^>]+)>','') IS NULL, 0,1) as num
+                                    FROM isdc_responses 
+                                  WHERE initvStgId = ${this.initvStgId_}) as num ) = 0
+                                            THEN TRUE
+                                    WHEN
+                                    (SELECT ISNULL(SUM(1))
+                                  FROM isdc_responses 
+                                  WHERE initvStgId = ${this.initvStgId_}) = 1
+                                            THEN TRUE
+                                              ELSE FALSE
+                                              END AS validation
+                                              FROM initiatives_by_stages ini
+                                              JOIN sections_meta sec
+                                              WHERE ini.id = ${this.initvStgId_}
+                                                AND sec.stageId= ini.stageId
+                                                AND sec.description='isdc-feedback-responses';`
+    var validationISDCFeedback = await this.queryRunner.query(validationISDCFeedbackSQL);
+    validationISDCFeedback[0].validation = parseInt(validationISDCFeedback[0].validation);
+    return validationISDCFeedback[0];
+   }catch(error){
+    throw new BaseError('Get validations ISDC Feedback', 400, error.message, false);
+   }
+ }
+
   async validationMelia() {
     try {
       // Validate Sections
@@ -636,17 +666,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.description='melia'
     AND subsec.description = 'melia-studies-and-activities';`;
 
-      var validationResultFramework = await this.queryRunner.query(
-        validateResultFrmwkSQL
-      );
+      // var validationResultFramework = await this.queryRunner.query(
+      //   validateResultFrmwkSQL
+      // );
       var validationMeliaPlan = await this.queryRunner.query(
         validateMeliaPlanSQL
       );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
 
-      validationResultFramework[0].validation = parseInt(
-        validationResultFramework[0].validation
-      );
+      // validationResultFramework[0].validation = parseInt(
+      //   validationResultFramework[0].validation
+      // );
       validationMeliaPlan[0].validation = parseInt(
         validationMeliaPlan[0].validation
       );
@@ -656,9 +686,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       validationMelia.map((me) => {
         me['subSections'] = [
-          validationResultFramework.find((rf) => {
-            return (rf.sectionId = me.sectionId);
-          }),
+          // validationResultFramework.find((rf) => {
+          //   return (rf.sectionId = me.sectionId);
+          // }),
 
           validationMeliaPlan.find((mep) => {
             return (mep.sectionId = me.sectionId);

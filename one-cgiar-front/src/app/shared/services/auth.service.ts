@@ -47,18 +47,18 @@ export class AuthService {
   logout(): void {
     // localStorage.removeItem('user');
     console.log("logout")
-    this.logOutTawtkTo();
+    // this.logOutTawtkTo();
     localStorage.clear()
     this.user.next(null);
     this.router.navigate(['/']);
   }
 
-  logoutWithoutNavigate(): void {
-    // localStorage.removeItem('user');
-    this.logOutTawtkTo();
-    localStorage.clear()
-    this.user.next(null);
-  }
+  // logoutWithoutNavigate(): void {
+  //   // localStorage.removeItem('user');
+  //   this.logOutTawtkTo();
+  //   localStorage.clear()
+  //   this.user.next(null);
+  // }
 
   private checkToken(): void {
     const user = JSON.parse(localStorage.getItem('user')) || null;

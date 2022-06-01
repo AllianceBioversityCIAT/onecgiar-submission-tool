@@ -45,6 +45,18 @@ export class InitiativeHandler extends InitiativeStageHandler {
     }
   }
 
+  /** Get existing initiatives without stage */
+  async getInitiativesList() {
+    let allInitiatives;
+
+    try {
+      allInitiatives = await this.queryRunner.query(`SELECT id, name, official_code, acronym FROM initiatives`);
+
+      return allInitiatives;
+    } catch (error) {
+      throw new BaseError('Get initiatives list', 400, error.message, false);
+    }
+  }
   /** Get all initiatives for main table */
   async getAllInitiatives() {
     let allInitiatives,
@@ -432,5 +444,13 @@ export class InitiativeHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
     }
+  }
+
+  async requestYears() {
+    const querySql = `
+        SELECT year
+        FROM years`;
+    let years = await this.queryRunner.query(querySql);
+    return years;
   }
 }

@@ -45,8 +45,8 @@ export class PcWorkPackageComponent implements OnInit {
       this.getWpById(params['id']);
     });
 
-    this._dataControlService.showCountries = true;
-    this._dataControlService.showRegions = true;
+    // this._dataControlService.showCountries = true;
+    // this._dataControlService.showRegions = true;
     // this.getWpById();
 
   }

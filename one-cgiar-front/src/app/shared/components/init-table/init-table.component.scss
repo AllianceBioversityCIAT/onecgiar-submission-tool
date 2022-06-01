@@ -28,7 +28,7 @@
 }
 
 .table-container {
-  margin: 12px 0px 100px 0px;
+  margin: 12px 0px 200px 0px;
   padding: 20px 80px;
 }
 .chip_stage{
@@ -127,8 +127,7 @@ th {
     border-radius: 30px;
   }
 
-  .with_scroll{
-    max-height: calc(80vh - 50px); 
+  .with_scroll{ 
     border-radius: 10px;
     border: 2px solid white;
     overflow: auto;

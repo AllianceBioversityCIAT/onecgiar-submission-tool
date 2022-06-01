@@ -60,7 +60,7 @@ export class InteractionsService {
   customConfirmationModal(messageObj, callback) {
     Swal.fire({
       title: messageObj?.title ? messageObj.title : 'Are you sure?',
-      text: messageObj?.text ? messageObj.text : "You won't be able to revert this!",
+      html: messageObj?.text ? messageObj.text : "You won't be able to revert this!",
       icon: messageObj?.icon ? messageObj.icon : 'warning',
       showCancelButton: messageObj?.cancelButton ? messageObj.cancelButton : true,
       confirmButtonColor:  messageObj?.confirmButtonColor ? messageObj.confirmButtonColor:'#eb4444',

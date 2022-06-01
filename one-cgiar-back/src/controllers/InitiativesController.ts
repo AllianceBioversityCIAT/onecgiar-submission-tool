@@ -518,6 +518,48 @@ export async function getInitiatives(req: Request, res: Response) {
     return res.status(error.httpCode).json(error);
   }
 }
+/**
+ * All Initiatives actives
+ * @param req
+ * @param res
+ */
+export async function getInitiativesList(req: Request, res: Response) {
+  try {
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    // Get active initiatives and detail
+    let initiatives = await initiativeshandler.getInitiativesList();
+
+    if (initiatives.length == 0)
+      res.json(
+        new ResponseHandler('There are no initiatives', {
+          initiatives: []
+        })
+      );
+    else {
+      res.json(
+        new ResponseHandler('Initiatives list', {
+          initiatives
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new APIError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        true,
+        error.message
+      );
+    }
+    return res.status(error.httpCode).json(error);
+  }
+}
 
 /**
  * All Initiatives whit all status
@@ -660,9 +702,9 @@ export const getUserRoleByInitiative = async (req: Request, res: Response) => {
             initiatives_by_users initvUsr
         LEFT JOIN users users ON users.id = initvUsr.userId
         LEFT JOIN roles role ON role.id = initvUsr.roleId
-        WHERE initvUsr.initiativeId = :initiativeId
+        WHERE initvUsr.initiativeId = ${initiativeId}
         AND initvUsr.active = TRUE
-        AND initvUsr.userId = :userId
+        AND initvUsr.userId = ${userId}
     `;
 
   let roles;
@@ -1885,7 +1927,6 @@ function getRepoConstStage(tableName: string) {
  * @param res
  * @returns meliaStudyTypes
  */
-
 export const getMeliaStudyTypes = async (req: Request, res: Response) => {
   try {
     //Get MELIA Study Types from submission
@@ -1896,6 +1937,29 @@ export const getMeliaStudyTypes = async (req: Request, res: Response) => {
     let meliaStudyTypes = await initiativeshandler.requestMeliaStudyTypes();
 
     res.json(new ResponseHandler('MELIA Study Types', {meliaStudyTypes}));
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns Years
+ */
+
+export const getYears = async (req: Request, res: Response) => {
+  try {
+    //Get Years from submission
+
+    // create new Meta Data object
+    const initiativeshandler = new InitiativeHandler();
+
+    let years = await initiativeshandler.requestYears();
+
+    res.json(new ResponseHandler('Years', {years}));
   } catch (error) {
     console.log(error);
     return res.status(error.httpCode).json(error);

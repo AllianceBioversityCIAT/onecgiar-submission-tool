@@ -4,7 +4,9 @@ import {
   login,
   validateCGUser,
   generateTocToken,
-  validateToCToken
+  validateToCToken,
+  pusherAuth,
+  pusherUpdate
 } from '../controllers/AuthController';
 import {checkJwt} from '../middlewares/jwt';
 
@@ -24,5 +26,11 @@ router.post('/toc/token', [checkJwt], generateTocToken);
 
 //Management ToC Token
 router.post('/toc', validateToCToken);
+
+//Authentication Pusher
+router.post('/pusherauth/:initiativeId([0-9]+)/:userId', pusherAuth);
+
+//Authentication Pusher
+router.post('/pusher/update', pusherUpdate);
 
 export default router;

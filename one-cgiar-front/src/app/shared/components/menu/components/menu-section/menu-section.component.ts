@@ -22,6 +22,7 @@ export class MenuSectionComponent implements OnInit {
   @Input() haveContent = false;
   @Input() collapse:boolean = true;
   @Input() fieldsCompleted:boolean = false;
+  @Input() sectionId: number = null;
   constructor(
     public router: Router,
     public _utilsService:UtilsService

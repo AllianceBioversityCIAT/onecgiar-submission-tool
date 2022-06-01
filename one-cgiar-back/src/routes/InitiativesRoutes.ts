@@ -13,6 +13,11 @@ const router = Router();
 router.get('/', [checkJwt], initiatives.getInitiatives);
 
 /**
+ ** GET INITIATIVES ACTIVES
+ */
+router.get('/list', [checkJwt], initiatives.getInitiativesList);
+
+/**
  ** GET INITIATIVES ALL STATUS
  */
 router.get('/all-status', [checkJwt], initiatives.getInitiativesAllStatus);
@@ -284,6 +289,9 @@ router.get('/projected-benefits', [checkJwt], initiatives.getProjectedBenefits);
 
 //get Melia Study Types
 router.get('/melia/study-types', [checkJwt], initiatives.getMeliaStudyTypes);
+
+//get Years
+router.get('/years', [checkJwt], initiatives.getYears);
 
 /**
  *

@@ -59,3 +59,40 @@
 .expanded{
     background-color: var(--ibdc-primary-color);
 }
+
+.isdc_feedback_section.active_section{
+    position: relative;
+    padding-left: 20px !important;
+    overflow: hidden;
+    &::after{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 10px;
+        background-color: var( --ibdc-secondary-color);
+    }
+}
+
+.isdc_feedback_section{
+    background-color: #3b7ee2;
+    &:hover{
+        background-color: #2065cc !important; 
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    }
+    /*display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    .name{
+        font-weight: 700;
+    }
+
+    i{
+
+    }*/
+
+}

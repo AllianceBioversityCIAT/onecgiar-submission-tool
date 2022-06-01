@@ -1,0 +1,15 @@
+<div [ngSwitch]="this._initiativesService.initiative.status">
+
+    <div *ngSwitchCase="'Approved'" class="approved">
+        Initiative <strong>{{this._initiativesService.initiative.name}}</strong> approved
+    </div>
+
+    <div *ngSwitchCase="false">
+
+    </div>
+
+    <div *ngSwitchDefault>
+
+    </div>
+
+</div>

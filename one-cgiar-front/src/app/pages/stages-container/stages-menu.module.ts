@@ -17,9 +17,11 @@ import { MaterialModule } from '../../material.module';
 import { MaUserCardComponent } from './stages/shared/components/manage-access/components/ma-user-card/ma-user-card.component';
 import { MaUserCardListComponent } from './stages/shared/components/manage-access/components/ma-user-card-list/ma-user-card-list.component';
 import { ButtonEditOrDeleteModule } from './stages/shared/components/button-edit-or-delete/button-edit-or-delete.module';
+import { InitiativeStatusInformationComponent } from './stages/components/initiative-status-information/initiative-status-information.component';
+
 
 @NgModule({
-  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, MaUserCardComponent, MaUserCardListComponent],
+  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, MaUserCardComponent, MaUserCardListComponent, InitiativeStatusInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,

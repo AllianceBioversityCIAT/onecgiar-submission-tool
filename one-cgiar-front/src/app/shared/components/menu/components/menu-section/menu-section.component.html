@@ -3,6 +3,7 @@
 
     <a 
     [attr.href]="this.haveContent ? null : this.customRouterLink" 
+    [ngClass]="{'isdc_feedback_section': sectionId == 30}"
     class="header section_title {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }} {{ !this.collapse && this.haveContent || this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'expanded':''}}" 
     (click)="this.haveContent?this.collapse = !this.collapse : this._utilsService.navigate(this.customRouterLink)" [routerLink]="this.haveContent ? null : this.customRouterLink">
         <div class="title">

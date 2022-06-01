@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MeasurableObjectivesRoutingModule } from './measurable-objectives-routing.module';
 import { MeasurableObjectivesComponent } from './measurable-objectives.component';
-// import { IbdAngularComponentsModule } from '../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module';
+// import { IbdAngularComponentsModule } from '../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/public-api';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';

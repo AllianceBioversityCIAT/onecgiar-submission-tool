@@ -24,7 +24,9 @@ export class InitiativesService {
     name: null,
     users: [],
     status: null,
-    submission: {}
+    submission: {},
+    userRoleId: null,
+    userRoleName: null
   }
 
   actionAreas: [];
@@ -242,6 +244,16 @@ export class InitiativesService {
   }
 
 
+  // Query to get initiatves list
+  getInitiativesList(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/list`).pipe(map(res => {
+      res.response.initiatives.map(initiatives => {
+        initiatives.initiativeId = initiatives.id;
+        delete initiatives.id;
+      })
+      return res;
+    }));
+  }
   // Query to get all the initiatives
   getAllInitiatives(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
@@ -269,7 +281,6 @@ export class InitiativesService {
   }
 
   getSummary(): Observable<any> {
-    console.log(this.initiative.id)
     return this.http.get<any>(`${environment.apiUrl}/initiatives/${this.initiative.id}/summary/${this.initiative.stageId}`);
   }
 
@@ -633,8 +644,23 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
   }
 
+  patchTracksByInitiativeAndStageId(body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
+  }
+
+  getTracksByInitiativeAndStageId(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
   
   /*** submitt initiative */
+  postApproveInitiative(body){
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/proposal/approve-initiative`, body);
+  }
+
+  getYears(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/years`);
+  }
 
 
 }

@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import {getRepository, In, Not} from 'typeorm';
+import { getRepository, In, Not } from 'typeorm';
 import * as entities from '../entity';
-import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
-import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import {ToolsSbt} from '../utils/toolsSbt';
-import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
-import {InitiativeStageHandler} from './InitiativeStageDomain';
+import { MeliaStudiesActivities } from '../entity/MeliaStudiesActivities';
+import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
+import { ToolsSbt } from '../utils/toolsSbt';
+import { BaseError } from './BaseError';
+import { InitiativeHandler } from './InitiativesDomain';
+import { InitiativeStageHandler } from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -123,9 +123,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${
-                   initvStg.id ? initvStg.id : initvStg[0].id
-                 }
+                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -151,9 +150,8 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${
-                    initvStg.id ? initvStg.id : initvStg[0].id
-                  }
+                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
+          }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -215,7 +213,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                   and work_package_id = ${id}
                 `;
 
-      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
+      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -392,7 +390,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || {name: null};
+      ) || { name: null };
 
       // if null, create object
       if (generalInformationId == null) {
@@ -759,7 +757,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedPjectionBenefits, upsertedDimensions};
+      return { upsertedPjectionBenefits, upsertedDimensions };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -957,7 +955,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedImpactStrategies, upsertedPartners};
+      return { upsertedImpactStrategies, upsertedPartners };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1182,7 +1180,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedMelia, upsertedFile};
+      return { upsertedMelia, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1309,7 +1307,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
       let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return {upsertedTableA, upsertedTableB, upsertedTableC};
+      return { upsertedTableA, upsertedTableB, upsertedTableC };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1552,7 +1550,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      return {upsertedOutcomesIndicators};
+      return { upsertedOutcomesIndicators };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1918,14 +1916,14 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = {regions: reg, countries: cou};
+        res['geo_scope'] = { regions: reg, countries: cou };
       });
 
-      const tableC = {results: results};
+      const tableC = { results: results };
 
       return {
         meliaPlan: meliaPlan[0],
-        resultFramework: {tableA, tableB, tableC}
+        resultFramework: { tableA, tableB, tableC }
       };
     } catch (error) {
       console.log(error);
@@ -1950,7 +1948,9 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
-
+    let regionsMeliaStd = [];
+    let countriesMeliaStd = [];
+    let initiativesMeliaStd = [];
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -1959,33 +1959,74 @@ export class ProposalHandler extends InitiativeStageHandler {
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
 
-        const newMeliaStudiesActivities = new MeliaStudiesActivities();
+        if (element.id) {
 
-        newMeliaStudiesActivities.id = element.id ? element.id : null;
-        newMeliaStudiesActivities.initvStgId = initvStg.id;
-        newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
-        newMeliaStudiesActivities.other_melia = element.other_melia;
-        newMeliaStudiesActivities.result_title = element.result_title;
-        newMeliaStudiesActivities.anticipated_year_completion =
-          element.anticipated_year_completion;
-        newMeliaStudiesActivities.co_delivery = element.co_delivery;
-        newMeliaStudiesActivities.management_decisions_learning =
-          element.management_decisions_learning;
-        newMeliaStudiesActivities.active = element.active;
+          const newMeliaStudiesActivities = new MeliaStudiesActivities();
 
-        meliaStudiesActivitiesArray.push(
-          toolsSbt.mergeData(
-            meliaStudiesActivitiesRepo,
-            ` 
+          newMeliaStudiesActivities.id = element.id ? element.id : null;
+          newMeliaStudiesActivities.initvStgId = initvStg.id;
+          newMeliaStudiesActivities.type_melia_id = element.type_melia_id;
+          newMeliaStudiesActivities.other_melia = element.other_melia;
+          newMeliaStudiesActivities.result_title = element.result_title;
+          newMeliaStudiesActivities.anticipated_year_completion =
+            element.anticipated_year_completion;
+          newMeliaStudiesActivities.co_delivery = element.co_delivery;
+          newMeliaStudiesActivities.management_decisions_learning =
+            element.management_decisions_learning;
+          newMeliaStudiesActivities.is_global = element.is_global;
+          newMeliaStudiesActivities.active = element.active;
+
+          meliaStudiesActivitiesArray.push(
+            toolsSbt.mergeData(
+              meliaStudiesActivitiesRepo,
+              ` 
              SELECT *
                FROM melia_studies_activities
               WHERE id = ${newMeliaStudiesActivities.id}
                 and initvStgId =${newMeliaStudiesActivities.initvStgId}`,
-            newMeliaStudiesActivities
-          )
-        );
+              newMeliaStudiesActivities
+            )
+          );
+
+          countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+          regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
+        } else {
+          const newMeliaStudy = new MeliaStudiesActivities();
+
+          newMeliaStudy.id = null;
+          newMeliaStudy.initvStgId = initvStg.id;
+          newMeliaStudy.type_melia_id = element.type_melia_id;
+          newMeliaStudy.other_melia = element.other_melia;
+          newMeliaStudy.result_title = element.result_title;
+          newMeliaStudy.anticipated_year_completion =
+            element.anticipated_year_completion;
+          newMeliaStudy.co_delivery = element.co_delivery;
+          newMeliaStudy.management_decisions_learning =
+            element.management_decisions_learning;
+          newMeliaStudy.is_global = element.is_global;
+          newMeliaStudy.active = element.active;
+
+          //Save new MELIA Studies to get ID and then save relations
+          const newMeliaResponse = await meliaStudiesActivitiesRepo.save(newMeliaStudy);
+          element.countries.map(coun => { coun.meliaStudyId = newMeliaResponse.id });
+          element.regions.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
+          element.initiatives.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
+
+          countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
+          regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
+        }
       }
 
+      const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
+        regionsMeliaStd,
+        countriesMeliaStd
+      );
+
+      const upsertedInitiativesByMelia = await this.upsertInitiativesByMeliaStudies(
+        initiativesMeliaStd
+      );
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
       );
@@ -2012,23 +2053,73 @@ export class ProposalHandler extends InitiativeStageHandler {
     );
 
     try {
-      const meliaStudiesActivities = this.queryRunner.query(`SELECT msa.id,
+      let meliaStudiesActivities = await this.queryRunner.query(`SELECT msa.id,
       msa.initvStgId,
       msa.type_melia_id,
       IF(msa.type_melia_id = 8,concat(cmst.name,ifnull(concat(' - ', if(msa.other_melia = '', null,msa.other_melia)), '')), cmst.name) as type_melia,
       msa.other_melia,
       msa.result_title,
       msa.anticipated_year_completion,
-      msa.co_delivery,
+      IF(group_concat(i.name) is null,msa.co_delivery,concat('<ul class="pl-3">',group_concat(concat('<li>',i.name, '</li>') separator ''), '</ul>')) as co_delivery,
       msa.management_decisions_learning,
+      msa.is_global,
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
+      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id
+      left join initiatives i on i.id = ibms.initiativeId 
       WHERE msa.initvStgId = ${initvStg.id}
-      and msa.active = 1`);
-      // const meliaStudiesActivities = meliaStudiesActivitiesRepo.find({
-      //   initvStgId: initvStg.id
-      // });
+      and msa.active = 1
+      group by id`);
+
+      let countries = await this.queryRunner.query(`SELECT id,country_id,initvStgId,meliaStudyId
+      FROM countries_by_melia_study 
+      WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
+      AND active = 1
+      GROUP BY id,country_id`);
+
+      let regions = await this.queryRunner.query(`
+      SELECT id,region_id,initvStgId,meliaStudyId
+        FROM regions_by_melia_study
+       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
+        }
+         AND active = 1
+      GROUP BY id,region_id`);
+
+
+
+      if (meliaStudiesActivities == undefined || meliaStudiesActivities.length == 0) {
+        meliaStudiesActivities = [];
+      } else {
+        // get Initiatives by melias
+        const meliaIds = meliaStudiesActivities.map(mel => mel.id);
+        console.log({meliaIds});
+        
+        let initiatives = await this.queryRunner.query(`
+      SELECT id,initiativeId,meliaStudyId
+        FROM initiatives_by_melia_study
+       WHERE meliaStudyId in (${meliaIds})
+         AND active = 1
+      GROUP BY id`,);
+
+        meliaStudiesActivities.map((melia) => {
+
+          // Map regions
+          melia['regions'] = regions.filter((reg) => {
+            return reg.meliaStudyId === melia.id;
+          });
+          // Map countries
+          melia['countries'] = countries.filter((cou) => {
+            return cou.meliaStudyId === melia.id;
+          });
+
+          //Map initiatives
+          melia['initiatives'] = initiatives.filter((init) => {
+            return init.meliaStudyId === melia.id;
+          });
+        });
+      }
+
 
       return meliaStudiesActivities;
     } catch (error) {
@@ -2148,7 +2239,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedManagePlan, upsertedFile};
+      return { upsertedManagePlan, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2350,12 +2441,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-            return op.risk_assessment_id === risk.id;
-          }))
+        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+          return op.risk_assessment_id === risk.id;
+        }))
       );
 
-      return {upsertedRiskAssessment};
+      return { upsertedRiskAssessment };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2483,7 +2574,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedHumanResources, upsertedFile};
+      return { upsertedHumanResources, upsertedFile };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2504,7 +2595,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async upsertInitiativeTeam(
     humanResourcesId,
     initvTeam
-  ): Promise<{upsertedInitiativeTeam: any}> {
+  ): Promise<{ upsertedInitiativeTeam: any }> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
     const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
@@ -2552,7 +2643,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {upsertedInitiativeTeam};
+      return { upsertedInitiativeTeam };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2745,7 +2836,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             : financialRSObject.id;
         fResource.financial_type_id =
           financialRSObject.financial_type_id == null ||
-          financialRSObject.financial_type_id == ''
+            financialRSObject.financial_type_id == ''
             ? null
             : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
@@ -2961,7 +3052,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedPolicyCompliance};
+      return { upsertedPolicyCompliance };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3051,7 +3142,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return {upsertedInnovationPackages};
+      return { upsertedInnovationPackages };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3176,7 +3267,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return {savedTocs: results};
+      return { savedTocs: results };
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3211,7 +3302,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           'work_package',
           'work_package_id'
         ],
-        where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
+        where: { toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId }
       });
 
       // Validate if the initiative has saved information
@@ -3233,7 +3324,7 @@ export class ProposalHandler extends InitiativeStageHandler {
          */
 
         var savedTocsType: any = await tocsRepo.find({
-          where: {initvStgId: newTocs.initvStgId, type: 1}
+          where: { initvStgId: newTocs.initvStgId, type: 1 }
         });
 
         if (savedTocsType.length > 0) {
@@ -3551,7 +3642,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = {regions: reg, countries: cou};
+        res['geo_scope'] = { regions: reg, countries: cou };
       });
 
       return eoi;
@@ -3564,5 +3655,138 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
+  }
+
+  async insertInitiativeApproval(user_id, initiativeId, is_approved) {
+    const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const newInitvApproval = await initvApprovalRepo.create({ user_id, initiativeId, is_approved })
+      await initvApprovalRepo.save(newInitvApproval);
+
+      console.log({ newInitvApproval });
+
+      const initvStage: any = await initvStageRepo.findOne({ where: { initiative: initiativeId, active: true } });
+
+      if (newInitvApproval) {
+
+        if (initvStage == null) {
+          throw new BaseError(
+            'Post Initiative Approval: Error',
+            400,
+            `Initiative not found`,
+            false
+          );
+        }
+        // Set status approved on Initiative by stage
+        initvStage.status = 4;
+        console.log({ initvStage });
+        const savedInitvStage = await initvStageRepo.save(initvStage);
+        console.log({ savedInitvStage });
+
+        return newInitvApproval;
+      }
+      return newInitvApproval;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Insert iniative approval error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
+  }
+
+  async upsertTracks(initiativeId, stageId, body) {
+    const tracksRepo = await getRepository(entities.Tracks);
+    const tracksYearsRepo = await getRepository(entities.TracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const tracks = await tracksRepo.find();
+      console.log({ tracks });
+
+      const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
+
+
+      let tracksRows = [];
+
+      for (const track in body) {
+        for (const year in body[track]) {
+          console.log(tracks.find(tr => tr.acronym == track));
+          console.log(tracksYears.find(ty => ty.year == year));
+          let newValue = {
+            id: body[track][year]['id'] ? body[track][year]['id'] : null,
+            track_id: tracks.find(tr => tr.acronym == track).id,
+            track_year_id: tracksYears.find(ty => ty.year == year).id,
+            initvStgId: initvStg.id,
+            value: body[track][year]['value']
+          }
+          tracksRows.push(newValue);
+        }
+      }
+
+      const response = await tracksYearsInitiativesRepo.save(tracksRows);
+      return tracksRows;
+
+
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Upsert Tracks error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+  }
+
+  async getTracks(initiativeId, stageId) {
+    const tracksRepo = await getRepository(entities.Tracks);
+    const tracksYearsRepo = await getRepository(entities.TracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const initvStageRepo = await getRepository(entities.InitiativesByStages);
+    try {
+      const tracks = await tracksRepo.find();
+      const tracksYears = await tracksYearsRepo.find();
+
+      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
+
+      let tracksRows = await tracksYearsInitiativesRepo.find({ where: { initvStgId: initvStg.id }, relations: ['track', 'trackYear'] });
+
+      let responseTracks = {};
+
+      for (const track of tracks) {
+        responseTracks[track.acronym] = {}
+        for (const ty of tracksYears) {
+          responseTracks[track.acronym][ty.year] = {}
+        }
+      }
+
+      for (const tr of tracksRows) {
+        responseTracks[tr.track.acronym][tr.trackYear.year] = { value: tr.value, id: tr.id }
+      }
+      return responseTracks;
+
+
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'Get Tracks error',
+        400,
+        error.message,
+        false
+      );
+    }
+
+
+
   }
 }

@@ -18,8 +18,8 @@ export class WpGeneralInformationComponent implements OnInit {
   workPackageForm: FormGroup;
   wpID;
   geographicScope = {
-    regions: [],
-    countries: []
+    regions: null,
+    countries: null
   }
   constructor(
     public _initiativesService: InitiativesService,
@@ -50,7 +50,7 @@ export class WpGeneralInformationComponent implements OnInit {
 
       this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
-        // console.log(directResp);
+        console.log(directResp);
         this.geographicScope.regions = directResp.regions;
         this.geographicScope.countries = directResp.countries;
         this.updateFields(directResp,this._wpDataControlService.wpId);
@@ -60,7 +60,7 @@ export class WpGeneralInformationComponent implements OnInit {
               if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
-          this._dataControlService.showRegions = true;
+          // this._dataControlService.showRegions = true;
         })
   
         this._initiativesService.getCLARISACountries().subscribe(countries=>{       
@@ -70,7 +70,7 @@ export class WpGeneralInformationComponent implements OnInit {
             })
             
           })
-          this._dataControlService.showCountries = true;
+          // this._dataControlService.showCountries = true;
         })
         // console.log(directResp);
       })

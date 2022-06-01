@@ -2,9 +2,14 @@
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
-        (onEdit)="this.getItemToExpand($event)" [list]="this.list" [attr_list_config]="this.attr_list_config"
-        [showTableViewVariable]="this.showTableViewVariable"></app-compact-information-table-view>
+    <div class="alert_container" style="margin: 20px 0 35px 0;">
+        <ibdc-alert [options]="{text: 'If you are planning to carry out the same study in different years, please report every MELIA study separately.', type:'info'}"></ibdc-alert>
+    </div>
+    <div style="padding-bottom: 2em;">
+        <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
+            (onEdit)="this.getItemToExpand($event)" [list]="this.list" [attr_list_config]="this.attr_list_config"
+            [showTableViewVariable]="this.showTableViewVariable"></app-compact-information-table-view>
+    </div>
 
 
     <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">No data
@@ -22,16 +27,15 @@
                         [confirmDeleteModal]="true"></app-button-edit-or-delete>
                     <br><br>
                     <div class="fields">
-                        
+
                         <div class="mb-4">
                             <ibdc-select-field class="field"
-                            [readOnlyVariable]="this._initiativesService.initiative.readonly"
-                            [objectItem]="item"  [objectAtributteName]="'type_melia'"  [objectAtributteId]="'type_melia_id'"
-                            [inputTitle]="attr_list_config[0].name"
-                            selectableListAtributteName = 'name'
-                            selectableListAtributteId = 'id'
-                            [selectableList]="this.meliaStudyTypes"
-                            ></ibdc-select-field>
+                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
+                                [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
+                                [inputTitle]="attr_list_config[0].name" selectableListAtributteName='name'
+                                selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes"
+                                frontendSearchAttribute="name">
+                            </ibdc-select-field>
                         </div>
                         <div class="mb-4" *ngIf="item.type_melia_id == 8">
                             <ibdc-text-area-field inputTitle="Specify the MELIA study or activity" [objectItem]="item"
@@ -40,11 +44,52 @@
                             </ibdc-text-area-field>
                         </div>
 
-                        <div class="field" *ngFor="let field of attr_list_config | slice:2">
-                            <ibdc-text-area-field [inputTitle]="field.name" [objectItem]="item"
-                                [objectAtributteName]="field?.attribute"
-                                [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
-                            </ibdc-text-area-field>
+                        <ibdc-text-area-field [inputTitle]="attr_list_config[1].name" [objectItem]="item"
+                            [objectAtributteName]="attr_list_config[1].attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                        </ibdc-text-area-field>
+
+                        <div class="mb-4">
+                            <ibdc-select-field class="field"
+                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
+                                [objectAtributteName]="'anticipated_year_completion'"
+                                [objectAtributteId]="'anticipated_year_completion'"
+                                [inputTitle]="attr_list_config[2].name" selectableListAtributteName='year'
+                                selectableListAtributteId='year' [selectableList]="this.years"
+                                frontendSearchAttribute="year">
+                            </ibdc-select-field>
+                        </div>
+
+                        <ibdc-text-area-field [inputTitle]="attr_list_config[4].name" [objectItem]="item"
+                            [objectAtributteName]="attr_list_config[4].attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                        </ibdc-text-area-field>
+
+                        <ibdc-select-multiple [options]="{
+                            required: null,
+                            inputTitle: attr_list_config[3].name,
+                            selectItemName:'name',
+                            selectItemId:'initiativeId',
+                            frontendSearchAttribute:'name',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list:item.initiatives,
+                                selectItemName:'name',
+                                selectItemId:'initiativeId',
+                                idToSave:'id',
+                                labelName:'initiatives'
+                            },
+                            service:{
+                                serviceTS:this._initiativesService,
+                                functionName:'getInitiativesList',
+                                objectName:['response','initiatives']
+                            }
+                           }"></ibdc-select-multiple>
+
+                        <div class="col-sm-12">
+                            <app-geographic-scope [localForm]="this.geographicScopes[i]"
+                                [regionsSelectedList]="item.regions" [countriesSelectedList]="item.countries">
+                            </app-geographic-scope>
                         </div>
                     </div>
                 </div>

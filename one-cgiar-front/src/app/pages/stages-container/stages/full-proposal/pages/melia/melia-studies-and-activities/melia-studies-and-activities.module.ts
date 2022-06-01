@@ -11,6 +11,7 @@ import { CompactInformationTableViewModule } from '../../../../../../../shared/c
 import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
 import { AddButtonModule } from '../../../../../../../shared/components/add-button/add-button.module';
 import { ButtonEditOrDeleteModule } from '../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
+import { GeographicScopeModule } from '@app/pages/stages-container/stages/shared/components/geographic-scope/geographic-scope.module';
 
 @NgModule({
   declarations: [MeliaStudiesAndActivitiesComponent],
@@ -24,7 +25,8 @@ import { ButtonEditOrDeleteModule } from '../../../../shared/components/button-e
     CompactInformationTableViewModule,
     CollapsibleContainerModule,
     AddButtonModule,
-    ButtonEditOrDeleteModule
+    ButtonEditOrDeleteModule,
+    GeographicScopeModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

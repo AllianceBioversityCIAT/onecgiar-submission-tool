@@ -9,8 +9,13 @@
         <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
             <div title>{{stage?.description}}</div>
             <div content>
+                <!-- <div *ngIf="stage?.stageId === 4" class="isdc_feedback_section" [routerLink]="this._utilsService.stageBaseRoute + this._utilsService.convertToKebabCase(stage?.description)+ '/isdc-feedback-responses'">
+                    <div class="name">ISDC Feedback responses</div>
+                    <i class="material-icons">forum</i>
+                </div> -->
                 <app-menu-section 
                     *ngFor="let sections of stage?.sections"
+                    [sectionId]="sections?.sectionId"
                     [fieldsCompleted]="sections?.fieldsCompleted" 
                     [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description" 
                     [haveContent]="sections?.subsections?.length">
@@ -37,7 +42,7 @@
                                 <app-menu-dynamic-list type="reports"
                                 *ngFor="let report of subsections?.reports"
                                 [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+report.frontRoute+(report?.id ? report?.id : '')">
-                                    <div title>{{report?.name}} as</div>
+                                    <div title>{{report?.name}}</div>
                                 </app-menu-dynamic-list>
     
                             </div>
@@ -52,7 +57,25 @@
                 </app-menu-section>
             </div>
         </app-menu-stage>
+        <div *ngIf="this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved'" class="approve_button_container" (click)="this.submitBtn()">
+            <div class="approve_button" [ngClass]="{'active': this._dataControlService.isdcFeedbackValidation?.validation }"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
+          
+        </div>
+
+        <div style="padding: 5px 10px;" *ngIf="this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved'" ngClass="animate__animated animate__bounceIn ng-star-inserted">
+            <p-card [style]="{'background-color': 'unset',
+                                'color': '#FFFFFF',
+                                'border-radius': '10px',
+                                'box-shadow':'unset',
+                                'text-align':'center'}">
+                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation">This button will be avaliable once the section <strong [style]="{'color':'#6aa1f4'}"><a [style]="{'cursor':'pointer'}" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal-isdc-feedback/isdc-feedback-responses'">"ISDC Feedback responses"</a></strong> is complete (<i>see the top of the left menu</i>)</p> 
+                <p *ngIf="this._dataControlService.isdcFeedbackValidation?.validation">The section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete. Now you can approve the initiative</p>            
+            </p-card>
+        </div>
+
     </div>
+
+
 </div>
 
 <p-dialog class="center_flex" header="Initiative Assessment" [(visible)]="display" [modal]="true" [style]="{width: '50vw'}">
