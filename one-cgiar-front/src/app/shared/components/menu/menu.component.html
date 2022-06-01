@@ -68,7 +68,7 @@
                                 'border-radius': '10px',
                                 'box-shadow':'unset',
                                 'text-align':'center'}">
-                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation">This button will be avaliable once the section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete (<i>see the top of the left menu</i>)</p>            
+                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation">This button will be avaliable once the section <strong [style]="{'color':'#6aa1f4'}"><a [style]="{'cursor':'pointer'}" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal-isdc-feedback/isdc-feedback-responses'">"ISDC Feedback responses"</a></strong> is complete (<i>see the top of the left menu</i>)</p> 
                 <p *ngIf="this._dataControlService.isdcFeedbackValidation?.validation">The section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete. Now you can approve the initiative</p>            
             </p-card>
         </div>
