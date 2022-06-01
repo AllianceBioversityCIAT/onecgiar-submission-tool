@@ -90,7 +90,7 @@ export class AuthService {
 
     setTimeout(() => {
       window['Tawk_API'].onLoad = function(){
-        window['Tawk_API'].setAttributes({
+        window['Tawk_API']?.setAttributes({
             'name'  : 'Name',
             'email' : 'email@email.com'
         }, function(error){

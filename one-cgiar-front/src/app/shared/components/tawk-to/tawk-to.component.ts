@@ -48,7 +48,7 @@ export class TawkToComponent implements OnInit {
 
       setTimeout(() => {
         window['Tawk_API'].onLoad = () => {
-          window['Tawk_API'].setAttributes({
+          window['Tawk_API']?.setAttributes({
             'name': this.getUserInfo.name,
             'email': this.getUserInfo.email,
             // 'hash'  : 'hash value'

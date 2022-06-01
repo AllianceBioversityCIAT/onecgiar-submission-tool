@@ -55,7 +55,8 @@ export class InitiativesService {
   // }
   setTitle(section){
     this.titleService.setTitle(`INIT ${this.initiative.id} - ${section}`);
-    window['Tawk_API'].setAttributes({
+    if (!window['Tawk_API']) return;
+    window['Tawk_API']?.setAttributes({
       'name': this.getUserInfo.name,
       'email': this.getUserInfo.email,
       // 'hash'  : 'hash value'
