@@ -13,12 +13,6 @@ const isdcResponses = [
             },
             {
                 "isdc_recommendation": "\n  <p class=\"MsoNormal\" style=\"margin-bottom:0in;line-height:normal\"><span style=\"font-size:9.0pt;color:#616151\">A much sharper articulation of how\n  scaling is expected to work and what the drivers or enablers—and<span style=\"letter-spacing:-3.05pt\"> </span>their related challenges or barriers\n  are—is needed urgently. These could vary quite substantially across the five<span style=\"letter-spacing:.05pt\"> </span>Work<span style=\"letter-spacing:-.15pt\">\n  </span>Packages<span style=\"letter-spacing:-.05pt\"> </span>and<span style=\"letter-spacing:-.05pt\"> </span>target countries.</span></p>\n  ",
-            },
-            {
-                "isdc_recommendation": "\n  <p class=\"MsoNormal\" style=\"margin-bottom:0in;line-height:normal\">&nbsp;</p>\n  ",
-            },
-            {
-                "isdc_recommendation": "\n  <p class=\"MsoNormal\" style=\"margin-bottom:0in;line-height:normal\">&nbsp;</p>\n  ",
             }
         ]
     },
