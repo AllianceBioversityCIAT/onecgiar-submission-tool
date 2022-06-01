@@ -49,14 +49,14 @@ export class PusherService {
       generalRoles = members[item]?.roles; 
 
         // TODO: Tener ene cuenta estado de la iniciativa
-
+      let oldDate = new Date("4000-05-31T20:40:34.081Z")
       // console.log(members)
 
         membersList.push(
           {
             userId:item, 
-            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : new Date("3000-05-31T20:40:34.081Z")) :  generalRoles?.length ? (generalRoles[0]?.name == "Admin" ? date :  new Date("3000-05-31T20:40:34.081Z")) : new Date("3000-05-31T20:40:34.081Z"),
-            role: initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name == "Admin" ? generalRoles[0]?.name:'Guest': 'Guest',
+            date: initiativeRoles?.length ? (initiativeRoles[0]?.name !== "Guest" ? date : oldDate) :  generalRoles?.length ? (generalRoles[0]?.name == "Admin" ? date :  oldDate) : oldDate,
+            role: this._initiativesService.initiative.status == 'Approved' ? 'Guest' :(initiativeRoles?.length ? initiativeRoles[0]?.name : generalRoles?.length ? generalRoles[0]?.name == "Admin" ? generalRoles[0]?.name:'Guest': 'Guest'),
             name: members[item]?.name,
             nameinitials: this.textToinitials(members[item]?.name)
           }
@@ -94,7 +94,7 @@ export class PusherService {
     // console.log(this._authService.lsUserRoles.name)
     // console.log('--')
     // console.log(!this._initiativesService.initiative.userRoleName && this._authService.lsUserRoles.name == "Guest")
-    return membersList[0]?.userId == myID || (!this._initiativesService.initiative.userRoleName && !this._authService.lsUserRoles.name) || (!this._initiativesService.initiative.userRoleName && this._authService.lsUserRoles.name == "Guest");
+    return membersList[0]?.userId == myID || (!this._initiativesService.initiative.userRoleName && !this._authService.lsUserRoles.name) || (!this._initiativesService.initiative.userRoleName && this._authService.lsUserRoles.name == "Guest") || this._initiativesService.initiative.readonly;
   }
 
   textToinitials(text){
