@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Title } from '@angular/platform-browser';
+
 const sectionPath = 'initiatives'
 
 @Injectable({
@@ -42,6 +44,7 @@ export class InitiativesService {
 
   constructor(
     public http: HttpClient,
+    private titleService:Title
   ) { }
 
   // get initvStgId():string{
@@ -50,6 +53,10 @@ export class InitiativesService {
   // set initvStgId(val: string){
   //   this.initvStgId = val;
   // }
+  setTitle(section){
+    this.titleService.setTitle(`${this.initiative.id} - ${section}`);
+  }
+
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
