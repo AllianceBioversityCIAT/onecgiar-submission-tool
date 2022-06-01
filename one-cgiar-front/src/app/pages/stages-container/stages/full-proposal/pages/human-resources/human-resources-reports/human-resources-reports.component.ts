@@ -20,6 +20,7 @@ export class HumanResourcesReportsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Human Resources preview');
     this.getPreviewHumanResources();
   }
 

@@ -34,6 +34,7 @@ export class CapacityDevelopmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Capacity Development');
     this.getHumanResources();
     this.formChanges();
   }

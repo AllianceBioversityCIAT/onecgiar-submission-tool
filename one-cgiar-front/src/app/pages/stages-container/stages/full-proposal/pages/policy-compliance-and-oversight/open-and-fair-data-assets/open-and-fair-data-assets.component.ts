@@ -28,6 +28,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Open and FAIR data assets');
     this.getPolicyCompliance();
     this.formChanges();
   }

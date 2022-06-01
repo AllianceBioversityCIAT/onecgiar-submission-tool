@@ -36,6 +36,7 @@ export class ManagementPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Management plan');
     this.getManagePlan();
     this.formChanges();
   }

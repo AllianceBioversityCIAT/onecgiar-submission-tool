@@ -34,6 +34,7 @@ export class MeliaPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Melia plan');
     this.getMeliaPlan();
     this.formChanges();
   }

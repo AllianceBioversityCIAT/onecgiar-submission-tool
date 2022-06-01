@@ -13,7 +13,7 @@ export class ImpactStatementsTableComponent implements OnInit {
   constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
-
+    this._initiativesService.setTitle('Impact area');
     this._initiativesService.getPOBenefitsFp().subscribe(respPOB=>{
       // console.log(respPOB.response.projectionBenefits);
      

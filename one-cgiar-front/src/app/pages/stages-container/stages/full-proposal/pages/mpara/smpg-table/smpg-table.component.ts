@@ -32,6 +32,7 @@ export class SmpgTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Summary management plan Gantt table');
     this.getManagePlan();
   }
 

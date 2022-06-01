@@ -26,6 +26,7 @@ export class InitiativeTeamComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Initiative team');
     this.getHumanResources();
   }
 

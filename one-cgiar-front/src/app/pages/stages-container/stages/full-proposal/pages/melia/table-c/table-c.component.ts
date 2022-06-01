@@ -21,6 +21,7 @@ export class TableCComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Table C');
     this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);

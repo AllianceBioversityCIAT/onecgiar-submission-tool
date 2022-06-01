@@ -21,6 +21,7 @@ export class TaImpactAreaComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Table A');
     this.activatedRouteSubsription();
 
   }
