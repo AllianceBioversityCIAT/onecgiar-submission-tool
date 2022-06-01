@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="manage_access_button_container">
-                        <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin && false">
+                        <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin">
                             Manage access
                             <mat-icon>settings</mat-icon>
                         </button>
