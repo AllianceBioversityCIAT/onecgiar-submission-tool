@@ -83,6 +83,7 @@ export class NavbarComponent implements OnInit {
 
 
   onExit(): void {
+    window['Tawk_API'].minimize();
     this.authSvc.logout();
     this.cleanTWKCookies();
     // document.querySelector('.Tawk_API_container').innerHTML = "";
@@ -105,6 +106,8 @@ export class NavbarComponent implements OnInit {
 
   cleanTWKCookies() {
     console.log('cleanTWKCookies');
+    // window['Tawk_API'].endChat()
+
     var cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
       let cookie = cookies[i];
@@ -116,9 +119,10 @@ export class NavbarComponent implements OnInit {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
+
     setTimeout(() => {
       window.location.reload();
-    }, 500);
+    }, 100);
   }
 
   addMemberToUserList(memberId) {
