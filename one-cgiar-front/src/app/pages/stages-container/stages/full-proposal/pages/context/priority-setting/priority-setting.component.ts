@@ -34,6 +34,7 @@ export class PrioritySettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Priority setting')
     this.getContext();
     this.getLinks();
     this.formChanges();

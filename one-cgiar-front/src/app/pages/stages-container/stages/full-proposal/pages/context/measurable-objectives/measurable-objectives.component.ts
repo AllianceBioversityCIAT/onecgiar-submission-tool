@@ -37,6 +37,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Measurable three-year outcomes')
     this.getEndOfInitiativeOutcome();
   }
 

@@ -41,6 +41,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Participatory design process')
     this.getContext();
     this.formChanges();
     this.getLinks();

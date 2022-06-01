@@ -27,6 +27,7 @@ export class ImpactAreaComponent implements OnInit {
     ){}
 
   ngOnInit(){
+    this._initiativesService.setTitle('Projection of benefits - Impact area')
     this.detectRoute();
   }
 

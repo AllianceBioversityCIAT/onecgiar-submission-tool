@@ -54,7 +54,7 @@ export class InitiativesService {
   //   this.initvStgId = val;
   // }
   setTitle(section){
-    this.titleService.setTitle(`${this.initiative.id} - ${section}`);
+    this.titleService.setTitle(`INIT ${this.initiative.id} - ${section}`);
   }
 
   getQuery(query: string) {

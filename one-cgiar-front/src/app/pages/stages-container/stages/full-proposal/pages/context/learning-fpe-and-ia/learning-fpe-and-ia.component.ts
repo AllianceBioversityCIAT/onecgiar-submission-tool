@@ -34,6 +34,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Learning from prior evaluations and Impact Assessments (IA)')
     this.getContext();
     this.getLinks();
     this.formChanges();
