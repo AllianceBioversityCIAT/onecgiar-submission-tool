@@ -1,0 +1,28 @@
+.local_container{
+    background-color: rgba(0, 0, 0, 0.692);
+    height: 100%;
+    padding-top: 50px;
+    .local_grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+        grid-gap: 10px;
+        .box_card{
+            background-color: rgba(255, 255, 255, 0.514);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .context{
+                display: flex;
+                justify-content: space-between;
+                .type{
+                    padding: 20px;
+                }
+                .date{
+                    background-color: red;
+                    padding: 20px;
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}

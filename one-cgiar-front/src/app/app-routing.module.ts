@@ -16,7 +16,11 @@ const routes: Routes = [
   {
     path: 'bi',
     loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
-  },  
+  }, 
+  {
+    path: 'section-of-interest',
+    loadChildren: () => import('./pages/section-of-interest/section-of-interest.module').then((m) => m.SectionOfInterestModule),
+  },   
   {
     path: 'notFound',
     loadChildren: () =>import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
