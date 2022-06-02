@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
 
 const sectionPath = 'initiatives'
 
@@ -40,11 +41,12 @@ export class InitiativesService {
   ownInitiatives: [];
 
   usersByInitiative: [];
-
+  TawkMetaData
 
   constructor(
     public http: HttpClient,
-    private titleService:Title
+    private titleService:Title,
+    private _authService:AuthService
   ) { }
 
   // get initvStgId():string{
@@ -55,16 +57,46 @@ export class InitiativesService {
   // }
   setTitle(section){
     this.titleService.setTitle(`INIT ${this.initiative.id} - ${section}`);
-    if (!window['Tawk_API']) return;
-    window['Tawk_API']?.setAttributes({
-      'name': this.getUserInfo.name,
-      'email': this.getUserInfo.email,
-      // 'hash'  : 'hash value'
-    }, (error) => { console.log(error) });
+    this.setTWKAttributes();
   }
+
+  setTWKAttributes(){
+    console.log(this.initiative.users)
+    let initUsers = '';
+    // if (this.initiative.users.length) {
+      this.initiative.users.map(initUser=>{
+        initUsers += '${initUser?.userId} - ${initUser?.last_name} ${initUser?.first_name}'
+      })
+    // }else{
+    //   initUsers = '';
+    // }
+
+    console.log(initUsers)
+
+    try {
+      console.log("setTitle")
+      window['Tawk_API']?.setAttributes({
+        'name': this.getUserInfo.name,
+        'email': this.getUserInfo.email,
+        'Metada' :`Initiative name: ${this.initiative.name}
+        User Id: ${JSON.parse(localStorage.getItem('user'))?.id}
+        Initiative role: ${this.initiative.userRoleName || 'No role'}
+        Initiative status: ${this.initiative.status || 'No status'}
+        App role: ${this._authService?.lsUserRoles?.name}
+        Users: ${initUsers}`
+      }, (error) => { console.log(error) });
+    } catch (error) {
+      
+    }
+  }
+
+
+
   get getUserInfo():{email,name}{
     return JSON.parse(localStorage.getItem('user'));
   }
+
+
 
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;

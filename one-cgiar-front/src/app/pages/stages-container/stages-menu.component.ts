@@ -131,13 +131,14 @@ export class StagesMenuComponent implements OnInit {
         const sucP2 = val[1].response.users;
         this.initiativesSvc.initiative.name = sucP1.name;
         this.initiativesSvc.initiative.official_code = sucP1.official_code;
-
+        this.initiativesSvc.setTWKAttributes();
         // this.initiativesSvc.initiative.stageId = sucP1.stages.find(stg => stg.initvStgId == sucP1.initvStgId).stageId;
         // this.initiativesSvc.initiative.stageName = this.initiativesSvc.initiative.stageId == 2 ? 'pre-concept' : 'proposal' ;
         
 
         this.initiativesSvc.initiative.users = sucP2;
         this.initiativesSvc.initiative.status = sucP1.status;
+        this.initiativesSvc.setTWKAttributes();
         this.getInitiativeReadOnlyValidation(this.initiativesSvc.initiative);
         this.initiativesSvc.getSubmission(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(
           res =>{
@@ -194,6 +195,7 @@ export class StagesMenuComponent implements OnInit {
        this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
        this.initiativesSvc.initiative.userRoleId = resp?.response?.roles[0]?.roleId;
       //  console.log(this.initiativesSvc.initiative.userRoleName)
+      // this.initiativesSvc.setTWKAttributes();
       let validations = ()=>{
         // console.log(resp?.response?.roles[0]?.roleId)
         if (this.user?.roles[0].id === 1 && initiative?.status == 'Editing') return false
