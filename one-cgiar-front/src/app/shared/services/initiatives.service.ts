@@ -62,11 +62,15 @@ export class InitiativesService {
 
   setTWKAttributes(){
     console.log(this.initiative.users)
-    let initUsers = '';
+    let initUsers = `
+    Users assigned to the initiative\n`;
     // if (this.initiative.users.length) {
       this.initiative.users.map(initUser=>{
-        initUsers += '${initUser?.userId} - ${initUser?.last_name} ${initUser?.first_name}'
+        initUsers+= `${initUser?.last_name} ${initUser?.first_name} (${initUser?.role_acronym})\n`;
       })
+
+      initUsers += `
+      `
     // }else{
     //   initUsers = '';
     // }
@@ -78,12 +82,18 @@ export class InitiativesService {
       window['Tawk_API']?.setAttributes({
         'name': this.getUserInfo.name,
         'email': this.getUserInfo.email,
-        'Metada' :`Initiative name: ${this.initiative.name}
+        'initiativename' :`
+          ${this.initiative.name}
+
+        `,
+        'metada' :`
         User Id: ${JSON.parse(localStorage.getItem('user'))?.id}
         Initiative role: ${this.initiative.userRoleName || 'No role'}
         Initiative status: ${this.initiative.status || 'No status'}
         App role: ${this._authService?.lsUserRoles?.name}
-        Users: ${initUsers}`
+        
+        `,
+        // 'users': initUsers
       }, (error) => { console.log(error) });
     } catch (error) {
       
