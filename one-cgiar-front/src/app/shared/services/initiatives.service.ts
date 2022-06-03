@@ -61,7 +61,7 @@ export class InitiativesService {
   }
 
   setTWKAttributes(){
-    console.log(this.initiative.users)
+    // console.log(this.initiative.users)
     let initUsers = `
     Users assigned to the initiative\n`;
     // if (this.initiative.users.length) {
@@ -75,7 +75,7 @@ export class InitiativesService {
     //   initUsers = '';
     // }
 
-    console.log(initUsers)
+    // console.log(initUsers)
 
     try {
       console.log("setTitle")
