@@ -15,6 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
 import { MaterialModule } from '../../material.module';
 import { InitiativeStatusInformationComponent } from './stages/components/initiative-status-information/initiative-status-information.component';
+import { FooterModule } from '../../shared/components/footer/footer.module';
 
 @NgModule({
   declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, InitiativeStatusInformationComponent],
@@ -30,7 +31,8 @@ import { InitiativeStatusInformationComponent } from './stages/components/initia
     IbdAngularComponentsModule,
     MenuModule,
     TooltipModule,
-    SectionBreadcrumbModule
+    SectionBreadcrumbModule,
+    FooterModule
   ]
 })
 export class StagesMenuModule { }
