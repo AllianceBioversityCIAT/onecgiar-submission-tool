@@ -17,6 +17,7 @@ export class LoginCardComponent implements OnInit {
   loginForm: FormGroup;
   subscription: Subscription = new Subscription();
   hide = true;
+  showModal = false;
   constructor(
     private spinnerService: NgxSpinnerService,
     private authSvc: AuthService,
@@ -43,6 +44,15 @@ export class LoginCardComponent implements OnInit {
       this.router.navigate(['/home']);
       this._interactionsService.showHeader = true;
     }
+  }
+
+  setModalStatus(){
+    this.showModal = !this.showModal;
+    console.log("first")
+  }
+
+  closeModal(){
+    this.showModal = false
   }
 
   jwtExpirationLogin(){

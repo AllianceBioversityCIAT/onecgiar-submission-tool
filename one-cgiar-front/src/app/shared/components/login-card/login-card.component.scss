@@ -85,3 +85,19 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1001;
 }
+
+.contact{
+  cursor: pointer;
+  color: rgb(61, 61, 61);
+  font-weight: 700;
+  display: flex;
+  box-sizing: border-box;
+  border-left: 7px solid var(--ibdc-tertiary-color);
+  padding: 5px 10px;
+  transition: all ease .3s;
+
+  &:hover{
+    background-color: #087b833d;
+    transition: all ease .3s;
+  }
+}
