@@ -86,7 +86,7 @@ export class InitiativesService {
           ${this.initiative.name || 'Home'}
 
         `,
-        'metada' :`
+        'metadata' :`
         User Id: ${JSON.parse(localStorage.getItem('user'))?.id}
         Initiative role: ${this.initiative.userRoleName || 'No role'}
         Initiative status: ${this.initiative.status || 'No status'}
