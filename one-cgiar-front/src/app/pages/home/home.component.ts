@@ -24,12 +24,11 @@ export class HomeComponent implements OnInit {
     private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {  
-    this._initiativesService.setTitle('Home');  
     this.initiativesSvc.initiative.id = null;
     this.initiativesSvc.initiative.stageId = null;
     this.initiativesSvc.initiative.stageName = null;
     this.initiativesSvc.initiative.exactStageName = null;
-
+    this._initiativesService.setTitle('Home'); 
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;
