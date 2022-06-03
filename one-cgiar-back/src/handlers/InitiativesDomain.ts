@@ -50,7 +50,9 @@ export class InitiativeHandler extends InitiativeStageHandler {
     let allInitiatives;
 
     try {
-      allInitiatives = await this.queryRunner.query(`SELECT id, name, official_code, acronym FROM initiatives`);
+      allInitiatives = await this.queryRunner.query(
+        `SELECT id, name, official_code, acronym FROM initiatives`
+      );
 
       return allInitiatives;
     } catch (error) {
@@ -442,7 +444,12 @@ export class InitiativeHandler extends InitiativeStageHandler {
       return meliaStudyTypes;
     } catch (error) {
       console.log(error);
-      throw new BaseError('Get CLARISA MELIA Study Types', 400, error.message, false);
+      throw new BaseError(
+        'Get CLARISA MELIA Study Types',
+        400,
+        error.message,
+        false
+      );
     }
   }
 

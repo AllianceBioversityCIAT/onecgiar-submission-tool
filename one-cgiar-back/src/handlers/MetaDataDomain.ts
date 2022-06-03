@@ -72,7 +72,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
    * @param initiativeId
    * @returns subsections
    */
-  async getSubSectios(initiativeId: string) {
+  async getSubSections(initiativeId: string) {
     try {
       let subsections = this.queryRunner
         .query(` SELECT subsections.id as subSectionId,subsections.description,
@@ -521,9 +521,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
- async validationISDCFeedback() {
-   try{
-    let validationISDCFeedbackSQL = `SELECT sec.id as sectionId,sec.description,
+  async validationISDCFeedback() {
+    try {
+      let validationISDCFeedbackSQL = `SELECT sec.id as sectionId,sec.description,
                                       CASE
                                   WHEN 
                                       (SELECT  SUM(num) - count(num)     
@@ -542,14 +542,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
                                               JOIN sections_meta sec
                                               WHERE ini.id = ${this.initvStgId_}
                                                 AND sec.stageId= ini.stageId
-                                                AND sec.description='isdc-feedback-responses';`
-    var validationISDCFeedback = await this.queryRunner.query(validationISDCFeedbackSQL);
-    validationISDCFeedback[0].validation = parseInt(validationISDCFeedback[0].validation);
-    return validationISDCFeedback[0];
-   }catch(error){
-    throw new BaseError('Get validations ISDC Feedback', 400, error.message, false);
-   }
- }
+                                                AND sec.description='isdc-feedback-responses';`;
+      var validationISDCFeedback = await this.queryRunner.query(
+        validationISDCFeedbackSQL
+      );
+      validationISDCFeedback[0].validation = parseInt(
+        validationISDCFeedback[0].validation
+      );
+      return validationISDCFeedback[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations ISDC Feedback',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 
   async validationMelia() {
     try {
