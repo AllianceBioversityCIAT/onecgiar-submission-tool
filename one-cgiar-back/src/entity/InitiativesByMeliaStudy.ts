@@ -6,8 +6,8 @@ import {
   ManyToOne
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
-import { Initiatives } from './Initiatives';
-import { MeliaStudiesActivities } from './MeliaStudiesActivities';
+import {Initiatives} from './Initiatives';
+import {MeliaStudiesActivities} from './MeliaStudiesActivities';
 
 @Entity('initiatives_by_melia_study')
 export class InitiativesByMeliaStudy extends UpdatedCreatedAt {
@@ -21,14 +21,13 @@ export class InitiativesByMeliaStudy extends UpdatedCreatedAt {
   meliaStudyId: number;
 
   @ManyToOne(() => MeliaStudiesActivities)
-  @JoinColumn({name: "meliaStudyId"})
+  @JoinColumn({name: 'meliaStudyId'})
   meliaStd!: MeliaStudiesActivities;
 
   @Column({type: 'int'})
   initiativeId: number;
 
   @ManyToOne(() => Initiatives)
-  @JoinColumn({name: "initiativeId"})
+  @JoinColumn({name: 'initiativeId'})
   initiative!: Initiatives;
-
 }

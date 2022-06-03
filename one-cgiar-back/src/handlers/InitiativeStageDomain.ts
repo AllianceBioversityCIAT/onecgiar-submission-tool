@@ -11,8 +11,8 @@ import {BaseValidation} from './validation/BaseValidation';
 import {Budget} from '../entity/Budget';
 import {GeneralInformationRepository} from '../repositories/generalInformationRepository';
 import {InitiativeHandler} from './InitiativesDomain';
-import { CountriesByMeliaStudy } from '../entity/CountriesByMeliaStudy';
-import { RegionsByMeliaStudy } from '../entity/RegionsByMeliaStudy';
+import {CountriesByMeliaStudy} from '../entity/CountriesByMeliaStudy';
+import {RegionsByMeliaStudy} from '../entity/RegionsByMeliaStudy';
 
 export class InitiativeStageHandler extends BaseValidation {
   public initvStgId_;
@@ -556,7 +556,6 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
-
   /**
    *
    * @param region?
@@ -565,8 +564,6 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopes(regions?, countries?) {
-
-
     let initvStgRegions, initvStgCountries;
 
     try {
@@ -625,7 +622,7 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
-   /**
+  /**
    *
    * @param region?
    * @param countries?
@@ -633,7 +630,6 @@ export class InitiativeStageHandler extends BaseValidation {
    */
 
   async upsertGeoScopesMeliaStudies(regions?, countries?) {
-
     let initvStgRegions, initvStgCountries;
 
     try {
@@ -646,7 +642,7 @@ export class InitiativeStageHandler extends BaseValidation {
       initvStgCountries = await this.countriesMeliaStdRepo.find({
         where: {initvStg: initvStg[0]}
       });
-      
+
       if (regions.length) {
         const uniqueRegions = [].concat(
           regions.filter((obj1) =>
@@ -663,7 +659,6 @@ export class InitiativeStageHandler extends BaseValidation {
         initvStgRegions = await this.regionsMeliaStdRepo.save(uniqueRegions);
       }
 
-
       if (countries.length) {
         const uniqueCountries = [].concat(
           countries.filter((obj1) =>
@@ -678,9 +673,10 @@ export class InitiativeStageHandler extends BaseValidation {
         uniqueCountries.every((uA) => (uA['initvStgId'] = initvStg[0].id));
         // console.log({uniqueCountries, initvStg: initvStg[0].id});
 
-        
         // save geo scope - countries
-        initvStgCountries = await this.countriesMeliaStdRepo.save(uniqueCountries);
+        initvStgCountries = await this.countriesMeliaStdRepo.save(
+          uniqueCountries
+        );
       }
 
       return {regions: initvStgRegions, countries: initvStgCountries};
@@ -695,19 +691,19 @@ export class InitiativeStageHandler extends BaseValidation {
     }
   }
 
-     /**
+  /**
    *
    * @param initiatives?
    * @returns { initiativesByMeliaStudy }
    */
 
   async upsertInitiativesByMeliaStudies(initiatives?) {
-
-    const intvByMeliaStudyRepository = getRepository(entities.InitiativesByMeliaStudy)
+    const intvByMeliaStudyRepository = getRepository(
+      entities.InitiativesByMeliaStudy
+    );
     try {
-
       const initiativesByMelia = intvByMeliaStudyRepository.save(initiatives);
-      
+
       return {initiativesByMelia};
     } catch (error) {
       console.log(error);
@@ -813,7 +809,7 @@ export class InitiativeStageHandler extends BaseValidation {
         ? existInitvStg[0]
         : new InitiativesByStages();
 
-     // this.intvStage_.active = true;
+      // this.intvStage_.active = true;
       this.intvStage_.initiative = this.initiativeId_;
       this.intvStage_.stage = this.stageId_;
       // save initiative by stage

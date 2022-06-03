@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import { getRepository, In, Not } from 'typeorm';
+import {getRepository, In, Not} from 'typeorm';
 import * as entities from '../entity';
-import { MeliaStudiesActivities } from '../entity/MeliaStudiesActivities';
-import { ProposalSections } from '../interfaces/FullProposalSectionsInterface';
-import { ToolsSbt } from '../utils/toolsSbt';
-import { BaseError } from './BaseError';
-import { InitiativeHandler } from './InitiativesDomain';
-import { InitiativeStageHandler } from './InitiativeStageDomain';
+import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
+import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import {ToolsSbt} from '../utils/toolsSbt';
+import {BaseError} from './BaseError';
+import {InitiativeHandler} from './InitiativesDomain';
+import {InitiativeStageHandler} from './InitiativeStageDomain';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -123,8 +123,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
-          }
+                 WHERE initvStgId = ${
+                   initvStg.id ? initvStg.id : initvStg[0].id
+                 }
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -150,8 +151,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                         true
                     ) AS validateWP
                    FROM work_packages wp 
-                  WHERE wp.initvStgId =  ${initvStg.id ? initvStg.id : initvStg[0].id
-          }
+                  WHERE wp.initvStgId =  ${
+                    initvStg.id ? initvStg.id : initvStg[0].id
+                  }
                     AND wp.active = 1                    
                     `;
       /*eslint-enable*/
@@ -213,7 +215,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                   and work_package_id = ${id}
                 `;
 
-      var workPackages = await wpRepo.find({ where: { id: id, active: 1 } });
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -390,7 +392,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // get select action areas for initiative
       const selectedActionArea = actionAreas.find(
         (area) => area.id == action_area_id
-      ) || { name: null };
+      ) || {name: null};
 
       // if null, create object
       if (generalInformationId == null) {
@@ -757,7 +759,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedPjectionBenefits, upsertedDimensions };
+      return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -955,7 +957,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedImpactStrategies, upsertedPartners };
+      return {upsertedImpactStrategies, upsertedPartners};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1180,7 +1182,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedMelia, upsertedFile };
+      return {upsertedMelia, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1307,7 +1309,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedTableB = await this.upsertTableB(tableB, initvStg.id);
       let upsertedTableC = await this.upsertTableC(tableC, initvStg.id);
 
-      return { upsertedTableA, upsertedTableB, upsertedTableC };
+      return {upsertedTableA, upsertedTableB, upsertedTableC};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1550,7 +1552,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      return { upsertedOutcomesIndicators };
+      return {upsertedOutcomesIndicators};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -1916,14 +1918,14 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = { regions: reg, countries: cou };
+        res['geo_scope'] = {regions: reg, countries: cou};
       });
 
-      const tableC = { results: results };
+      const tableC = {results: results};
 
       return {
         meliaPlan: meliaPlan[0],
-        resultFramework: { tableA, tableB, tableC }
+        resultFramework: {tableA, tableB, tableC}
       };
     } catch (error) {
       console.log(error);
@@ -1960,7 +1962,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         const element = meliaStudiesActivitiesData[index];
 
         if (element.id) {
-
           const newMeliaStudiesActivities = new MeliaStudiesActivities();
 
           newMeliaStudiesActivities.id = element.id ? element.id : null;
@@ -1990,7 +1991,9 @@ export class ProposalHandler extends InitiativeStageHandler {
 
           countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
           regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
-          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(
+            element.initiatives || []
+          );
         } else {
           const newMeliaStudy = new MeliaStudiesActivities();
 
@@ -2008,14 +2011,24 @@ export class ProposalHandler extends InitiativeStageHandler {
           newMeliaStudy.active = element.active;
 
           //Save new MELIA Studies to get ID and then save relations
-          const newMeliaResponse = await meliaStudiesActivitiesRepo.save(newMeliaStudy);
-          element.countries.map(coun => { coun.meliaStudyId = newMeliaResponse.id });
-          element.regions.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
-          element.initiatives.map(reg => { reg.meliaStudyId = newMeliaResponse.id });
+          const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
+            newMeliaStudy
+          );
+          element.countries.map((coun) => {
+            coun.meliaStudyId = newMeliaResponse.id;
+          });
+          element.regions.map((reg) => {
+            reg.meliaStudyId = newMeliaResponse.id;
+          });
+          element.initiatives.map((reg) => {
+            reg.meliaStudyId = newMeliaResponse.id;
+          });
 
           countriesMeliaStd = countriesMeliaStd.concat(element.countries || []);
           regionsMeliaStd = regionsMeliaStd.concat(element.regions || []);
-          initiativesMeliaStd = initiativesMeliaStd.concat(element.initiatives || []);
+          initiativesMeliaStd = initiativesMeliaStd.concat(
+            element.initiatives || []
+          );
         }
       }
 
@@ -2024,9 +2037,8 @@ export class ProposalHandler extends InitiativeStageHandler {
         countriesMeliaStd
       );
 
-      const upsertedInitiativesByMelia = await this.upsertInitiativesByMeliaStudies(
-        initiativesMeliaStd
-      );
+      const upsertedInitiativesByMelia =
+        await this.upsertInitiativesByMeliaStudies(initiativesMeliaStd);
       const meliaStudiesActivitiesMerge = await Promise.all(
         meliaStudiesActivitiesArray
       );
@@ -2072,7 +2084,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       and msa.active = 1
       group by id`);
 
-      let countries = await this.queryRunner.query(`SELECT id,country_id,initvStgId,meliaStudyId
+      let countries = await this.queryRunner
+        .query(`SELECT id,country_id,initvStgId,meliaStudyId
       FROM countries_by_melia_study 
       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
       AND active = 1
@@ -2081,29 +2094,28 @@ export class ProposalHandler extends InitiativeStageHandler {
       let regions = await this.queryRunner.query(`
       SELECT id,region_id,initvStgId,meliaStudyId
         FROM regions_by_melia_study
-       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id
-        }
+       WHERE initvStgId = ${initvStg.id ? initvStg.id : initvStg[0].id}
          AND active = 1
       GROUP BY id,region_id`);
 
-
-
-      if (meliaStudiesActivities == undefined || meliaStudiesActivities.length == 0) {
+      if (
+        meliaStudiesActivities == undefined ||
+        meliaStudiesActivities.length == 0
+      ) {
         meliaStudiesActivities = [];
       } else {
         // get Initiatives by melias
-        const meliaIds = meliaStudiesActivities.map(mel => mel.id);
+        const meliaIds = meliaStudiesActivities.map((mel) => mel.id);
         console.log({meliaIds});
-        
+
         let initiatives = await this.queryRunner.query(`
       SELECT id,initiativeId,meliaStudyId
         FROM initiatives_by_melia_study
        WHERE meliaStudyId in (${meliaIds})
          AND active = 1
-      GROUP BY id`,);
+      GROUP BY id`);
 
         meliaStudiesActivities.map((melia) => {
-
           // Map regions
           melia['regions'] = regions.filter((reg) => {
             return reg.meliaStudyId === melia.id;
@@ -2119,7 +2131,6 @@ export class ProposalHandler extends InitiativeStageHandler {
           });
         });
       }
-
 
       return meliaStudiesActivities;
     } catch (error) {
@@ -2239,7 +2250,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedManagePlan, upsertedFile };
+      return {upsertedManagePlan, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2441,12 +2452,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       upsertedRiskAssessment.map(
         (risk) =>
-        (risk['opportunities'] = upsertedOpportunities.filter((op) => {
-          return op.risk_assessment_id === risk.id;
-        }))
+          (risk['opportunities'] = upsertedOpportunities.filter((op) => {
+            return op.risk_assessment_id === risk.id;
+          }))
       );
 
-      return { upsertedRiskAssessment };
+      return {upsertedRiskAssessment};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2574,7 +2585,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedHumanResources, upsertedFile };
+      return {upsertedHumanResources, upsertedFile};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2595,7 +2606,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   async upsertInitiativeTeam(
     humanResourcesId,
     initvTeam
-  ): Promise<{ upsertedInitiativeTeam: any }> {
+  ): Promise<{upsertedInitiativeTeam: any}> {
     initvTeam = typeof initvTeam === 'undefined' ? [] : initvTeam;
 
     const initiativeTeamRepo = getRepository(entities.InitiativeTeam);
@@ -2643,7 +2654,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { upsertedInitiativeTeam };
+      return {upsertedInitiativeTeam};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -2836,7 +2847,7 @@ export class ProposalHandler extends InitiativeStageHandler {
             : financialRSObject.id;
         fResource.financial_type_id =
           financialRSObject.financial_type_id == null ||
-            financialRSObject.financial_type_id == ''
+          financialRSObject.financial_type_id == ''
             ? null
             : financialRSObject.financial_type_id;
         fResource.financial_type = financialRSObject.financial_type;
@@ -3052,7 +3063,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedPolicyCompliance };
+      return {upsertedPolicyCompliance};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3142,7 +3153,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
       }
 
-      return { upsertedInnovationPackages };
+      return {upsertedInnovationPackages};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3267,7 +3278,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      return { savedTocs: results };
+      return {savedTocs: results};
     } catch (error) {
       console.log(error);
       throw new BaseError(
@@ -3302,7 +3313,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           'work_package',
           'work_package_id'
         ],
-        where: { toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId }
+        where: {toc_id: newTocs.toc_id, initvStgId: newTocs.initvStgId}
       });
 
       // Validate if the initiative has saved information
@@ -3324,7 +3335,7 @@ export class ProposalHandler extends InitiativeStageHandler {
          */
 
         var savedTocsType: any = await tocsRepo.find({
-          where: { initvStgId: newTocs.initvStgId, type: 1 }
+          where: {initvStgId: newTocs.initvStgId, type: 1}
         });
 
         if (savedTocsType.length > 0) {
@@ -3642,7 +3653,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return res.id === co.results_id;
         });
 
-        res['geo_scope'] = { regions: reg, countries: cou };
+        res['geo_scope'] = {regions: reg, countries: cou};
       });
 
       return eoi;
@@ -3661,15 +3672,20 @@ export class ProposalHandler extends InitiativeStageHandler {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
-      const newInitvApproval = await initvApprovalRepo.create({ user_id, initiativeId, is_approved })
+      const newInitvApproval = await initvApprovalRepo.create({
+        user_id,
+        initiativeId,
+        is_approved
+      });
       await initvApprovalRepo.save(newInitvApproval);
 
-      console.log({ newInitvApproval });
+      console.log({newInitvApproval});
 
-      const initvStage: any = await initvStageRepo.findOne({ where: { initiative: initiativeId, active: true } });
+      const initvStage: any = await initvStageRepo.findOne({
+        where: {initiative: initiativeId, active: true}
+      });
 
       if (newInitvApproval) {
-
         if (initvStage == null) {
           throw new BaseError(
             'Post Initiative Approval: Error',
@@ -3680,9 +3696,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
         // Set status approved on Initiative by stage
         initvStage.status = 4;
-        console.log({ initvStage });
+        console.log({initvStage});
         const savedInitvStage = await initvStageRepo.save(initvStage);
-        console.log({ savedInitvStage });
+        console.log({savedInitvStage});
 
         return newInitvApproval;
       }
@@ -3696,97 +3712,89 @@ export class ProposalHandler extends InitiativeStageHandler {
         false
       );
     }
-
-
-
   }
 
   async upsertTracks(initiativeId, stageId, body) {
     const tracksRepo = await getRepository(entities.Tracks);
     const tracksYearsRepo = await getRepository(entities.TracksYears);
-    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(
+      entities.InitiativesTracksYears
+    );
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const tracks = await tracksRepo.find();
-      console.log({ tracks });
+      console.log({tracks});
 
       const tracksYears = await tracksYearsRepo.find();
 
-      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
-
+      const initvStg = await initvStageRepo.findOne({
+        where: {stage: stageId, initiative: initiativeId}
+      });
 
       let tracksRows = [];
 
       for (const track in body) {
         for (const year in body[track]) {
-          console.log(tracks.find(tr => tr.acronym == track));
-          console.log(tracksYears.find(ty => ty.year == year));
+          console.log(tracks.find((tr) => tr.acronym == track));
+          console.log(tracksYears.find((ty) => ty.year == year));
           let newValue = {
             id: body[track][year]['id'] ? body[track][year]['id'] : null,
-            track_id: tracks.find(tr => tr.acronym == track).id,
-            track_year_id: tracksYears.find(ty => ty.year == year).id,
+            track_id: tracks.find((tr) => tr.acronym == track).id,
+            track_year_id: tracksYears.find((ty) => ty.year == year).id,
             initvStgId: initvStg.id,
             value: body[track][year]['value']
-          }
+          };
           tracksRows.push(newValue);
         }
       }
 
       const response = await tracksYearsInitiativesRepo.save(tracksRows);
       return tracksRows;
-
-
     } catch (error) {
       console.log(error);
-      throw new BaseError(
-        'Upsert Tracks error',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Upsert Tracks error', 400, error.message, false);
     }
-
   }
 
   async getTracks(initiativeId, stageId) {
     const tracksRepo = await getRepository(entities.Tracks);
     const tracksYearsRepo = await getRepository(entities.TracksYears);
-    const tracksYearsInitiativesRepo = await getRepository(entities.InitiativesTracksYears);
+    const tracksYearsInitiativesRepo = await getRepository(
+      entities.InitiativesTracksYears
+    );
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const tracks = await tracksRepo.find();
       const tracksYears = await tracksYearsRepo.find();
 
-      const initvStg = await initvStageRepo.findOne({ where: { stage: stageId, initiative: initiativeId } });
+      const initvStg = await initvStageRepo.findOne({
+        where: {stage: stageId, initiative: initiativeId}
+      });
 
-      let tracksRows = await tracksYearsInitiativesRepo.find({ where: { initvStgId: initvStg.id }, relations: ['track', 'trackYear'] });
+      let tracksRows = await tracksYearsInitiativesRepo.find({
+        where: {initvStgId: initvStg.id},
+        relations: ['track', 'trackYear']
+      });
 
       let responseTracks = {};
 
       for (const track of tracks) {
-        responseTracks[track.acronym] = {}
+        responseTracks[track.acronym] = {};
         for (const ty of tracksYears) {
-          responseTracks[track.acronym][ty.year] = {}
+          responseTracks[track.acronym][ty.year] = {};
         }
       }
 
       for (const tr of tracksRows) {
-        responseTracks[tr.track.acronym][tr.trackYear.year] = { value: tr.value, id: tr.id }
+        responseTracks[tr.track.acronym][tr.trackYear.year] = {
+          value: tr.value,
+          id: tr.id
+        };
       }
       return responseTracks;
-
-
     } catch (error) {
       console.log(error);
-      throw new BaseError(
-        'Get Tracks error',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Get Tracks error', 400, error.message, false);
     }
-
-
-
   }
 }
