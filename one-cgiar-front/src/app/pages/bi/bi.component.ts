@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InitiativesService } from '../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-bi',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BiComponent implements OnInit {
 
-  constructor() { }
+  constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('BI'); 
   }
 
 }

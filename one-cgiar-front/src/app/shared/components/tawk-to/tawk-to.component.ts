@@ -50,13 +50,13 @@ export class TawkToComponent implements OnInit {
       // const selectEntry = document.getElementById('.Tawk_API_container').addEventListener('click', ()=>{console.log("insert T")})
       
 
-      try {
-        window['Tawk_API'].onLoad = () => {
-          this._initiativesService.setTitle('Home');
-        }
-      } catch (error) {
-        console.log(error)
-      }
+      // try {
+      //   window['Tawk_API'].onLoad = () => {
+      //     this._initiativesService.setTitle('Home');
+      //   }
+      // } catch (error) {
+      //   console.log(error)
+      // }
 
 
     }
