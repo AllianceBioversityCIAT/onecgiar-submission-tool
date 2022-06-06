@@ -83,7 +83,7 @@ export class InitiativesService {
         'name': this.getUserInfo.name,
         'email': this.getUserInfo.email,
         'initiativename' :`
-          ${this.initiative.name || 'Home'}
+        INIT ${this.initiative.id} - ${this.initiative.name || 'Home'}
 
         `,
         'metadata' :`
