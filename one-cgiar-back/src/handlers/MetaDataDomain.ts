@@ -1659,22 +1659,35 @@ export class MetaDataHandler extends InitiativeStageHandler {
     AND subsec.description = 'challenge-statement';`,
         measurableObjectivesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
-      WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-	   JOIN subsections_meta subsec
-      WHERE ini.id = ${this.initvStgId_}
+          WHEN
+          (SELECT SUM(1) as firstValidation FROM results rs
+            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
+          AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId) IS NULL 
+            OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId) = '')
+          THEN  FALSE
+        ELSE CASE
+          WHEN 
+              (SELECT SUM(1) 
+            FROM results rs 
+              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3) IS NOT NULL AND
+          (  SELECT count(rsi.name) - sum(IF(rsi.name is null || rsi.name = '', 0, 1)) as validation
+            FROM results rs 
+              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ${this.initvStgId_}  ) = 0
+          THEN TRUE
+              ELSE FALSE
+              END
+        END as validation
+      FROM initiatives_by_stages ini
+             JOIN sections_meta sec
+           JOIN subsections_meta subsec
+       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-		AND sec.id = subsec.sectionId
-        AND sec.description='context'
-	    AND subsec.description = 'measurable-objectives';`,
+          AND sec.id = subsec.sectionId
+              AND sec.description='context'
+            AND subsec.description = 'measurable-objectives'
+      GROUP BY ini.id;`,
         learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
