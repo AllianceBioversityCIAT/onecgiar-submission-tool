@@ -1,0 +1,105 @@
+.valid {
+//   outline: 2px solid rgb(65, 65, 65);
+}
+
+.invalid {
+  outline: 2px solid rgb(235, 84, 84);
+}
+
+.header-invalid{
+  background-color: rgb(235, 84, 84);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 5px;
+  padding-right: 50px;
+  height: auto !important;
+  text-align: center;
+  font-size: 10px;
+}
+
+.header-valid{
+  background-color: rgb(65, 65, 65);
+}
+
+.card_container_box{
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card_container_list{
+  gap: 30px;
+}
+
+.user-card {
+  background: white;
+  // background: linear-gradient(180deg, rgba(19,205,218,1) 0%, rgba(17,187,199,1) 86%);
+  box-shadow: 0px 0px 7px #c0c0c0, 0px 0px 7px #c0c0c0;
+  width: 100%;
+  border-radius: 10px;
+  color: rgb(65, 65, 65);
+
+  overflow: hidden;
+  position: relative;
+
+  .header {
+    height: 30px;
+  }
+
+  .card_container {
+    padding: 15px 10px;
+    display: flex;
+    // flex-direction: column;
+    // gap: 15px;
+
+    .role {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      .rol-chip {
+        color: white;
+        background-color: rgb(65, 65, 65);
+        border-radius: 100px;
+        padding: 5px 20px;
+        width: max-content;
+        font-size: 12px;
+
+        span {
+          opacity: .7;
+        }
+      }
+
+      .icon_container {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border-radius: 100px;
+        padding: 7px;
+        box-shadow: 0px 0px 7px #c0c0c0, 0px 0px 7px #c0c0c0;
+
+        .icon {
+          color: rgb(65, 65, 65);
+          font-size: 15px;
+        }
+      }
+
+    }
+
+    .user_personal_info {
+      .name {
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      .email {
+        font-size: 12px;
+      }
+    }
+  }
+
+
+}

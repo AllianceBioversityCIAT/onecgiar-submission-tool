@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 export interface DialogData {
   animal: string;
@@ -21,11 +22,13 @@ export class ManageAccessComponent implements OnInit {
   tabNumber=0;
   rolesLoaded = false;
   usersLoaded = false;
+  updateRolesButtonDisabled = true;
   constructor(
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
-
+    private _initiativesService:InitiativesService,
+    private _interactionsService:InteractionsService
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +41,8 @@ export class ManageAccessComponent implements OnInit {
   }
 
   reloadSelectRoleComp(){
+    this.getAllRoles();
+    this.getUsersByInitiative();
     this.showForm = false;
     setTimeout(() => {
     this.showForm = true;
@@ -75,8 +80,60 @@ export class ManageAccessComponent implements OnInit {
       this.selectedUsers = resp.response.users;
       this.showForm=true;
       this.removeInactiveUsers();
+      this.validate_repeat_leads();
       // console.log(resp.response.users);
     },err=>{},()=>{this.usersLoaded = true})
+  }
+
+  validate_repeat_leads(){
+
+    let counter = {
+      lead:0,
+      deputy:0
+    }
+    this.selectedUsers.map(user=>{
+      delete user.invalid
+      counter.lead = user.roleId == 2 ? (counter.lead+1) : counter.lead;
+      counter.deputy = user.roleId == 3 ? (counter.deputy+1) : counter.deputy;
+    })
+
+    this.mapInvalid(counter);
+  }
+
+  mapInvalid(counter){
+    if (counter.lead>1 || counter.deputy >1) {
+      this.updateRolesButtonDisabled = true;
+      this.selectedUsers.map(user=>{
+        user.invalid = counter.lead>1 && user.roleId == 2 ? true : user.invalid ;
+        user.invalid = counter.deputy>1 && user.roleId == 3 ? true : user.invalid ;
+      })
+    }else{
+      this.updateRolesButtonDisabled = false;
+    }
+  }
+
+  assignRolesOrUpdate(){
+    
+    console.log(this.selectedUsers)
+    let usersToUpdate = [];
+
+    this.selectedUsers.map(user=>{
+      // console.log(user)
+      let {userId, roleId, active} = user
+      let body = {
+        active,
+        userId,
+        roleId: roleId ? roleId:5
+      }
+      console.log(body)
+
+      this._initiativesService.assignUserToInitiative(body,this._initiativesService.initiative.id).subscribe(resp=>{
+        console.log(resp);
+      });
+
+    })
+
+    this._interactionsService.successMessage(`Updated users and roles`);
   }
 
   firstTab(){

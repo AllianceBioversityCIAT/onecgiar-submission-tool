@@ -61,21 +61,40 @@
                                }"></ibdc-select-multiple>
 
                         </div>
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <ibdc-alert [options]="{htmlText: 'Please assign role if you want to keep the users assigned to this initiative', type:'info'}"></ibdc-alert>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12">
                             <h2 class="color-secondary">Users with editing access to this initiative.</h2>
-                            <div class="scroll_container">
+                            
 
+                            <app-ma-user-card-list (onSelectOptionEvent)="validate_repeat_leads()" [roles]="allRoles" [users]="selectedUsers"></app-ma-user-card-list>
+
+
+                            <!-- <div class="scroll_container">
+
+
+                                <br><br>
                                 <mat-accordion class="example-headers-align" *ngIf="rolesLoaded && usersLoaded">
                                     <app-edit-rol-user *ngFor="let user of selectedUsers" [user]="user" [roles]="allRoles" [activeWithUserId]="4"  initiativeId (reload)="getUsersByInitiative()"></app-edit-rol-user>
                                 </mat-accordion>
 
+                            </div> -->
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="update_roles_button_container">
+                                <button [disabled]="this.updateRolesButtonDisabled" (click)="assignRolesOrUpdate()" pButton pRipple  class="update_roles_button p-button-success">
+                                    Update roles
+                                </button>
                             </div>
+                            <br><br><br><br>
                         </div>
                     </div>
+
                 </div>
+
+
+
 
             </mat-tab>
 
@@ -86,7 +105,7 @@
                 </ng-template>
 
 
-                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" (realoadRoles)="reloadSelectRoleComp();getUsersByInitiative()"></app-create-users>
+                <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" (realoadRoles)="reloadSelectRoleComp()"></app-create-users>
 
             </mat-tab>
         </mat-tab-group>
