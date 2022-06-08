@@ -27,8 +27,7 @@
        <div class="eoi-list">
         <div class="eoi-card"
             *ngFor="let actionAreasOutcomesIndicator of this.tableBData?.action_areas_outcomes_indicators">
-            <app-eoi-card [result_type]="4" [seemore]="false">
-                <div title>{{this.actionAreasOutcomesIndicator.action_area_name}}</div>
+            <app-eoi-card [result_type]="4" [seemore]="false" [title]="this.actionAreasOutcomesIndicator.action_area_name">
                 <div visible-content>
                     <div class="eoi-item">
                         <div class="eoi-item-title">Outcome statement: </div>

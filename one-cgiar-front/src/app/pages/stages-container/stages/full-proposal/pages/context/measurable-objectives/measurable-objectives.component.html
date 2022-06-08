@@ -14,8 +14,7 @@
 
     <div class="eoi-list">
         <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList">
-            <app-eoi-card [result_type]="this.eoiData?.result_type">
-                <div title>{{this.eoiData?.type_name}} - {{this.eoiData?.result_title}}</div>
+            <app-eoi-card [result_type]="this.eoiData?.result_type" [title]="this.eoiData?.type_name + '-' + this.eoiData?.result_title">
                 <div visible-content>
 
                     <div class="eoi-item" style="margin-top: 8px;">

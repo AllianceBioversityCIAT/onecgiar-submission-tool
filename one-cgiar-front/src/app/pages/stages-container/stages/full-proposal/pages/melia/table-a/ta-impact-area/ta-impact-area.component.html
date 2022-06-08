@@ -13,8 +13,7 @@
     <br>
     <div class="local_grid">
 
-        <app-eoi-card [result_type]="5" [seemore]="false">
-            <div title>Collective global 2030 targets</div>
+        <app-eoi-card [result_type]="5" [seemore]="false" title="Collective global 2030 targets">
             <div visible-content>
                 <div class="no-data" *ngIf="!tableAData?.global_targets?.length">
                     No information
@@ -25,7 +24,7 @@
             </div>
         </app-eoi-card>
 
-        <app-eoi-card [result_type]="5" [seemore]="false">
+        <app-eoi-card [result_type]="5" [seemore]="false" title="Common impact indicators">
             <div title>Common impact indicators</div>
             <div visible-content>
                 <div class="no-data" *ngIf="!tableAData?.impact_areas_indicators?.length">
@@ -38,10 +37,8 @@
         </app-eoi-card>
 
     
-        <app-eoi-card [result_type]="5" [seemore]="false">
-            <div title>SDG Targets</div>
+        <app-eoi-card [result_type]="5" [seemore]="false" title="SDG Targets">
             <div visible-content>
-
                 <div class="no-data" *ngIf="!tableAData?.sdg_targets?.length">
                     No information
                 </div>
