@@ -29,7 +29,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.utilsSvc.sidebarOpened$
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: boolean) => (this.opened = res));
+
   }
+
+  
 
   ngOnDestroy(): void {
     this.destroy$.next({});

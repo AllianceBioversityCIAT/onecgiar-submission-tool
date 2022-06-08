@@ -32,6 +32,7 @@ export class ChallengeStatementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Challenge statement')
     this.getContext();
     this.formChanges();
   }

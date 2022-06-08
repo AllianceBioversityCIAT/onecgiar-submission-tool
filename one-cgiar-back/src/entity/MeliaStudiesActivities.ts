@@ -7,7 +7,7 @@ import {
   OneToMany,
   ManyToOne
 } from 'typeorm';
-import { ClarisaMeliaStudyTypes } from './ClarisaMeliaStudyTypes';
+import {ClarisaMeliaStudyTypes} from './ClarisaMeliaStudyTypes';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
 

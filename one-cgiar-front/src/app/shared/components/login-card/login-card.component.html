@@ -41,6 +41,8 @@
           </mat-form-field>
           <button style="margin-top: 11px;" [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Log in</button>
           <br><br>
+          <div class="contact" (click)="setModalStatus()"><div>Do you have any questions?</div></div>
+          <br>
           <!-- <p class="color-tertiary change-password-text" (click)="this._dataControlService.x_position_login_animation = - 100"> change password </p> -->
           <hr class="my-4">
           <div class="note">
@@ -54,4 +56,7 @@
       </div>
 
     </div>
-  </div>
+</div>
+
+
+  <app-contact-modal (close)="closeModal()" [showModal]="showModal"></app-contact-modal>

@@ -13,7 +13,6 @@ import { GeneralInfoPatchBody } from './interfaces/general-info-patch-body.inter
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../shared/services/interactions.service';
-import { ConceptService } from '../../../../../../shared/services/concept.service';
 
 @Component({
   selector: 'app-general-information',
@@ -61,18 +60,17 @@ export class GeneralInformationComponent implements OnInit {
   }
 
   constructor(
-    public conceptSvc: ConceptService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService: InteractionsService,
     public dialog: MatDialog,
     public _initiativesService: InitiativesService,
     public _dataControlService: DataControlService,
-    public _dataValidatorsService : DataValidatorsService
+    public _dataValidatorsService : DataValidatorsService,
   ) {
   }
 
   ngOnInit(): void {
-
+    this._initiativesService.setTitle('General information')
     // console.log("ngOnInit")
 
     this.stageId =  this._initiativesService.initiative.stageId;
@@ -145,7 +143,7 @@ export class GeneralInformationComponent implements OnInit {
       })
 
 
-    this.conceptSvc.getActionAreas().subscribe(resp => {
+    this._initiativesService.getActionAreas().subscribe(resp => {
       // console.log(resp);
       this.actionAreas = resp;
       for (let index = 0; index < this.actionAreas.length; index++) {

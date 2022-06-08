@@ -38,6 +38,7 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Risk assessment');
     this.getManagePlan();
     this.getRisksList();
     this.getRisksTheme();
@@ -108,8 +109,9 @@ export class RiskAssessmentComponent implements OnInit {
       if (response) this.managementPlan = response;
       if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
       // console.log(response)
+      this.showForm = true;
     },
-      err => { console.log(err); }
+      err => { console.log(err);this.showForm = true; }
       , () => {
         this.showForm = true;
       })

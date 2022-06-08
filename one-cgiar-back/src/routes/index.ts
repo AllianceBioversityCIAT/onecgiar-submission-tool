@@ -1,4 +1,5 @@
-import {Router} from 'express';console.log
+import {Router} from 'express';
+console.log;
 import auth from './AuthRoutes';
 import user from './UserRoutes';
 import roles from './RolesRoutes';

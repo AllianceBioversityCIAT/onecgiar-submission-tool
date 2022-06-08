@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Title } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
+
 const sectionPath = 'initiatives'
 
 @Injectable({
@@ -38,10 +41,12 @@ export class InitiativesService {
   ownInitiatives: [];
 
   usersByInitiative: [];
-
+  TawkMetaData
 
   constructor(
     public http: HttpClient,
+    private titleService:Title,
+    private _authService:AuthService
   ) { }
 
   // get initvStgId():string{
@@ -50,6 +55,59 @@ export class InitiativesService {
   // set initvStgId(val: string){
   //   this.initvStgId = val;
   // }
+  setTitle(section){
+    this.titleService.setTitle( (this.initiative.id ?  `INIT ${this.initiative.id} - ` : '') + section);
+    this.setTWKAttributes();
+  }
+
+  setTWKAttributes(){
+    // console.log(this.initiative.users)
+    let initUsers = `
+    Users assigned to the initiative\n`;
+    // if (this.initiative.users.length) {
+      this.initiative.users.map(initUser=>{
+        initUsers+= `${initUser?.last_name} ${initUser?.first_name} (${initUser?.role_acronym})\n`;
+      })
+
+      initUsers += `
+      `
+    // }else{
+    //   initUsers = '';
+    // }
+
+    // console.log(initUsers)
+
+    try {
+      console.log("setTitle")
+      window['Tawk_API']?.setAttributes({
+        'name': this.getUserInfo.name,
+        'email': this.getUserInfo.email,
+        'initiativename' :`
+        INIT ${this.initiative.id} - ${this.initiative.name || 'Home'}
+
+        `,
+        'metadata' :`
+        User Id: ${JSON.parse(localStorage.getItem('user'))?.id}
+        Initiative role: ${this.initiative.userRoleName || 'No role'}
+        Initiative status: ${this.initiative.status || 'No status'}
+        App role: ${this._authService?.lsUserRoles?.name}
+        
+        `,
+        // 'users': initUsers
+      }, (error) => { console.log(error) });
+    } catch (error) {
+      
+    }
+  }
+
+
+
+  get getUserInfo():{email,name}{
+    return JSON.parse(localStorage.getItem('user'));
+  }
+
+
+
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;

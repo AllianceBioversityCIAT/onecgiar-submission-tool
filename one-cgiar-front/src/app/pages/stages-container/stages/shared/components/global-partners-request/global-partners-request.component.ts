@@ -22,7 +22,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
       attributeName: 'scaling'
     },    
     {
-      name:'Demanding',
+      name:'Demand',
       id: 2,
       attributeName: 'demand'
     },

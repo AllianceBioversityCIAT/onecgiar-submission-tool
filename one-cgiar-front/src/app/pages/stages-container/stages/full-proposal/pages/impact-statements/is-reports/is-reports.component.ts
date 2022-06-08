@@ -19,6 +19,7 @@ export class IsReportsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Partners list summary report');
     this.getPreviewPartners();
   }
 

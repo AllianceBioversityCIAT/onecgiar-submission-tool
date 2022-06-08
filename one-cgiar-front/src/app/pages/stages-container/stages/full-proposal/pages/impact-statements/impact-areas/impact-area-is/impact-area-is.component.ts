@@ -70,6 +70,7 @@ export class ImpactAreaIsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Impact area');
     let reload = false;
     this.formChanges();
     this.getCLARISAInstitutions();

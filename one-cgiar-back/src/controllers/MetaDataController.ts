@@ -27,7 +27,7 @@ export async function getMenu(req: Request, res: Response) {
     // Get metadata per sections
     let stages = await metaData.getStages(initiativeId);
     let sections = await metaData.getSections(initiativeId);
-    let subsections = await metaData.getSubSectios(initiativeId);
+    let subsections = await metaData.getSubSections(initiativeId);
 
     // Map metadata
     stages.map((stage) => {
@@ -63,11 +63,11 @@ export async function getValidations(req: Request, res: Response) {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
 
-    // get intiative by stage
+    // get initiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not intitiative by stage, throw error
+    // if not initiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(
         'Validations: Error',
@@ -104,28 +104,28 @@ export async function getValidations(req: Request, res: Response) {
           melia: await metaData.validationMelia(),
           managePlan: await metaData.validationManagementPlan(),
           humanResources: await metaData.validationHumanResources(),
-         // financialResources: await metaData.validationFinancialResources(),
+          // financialResources: await metaData.validationFinancialResources(),
           policyCompliance: await metaData.validationPolicyCompliance(),
           impactStrategies: await metaData.validationImpactStrategies(),
           workPackages: await metaData.validationWorkPackages(),
           context: await metaData.validationContext()
         };
         break;
-        case 'Full Proposal ISDC Feedback':
-          validatorsObject = {
-            isdcFeedBack: await metaData.validationISDCFeedback(),
-            generalInformation: await metaData.validationGI(),
-            innovationPackages: await metaData.validationInnovationPackages(),
-            melia: await metaData.validationMelia(),
-            managePlan: await metaData.validationManagementPlan(),
-            humanResources: await metaData.validationHumanResources(),
-           // financialResources: await metaData.validationFinancialResources(),
-            policyCompliance: await metaData.validationPolicyCompliance(),
-            impactStrategies: await metaData.validationImpactStrategies(),
-            workPackages: await metaData.validationWorkPackages(),
-            context: await metaData.validationContext()
-          };
-          break;
+      case 'Full Proposal ISDC Feedback':
+        validatorsObject = {
+          isdcFeedBack: await metaData.validationISDCFeedback(),
+          generalInformation: await metaData.validationGI(),
+          innovationPackages: await metaData.validationInnovationPackages(),
+          melia: await metaData.validationMelia(),
+          managePlan: await metaData.validationManagementPlan(),
+          humanResources: await metaData.validationHumanResources(),
+          // financialResources: await metaData.validationFinancialResources(),
+          policyCompliance: await metaData.validationPolicyCompliance(),
+          impactStrategies: await metaData.validationImpactStrategies(),
+          workPackages: await metaData.validationWorkPackages(),
+          context: await metaData.validationContext()
+        };
+        break;
 
       default:
         break;

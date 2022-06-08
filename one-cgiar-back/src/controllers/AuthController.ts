@@ -258,7 +258,6 @@ export async function pusherAuth(req: Request, res: Response) {
   const userRepo = getCustomRepository(UsersRepository);
 
   try {
-
     let userInfo = await userRepo.findOneUserByRoleAndInitRole(
       initiativeId,
       userId
@@ -270,7 +269,7 @@ export async function pusherAuth(req: Request, res: Response) {
 
     const presenceData = {
       user_id: userId,
-      user_info: {name, roles,initiativeRoles, today}
+      user_info: {name, roles, initiativeRoles, today}
     };
     const auth = pusher.authenticate(socketId, channel, presenceData);
 

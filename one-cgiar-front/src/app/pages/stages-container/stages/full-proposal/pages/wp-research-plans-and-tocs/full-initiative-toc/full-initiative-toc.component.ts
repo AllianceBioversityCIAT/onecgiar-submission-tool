@@ -25,6 +25,7 @@ export class FullInitiativeTocComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Full initiative Toc')
     this.getProposalTocByInitiativeId();
   }
 

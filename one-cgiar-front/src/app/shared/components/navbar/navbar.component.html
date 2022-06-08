@@ -1,13 +1,13 @@
 <div class="navbar-content" *ngIf="_interactionsService.showHeader">
     <div class="navbar-options">
-        <div class="cgiar-logo">
+        <a class="cgiar-logo" routerLink="/home">
             <app-cgiar-logo-svg></app-cgiar-logo-svg>
-        </div>
-        <div class="platform-name"><strong>One CGIAR </strong><div class="outline-font">Submission Tool</div></div>
+        </a>
+        <a class="platform-name" routerLink="/home"><strong>One CGIAR </strong><div class="outline-font">Submission Tool</div></a>
         <!-- <i class="cgiar-logo"></i> -->
 
-        <div class="navbar-title" routerLink="/home" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Initiatives</div>
-        <div class="navbar-title" routerLink="/bi" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">BI</div>
+        <a class="navbar-title" routerLink="/home" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Initiatives</a>
+        <a class="navbar-title" routerLink="/bi" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">BI</a>
         <!-- <div class="navbar-title">Users online {{ this.pusherService.presenceChannel?.members.count}}</div> -->
     </div>
     <div class="navbar-opt">

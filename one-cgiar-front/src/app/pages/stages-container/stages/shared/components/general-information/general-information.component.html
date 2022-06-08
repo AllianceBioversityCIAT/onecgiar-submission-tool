@@ -55,10 +55,10 @@
                         <mat-card>
                             <div class="lead_content_grid">
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Deputy name', value: this.body?.generalInformation.co_first_name||'Not provided'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Co-Lead name', value: this.body?.generalInformation.co_first_name||'Not provided'}"></ibdc-simple-text>
                                 </div>
                                 <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Deputy email', value:this.body?.generalInformation.co_email||'Not provided'}"></ibdc-simple-text>
+                                    <ibdc-simple-text [options]="{inputTitle:'Co-Lead email', value:this.body?.generalInformation.co_email||'Not provided'}"></ibdc-simple-text>
                                 </div>
                                 <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
                                     <mat-icon>edit</mat-icon>

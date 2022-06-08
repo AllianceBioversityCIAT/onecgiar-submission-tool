@@ -37,7 +37,7 @@ export class AuthService {
         map((srvRes: ServerResponse) => {
           // console.log(srvRes);
           this.saveLocalStorage(srvRes);
-          this.setLoggedUserTawkTo(srvRes.response)
+          // this.setLoggedUserTawkTo(srvRes.response)
           this.user.next(srvRes.response);
           return srvRes.response;
         }),
@@ -83,57 +83,26 @@ export class AuthService {
     return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, body);
   }
 
-  private setLoggedUserTawkTo(user) {
-    // if (window.hasOwnProperty('Tawk_API')) {
-    //   if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
-    //   console.log(user)
+  // private setLoggedUserTawkTo(user) {
+  //   // if (window.hasOwnProperty('Tawk_API')) {
+  //   //   if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
+  //   //   console.log(user)
 
-    setTimeout(() => {
-      window['Tawk_API'].onLoad = function(){
-        window['Tawk_API'].setAttributes({
-            'name'  : 'Name',
-            'email' : 'email@email.com'
-        }, function(error){
-          console.log("setAttributes error")
-          console.log(error)
-        });
-    }
-    }, 3000);
-
-
+  //   setTimeout(() => {
+  //     window['Tawk_API'].onLoad = function(){
+  //       window['Tawk_API']?.setAttributes({
+  //           'name'  : 'Name',
+  //           'email' : 'email@email.com'
+  //       }, function(error){
+  //         console.log("setAttributes error")
+  //         console.log(error)
+  //       });
+  //   }
+  //   }, 3000);
 
 
 
-    //   // window['Tawk_API'].setAttributes({
-    //   //   name: user.name,
-    //   //   email: user.email
-    //   // }, function(error) {
-    //   //   console.log("setAttributes error")
-    //   //   console.log(error)
-    //   // });
-
-
-    // } else {
-    //   console.log('Tawk API DOES NOT EXISTS');
-    //   setTimeout(
-    //     () => {
-    //       if (window.hasOwnProperty('Tawk_API')) {
-    //         console.log('Tawk API EXISTS');
-            
-    //         if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
-            
-    //         window['Tawk_API'].setAttributes({
-    //           name: user.username,
-    //           email: user.email
-    //         }, function (error) {
-    //           console.log(error)
-    //         });
-    //       }
-    //     }
-    //     ,10000)
-
-    // }
-  }
+  // }
   
   private logOutTawtkTo() {
 

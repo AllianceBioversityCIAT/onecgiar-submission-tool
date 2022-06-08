@@ -6,13 +6,15 @@
         <div class="col-sm-2">
           <i class="cgiar-logo"></i>
         </div>
-        <div class="col-sm-8">
-          <mat-list>
-            <mat-list-item class="title"> Description </mat-list-item>
-            <mat-list-item>
-              <p style="font-size: 15px;">This is a tool to submit OneCGIAR initiatives in their phases of: pre-concept, concept and full proposal.</p> 
-            </mat-list-item>
-          </mat-list>
+        <div class="col-sm-8 sections">
+
+          <div class="platform-name" routerLink="/home"><strong>One CGIAR </strong><div class="outline-font">Submission Tool</div></div>
+          <!-- <i class="cgiar-logo"></i> -->
+  
+          <div class="navbar-title" routerLink="/home" routerLinkActive="active" >Initiatives</div>
+          <div class="navbar-title" routerLink="/bi" routerLinkActive="active" >BI</div>
+    
+          <div class="contact" (click)="setModalStatus()"><div>Should you have any questions, please do not hesitate to contact us</div></div>
           <!-- <h5 class="title">Description</h5>
           <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium at obcaecati blanditiis a aspernatur porro, ducimus fugiat quaerat natus suscipit?</p>
         -->
@@ -34,3 +36,5 @@
     </div>
   </div>
 </footer>
+
+<app-contact-modal (close)="closeModal()" [showModal]="showModal"></app-contact-modal>

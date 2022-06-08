@@ -366,12 +366,12 @@ export class MenuComponent implements OnInit {
         this.mapDataInMenu( [{
           name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
-        }],"dynamicList",3, 1, 8);
+        }],"reports",3, 1, 8);
 
         this.mapDataInMenu( [{
           name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
-        }],"dynamicList",4, 21, 46);
+        }],"reports",4, 21, 46);
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;

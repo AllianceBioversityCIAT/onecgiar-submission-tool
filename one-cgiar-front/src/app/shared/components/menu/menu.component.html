@@ -57,12 +57,12 @@
                 </app-menu-section>
             </div>
         </app-menu-stage>
-        <div *ngIf="this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved'" class="approve_button_container" (click)="this.submitBtn()">
+        <div *ngIf="(this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved') && this.initiativesSvc.initiative.stageId === 4" class="approve_button_container" (click)="this.submitBtn()">
             <div class="approve_button" [ngClass]="{'active': this._dataControlService.isdcFeedbackValidation?.validation }"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
           
         </div>
 
-        <div style="padding: 5px 10px;" *ngIf="this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved'" ngClass="animate__animated animate__bounceIn ng-star-inserted">
+        <div style="padding: 5px 10px;" *ngIf="(this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved') && this.initiativesSvc.initiative.stageId === 4" ngClass="animate__animated animate__bounceIn ng-star-inserted">
             <p-card [style]="{'background-color': 'unset',
                                 'color': '#FFFFFF',
                                 'border-radius': '10px',

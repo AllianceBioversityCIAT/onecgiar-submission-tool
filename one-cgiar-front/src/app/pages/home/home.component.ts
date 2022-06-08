@@ -16,14 +16,19 @@ export class HomeComponent implements OnInit {
   public data: any = [];
   public role: string = null;
   showTable = false;
-  constructor(public authSvc: AuthService, public initiativesSvc: InitiativesService, private spinnerService: NgxSpinnerService, private _clarisaService:ClarisaService) { }
+  constructor(
+    public authSvc: AuthService, 
+    public initiativesSvc: InitiativesService, 
+    private spinnerService: NgxSpinnerService, 
+    private _clarisaService:ClarisaService,
+    private _initiativesService:InitiativesService) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {  
     this.initiativesSvc.initiative.id = null;
     this.initiativesSvc.initiative.stageId = null;
     this.initiativesSvc.initiative.stageName = null;
     this.initiativesSvc.initiative.exactStageName = null;
-
+    this._initiativesService.setTitle('Initiatives'); 
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;

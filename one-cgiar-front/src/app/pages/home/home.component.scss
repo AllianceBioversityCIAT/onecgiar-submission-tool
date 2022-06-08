@@ -6,3 +6,11 @@
     border-radius: 20px;
     outline: none;
 }
+
+.local_container{
+    display: grid;
+    max-height: calc(100vh - 50px );
+    height: 100vh;
+    overflow-y: scroll;
+    // border: 1px;
+}

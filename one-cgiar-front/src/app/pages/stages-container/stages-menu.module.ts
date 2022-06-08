@@ -18,6 +18,7 @@ import { MaUserCardComponent } from './stages/shared/components/manage-access/co
 import { MaUserCardListComponent } from './stages/shared/components/manage-access/components/ma-user-card-list/ma-user-card-list.component';
 import { ButtonEditOrDeleteModule } from './stages/shared/components/button-edit-or-delete/button-edit-or-delete.module';
 import { InitiativeStatusInformationComponent } from './stages/components/initiative-status-information/initiative-status-information.component';
+import { FooterModule } from '../../shared/components/footer/footer.module';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { InitiativeStatusInformationComponent } from './stages/components/initia
     MenuModule,
     TooltipModule,
     SectionBreadcrumbModule,
-    ButtonEditOrDeleteModule
+    ButtonEditOrDeleteModule,
+    FooterModule
   ]
 })
 export class StagesMenuModule { }

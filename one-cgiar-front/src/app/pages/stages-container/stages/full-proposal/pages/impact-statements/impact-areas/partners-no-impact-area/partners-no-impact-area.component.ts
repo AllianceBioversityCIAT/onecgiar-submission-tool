@@ -39,6 +39,7 @@ export class PartnersNoImpactAreaComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Partners');
     this.getCLARISAInstitutions();
     this.getInstitutionsTypes();
     this.getImpactStrategies();

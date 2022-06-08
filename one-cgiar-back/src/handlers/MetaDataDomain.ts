@@ -72,7 +72,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
    * @param initiativeId
    * @returns subsections
    */
-  async getSubSectios(initiativeId: string) {
+  async getSubSections(initiativeId: string) {
     try {
       let subsections = this.queryRunner
         .query(` SELECT subsections.id as subSectionId,subsections.description,
@@ -521,9 +521,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
- async validationISDCFeedback() {
-   try{
-    let validationISDCFeedbackSQL = `SELECT sec.id as sectionId,sec.description,
+  async validationISDCFeedback() {
+    try {
+      let validationISDCFeedbackSQL = `SELECT sec.id as sectionId,sec.description,
                                       CASE
                                   WHEN 
                                       (SELECT  SUM(num) - count(num)     
@@ -542,14 +542,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
                                               JOIN sections_meta sec
                                               WHERE ini.id = ${this.initvStgId_}
                                                 AND sec.stageId= ini.stageId
-                                                AND sec.description='isdc-feedback-responses';`
-    var validationISDCFeedback = await this.queryRunner.query(validationISDCFeedbackSQL);
-    validationISDCFeedback[0].validation = parseInt(validationISDCFeedback[0].validation);
-    return validationISDCFeedback[0];
-   }catch(error){
-    throw new BaseError('Get validations ISDC Feedback', 400, error.message, false);
-   }
- }
+                                                AND sec.description='isdc-feedback-responses';`;
+      var validationISDCFeedback = await this.queryRunner.query(
+        validationISDCFeedbackSQL
+      );
+      validationISDCFeedback[0].validation = parseInt(
+        validationISDCFeedback[0].validation
+      );
+      return validationISDCFeedback[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations ISDC Feedback',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
 
   async validationMelia() {
     try {
@@ -664,7 +673,61 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'melia-studies-and-activities';`;
+    AND subsec.description = 'melia-studies-and-activities';`,
+    validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 ) > 0 AND
+      (SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 ) > 0 )AND
+      ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) = 0 AND
+      (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0)
+      THEN  CASE
+      WHEN 
+          ((SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) > 0 AND
+      (SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
+      (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
+        FROM results rs 
+          LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} aND rs.result_type_id IN (1,2)) = 0
+      THEN TRUE
+          ELSE FALSE
+          END
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+    AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-c';`,
+    validateTableB = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+        (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+            (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+              FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-b';`;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -673,6 +736,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         validateMeliaPlanSQL
       );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
+      var validationTableC = await this.queryRunner.query(validateTableC);
+      var validationTableB = await this.queryRunner.query(validateTableB);
 
       // validationResultFramework[0].validation = parseInt(
       //   validationResultFramework[0].validation
@@ -682,6 +747,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
       validationStudies[0].validation = parseInt(
         validationStudies[0].validation
+      );
+      validationTableC[0].validation = parseInt(
+        validationTableC[0].validation
+      );
+      validationTableB[0].validation = parseInt(
+        validationTableB[0].validation
       );
 
       validationMelia.map((me) => {
@@ -696,6 +767,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           validationStudies.find((st) => {
             return (st.sectionId = me.sectionId);
+          }),
+          validationTableC.find(tc => {
+            return (tc.sectionId = me.sectionId);
+          }),
+          validationTableB.find(tb => {
+            return (tb.sectionId = me.sectionId);
           })
         ];
       });
@@ -1650,22 +1727,34 @@ export class MetaDataHandler extends InitiativeStageHandler {
     AND subsec.description = 'challenge-statement';`,
         measurableObjectivesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
-      WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-	   JOIN subsections_meta subsec
-      WHERE ini.id = ${this.initvStgId_}
+          WHEN
+          (SELECT SUM(1) as firstValidation FROM results rs
+            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
+          AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) IS NULL 
+            OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) = '')
+          THEN  FALSE
+        ELSE CASE
+          WHEN 
+              (SELECT SUM(1) 
+            FROM results rs 
+              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3) IS NOT NULL AND
+          (  SELECT count(rsi.name) - sum(IF(rsi.name is null || rsi.name = '', 0, 1)) as validation
+            FROM results rs 
+              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ${this.initvStgId_}  ) = 0
+          THEN TRUE
+              ELSE FALSE
+              END
+        END as validation
+      FROM initiatives_by_stages ini
+             JOIN sections_meta sec
+           JOIN subsections_meta subsec
+       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-		AND sec.id = subsec.sectionId
-        AND sec.description='context'
-	    AND subsec.description = 'measurable-objectives';`,
+          AND sec.id = subsec.sectionId
+              AND sec.description='context'
+            AND subsec.description = 'measurable-objectives';`,
         learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 

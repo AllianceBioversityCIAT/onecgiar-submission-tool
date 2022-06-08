@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
-import { MeliaStudiesActivities } from './MeliaStudiesActivities';
-import { Tracks } from './Tracks';
-import { TracksYears } from './TracksYears';
+import {MeliaStudiesActivities} from './MeliaStudiesActivities';
+import {Tracks} from './Tracks';
+import {TracksYears} from './TracksYears';
 
 @Entity('initiatives_tracks_years')
 export class InitiativesTracksYears extends UpdatedCreatedAt {
@@ -21,21 +21,21 @@ export class InitiativesTracksYears extends UpdatedCreatedAt {
   track_id: number;
 
   @ManyToOne(() => Tracks)
-  @JoinColumn({name: "track_id"})
+  @JoinColumn({name: 'track_id'})
   track!: Tracks;
 
   @Column({type: 'int'})
   track_year_id: number;
 
   @ManyToOne(() => TracksYears)
-  @JoinColumn({name: "track_year_id"})
+  @JoinColumn({name: 'track_year_id'})
   trackYear!: TracksYears;
 
   @Column({type: 'int'})
   initvStgId: number;
 
   @ManyToOne(() => InitiativesByStages)
-  @JoinColumn({name: "initvStgId"})
+  @JoinColumn({name: 'initvStgId'})
   initvStg!: InitiativesByStages;
 
   @Column({type: 'int', default: 0})

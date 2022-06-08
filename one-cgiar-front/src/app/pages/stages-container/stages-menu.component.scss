@@ -170,6 +170,11 @@
         // overflow-y: hidden;
         position: relative;
         z-index: 0;
+        .footer{
+            margin-top: 100px;
+            position: relative;
+            z-index: -1;
+        }
     }
 }
 
@@ -285,6 +290,7 @@
 }
 
 
+
 // /* Extra small devices (phones, 600px and down) */
 // @media only screen and (max-width: 600px) {
 //     .left_menu{
@@ -364,7 +370,7 @@
 
 
 @media only screen and (max-width: 1300px) {
-    .right_container{
+    .right_container_content{
         padding: 5px 10px 0px;
     }
 }
@@ -372,7 +378,7 @@
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 1300px) {
 
-    .right_container{
+    .right_container_content{
         padding: 10px 20px 0px; 
     }
 }
@@ -381,7 +387,7 @@
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 1550px) {
 
-    .right_container{
+    .right_container_content{
         padding: 10px 40px 0px; 
     }
 }

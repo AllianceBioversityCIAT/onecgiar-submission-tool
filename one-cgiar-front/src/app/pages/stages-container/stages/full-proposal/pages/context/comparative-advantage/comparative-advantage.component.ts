@@ -36,6 +36,7 @@ export class ComparativeAdvantageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Comparative advantage')
     this.getContext();
     this.getLinks();
     this.formChanges();

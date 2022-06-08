@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnDestroy, OnInit, Renderer2 } from '@angular
 import { DOCUMENT } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({
   selector: 'app-tawk-to',
@@ -16,7 +17,7 @@ export class TawkToComponent implements OnInit {
   config = environment;
 
 
-  constructor(private _renderer: Renderer2, @Inject(DOCUMENT) private _document, private authService: AuthService) {
+  constructor(private _renderer: Renderer2, @Inject(DOCUMENT) private _document, private authService: AuthService, private _initiativesService:InitiativesService) {
     this.authService.user$.subscribe(x => {
       this.currentUser = x;
     });
@@ -46,15 +47,17 @@ export class TawkToComponent implements OnInit {
       `;
       this._renderer.appendChild(document.querySelector('.Tawk_API_container'), this.script);
 
-      setTimeout(() => {
-        window['Tawk_API'].onLoad = () => {
-          window['Tawk_API'].setAttributes({
-            'name': this.getUserInfo.name,
-            'email': this.getUserInfo.email,
-            // 'hash'  : 'hash value'
-          }, (error) => { console.log(error) });
-        }
-      }, 500);
+      // const selectEntry = document.getElementById('.Tawk_API_container').addEventListener('click', ()=>{console.log("insert T")})
+      
+
+      // try {
+      //   window['Tawk_API'].onLoad = () => {
+      //     this._initiativesService.setTitle('Home');
+      //   }
+      // } catch (error) {
+      //   console.log(error)
+      // }
+
 
     }
 

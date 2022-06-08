@@ -27,6 +27,7 @@ export class WorkPackageComponent implements OnInit {
   }
 
   ngOnInit(){
+    this._initiativesService.setTitle('Work package')
     let reload = false;
     this.activatedRoute.params.subscribe((routeResp: any) => {
       // console.log(routeResp);

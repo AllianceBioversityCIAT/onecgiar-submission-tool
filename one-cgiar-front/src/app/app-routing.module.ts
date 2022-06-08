@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
 import { CheckHomeGuard } from './shared/guards/check-home.guard';
 import { CheckLoginGuard } from './shared/guards/check-login.guard';
 
@@ -10,7 +9,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/stages-container/stages-menu.module').then((m) => m.StagesMenuModule),
   },  
   {
-    path: 'home', component: HomeComponent,
+    path: 'home', 
+    loadChildren: () => import('./pages/home/home.module').then((m) => m.HomeModule),
     canActivate: [CheckHomeGuard],
   },
   {

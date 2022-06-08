@@ -7,10 +7,10 @@ import {
   ManyToOne
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
-import { Initiatives } from './Initiatives';
+import {Initiatives} from './Initiatives';
 import {InitiativesByStages} from './InititativesByStages';
-import { MeliaStudiesActivities } from './MeliaStudiesActivities';
-import { Users } from './Users';
+import {MeliaStudiesActivities} from './MeliaStudiesActivities';
+import {Users} from './Users';
 
 @Entity('initiatives_approval')
 export class InitiativesApproval extends UpdatedCreatedAt {
@@ -21,14 +21,14 @@ export class InitiativesApproval extends UpdatedCreatedAt {
   initiativeId: number;
 
   @ManyToOne(() => Initiatives)
-  @JoinColumn({name: "initiativeId"})
+  @JoinColumn({name: 'initiativeId'})
   initiative!: Initiatives;
 
   @Column({type: 'int'})
   user_id: number;
 
   @ManyToOne(() => Users)
-  @JoinColumn({name: "user_id"})
+  @JoinColumn({name: 'user_id'})
   user!: Users;
 
   @Column()

@@ -246,7 +246,16 @@ button {
   background-position: center;
   background-size: cover;
 }
-
+.table-container{
+  .p-datatable-header{
+      background-color: var(--ibdc-secondary-color);
+  }
+  .p-datatable{
+    border-radius: 10px !important;
+    overflow: hidden;
+    border: 2px solid white;
+  }
+}
 .viewer-close{
   background-color: var(--ibdc-secondary-color) !important;
 }

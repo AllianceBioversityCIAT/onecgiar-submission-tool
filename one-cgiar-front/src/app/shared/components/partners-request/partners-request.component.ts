@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../services/initiatives.service';
 import { InteractionsService } from '../../services/interactions.service';
-import { ConceptService } from '../../services/concept.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -39,7 +38,6 @@ export class PartnersRequestComponent implements OnInit {
     public _initiativesService:InitiativesService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    private _conceptService:ConceptService,
     private dialogRef: MatDialogRef<PartnersRequestComponent>
   ) { 
     this.partnersRequestForm = new FormGroup({
@@ -73,7 +71,6 @@ export class PartnersRequestComponent implements OnInit {
   }
 
   // getInitiativeName(){
-  //   this._conceptService.getConcept(this._initiativesService.initvStgId).subscribe(resp=>{
   //     console.log(resp);
   //     this.conceptInfo = resp;
   //     this.partnersRequestForm.get("externalUserComments").setValue(this.setComment());
