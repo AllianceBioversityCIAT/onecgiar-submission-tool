@@ -727,8 +727,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
           AND sec.description='melia'
-        AND subsec.description = 'table-b'
-  GROUP BY ini.id;`;
+        AND subsec.description = 'table-b';`;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -1731,8 +1730,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
           WHEN
           (SELECT SUM(1) as firstValidation FROM results rs
             WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
-          AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId) IS NULL 
-            OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId) = '')
+          AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) IS NULL 
+            OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) = '')
           THEN  FALSE
         ELSE CASE
           WHEN 
@@ -1755,8 +1754,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.stageId= ini.stageId
           AND sec.id = subsec.sectionId
               AND sec.description='context'
-            AND subsec.description = 'measurable-objectives'
-      GROUP BY ini.id;`,
+            AND subsec.description = 'measurable-objectives';`,
         learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
