@@ -96,17 +96,6 @@ const validateAD = (one_user, password) => {
       if (err) {
         console.log(Object.keys(err));
 
-        adirri.authenticate(ad_user, password, (err, auth) => {
-          if (auth) {
-            console.log('Authenticated ADIRRI!');
-            return resolve(auth);
-          }
-          if (err) {
-            console.log(err);
-            return resolve(false);
-          }
-        });
-
         let notFound = {
           name: 'SERVER_NOT_FOUND',
           description: `There was an internal server error: ${err.lde_message}`,
@@ -121,6 +110,18 @@ const validateAD = (one_user, password) => {
 
         return reject(notFound);
       } else {
+
+        adirri.authenticate(ad_user, password, (err, auth) => {
+          if (auth) {
+            console.log('Authenticated ADIRRI!');
+            return resolve(auth);
+          }
+          if (err) {
+            console.log(err);
+            return resolve(false);
+          }
+        });
+
         console.log('Authentication failed!');
         let err = {
           name: 'INVALID_CREDENTIALS',
