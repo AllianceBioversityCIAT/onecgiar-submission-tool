@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 export interface DialogData {
   animal: string;
@@ -26,7 +27,8 @@ export class ManageAccessComponent implements OnInit {
     public dialogRef: MatDialogRef<ManageAccessComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
-    private _initiativesService:InitiativesService
+    private _initiativesService:InitiativesService,
+    private _interactionsService:InteractionsService
   ) { }
 
   ngOnInit(): void {
@@ -131,6 +133,7 @@ export class ManageAccessComponent implements OnInit {
 
     })
 
+    this._interactionsService.successMessage(`Updated users and roles`);
   }
 
   firstTab(){
