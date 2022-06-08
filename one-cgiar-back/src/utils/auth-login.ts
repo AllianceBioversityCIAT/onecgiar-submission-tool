@@ -94,7 +94,7 @@ const validateAD = (one_user, password) => {
         return resolve(auth);
       }
       if (err) {
-        console.log(Object.keys(err));
+        console.log('ERROR 1',Object.keys(err));
 
         let notFound = {
           name: 'SERVER_NOT_FOUND',
