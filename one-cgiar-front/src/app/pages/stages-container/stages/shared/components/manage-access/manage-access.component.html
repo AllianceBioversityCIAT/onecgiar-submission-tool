@@ -5,12 +5,12 @@
 
     <div class="custom-container-dialog">
 
-        <mat-tab-group [(selectedIndex)]="tabNumber">
-            <mat-tab>
+        <!-- <mat-tab-group [(selectedIndex)]="tabNumber"> -->
+            <!-- <mat-tab>
                 <ng-template mat-tab-label>
                     <mat-icon style="margin-right: 8px;" class="tab-icon">person_add</mat-icon>
                     Assign coordinators
-                </ng-template>
+                </ng-template> -->
 
 
                 <!-- <br> -->
@@ -77,9 +77,9 @@
                     </div>
                 </div>
 
-            </mat-tab>
+            <!-- </mat-tab> -->
 
-            <mat-tab>
+            <!-- <mat-tab>
                 <ng-template mat-tab-label>
                     <mat-icon style="margin-right: 8px;" class="tab-icon">add_circle_outline</mat-icon>
                     Register users
@@ -88,8 +88,8 @@
 
                 <app-create-users [allRoles]="allRoles" (firstTab)="firstTab();" (realoadRoles)="reloadSelectRoleComp();getUsersByInitiative()"></app-create-users>
 
-            </mat-tab>
-        </mat-tab-group>
+            </mat-tab> -->
+        <!-- </mat-tab-group> -->
     </div>
 
 </div>
