@@ -6,6 +6,7 @@ import config from '../config/config';
 
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
+const adirri = new ActiveDirectory(config.active_directory_irri);
 const jwtSecret = process.env.jwtSecret;
 const jwtTocSecret = process.env.jwtTocSecret;
 
@@ -93,7 +94,19 @@ const validateAD = (one_user, password) => {
         return resolve(auth);
       }
       if (err) {
-        // console.log(Object.keys(err))
+        console.log(Object.keys(err));
+
+        adirri.authenticate(ad_user, password, (err, auth) => {
+          if (auth) {
+            console.log('Authenticated ADIRRI!');
+            return resolve(auth);
+          }
+          if (err) {
+            console.log(err);
+            return resolve(false);
+          }
+        });
+
         let notFound = {
           name: 'SERVER_NOT_FOUND',
           description: `There was an internal server error: ${err.lde_message}`,
