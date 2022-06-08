@@ -11,8 +11,6 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 
 //? Components
-import { InitTableComponent } from './shared/components/init-table/init-table.component';
-import { HomeComponent } from './pages/home/home.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
@@ -45,8 +43,6 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    InitTableComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
