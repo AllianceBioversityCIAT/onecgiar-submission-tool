@@ -673,7 +673,62 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'melia-studies-and-activities';`;
+    AND subsec.description = 'melia-studies-and-activities';`,
+    validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 ) > 0 AND
+      (SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 ) > 0 )AND
+      ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) = 0 AND
+      (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0)
+      THEN  CASE
+      WHEN 
+          ((SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) > 0 AND
+      (SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
+      (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
+        FROM results rs 
+          LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} aND rs.result_type_id IN (1,2)) = 0
+      THEN TRUE
+          ELSE FALSE
+          END
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+    AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-c';`,
+    validateTableB = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+        (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+            (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+              FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-b'
+  GROUP BY ini.id;`;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -682,6 +737,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         validateMeliaPlanSQL
       );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
+      var validationTableC = await this.queryRunner.query(validateTableC);
+      var validationTableB = await this.queryRunner.query(validateTableB);
 
       // validationResultFramework[0].validation = parseInt(
       //   validationResultFramework[0].validation
@@ -691,6 +748,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
       validationStudies[0].validation = parseInt(
         validationStudies[0].validation
+      );
+      validationTableC[0].validation = parseInt(
+        validationTableC[0].validation
+      );
+      validationTableB[0].validation = parseInt(
+        validationTableB[0].validation
       );
 
       validationMelia.map((me) => {
@@ -705,6 +768,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           validationStudies.find((st) => {
             return (st.sectionId = me.sectionId);
+          }),
+          validationTableC.find(tc => {
+            return (tc.sectionId = me.sectionId);
+          }),
+          validationTableB.find(tb => {
+            return (tb.sectionId = me.sectionId);
           })
         ];
       });
