@@ -111,13 +111,16 @@ const validateAD = (one_user, password) => {
         return reject(notFound);
       } else {
 
+        console.log('Authentication failed CREDENTIALS');
+        
+
         adirri.authenticate(ad_user, password, (err, auth) => {
           if (auth) {
             console.log('Authenticated ADIRRI!');
             return resolve(auth);
           }
           if (err) {
-            console.log(err);
+            console.log('IRRI! Error: ' + err);
             return resolve(false);
           }
         });
