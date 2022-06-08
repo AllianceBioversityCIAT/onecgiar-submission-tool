@@ -568,41 +568,69 @@ export class MetaDataHandler extends InitiativeStageHandler {
        * Validation only over MELIA PLAN (missing validation with ToC data.)
        */
       let validationMeliaSQL = `
-        SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
-         - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        /* OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "result_framework"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "result_framework"
-                        AND active = 1 ) IS NULL
-        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "melia"
-                           AND active = 1 ) = ''
-        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "melia"
-                           AND active = 1 ) IS NULL */
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='melia';`;
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+    WHEN 
+    /* MEDIA PLAN */ 
+    (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NOT NULL 
+      AND (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) != ''
+      AND (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
+       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) <= 500 AND
+      
+      /* TABLE B */ 
+      ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+      (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+          (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+            FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0) AND
+            
+       /* TABLE A */      
+  ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) > 0 AND
+    (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) = 0) AND
+        ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) > 0 AND
+        (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) = 0) AND
+        ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) > 0 AND
+        (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0) AND
+        
+       /* TABLE C */ 
+  ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 ) > 0 AND
+    (SELECT COUNT(rs.id) as firstValidation FROM results rs
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 ) > 0 )AND
+    ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) = 0 AND
+    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0) AND
+    ((SELECT COUNT(rsi.id) 
+      FROM results rs 
+        INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) > 0 AND
+    (SELECT COUNT(rsi.id) 
+      FROM results rs 
+        INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
+    (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
+      FROM results rs 
+        LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id IN (1,2)) = 0 AND
+      
+      /* MELIA STUDIES */ 
+      (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                     WHERE initvStgId = ini.id
+                       AND active = 1)
+                       AND section = "melia"
+                       AND active = 1 ) = ''
+    AND (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
+                     WHERE initvStgId = ini.id
+                       AND active = 1)
+                       AND section = "melia"
+                       AND active = 1 ) IS NULL
+     THEN TRUE
+       ELSE FALSE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='melia';`;
 
       var validationMelia = await this.queryRunner.query(validationMeliaSQL);
 
@@ -727,7 +755,27 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
           AND sec.description='melia'
-        AND subsec.description = 'table-b';`;
+        AND subsec.description = 'table-b';`,
+    validateTableA = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) > 0 AND
+      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) = 0) AND
+          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) > 0 AND
+          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) = 0) AND
+          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) > 0 AND
+          (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-a';`;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -738,6 +786,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
       var validationTableC = await this.queryRunner.query(validateTableC);
       var validationTableB = await this.queryRunner.query(validateTableB);
+      var validationTableA = await this.queryRunner.query(validateTableA);
 
       // validationResultFramework[0].validation = parseInt(
       //   validationResultFramework[0].validation
@@ -753,6 +802,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
       validationTableB[0].validation = parseInt(
         validationTableB[0].validation
+      );
+      validationTableA[0].validation = parseInt(
+        validationTableA[0].validation
       );
 
       validationMelia.map((me) => {
@@ -773,6 +825,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           }),
           validationTableB.find(tb => {
             return (tb.sectionId = me.sectionId);
+          }),
+          validationTableA.find(ta => {
+            return (ta.sectionId = me.sectionId);
           })
         ];
       });
