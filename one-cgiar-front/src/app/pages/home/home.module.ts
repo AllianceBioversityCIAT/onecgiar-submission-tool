@@ -8,6 +8,7 @@ import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import { InitiativeCreatorModule } from '../stages-container/stages/shared/components/initiative-creator/initiative-creator.module';
+import { FooterModule } from '../../shared/components/footer/footer.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { InitiativeCreatorModule } from '../stages-container/stages/shared/compo
     TableModule,
     ButtonModule,
     InputTextModule,
-    InitiativeCreatorModule
+    InitiativeCreatorModule,
+    FooterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
