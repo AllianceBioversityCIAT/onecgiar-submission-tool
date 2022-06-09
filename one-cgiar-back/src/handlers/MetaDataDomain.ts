@@ -613,16 +613,35 @@ export class MetaDataHandler extends InitiativeStageHandler {
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id IN (1,2)) = 0 AND
       
       /* MELIA STUDIES */ 
-      (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                     WHERE initvStgId = ini.id
-                       AND active = 1)
-                       AND section = "melia"
-                       AND active = 1 ) = ''
-    AND (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                     WHERE initvStgId = ini.id
-                       AND active = 1)
-                       AND section = "melia"
-                       AND active = 1 ) IS NULL
+      (CASE
+        WHEN
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
+        THEN CASE
+        WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
+        THEN TRUE
+        ELSE CASE
+          WHEN 
+          (SELECT if(sum(CASE
+            WHEN 
+              ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) - count(CASE
+            WHEN ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) = 0, 1, 0) as validation_region_contries
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 1
+                THEN TRUE
+                ELSE FALSE
+                END
+          END
+        ELSE FALSE
+        END ) = 1
      THEN TRUE
        ELSE FALSE
        END AS validation
