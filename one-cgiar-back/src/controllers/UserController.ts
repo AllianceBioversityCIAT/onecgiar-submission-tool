@@ -8,6 +8,7 @@ import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
+import { InitiativeHandler } from '../handlers/InitiativesDomain';
 
 // get all users
 export const getUsers = async (
@@ -358,3 +359,33 @@ export async function removeUser(req: Request, res: Response) {
     return error;
   }
 }
+
+// get users by initiatives
+export const getUsersByInitiatives = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+
+  const initiativeshandler = new InitiativeHandler();
+
+  try {
+    const usersByInitiativesList = await initiativeshandler.getUsersByInitiativesList();
+    console.log(usersByInitiativesList);
+    
+    return res.json({data: usersByInitiativesList, msg: 'Users by initiatives list'});
+  } catch (error) {
+    console.log(error);
+    if (
+      error instanceof QueryFailedError ||
+      error instanceof EntityNotFoundError
+    ) {
+      new BaseError(
+        'Bad Request',
+        HttpStatusCode.BAD_REQUEST,
+        error.message,
+        true
+      );
+    }
+    return res.status(404).json({msg: 'Something went wrong', data: error});
+  }
+};

@@ -45,6 +45,27 @@ export class InitiativeHandler extends InitiativeStageHandler {
     }
   }
 
+  /** Get users by initiatives and roles */
+  async getUsersByInitiativesList() {
+    let getUsersByInitiatives;
+
+    try {
+      getUsersByInitiatives = await this.queryRunner.query(
+        `select u.first_name, u.last_name, u.email, i.official_code as initiative_code, r.name as role
+        from initiatives_by_users ibu 
+        left join users u on ibu.userId = u.id
+        left join roles_by_users rbu on u.id = rbu.user_id 
+        left join initiatives i on ibu.initiativeId =i.id
+        left join roles r on ibu.roleId = r.id 
+        where ibu.active = true`
+      );
+
+      return getUsersByInitiatives;
+    } catch (error) {
+      throw new BaseError('Get users by initiatives list', 400, error.message, false);
+    }
+  }
+
   /** Get existing initiatives without stage */
   async getInitiativesList() {
     let allInitiatives;
