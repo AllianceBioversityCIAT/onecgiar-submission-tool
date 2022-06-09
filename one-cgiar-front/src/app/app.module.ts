@@ -40,6 +40,7 @@ import { SidebarModule } from './shared/components/sidebar/sidebar.module';
 import { HttpRequestInterceptor } from './shared/interceptors/http-request.interceptor';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { AppErrorHandler } from './shared/utils/app-error-handler';
+import { GoogleAnalyticsModule } from './shared/components/google-analytics/google-analytics.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +60,7 @@ import { AppErrorHandler } from './shared/utils/app-error-handler';
     FormsModule,
     SweetAlert2Module.forRoot(),
     QuillModule.forRoot(),
+    GoogleAnalyticsModule,
     // NgxHotjarModule.forRoot(environment.hotjar),
     // NgxHotjarRouterModule,
     MaterialModule,
