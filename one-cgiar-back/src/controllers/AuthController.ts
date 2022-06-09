@@ -25,7 +25,6 @@ const pusher = new Pusher({
 });
 const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
-const adirri = new ActiveDirectory(config.active_directory_irri);
 
 export const login = async (req: Request, res: Response) => {
   const {email, password} = req.body;
