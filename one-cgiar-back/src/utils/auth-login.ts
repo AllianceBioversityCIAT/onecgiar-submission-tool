@@ -3,8 +3,8 @@ import {Users} from '../entity/Users';
 import {BaseError} from '../handlers/BaseError';
 import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
+import ActiveDirectory from 'activedirectory2';
 
-const ActiveDirectory = require('activedirectory');
 const ad = new ActiveDirectory(config.active_directory);
 const jwtSecret = process.env.jwtSecret;
 const jwtTocSecret = process.env.jwtTocSecret;
@@ -83,19 +83,34 @@ export const utilLogin = async (email: string, password: string) => {
   return {token, name, roles, id};
 };
 
-const validateAD = (one_user, password) => {
+const validateAD = async (one_user, password) => {
   // ad = new ActiveDirectory(config.active_directory);
   let ad_user = one_user.email;
   console.log(ad_user);
-  
+
   return new Promise((resolve, reject) => {
+
+
+    var userPrincipalName = ad_user;
+    var username = 'CN=Juan,OU=Users,DC=CGIARAD,DC=ORG';
+  
+   ad.findUser(userPrincipalName , function(err, user) {
+      if (err) {
+        console.log('ERROR: ' +JSON.stringify(err));
+        // return 'ERROR';
+      }
+     
+      if (! user) console.log('User: ' + userPrincipalName  + ' not found.');
+      else console.log(JSON.stringify(user));
+    });
+  
+
     ad.authenticate(ad_user, password, (err, auth) => {
       if (auth) {
-        console.log('Authenticated AD!');
+        console.log('Authenticated AD!', JSON.stringify(auth));
         return resolve(auth);
       }
       if (err) {
- 
         let notFound = {
           name: 'SERVER_NOT_FOUND',
           description: `There was an internal server error: ${err.lde_message}`,
@@ -110,7 +125,6 @@ const validateAD = (one_user, password) => {
 
         return reject(notFound);
       } else {
-
         console.log('Authentication failed!');
         let err = {
           name: 'INVALID_CREDENTIALS',
@@ -121,6 +135,8 @@ const validateAD = (one_user, password) => {
         return reject(err);
       }
     });
+
+    
   });
 };
 
