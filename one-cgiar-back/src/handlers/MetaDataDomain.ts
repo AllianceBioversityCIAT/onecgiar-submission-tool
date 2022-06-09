@@ -617,7 +617,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         WHEN
           (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
                 (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
@@ -703,7 +704,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
         WHEN
           (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
                 (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
