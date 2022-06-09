@@ -679,29 +679,44 @@ export class MetaDataHandler extends InitiativeStageHandler {
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
     AND subsec.description = 'melia-plan';`,
-        validateStudiesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
-      CASE
-    WHEN (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                       WHERE initvStgId = ini.id
-                         AND active = 1)
-                         AND section = "melia"
-                         AND active = 1 ) = ''
-      OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                       WHERE initvStgId = ini.id
-                         AND active = 1)
-                         AND section = "melia"
-                         AND active = 1 ) IS NULL
-     THEN FALSE
-       ELSE TRUE
-       END AS validation
-     FROM initiatives_by_stages ini
-     JOIN sections_meta sec
-   JOIN subsections_meta subsec
-    WHERE ini.id = ${this.initvStgId_}
-      AND sec.stageId= ini.stageId
-  AND sec.id = subsec.sectionId
-      AND sec.description='melia'
-    AND subsec.description = 'melia-studies-and-activities';`,
+        validateStudiesSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+        WHEN
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0
+        THEN CASE
+        WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
+        THEN TRUE
+        ELSE CASE
+          WHEN 
+          (SELECT if(sum(CASE
+            WHEN 
+              ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) - count(CASE
+            WHEN ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) = 0, 1, 0) as validation_region_contries
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 1
+                THEN TRUE
+                ELSE FALSE
+                END
+          END
+        ELSE FALSE
+        END as validation
+      FROM initiatives_by_stages ini
+        JOIN sections_meta sec
+        JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.id = subsec.sectionId
+        AND sec.description='melia'
+        AND subsec.description = 'melia-studies-and-activities';`,
     validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
     CASE
       WHEN
