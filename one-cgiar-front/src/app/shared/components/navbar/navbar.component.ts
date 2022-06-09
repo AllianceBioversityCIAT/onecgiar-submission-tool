@@ -5,6 +5,7 @@ import { PusherService } from '../../services/pusher.service';
 import { DataControlService } from '../../services/data-control.service';
 import { NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
 import { InitiativesService } from '../../services/initiatives.service';
+declare let gtag: (property: string, value: any, configs: any) => {};
 
 @Component({
   selector: 'app-navbar',
@@ -58,7 +59,11 @@ export class NavbarComponent implements OnInit {
         this._pusherService.continueEditing = false;
         this._pusherService.firstUser = false;
         this._pusherService.secondUser = null;
+        gtag('config', 'G-HMDMDNT5F9', {
+          page_path: event.url
+        });
       }
+ 
     })
 
 
