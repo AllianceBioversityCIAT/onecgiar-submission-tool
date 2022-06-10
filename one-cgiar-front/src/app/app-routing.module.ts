@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CheckHomeGuard } from './shared/guards/check-home.guard';
 import { CheckLoginGuard } from './shared/guards/check-login.guard';
+import { IsAdminGuard } from './shared/guards/is-admin.guard';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./pages/admin-panel/admin-panel.module').then((m) => m.AdminPanelModule),
+    canActivate: [IsAdminGuard],
   },  
   {
     path: 'notFound',
