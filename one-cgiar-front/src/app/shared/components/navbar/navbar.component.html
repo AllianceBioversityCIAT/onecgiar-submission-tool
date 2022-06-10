@@ -8,7 +8,7 @@
 
         <a class="navbar-title" routerLink="/home" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Initiatives</a>
         <a class="navbar-title" routerLink="/bi" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">BI</a>
-        <a class="navbar-title" routerLink="/admin" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Admin panel</a>
+        <a class="navbar-title" *ngIf="this._dataControlService.isAdmin" routerLink="/admin" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Admin panel</a>
         <!-- <div class="navbar-title">Users online {{ this.pusherService.presenceChannel?.members.count}}</div> -->
     </div>
     <div class="navbar-opt">
