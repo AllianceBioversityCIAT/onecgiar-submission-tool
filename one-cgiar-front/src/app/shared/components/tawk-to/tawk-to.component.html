@@ -3,3 +3,8 @@
         chat
     </span>
 </button>
+<button *ngIf="!currentUser" (click)="openChat()" type="button" class="btn btn-primary tawk-to-button">
+    <span class="material-icons">
+        chat
+    </span>
+</button>

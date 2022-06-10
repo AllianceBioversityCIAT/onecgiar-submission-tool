@@ -31,8 +31,8 @@ export class TawkToComponent implements OnInit {
   }
 
   initializeTawkIo(){
-    // console.log("initializeTawkIo");
-    if (this.currentUser && this.currentUser.roles[0].id != 3) {
+    console.log("initializeTawkIo");
+    // if (this.currentUser && this.currentUser.roles[0].id != 3) {
       // console.log("Tawk_API")
       this.script.text = `
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -43,6 +43,13 @@ export class TawkToComponent implements OnInit {
       s1.charset='UTF-8';
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
+      Tawk_API.onLoad = function(){
+        window['Tawk_API'].setAttributes({
+                        name:  'Visitor'
+                      }, function (error) {
+                        console.log(error)
+                      });
+    };
       })();  
       `;
       this._renderer.appendChild(document.querySelector('.Tawk_API_container'), this.script);
@@ -57,9 +64,17 @@ export class TawkToComponent implements OnInit {
       // } catch (error) {
       //   console.log(error)
       // }
+      // if(this.currentUser == undefined) {
+      //   window['Tawk_API'].setAttributes({
+      //               name:  'Visitor',
+      //               email:  'No user logged'
+      //             }, function (error) {
+      //               console.log(error)
+      //             });
+      // }
 
 
-    }
+    // }
 
   }
 
@@ -70,6 +85,18 @@ export class TawkToComponent implements OnInit {
   }
 
   openChat() {
+    console.log('Open chat function');
+    console.log(window['Tawk_API']);
+    
+    if(this.currentUser ==  undefined){
+      window['Tawk_API'].setAttributes({
+        name:  'Visitor'
+        // email:  'No user logged'
+      }, function (error) {
+        console.log(error)
+      });
+    }
+
     if (window['Tawk_API'].hasOwnProperty('maximize')) {
       window['Tawk_API'].maximize();
     }
