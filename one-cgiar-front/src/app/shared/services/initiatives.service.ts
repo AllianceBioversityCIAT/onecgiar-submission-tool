@@ -720,5 +720,8 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/years`);
   }
 
+  getUsersWithInitiativesInformation(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/users/initiatives`);
+  }
 
 }

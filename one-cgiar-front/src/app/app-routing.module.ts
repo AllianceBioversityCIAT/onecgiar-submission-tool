@@ -18,6 +18,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
   },  
   {
+    path: 'admin',
+    loadChildren: () => import('./pages/admin-panel/admin-panel.module').then((m) => m.AdminPanelModule),
+  },  
+  {
     path: 'notFound',
     loadChildren: () =>import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
   },

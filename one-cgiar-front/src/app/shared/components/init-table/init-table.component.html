@@ -41,10 +41,6 @@
         </ng-template>
     </p-table>
 
-    <div class="initiatives_counter">
-        {{data.length}}
-    </div>
-
     <div *ngIf="this._dataControlService.isAdmin">
         <app-initiative-creator></app-initiative-creator>
     </div>
