@@ -192,7 +192,7 @@ const routes: Routes = [
     children: [
       ...preConceptRoutes,
       ...fullProposalRoutes,
-      // ...fullProposalISDCRoutes,
+    { path: '**', pathMatch: 'full', redirectTo: 'home' },
     ],
   },
 ];

@@ -6,7 +6,8 @@ const routes: Routes = [
   {
     path: '',
     component: FullProposalComponent,
-  }
+  },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
 @NgModule({

@@ -37,6 +37,7 @@ const routes: Routes = [
     loadChildren: () =>import('./pages/login/login.module').then((m) => m.LoginModule),
     canActivate: [CheckLoginGuard],
   },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
 @NgModule({
