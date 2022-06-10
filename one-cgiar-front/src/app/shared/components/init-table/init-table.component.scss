@@ -4,6 +4,23 @@
   p-table{
     border-radius: 10px !important;
     overflow: hidden;
+    .space-b{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      // background-color: white;
+    }
+    .initiatives_counter{
+      background-color: rgb(95, 95, 95);
+      padding: 5px 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: 300;
+      strong{
+        font-weight: 500;
+      }
+    }
   }
   .initiative_link{
     text-decoration: none;
@@ -14,7 +31,24 @@
   }
 }
 
-
+tr.tr{
+  position: relative;
+  .link{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(0, 255, 115, 0);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transition: all cubic-bezier(0.47, 0, 0.745, 0.715) .1s;
+    &:hover{
+      background:  #41414134;
+      transition: all cubic-bezier(0.47, 0, 0.745, 0.715) .1s;
+    }
+  }
+}
 
 .tag_container{
   width: 100%;
@@ -32,34 +66,36 @@
   }
 }
 
-// .custom_search_input_container{
-//   position: relative;
-//   .material-icons{
-//     position: absolute;
-//     left: 0;
-//     top: 50%;
-//     transform: translateY(-50%);
-//     margin-left: 5px;
-//     color: gray;
-//   }
-//   .custom_search_input{
-//     outline: none;
-//     border-radius: 10px;
-//     padding: 5px 0px 5px 40px;
-//     border: none;
-//     transition: all ease .3s;
-//     width: 200px;
-//     // &:hover{
-//     //   width: 500px;
-//     //   transition: all ease .3s;
-//     // }
-//     &:focus{
-//       width: 500px;
-//       transition: all ease .3s;
-//     }
-//   }
-//   margin-bottom: 10px;
-// }
+.custom_search_input_container{
+  position: relative;
+  .material-icons{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 5px;
+    color: gray;
+  }
+  .custom_search_input{
+    outline: none;
+    border-radius: 10px;
+    padding: 5px 0px 5px 40px;
+    border: none;
+    transition: all ease .3s;
+    width: 200px;
+    // &:hover{
+    //   width: 500px;
+    //   transition: all ease .3s;
+    // }
+    &:focus{
+      width: 500px;
+      transition: all ease .3s;
+    }
+  }
+  // margin-bottom: 10px;
+}
+
+
 
 
 // .chip_stage{
