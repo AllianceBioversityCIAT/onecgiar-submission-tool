@@ -1,13 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-
-import { ServerResponse, User } from '@shared/models/user.interface';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ServerResponse, User } from '../models/user.interface';
+import { environment } from '../../../environments/environment';
 
 const helper = new JwtHelperService();
 
@@ -17,25 +15,16 @@ const helper = new JwtHelperService();
 export class AuthService {
 
   private user = new BehaviorSubject<ServerResponse>(null);
-  // generalInformationForm = new FormGroup({
-  //   initiativeName: new FormControl('', Validators.required),
-  //   leadContact: new FormControl('', Validators.email),
-  //   actionArea: new FormControl('', Validators.required),
-  //   globalBudget: new FormControl('', Validators.required),
-  // });
-  // narrativesForm = new FormGroup({
-  //   challenge: new FormControl('', Validators.required),
-  //   objectives: new FormControl('', Validators.required),
-  //   results: new FormControl('', Validators.required),
-  //   activities: new FormControl('', Validators.required),
-  //   highlights: new FormControl('', Validators.required),
-  // });
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
   }
   get user$(): Observable<ServerResponse> {
     return this.user.asObservable();
+  }
+
+  get lsUserRoles(){
+    return JSON.parse(localStorage.getItem('user'))?.roles[0]
   }
 
   get userValue(): ServerResponse {
@@ -46,8 +35,9 @@ export class AuthService {
       .post<ServerResponse>(`${environment.apiUrl}/auth/login`, authData)
       .pipe(
         map((srvRes: ServerResponse) => {
+          // console.log(srvRes);
           this.saveLocalStorage(srvRes);
-          this.setLoggedUserTawkTo(srvRes.response)
+          // this.setLoggedUserTawkTo(srvRes.response)
           this.user.next(srvRes.response);
           return srvRes.response;
         }),
@@ -56,11 +46,19 @@ export class AuthService {
 
   logout(): void {
     // localStorage.removeItem('user');
-    this.logOutTawtkTo();
+    console.log("logout")
+    // this.logOutTawtkTo();
     localStorage.clear()
     this.user.next(null);
     this.router.navigate(['/']);
   }
+
+  // logoutWithoutNavigate(): void {
+  //   // localStorage.removeItem('user');
+  //   this.logOutTawtkTo();
+  //   localStorage.clear()
+  //   this.user.next(null);
+  // }
 
   private checkToken(): void {
     const user = JSON.parse(localStorage.getItem('user')) || null;
@@ -85,35 +83,37 @@ export class AuthService {
     return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, body);
   }
 
-  private setLoggedUserTawkTo(user) {
-    if (window.hasOwnProperty('Tawk_API')) {
-      if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
-      console.log(user)
-      window['Tawk_API'].setAttributes({
-        name: user.name,
-        email: user.email
-      }, function (error) {
-        console.log(error)
-      });
-    }
-  }
+  // private setLoggedUserTawkTo(user) {
+  //   // if (window.hasOwnProperty('Tawk_API')) {
+  //   //   if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
+  //   //   console.log(user)
+
+  //   setTimeout(() => {
+  //     window['Tawk_API'].onLoad = function(){
+  //       window['Tawk_API']?.setAttributes({
+  //           'name'  : 'Name',
+  //           'email' : 'email@email.com'
+  //       }, function(error){
+  //         console.log("setAttributes error")
+  //         console.log(error)
+  //       });
+  //   }
+  //   }, 3000);
+
+
+
+  // }
   
   private logOutTawtkTo() {
-    console.log(window.hasOwnProperty('Tawk_API'))
+
     if (window.hasOwnProperty('Tawk_API')) {
-      try {
-        window['Tawk_API'].endChat();
-      } catch (error) {
-        console.log(error)
-      }
-      // if (window['Tawk_API'].isChatMaximized()) {
-      // }
       window['Tawk_API'].visitor = {
         name: null,
         email: null
       };
     }
-  }
 
+
+  }
 
 }

@@ -1,38 +1,43 @@
-import { IsNotEmpty } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne } from 'typeorm'
-import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { InitiativesByStages } from './InititativesByStages';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne
+} from 'typeorm';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import {InitiativesByStages} from './InititativesByStages';
 
 @Entity('work_packages')
 export class WorkPackages extends UpdatedCreatedAt {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column('tinyint')
+  active: boolean;
 
-    @Column('tinyint')
-    active: boolean
+  @Column({length: '500'})
+  name: string;
 
-    @Column({length: '500'})
-    name: string
-    
-    @Column({length: '500'})
-    acronym: string
+  @Column({length: '500'})
+  acronym: string;
 
-    @Column({length: '1000'})
-    results: string
-    
-    @Column({length: '1000'})
-    pathway_content: string
+  @Column({length: '1000'})
+  results: string;
 
-    @Column('tinyint')
-    is_global: boolean
+  @Column({length: '1000'})
+  pathway_content: string;
 
-    @Column({type:"int"})
-    initvStgId:number
+  @Column('tinyint')
+  is_global: boolean;
 
-    @OneToOne(() => InitiativesByStages)
-    @JoinColumn()
-    initvStg!: InitiativesByStages;
+  @Column({type: 'int'})
+  initvStgId: number;
 
+  @Column({type: 'int'})
+  wp_official_code: number;
 
+  @OneToOne(() => InitiativesByStages)
+  @JoinColumn()
+  initvStg!: InitiativesByStages;
 }

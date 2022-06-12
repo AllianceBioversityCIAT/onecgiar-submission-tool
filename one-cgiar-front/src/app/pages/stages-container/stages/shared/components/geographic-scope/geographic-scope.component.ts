@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClarisaService } from '@app/shared/services/clarisa.service';
-import { DataControlService } from '@app/shared/services/data-control.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
+import { FormGroup } from '@angular/forms';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../shared/services/data-control.service';
+import { ClarisaService } from '../../../../../../shared/services/clarisa.service';
+
 
 @Component({
   selector: 'app-geographic-scope',
@@ -11,14 +11,13 @@ import { InteractionsService } from '@app/shared/services/interactions.service';
   styleUrls: ['./geographic-scope.component.scss']
 })
 export class GeographicScopeComponent implements OnInit {
-  @Input() regionsSelectedList=[];
+  @Input() regionsSelectedList;
   @Input() countriesSelectedList=[];
   @Input() localForm:FormGroup;
   showForm=false;
   constructor(
     public _initiativesService:InitiativesService,
     public _dataControlService:DataControlService,
-    private _interactionsService:InteractionsService,
     public _clarisaService:ClarisaService
   ) { 
 
@@ -26,19 +25,14 @@ export class GeographicScopeComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.localForm.get('is_global').value);
+    console.log(this.regionsSelectedList)
     this.setIsGlobal(this.localForm.value.is_global);
   }
   
   setIsGlobal(value){
-    this.localForm.controls['is_global'].setValue(value);
+    this.localForm.controls['is_global'].setValue(value || false);
     // console.log(this.localForm.value.is_global);
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this._dataControlService.showCountries = false;
-    this._dataControlService.showRegions = false;
-  }
 
 }

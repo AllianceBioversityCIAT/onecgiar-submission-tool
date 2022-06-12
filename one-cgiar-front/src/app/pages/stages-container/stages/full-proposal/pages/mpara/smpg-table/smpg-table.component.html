@@ -4,14 +4,9 @@
 
 
 <div class="section-container animate__animated animate__fadeIn">
-
-    <div class="row">
-     
-        <div class="col-12">
-            <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
-            <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
-        </div>
-        
+    <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
+    <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
+    <div class="row">        
         <div class="col-12">
             <br>
             <div class="ibdc_button_template_container">
@@ -27,7 +22,7 @@
     <form (ngSubmit)="saveSection()">
 
         <ibdc-upload-files *ngIf="showForm" [options]="{
-            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
+            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList, readOnlyVariable: this._initiativesService.initiative.readonly}">
         </ibdc-upload-files>
 
         <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">

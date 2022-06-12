@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WpDataControlService } from '../services/wp-data-control.service';
 import { DataControlService } from '../../../../../../../../shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../../../shared/services/interactions.service';
+import { AuthService } from '../../../../../../../../shared/services/auth.service';
 
 
 @Component({
@@ -17,12 +19,15 @@ export class WorkPackageComponent implements OnInit {
     private _wpDataControlService:WpDataControlService,
     private _dataControlService:DataControlService,
     private router:Router,
-    private _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    private _interactionsService : InteractionsService,
+    public _authService: AuthService
   ){
 
   }
 
   ngOnInit(){
+    this._initiativesService.setTitle('Work package')
     let reload = false;
     this.activatedRoute.params.subscribe((routeResp: any) => {
       // console.log(routeResp);
@@ -37,30 +42,43 @@ export class WorkPackageComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages`])
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
-    }, 10);
+    }, 100);
     
   }
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
    this.wpColorselected(3, 5, 12,-1)
   }
 
   ngDoCheck(): void {
-    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
-    //Add 'implements DoCheck' to the class.
-    // console.log(this.iaID);
-    // console.log(this._dataControlService.userMenu);
-    // console.log("--------------------");
-    // console.log(this._wpDataControlService.wpId);
-    // console.log(this._dataControlService.userMenu.length);
     if (this._wpDataControlService.wpId && this._dataControlService.userMenu.length) {
       this.wpColorselected(3, 5, 12, this._wpDataControlService.wpId);
+    } 
+  }
+
+  deleteCurrentWP() {
+
+    let body = {
+      id: Number(this._wpDataControlService.wpId),
+      active: false,
     }
+
+    console.log(this._wpDataControlService.wpId)
+
+
+
+
+    console.log('addWorkPackage()')
+    // let body = {active:false,id:this._wpDataControlService.wpId}
+    console.log(body)
+    this._initiativesService.saveWpFp(body).subscribe(resp => {
+      console.log(resp)
+      this._interactionsService.successMessage('Work package has been removed')
+      this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages`])
+    })
     
   }
 
@@ -78,10 +96,9 @@ export class WorkPackageComponent implements OnInit {
    
     // select current wp
     if (wpId != -1 && allWp) {
-      let sectionFinded = allWp.find((wp) => wp.id == wpId).activeSection = true;
-      // console.log(sectionFinded);
+      let sectionFinded = allWp.find((wp) => wp.id == wpId);
+      if (sectionFinded) sectionFinded.activeSection = true;
     }
-    // console.log(allWp);
      
   }
 

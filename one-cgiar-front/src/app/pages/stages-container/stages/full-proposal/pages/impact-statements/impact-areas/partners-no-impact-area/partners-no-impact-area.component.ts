@@ -39,13 +39,14 @@ export class PartnersNoImpactAreaComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Partners');
     this.getCLARISAInstitutions();
     this.getInstitutionsTypes();
     this.getImpactStrategies();
   }
 
   getImpactStrategies(){
-    this._initiativesService.getImpactStrategies(this._initiativesService.initiative.id, 0).subscribe(resp=>{
+    this._initiativesService.getImpactStrategies(0).subscribe(resp=>{
       if (resp.response.impactStrategies) {
         this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.id);
         console.log(resp.response.impactStrategies.partners);
@@ -109,7 +110,7 @@ export class PartnersNoImpactAreaComponent implements OnInit {
     })
     body.partners = this.savedList;
     console.log(body);
-    this._initiativesService.saveImpactStrategies(body,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.saveImpactStrategies(body).subscribe(resp=>{
       console.log(resp);
       // console.log(resp.response.impactStrategies.upsertedImpactStrategies.id);
       this.sectionForm.controls['id'].setValue(resp.response.impactStrategies.upsertedImpactStrategies.id);

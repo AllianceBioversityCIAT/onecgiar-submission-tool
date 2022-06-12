@@ -1,10 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateContextTable1626271318977 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        console.log('create context table')
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create context table');
+    await queryRunner.query(`
         CREATE TABLE context (
             id int(11) NOT NULL AUTO_INCREMENT,
             initvStgId int(11) NOT NULL,
@@ -14,7 +13,6 @@ export class CreateContextTable1626271318977 implements MigrationInterface {
             priority_setting TEXT DEFAULT NULL,
             comparative_advantage TEXT DEFAULT NULL,
             participatory_design TEXT DEFAULT NULL,
-
             created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             KEY IDX_1354654117589921_initvStgId (initvStgId),
@@ -23,9 +21,7 @@ export class CreateContextTable1626271318977 implements MigrationInterface {
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

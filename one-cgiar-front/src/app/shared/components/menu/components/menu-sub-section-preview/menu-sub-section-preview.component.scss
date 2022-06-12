@@ -1,0 +1,29 @@
+.sectionPreviewButton{
+    display: flex;
+    justify-content: space-between;
+    // border: 1px solid red;
+    color: white;
+    border-radius: 100px;
+    padding: 5px 0px;
+    // margin-left: 7px;
+    margin-bottom: 10px;
+    width: calc(100% - 7px);
+    // margin-left: auto;
+    box-sizing: border-box;
+    // margin-right: auto;
+    .previewButton_texts{
+        display: flex;
+        font-weight: 500;
+        align-items: center;
+        .point{
+            margin-right: 7px;
+            width: 9px;
+            height: 9px;
+            border-radius: 10px;
+        }
+    }
+}
+
+.preview{
+    background-color: #31c9965e;
+}

@@ -1,0 +1,130 @@
+.local-container {
+  overflow-x: scroll;
+}
+
+.local-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  grid-gap: 10px;
+
+  .local-col {}
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: 0px 0px 7px rgb(185, 185, 185);
+  border-radius: 5px;
+  .editable-icon{
+    cursor: pointer;
+  }
+}
+
+td,
+th {
+  // border: 1px solid #b9b9b9;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #ececec;
+}
+
+
+.toggle-view-button-container, .noDataInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .toggle-view-button {
+    background-color: white;
+    border: 1px solid rgb(6, 197, 6);
+    color: rgb(6, 197, 6);
+    border-radius: 5px;
+    padding: 10px 25px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    span {
+      position: relative;
+      z-index: 1;
+      transition: all ease-in-out .3s;
+      font-weight: 500;
+
+    }
+
+    &::after {
+      content: '';
+      background-color: rgb(6, 197, 6);
+      width: 1px;
+      height: 1px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transition: all ease-in-out .4s;
+      z-index: 0;
+      border-radius: 100px;
+      opacity: .5;
+    }
+
+    &:hover {
+      span {
+        color: white;
+        transition: all ease-in-out .3s;
+
+      }
+
+      &::after {
+        transform: scale(400);
+        transition: all ease-in-out .6s;
+        opacity: 1;
+      }
+    }
+
+
+  }
+}
+
+.warning{
+  background-color: rgba(255, 230, 0, 0.089);
+  &::after{
+    content: 'Data not provided';
+    font-style: italic;
+    font-size: smaller;
+    text-align: center;
+    display: block;
+  }
+}
+
+table{
+  thead{
+      position: sticky;
+      top: 0;
+      background-color: white;
+  }
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+  .delete-th{
+    border-left: none;
+  }
+
+  .edit-th{
+    border-right: none;
+  }
+
+    tr:nth-child(even) {
+      background-color: #eeeeee;
+    }
+}
+
+.asterisk{
+  color: #ff0000;
+}

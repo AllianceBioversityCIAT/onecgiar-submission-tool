@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { StagesMenuService } from '@shared/services/stages-menu.service';
-import { ConceptService } from '@app/shared/services/concept.service';
+import { FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ErrorService } from '@app/shared/services/error.service';
-import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AppErrorHandler } from '@app/shared/utils/app-error-handler';
-import { InteractionsService } from '@app/shared/services/interactions.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { DataControlService } from '@app/shared/services/data-control.service';
 import { ManageAccessComponent } from '../manage-access/manage-access.component';
+import { DataValidatorsService } from '../../data-validators.service';
+import { DevConsole } from '../../../../../../shared/models/dev-console-log';
+import { Subscription } from 'rxjs';
+import { RootObject, ServiceResponse } from './interfaces/genetal-information-data.interface';
+import { GeneralInfoFullProposalBody } from './interfaces/general-information-fp-body.interface';
+import { GeneralInfoPreConceptBody } from './interfaces/general-information-pc-body.interface';
+import { GeneralInfoPatchBody } from './interfaces/general-info-patch-body.interface';
+import { DataControlService } from '../../../../../../shared/services/data-control.service';
+import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-general-information',
@@ -21,231 +21,202 @@ import { ManageAccessComponent } from '../manage-access/manage-access.component'
 })
 export class GeneralInformationComponent implements OnInit {
 
-  @Input() stageName = '';
+  stageId: number = 0;
+
   public summaryForm: FormGroup;
   public actionAreas: any[];
-  // public usersByInitiative: [];
-
+  actionAreasList = [];
   fName = "";
   wordCount: any;
-  leads = {
-    lead_name: null,
-    lead_email: null,
-    lead_id: -1,
-    co_lead_name: '',
-    co_lead_email: '',
-    co_lead_id: -1
-  }
+
+  generalInfoFullProposalBody:GeneralInfoFullProposalBody;
+  generalInfoPreConceptBody:GeneralInfoPreConceptBody;
+
+  body: ServiceResponse = {
+    generalInformation:{
+      name:'',
+      action_area_description:'',
+      action_area_id: null,
+      acronym: null
+    },
+    budget:{
+     value: '0' 
+    },
+    geoScope:{
+      countries:[],
+      regions:[],
+      goblalDimension:null
+    }
+  }; 
 
   @ViewChild("text") text: ElementRef;
   words: any;
-  showForm = false;
-  showFormActionArea = false;
-  regionsList = [];
-  countriesList = [];
-  // geographicScope = {
-  //   regions: [],
-  //   countries: []
-  // }
-
-
+  devprint = new DevConsole();
+  localEmitter: Subscription;
+  createInitiative$: Subscription;
   wordCounter() {
     this.wordCount = this.text ? this.text.nativeElement.value.split(/\s+/) : 0;
     this.words = this.wordCount ? this.wordCount.length : 0;
   }
 
   constructor(
-    private errorService: AppErrorHandler,
-    public conceptSvc: ConceptService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService: InteractionsService,
     public dialog: MatDialog,
     public _initiativesService: InitiativesService,
-    private router: Router,
     public _dataControlService: DataControlService,
-    private _StagesMenuService: StagesMenuService
+    public _dataValidatorsService : DataValidatorsService,
   ) {
-    this.summaryForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      action_area_description: new FormControl(''),
-      action_area_id: new FormControl(null, Validators.required),
-      generalInformationId: new FormControl(null, Validators.required),
-      budget_value: new FormControl(0, [Validators.required,Validators.min(1)]),
-      table_name: new FormControl("general_information"),
-      col_name: new FormControl("budget"),
-      active: new FormControl(true),
-      budgetId: new FormControl(null),
-      is_global: new FormControl(true),
-    });
-
   }
 
-  localEmitter: any;
-
-
   ngOnInit(): void {
+    this._initiativesService.setTitle('General information')
+    // console.log("ngOnInit")
 
-    this.budgetCol?.valueChanges.subscribe(budget => {
-      if (budget < 0) {
-        this.budgetCol.setValue(0)
-        this.budgetCol.setErrors({ 'invalid': true });
-        //  console.log(this.budgetCol.invalid)/
-      }
-    })
+    this.stageId =  this._initiativesService.initiative.stageId;
+    // console.log(this.stageId)
+
+    this.getActionAreas();
+
     this.localEmitter = this._dataControlService.generalInfoChange$.subscribe(resp => {
-      this.getSummary();
+      // console.log("emitido")
+      // switch (this.stageId) {
+      //   case 2:
+          // this.getGeneralInformation();
+        //   break;
+
+        // case 3:
+          this.getSummary();
+      //     break;
+      // }
+     
     })
     this._dataControlService.generalInfoChange$.emit();
+
   }
 
   ngOnDestroy(): void {
-    this.localEmitter.unsubscribe()
+    if (this.localEmitter) {
+      this.localEmitter.unsubscribe()
+    }
+   
   }
 
-  get budgetCol() {
-    return this.summaryForm.get('budget_value') as FormControl;
+  getActionAreas(){
+    this._initiativesService.getActionAreas().subscribe(resp=>{
+      // console.log(resp);
+      this.actionAreasList = resp;
+    })
   }
 
   validateFormAndLeads() {
-    ((this.leads.lead_name && this.leads.co_lead_name) ? true : false)
-    if (this.summaryForm.status == 'VALID' && ((this.leads.lead_name && this.leads.co_lead_name) ? true : false) == true) {
+    ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name) ? true : false)
+    if (this.summaryForm.status == 'VALID' && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name) ? true : false) == true) {
       return 'VALID';
     } else {
       return 'INVALID'
     }
   }
 
+
+  // getGeneralInformation(){
+  //   console.log("getGeneralInformation");
+  //   console.log(this._initiativesService.initiative.id)
+  //   this._initiativesService.getGeneralInformation(this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, this.stageId).subscribe((resp:RootObject)=>{
+  //     this.body.generalInformation = resp.response.generalInformation;
+  //   })
+  // }
+
   getSummary() {
+    // console.log(this._initiativesService.initiative.id)
     this.spinnerService.show('general-information');
 
-    this._initiativesService.getSummary(this._initiativesService.initiative.id, this.stageName == 'proposal' ? 3 : 2).subscribe(resp => {
-
-      console.log(resp.response.geoScope);
-      this.regionsList = resp?.response?.geoScope?.regions;
-      this.countriesList = resp?.response?.geoScope?.countries;
-      // get general information leads
-      let general_information_data = resp.response.generalInformation;
-      this.leads.lead_name = general_information_data.first_name;
-      this.leads.lead_email = general_information_data.email;
-      this.leads.lead_id = general_information_data.lead_id;
-      this.leads.co_lead_name = general_information_data.co_first_name;
-      this.leads.co_lead_email = general_information_data.co_email;
-      this.leads.co_lead_id = general_information_data.co_lead_id;
-      //general information fields
-      this.summaryForm.controls['name'].setValue(general_information_data.name);
-      this.summaryForm.controls['action_area_id'].setValue(general_information_data.action_area_id);
-      this.summaryForm.controls['action_area_description'].setValue(general_information_data.action_area_description);
-      this.summaryForm.controls['generalInformationId'].setValue(general_information_data.generalInformationId);
-      // get budget
-      let budget_data = resp.response.budget;
-      this.summaryForm.controls['budgetId'].setValue(budget_data.id);
-      this.summaryForm.controls['budget_value'].setValue(budget_data.value);
-      // get Geo
-      let geo_data = resp.response.geoScope;
-      // this.geographicScope.regions = geo_data.regions;
-      // this.geographicScope.countries = geo_data.countries;
-      this.summaryForm.controls['is_global'].setValue(geo_data.goblalDimension);
-      // console.log('summary');
-      // console.log(this.summaryForm.value);
-
-      // this._initiativesService.getCLARISARegions('').subscribe(regions => {
-      //   this.geographicScope.regions.map(mapReg => {
-      //     regions.response.regions.forEach(regionItem => {
-      //       if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
-      //     })
-      //   })
-      //   this._dataControlService.showRegions = true;
-      // })
-
-      // this._initiativesService.getCLARISACountries().subscribe(countries => {
-      //   this.geographicScope.countries.map(mapCoun => {
-      //     countries.response.countries.forEach(countryItem => {
-      //       if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
-      //     })
-
-      //   })
-      //   this._dataControlService.showCountries = true;
-      // })
-
-      this.showForm = true;
+    this._initiativesService.getSummary().subscribe((resp:RootObject) => {
+      this.body = resp.response;
     },
       err => {
         console.log(err);
+        this.spinnerService.hide('general-information');
       },
       () => {
         this.spinnerService.hide('general-information');
-
       })
 
 
-    this.conceptSvc.getActionAreas().subscribe(resp => {
+    this._initiativesService.getActionAreas().subscribe(resp => {
       // console.log(resp);
       this.actionAreas = resp;
       for (let index = 0; index < this.actionAreas.length; index++) {
         this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
       }
-      this.showFormActionArea = true;
     },
       err => {
         console.log(err);
-        this.showFormActionArea = true;
       })
-
 
   }
 
-  upsertGeneralInfo() {
+  validateBudget(){
+    return (Number(this.body.budget.value)>=0.1);
+  }
 
-    console.log(this.summaryForm);
+  upsertSection() {
 
-    this.spinnerService.show('general-information');
+    let patchBody:GeneralInfoPatchBody = {
+      acronym: this.body.generalInformation.acronym,
+      action_area_description: this.body.generalInformation.action_area_description,
+      action_area_id: this.body.generalInformation.action_area_id,
+      active: true,
+      budgetId: this.body.budget.id,
+      budget_value:  this.body.budget.value === null || this.body.budget.value === undefined ? '0' :this.body.budget.value,
+      col_name: "budget",
+      generalInformationId: this.body.generalInformation.generalInformationId,
+      is_global: this.body.geoScope.goblalDimension,
+      name: this.body.generalInformation.name,
+      table_name:"general_information",
+    }
 
-    // this.geographicScope.regions.map(newRegId => {
-    //   if (newRegId.um49Code) {
-    //     newRegId.region_id = newRegId.um49Code;
-    //   }
-    // })
+    // if (this.stageId == 2) this.saveGeneralInformation(patchBody);
+    // if (this.stageId == 3) 
+    this.saveSummary(patchBody);
 
-    // this.geographicScope.countries.map(newCountId => {
-    //   if (newCountId.code) {
-    //     newCountId.country_id = newCountId.code;
-    //   }
-    // })
-    let body = this.summaryForm.value;
-    // body.regions=this.geographicScope.regions;
-    // body.countries=this.geographicScope.countries;
-    // console.log(this.geographicScope);
-    console.log(body);
-    // console.log(this.summaryForm.value);
-    // console.log(this._initiativesService.initiative.id);
-    // console.log(this.stageName=='proposal'?3:2);
+  }
 
-    if (!(body.budget_value) || (body.budget_value == "")) body.budget_value = 0;
-    console.log(body);
+  saveSummary(patchBody){
+    // this.spinnerService.show('general-information');    
 
-    this._initiativesService.patchSummary(body,this._initiativesService.initiative.id,this.stageName=='proposal'?3:2).subscribe(generalResp => {
-      this.summaryForm.controls['generalInformationId'].setValue(generalResp.response.generalInformation.generalInformationId);
-      this.summaryForm.controls['budgetId'].setValue(generalResp.response.budget.id);
-      // this._initiativesService.getGreenCheckStatus(this._initiativesService.initvStgId).subscribe(resp=>{
-      //   this._StagesMenuService.validateAllSectionsStatus('concept',resp.response?.validatedSections,this._initiativesService.initvStgId);
-      // })
+    this.devprint.log('body', this.body)
+    this.devprint.log('patchBody', patchBody)
+
+    this._initiativesService.patchSummary(patchBody, this._initiativesService.initiative.id, this.stageId).subscribe(generalResp => {
       this._interactionsService.successMessage('General information has been saved');
-      this.summaryForm.valid && ((this.leads.lead_name && this.leads.co_lead_name)?true:false)
+      this.validateBudget() && this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
-      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
+      this._dataControlService.generalInfoChange$.emit();
     },error => {
     // console.log(error, this.errorService.getServerMessage(error))
+    this.spinnerService.hide('general-information');
     console.log(error);
     },
     ()=>{
       this.spinnerService.hide('general-information');
 
     });
-    // console.log('%cregions','background: #222; color: #84c3fd');
-    // console.log(this.geographicScope.regions);
-    // console.log('%ccountries','background: #222; color: #fd8484');
-    // console.log(this.geographicScope.countries);
   }
+
+  saveGeneralInformation(patchBody){
+    console.log(patchBody);
+    this._initiativesService.patchGeneralInformation( this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, patchBody ).subscribe(resp=>{
+      console.log(resp);
+      this._dataControlService.generalInfoChange$.emit();
+      this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
+      ?this._interactionsService.successMessage('General information has been saved')
+      :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
+    });
+  }
+
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ManageAccessComponent, {
@@ -256,39 +227,22 @@ export class GeneralInformationComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.getSummary();
-      // let currentUrl = this.router.url;
-      // this.router.navigateByUrl('/home', {skipLocationChange: true}).then(() => {
-      //     this.router.navigate([currentUrl]);
-      // });
     });
   }
 
   setExpandWithUserId(type) {
     switch (type) {
       case 'Co-Lead':
-        this._interactionsService.expandWithUserId = this.leads.co_lead_id;
+        this._interactionsService.expandWithUserId = this.body.generalInformation.co_lead_id;
 
         break;
 
       case 'Lead':
-        this._interactionsService.expandWithUserId = this.leads.lead_id;
+        this._interactionsService.expandWithUserId = this.body.generalInformation.lead_id;
         break;
 
       default:
         break;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
-        console.log(propName)
-        // switch (propName) {
-        //   case 'myFirstInputParameter': {
-        //     // this.doSomething(change.currentValue)
-        //   }
-        // }
-      }
     }
   }
 

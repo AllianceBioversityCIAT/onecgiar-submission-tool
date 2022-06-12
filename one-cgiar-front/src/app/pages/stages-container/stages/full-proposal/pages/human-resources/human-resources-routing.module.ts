@@ -19,6 +19,11 @@ const routes: Routes = [
         path: 'initiative-team',
         loadChildren: () => import('./initiative-team/initiative-team.module').then(mod => mod.InitiativeTeamModule),
       }
+      ,
+      {
+        path: 'human-resources-reports',
+        loadChildren: () => import('./human-resources-reports/human-resources-reports.module').then(mod => mod.HumanResourcesReportsModule),
+      }
     ],
   }
 ];

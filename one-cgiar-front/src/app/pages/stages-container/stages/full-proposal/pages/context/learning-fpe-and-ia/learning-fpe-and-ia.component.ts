@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FullProposalService } from '@app/shared/services/full-proposal.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-learning-fpe-and-ia',
@@ -34,6 +34,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Learning from prior evaluations and Impact Assessments (IA)')
     this.getContext();
     this.getLinks();
     this.formChanges();
@@ -57,9 +58,10 @@ export class LearningFpeAndIaComponent implements OnInit {
 
   upserInfo(){
     //save narrative
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    console.log(this.contextForm.value);
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
       this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')
     })
@@ -75,19 +77,19 @@ export class LearningFpeAndIaComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       this.contextForm.controls['key_learnings'].setValue(resp?.response?.context?.key_learnings);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log(err);
+      //console.log(err);
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value, 250);
     })
   }

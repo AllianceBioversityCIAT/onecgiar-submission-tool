@@ -18,15 +18,18 @@ export class GlobalPartnersRequestComponent implements OnInit {
   button_changing = [
     {
       name:'Scaling',
-      id: 1
+      id: 1,
+      attributeName: 'scaling'
     },    
     {
-      name:'Demanding',
-      id: 2
+      name:'Demand',
+      id: 2,
+      attributeName: 'demand'
     },
     {
       name:'Innovation',
-      id: 3
+      id: 3,
+      attributeName: 'innovation'
     }
   ]
 
@@ -36,28 +39,16 @@ export class GlobalPartnersRequestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this.institutions);
-    // console.log(this.institutionsTypes);
-    // console.log("savedList");
-    // console.log(this.savedList);
-    // console.log("institutionsTypesSavedList");
-    // console.log(this.institutionsTypesSavedList);
-    // console.log("institutionsTypesDisableList");
-    // console.log(this.institutionsTypesDisableList);
+    // console.log(this.savedList)
     this.mapInstitutionsTypes();
-    // console.log(this.institutions);
     this.institutions.map(item=>{
-      // item.type_id = 1000;
       item.id = null;
       item.tag_id = '0,0,0';
     })
-    // this.openDialog()
   }
 
   getInstitutionsTypesDisableList(){
-    // console.log("change");
     let institutionsTypesDisableList=[];
-    // console.log(this.savedList);
     this.savedList.map(item=>{
     if (item.code && item.active !== false) {
       let body = {
@@ -84,64 +75,27 @@ export class GlobalPartnersRequestComponent implements OnInit {
   }
 
   mapInstitutionsTypes(){
-    // console.log(this.institutionsTypes);
     this.institutionsTypes.map(item=>{
       item.institutionType = item.name;
-      // item.
-      // impact_strategies_id
-      // institutionType
-      // institutionTypeId
     })
-    // console.log(this.institutionsTypes);
   }
 
   showDialog() {
       this.display = true;
   }
 
-  getActiveTag(item,i){
-
-    if (!item.tag_id)item.tag_id = '0,0,0';
-    if (item.code) {
-      if (String(item.tag_id).length == 1) {
-        let localValue = item.tag_id;
-        item.tag_id = '0,0,0';
-        let localArray = item.tag_id.split(',')
-        localArray[Number(localValue)-1] = localValue;
-        item.tag_id = localArray.join(',');
-      }
-
-      if (item.tag_id.split(',')[i]!='0') {
-        return true;
-      }else{
-        return false;
-      }
-    }
-
-  }
-
-  changeTagId(item,value){
-
-    if (!item.tag_id)item.tag_id = '0,0,0';
-
-    if (String(item.tag_id).length == 1) {
-      let localValue = item.tag_id;
-      item.tag_id = '0,0,0';
-      let localArray = item.tag_id.split(',')
-      localArray[Number(localValue)-1] = localValue;
-      item.tag_id = localArray.join(',');
-    }
-
-
-       let array = item.tag_id.split(',')
-      if (array[Number(value)-1] == value) {
-        array[Number(value)-1] = 0;
-      }else{
-        array[Number(value)-1] = value;
-      }
-      
-      item.tag_id = array.join(',');
-    
+  onSelectTag(item,attributeName){
+    console.log(item)
+    console.log(attributeName)
+    console.log( !item.hasOwnProperty(attributeName))
+    if (this._initiativesService.initiative.readonly) return;
+    if ( !item.hasOwnProperty(attributeName)) return item[attributeName] = true;
+    console.log("inverso")
+    console.log("item[attributeName] = " + item[attributeName])
+    console.log("!item[attributeName] = " + !item[attributeName] )
+    item[attributeName] = !item[attributeName] 
+    console.log(item[attributeName])
+    console.log(item)
   }
 
   countDuplicates(originalArray) {
@@ -187,6 +141,7 @@ export class GlobalPartnersRequestComponent implements OnInit {
 }
 
   onSelectOption(option:any){
+    console.log("onSelectOption")
     // console.log(this.savedList);
     console.log(option);
     // encontrar en lista de guardados la opcion seleccionada
@@ -195,25 +150,30 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // console.log(itemFinded);
     // toggle de seleccion (quitar / poner)
     // Eliminado logico o eliminar de elementos de un array que no están en la bd
+    
     option.selected = false;
     this.institutions.find((savedItem:any)=>savedItem.code == option.code).selected = false;
     this.institutionsTypes.find((savedItem:any)=>savedItem.code == itemFinded.institutionTypeId).disabled = false
       //formas de borrar
       if (itemFinded) {
         // si tiene id de la bd pero de guardado
-        if (itemFinded.id) {
+        if (itemFinded.hasOwnProperty('id')) {
+          console.log("borrado logico=> "+itemFinded.id)
           //borrado logico
           itemFinded.active = false;
         }else{
           //borrado de array
+          console.log("borrado de array")
           this.savedList.splice(itemFindedIndex, 1)
         }
         
       }
     // console.log(option);
+    console.log(this.savedList)
   }
 
   onDeleteInstitutionType(option){
+    console.log("onDeleteInstitutionType")
     // console.log("_______________________________");
     // console.log(option);
     // console.log(this.institutionsTypesSavedList);
@@ -227,14 +187,16 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // console.log(finisd);
 
     if (itemFinded) {
-      if (itemFinded.id) {
+      if (itemFinded.hasOwnProperty('id')) {
+        console.log("borrado logico")
         itemFinded.active = false;
       }else{
+        console.log("borrado de array")
         this.institutionsTypesSavedList.splice(itemFindedIndex, 1);
       }
     }
 
-    // console.log(this.savedList);
+    console.log(this.savedList);
     // console.log(this.institutionsTypesSavedList);
 
   }

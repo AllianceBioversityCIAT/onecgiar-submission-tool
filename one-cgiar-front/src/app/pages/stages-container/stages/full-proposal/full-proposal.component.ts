@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataControlService } from '../../../../shared/services/data-control.service';
-import { InitiativesService } from '../../../../shared/services/initiatives.service';
-import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-full-proposal',
@@ -9,81 +7,16 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./full-proposal.component.scss']
 })
 export class FullProposalComponent implements OnInit {
-  private user = JSON.parse(localStorage.getItem('user')) || null;
   constructor(
-    private _dataControlService:DataControlService,
-    private _initiativesService:InitiativesService
+    private router:Router
   ) { }
 
   ngOnInit(): void {
-
-    this._initiativesService.getInitvStgId(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      // console.log(resp.response);
-      this._initiativesService.initvStgId = resp.response;
-      this.getRolefromInitiativeById();
-    })
-    
-    this._dataControlService.validateMenu$.subscribe(resp=>{
-      // console.log("validateMenu$");
-      this.validateAllSections();
-    })
-    this._dataControlService.loadMenu$.emit('full-proposal');
-    
-  }
-
-  validateAllSections(){
-    this._initiativesService.getSectionsValidation(this._initiativesService.initiative.id,3).subscribe(resp=>{
-      Object.keys(resp.response).map(key=>{
-        let stageId = 3; 
-        let sectionId = resp.response[key].sectionId; 
-        let ValidateGI = resp.response[key].validation;
-
-        let result = this._dataControlService?.userMenu.find(item=>item.stageId == stageId).sections.find(item=>item.sectionId == sectionId)
-        result.fieldsCompleted = ValidateGI;
-
-        let subSectionsToMap = resp.response[key].subSections;
-        if (subSectionsToMap) 
-        subSectionsToMap.map(item=>{
-
-          let menuSubsections= result.subsections.find(subSeItem=>subSeItem.subSectionId == item.subSectionId);
-          if (menuSubsections ) {
-            menuSubsections.fieldsCompleted = item.validation
-          }
-
-          if (item.hasOwnProperty('dinamicList')) {
-            item.dinamicList.map(resp=>{
-              if ( menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id)) {
-                menuSubsections.dynamicList.find(dynamicItem=>dynamicItem.id == resp.impact_area_id).fieldsCompleted = resp.validation;
-              }
-              
-            })
-          }
-          
-        });
-        
-        
-      })
-
-    })
+    this.router.navigate([this.router.url,'general-information'])
   }
 
 
-  getRolefromInitiativeById(){
-    this._initiativesService.getRolefromInitiativeById(this._initiativesService.initiative.id).subscribe(resp=>{
-      // console.log(resp.response);
 
-      let rol = resp.response.roles
-      let firstRol =  rol[0]?.roleId
 
-      if (rol.length) {
-        console.log(firstRol);
-        this._initiativesService.initiative.readonly = ( firstRol === 1|| firstRol === 2|| firstRol === 3|| firstRol === 5||this.user?.roles[0].id === 1)?false:true;
-        console.log(this._initiativesService.initiative.readonly);
-      }else{
-        this._initiativesService.initiative.readonly = (this.user?.roles[0].id === 1)?false:true;
-      }
-
-    });
-  }
 
 }

@@ -207,10 +207,121 @@ button {
   color: #797979;
 }
 
+.ibdc_basic_title{
+  color: var(--ibdc-tertiary-color);
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.ibdc_basic_description{
+  color: rgb(80, 80, 80);
+  // margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.ibdc_green_gradient{
+  background: rgb(91,189,147);
+  background: linear-gradient(131deg, rgba(91,189,147,1) 0%, rgba(210,225,200,1) 100%);
+}
+
 //ibdc colors end
 
 :root{
+  --ibdc-primary-color: #272A30;
   --ibdc-secondary-color: #5cc560;
+  --ibdc-active-color: #9ef1a1;
   --ibdc-tertiary-color: #087b83;
   --ibdc-text-color: #797979;
+  --ibdc-black-1: #1A1C1E;
+  --ibdc-black-2: #2b2d2e;
+  --ibdc-gray-1: #757575;
+  --ibdc-gray-2: #757575;
+}
+
+.viewer-backdrop{
+  // background-color: rgb(255, 255, 255) !important;
+  background-image: url('/assets/images/platform_background.jpg') !important;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.viewer-close{
+  background-color: var(--ibdc-secondary-color) !important;
+}
+
+
+.section_title{
+  font-weight: 700 !important;
+}
+
+
+.ia-1,.ia-2,.ia-3,.ia-4,.ia-5{
+  width: 8px;
+  height: 25px;
+  margin-right: 7px;
+}
+
+.ia-1{
+  background-color: #F07E27;
+}
+
+.ia-2{
+  background-color: #055F6B;
+}
+
+.ia-3{
+  background-color: #EB5B47;
+}
+
+.ia-4{
+  background-color: #00A772;
+}
+
+.ia-5{
+  background-color: #74B959;
+}
+
+.custom_scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom_scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+.custom_scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.custom_scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.eoi-item{
+  // display: flex;
+  margin-top: 12px;
+  .eoi-item-title{
+    color: rgb(17, 17, 17);
+    font-weight: 700;
+    margin-right: 5px;
+    width: max-content;
+  }
+  
+  .eoi-item-description{
+    color: rgb(109, 109, 109);
+  }
+}
+
+.eoi-list{
+  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
 }

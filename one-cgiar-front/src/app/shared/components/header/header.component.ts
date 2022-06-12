@@ -7,9 +7,9 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { AuthService } from '@shared/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
 import { InteractionsService } from '../../services/interactions.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -52,4 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onLogout(): void {
     this.authSvc.logout();
   }
+
+  validateUser(){
+    return localStorage.getItem('user')
+  }
+
 }

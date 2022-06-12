@@ -2,7 +2,11 @@
 <form>
 <section-sub-title name="Geographic scope"></section-sub-title>
  <div class="local_container">
-        
+    
+    <div class="alert_container" style="margin-bottom: 40px;">
+        <ibdc-alert [options]="{text:'The lists of regions and countries below are coming from the geographic scope entered on each Work-Package.', 
+                                type:'info'}"></ibdc-alert>
+    </div>
    
     <div class="row">
         <div class="col-sm-12 horizontal_padding">
@@ -25,10 +29,10 @@
             </div>
             <br>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showRegions">
+        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="this._dataControlService.showRegions">
+        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList != null">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required: !this.localForm.value.is_global,
@@ -53,10 +57,10 @@
             </div>
 
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="!this._dataControlService.showCountries">
+        <div class="col-6 horizontal_padding" *ngIf="this.countriesSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6  horizontal_padding" *ngIf="this._dataControlService.showCountries">
+        <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList != null">
             <div class="box_container">
             <ibdc-select-multiple [options]="{
                 required: !this.localForm.value.is_global,

@@ -1,0 +1,59 @@
+<section-title name="Partners list summary report" ></section-title>
+
+<div class="section-container-for-previews animate__animated animate__fadeIn">  
+    <div class="card-for-preview ibd-shadow-2">
+        <!-- <h5>Horizontal and Vertical</h5> -->
+        <div class="alert_container" style="margin: 0 0 25px 10px;">
+            <ibdc-alert [options]="{htmlText:'The list of partner below corresponds to the ones entered in the previous sections (Per impact Area or the ones not related to any IA). If you see partners repeated, it may happen that they are coming from more than one Impact Area.  <br><br>Please feel free to download the list of partner using the Excel icon below. They are already aligned with CLARISA.', 
+                                    type:'info'}"></ibdc-alert>
+        </div>
+        <div class="card-content">
+            <p-table #tablee *ngIf="previewPartners.length" [value]="previewPartners" [scrollable]="true" styleClass="p-datatable-gridlines"  scrollHeight="400px" scrollDirection="both"
+            sortMode="multiple"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex" *ngIf="!this.notArePreviewPartners">
+    
+                        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+    
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="{{item}}" *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">{{item !== 'office_location' ? item : 'headquarter_office_location' | replaceSymbolBySpace | capitalLetter}}<p-sortIcon field="{{item}}"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                        <td  *ngFor="let item of headerPreviewPartners; let i=index" [style]="i<2?'width:150px':'width:200px'">
+                            <div *ngIf="item === 'demand'||item ===  'innovation' || item === 'scaling'">
+                                <span >{{customer[item]?'Yes':'No'}}</span>
+                            </div>
+    
+                            <div *ngIf="item ==='website'">
+                                <a  target="_blank" [href]="customer[item]">{{customer[item] || 'Not provided'}}</a>
+                            </div>
+    
+                            <div *ngIf="item !=='website' && item !== 'demand'&& item !==  'innovation' &&  item !== 'scaling'">
+                                <span >{{customer[item] || 'Not provided'}}</span>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+                <!-- <ng-template pTemplate="footer">
+                    <tr>
+                        <td style="width:100px">Id</td>
+                        <td style="width:200px">Name</td>
+                        <td style="width:200px">Country</td>
+                    </tr>
+                </ng-template> -->
+            </p-table>
+            <br>
+            <app-text-not-data [hidden]="!this.notArePreviewPartners" text="There are not Partners data"></app-text-not-data>
+            <br>
+        </div>
+
+
+    </div>
+</div>

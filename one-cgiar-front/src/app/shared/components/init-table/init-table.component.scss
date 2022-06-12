@@ -1,6 +1,35 @@
+.custom_search_input_container{
+  position: relative;
+  .material-icons{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 5px;
+    color: gray;
+  }
+  .custom_search_input{
+    outline: none;
+    border-radius: 10px;
+    padding: 5px 0px 5px 40px;
+    border: none;
+    transition: all ease .3s;
+    width: 200px;
+    // &:hover{
+    //   width: 500px;
+    //   transition: all ease .3s;
+    // }
+    &:focus{
+      width: 500px;
+      transition: all ease .3s;
+    }
+  }
+  margin-bottom: 10px;
+}
+
 .table-container {
-  margin: 50px 0px;
-  padding: 20px 150px;
+  margin: 12px 0px 200px 0px;
+  padding: 20px 80px;
 }
 .chip_stage{
   padding: 7px 10px;
@@ -15,8 +44,6 @@
 .searchField{
   max-height: 70vh; 
   border-radius: 10px;
-  // border: 2px solid white;
-  // background-color: white;
 }
 
 .initiative_link{
@@ -100,9 +127,7 @@ th {
     border-radius: 30px;
   }
 
-  .with_scroll{
-    max-height: 70vh; 
-    // overflow: hidden;
+  .with_scroll{ 
     border-radius: 10px;
     border: 2px solid white;
     overflow: auto;

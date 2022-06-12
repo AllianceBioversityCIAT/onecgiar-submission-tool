@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { map } from 'rxjs/operators';
+import { AttributesListConfiguration } from '../../../../../../../shared/components/compact-information-table-view/CompactInformationTableView.interface';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activities.interface';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
-import { DataValidatorsService } from '../../../../shared/data-validators.service';
-import { environment } from '../../../../../../../../environments/environment';
+import { InteractionsService } from '@app/shared/services/interactions.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'app-melia-studies-and-activities',
@@ -11,79 +14,196 @@ import { environment } from '../../../../../../../../environments/environment';
   styleUrls: ['./melia-studies-and-activities.component.scss']
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
-  templatesUrlBase = environment.templatesUrlBase;
-  filesList:any[]=[];
-  filesSavedList = [];
-  showForm = false;
-  data = {
-    id : null,
-    // melia_plan : "algo no tan implicito",
-    active : true,
-    section : "melia",
-    updateFiles : []
-  };
+  list: MeliaStudiesAndActivities[] = [];
+
+  attr_list_config: AttributesListConfiguration[] = [
+    {
+      attribute: 'type_melia',
+      name: "Type of MELIA study or activity",
+    },
+    {
+      attribute: 'result_title',
+      name: "Result or indicator title that the MELIA study or activity will contribute to.",
+    },
+    {
+      attribute: 'anticipated_year_completion',
+      name: "Anticipated year of completion (based on 2022-24 Initiative timeline)",
+    },
+    {
+      attribute: 'co_delivery',
+      name: "Co-delivery of planned MELIA study with other Initiatives",
+    },
+    {
+      attribute: 'management_decisions_learning',
+      name: "How the MELIA study or activity will inform management decisions and contribute to internal learning"
+    },
+    {
+      attribute: 'geographic_scope',
+      name: "Geographic Scope"
+    },
+  ]
+  showTableViewVariable = true;
+  meliaStudyTypes = [];
+  geographicScopes: FormGroup[] = [];
+  years: [];
   constructor(
     public _initiativesService: InitiativesService,
-    private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService,
-    public _dataValidatorsService:DataValidatorsService
-  ) { }
+    public _dataControlService: DataControlService,
+    private _interactionsService: InteractionsService,
+  ) {
+    this.getmeliaStudActiByInitId();
+
+  }
 
   ngOnInit(): void {
-    this.getMelia();
-  }
+    this._initiativesService.setTitle('Melia studies and activities');
+    this._initiativesService.getMeliaStudyTypes().subscribe(respMeliaStudyTypes => {
 
-  getMelia(){
-    this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
-      // console.log(resp);
-      this.filesList = [];
-      let melia = resp.response.meliaData;
-      this.filesSavedList = melia?.files?melia.files:[];
-      this.data.id = melia?.id;
-      // console.log(melia);
-      // console.log(this.filesSavedList);
-    },
-    err=>{console.log(err);}
-    ,()=>{
-      this.showForm = true;
+      this.meliaStudyTypes = respMeliaStudyTypes.response.meliaStudyTypes;
+      console.log(this.meliaStudyTypes);
+    });
+    this._initiativesService.getYears().subscribe( res => {
+      this.years = res.response.years;
+      console.log('Years', this.years);
     })
   }
-  saveSection(){
 
-    const formData = new FormData();
+  getTabIndex(e) {
+    this.showTableViewVariable = e;
+  }
 
-    if (this.filesList.length) {
-      for  (var i =  0; i <  this.filesList.length; i++)  {  
-        this.filesList[i].atributo = "si funciona"
-       formData.append("file",  this.filesList[i]);
-      } 
+  getItemToExpand(item) {
+    console.log(this.list.find(meliaItem => meliaItem?.id == item?.id)['collapse'] = false)
+  }
+
+  addItem() {
+    this.list.push(
+      {
+        id: null,
+        type_melia: null,
+        type_melia_id: null,
+        other_melia: null,
+        result_title: null,
+        anticipated_year_completion: null,
+        co_delivery: null,
+        management_decisions_learning: null,
+        active: true,
+        is_global: null,
+        countries: [],
+        regions: [],
+        initiatives: []
+      }
+    )
+    this.geographicScopes.push(new FormGroup({ is_global: new FormControl(this.list[this.list.length - 1].is_global) }));
+
+    this.list.map((el: any) => { el.collapse = true })
+    this.list[this.list.length - 1]['collapse'] = false;
+
+    // Go to editable view
+    this.showTableViewVariable = false;
+    console.log(this.list);
+  }
+
+  deleteItem(item, i?) {
+    if (item?.id) {
+      console.log("logic remove")
+      item.active = false;
+    } else {
+      console.log("remove from array")
+      this.list.splice(i, 1);
+    }
+  }
+
+  getmeliaStudActiByInitId() {
+    console.log(this._initiativesService.initiative.id)
+    this._initiativesService.getmeliaStudActiByInitId().pipe(map(res => res?.response?.meliaStudiesActivities)).subscribe((resp: MeliaStudiesAndActivities[]) => {
+      console.log(resp)
+      this.list = resp;
+
+      this.list.forEach(melia => {
+        this.geographicScopes.push(new FormGroup({
+          is_global: new FormControl(melia.is_global),
+        })
+        );
+      });
+
+      console.log(this.geographicScopes);
+
+
+      //MAP INITIATIVES
+      this._initiativesService.getInitiativesList().subscribe(initiatives => {
+        this.list.map((melia: any) => {
+          melia.initiatives.map(mapInit => {
+            initiatives.response.initiatives.forEach(initItem => {
+              if (initItem.initiativeId == mapInit.initiativeId) mapInit.name = initItem.name;
+            })
+          })
+          // this._dataControlService.showinitiatives = true;
+        })
+      });
+      //MAP REGIONS
+      this._initiativesService.getCLARISARegions('').subscribe(regions => {
+        this.list.map((melia: any) => {
+          melia.regions.map(mapReg => {
+            regions.response.regions.forEach(regionItem => {
+              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
+            })
+          })
+          // this._dataControlService.showRegions = true;
+        })
+      });
+
+      //MAP COUNTRIES
+      this._initiativesService.getCLARISACountries().subscribe(countries => {
+        this.list.map((melia: any) => {
+          melia.countries.map(mapCoun => {
+            countries.response.countries.forEach(countryItem => {
+              if (countryItem.code == mapCoun.country_id) mapCoun.name = countryItem.name;
+            })
+
+          })
+        });
+
+        this.formatGeographicScope(this.list);
+        // this._dataControlService.showCountries = true;
+      })
+        ;
+    })
+  }
+
+  saveSection() {
+    console.log(this.list)
+
+    //Update is global from formControl to body
+    for (let i = 0; i < this.list.length; i++) {
+      const element = this.list[i];
+      element.is_global = this.geographicScopes[i].controls['is_global'].value;
     }
 
-    if (this.filesSavedList.length) {
-      for  (var i =  0; i <  this.filesSavedList.length; i++)  {  
-        if (this.filesSavedList[i].show === false) {
-          let item = {
-            id: this.filesSavedList[i].id,
-            active: false
-          }
-          this.data.updateFiles.push(item);
-        }
-      } 
+    //Add meliaStudyId to countries and regions
+    for (const melia of this.list) {
+      melia.regions.map((reg: any) => reg.meliaStudyId = Number(melia.id));
+      melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
+      melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
-
-    this.data.id = this.data.id == undefined ? null : this.data.id;
-
-    formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'6.melia',3).subscribe(resp=>{
-      console.log("saveMelia");
-      // console.log(resp);
-      this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?
-      this._interactionsService.successMessage('Melia studies and activities has been saved'):
-      this._interactionsService.warningMessage('Melia studies and activities has been saved, but there are incomplete fields')
-      this.getMelia();
+    this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
+      console.log(resp);
+      this._interactionsService.successMessage('MELIA studies and activities has been saved');
+      // this._interactionsService.warningMessage('MELIA studies and activities has been saved, but there are incomplete fields');
+      this.getmeliaStudActiByInitId();
+      this.showTableViewVariable = true;
     })
 
-    
+  }
+
+  formatGeographicScope(arrayMelias: MeliaStudiesAndActivities[]) {
+    for (const melia of arrayMelias) {
+      melia['geographic_scope'] = `
+      <p><strong>Global scope: </strong>${melia.is_global ? 'Yes' : 'No'}</p>
+      ${melia.regions.length ? `<p><strong>Regions: </strong>${melia.regions.map((coun: any) => coun.name).join(', ')}</p>` : ''}
+      ${melia.countries.length ? `<p><strong>Countries: </strong>${melia.countries.map((coun: any) => coun.name).join(', ')}</p>` : ''}
+      `
+    }
   }
 
 }

@@ -34,16 +34,17 @@ export class CapacityDevelopmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Capacity Development');
     this.getHumanResources();
     this.formChanges();
   }
 
   getHumanResources(){
-    this._initiativesService.getHumanResources(this._initiativesService.initiative.id,'gender').subscribe(resp=>{
-      console.log(resp);
+    this._initiativesService.getHumanResources('gender').subscribe(resp=>{
+      //console.log(resp);
       let respData = resp.response.humanResourcesData;
       this.data.id = respData?.id;
-      console.log(respData);
+      //console.log(respData);
       this.secionForm.controls['example'].setValue(respData?.capacity_development);
     },
     err=>{console.log(err);}
@@ -60,11 +61,11 @@ export class CapacityDevelopmentComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources',3).subscribe(resp=>{
-      console.log("Human resources");
-      console.log(resp);
+    this._initiativesService.saveHumanResources(formData,'9.human-resources').subscribe(resp=>{
+      //console.log("Human resources");
+      //console.log(resp);
       this.getHumanResources();
-      this.secionForm.valid?
+      this.secionForm.valid && this.extraValidation ?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources  has been saved, but there are incomplete fields')
     })
@@ -75,7 +76,7 @@ export class CapacityDevelopmentComponent implements OnInit {
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 250);
-      console.log(this.extraValidation);
+      //console.log(this.extraValidation);
     })
   }
 

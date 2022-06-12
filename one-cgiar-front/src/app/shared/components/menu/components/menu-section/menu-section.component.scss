@@ -1,0 +1,98 @@
+.header{
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    cursor: pointer;
+    transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    text-decoration: none;
+    color: inherit;
+    &:hover{
+        background-color: var(--ibdc-black-2) !important; 
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    }
+    .title{
+        align-self: center;
+    }
+    .icons{
+        display: flex;
+        .icon{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            i{
+                font-size: 21px;
+            }
+            .expand_more_icon{
+                transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .3s;
+                user-select: none;
+            }
+        }
+    }
+
+
+}
+.body{
+    display: grid;
+    grid-template-columns:  1fr;
+    overflow: hidden;
+   margin-top: -2px;
+    // .line{
+    //     height: auto;
+    //     width: 5px;
+    //     // background-color: var(--ibdc-primary-color);
+    //     justify-self: end;
+    // }
+    .content{
+        border: 5px solid var(--ibdc-primary-color);
+        padding-bottom: 5px;
+        padding-right: 5px;
+        border-radius: 0px 0px 4px 4px;
+    }
+}
+
+.active_section{
+    color: var(--ibdc-active-color);
+}
+
+.expanded{
+    background-color: var(--ibdc-primary-color);
+}
+
+.isdc_feedback_section.active_section{
+    position: relative;
+    padding-left: 20px !important;
+    overflow: hidden;
+    &::after{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 10px;
+        background-color: var( --ibdc-secondary-color);
+    }
+}
+
+.isdc_feedback_section{
+    background-color: #3b7ee2;
+    &:hover{
+        background-color: #2065cc !important; 
+        transition: all cubic-bezier(0.23, 1, 0.320, 1) .5s;
+    }
+    /*display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    .name{
+        font-weight: 700;
+    }
+
+    i{
+
+    }*/
+
+}

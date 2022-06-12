@@ -1,0 +1,69 @@
+.custom_card{
+    position: relative;
+    background-color: #fafafefe;
+    box-shadow: 0 3px 6px #cfcfcf88, 0 3px 6px #cfcfcf88;
+    border-radius: 15px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    // padding-top: 50px;
+    overflow: hidden;
+    .risk_header{
+        .create_by_tag{
+            background-color: rgb(145, 91, 189);
+            width: auto;
+            padding: 5px 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: white;
+            border-radius: 0px 0px 10px 0px;
+            font-size: .8em;
+        }
+        .edit_options{
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+            .button_option{
+                padding: 10px 0px;
+                width: 200px;
+                border-radius: 5px;
+                text-align: center;
+                color: white;
+                font-weight: 700;
+                font-size: 1.1em;
+                cursor: pointer;
+            }
+            .list{
+                display: flex;
+                justify-content: end;
+               
+                .button_option{
+                    background-color: rgb(91,189,147);
+                }
+            }
+            .input{
+                display: flex;
+                justify-content: start;
+                .button_option{
+                    background-color: rgb(145, 91, 189);
+                }
+            }
+        }
+    }
+}
+
+.margin-top-15{
+    margin-top: 15px;
+}
+
+.normal_border{
+    border: 2px solid rgb(91,189,147); 
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.manual_border{
+    border: 2px solid rgb(145, 91, 189);  
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}

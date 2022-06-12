@@ -36,12 +36,13 @@ export class ManagementPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Management plan');
     this.getManagePlan();
     this.formChanges();
   }
 
   getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'management-plan').subscribe(resp=>{
+    this._initiativesService.getManagePlan('management-plan').subscribe(resp=>{
       // console.log(resp);
       let mpara = resp.response.managePlanData;
       this.data.id = mpara?.id;
@@ -62,11 +63,11 @@ export class ManagementPlanComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'7.management-plan',3).subscribe(resp=>{
+    this._initiativesService.saveManagePlan(formData,'7.management-plan').subscribe(resp=>{
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();
-      this.managementPlanForm.valid?
+      this.managementPlanForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
     })

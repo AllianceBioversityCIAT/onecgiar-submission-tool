@@ -5,6 +5,10 @@ import { FullInitiativeTocRoutingModule } from './full-initiative-toc-routing.mo
 import { FullInitiativeTocComponent } from './full-initiative-toc.component';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
+import { ToggleFormatDateModule } from '../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -13,7 +17,12 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
     CommonModule,
     FullInitiativeTocRoutingModule,
     UtilsModule,
-    IbdAngularComponentsModule
+    IbdAngularComponentsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    EditTocButtonModule,
+    ToggleFormatDateModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

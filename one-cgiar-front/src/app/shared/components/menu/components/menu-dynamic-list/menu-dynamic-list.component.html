@@ -1,0 +1,23 @@
+<div class="section">
+    <a  [ngStyle]="this.type == 'sub-section'?'':{'padding': '4px 5px', 'background' : '#5cc5602e', 'border-radius':'10px'}"
+    [attr.href]="this.customRouterLink" 
+    class="header {{this._utilsService.validateCurrrentSection(this.customRouterLink) ? 'active_section' : '' }}" 
+    (click)="this._utilsService.navigate(this.customRouterLink)" [routerLink]="this.customRouterLink">
+        <div class="title">
+            <ng-content select="[title]"></ng-content>
+        </div>
+        <div class="icons">
+            <div class="icon icon_toc" *ngIf="this.showTocIcon">
+                <img width="20px" src="/assets/images/ToC_Icon.png" alt="Toc tool">
+                <div class="pop_text">
+                    Section related to "ToC Board"
+                </div>
+             </div>
+            <div class="icon">
+                <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">{{this.type == 'sub-section' ?'task_alt':'analytics'}}</i>
+            </div>
+        </div>
+
+    </a>
+    <ng-content select="[content]"></ng-content>
+</div>

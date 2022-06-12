@@ -1,42 +1,114 @@
-<section-title name="Melia studies and activities" ></section-title>
-
-
-
+<section-title name="Melia studies and activities"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    <div class="row">
-
-        <div class="col-12">
-            <app-section-alerts-pack [extraValidation]="this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)" ></app-section-alerts-pack>
-            <ibdc-alert [options]="{htmlText: this._dataControlService.fileSteps, type:'info'}"></ibdc-alert>
-        </div>
-
-        
-
-        <div class="col-12">
-            <br>
-            <div class="ibdc_button_template_container">
-                <a [href]="this.templatesUrlBase+'/templates/Section 6.3 - (MELIA) studies and activities - Submission Tool Template.xlsx'" target="_blank" class="ibdc_button_template">
-                    Download template
-                </a>
-            </div>
-        </div>
-
+    <div class="alert_container" style="margin: 20px 0 35px 0;">
+        <ibdc-alert [options]="{text: 'If you are planning to carry out the same study in different years, please report every MELIA study separately.', type:'info'}"></ibdc-alert>
+    </div>
+    <div style="padding-bottom: 2em;">
+        <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
+            (onEdit)="this.getItemToExpand($event)" [list]="this.list" [attr_list_config]="this.attr_list_config"
+            [showTableViewVariable]="this.showTableViewVariable"></app-compact-information-table-view>
     </div>
 
-    <br>
-    
-    <form (ngSubmit)="saveSection()">
 
-        <ibdc-upload-files *ngIf="showForm" [options]="{
-            inputTitle:'Provide document(s)',filesList:this.filesList,filesSavedList:this.filesSavedList}">
-        </ibdc-upload-files>
+    <h1 style="text-align: center;" *ngIf="!this.list?.length && this._initiativesService.initiative.readonly">No data
+    </h1>
 
-        <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">
-            <ibdc-save-button [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+    <div class="items animate__animated animate__fadeIn" *ngIf="!showTableViewVariable">
+        <div class="item" *ngFor="let item of list; let i=index">
+
+
+            <app-collapsible-container [collapse]="item?.collapse">
+                <div header>Melia studies and activity {{i+1}}</div>
+                <div content>
+                    <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly"
+                        [ngCustomStyle]="{'margin-top':'12px'}" type="delete" (action)="deleteItem(item, i)"
+                        [confirmDeleteModal]="true"></app-button-edit-or-delete>
+                    <br><br>
+                    <div class="fields">
+
+                        <div class="mb-4">
+                            <ibdc-select-field class="field"
+                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
+                                [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
+                                [inputTitle]="attr_list_config[0].name" selectableListAtributteName='name'
+                                selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes"
+                                frontendSearchAttribute="name">
+                            </ibdc-select-field>
+                        </div>
+                        <div class="mb-4" *ngIf="item.type_melia_id == 8">
+                            <ibdc-text-area-field inputTitle="Specify the MELIA study or activity" [objectItem]="item"
+                                [objectAtributteName]="'other_melia'"
+                                [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                            </ibdc-text-area-field>
+                        </div>
+
+                        <ibdc-text-area-field [inputTitle]="attr_list_config[1].name" [objectItem]="item"
+                            [objectAtributteName]="attr_list_config[1].attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                        </ibdc-text-area-field>
+
+                        <div class="mb-4">
+                            <ibdc-select-field class="field"
+                                [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
+                                [objectAtributteName]="'anticipated_year_completion'"
+                                [objectAtributteId]="'anticipated_year_completion'"
+                                [inputTitle]="attr_list_config[2].name" selectableListAtributteName='year'
+                                selectableListAtributteId='year' [selectableList]="this.years"
+                                frontendSearchAttribute="year">
+                            </ibdc-select-field>
+                        </div>
+
+                        <ibdc-text-area-field [inputTitle]="attr_list_config[4].name" [objectItem]="item"
+                            [objectAtributteName]="attr_list_config[4].attribute"
+                            [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
+                        </ibdc-text-area-field>
+
+                        <ibdc-select-multiple [options]="{
+                            required: null,
+                            inputTitle: attr_list_config[3].name,
+                            selectItemName:'name',
+                            selectItemId:'initiativeId',
+                            frontendSearchAttribute:'name',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list:item.initiatives,
+                                selectItemName:'name',
+                                selectItemId:'initiativeId',
+                                idToSave:'id',
+                                labelName:'initiatives'
+                            },
+                            service:{
+                                serviceTS:this._initiativesService,
+                                functionName:'getInitiativesList',
+                                objectName:['response','initiatives']
+                            }
+                           }"></ibdc-select-multiple>
+
+                        <div class="col-sm-12">
+                            <app-geographic-scope [localForm]="this.geographicScopes[i]"
+                                [regionsSelectedList]="item.regions" [countriesSelectedList]="item.countries">
+                            </app-geographic-scope>
+                        </div>
+                    </div>
+                </div>
+            </app-collapsible-container>
+
+
+
         </div>
-    </form>
+    </div>
 
+    <div style="margin-top: 20px;" *ngIf="!this._initiativesService.initiative.readonly">
+        <app-add-button name="Add Melia studies and activity" (click)="addItem()"></app-add-button>
+    </div>
+
+
+    <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly" (click)="saveSection()">
+        <ibdc-save-button
+            [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+        </ibdc-save-button>
+    </div>
 
 </div>

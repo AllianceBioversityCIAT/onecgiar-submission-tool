@@ -19,6 +19,10 @@ const routes: Routes = [
         path: 'management-plan',
         loadChildren: () => import('./management-plan/management-plan.module').then(mod => mod.ManagementPlanModule),
       },
+      {
+        path: 'mpara-reports',
+        loadChildren: () => import('./mpara-reports/mpara-reports.module').then(mod => mod.MparaReportsModule),
+      }
     ],
   }
 ];

@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { InitiativesService } from './initiatives.service';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 
 const sectionPath = 'stages-control'
 @Injectable({
   providedIn: 'root'
 })
-export class ConceptService extends InitiativesService {
+export class ConceptService {
   generaInformation: {};
   narratives: {};
   toc: number;
 
-  constructor(http: HttpClient) {
-    super(http);
+  constructor(public http: HttpClient) {
+    // super(http);
   }
 
   /**
@@ -77,7 +77,7 @@ export class ConceptService extends InitiativesService {
   // Query to get theory of change information by ID
   getTheoryOfChange(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/tocs/${id}/files`).pipe(map(res => {
-      this.TOC = res.response.TOC;
+      // this.TOC = res.response.TOC;
       return res.response.TOC;
     }));
     // return this.getQuery(`/stages-control/concept/tocs/${id}/files`);

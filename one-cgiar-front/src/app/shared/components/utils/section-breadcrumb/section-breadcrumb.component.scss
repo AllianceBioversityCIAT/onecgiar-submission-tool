@@ -6,5 +6,17 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        // max-width: 100px;
+        // overflow: hidden;
+        .text{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+        .icon{
+            width: auto;
+            min-width: 50px;
+        }
     }
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
+
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
 import { environment } from '../../../../../../../../environments/environment';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-smpg-table',
@@ -31,11 +32,12 @@ export class SmpgTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Summary management plan Gantt table');
     this.getManagePlan();
   }
 
   getManagePlan(){
-    this._initiativesService.getManagePlan(this._initiativesService.initiative.id,'management_gantt').subscribe(resp=>{
+    this._initiativesService.getManagePlan('management_gantt').subscribe(resp=>{
       console.log(resp);
       this.filesList = [];
       let mpara = resp.response.managePlanData;
@@ -76,7 +78,7 @@ export class SmpgTableComponent implements OnInit {
     this.data.id = this.data.id == undefined ? null : this.data.id;
 
     formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveManagePlan(formData,this._initiativesService.initiative.id,'7.management-plan',3).subscribe(resp=>{
+    this._initiativesService.saveManagePlan(formData,'7.management-plan').subscribe(resp=>{
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();

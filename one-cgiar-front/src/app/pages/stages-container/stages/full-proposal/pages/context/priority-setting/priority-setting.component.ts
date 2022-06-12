@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataControlService } from '@app/shared/services/data-control.service';
-import { FullProposalService } from '@app/shared/services/full-proposal.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-priority-setting',
@@ -34,6 +34,7 @@ export class PrioritySettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Priority setting')
     this.getContext();
     this.getLinks();
     this.formChanges();
@@ -56,9 +57,9 @@ export class PrioritySettingComponent implements OnInit {
   }
 
   upserInfo(){
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid  && this.extraValidation?
       this._interactionsService.successMessage('Priority setting has been saved'):
       this._interactionsService.warningMessage('Priority setting has been saved, but there are incomplete fields')
     })
@@ -73,20 +74,20 @@ export class PrioritySettingComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
+      //console.log(resp);
       this.contextForm.controls['priority_setting'].setValue(resp?.response?.context?.priority_setting);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      //console.log("errorerekkasssssssssssssssdasda");
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("priority_setting").value, 500);
     })
   }

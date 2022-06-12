@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
-export class CreateTableClarisaGlobalTargets1635258275070 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create Clarisa global targets')
-        await queryRunner.query(`
+export class CreateTableClarisaGlobalTargets1635258275070
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create Clarisa global targets');
+    await queryRunner.query(`
         CREATE TABLE clarisa_global_targets (
             id int(11) NOT NULL,
             impact_area_id int(11) NOT NULL,
@@ -17,12 +17,7 @@ export class CreateTableClarisaGlobalTargets1635258275070 implements MigrationIn
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-
-
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

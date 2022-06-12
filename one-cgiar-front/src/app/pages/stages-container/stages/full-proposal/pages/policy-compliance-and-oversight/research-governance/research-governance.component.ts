@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DataControlService } from '@app/shared/services/data-control.service';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-research-governance',
@@ -24,12 +24,13 @@ export class ResearchGovernanceComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Research governance');
     this.getPolicyCompliance();
   }
 
   saveSection(){
     // console.log(this.sectionForm.value);
-    this._initiativesService.savePolicyCompliance(this.sectionForm.value,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.savePolicyCompliance(this.sectionForm.value).subscribe(resp=>{
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
       this.sectionForm.valid?
       this._interactionsService.successMessage('Research governance has been saved'):
@@ -38,7 +39,7 @@ export class ResearchGovernanceComponent implements OnInit {
   }
 
   getPolicyCompliance(){
-    this._initiativesService.getPolicyCompliance(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getPolicyCompliance().subscribe(resp=>{
       let response = resp.response.policyComplianceData;
       // console.log(response);
       if (resp.response.policyComplianceData) {

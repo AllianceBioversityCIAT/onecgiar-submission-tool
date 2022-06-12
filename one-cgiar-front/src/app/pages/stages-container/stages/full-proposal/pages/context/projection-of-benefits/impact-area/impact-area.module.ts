@@ -13,6 +13,8 @@ import { PobIndicatorComponent } from './components/pob-indicator/pob-indicator.
 import { PobDimensionComponent } from './components/pob-dimension/pob-dimension.component';
 import { PobNarrativeComponent } from './components/pob-narrative/pob-narrative.component';
 import { SkeletonsModule } from '../../../../../../../../shared/components/skeletons/skeletons.module';
+import { ButtonEditOrDeleteModule } from '../../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
+import { IaVisualReferenceModule } from '../../../../../../../../shared/components/ia-visual-reference/ia-visual-reference.module';
 
 //7:00 pm
 
@@ -28,8 +30,9 @@ import { SkeletonsModule } from '../../../../../../../../shared/components/skele
     ButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    SkeletonsModule
-    
+    SkeletonsModule,
+    ButtonEditOrDeleteModule,
+    IaVisualReferenceModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
   

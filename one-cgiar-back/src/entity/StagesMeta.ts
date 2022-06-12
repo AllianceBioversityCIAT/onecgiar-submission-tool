@@ -1,42 +1,39 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, ManyToOne } from 'typeorm'
-import { IsNotEmpty } from 'class-validator'
-import { UpdatedCreatedAt } from './extends/UpdateCreateAt';
-import { Stages } from './Stages';
-import { SubSectionsMeta } from './SubSectionsMeta';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import {Stages} from './Stages';
+import {SubSectionsMeta} from './SubSectionsMeta';
 
 @Entity('stages_meta')
 export class StagesMeta extends UpdatedCreatedAt {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @Column({length: '500'})
+  stage_name: string;
+  @Column({length: '250'})
+  col_name: string;
 
-    @Column({ length: '500' })
-    stage_name: string;
-;
-    @Column({ length: '250' })
-    col_name: string;
-    
-    @Column({ length: '250' })
-    table_name: string;
+  @Column({length: '250'})
+  table_name: string;
 
-    @Column({ length: '250' })
-    display_name: string;
-    
-    @Column({ length: '250' })
-    group_by: string;
+  @Column({length: '250'})
+  display_name: string;
 
-    @Column('tinyint')
-    active: boolean;
+  @Column({length: '250'})
+  group_by: string;
 
-    @Column('tinyint')
-    visible: boolean;
+  @Column('tinyint')
+  active: boolean;
 
-    @Column('int')
-    order: number;
+  @Column('tinyint')
+  visible: boolean;
 
-    @ManyToOne(() => Stages, stage => stage.id)
-    stage: Stages;
+  @Column('int')
+  order: number;
 
-    @ManyToOne(() => SubSectionsMeta, subsection => subsection.id)
-    subsection: SubSectionsMeta;
+  @ManyToOne(() => Stages, (stage) => stage.id)
+  stage: Stages;
+
+  @ManyToOne(() => SubSectionsMeta, (subsection) => subsection.id)
+  subsection: SubSectionsMeta;
 }

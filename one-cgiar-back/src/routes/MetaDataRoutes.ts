@@ -1,8 +1,7 @@
-import { Router } from "express";
-import { getMenu, getValidations } from "../controllers/MetaDataController";
-import { checkJwt } from "../middlewares/jwt";
-import { checkRole } from "../middlewares/role";
-
+import {Router} from 'express';
+import {getMenu, getValidations} from '../controllers/MetaDataController';
+import {checkJwt} from '../middlewares/jwt';
+import {checkRole} from '../middlewares/role';
 
 const router = Router();
 
@@ -13,16 +12,16 @@ const router = Router();
  * @apiPermission admin
  * @apiName GetMenu
  * @apiGroup Metadata
- * 
+ *
  * @apiDescription  Show metadata from stages,sections and subsections
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/meta/menu/2
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/meta/menu/2
  *
  * @apiHeader {String} auth Token
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *  {
@@ -52,7 +51,7 @@ const router = Router();
  *   },
  *   "title": "Initiatives:Get link."
  *  }
- * 
+ *
  *
  * @apiError Error GetMenu.
  *
@@ -60,8 +59,11 @@ const router = Router();
  *     HTTP/1.1 400 Not Found
  *     { message: "Get Metadata:", error }
  */
-router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getMenu);
-
+router.get(
+  '/menu/:initiativeId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  getMenu
+);
 
 // get validations per stage
 /**
@@ -70,16 +72,16 @@ router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'r
  * @apiPermission admin
  * @apiName GetValidations
  * @apiGroup Metadata
- * 
+ *
  * @apiDescription  Show validations (Green Checks)
- * 
+ *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3
- * 
+ *
  * @apiSampleRequest https://initiativestest.ciat.cgiar.org/api/meta/validations/menu/2/3
  *
  * @apiHeader {String} auth Token
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * {
@@ -94,7 +96,7 @@ router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'r
  *     },
  *     "title": "Validations General Information:Menu"
  * }
- * 
+ *
  *
  * @apiError Error Get validations GI.
  *
@@ -102,6 +104,10 @@ router.get("/menu/:initiativeId([0-9]+)", [checkJwt, checkRole('initiatives', 'r
  *     HTTP/1.1 400 Not Found
  *     { message: "Get validations GI", error }
  */
-router.get("/validations/menu/:initiativeId([0-9]+)/:stageId([0-9]+)", [checkJwt, checkRole('initiatives', 'readOwn')], getValidations);
+router.get(
+  '/validations/menu/:initiativeId([0-9]+)/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  getValidations
+);
 
 export default router;

@@ -1,11 +1,11 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FullProposalService } from '@app/shared/services/full-proposal.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 
 
 @Component({
@@ -32,13 +32,14 @@ export class ChallengeStatementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Challenge statement')
     this.getContext();
     this.formChanges();
   }
 
   upserInfo(){
-    console.log(this.challengeStatementForm);
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
+    //console.log(this.challengeStatementForm);
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.challengeStatementForm.value).subscribe(resp=>{
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.challengeStatementForm.valid?
       this._interactionsService.successMessage('Challenge statement has been saved'):
@@ -48,19 +49,19 @@ export class ChallengeStatementComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
+    console.log("getContext")
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
       this.challengeStatementForm.controls['challenge_statement'].setValue(resp?.response?.context?.challenge_statement);
       this.challengeStatementForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showfrom = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      console.log(err);
     })
   }
 
   formChanges(){
     this.challengeStatementForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 500);
     })
   }

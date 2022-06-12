@@ -1,0 +1,55 @@
+.table_edit {
+  background-color: white;
+
+  .te_header {
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: var(--ibdc-secondary-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 100px;
+    color: white;
+  }
+
+  .te_content {
+    box-sizing: border-box;
+    max-height: 450px;
+    overflow-y: scroll;
+  }
+
+  border-radius: 10px;
+  box-shadow: 0 3px 6px #ecececb6,
+  0 3px 6px #ecececb6;
+
+}
+
+.addItiativeTeamItem {
+  padding: 10px;
+}
+
+:host ::ng-deep ibdc-input-field {
+  .ta_container {
+    border: unset !important;
+    border-radius: unset !important;
+    box-shadow: unset;
+    transition: box-shadow ease 0.2s;
+
+    &:hover {
+      box-shadow: 0 10px 10px hsl(0deg 0% 67% / 19%), 0 6px 6px hsl(0deg 0% 67% / 19%);
+    }
+  }
+
+}
+
+:host ::ng-deep ibdc-select-field {
+  div div .ta_container {
+    border: unset !important;
+    border-radius: unset !important;
+    box-shadow: unset;
+    transition: box-shadow ease 0.2s;
+
+    &:hover {
+      box-shadow: 0 10px 10px hsl(0deg 0% 67% / 19%), 0 6px 6px hsl(0deg 0% 67% / 19%);
+    }
+  }
+}

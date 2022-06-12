@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataValidatorsService } from '@app/pages/stages-container/stages/shared/data-validators.service';
-import { DataControlService } from '@app/shared/services/data-control.service';
-import { FullProposalService } from '@app/shared/services/full-proposal.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
+
+import { map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
+import { FullProposalService } from '../../../../../../../shared/services/full-proposal.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
+import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { ParticipatoryProcess } from './interfaces/Participatory-interface';
+import { AttributesListConfiguration } from '../../../../../../../shared/components/compact-information-table-view/CompactInformationTableView.interface';
+import { AuthService } from '../../../../../../../shared/services/auth.service';
 
 
 @Component({
@@ -19,6 +24,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
   citationsList=[];
   extraValidation = false;
+
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -35,9 +41,10 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._initiativesService.setTitle('Participatory design process')
     this.getContext();
-    this.getLinks();
     this.formChanges();
+    this.getLinks();
   }
 
   getLinks(){
@@ -57,11 +64,11 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   }
 
   upserInfo(){
-    this._fullProposalService.patchContext(this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
+    this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid  &&  this.extraValidation?
       this._interactionsService.successMessage('Participatory design process has been saved'):
-      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields')
+      this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields');
     })
     //save links
     this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
@@ -74,20 +81,20 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
 
   getContext(){
     this.spinnerService.show('spinner');
-    this._fullProposalService.getContext(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp);
+    this._fullProposalService.getContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id).subscribe(resp=>{
+      //console.log(resp);
       this.contextForm.controls['participatory_design'].setValue(resp?.response?.context?.participatory_design);
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
       this.showform = true;
       this.spinnerService.hide('spinner');
     },err=>{
-      console.log("errorerekkasssssssssssssssdasda");
+      //console.log("errorerekkasssssssssssssssdasda");
     })
   }
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
+      //console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
   }

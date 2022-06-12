@@ -1,0 +1,87 @@
+
+<form>
+    <section-sub-title name="Geographic scope"></section-sub-title>
+     <div class="local_container">
+            
+       
+        <div class="row">
+            <div class="col-sm-12 horizontal_padding">
+                <div class="geographic-scope-container">
+                    <div class="geographic-scope-form">
+                        <p class="readonly_text_title"><strong class="color-secondary">Does the initiative have a global dimension?: </strong><span class="ibdc_asterisk">* </span></p>
+                        <div class="edit" *ngIf="!this._initiativesService.initiative.readonly">
+                            <div>
+                                <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.objectItem[this.objectAtributteName]?'accent':''"
+                                    (click)="setIsGlobal(true);">Yes</button>
+                                <button type="button" mat-raised-button [color] = "!this.objectItem[this.objectAtributteName]?'warn':''"
+                                    (click)="setIsGlobal(false);">No</button>
+                            </div>
+                        </div>
+                        <div class="only_read" *ngIf="this._initiativesService.initiative.readonly">
+                            <p>{{this.localForm.get('is_global').value?'Yes':'No'}}</p>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList == null">
+                <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
+            </div>
+            <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList != null">
+                <div class="box_container">
+                    <ibdc-select-multiple [options]="{
+                        required: !this.objectItem[this.objectAtributteName],
+                        inputTitle:'Select regions',
+                        selectItemName:'name',
+                        selectItemId:'region_id',
+                        frontendSearchAttribute:'name',
+                        readOnlyVariable: this._initiativesService.initiative.readonly,
+                        savedList:{
+                            list:this.regionsSelectedList,
+                            selectItemId:'region_id',
+                            selectItemName:'name',
+                            idToSave:'id',
+                            labelName:'regions'
+                        },
+                        service:{
+                            serviceTS:this._initiativesService,
+                            functionName:'getCLARISARegions',
+                            objectName:['response','regions']
+                        }
+                       }"></ibdc-select-multiple>
+                </div>
+    
+            </div>
+            <div class="col-6 horizontal_padding" *ngIf="!this.countriesSelectedList">
+                <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
+            </div>
+            <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList">
+                <div class="box_container">
+                <ibdc-select-multiple [options]="{
+                    required: !this.objectItem[this.objectAtributteName],
+                    inputTitle:'Select countries',
+                    selectItemName:'name',
+                    selectItemId:'country_id',
+                    frontendSearchAttribute:'name',
+                    readOnlyVariable: this._initiativesService.initiative.readonly,
+                    savedList:{
+                        list:this.countriesSelectedList,
+                        selectItemName:'name',
+                        selectItemId:'country_id',
+                        idToSave:'id',
+                        labelName:'countries'
+                    },
+                    service:{
+                        serviceTS:this._initiativesService,
+                        functionName:'getCLARISACountries',
+                        objectName:['response','countries']
+                    }
+                   }"></ibdc-select-multiple>
+                </div>
+            </div>
+        </div>
+    
+        <br>
+     </div>
+    </form>

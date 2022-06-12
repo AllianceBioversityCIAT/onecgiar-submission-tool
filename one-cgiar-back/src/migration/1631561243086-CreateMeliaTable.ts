@@ -1,11 +1,9 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class CreateMeliaTable1631561243086 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-
-        console.log('create melia table')
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    console.log('create melia table');
+    await queryRunner.query(`
         CREATE TABLE melia (
             id int(11) NOT NULL AUTO_INCREMENT,
             initvStgId int(11) NOT NULL,
@@ -20,10 +18,7 @@ export class CreateMeliaTable1631561243086 implements MigrationInterface {
             
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;   
         `);
+  }
 
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }

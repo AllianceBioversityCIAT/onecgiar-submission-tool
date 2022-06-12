@@ -14,6 +14,10 @@ const routes: Routes = [
       {
         path: 'work-package',
         loadChildren: () => import('./work-package/work-package.module').then(mod => mod.WorkPackageModule),
+      },
+      {
+        path: 'wp-reports',
+        loadChildren: () => import('./wp-reports/wp-reports.module').then(mod => mod.WpReportsModule),
       }
     ]
   }

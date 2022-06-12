@@ -1,8 +1,8 @@
 import { UsersService } from './../../services/users.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BaseFormUser } from '../../../../shared/utils/base-form-user';
 
-import { BaseFormUser } from '@shared/utils/base-form-user';
 enum Action {
   EDIT = 'edit',
   NEW = 'new',
@@ -38,12 +38,12 @@ export class ModalComponent implements OnInit {
     const formValue = this.userForm.baseForm.value;
     if (this.actionTODO === Action.NEW) {
       this.userSvc.new(formValue).subscribe((res) => {
-        console.log('New ', res);
+        //console.log('New ', res);
       });
     } else {
       const userId = this.data?.user?.id;
       this.userSvc.update(userId, formValue).subscribe((res) => {
-        console.log('Update', res);
+        //console.log('Update', res);
       });
     }
   }

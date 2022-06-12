@@ -2,7 +2,7 @@
 
 <div class="section-container animate__animated animate__fadeIn">
 
-    <p-table [columns]="cols" [value]="workPackagesList" responsiveLayout="scroll">
+    <p-table [columns]="cols" [value]="workPackagesList" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns" style="text-align: center;">

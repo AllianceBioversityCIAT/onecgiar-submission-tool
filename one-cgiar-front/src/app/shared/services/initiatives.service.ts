@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { observable, Observable } from 'rxjs';
-import { AllInitiatives } from '../models/initiative.interface';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { Title } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
+
 const sectionPath = 'initiatives'
 
 @Injectable({
@@ -14,13 +16,20 @@ export class InitiativesService {
   initvStgId: string;
 
   initvRoleId: number;
-  initiative={
-    id:null,
-    official_code:null,
-    roleId:4,
+  initiative = {
+    id: null,
+    official_code: null,
+    roleId: 4,
     readonly: true,
-    stageId:null,
-    name:null
+    stageId: null,
+    stageName: null,
+    exactStageName: null,
+    name: null,
+    users: [],
+    status: null,
+    submission: {},
+    userRoleId: null,
+    userRoleName: null
   }
 
   actionAreas: [];
@@ -32,11 +41,13 @@ export class InitiativesService {
   ownInitiatives: [];
 
   usersByInitiative: [];
-
+  TawkMetaData
 
   constructor(
     public http: HttpClient,
-    ) { }
+    private titleService:Title,
+    private _authService:AuthService
+  ) { }
 
   // get initvStgId():string{
   //   return this.initvStgId;
@@ -44,6 +55,59 @@ export class InitiativesService {
   // set initvStgId(val: string){
   //   this.initvStgId = val;
   // }
+  setTitle(section){
+    this.titleService.setTitle( (this.initiative.id ?  `INIT ${this.initiative.id} - ` : '') + section);
+    this.setTWKAttributes();
+  }
+
+  setTWKAttributes(){
+    // console.log(this.initiative.users)
+    let initUsers = `
+    Users assigned to the initiative\n`;
+    // if (this.initiative.users.length) {
+      this.initiative.users.map(initUser=>{
+        initUsers+= `${initUser?.last_name} ${initUser?.first_name} (${initUser?.role_acronym})\n`;
+      })
+
+      initUsers += `
+      `
+    // }else{
+    //   initUsers = '';
+    // }
+
+    // console.log(initUsers)
+
+    try {
+      console.log("setTitle")
+      window['Tawk_API']?.setAttributes({
+        'name': this.getUserInfo.name,
+        'email': this.getUserInfo.email,
+        'initiativename' :`
+          ${this.initiative.name || 'Home'}
+
+        `,
+        'metadata' :`
+        User Id: ${JSON.parse(localStorage.getItem('user'))?.id}
+        Initiative role: ${this.initiative.userRoleName || 'No role'}
+        Initiative status: ${this.initiative.status || 'No status'}
+        App role: ${this._authService?.lsUserRoles?.name}
+        
+        `,
+        // 'users': initUsers
+      }, (error) => { console.log(error) });
+    } catch (error) {
+      
+    }
+  }
+
+
+
+  get getUserInfo():{email,name}{
+    return JSON.parse(localStorage.getItem('user'));
+  }
+
+
+
   getQuery(query: string) {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     const token = user.token;
@@ -89,14 +153,14 @@ export class InitiativesService {
 
   }
 
-    /**
-   * @param initiativeId initiative id 
-   * @param stageName stage NAme 
-   * @returns general-information data
-   */
+  /**
+ * @param initiativeId initiative id 
+ * @param stageName stage NAme 
+ * @returns general-information data
+ */
 
-  getGeneralInformation(initiativeId,stageName) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`);
+  getGeneralInformation(initiativeId, stageName, stageId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${stageName}/${stageId}/${initiativeId}/general-information`);
   }
 
   /**
@@ -105,16 +169,16 @@ export class InitiativesService {
    * @param body body
    * @returns general-information data
    */
-  patchGeneralInformation(initiativeId,stageName,body) {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`,body);
+  patchGeneralInformation(initiativeId, stageName, body) {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${stageName}/${initiativeId}/general-information`, body);
   }
 
-   /**
-   * @param id initiative id
-   * @returns WP
-   */
+  /**
+  * @param id initiative id
+  * @returns WP
+  */
   // Query to get all the WorkPackages
-  getAllIWorkPackages(id: number|string): Observable<any> {
+  getAllIWorkPackages(id: number | string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/${id}`);
   }
 
@@ -123,23 +187,23 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/${id}/partnership`);
   }
 
-  // Query to get CLARISA Regions 
-  getCLARISARegions(filterText:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions?filter=${filterText}`).pipe(map(resp => {
+  //? Query to get CLARISA Regions 
+  getCLARISARegions(filterText: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/regions-cgiar?filter=${filterText}`).pipe(map(resp => {
       resp.response.regions.map(region => {
-        region.region_id = region.um49Code;
+        region.region_id = region.id;
       })
-      return  resp;
+      return resp;
     }));;
   }
 
-  // Query to get CLARISA Countries
+  //? Query to get CLARISA Countries
   getCLARISACountries(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/countries`).pipe(map(resp => {
       resp.response.countries.map(country => {
         country.country_id = country.code;
       })
-      return  resp;
+      return resp;
     }));;
   }
 
@@ -147,20 +211,20 @@ export class InitiativesService {
   getCLARISAInstitutions(filterText: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions?filter=${filterText}`).pipe(map(resp => {
       resp.response.institutions.map(institution => {
-        institution.acronym_name = `(Id: ${institution.code ? institution.code: ' '})   ${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
+        institution.acronym_name = `(Id: ${institution.code ? institution.code : ' '})   ${institution.acronym ? institution.acronym + ' - ' : ''} ${institution.name}`;
       })
-      return  resp.response.institutions;
+      return resp.response.institutions;
     }));;
   }
-  
 
-  getRegionsAndCountries(InitiativeId): Observable<any>{
+
+  getRegionsAndCountries(InitiativeId): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/geo-scope/${InitiativeId}`);
   }
 
   // Query to create an initiative (Only users with admin role can do this)
   createInitiative(body: any): Observable<any> {
-    return this.postQuery('/initiatives', body);
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/pre-concept/create-initiative`, body);  
   }
 
   /**
@@ -186,7 +250,7 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/regions`, body);
   }
 
-    
+
   // Query to create a countries in work package
   createCountrie(body: any): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/countries`, body);
@@ -194,12 +258,10 @@ export class InitiativesService {
 
   // Query to create a user
   createUser(body: any): Observable<any> {
-    console.log('%c'+`${environment.apiUrl}/users`,'background: #222; color: #ffff00');
-    console.log(body);
     return this.http.post<any>(`${environment.apiUrl}/users`, body);
   }
 
-  assignUserToInitiative(body: any,initiativeId:string|number): Observable<any> {
+  assignUserToInitiative(body: any, initiativeId: string | number): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/users`, body);
   }
   // Query to update the narrative of a theory of change (Only narrative)
@@ -231,7 +293,7 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/areas`).pipe(map(res => {
       this.actionAreas = res.response.actionAreas;
 
-      res.response.actionAreas.map((resp,index)=>{
+      res.response.actionAreas.map((resp, index) => {
         resp.index_name = `Action area ${index + 1} - ${resp.name}`;
       })
       // this.actionAreas[index].index_name = `Action area ${index + 1} - ${this.actionAreas[index].name}`;
@@ -239,6 +301,17 @@ export class InitiativesService {
     }));
   }
 
+
+  // Query to get initiatves list
+  getInitiativesList(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/list`).pipe(map(res => {
+      res.response.initiatives.map(initiatives => {
+        initiatives.initiativeId = initiatives.id;
+        delete initiatives.id;
+      })
+      return res;
+    }));
+  }
   // Query to get all the initiatives
   getAllInitiatives(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}`).pipe(map(res => {
@@ -265,66 +338,82 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/roles`);
   }
 
-  getSummary(initiativeId,stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`);
+  getSummary(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/${this.initiative.id}/summary/${this.initiative.stageId}`);
   }
 
-  patchSummary(body:any,initiativeId,stageId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`,body);
+  patchSummary(body: any, initiativeId, stageId): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/${initiativeId}/summary/${stageId}`, body);
   }
 
-  getBudget (body:any,initiativeId,stageId): Observable<any> {
+  getBudget(body: any, initiativeId, stageId): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/get-budget/${initiativeId}/${stageId}`, body);
   }
 
 
-  saveBudget (body:any,initiativeId,stageId): Observable<any> {
+  saveBudget(body: any, initiativeId, stageId): Observable<any> {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-budget/${initiativeId}/${stageId}`, body);
   }
 
-  saveMelia (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${location}/${stageId}`, body);
+  saveMelia(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}`, body);
   }
 
-  getMelia (initiativeId,section:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${initiativeId}/${section}`);
+  getMelia(section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}/${section}`);
   }
 
-  saveManagePlan (body:any,initiativeId,location:string,stageId:string|number): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${location}/${stageId}`, body);
+  saveMeliaPlan(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/melia/plan/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
-  getManagePlan (initiativeId,section:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${initiativeId}/${section}`);
+  getMeliaPlan(section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/melia/plan/${this.initiative.stageId}/${this.initiative.id}/${section}`);
   }
 
-  saveHumanResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${location}/${stageId}`, body);
+  saveManagePlan(body: any, location: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${this.initiative.stageId}/${this.initiative.id}/${location}/`, body);
   }
 
-  getHumanResources (initiativeId,section:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${initiativeId}/${section}`);
+  getRisksList(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/risks`);
   }
 
-  saveFinancialResources (body:any, initiativeId, location:string, stageId:string|number): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${location}/${stageId}`, body);
+  getRisksTheme(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/risks-theme`);
   }
 
-  getFinancialResources (initiativeId,section:string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${initiativeId}/${section}`);
+  getManagePlan(section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/manage-plan/${this.initiative.stageId}/${this.initiative.id}/${section}`);
+  }
+
+  saveHumanResources(body: any, location: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${this.initiative.stageId}/${this.initiative.id}/${location}`, body);
+  }
+
+  getHumanResources(section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/human-resources/${this.initiative.stageId}/${this.initiative.id}/${section}`);
+  }
+
+  saveFinancialResources(body: any, initiativeId, section: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${this.initiative.stageId}/${initiativeId}/${section}`, body);
+  }
+
+  getFinancialResources(initiativeId, section: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/financial-resources/${this.initiative.stageId}/${initiativeId}/${section}`);
   }
 
 
-  savePolicyCompliance (body:any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${initiativeId}`, body);
+  savePolicyCompliance(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
-  getPolicyCompliance (initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${initiativeId}`);
+  getPolicyCompliance(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/policy-compliance/${this.initiative.stageId}/${this.initiative.id}`);
   }
 
-  saveImpactStrategies (body:any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}`, body);
+  saveImpactStrategies(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
   // Query to get all the users 
@@ -333,20 +422,20 @@ export class InitiativesService {
     // api/initiatives/get-initvStgId/2/3
   }
 
-  getInnovationPackages (initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`);
+  getInnovationPackages(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${this.initiative.stageId}/${this.initiative.id}`);
   }
 
-  saveInnovationPackages (body:any, initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${initiativeId}`, body);
+  saveInnovationPackages(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/innovation-packages/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
-  getProjectedBenefitLists (): Observable<any> {
+  getProjectedBenefitLists(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-benefits`);
   }
 
-  getImpactStrategies (initiativeId,impactAreaId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${initiativeId}/${impactAreaId}`);
+  getImpactStrategies(impactAreaId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/impact-strategies/${this.initiative.stageId}/${this.initiative.id}/${impactAreaId}`);
   }
 
   // Query to get all the users by roles
@@ -356,9 +445,9 @@ export class InitiativesService {
 
   // Query to get all the users 
   getAllUsers(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=`).pipe(map(resp=> {
-      resp.response.users.map(user=>{
-        user.firstN_lastN_email = user.first_name+' '+user.last_name+'  -  '+ user.email;
+    return this.http.get<any>(`${environment.apiUrl}/users/search?filter=`).pipe(map(resp => {
+      resp.response.users.map(user => {
+        user.firstN_lastN_email = user.first_name + ' ' + user.last_name + '  -  ' + user.email;
         user.is_active = true;
       })
       return resp;
@@ -373,7 +462,7 @@ export class InitiativesService {
     }));
   }
 
-  getRolefromInitiativeById(initiativeId){
+  getRolefromInitiativeById(initiativeId) {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/${initiativeId}/roles`);
   }
 
@@ -385,12 +474,12 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/${WorkPackageID}`);
   }
 
-  getPOBenefitsFp(initiativeId) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}`);
+  getPOBenefitsFp() {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${this.initiative.stageId}/${this.initiative.id}`);
   }
 
-  getPOBenefitsFpByImpactArea(initiativeId,impactId) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${initiativeId}/${impactId}`);
+  getPOBenefitsFpByImpactArea(stageId, initiativeId, impactId) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${stageId}/${initiativeId}/${impactId}`);
   }
   // 
   getPOBenefitsTimetimeframes(benefitId) {
@@ -407,87 +496,92 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/concept/packages/benefits/timeframes`, body);
   }
 
-  getTocTxtDataByTocId(tocId){
+  getTocTxtDataByTocId(tocId) {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/toc/narrative/${tocId}`);
   }
 
-  getSdgTargets(){
+  getSdgTargets() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/sdg-targets`);
   }
 
-  getGlobalTargets(){
+  getGlobalTargets() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/global-targets`);
   }
 
-  getOutcomesIndicators(){
+  getOutcomesIndicators() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/action-areas/outcomes-indicators`);
   }
 
-  getGreenCheckStatus(initiativeId){
+  getGreenCheckStatus(initiativeId) {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/stages-meta/${initiativeId}`);
   }
 
-  getSectionsValidation(initiativeId,stageId){
+  getSectionsValidation(initiativeId, stageId) {
     return this.http.get<any>(`${environment.apiUrl}/meta/validations/menu/${initiativeId}/${stageId}`);
   }
   // get all work packages by initiative with stage full proposal
-  getWpsFpByInititative(initiativeId){
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`);
+  getWpsFpByInititative() {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`);
   }
 
   // get one work package by id with stage full proposal
-  getWpFpByInititative(wpID){
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/package/${wpID}`);
+  getWpById(wpID) {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/package/${wpID}`);
   }
 
   // get one work package by id with stage full proposal
-  getImpactAreas(){
+  getImpactAreas() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas`);
   }
 
   // get getImpactAreasIndicators
-  getImpactAreasIndicators(){
+  getImpactAreasIndicators() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/impact-areas/inidicators`);
   }
 
   // get getDepthDescription
-  getDepthDescription(impactAreaIndicator){
+  getDepthDescription(impactAreaIndicator) {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-description/${impactAreaIndicator}`);
   }
 
   // get getDepthDescription
-  getDepthScale(impactAreaIndicator){
+  getDepthScale(impactAreaIndicator) {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/depth-scale/${impactAreaIndicator}`);
   }
 
-    // 
-  patchPOBenefitsFp(body: any,pobId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${pobId}`, body);
+  //getMeliaStudyTypes
+  getMeliaStudyTypes() {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/melia/study-types`);
+  }
+
+  // 
+  patchPOBenefitsFp(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/projection-benefits/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
 
   // get getPobProbabilities
-  getPobProbabilities(){
+  getPobProbabilities() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/projected-probabilities`);
   }
 
   // get one work package by id with stage full proposal
-  getProjectionOfBenefitsImpactAreas(){
+  getProjectionOfBenefitsImpactAreas() {
     return this.http.get<any>(`/assets/DB/impact-areas.json`);
   }
 
-  saveWpFp(body: any,initiativeId): Observable<any> {
-    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/packages/${initiativeId}`, body);
+  saveWpFp(body: any): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`, body);
   }
-    // Query to create a work package
+  // Query to create a work package
   createPartner(body: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/institutions/institution-requests`, body);
   }
 
-  getInstitutionsTypes(){
+  getInstitutionsTypes() {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/institutions/types`);
   }
 
-  addLink(body,initiativeID,stageID){
+  addLink(body, initiativeID, stageID) {
     return this.http.patch<any>(`${environment.apiUrl}/initiatives/add-link/${initiativeID}/${stageID}`, body);
   }
 
@@ -495,24 +589,135 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/meta/menu/${initiativeId}`);
   }
 
-  getLinks(body,initiativeID,stageID){
+  //? previews
+
+  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewPartnersData(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
+  }
+
+  getPreviewGeographicScopeData(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewPartners(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewRiskAssessment(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${stageId}`);
+  }
+
+  getPreviewProjectedBenefits(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${stageId}`);
+  }
+
+  getLinks(body, initiativeID, stageID) {
     return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${stageID}`, body);
   }
 
-  async addLinks(citationList,initiativeID,stageID){
-    let promiseList=[];
+  async addLinks(citationList, initiativeID, stageID) {
+    let promiseList = [];
     citationList.forEach(citation => {
-      if (!citation?.citationId || citation?.edited)  promiseList.push( this.addLink(citation,initiativeID,stageID).toPromise());
+      if (!citation?.citationId || citation?.edited) promiseList.push(this.addLink(citation, initiativeID, stageID).toPromise());
     });
 
     await Promise.all(promiseList).then(values => {
       console.log(values);
     },
-    err=>{
-      console.log(err);
-    });
+      err => {
+        console.log(err);
+      });
 
 
+  }
+
+
+  /*** submitt initiative */
+
+  submitInitiative(initiativeId, stageId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/submit/${initiativeId}/${stageId}`, {});
+  }
+
+  authTocToken(userId): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/toc/token`, {userId});
+  }
+
+  getAssesssmentStatuses(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/assessment/${initiativeId}/${stageId}/statuses`);
+  }
+
+  updateSubmissionStatus(initiativeId, stageId, body): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/initiatives/assessment/status/${initiativeId}/${stageId}`, body);
+  }
+
+  patchPcInitialToc(initiativeId, ubication, stageId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${ubication}/${stageId}`, body);
+  }
+
+  patchInitiativeStatements(initiativeId, body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`, body);
+  }
+
+  getInitiativeStatements(initiativeId){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initiative-statements/${initiativeId}`);
+  }
+
+  getPcInitialToc(initiativeId, sectionName){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/pre-concept/initial-toc/${initiativeId}/${sectionName}`);
+  }
+
+  getSubmission(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/submission/${initiativeId}/${stageId}`, {});
+  }
+
+  getMeliaResultFramework(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/${this.initiative.id}/result_framework`, {});
+  }
+
+  getProposalTocByInitiativeId(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/toc/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
+  getmeliaStudActiByInitId(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
+  patchmeliaStudActiByInitId(body): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/melia/studies-activities/${this.initiative.stageId}/${this.initiative.id}`, body);
+  }
+
+  getEndOfInitiativeOutcome(){
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/eoi/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
+  getRecommendationsByInitId(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`);
+  }
+
+  patchRecommendationByInitId(body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
+  }
+
+  patchTracksByInitiativeAndStageId(body){
+    return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
+  }
+
+  getTracksByInitiativeAndStageId(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`);
+  }
+
+  
+  /*** submitt initiative */
+  postApproveInitiative(body){
+    return this.http.post<any>(`${environment.apiUrl}/stages-control/proposal/approve-initiative`, body);
+  }
+
+  getYears(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/years`);
   }
 
 

@@ -34,13 +34,18 @@
               "src/styles/media-queries.scss",
               "src/styles/align.scss",
               "src/styles/details.scss",
+              "src/styles/shadows.scss",
+              "src/app/shared/components/menu/styles/menu.scss",
               "node_modules/primeng/resources/themes/saga-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
+              "node_modules/viewerjs/dist/viewer.min.css",
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/viewerjs/dist/viewer.min.js",
+              "node_modules/pusher-js/dist/web/pusher.min.js"
             ]
           },
           "configurations": {
@@ -77,8 +82,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "submission-tool:build",
-            "proxyConfig": "proxy.conf.json"
+            "browserTarget": "submission-tool:build"
           },
           "configurations": {
             "production": {

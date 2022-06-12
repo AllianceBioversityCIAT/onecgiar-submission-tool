@@ -1,18 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column} from "typeorm";
-import { UpdatedCreatedAt } from "./extends/UpdateCreateAt";
+import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 
 @Entity('projected_probabilities')
-export class projectedProbabilities extends UpdatedCreatedAt {
+export class ProjectedProbabilities extends UpdatedCreatedAt {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @Column({type: 'text'})
+  name: string;
 
-    @Column({ type: "text" })
-    name: string;
+  @Column({type: 'text'})
+  description: string;
 
-    @Column({ type: "text" })
-    description: string;
-
-    @Column({ type: "tinyint" })
-    active: boolean;
+  @Column({type: 'tinyint'})
+  active: boolean;
 }

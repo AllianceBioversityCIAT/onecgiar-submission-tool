@@ -31,6 +31,18 @@ export class DataValidatorsService {
 
   }
 
+  countAtributeBooleanInArray(array:[],atribute:string){
+    let cont = 0;
+    array.map(item=>{
+      if (item[atribute] === true) {
+        cont++;
+      }
+    })
+
+    return cont;
+
+  }
+
   validateIfArrayHasActiveFalseEstrict(array:any,atribute){
 
     if (!array.length) {
@@ -101,31 +113,66 @@ export class DataValidatorsService {
 
   }
 
+  //! DEPRECARED
+  // wordCounterIsCorrect(textTocount,maxWords) {
+  //   let words = 0;
+  //   if (textTocount) {
+  //     let textReplaced = textTocount.replace(/(<(\/?p)>)/gi,' ').replace(/(<([^>]+)>)/gi,'');
+  //     // console.log(textReplaced);
+  //     if (textReplaced) {
+  //       let textMatch = textReplaced.match(/\S+/g);
+  //       if (textMatch) {
+  //         words = textMatch.length;
+  //       }else{
+  //         return true;
+  //       }
+        
+  //       if (words > maxWords) {
+  //         return false;
+  //       }else{
+  //         return true;
+  //       }
+  //     }else{
+  //       return true;
+  //     }
+
+  //   }else{
+  //     return true;
+  //   }
+
+  // }
+
+
+
+  
+
+
+
   wordCounterIsCorrect(textTocount,maxWords) {
     let words = 0;
     if (textTocount) {
-      let textReplaced = textTocount.replace(/(<(\/?p)>)/gi,' ').replace(/(<([^>]+)>)/gi,'');
-      // console.log(textReplaced);
-      if (textReplaced) {
-        let textMatch = textReplaced.match(/\S+/g);
-        if (textMatch) {
-          words = textMatch.length;
-        }else{
-          return true;
-        }
-        
+      let textReplaced = textTocount.replace(/(<(\/?p)>)|(&nbsp;)/gi, ' ').replace(/(<([^>]+)>)/gi, '');
+      let splitWords = textReplaced.split(' ')
+      if (splitWords.length) {
+        words = 0;
+        splitWords.map(item => {
+          if (item === '' || item === '\n' || item === '\t') return;
+          words++
+        })
+
         if (words > maxWords) {
           return false;
         }else{
           return true;
         }
-      }else{
+      } else {
         return true;
       }
 
-    }else{
+    } else {
       return true;
     }
+
 
   }
 

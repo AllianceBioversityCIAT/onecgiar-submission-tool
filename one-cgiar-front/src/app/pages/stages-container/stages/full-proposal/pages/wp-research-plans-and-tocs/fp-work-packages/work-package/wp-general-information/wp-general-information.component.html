@@ -5,7 +5,7 @@
     <form  [formGroup]="workPackageForm" (ngSubmit)="updateWp()" class="general-information-form" *ngIf="showForm">
       <div class="row">
         <div class="col-sm-5">
-          <ibdc-textarea [options]="{inputTitle:'Short format', form:workPackageForm, formControlName:'acronym'
+          <ibdc-textarea [options]="{inputTitle:'Short title', form:workPackageForm, formControlName:'acronym'
                 ,readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:3}">
           </ibdc-textarea>
         </div>

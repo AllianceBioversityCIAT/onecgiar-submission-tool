@@ -13,16 +13,16 @@ export class WpsTableComponent implements OnInit {
   constructor( private _initiativesService:InitiativesService) { }
 
   ngOnInit(): void {
-    this._initiativesService.getWpsFpByInititative(this._initiativesService.initiative.id).subscribe(resp=>{
-      console.log(resp.response.workpackage);
+    console.log(this._initiativesService.initiative.stageName)
+    this._initiativesService.getWpsFpByInititative().subscribe(resp=>{
       this.workPackagesList = resp.response.workpackage;
-    })
+    },err=>{console.log(err);});
     
 
     this.cols = [
         { field: 'acronym', header: 'Short name' },
-        { field: 'active', header: 'General information status' },
-        { field: 'active', header: 'Theory of change status' }
+        // { field: 'active', header: 'General information status' },
+        // { field: 'active', header: 'Theory of change status' }
     ];
   }
 

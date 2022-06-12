@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../../shared/services/interactions.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { DataValidatorsService } from '../../../../shared/data-validators.service';
+import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-melia-plan',
@@ -34,16 +34,15 @@ export class MeliaPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMelia();
+    this._initiativesService.setTitle('Melia plan');
+    this.getMeliaPlan();
     this.formChanges();
   }
 
-  getMelia(){
-    this._initiativesService.getMelia(this._initiativesService.initiative.id,'melia').subscribe(resp=>{
-      console.log(resp);
-      let melia = resp.response.meliaData;
-      this.data.id = melia?.id;
-      console.log(melia);
+  getMeliaPlan(){
+    this._initiativesService.getMeliaPlan('melia').subscribe(resp=>{
+      let melia = resp?.response?.melia?.meliaPlan;
+      this.data.id = melia?.id ? melia?.id : null;
       this.secionForm.controls['example'].setValue(melia?.melia_plan);
     },
     err=>{console.log(err);}
@@ -53,18 +52,17 @@ export class MeliaPlanComponent implements OnInit {
   }
   saveSection(){
 
-    const formData = new FormData();
-
     this.data.melia_plan = this.secionForm.get("example").value;
+   
 
-    this.data.id = this.data.id == undefined ? null : this.data.id;
+    let body = { melia_plan: this.data };
+    console.log(body);
 
-    formData.append('data', JSON.stringify(this.data));
-    this._initiativesService.saveMelia(formData,this._initiativesService.initiative.id,'melia',3).subscribe(resp=>{
-      console.log("saveMelia");
+    this._initiativesService.saveMeliaPlan(body).subscribe(resp=>{
+      console.log("saveMeliaPlan");
       console.log(resp);
-      this.getMelia();
-      this.secionForm.valid?
+      this.getMeliaPlan();
+      this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Melia plan has been saved'):
       this._interactionsService.warningMessage('Melia plan has been saved, but there are incomplete fields')
     })
@@ -74,7 +72,6 @@ export class MeliaPlanComponent implements OnInit {
 
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
-      console.log("changes");
       this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 500);
     })
   }

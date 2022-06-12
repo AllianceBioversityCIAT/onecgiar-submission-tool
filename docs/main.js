@@ -900,4 +900,24 @@ require([
         return results;
     }
 
+
+    function addCustomStylesAndScripst(){
+        console.log("addCustomStylesAndScripst")
+        $('.show-api-article').append( "<div class='custom-divider'></div>" );
+        $('.sidenav.nav.nav-list.list').find('li').addClass( "menu_item");
+        $('#api-Previews h1:first').addClass( "main_title");
+        $('.main_title').text('API documentation');
+        $('.api-Previews-init').text('API documentation');
+        
+        // $('section.show-api-group').find(".show-api-article")
+        // .css("background-color", "yellow");
+
+        $('section.show-api-group').find(".show-api-article").each(function(index, value) {
+            $('article .pull-left h1').addClass( "section_title");
+            $(this).find('.section_title').text($(this).find('.section_title').text().split('-')[1].replace("Previews", ""))
+        });
+    }
+
+    addCustomStylesAndScripst();
+
 });

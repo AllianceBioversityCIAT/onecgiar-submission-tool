@@ -1,0 +1,123 @@
+<div class="custom_card {{this.riskAssessment.add_by_user?'manual_border':'normal_border'}}">
+    <div class="risk_header">
+        <div class="create_by_tag" *ngIf="this.riskAssessment.add_by_user">
+            {{this.riskAssessment.add_by_user?'Created by user':''}}
+        </div>
+        <br *ngIf="this.riskAssessment.add_by_user">
+        <div class="risk_name" *ngIf="!riskTitleEditableIsActive">
+            {{this.riskAssessment.risks_achieving_impact}}
+            <h5>Risk theme: <strong>{{this.riskAssessment.risks_theme}}</strong> </h5>
+        </div>
+        <div class="edit_button" *ngIf="!riskTitleEditableIsActive && !this._initiativesService?.initiative.readonly">
+            <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
+        </div>
+
+
+        <div class="edit_options" *ngIf="riskTitleEditableIsActive">
+            <div class="list">
+                <div class="button_option ibd-shadow-3" (click)="this.selectList = true; this.riskAssessment.add_by_user = false">Choose risk</div>
+            </div>
+            <div  class="input">
+                <div class="button_option ibd-shadow-3" (click)="this.selectList = false; this.riskAssessment.add_by_user = true">Create risk</div>
+            </div>
+        </div>
+
+
+        <div *ngIf="selectList === true" class="animate__animated animate__fadeInLeftBig">
+            <br>
+            <ibdc-select-field
+            [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"  frontendSearchAttribute="risks_achieving_impact" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
+            [selectableList]="this.risksList"
+          ></ibdc-select-field>
+        </div>
+
+
+        <!-- <ibdc-select *ngIf="selectList === true" [options]="
+        {
+         required:true,
+         inputTitle:'Select Risk',
+         form:riskAssessmentForm,
+         formControlId:'idBd',
+         selectItemId:'idBd',
+         formControlName:'risks_achieving_impact',
+         selectItemName:'risks_achieving_impact',
+         frontendSearchAttribute:'risks_achieving_impact',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.risksList
+        }">
+        ></ibdc-select> -->
+
+        <div class="row animate__animated  animate__fadeInRightBig" *ngIf="selectList === false">
+            <div class="col-12">
+                <br>
+            </div>
+            <div class="col-6">
+                <div class="ibdc-input-field-container">
+                    <ibdc-input-field inputTitle="Risks achieving impact" [rows]="1" [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"></ibdc-input-field>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="ibdc-input-field-container">
+                    <ibdc-select-field
+                       [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_theme'" inputTitle="Risk theme" selectableListAtributteName = 'categoryName'
+                       [selectableList]="[{id:1,categoryName:'Research'},{id:2,categoryName:'Research support'}]"
+                     ></ibdc-select-field>
+                 </div>
+            </div>
+        </div>
+
+
+        <br>
+
+
+
+    </div>
+    
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <ibdc-text-area-field [readOnlyVariable]="this._initiativesService?.initiative.readonly"  [objectItem]="this.riskAssessment" [objectAtributteName]="'description_risk'" inputTitle="Detailed description"></ibdc-text-area-field>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-select-field
+            [objectItem]="this.riskAssessment"
+            [readOnlyVariable]="this._initiativesService.initiative.readonly" 
+            inputDescription="should be rate from 1 to 5"  
+            objectAtributteName="likelihood" 
+            inputTitle="Likelihood"
+            selectableListAtributteName = 'categoryName'
+            [selectableList]="[{id:1,categoryName:'1'},{id:2,categoryName:'2'},{id:3,categoryName:'3'},{id:4,categoryName:'4'},{id:5,categoryName:'5'}]"
+          ></ibdc-select-field>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-select-field
+            [objectItem]="this.riskAssessment" 
+            [readOnlyVariable]="this._initiativesService.initiative.readonly" 
+            [inputDescription]="'should be rate from 1 to 5'"  
+            [objectAtributteName]="'impact'" 
+            inputTitle="Consequence (impact)"
+            selectableListAtributteName = 'categoryName'
+            [selectableList]="[{id:1,categoryName:'1'},{id:2,categoryName:'2'},{id:3,categoryName:'3'},{id:4,categoryName:'4'},{id:5,categoryName:'5'}]"
+          ></ibdc-select-field>
+        </div>
+        <div class="col-6 margin-top-15">
+            <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
+        </div>
+        <div class="col-6"></div>
+        <div class="col-12">
+            <br>
+            <hr>
+            <br>
+        </div>
+        
+        <div class="col-12">
+            <div class="ibdc_basic_title">Opportunities</div>
+            <div *ngFor="let opportunity of this.riskAssessment.opportinities">
+                <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
+            </div>
+            <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
+
+        </div>
+        
+    </div>
+</div>

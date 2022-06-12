@@ -16,8 +16,8 @@ export class PobDimensionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.dimensionsList);
-    console.log(this.depthDescriptionsList);
+    //console.log(this.dimensionsList);
+    //console.log(this.depthDescriptionsList);
   }
 
   addDimension(){
@@ -34,12 +34,16 @@ export class PobDimensionComponent implements OnInit {
     return null;
   }
 
+  checkIfUnitNeedCurrencyFormat(unit:HTMLElement){
+    return unit.textContent.search('dollars') > 0;
+  }
+
   removeDimension(index,object,itemLink:HTMLElement){
     itemLink.classList.remove('animate__animated', 'animate__fadeInRight', 'animate__faster');
     itemLink.classList.add('animate__animated', 'animate__bounceOutLeft');
     itemLink.addEventListener('animationend', () => {
       itemLink.style.maxHeight = '0px';
-      if (object.descriptionID) {
+      if (object.id) {
         object.edited = true;
         object.active = false;
         setTimeout(() => {

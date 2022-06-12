@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataControlService } from '@app/shared/services/data-control.service';
-import { InitiativesService } from '@app/shared/services/initiatives.service';
-import { InteractionsService } from '@app/shared/services/interactions.service';
 import { WpDataControlService } from '../../services/wp-data-control.service';
+import { InitiativesService } from '../../../../../../../../../shared/services/initiatives.service';
+import { DataControlService } from '../../../../../../../../../shared/services/data-control.service';
+import { InteractionsService } from '../../../../../../../../../shared/services/interactions.service';
 
 @Component({
   selector: 'app-wp-general-information',
@@ -18,8 +18,8 @@ export class WpGeneralInformationComponent implements OnInit {
   workPackageForm: FormGroup;
   wpID;
   geographicScope = {
-    regions: [],
-    countries: []
+    regions: null,
+    countries: null
   }
   constructor(
     public _initiativesService: InitiativesService,
@@ -35,6 +35,7 @@ export class WpGeneralInformationComponent implements OnInit {
       is_global: new FormControl(true),
       id: new FormControl(null),
       active: new FormControl(true),
+      wp_official_code: new FormControl(null),
     });
 
 
@@ -44,10 +45,10 @@ export class WpGeneralInformationComponent implements OnInit {
   
       // Add activeSection = true if is the current wp open
       // this.wpColorselected(3, 5, 12,routeResp.wpID);
-      console.log(this._wpDataControlService.wpId);
+      //console.log(this._wpDataControlService.wpId);
       this.wpID = this._wpDataControlService.wpId 
 
-      this._initiativesService.getWpFpByInititative(this._wpDataControlService.wpId).subscribe(resp => {
+      this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
         console.log(directResp);
         this.geographicScope.regions = directResp.regions;
@@ -56,10 +57,10 @@ export class WpGeneralInformationComponent implements OnInit {
         this._initiativesService.getCLARISARegions('').subscribe(regions=>{
           this.geographicScope.regions.map(mapReg=>{
             regions.response.regions.forEach(regionItem=>{
-              if (regionItem.um49Code == mapReg.region_id) mapReg.name = regionItem.name;
+              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
-          this._dataControlService.showRegions = true;
+          // this._dataControlService.showRegions = true;
         })
   
         this._initiativesService.getCLARISACountries().subscribe(countries=>{       
@@ -69,7 +70,7 @@ export class WpGeneralInformationComponent implements OnInit {
             })
             
           })
-          this._dataControlService.showCountries = true;
+          // this._dataControlService.showCountries = true;
         })
         // console.log(directResp);
       })
@@ -86,8 +87,8 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    console.log(body);
-    this._initiativesService.saveWpFp(body,this._initiativesService.initiative.id).subscribe(resp=>{
+    // console.log(body);
+    this._initiativesService.saveWpFp(body).subscribe(resp=>{
       // console.log(resp);
       // console.log(this.workPackageForm.valid?true:false);
       this.workPackageForm.valid?
@@ -100,21 +101,23 @@ export class WpGeneralInformationComponent implements OnInit {
 
   reloadComponent(){
     let currentRoute = this.router.routerState.snapshot.url;
-    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/full-proposal/work-package-research-plans-and-tocs/work-packages/work-package`])
+    console.log(this._initiativesService.initiative.exactStageName)
+    this.router.navigate([`/initiatives/${this._initiativesService.initiative.id}/stages/${this._initiativesService.initiative.exactStageName}/work-package-research-plans-and-tocs/work-packages/work-package`])
     setTimeout(() => {
       this.router.navigate([currentRoute])
-    }, 10);
+    }, 500);
     
-    console.log("Reload");
+    //console.log("Reload");
   }
 
   updateFields(directResp,id:number){
         // console.log(id);
-        this.workPackageForm.controls['acronym'].setValue(directResp.acronym);
-        this.workPackageForm.controls['name'].setValue(directResp.name);
-        this.workPackageForm.controls['pathway_content'].setValue(directResp.pathway_content);
-        this.workPackageForm.controls['is_global'].setValue(directResp.is_global);
+        this.workPackageForm.controls['acronym'].setValue(directResp?.acronym);
+        this.workPackageForm.controls['name'].setValue(directResp?.name);
+        this.workPackageForm.controls['pathway_content'].setValue(directResp?.pathway_content);
+        this.workPackageForm.controls['is_global'].setValue(directResp?.is_global);
         this.workPackageForm.controls['id'].setValue(Number(id));
+        this.workPackageForm.controls['wp_official_code'].setValue(Number(directResp?.wp_official_code));
         this.showForm = false;
         setTimeout(() => {
           this.showForm = true;

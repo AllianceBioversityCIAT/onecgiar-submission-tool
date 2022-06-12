@@ -1,0 +1,58 @@
+<section-title name="Initiative statements"></section-title>
+
+<div class="section-container animate__animated animate__fadeIn">
+
+    <ibdc-alert
+        [options]="{text: 'Provide a concise description of 5 Initiative Highlights focusing on the originality of  the Initiative in terms of how it addresses the defined challenges and achieves impacts through its innovations and partnerships.', type:'info'}">
+    </ibdc-alert>
+
+
+    <div class="elements_container">
+        <section-sub-title name="Highlights List"></section-sub-title>
+        <div class="highlights-list">
+            <div class="highlight" *ngFor="let highlight of this.body.highlights; let i=index" >
+                <ibdc-text-area-field 
+                    inputTitle="highlight {{i+1}}"
+                    [objectItem]="highlight" 
+                    [objectAtributteName]="'description'"
+                    [maxWords]="250"
+                    >
+
+                </ibdc-text-area-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="elements_container">
+        <section-sub-title name="Challenge Statement narrative"></section-sub-title>
+        <div class="content">
+            <ibdc-text-area-field 
+            inputTitle="Challenge Statement"
+            [objectItem]="body.context" 
+            [objectAtributteName]="'challenge_statement'"
+            [maxWords]="250">
+            </ibdc-text-area-field>
+        </div>
+    </div>
+
+    <div class="elements_container">
+        <section-sub-title name="Objective Statement narrative"></section-sub-title>
+        <div class="content">
+            <ibdc-text-area-field 
+            inputTitle="Objective Statement"
+            [objectItem]="body.context" 
+            [objectAtributteName]="'smart_objectives'"
+            [maxWords]="250">
+            </ibdc-text-area-field>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div (click)="saveSection()">
+    <ibdc-save-button
+        [options]="{readOnlyVariable: this._initiativesService.initiative.readonly, remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
+    </ibdc-save-button>
+</div>

@@ -1,8 +1,8 @@
 import { Component, Inject, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '@shared/services/auth.service';
-// import { User } from '../_models/user.model';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
+import { InitiativesService } from '../../services/initiatives.service';
 
 @Component({
   selector: 'app-tawk-to',
@@ -17,7 +17,7 @@ export class TawkToComponent implements OnInit {
   config = environment;
 
 
-  constructor(private _renderer: Renderer2, @Inject(DOCUMENT) private _document, private authService: AuthService) {
+  constructor(private _renderer: Renderer2, @Inject(DOCUMENT) private _document, private authService: AuthService, private _initiativesService:InitiativesService) {
     this.authService.user$.subscribe(x => {
       this.currentUser = x;
     });
@@ -25,32 +25,48 @@ export class TawkToComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.currentUser && this.currentUser.roles[0].id != 3) {
+    setTimeout(() => {
+      this.initializeTawkIo();
+    }, 500);
+  }
 
+  initializeTawkIo(){
+    // console.log("initializeTawkIo");
+    if (this.currentUser && this.currentUser.roles[0].id != 3) {
+      // console.log("Tawk_API")
       this.script.text = `
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-      (function(){
+      (()=>{
       var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
       s1.async=true;
       s1.src = 'https://embed.tawk.to/${this.config.tawkToId}';
       s1.charset='UTF-8';
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
-      })();
+      })();  
+      `;
+      this._renderer.appendChild(document.querySelector('.Tawk_API_container'), this.script);
+
+      // const selectEntry = document.getElementById('.Tawk_API_container').addEventListener('click', ()=>{console.log("insert T")})
       
 
-      Tawk_API.visitor = {
-        name  : '',
-        email : ''
-      };
-      `;
-      this._renderer.appendChild(this._document.body, this.script);
-      setTimeout(() => {
-        this.openChat();
-        // this.setLoggedUser()
-      }, 500);
+      try {
+        window['Tawk_API'].onLoad = () => {
+          this._initiativesService.setTitle('Home');
+        }
+      } catch (error) {
+        console.log(error)
+      }
+
+
     }
 
+  }
+
+
+
+  get getUserInfo():{email,name}{
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   openChat() {
@@ -60,20 +76,21 @@ export class TawkToComponent implements OnInit {
 
   }
 
-  setLoggedUser() {
-    if (window['Tawk_API'].hasOwnProperty('visitor')) {
-      if (window.hasOwnProperty('Tawk_API')) {
-        if (window.hasOwnProperty('Tawk_API')) {
-          if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
-          window['Tawk_API'].setAttributes({
-            name:  this.currentUser.name,
-            email:  this.currentUser.email
-          }, function (error) {
-            console.log(error)
-          });
-        }
-      }
-    }
-  }
+  // setLoggedUser() {
+  //   if (window['Tawk_API'].hasOwnProperty('visitor')) {
+  //     if (window.hasOwnProperty('Tawk_API')) {
+  //       if (window.hasOwnProperty('Tawk_API')) {
+  //         if (window['Tawk_API'].isVisitorEngaged()) window['Tawk_API'].endChat();
+  //         window['Tawk_API'].setAttributes({
+  //           name:  this.currentUser.name,
+  //           email:  this.currentUser.email
+  //         }, function (error) {
+  //           console.log(error)
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
 
 }
+

@@ -1,0 +1,31 @@
+<section-title name="Geographic breakdown"></section-title>
+<div class="section-container animate__animated animate__fadeIn">
+
+    <div class="custom_table_container">
+
+        <div class="table_header">
+            <div class="table_title" *ngFor="let item of this.fixedData.headerNames">{{item}}</div>
+        </div>
+        <div class="table_content" *ngFor="let tableDataItem of this.fixedData.list; let i=index">
+            <div class="table_item">
+                <div class="name">{{tableDataItem.name}}</div>
+            </div>
+            <div class="table_item" *ngFor="let item of fixedData.years; let j=index">
+                <div>
+                    <!-- <input [ngModel]="tableDataItem.valuesList[item] " (ngModelChange)="tableDataItem.valuesList[item]= $event" name="value" placeholder="Value" class="field"   type="text"> -->
+                    <ibdc-input-field [readOnlyVariable]="this._initiativesService.initiative.readonly" inputType="currency" [objectItem]="tableDataItem.valuesList"  [objectAtributteName]="item"></ibdc-input-field>
+                </div>
+            </div>
+            <div class="table_item center_flex">
+                <div class="total">{{getTotal(tableDataItem) | currency }}</div>
+            </div>
+        </div>
+    </div>
+    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='geographic-breakdown'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
+</div>
+
+<form (ngSubmit)="onSave()">
+    <ibdc-save-button
+        [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember:10}">
+    </ibdc-save-button>
+</form>

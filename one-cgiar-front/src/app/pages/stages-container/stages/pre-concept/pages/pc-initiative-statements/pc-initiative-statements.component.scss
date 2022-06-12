@@ -1,0 +1,27 @@
+
+
+
+.elements_container{
+    background: rgb(234,241,252);
+    background: linear-gradient(166deg, rgba(234,241,252,1) 0%, rgba(248,252,255,1) 86%);
+    border-radius: 10px;
+    box-shadow: 0 0px 10px #dbe8fc, 0 0px 10px rgb(212, 212, 212);
+    overflow: hidden;
+    margin-bottom: 30px;
+    .content{
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+    .highlights-list{
+
+        padding: 20px;
+        
+        .highlight{
+            margin-bottom: 15px;
+        }
+        
+    }
+}
+
+
+
