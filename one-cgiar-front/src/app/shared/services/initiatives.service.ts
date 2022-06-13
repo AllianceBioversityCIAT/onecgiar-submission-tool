@@ -78,7 +78,7 @@ export class InitiativesService {
     // console.log(initUsers)
 
     try {
-      console.log("setTitle")
+      // console.log("setTitle")
       window['Tawk_API']?.setAttributes({
         'name': this.getUserInfo.name,
         'email': this.getUserInfo.email,

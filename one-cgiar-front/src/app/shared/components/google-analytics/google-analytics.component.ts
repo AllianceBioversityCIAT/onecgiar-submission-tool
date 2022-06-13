@@ -13,7 +13,7 @@ export class GoogleAnalyticsComponent implements OnInit {
   ngOnInit(): void {
     var script = document.createElement('script');
     script.onload = () => {
-      console.log("Script loaded and ready");
+      // console.log("Script loaded and ready");
     };
     script.src = `https://www.googletagmanager.com/gtag/js?id=${environment.googleAnalyticsId}`;
     document.getElementsByTagName('head')[0].appendChild(script);

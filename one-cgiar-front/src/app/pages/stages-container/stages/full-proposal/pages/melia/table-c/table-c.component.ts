@@ -27,7 +27,7 @@ export class TableCComponent implements OnInit {
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
       this.listToSave = resp;
-      console.log(resp)
+      // console.log(resp)
     })
   }
 
@@ -68,7 +68,7 @@ export class TableCComponent implements OnInit {
       })
     })
 
-    console.log(this.resultDataList)
+    // console.log(this.resultDataList)
   }
 
   compactGeoData(geo_scope){
