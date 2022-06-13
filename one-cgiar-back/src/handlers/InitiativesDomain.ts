@@ -62,7 +62,12 @@ export class InitiativeHandler extends InitiativeStageHandler {
 
       return getUsersByInitiatives;
     } catch (error) {
-      throw new BaseError('Get users by initiatives list', 400, error.message, false);
+      throw new BaseError(
+        'Get users by initiatives list',
+        400,
+        error.message,
+        false
+      );
     }
   }
 

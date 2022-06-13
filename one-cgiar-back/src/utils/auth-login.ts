@@ -91,7 +91,7 @@ const validateAD = async (one_user, password) => {
   return new Promise((resolve, reject) => {
     // var userPrincipalName = 'j.cadavid@cgiar.org';
     // var username = 'CN=Juan,OU=Users,DC=CGIARAD,DC=ORG';
-    
+
     ad.authenticate(ad_user, password, (err, auth) => {
       if (auth) {
         console.log('Authenticated AD!', JSON.stringify(auth));

@@ -200,6 +200,15 @@ router.get(
 );
 
 /**
+ ** GET ISDC RESPONSES GENERAL STATUS 
+ */
+router.get(
+  '/isdc-responses/status/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getISDCResponsesStatus
+);
+
+/**
  ** UPSERT MANAGEMENT PLAN RISK BY INITIATIVE
  */
 router.patch(

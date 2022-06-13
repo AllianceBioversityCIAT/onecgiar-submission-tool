@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import {getRepository, In, Not} from 'typeorm';
+import { getRepository, In, Not, getCustomRepository } from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeHandler} from './InitiativesDomain';
@@ -3571,6 +3572,30 @@ export class ProposalHandler extends InitiativeStageHandler {
       console.log(error);
       throw new BaseError(
         'GET ISDC Responses: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+    /**
+     * REQUEST ISDC RESPONSES STATUS
+     * @returns 
+     */
+  async requestISDCResponsesStatus(stageId) {
+    const ISDCResponsesRepo = getCustomRepository(IsdcResponsesRepository);
+
+    try {
+
+
+      const ISDCResponsesStatus = await ISDCResponsesRepo.findIsdcFeedbackStatus(stageId);
+
+      return ISDCResponsesStatus;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'REQUEST ISDC Responses status: Full proposal domain',
         400,
         error.message,
         false

@@ -1859,6 +1859,35 @@ export async function getISDCResponses(
   }
 }
 
+/**
+ * GET ISDC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getISDCResponsesStatus(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const ISDCResponses = await fullPposal.requestISDCResponsesStatus(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ISDC Responses status.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
 
