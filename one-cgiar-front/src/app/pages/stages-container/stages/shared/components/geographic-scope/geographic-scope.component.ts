@@ -14,6 +14,7 @@ export class GeographicScopeComponent implements OnInit {
   @Input() regionsSelectedList;
   @Input() countriesSelectedList=[];
   @Input() localForm:FormGroup;
+  @Input() subject: String;
   showForm=false;
   constructor(
     public _initiativesService:InitiativesService,
