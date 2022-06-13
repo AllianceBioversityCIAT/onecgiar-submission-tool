@@ -24,7 +24,8 @@ export class AdminPanelComponent implements OnInit {
         items: [
           {
             label: 'ISDC comments',
-            icon: 'pi pi-fw pi-bookmark'
+            icon: 'pi pi-fw pi-bookmark',
+            url: '/admin/isdc-status'
           }
         ]
       }
