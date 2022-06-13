@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-admin-panel',
@@ -8,9 +9,27 @@ import { Component, OnInit } from '@angular/core';
 export class AdminPanelComponent implements OnInit {
   constructor() { }
 
+  items: MenuItem[];
+
   ngOnInit(): void {
+    this.items = [
+      {
+        label: 'User panel',
+        icon: 'pi pi-fw pi-users',
+        url: '/admin/users'
+      },
+      {
+        label: 'Completeness status',
+        icon: 'pi pi-fw pi-comment',
+        items: [
+          {
+            label: 'ISDC comments',
+            icon: 'pi pi-fw pi-bookmark'
+          }
+        ]
+      }
+    ]
   }
 
- 
 
 }

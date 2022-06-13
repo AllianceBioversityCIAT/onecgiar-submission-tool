@@ -1,4 +1,21 @@
-.local_container{
+.local_container {
     background-color: white;
     margin-top: 20px;
+}
+
+.admin_container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+
+    .container_menu {
+        height: 100%;
+        max-height: calc(100vh - 50px);
+        color: white;
+        background-color: var(--ibdc-black-1);
+        padding: 8px 0px 8px 8px;
+    }
 }
