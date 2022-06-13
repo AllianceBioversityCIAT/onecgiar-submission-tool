@@ -111,11 +111,11 @@
         </div>
         
         <div class="col-12">
-            <div class="ibdc_basic_title">Opportunities</div>
+            <div class="ibdc_basic_title">Proposed mitigation measurements</div>
             <div *ngFor="let opportunity of this.riskAssessment.opportinities">
                 <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
             </div>
-            <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
+            <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add mitigation" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
 
         </div>
         
