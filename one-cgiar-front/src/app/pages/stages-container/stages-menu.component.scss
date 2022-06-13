@@ -170,6 +170,7 @@
         // overflow-y: hidden;
         position: relative;
         z-index: 0;
+        scroll-behavior: smooth;
         .footer{
             margin-top: 100px;
             position: relative;
