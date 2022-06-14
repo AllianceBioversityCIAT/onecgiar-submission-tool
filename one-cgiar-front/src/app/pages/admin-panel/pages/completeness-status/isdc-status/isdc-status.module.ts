@@ -7,6 +7,7 @@ import {InputTextModule} from 'primeng/inputtext';
 
 import { IsdcStatusRoutingModule } from './isdc-status-routing.module';
 import { IsdcStatusComponent } from './isdc-status.component';
+import { UtilsModule } from '../../../../../shared/components/utils/utils.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { IsdcStatusComponent } from './isdc-status.component';
     TableModule,
     ProgressBarModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    UtilsModule
   ],
 })
 export class IsdcStatusModule { }

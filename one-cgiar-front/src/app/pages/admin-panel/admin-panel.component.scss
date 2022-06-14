@@ -1,6 +1,7 @@
 .local_container {
     background-color: white;
     margin-top: 20px;
+    border-radius: 10px;
 }
 
 .admin_container {
@@ -18,4 +19,10 @@
         background-color: var(--ibdc-black-1);
         padding: 8px 0px 8px 8px;
     }
+}
+
+.right_container{
+    width: 100%;
+    max-height: calc(100vh - 50px);
+    padding: 20px 30px;
 }
