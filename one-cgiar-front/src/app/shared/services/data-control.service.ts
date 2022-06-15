@@ -45,7 +45,7 @@ export class DataControlService {
   isdcFeedbackValidation = null;
 
   get isAdmin (){
-    return JSON.parse(localStorage.getItem('user')).roles[0]?.id == 1 ? true : false
+    return JSON.parse(localStorage.getItem('user'))?.roles[0]?.id == 1 ? true : false
   }
 
   EOIcolors = [];

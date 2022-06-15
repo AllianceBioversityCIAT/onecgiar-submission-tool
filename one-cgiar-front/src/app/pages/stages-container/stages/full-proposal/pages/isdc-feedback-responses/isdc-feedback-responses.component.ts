@@ -21,6 +21,7 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
   showTableViewVariable = true;
   extraValidation = false;
   showform = false;
+  constList = [];
   list:ParticipatoryProcess[] = [];
   contextForm: FormGroup;
   attr_list_config: AttributesListConfiguration[] = [
@@ -115,7 +116,8 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
       this._interactionsService.warningMessage('The information in this section has been saved, but there are incomplete fields.', 6000)
     })
     //save recommendations
-    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
+    console.log(this.changesFiltering())
+    this._initiativesService.patchRecommendationByInitId(this.changesFiltering()).subscribe(resp=>{
       this.getRecommendationsByInitId();
       this.showTableViewVariable = true;
     })
@@ -124,13 +126,20 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
   getRecommendationsByInitId(){
     if(this._initiativesService.initiative.stageId !== 4) return;
     this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
-    this.list = resp.map(e => {
-      this.extraValidation = this.valideteInputTable();
-      return {...e, user_id: this._authService.userValue.id};
-    });
+    this.list = resp;
+    this.constList = [];
+    this.list.forEach(e => this.constList.push(e.updated_response));
+    this.extraValidation = this.valideteInputTable();
     this.initExtraValidation();
     //this.extraValidation = this.extraValidation && this.filterIncompleteData();
     })
+  }
+
+  changesFiltering(){
+    console.log(this.list[0].updated_response);
+    console.log(this.constList[0]);
+    let filterData = this.list.filter( (r, index) => r.updated_response != this.constList[index]); 
+    return filterData.map(e => ({...e, user_id: this._authService.userValue.id}));
   }
 
 }

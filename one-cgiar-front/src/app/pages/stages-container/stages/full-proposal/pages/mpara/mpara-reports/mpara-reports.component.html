@@ -20,7 +20,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="text-align: center;" *ngFor="let item of headerPreview; let i=index">
-                            {{item.headerName | capitalLetter | replaceSymbolBySpace:'_'}}</th>
+                            {{item.headerName =='opportunities_description'?'Proposed mitigation measurements' : item.headerName | capitalLetter | replaceSymbolBySpace:'_'}}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-customer>
