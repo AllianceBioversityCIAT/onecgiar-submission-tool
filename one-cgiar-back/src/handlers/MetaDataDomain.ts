@@ -1720,6 +1720,27 @@ export class MetaDataHandler extends InitiativeStageHandler {
 		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
     char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) < 1
+    OR (CASE
+      WHEN
+      (SELECT SUM(1) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
+      AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) IS NULL 
+        OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) = '')
+      THEN  FALSE
+    ELSE CASE
+      WHEN 
+          (SELECT SUM(1) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3) IS NOT NULL AND
+      (  SELECT count(rsi.name) - sum(IF(rsi.name is null || rsi.name = '', 0, 1)) as validation
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_}  ) = 0
+      THEN TRUE
+          ELSE FALSE
+          END
+    END) = 0
        THEN FALSE
          ELSE TRUE
          END AS validation
