@@ -63,7 +63,7 @@
                     <tr *ngFor="let resultData of resultDataList">
                         <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
                         <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not provided'}}</td>
-                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');"> {{resultData?.wp_acronym && resultData?.wp_name ? '' : 'Not provided'}}  {{resultData?.wp_acronym || ''}} {{resultData?.wp_acronym ? ': ' : ''}} {{resultData?.wp_name || ''}}</td>
+                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');"> {{resultData?.wp_acronym && resultData?.wp_name ? '' : 'Not applicable'}}  {{resultData?.wp_acronym || ''}} {{resultData?.wp_acronym ? ': ' : ''}} {{resultData?.wp_name || ''}}</td>
                         <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not provided'}}</td>
                         <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not provided'"></td>
                         <td class="t_col_2">{{resultData?.indicator_name || 'Not provided'}}</td>
