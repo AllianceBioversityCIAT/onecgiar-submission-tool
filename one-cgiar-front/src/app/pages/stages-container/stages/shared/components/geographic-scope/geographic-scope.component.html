@@ -3,7 +3,7 @@
 <section-sub-title name="Geographic scope"></section-sub-title>
  <div class="local_container">
     
-    <div class="alert_container" style="margin-bottom: 40px;">
+    <div *ngIf="this.subject != 'MELIA Study'" class="alert_container" style="margin-bottom: 40px;">
         <ibdc-alert [options]="{text:'The lists of regions and countries below are coming from the geographic scope entered on each Work-Package.', 
                                 type:'info'}"></ibdc-alert>
     </div>
