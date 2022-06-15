@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {TableModule} from 'primeng/table';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {ButtonModule} from 'primeng/button';
@@ -8,6 +8,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import { TocReportingRoutingModule } from './toc-reporting-routing.module';
 import { TocReportingComponent } from './toc-reporting.component';
 import { UtilsModule } from '../../../../../shared/components/utils/utils.module';
+
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { UtilsModule } from '../../../../../shared/components/utils/utils.module
     ButtonModule,
     InputTextModule,
     UtilsModule
-  ]
+  ],
+  providers:[DatePipe]
 })
 export class TocReportingModule { }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-toc-reporting',
@@ -14,7 +15,8 @@ export class TocReportingComponent implements OnInit {
 
   constructor( 
     private _manageExcelService:ManageExcelService,
-    private _initiativesService: InitiativesService ) { }
+    private _initiativesService: InitiativesService,
+    public datepipe: DatePipe ) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
@@ -22,10 +24,7 @@ export class TocReportingComponent implements OnInit {
 
   getISDCStatus(){
     this._initiativesService.getTOCReporting().subscribe(e => {
-      this.listReporting = e.response.TOCResponses.map(e => ({...e, 
-                                                              eoi_outcome: parseInt(e.eoi_outcome), 
-                                                              outcome:parseInt(e.outcome), 
-                                                              output: parseInt(e.output)}));
+      this.listReporting = e.response.TOCResponses;
     });
   }
 
@@ -35,7 +34,7 @@ export class TocReportingComponent implements OnInit {
 
   exportExcel() {
     import("xlsx").then(xlsx => {
-
+      const dateStamp = new Date();
       const xlsExport = this.listReporting.map(e=>({official_code:e.official_code,
                                                     name:e.name,
                                                     output:e.output,
@@ -55,7 +54,7 @@ export class TocReportingComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-      this._manageExcelService.saveAsExcelFile(excelBuffer, `Toc Reporting`);
+      this._manageExcelService.saveAsExcelFile(excelBuffer, `Toc Reporting_${this.datepipe.transform(dateStamp,'yyyyLLdd_HHmmSS')}`);
     });
   }
 
