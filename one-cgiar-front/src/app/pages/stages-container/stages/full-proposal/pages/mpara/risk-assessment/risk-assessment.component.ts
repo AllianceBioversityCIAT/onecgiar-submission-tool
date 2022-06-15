@@ -108,7 +108,7 @@ export class RiskAssessmentComponent implements OnInit {
       this.steperValidation(response?.riskassessment?.length);
       if (response) this.managementPlan = response;
       if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
-      console.log(response)
+      // console.log(response)
       this.showForm = true;
     },
       err => { console.log(err);this.showForm = true; }

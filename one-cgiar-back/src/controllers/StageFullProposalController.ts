@@ -1093,9 +1093,6 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
   //melia section files
   const files = req['files'];
 
-  console.log(files);
-  
-
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
