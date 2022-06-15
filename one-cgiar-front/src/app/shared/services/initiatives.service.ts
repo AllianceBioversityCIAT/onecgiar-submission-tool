@@ -521,7 +521,12 @@ export class InitiativesService {
   }
   // get all work packages by initiative with stage full proposal
   getWpsFpByInititative() {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`);
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`).pipe(map(resp => {
+      resp.response.workpackage.map(wp => {
+        wp.fieldsCompleted = wp?.validateWP;
+      })
+      return resp;
+    }));
   }
 
   // get one work package by id with stage full proposal
