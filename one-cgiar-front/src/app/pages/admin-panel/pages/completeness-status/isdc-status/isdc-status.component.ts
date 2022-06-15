@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-isdc-status',
@@ -14,7 +15,8 @@ export class IsdcStatusComponent implements OnInit {
 
   constructor( 
     private _manageExcelService:ManageExcelService,
-    private _initiativesService: InitiativesService) { }
+    private _initiativesService: InitiativesService,
+    public datepipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
@@ -35,6 +37,7 @@ export class IsdcStatusComponent implements OnInit {
   }
 
   exportExcel() {
+    const dateStamp = new Date();
     const xlsExport = this.listStatus.map(e=>({
       official_code:e.official_code,
       name:e.name,
@@ -58,7 +61,7 @@ export class IsdcStatusComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-      this._manageExcelService.saveAsExcelFile(excelBuffer, `ISDC Comments status`);
+      this._manageExcelService.saveAsExcelFile(excelBuffer, `ISDC Comments status_${this.datepipe.transform(dateStamp,'yyyyLLdd_HHmmSS')}`);
     });
   }
 

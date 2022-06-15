@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {TableModule} from 'primeng/table';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {ButtonModule} from 'primeng/button';
@@ -22,5 +22,6 @@ import { UtilsModule } from '../../../../../shared/components/utils/utils.module
     InputTextModule,
     UtilsModule
   ],
+  providers:[DatePipe]
 })
 export class IsdcStatusModule { }

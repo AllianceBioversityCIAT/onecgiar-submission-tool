@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { AdminUsersRoutingModule } from './admin-users-routing.module';
 import { AdminUsersComponent } from './admin-users.component';
@@ -23,6 +23,7 @@ import { UtilsModule } from '../../../../shared/components/utils/utils.module';
     UtilsModule,
     DropdownModule,
     FormsModule
-  ]
+  ],
+  providers:[DatePipe]
 })
 export class AdminUsersModule { }
