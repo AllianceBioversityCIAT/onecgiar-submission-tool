@@ -17,7 +17,7 @@
                         <div>
                             <button style="margin-right: 10px;" type="button" mat-raised-button [color]="this.localForm.value.is_global?'accent':''"
                                 (click)="setIsGlobal(true);">Yes</button>
-                            <button type="button" mat-raised-button [color] = "!this.localForm.value.is_global?'warn':''"
+                            <button type="button" mat-raised-button [color] = "this.localForm.value.is_global == false?'warn':''"
                                 (click)="setIsGlobal(false);">No</button>
                         </div>
                     </div>
