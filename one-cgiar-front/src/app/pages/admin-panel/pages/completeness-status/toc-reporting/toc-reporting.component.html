@@ -1,15 +1,15 @@
 <div class="card-container">
-    <section-title name="ISDC Comments status"></section-title>
+    <section-title name="ToC reporting"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
         <div class="card">
-            <p-table #dt1 [value]="this.listStatus" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
+            <p-table #dt1 [value]="this.listReporting" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
                 scrollHeight="calc(80vh - 100px)">
                 <ng-template pTemplate="caption">
                     <div style="display: flex; justify-content: space-between;">
                         <!-- <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button> -->
                         <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
                             (click)="clear(dt1)"></button>
-                            <button style="margin-left: 10px;" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                        <button style="margin-left: 10px;" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
 
                         <span class="p-input-icon-left ml-auto">
                             <i class="pi pi-search"></i>
@@ -35,32 +35,25 @@
                                 <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th pSortableColumn="total_comments" class="col_num">
+                        <th pSortableColumn="output" class="col_num">
                             <div class="flex justify-content-center align-items-center">
-                                Total Comments
-                                <p-sortIcon field="total_comments"></p-sortIcon>
-                                <p-columnFilter type="text" field="total_comments" display="menu"></p-columnFilter>
+                                OUTPUT
+                                <p-sortIcon field="output"></p-sortIcon>
+                                <p-columnFilter type="text" field="output" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th pSortableColumn="responses" class="col_num">
+                        <th pSortableColumn="outcome" class="col_num">
                             <div class="flex justify-content-center align-items-center">
-                                Responses
-                                <p-sortIcon field="responses"></p-sortIcon>
-                                <p-columnFilter type="text" field="responses" display="menu"></p-columnFilter>
+                                OUTCOME
+                                <p-sortIcon field="outcome"></p-sortIcon>
+                                <p-columnFilter type="text" field="outcome" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th pSortableColumn="pending" class="col_num">
+                        <th pSortableColumn="eoi_outcome" class="col_num">
                             <div class="flex justify-content-center align-items-center">
-                                Pending
-                                <p-sortIcon field="pending"></p-sortIcon>
-                                <p-columnFilter type="text" field="pending" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th pSortableColumn="average" style="width: 200px;">
-                            <div class="flex justify-content-center align-items-center">
-                                Average
-                                <p-sortIcon field="average"></p-sortIcon>
-                                <p-columnFilter type="text" field="average" display="menu"></p-columnFilter>
+                                EOI OUTCOME
+                                <p-sortIcon field="eoi_outcome"></p-sortIcon>
+                                <p-columnFilter type="text" field="eoi_outcome" display="menu"></p-columnFilter>
                             </div>
                         </th>
                     </tr>
@@ -69,13 +62,9 @@
                     <tr>
                         <td style="width: 100px;"><strong>{{init.official_code}}</strong></td>
                         <td style="width: 350px;">{{init.name}}</td>
-                        <td class="col_num"><strong>{{init.total_comments}}</strong></td>
-                        <td class="col_num">{{init.responses}}</td>
-                        <td class="col_num">{{init.pending}}</td>
-                        <td style="width: 200px;">
-                            <p-progressBar class="customProgress" [value]="init.average | number:'1.0-0'">
-                            </p-progressBar>
-                        </td>
+                        <td class="col_num">{{init.output}}</td>
+                        <td class="col_num">{{init.outcome}}</td>
+                        <td class="col_num">{{init.eoi_outcome}}</td>
                     </tr>
                 </ng-template>
             </p-table>

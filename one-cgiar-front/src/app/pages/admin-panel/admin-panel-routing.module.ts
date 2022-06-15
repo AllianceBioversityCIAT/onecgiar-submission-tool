@@ -15,6 +15,10 @@ const routes: Routes = [
         path: 'isdc-status', 
         loadChildren: () => import('./pages/completeness-status/isdc-status/isdc-status.module').then((m) => m.IsdcStatusModule),
       },
+      {
+        path: 'toc-reporting', 
+        loadChildren: () => import('./pages/completeness-status/toc-reporting/toc-reporting.module').then((m) => m.TocReportingModule),
+      },
       { path: '**', pathMatch: 'full', redirectTo: 'users' }
     ]
   }

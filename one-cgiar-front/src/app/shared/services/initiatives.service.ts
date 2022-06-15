@@ -706,6 +706,10 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/isdc-responses/status/4`);
   }
 
+  getTOCReporting(): Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/toc-responses/reporting/4`);
+  }
+
   patchTracksByInitiativeAndStageId(body){
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
   }

@@ -209,6 +209,15 @@ router.get(
 );
 
 /**
+ ** GET ISDC RESPONSES GENERAL STATUS 
+ */
+ router.get(
+  '/toc-responses/reporting/:stageId([0-9]+)',
+  [checkJwt, checkRole('initiatives', 'readOwn')],
+  stagefull.getTOCResponsesReporting
+);
+
+/**
  ** UPSERT MANAGEMENT PLAN RISK BY INITIATIVE
  */
 router.patch(

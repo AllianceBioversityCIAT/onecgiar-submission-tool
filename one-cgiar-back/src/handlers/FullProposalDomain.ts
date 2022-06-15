@@ -4,6 +4,7 @@ import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
 import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository';
+import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeHandler} from './InitiativesDomain';
@@ -3580,7 +3581,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
     /**
-     * REQUEST ISDC RESPONSES STATUS
+     **REQUEST ISDC RESPONSES STATUS
      * @returns 
      */
   async requestISDCResponsesStatus(stageId) {
@@ -3602,6 +3603,30 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+   /**
+     ** REQUEST ToC RESPONSES REPORTING
+     * @returns 
+     */
+    async requestTOCProgress(stageId) {
+      const tocResponsesRepo = getCustomRepository(TocResponsesRepository);
+  
+      try {
+  
+  
+        const tocResponsesReporting = await tocResponsesRepo.findTocProgressReporting(stageId);
+  
+        return tocResponsesReporting;
+      } catch (error) {
+        console.log(error);
+        throw new BaseError(
+          'REQUEST ToC Responses progress: Full proposal domain',
+          400,
+          error.message,
+          false
+        );
+      }
+    }
 
   /**
    * * REQUEST EOI BY INITIATIVE

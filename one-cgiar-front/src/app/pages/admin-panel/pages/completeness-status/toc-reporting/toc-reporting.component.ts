@@ -4,25 +4,25 @@ import { InitiativesService } from '../../../../../shared/services/initiatives.s
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
 
 @Component({
-  selector: 'app-isdc-status',
-  templateUrl: './isdc-status.component.html',
-  styleUrls: ['./isdc-status.component.scss']
+  selector: 'app-toc-reporting',
+  templateUrl: './toc-reporting.component.html',
+  styleUrls: ['./toc-reporting.component.scss']
 })
-export class IsdcStatusComponent implements OnInit {
+export class TocReportingComponent implements OnInit {
 
-  listStatus: Array<any> = [];
+  listReporting: Array<any> = [];
 
   constructor( 
     private _manageExcelService:ManageExcelService,
-    private _initiativesService: InitiativesService) { }
+    private _initiativesService: InitiativesService ) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
   }
 
   getISDCStatus(){
-    this._initiativesService.getIsdcStatus().subscribe(e => {
-      this.listStatus = e.response.ISDCResponses;
+    this._initiativesService.getTOCReporting().subscribe(e => {
+      this.listReporting = e.response.TOCResponses;
     });
   }
 
@@ -31,20 +31,18 @@ export class IsdcStatusComponent implements OnInit {
   }
 
   exportExcel() {
-    const xlsExport = this.listStatus.map(e=>({
-      official_code:e.official_code,
-      name:e.name,
-      total_comments:e.total_comments,
-      responses:e.responses,
-      pending:e.pending,
-      average:`${Math.round(e.average)}%`
-    }));
     import("xlsx").then(xlsx => {
+
+      const xlsExport = this.listReporting.map(e=>({official_code:e.official_code,
+                                                    name:e.name,
+                                                    output:e.output,
+                                                    outcome:e.outcome,
+                                                    eoi_outcome:e.eoi_outcome
+                                                  }));
       const worksheet = xlsx.utils.json_to_sheet(xlsExport);
       var wscols = [
         {wpx:100},
         {wpx:300},
-        {wpx:50},
         {wpx:50},
         {wpx:50},
         {wpx:50}
@@ -54,7 +52,7 @@ export class IsdcStatusComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-      this._manageExcelService.saveAsExcelFile(excelBuffer, `ISDC Comments status`);
+      this._manageExcelService.saveAsExcelFile(excelBuffer, `Toc Reporting`);
     });
   }
 

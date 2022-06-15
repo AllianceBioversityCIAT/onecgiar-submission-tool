@@ -1888,6 +1888,35 @@ export async function getISDCResponses(
   }
 }
 
+/**
+ * GET ToC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getTOCResponsesReporting(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const TOCResponses = await fullPposal.requestTOCProgress(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ToC Responses reporting.', {
+        TOCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
 
