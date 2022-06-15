@@ -25,6 +25,11 @@ export class AdminUsersComponent implements OnInit {
     })
   }
 
+  roles = [
+    { label: "Lead", value: "Lead" },
+    { label: "Co-Lead", value: "Co-Lead" },
+    { label: "Coordinator", value: "Coordinator" }];
+
   clear(table: Table) {
     table.clear();
 }

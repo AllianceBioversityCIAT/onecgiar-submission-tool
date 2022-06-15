@@ -7,21 +7,21 @@ export class TocResponsesRepository extends Repository<TOCs> {
 
     try {
       const tocProgressReportingQuery = `SELECT i.official_code, i.name, ibs.id,
-      (select count(result_type_id)
+      CAST((select count(result_type_id)
                from results r2
               where r2.initvStgId  = r.initvStgId
                 and result_type_id = 1
-                and r2.active > 0) as output,
-                  (select count(result_type_id)
+                and r2.active > 0) AS UNSIGNED) as output,
+                CAST((select count(result_type_id)
                from results r2
               where r2.initvStgId  = r.initvStgId
                 and result_type_id = 2
-                and r2.active > 0) as outcome,
-                  (select count(result_type_id)
+                and r2.active > 0) AS UNSIGNED) as outcome,
+                CAST((select count(result_type_id)
                from results r2
               where r2.initvStgId  = r.initvStgId
                 and result_type_id = 3
-                and r2.active > 0) as eoi_outcome
+                and r2.active > 0) AS UNSIGNED) as eoi_outcome
         FROM initiatives_by_stages ibs
    left join results r  on ibs.id = r.initvStgId
    left join initiatives i on i.id = ibs.initiativeId

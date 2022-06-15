@@ -44,11 +44,20 @@
                             <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
                         </div>
                     </th>
-                    <th pSortableColumn="last_login">
+                    <th pSortableColumn="role">
                         <div class="flex justify-content-center align-items-center">
                             Role
-                            <p-sortIcon field="last_login"></p-sortIcon>
-                            <p-columnFilter type="text" field="role" display="menu"></p-columnFilter>
+                            <p-sortIcon field="role"></p-sortIcon>
+                            <p-columnFilter type="text" field="role" display="menu">
+                                <!-- <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                    <p-dropdown [ngModel]="value" [options]="roles" (onChange)="filter($event.value)"
+                                        placeholder="Any">
+                                        <ng-template let-option pTemplate="item">
+                                            <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                        </ng-template>
+                                    </p-dropdown>
+                                </ng-template> -->
+                            </p-columnFilter>
                         </div>
                     </th>
                     <th pSortableColumn="last_login">
@@ -62,7 +71,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-user>
                 <tr>
-                    <td>{{user.official_code}}</td>
+                    <td><strong>{{user.official_code}}</strong></td>
                     <td>{{user.initiative_name}}</td>
                     <td>{{user.user_name}}</td>
                     <td>{{user.email}}</td>

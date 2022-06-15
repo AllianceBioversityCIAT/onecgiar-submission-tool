@@ -22,7 +22,11 @@ export class IsdcStatusComponent implements OnInit {
 
   getISDCStatus(){
     this._initiativesService.getIsdcStatus().subscribe(e => {
-      this.listStatus = e.response.ISDCResponses;
+      this.listStatus = e.response.ISDCResponses.map(e => ({...e, 
+                                                            pending: parseInt(e.pending), 
+                                                            responses: parseInt(e.responses), 
+                                                            total_comments:parseInt(e.total_comments), 
+                                                            average: parseInt(e.average)}));
     });
   }
 
@@ -37,7 +41,7 @@ export class IsdcStatusComponent implements OnInit {
       total_comments:e.total_comments,
       responses:e.responses,
       pending:e.pending,
-      average:`${Math.round(e.average)}%`
+      average:`${e.average}%`
     }));
     import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(xlsExport);

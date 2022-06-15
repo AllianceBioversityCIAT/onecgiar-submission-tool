@@ -22,7 +22,10 @@ export class TocReportingComponent implements OnInit {
 
   getISDCStatus(){
     this._initiativesService.getTOCReporting().subscribe(e => {
-      this.listReporting = e.response.TOCResponses;
+      this.listReporting = e.response.TOCResponses.map(e => ({...e, 
+                                                              eoi_outcome: parseInt(e.eoi_outcome), 
+                                                              outcome:parseInt(e.outcome), 
+                                                              output: parseInt(e.output)}));
     });
   }
 
