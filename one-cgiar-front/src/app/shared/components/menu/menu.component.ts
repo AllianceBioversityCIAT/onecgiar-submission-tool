@@ -485,7 +485,7 @@ export class MenuComponent implements OnInit {
     if(this._dataControlService.isdcFeedbackValidation?.validation){
       const configAlert = {
         title:'',
-        text:`The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> initiative is about to be approved. No changes can be made once approved.`,
+        text:`The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> is about to be approved. Please note that further changes cannot be made once approved.`,
         icon:'warning',
         confirmButtonColor:'#4caf50',
         confirmText:'Yes, approve it!'
