@@ -27,7 +27,7 @@ export class TocResponsesRepository extends Repository<TOCs> {
    left join initiatives i on i.id = ibs.initiativeId
         WHERE ibs.active > 0 and
         ibs.stageId = ${stageId}
-    GROUP by i.id
+    GROUP by i.id, ibs.id
     order by i.id`;
 
       let tocProgressReporting = await this.query(tocProgressReportingQuery);
