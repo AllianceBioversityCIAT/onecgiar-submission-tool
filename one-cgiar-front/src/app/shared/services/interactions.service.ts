@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class InteractionsService {
-  collapseHeader = false;
   showHeader = true;
   noWp = false;
   requests = [];

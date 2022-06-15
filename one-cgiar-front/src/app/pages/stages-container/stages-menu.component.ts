@@ -63,7 +63,6 @@ export class StagesMenuComponent implements OnInit {
         this._dataControlService.breadcrumbItemTwo = event?.url.indexOf('work-package') !== (-1) ? this._dataControlService.breadcrumbItemTwo : '';
       }
     })
-    this._interactionsService.collapseHeader = true;
 
     this.initiativesSvc.getStages().subscribe((resp:any)=>{
       this.activedRouteEvent(resp?.stages);
