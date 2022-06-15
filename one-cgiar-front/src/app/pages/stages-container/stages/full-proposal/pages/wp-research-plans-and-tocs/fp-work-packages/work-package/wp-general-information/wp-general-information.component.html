@@ -22,8 +22,7 @@
         <div class="col-sm-12">
           <app-geographic-scope [localForm]="this.workPackageForm"
             [regionsSelectedList]="this.geographicScope.regions"
-            [countriesSelectedList]="this.geographicScope.countries"
-            [subject]="'initiative'"></app-geographic-scope>
+            [countriesSelectedList]="this.geographicScope.countries"></app-geographic-scope>
         </div>
       </div>
       <div class="justify_content_end" *ngIf="!_initiativesService.initiative.readonly">

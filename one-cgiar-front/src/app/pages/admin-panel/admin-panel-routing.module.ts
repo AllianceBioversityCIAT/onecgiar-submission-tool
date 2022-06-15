@@ -8,9 +8,18 @@ const routes: Routes = [
     component: AdminPanelComponent,
     children: [
       {
-        path: '', 
+        path: 'users', 
         loadChildren: () => import('./pages/admin-users/admin-users.module').then((m) => m.AdminUsersModule),
-      }
+      },
+      {
+        path: 'isdc-status', 
+        loadChildren: () => import('./pages/completeness-status/isdc-status/isdc-status.module').then((m) => m.IsdcStatusModule),
+      },
+      {
+        path: 'toc-reporting', 
+        loadChildren: () => import('./pages/completeness-status/toc-reporting/toc-reporting.module').then((m) => m.TocReportingModule),
+      },
+      { path: '**', pathMatch: 'full', redirectTo: 'users' }
     ]
   }
 

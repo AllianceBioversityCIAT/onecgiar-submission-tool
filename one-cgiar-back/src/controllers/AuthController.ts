@@ -32,7 +32,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     // const validUser = await searchByEmail(email + '');
     // console.log(validUser);
-    
+
     const {token, name, roles, id} = await utilLogin(email, password);
     res.json(
       new ResponseHandler('User logged.', {token, email, name, roles, id})

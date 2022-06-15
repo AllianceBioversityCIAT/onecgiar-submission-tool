@@ -6,6 +6,8 @@ import { AdminUsersComponent } from './admin-users.component';
 import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
+import { ToggleFormatDateModule } from '../../../../shared/components/toggle-format-date/toggle-format-date.module';
+import { UtilsModule } from '../../../../shared/components/utils/utils.module';
 
 @NgModule({
   declarations: [AdminUsersComponent],
@@ -14,7 +16,9 @@ import {InputTextModule} from 'primeng/inputtext';
     AdminUsersRoutingModule,
     TableModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    ToggleFormatDateModule,
+    UtilsModule
   ]
 })
 export class AdminUsersModule { }

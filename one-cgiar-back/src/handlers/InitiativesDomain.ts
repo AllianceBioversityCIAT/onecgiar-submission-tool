@@ -51,18 +51,28 @@ export class InitiativeHandler extends InitiativeStageHandler {
 
     try {
       getUsersByInitiatives = await this.queryRunner.query(
-        `select u.first_name, u.last_name, u.email, i.official_code as initiative_code, r.name as role
-        from initiatives_by_users ibu 
+        `select  i.official_code as official_code,i.name as initiative_name, 
+           CONCAT(u.first_name," ",u.last_name) as  user_name,u.email,
+           r.name as role, u.last_login
+             from initiatives_by_users ibu
         left join users u on ibu.userId = u.id
-        left join roles_by_users rbu on u.id = rbu.user_id 
+             join roles_by_users rbu on u.id = rbu.user_id
         left join initiatives i on ibu.initiativeId =i.id
-        left join roles r on ibu.roleId = r.id 
-        where ibu.active = true`
+        left join roles r on ibu.roleId = r.id
+        left join initiatives_by_stages ibs on ibs.initiativeId = i.id
+            where ibu.active = true
+              and ibs.active > 0
+          order by i.id;`
       );
 
       return getUsersByInitiatives;
     } catch (error) {
-      throw new BaseError('Get users by initiatives list', 400, error.message, false);
+      throw new BaseError(
+        'Get users by initiatives list',
+        400,
+        error.message,
+        false
+      );
     }
   }
 

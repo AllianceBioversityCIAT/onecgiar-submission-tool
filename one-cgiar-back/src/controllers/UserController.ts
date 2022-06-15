@@ -8,7 +8,7 @@ import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
-import { InitiativeHandler } from '../handlers/InitiativesDomain';
+import {InitiativeHandler} from '../handlers/InitiativesDomain';
 
 // get all users
 export const getUsers = async (
@@ -365,14 +365,17 @@ export const getUsersByInitiatives = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-
   const initiativeshandler = new InitiativeHandler();
 
   try {
-    const usersByInitiativesList = await initiativeshandler.getUsersByInitiativesList();
+    const usersByInitiativesList =
+      await initiativeshandler.getUsersByInitiativesList();
     console.log(usersByInitiativesList);
-    
-    return res.json({data: usersByInitiativesList, msg: 'Users by initiatives list'});
+
+    return res.json({
+      data: usersByInitiativesList,
+      msg: 'Users by initiatives list'
+    });
   } catch (error) {
     console.log(error);
     if (

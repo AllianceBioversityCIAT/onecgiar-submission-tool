@@ -250,7 +250,7 @@ export class PreviewsDomain {
         opportinitiesQuery = `
               SELECT id,opportunities_description,
                      risk_assessment_id,active
-              FROM opportunities opp
+              FROM opportunities
              WHERE risk_assessment_id in (
              SELECT id
                FROM risk_assessment
@@ -258,7 +258,7 @@ export class PreviewsDomain {
              SELECT id
              FROM manage_plan_risk
               WHERE initvStgId = ${initiativeId}
-                AND opp.active = 1
+                AND active = 1
                )
               );
               

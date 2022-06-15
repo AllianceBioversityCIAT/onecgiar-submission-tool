@@ -742,7 +742,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.id = subsec.sectionId
         AND sec.description='melia'
         AND subsec.description = 'melia-studies-and-activities';`,
-    validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
     CASE
       WHEN
       ((SELECT COUNT(rs.id) as firstValidation FROM results rs
@@ -778,7 +778,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.id = subsec.sectionId
           AND sec.description='melia'
         AND subsec.description = 'table-c';`,
-    validateTableB = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        validateTableB = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
     CASE
       WHEN
       ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
@@ -796,7 +796,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.id = subsec.sectionId
           AND sec.description='melia'
         AND subsec.description = 'table-b';`,
-    validateTableA = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        validateTableA = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
     CASE
       WHEN
       ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) > 0 AND
@@ -837,15 +837,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       validationStudies[0].validation = parseInt(
         validationStudies[0].validation
       );
-      validationTableC[0].validation = parseInt(
-        validationTableC[0].validation
-      );
-      validationTableB[0].validation = parseInt(
-        validationTableB[0].validation
-      );
-      validationTableA[0].validation = parseInt(
-        validationTableA[0].validation
-      );
+      validationTableC[0].validation = parseInt(validationTableC[0].validation);
+      validationTableB[0].validation = parseInt(validationTableB[0].validation);
+      validationTableA[0].validation = parseInt(validationTableA[0].validation);
 
       validationMelia.map((me) => {
         me['subSections'] = [
@@ -860,13 +854,13 @@ export class MetaDataHandler extends InitiativeStageHandler {
           validationStudies.find((st) => {
             return (st.sectionId = me.sectionId);
           }),
-          validationTableC.find(tc => {
+          validationTableC.find((tc) => {
             return (tc.sectionId = me.sectionId);
           }),
-          validationTableB.find(tb => {
+          validationTableB.find((tb) => {
             return (tb.sectionId = me.sectionId);
           }),
-          validationTableA.find(ta => {
+          validationTableA.find((ta) => {
             return (ta.sectionId = me.sectionId);
           })
         ];
@@ -1479,7 +1473,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       // 5 impact strategies
       let multi = 1;
       for (let index = 1; index < 6; index++) {
-
         // Validate Sections
         let validationImpactStrategiesSQL = `
           SELECT sec.id as sectionId,sec.description, 
@@ -1635,7 +1628,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
         let multi = 1;
         for (let index = 0; index < allWorkPackages.length; index++) {
           const wpId = allWorkPackages[index].id;
-          
 
           let validationWPSQL = `
           SELECT sec.id as sectionId,sec.description, 
@@ -1975,7 +1967,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       // 5 impact strategies
       let multi = 1;
       for (let index = 1; index < 6; index++) {
-
         // Validate Sections
         let validationProjectionBenefitsSQL = `
         SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,

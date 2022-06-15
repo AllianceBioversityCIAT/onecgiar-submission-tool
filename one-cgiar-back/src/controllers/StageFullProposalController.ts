@@ -1093,9 +1093,6 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
   //melia section files
   const files = req['files'];
 
-  console.log(files);
-  
-
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1854,6 +1851,64 @@ export async function getISDCResponses(
     res.json(
       new ResponseHandler('Full Proposal: ISDC Responses.', {
         ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET ISDC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getISDCResponsesStatus(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const ISDCResponses = await fullPposal.requestISDCResponsesStatus(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ISDC Responses status.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET ToC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getTOCResponsesReporting(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const TOCResponses = await fullPposal.requestTOCProgress(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ToC Responses reporting.', {
+        TOCResponses
       })
     );
   } catch (error) {

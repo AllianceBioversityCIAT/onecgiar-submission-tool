@@ -86,9 +86,11 @@ export const utilLogin = async (email: string, password: string) => {
 const validateAD = async (one_user, password) => {
   // ad = new ActiveDirectory(config.active_directory);
   let ad_user = one_user.email;
-  // console.log(ad_user);
+  console.log(ad_user);
 
   return new Promise((resolve, reject) => {
+    // var userPrincipalName = 'j.cadavid@cgiar.org';
+    // var username = 'CN=Juan,OU=Users,DC=CGIARAD,DC=ORG';
 
     ad.authenticate(ad_user, password, (err, auth) => {
       if (auth) {

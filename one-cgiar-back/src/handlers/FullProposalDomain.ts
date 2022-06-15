@@ -1,8 +1,10 @@
 import _ from 'lodash';
-import {getRepository, In, Not} from 'typeorm';
+import { getRepository, In, Not, getCustomRepository } from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
+import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository';
+import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeHandler} from './InitiativesDomain';
@@ -3577,6 +3579,54 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
     }
   }
+
+    /**
+     **REQUEST ISDC RESPONSES STATUS
+     * @returns 
+     */
+  async requestISDCResponsesStatus(stageId) {
+    const ISDCResponsesRepo = getCustomRepository(IsdcResponsesRepository);
+
+    try {
+
+
+      const ISDCResponsesStatus = await ISDCResponsesRepo.findIsdcFeedbackStatus(stageId);
+
+      return ISDCResponsesStatus;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'REQUEST ISDC Responses status: Full proposal domain',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+   /**
+     ** REQUEST ToC RESPONSES REPORTING
+     * @returns 
+     */
+    async requestTOCProgress(stageId) {
+      const tocResponsesRepo = getCustomRepository(TocResponsesRepository);
+  
+      try {
+  
+  
+        const tocResponsesReporting = await tocResponsesRepo.findTocProgressReporting(stageId);
+  
+        return tocResponsesReporting;
+      } catch (error) {
+        console.log(error);
+        throw new BaseError(
+          'REQUEST ToC Responses progress: Full proposal domain',
+          400,
+          error.message,
+          false
+        );
+      }
+    }
 
   /**
    * * REQUEST EOI BY INITIATIVE
