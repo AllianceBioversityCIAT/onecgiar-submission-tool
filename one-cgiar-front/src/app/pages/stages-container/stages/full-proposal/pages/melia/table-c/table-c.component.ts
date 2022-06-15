@@ -27,7 +27,7 @@ export class TableCComponent implements OnInit {
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp);
       this.listToSave = resp;
-      // console.log(resp)
+      console.log(resp)
     })
   }
 
@@ -45,6 +45,7 @@ export class TableCComponent implements OnInit {
           result_title: result?.result_title,
           type_name: result?.type_name,
           wp_acronym: result?.wp_acronym, 
+          wp_name: result?.wp_name,
           rowSpan: 1, 
           geo_scope: this.compactGeoData(result['geo_scope'])
         }) ;
@@ -58,6 +59,7 @@ export class TableCComponent implements OnInit {
               type_name: result?.type_name, 
               wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
+              wp_name: result?.wp_name,
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
             });
@@ -122,7 +124,7 @@ export class TableCComponent implements OnInit {
       result.indicators.map((indicator)=>{
           list.push({
             Result_type	: result?.type_name || 'Not provided',
-            Work_package:  result?.wp_acronym || 'Not provided',
+            Work_package: `${result?.wp_acronym && result?.wp_name ? '' : 'Not provided'}${result?.wp_acronym || ''}${result?.wp_acronym ? ': ' : ''} ${result?.wp_name || ''}`,
             result_title: result?.result_title || 'Not provided',
             geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
             indicator_name: indicator?.indicator_name || 'Not provided',
@@ -136,7 +138,7 @@ export class TableCComponent implements OnInit {
             });
       })
     })
-    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:100},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
+    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:300},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
   }
 
 }

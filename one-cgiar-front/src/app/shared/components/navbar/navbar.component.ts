@@ -60,6 +60,7 @@ export class NavbarComponent implements OnInit {
         this._pusherService.continueEditing = false;
         this._pusherService.firstUser = false;
         this._pusherService.secondUser = null;
+        if (document.querySelector('.right_container'))document.querySelector('.right_container').scrollTop = 0;
         gtag('config', environment.googleAnalyticsId, {
           page_path: event.url
         });
