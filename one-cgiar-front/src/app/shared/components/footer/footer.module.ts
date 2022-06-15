@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from './footer.component';
 import { MatListModule } from '@angular/material/list';
 import { ContactModalModule } from '../contact-modal/contact-modal.module';
+import { RouterModule } from '@angular/router';
 
 const angularMaterialModules = [
   MatListModule
@@ -14,6 +15,7 @@ const angularMaterialModules = [
   imports: [
     CommonModule,
     ContactModalModule,
+    RouterModule,
     ...angularMaterialModules
   ]
 })
