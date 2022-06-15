@@ -62,17 +62,9 @@ export class MparaReportsComponent implements OnInit {
       riskA?.opportinities?.map((opportiny, index) => {
         if (index == 0) return;
         i++;
-        this.previewListCoverted.push({ b: '', c: '', d: '', e: '', f: opportiny?.opportunities_description || ''});
+        this.previewListCoverted.push({f: opportiny?.opportunities_description || ''});
       })
 
-      // if (!impactArea?.impactIndicators?.dimensions.length) {
-      //   i++;
-      //   this.previewListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name, rowspan:1 });
-      // }
-      // console.log('celIndex ',celIndex);
-      // console.log(this.previewListCoverted[celIndex]);
-      // console.log(this.previewListCoverted);
-      // console.log("------------------------------");
       if (riskA?.opportinities.length >= 2) this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
       // this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
       this.mergeList.push(
@@ -85,7 +77,7 @@ export class MparaReportsComponent implements OnInit {
 
     })
 
-    // console.log(this.previewListCoverted);
+    console.log(this.previewListCoverted);
 
    
   }
