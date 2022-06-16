@@ -32,11 +32,9 @@
 }
 
 tr.tr{
-  position: relative;
+  position: relative !important;
   .link{
     position: absolute;
-    width: 100px;
-    height: 100px;
     background-color: rgba(0, 255, 115, 0);
     left: 0;
     top: 0;
