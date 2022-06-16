@@ -607,10 +607,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
-    (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
-      FROM results rs 
-        LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id IN (1,2)) = 0 AND
       
       /* MELIA STUDIES */ 
       (CASE
@@ -760,11 +756,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       (SELECT COUNT(rsi.id) 
         FROM results rs 
           INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
-      (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
-        FROM results rs 
-          LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_} aND rs.result_type_id IN (1,2)) = 0
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0)
       THEN TRUE
           ELSE FALSE
           END
