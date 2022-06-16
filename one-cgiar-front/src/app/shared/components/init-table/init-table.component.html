@@ -1,5 +1,5 @@
 <div class="table-container animate__animated animate__fadeIn">
-    <p-table #dt1 [value]="data"  [scrollable]="true" styleClass="p-datatable-sm p-datatable-gridlines"  scrollHeight="calc(80vh - 100px)" scrollDirection="both"
+    <p-table #dt1 [value]="data" selectionMode="single" [scrollable]="true" styleClass="p-datatable-sm p-datatable-gridlines"  scrollHeight="calc(80vh - 100px)" scrollDirection="both"
     [globalFilterFields]="['official_code','acronym_and_name']">
         <ng-template pTemplate="caption">
             <div class="space-b">
@@ -31,11 +31,25 @@
         </ng-template>
         <ng-template pTemplate="body" let-initiative>
             <tr class="tr">
-                <td style="max-width: 100px !important; width: 100px;">{{initiative.official_code}}</td>
-                <td><a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> <a class="initiative_link"> <strong>{{initiative?.acronym ? (initiative.acronym +  ' - ') : ''}}</strong>{{initiative.name}}</a></td>
-                <td style="max-width: 100px !important; width: 100px;">{{initiative.status}}</td>
-                <td style="max-width: 200px !important; width: 200px;">{{initiative.action_area_description}}</td>
-                <td style="max-width: 200px !important; width: 200px;"> <div class="tag_container"><div class="tag_current_stage" [style.backgroundColor]="parseCurrentStageColor(initiative?.stageId)"> {{initiative.description}} </div></div>  </td>
+                <td style="max-width: 100px !important; width: 100px;">
+                    <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
+                    {{initiative.official_code}}
+                </td>
+                <td>
+                    <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
+                    <a class="initiative_link"> <strong>{{initiative?.acronym ? (initiative.acronym +  ' - ') : ''}}</strong>{{initiative.name}}</a></td>
+                <td style="max-width: 100px !important; width: 100px;">
+                    <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
+                    {{initiative.status}}
+                </td>
+                <td style="max-width: 200px !important; width: 200px;">
+                    <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
+                    {{initiative.action_area_description}}
+                </td>
+                <td style="max-width: 200px !important; width: 200px;">
+                    <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
+                    <div class="tag_container"><div class="tag_current_stage" [style.backgroundColor]="parseCurrentStageColor(initiative?.stageId)"> {{initiative.description}} </div></div> 
+                 </td>
                 
             </tr>
         </ng-template>
