@@ -57,7 +57,7 @@ export class WpGeneralInformationComponent implements OnInit {
         this._initiativesService.getCLARISARegions('').subscribe(regions=>{
           this.geographicScope.regions.map(mapReg=>{
             regions.response.regions.forEach(regionItem=>{
-              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
+              if (regionItem.region_id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
           // this._dataControlService.showRegions = true;
@@ -87,7 +87,6 @@ export class WpGeneralInformationComponent implements OnInit {
     body.countries = this.geographicScope.countries;
     body.regions.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
     body.countries.map(resp=>resp.wrkPkg = Number(this.workPackageForm.value.id));
-    // console.log(body);
     this._initiativesService.saveWpFp(body).subscribe(resp=>{
       // console.log(resp);
       // console.log(this.workPackageForm.valid?true:false);

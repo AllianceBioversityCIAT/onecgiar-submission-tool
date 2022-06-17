@@ -192,6 +192,7 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/regions-cgiar?filter=${filterText}`).pipe(map(resp => {
       resp.response.regions.map(region => {
         region.region_id = region.id;
+        region.id = null;
       })
       return resp;
     }));;
