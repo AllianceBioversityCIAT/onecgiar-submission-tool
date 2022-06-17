@@ -83,7 +83,7 @@ router.get(
  *! TOC INTEGRATION
  */
 router.get(
-  '/package/:wrkPkgId([0-9]+)',
+  '/package/:stageId([0-9]+)/:initiativeId([0-9]+)/:wrkPkgId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   stagefull.getWorkPackage
 );
