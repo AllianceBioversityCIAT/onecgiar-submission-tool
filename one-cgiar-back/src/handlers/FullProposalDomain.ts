@@ -142,11 +142,11 @@ export class ProposalHandler extends InitiativeStageHandler {
                         OR acronym IS NULL
                         OR acronym = ''
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1 
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 30
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1
                         OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1
                         OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
                         OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
                         false,
@@ -191,21 +191,22 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  async getWorkPackageId(id) {
-    // const initvStgId: string = this.initvStgId_;
-    // const initvStg = await this.initvStage
+  async getWorkPackageId(wpOficialCode) {
+    const initvStgId: string = this.initvStgId_;
+    //const initvStg = await this.initvStage
     const wpRepo = getRepository(entities.WorkPackages);
 
     try {
+      let workPackages: any = await wpRepo.find({where: {wp_official_code: wpOficialCode, active: 1, initvStgId:initvStgId}});
       let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
-               WHERE wrkPkgId = ${id}
+               WHERE wrkPkgId = ${workPackages[0].id}
                  AND active = 1
               GROUP BY id,country_id`,
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE wrkPkgId = ${id}
+                 WHERE wrkPkgId = ${workPackages[0].id}
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -214,10 +215,9 @@ export class ProposalHandler extends InitiativeStageHandler {
                   FROM tocs
                  WHERE active = 1
                   and type = 0
-                  and work_package_id = ${id}
+                  and work_package_id = ${wpOficialCode}
                 `;
 
-      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -227,12 +227,12 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         // Map Geo
         workPackages.map((geo) => {
-          geo['regions'] = regions.filter((wp) => {
-            return wp.wrkPkgId === geo.id;
+          geo['regions'] = regions.filter((re) => {
+            return re.wrkPkgId === geo.id;
           });
 
-          geo['countries'] = countries.filter((wp) => {
-            return wp.wrkPkgId === geo.id;
+          geo['countries'] = countries.filter((co) => {
+            return co.wrkPkgId === geo.id;
           });
         });
 

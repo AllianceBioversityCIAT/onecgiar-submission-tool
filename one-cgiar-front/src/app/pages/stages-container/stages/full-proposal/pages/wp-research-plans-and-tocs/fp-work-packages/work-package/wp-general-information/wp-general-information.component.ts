@@ -46,14 +46,13 @@ export class WpGeneralInformationComponent implements OnInit {
       // Add activeSection = true if is the current wp open
       // this.wpColorselected(3, 5, 12,routeResp.wpID);
       //console.log(this._wpDataControlService.wpId);
-      this.wpID = this._wpDataControlService.wpId 
 
       this._initiativesService.getWpById(this._wpDataControlService.wpId).subscribe(resp => {
         let directResp = resp.response.workpackage;
-        console.log(directResp);
+        this.wpID = directResp.id;
         this.geographicScope.regions = directResp.regions;
         this.geographicScope.countries = directResp.countries;
-        this.updateFields(directResp,this._wpDataControlService.wpId);
+        this.updateFields(directResp,this.wpID);
         this._initiativesService.getCLARISARegions('').subscribe(regions=>{
           this.geographicScope.regions.map(mapReg=>{
             regions.response.regions.forEach(regionItem=>{

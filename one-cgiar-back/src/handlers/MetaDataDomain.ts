@@ -1621,6 +1621,31 @@ export class MetaDataHandler extends InitiativeStageHandler {
         for (let index = 0; index < allWorkPackages.length; index++) {
           const wpId = allWorkPackages[index].id;
 
+          var workPackage = await this.validationSubsectionWorkPackages(wpId);
+
+          workPackage[0].validation = parseInt(workPackage[0].validation);
+
+          multi = multi * workPackage[0].validation;
+
+          workPackage[0].validation = multi;
+        }
+      } else {
+        workPackage = [];
+      }
+
+      return workPackage[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async validationSubsectionWorkPackages(wpId){
+    try{
           let validationWPSQL = `
           SELECT sec.id as sectionId,sec.description, 
           CASE
@@ -1651,26 +1676,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
           AND sec.description='work-package-research-plans-and-tocs';
           `;
 
-          var workPackage = await this.queryRunner.query(validationWPSQL);
-
-          workPackage[0].validation = parseInt(workPackage[0].validation);
-
-          multi = multi * workPackage[0].validation;
-
-          workPackage[0].validation = multi;
-        }
-      } else {
-        workPackage = [];
-      }
-
-      return workPackage[0];
-    } catch (error) {
-      throw new BaseError(
-        'Get validations Work packages',
-        400,
-        error.message,
-        false
-      );
+          const workPackage = await this.queryRunner.query(validationWPSQL);
+          return workPackage;
+    }catch (error) {
+      throw new BaseError('Get validations Subsection Context', 400, error.message, false);
     }
   }
 
