@@ -146,7 +146,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         this.list.map((melia: any) => {
           melia.regions.map(mapReg => {
             regions.response.regions.forEach(regionItem => {
-              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
+              if (regionItem.region_id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
           // this._dataControlService.showRegions = true;
