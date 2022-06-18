@@ -192,6 +192,7 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/regions-cgiar?filter=${filterText}`).pipe(map(resp => {
       resp.response.regions.map(region => {
         region.region_id = region.id;
+        region.id = null;
       })
       return resp;
     }));;
@@ -531,7 +532,7 @@ export class InitiativesService {
 
   // get one work package by id with stage full proposal
   getWpById(wpID) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/package/${wpID}`);
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/package/${this.initiative.stageId}/${this.initiative.id}/${wpID}`);
   }
 
   // get one work package by id with stage full proposal

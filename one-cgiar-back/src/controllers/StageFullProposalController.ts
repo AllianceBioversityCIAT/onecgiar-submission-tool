@@ -124,11 +124,34 @@ export async function getWorkPackages(req: Request, res: Response) {
  * @returns
  */
 export async function getWorkPackage(req: Request, res: Response) {
-  const {wrkPkgId} = req.params;
+
+  const {stageId, initiativeId, wrkPkgId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
 
   try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {id: stageId}
+    });
+    // get initiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not initiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read Workpackage: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
     // create new full proposal object
-    const fullPposal = new ProposalHandler();
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     // get workpackage from proposal object
     const workpackage = await fullPposal.getWorkPackageId(wrkPkgId);

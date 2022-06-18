@@ -607,10 +607,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
-    (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
-      FROM results rs 
-        LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id IN (1,2)) = 0 AND
       
       /* MELIA STUDIES */ 
       (CASE
@@ -760,11 +756,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       (SELECT COUNT(rsi.id) 
         FROM results rs 
           INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
-      (SELECT count(rsi.name) - sum(IF(rsi.name is null OR rsi.name = '', 0, 1)) as validation
-        FROM results rs 
-          LEFT JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_} aND rs.result_type_id IN (1,2)) = 0
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0)
       THEN TRUE
           ELSE FALSE
           END
@@ -1620,8 +1612,16 @@ export class MetaDataHandler extends InitiativeStageHandler {
       let getAllWpSQL = `
       SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
       `;
+      const generalWorkPackagesQuery = `SELECT sec.id as sectionId,sec.description, 1 AS validation
+      FROM initiatives_by_stages ini
+      JOIN sections_meta sec
+     WHERE ini.id = ${this.initvStgId_}
+       AND sec.stageId= ini.stageId
+       AND sec.description='work-package-research-plans-and-tocs';`;
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
+
+      let generalWorkPackages = await this.queryRunner.query(generalWorkPackagesQuery);
 
       if (allWorkPackages.length > 0) {
         // Get Work packages per initiative
@@ -1629,8 +1629,42 @@ export class MetaDataHandler extends InitiativeStageHandler {
         for (let index = 0; index < allWorkPackages.length; index++) {
           const wpId = allWorkPackages[index].id;
 
+          var workPackage = await this.validationSubsectionWorkPackages(wpId);
+
+          workPackage[0].validation = parseInt(workPackage[0].validation);
+
+          multi = multi * workPackage[0].validation;
+
+          workPackage[0].validation = multi;
+        }
+      } else {
+        workPackage = [];
+      }
+      generalWorkPackages[0].validation *= workPackage[0].validation;
+      generalWorkPackages.map((con) => {
+        con['subSections'] = [
+          workPackage.find((cha) => {
+            return (cha.sectionId = con.sectionId);
+          })
+        ];
+      })
+      
+      console.log(generalWorkPackages)
+      return generalWorkPackages[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async validationSubsectionWorkPackages(wpId){
+    try{
           let validationWPSQL = `
-          SELECT sec.id as sectionId,sec.description, 
+          SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
           OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
@@ -1654,31 +1688,18 @@ export class MetaDataHandler extends InitiativeStageHandler {
            END AS validation
          FROM initiatives_by_stages ini
          JOIN sections_meta sec
+         join subsections_meta sm 
         WHERE ini.id = ${this.initvStgId_}
+          and sm.sectionId = sec.id 
           AND sec.stageId= ini.stageId
-          AND sec.description='work-package-research-plans-and-tocs';
+          AND sec.description='work-package-research-plans-and-tocs'
+          and sm.description = 'work-packages';
           `;
 
-          var workPackage = await this.queryRunner.query(validationWPSQL);
-
-          workPackage[0].validation = parseInt(workPackage[0].validation);
-
-          multi = multi * workPackage[0].validation;
-
-          workPackage[0].validation = multi;
-        }
-      } else {
-        workPackage = [];
-      }
-
-      return workPackage[0];
-    } catch (error) {
-      throw new BaseError(
-        'Get validations Work packages',
-        400,
-        error.message,
-        false
-      );
+          const workPackage = await this.queryRunner.query(validationWPSQL);
+          return workPackage;
+    }catch (error) {
+      throw new BaseError('Get validations Subsection Context', 400, error.message, false);
     }
   }
 
