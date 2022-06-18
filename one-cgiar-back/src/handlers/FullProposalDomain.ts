@@ -134,24 +134,27 @@ export class ProposalHandler extends InitiativeStageHandler {
         /*eslint-disable*/
         WPquery = `
                     SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,wp_official_code,
-                    IF (
-                        name IS NULL
-                        OR name = ''
-                        OR pathway_content IS NULL
-                        OR pathway_content = ''
-                        OR acronym IS NULL
-                        OR acronym = ''
-                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1 
-                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1
-                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) < 1
-                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
-                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
-                        false,
-                        true
-                    ) AS validateWP
+                    CASE
+                    WHEN (SELECT acronym FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL 
+                      OR (SELECT acronym FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
+                      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                      char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+                    FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id =wp.id) < 1
+                    OR (SELECT name FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL
+                    OR (SELECT name FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
+                    OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+                          FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) < 1
+		                OR (SELECT pathway_content FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL
+                    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
+                    OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+                          FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) < 1
+	    	            OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1 ) = 0
+		                OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1) = 0
+                     THEN FALSE
+                       ELSE TRUE
+                       END AS validateWP
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${
                     initvStg.id ? initvStg.id : initvStg[0].id

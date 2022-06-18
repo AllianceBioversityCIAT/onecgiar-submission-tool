@@ -1612,8 +1612,16 @@ export class MetaDataHandler extends InitiativeStageHandler {
       let getAllWpSQL = `
       SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
       `;
+      const generalWorkPackagesQuery = `SELECT sec.id as sectionId,sec.description, 1 AS validation
+      FROM initiatives_by_stages ini
+      JOIN sections_meta sec
+     WHERE ini.id = ${this.initvStgId_}
+       AND sec.stageId= ini.stageId
+       AND sec.description='work-package-research-plans-and-tocs';`;
 
       var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
+
+      let generalWorkPackages = await this.queryRunner.query(generalWorkPackagesQuery);
 
       if (allWorkPackages.length > 0) {
         // Get Work packages per initiative
@@ -1632,8 +1640,17 @@ export class MetaDataHandler extends InitiativeStageHandler {
       } else {
         workPackage = [];
       }
-
-      return workPackage[0];
+      generalWorkPackages[0].validation *= workPackage[0].validation;
+      generalWorkPackages.map((con) => {
+        con['subSections'] = [
+          workPackage.find((cha) => {
+            return (cha.sectionId = con.sectionId);
+          })
+        ];
+      })
+      
+      console.log(generalWorkPackages)
+      return generalWorkPackages[0];
     } catch (error) {
       throw new BaseError(
         'Get validations Work packages',
@@ -1647,7 +1664,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
   async validationSubsectionWorkPackages(wpId){
     try{
           let validationWPSQL = `
-          SELECT sec.id as sectionId,sec.description, 
+          SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
           OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
@@ -1671,9 +1688,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
            END AS validation
          FROM initiatives_by_stages ini
          JOIN sections_meta sec
+         join subsections_meta sm 
         WHERE ini.id = ${this.initvStgId_}
+          and sm.sectionId = sec.id 
           AND sec.stageId= ini.stageId
-          AND sec.description='work-package-research-plans-and-tocs';
+          AND sec.description='work-package-research-plans-and-tocs'
+          and sm.description = 'work-packages';
           `;
 
           const workPackage = await this.queryRunner.query(validationWPSQL);
