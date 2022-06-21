@@ -2168,7 +2168,22 @@ WHERE ini.id = ${this.initvStgId_}
        OR pb.depth_scale_id= ''
          OR pb.probability_id IS NULL
        OR pb.probability_id= ''
-     
+       OR (select
+        sum(CASE 
+         WHEN d.breadth_value IS NULL
+           OR d.breadth_value =''
+           OR d.depthDescriptionId IS NULL
+           OR d.depthDescriptionId = ''
+        THEN FALSE
+                ELSE TRUE
+     end) - count(d.id)
+        FROM dimensions d
+         RIGHT JOIN projection_benefits pb2
+        ON d.projectionId = pb2.id
+       WHERE pb2.initvStgId = ini.id
+         AND d.active = 1
+         AND pb2.depth_scale_id not in (4)
+         AND pb2.impact_area_id = pb.impact_area_id) <> 0 
       THEN FALSE
               ELSE TRUE
    END AS validation
