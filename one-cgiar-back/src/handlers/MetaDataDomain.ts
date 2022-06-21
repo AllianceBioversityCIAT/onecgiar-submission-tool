@@ -446,32 +446,40 @@ export class MetaDataHandler extends InitiativeStageHandler {
     try {
       /* eslint-disable */
       let validationGISQL = `
-   SELECT sec.id as sectionId,sec.description, 
-     CASE
-      WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
-		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
-        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-        char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM general_information WHERE initvStgId = ini.id) < 1
-	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
-        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
-        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
-        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT value FROM budget WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT value FROM budget WHERE initvStgId = ini.id)  < 1
-		    OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id OR wrkPkgId IS NULL) = 0
-	      OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id OR wrkPkgId IS NULL) = 0
-    THEN FALSE
-      ELSE TRUE
-      END AS validation
-    FROM initiatives_by_stages ini
-    JOIN sections_meta sec
-   WHERE ini.id = ${this.initvStgId_}
-     AND sec.stageId= ini.stageId
-     AND sec.description='general-information'`;
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
+         OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+         OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+         char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+         FROM general_information WHERE initvStgId = ini.id) < 1
+         OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
+         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT value FROM budget WHERE initvStgId = ini.id) IS NULL 
+         OR (SELECT value FROM budget WHERE initvStgId = ini.id)  < 1
+     THEN FALSE
+       ELSE case 
+         when (select count(wp.id) - sum(wp.is_global) from work_packages wp where wp.initvStgId = ini.id) = 0
+         then true
+         else  case when 
+           (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and active = 1) > 0
+         OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and active = 1) > 0
+         then true
+         else false
+         end
+       end
+       
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='general-information'`;
 
       var validationGI = await this.queryRunner.query(validationGISQL);
 
@@ -1609,9 +1617,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationWorkPackages() {
     try {
-      let getAllWpSQL = `
-      SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
-      `;
       const generalWorkPackagesQuery = `SELECT sec.id as sectionId,sec.description, 1 AS validation
       FROM initiatives_by_stages ini
       JOIN sections_meta sec
@@ -1619,37 +1624,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
        AND sec.stageId= ini.stageId
        AND sec.description='work-package-research-plans-and-tocs';`;
 
-      var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
-
       let generalWorkPackages = await this.queryRunner.query(generalWorkPackagesQuery);
+      let {fullInitiativeToc, workPackage} = await this.validationSubsectionWorkPackages();
 
-      if (allWorkPackages.length > 0) {
-        // Get Work packages per initiative
-        let multi = 1;
-        for (let index = 0; index < allWorkPackages.length; index++) {
-          const wpId = allWorkPackages[index].id;
-
-          var workPackage = await this.validationSubsectionWorkPackages(wpId);
-
-          workPackage[0].validation = parseInt(workPackage[0].validation);
-
-          multi = multi * workPackage[0].validation;
-
-          workPackage[0].validation = multi;
-        }
-      } else {
-        workPackage = [];
-      }
-      generalWorkPackages[0].validation *= workPackage[0].validation;
+      generalWorkPackages[0].validation *= workPackage[0].validation * fullInitiativeToc[0].validation;
       generalWorkPackages.map((con) => {
         con['subSections'] = [
           workPackage.find((cha) => {
             return (cha.sectionId = con.sectionId);
+          }),
+          fullInitiativeToc.find((cha) => {
+            return (cha.sectionId = con.sectionId);
           })
         ];
       })
+
+      console.log(fullInitiativeToc)
       
-      console.log(generalWorkPackages)
       return generalWorkPackages[0];
     } catch (error) {
       throw new BaseError(
@@ -1661,8 +1652,42 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
-  async validationSubsectionWorkPackages(wpId){
+  async validationSubsectionWorkPackages(){
     try{
+        let validationSubToc = `
+        SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
+	case when (select count(t.id) - sum(if(REGEXP_REPLACE(REGEXP_REPLACE(t.narrative,'<(\/?p)>',' '),'<([^>]+)>','') = '' or t.narrative= null, 0, 1))
+                        from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) = 0 and
+			(select count(t.id) - sum(if(t.diagram = '' or t.diagram = null, 0, 1))
+                        from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) = 0 and
+			(select count(t.id)
+						from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) > 0
+        then true
+        else false 
+        end as validation
+FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+         join subsections_meta sm 
+WHERE ini.id = ${this.initvStgId_}
+          and sm.sectionId = sec.id 
+          AND sec.stageId= ini.stageId
+          AND sec.description='work-package-research-plans-and-tocs'
+          and sm.description = 'full-initiative-toc';
+        `;
+
+      const getAllWpSQL = `
+      SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
+      `;
+      let allWorkPackages = await this.queryRunner.query(getAllWpSQL);
+      if (allWorkPackages.length > 0) {
+        // Get Work packages per initiative
+        let multi = 1;
+        for (let index = 0; index < allWorkPackages.length; index++) {
+          const wpId = allWorkPackages[index].id;
+
           let validationWPSQL = `
           SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
           CASE
@@ -1681,10 +1706,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
         char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) < 1
-	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
-		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
          THEN FALSE
-           ELSE TRUE
+           ELSE case 
+	           	when   (select is_global  FROM work_packages WHERE initvStgId  = ini.id and id = ${wpId} AND ACTIVE = 1 ) = 1
+	           		OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) > 0
+		    		OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) > 0
+           		then TRUE
+           		else FALSE
+           		end
            END AS validation
          FROM initiatives_by_stages ini
          JOIN sections_meta sec
@@ -1696,8 +1725,27 @@ export class MetaDataHandler extends InitiativeStageHandler {
           and sm.description = 'work-packages';
           `;
 
-          const workPackage = await this.queryRunner.query(validationWPSQL);
-          return workPackage;
+          var workPackage = await this.queryRunner.query(validationWPSQL);
+
+          workPackage[0].validation = parseInt(workPackage[0].validation);
+
+          multi = multi * workPackage[0].validation;
+
+          workPackage[0].validation = multi;
+        }
+      } else {
+        workPackage = [];
+      }
+
+      let fullInitiativeToc = await this.queryRunner.query(validationSubToc);
+      if(fullInitiativeToc.length > 0){
+        fullInitiativeToc[0].validation = parseInt(fullInitiativeToc[0]?.validation);
+      }else{
+        fullInitiativeToc = [];
+      }
+
+      return {workPackage,
+              fullInitiativeToc};
     }catch (error) {
       throw new BaseError('Get validations Subsection Context', 400, error.message, false);
     }
