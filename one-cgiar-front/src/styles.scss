@@ -334,3 +334,12 @@ button {
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
 }
+
+
+.ql-editor {
+  resize: vertical !important;
+}
+
+.p-editor-content.ql-container.ql-snow {
+  height: unset !important;
+}
