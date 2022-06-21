@@ -799,11 +799,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         validateTableA = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
     CASE
       WHEN
-      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) > 0 AND
-      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) = 0) AND
-          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) > 0 AND
-          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) = 0) AND
-          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) > 0 AND
+      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
           (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
       THEN  TRUE
     ELSE FALSE
@@ -815,7 +815,31 @@ export class MetaDataHandler extends InitiativeStageHandler {
       AND sec.stageId= ini.stageId
       AND sec.id = subsec.sectionId
           AND sec.description='melia'
-        AND subsec.description = 'table-a';`;
+        AND subsec.description = 'table-a';`,
+        validateSubTableA = `
+        SELECT sec.id as sectionId,pb.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
+          (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+       JOIN subsections_meta subsec
+       JOIN projection_benefits pb
+   WHERE ini.id = ${this.initvStgId_}
+      AND ini.id = pb.initvStgId
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+      AND sec.description='melia'
+      AND subsec.description = 'table-a';
+        `;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -827,6 +851,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       var validationTableC = await this.queryRunner.query(validateTableC);
       var validationTableB = await this.queryRunner.query(validateTableB);
       var validationTableA = await this.queryRunner.query(validateTableA);
+      var validationSubTableA = await this.queryRunner.query(validateSubTableA);
 
       // validationResultFramework[0].validation = parseInt(
       //   validationResultFramework[0].validation
@@ -840,6 +865,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
       validationTableC[0].validation = parseInt(validationTableC[0].validation);
       validationTableB[0].validation = parseInt(validationTableB[0].validation);
       validationTableA[0].validation = parseInt(validationTableA[0].validation);
+      validationSubTableA = validationSubTableA.map( sa => ({...sa, validation:parseInt(sa.validation)}));
+
+      validationTableA.map(ta => {
+        ta['dinamicList'] = [
+          ...validationSubTableA.filter(sa => {
+            return sa.sectionId == ta.sectionId
+          })
+        ]
+      })
 
       validationMelia.map((me) => {
         me['subSections'] = [
@@ -1639,7 +1673,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
         ];
       })
 
-      console.log(fullInitiativeToc)
       
       return generalWorkPackages[0];
     } catch (error) {
