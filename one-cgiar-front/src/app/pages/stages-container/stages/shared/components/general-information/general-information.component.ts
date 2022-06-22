@@ -190,7 +190,7 @@ export class GeneralInformationComponent implements OnInit {
 
     this._initiativesService.patchSummary(patchBody, this._initiativesService.initiative.id, this.stageId).subscribe(generalResp => {
       this._interactionsService.successMessage('General information has been saved');
-      this.validateBudget() && this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
+      this.validateBudget() &&((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
       this._dataControlService.generalInfoChange$.emit();
@@ -210,7 +210,7 @@ export class GeneralInformationComponent implements OnInit {
     this._initiativesService.patchGeneralInformation( this._initiativesService.initiative.id, this._dataControlService.getStageRouteByStageId(this.stageId).ownPath, patchBody ).subscribe(resp=>{
       console.log(resp);
       this._dataControlService.generalInfoChange$.emit();
-      this._dataValidatorsService.wordCounterIsCorrect(this.body.generalInformation.name, 50) && ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
+     ((this.body.generalInformation.first_name && this.body.generalInformation.co_first_name)?true:false)
       ?this._interactionsService.successMessage('General information has been saved')
       :this._interactionsService.warningMessage('General information has been saved, but there are incomplete fields');
     });

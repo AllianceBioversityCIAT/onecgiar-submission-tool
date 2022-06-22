@@ -26,7 +26,7 @@ export class GeographicScopeComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.localForm.get('is_global').value);
-    console.log(this.regionsSelectedList)
+    // console.log(this.regionsSelectedList)
     this.setIsGlobal(this.localForm.value.is_global);
   }
   

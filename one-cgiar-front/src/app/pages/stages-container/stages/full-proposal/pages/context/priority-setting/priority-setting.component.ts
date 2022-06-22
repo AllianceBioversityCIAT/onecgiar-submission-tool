@@ -17,7 +17,6 @@ export class PrioritySettingComponent implements OnInit {
   showform = false;
   citationColAndTable={table_name: "context", col_name: "priority_setting", active: true}
   citationsList=[]
-  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -37,7 +36,6 @@ export class PrioritySettingComponent implements OnInit {
     this._initiativesService.setTitle('Priority setting')
     this.getContext();
     this.getLinks();
-    this.formChanges();
   }
 
   getLinks(){
@@ -59,7 +57,7 @@ export class PrioritySettingComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid  && this.extraValidation?
+      this.contextForm.valid?
       this._interactionsService.successMessage('Priority setting has been saved'):
       this._interactionsService.warningMessage('Priority setting has been saved, but there are incomplete fields')
     })
@@ -82,13 +80,6 @@ export class PrioritySettingComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
-    })
-  }
-
-  formChanges(){
-    this.contextForm.valueChanges.subscribe(resp=>{
-      //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("priority_setting").value, 500);
     })
   }
 

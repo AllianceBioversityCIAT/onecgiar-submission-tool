@@ -32,7 +32,7 @@
                             <ibdc-select-field class="field"
                                 [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
                                 [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
-                                [inputTitle]="attr_list_config[0].name" selectableListAtributteName='name'
+                                [inputTitle]="this.attr_list_config[1].name" selectableListAtributteName='name'
                                 selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes"
                                 frontendSearchAttribute="name">
                             </ibdc-select-field>
@@ -44,8 +44,8 @@
                             </ibdc-text-area-field>
                         </div>
 
-                        <ibdc-text-area-field [inputTitle]="attr_list_config[1].name" [objectItem]="item"
-                            [objectAtributteName]="attr_list_config[1].attribute"
+                        <ibdc-text-area-field [inputTitle]="this.attr_list_config[2].name" [objectItem]="item"
+                            [objectAtributteName]="this.attr_list_config[2].attribute"
                             [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                         </ibdc-text-area-field>
 
@@ -54,27 +54,27 @@
                                 [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
                                 [objectAtributteName]="'anticipated_year_completion'"
                                 [objectAtributteId]="'anticipated_year_completion'"
-                                [inputTitle]="attr_list_config[2].name" selectableListAtributteName='year'
+                                [inputTitle]="this.attr_list_config[3].name" selectableListAtributteName='year'
                                 selectableListAtributteId='year' [selectableList]="this.years"
                                 frontendSearchAttribute="year">
                             </ibdc-select-field>
                         </div>
 
-                        <ibdc-text-area-field [inputTitle]="attr_list_config[4].name" [objectItem]="item"
-                            [objectAtributteName]="attr_list_config[4].attribute"
+                        <ibdc-text-area-field [inputTitle]="this.attr_list_config[5].name" [objectItem]="item"
+                            [objectAtributteName]="this.attr_list_config[5].attribute"
                             [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                         </ibdc-text-area-field>
 
                         <ibdc-select-multiple [options]="{
                             required: null,
-                            inputTitle: attr_list_config[3].name,
-                            selectItemName:'name',
+                            inputTitle: this.attr_list_config[4].name,
+                            selectItemName:'displayName',
                             selectItemId:'initiativeId',
-                            frontendSearchAttribute:'name',
+                            frontendSearchAttribute:'displayName',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
                             savedList:{
                                 list:item.initiatives,
-                                selectItemName:'name',
+                                selectItemName:'displayName',
                                 selectItemId:'initiativeId',
                                 idToSave:'id',
                                 labelName:'initiatives'

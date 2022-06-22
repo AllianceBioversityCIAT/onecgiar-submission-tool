@@ -150,10 +150,14 @@ export class ProposalHandler extends InitiativeStageHandler {
                     OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
                     char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
                           FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) < 1
-	    	            OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1 ) = 0
-		                OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1) = 0
                      THEN FALSE
-                       ELSE TRUE
+                       ELSE case 
+                       when   (select is_global  FROM work_packages WHERE initvStgId  = wp.initvStgId and id = wp.id AND ACTIVE = 1 ) = 1
+                         OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1 ) > 0
+                    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1) > 0
+                       then TRUE
+                       else FALSE
+                       end
                        END AS validateWP
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${
@@ -2083,7 +2087,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
-      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id
+      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id and ibms.active = 1
       left join initiatives i on i.id = ibms.initiativeId 
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1

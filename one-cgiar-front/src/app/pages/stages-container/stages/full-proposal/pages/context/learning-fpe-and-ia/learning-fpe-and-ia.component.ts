@@ -17,7 +17,6 @@ export class LearningFpeAndIaComponent implements OnInit {
   showform = false;
   citationColAndTable={table_name: "context", col_name: "key_learnings", active: true}
   citationsList=[]
-  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -37,7 +36,6 @@ export class LearningFpeAndIaComponent implements OnInit {
     this._initiativesService.setTitle('Learning from prior evaluations and Impact Assessments (IA)')
     this.getContext();
     this.getLinks();
-    this.formChanges();
   }
 
   getLinks(){
@@ -61,7 +59,7 @@ export class LearningFpeAndIaComponent implements OnInit {
     console.log(this.contextForm.value);
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid && this.extraValidation?
+      this.contextForm.valid?
       this._interactionsService.successMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved'):
       this._interactionsService.warningMessage('Learning from prior evaluations and Impact Assessments (IA) has been saved, but there are incomplete fields')
     })
@@ -86,13 +84,5 @@ export class LearningFpeAndIaComponent implements OnInit {
       //console.log(err);
     })
   }
-
-  formChanges(){
-    this.contextForm.valueChanges.subscribe(resp=>{
-      //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value, 250);
-    })
-  }
-
 
 }
