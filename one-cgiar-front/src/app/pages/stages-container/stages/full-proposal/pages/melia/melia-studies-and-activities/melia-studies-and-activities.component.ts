@@ -18,6 +18,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   attr_list_config: AttributesListConfiguration[] = [
     {
+      attribute: 'id',
+      name: "ID",
+    },
+    {
       attribute: 'type_melia',
       name: "Type of MELIA study or activity",
     },
