@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InitiativesService } from '../../../../../../shared/services/initiatives.service';
 import { InteractionsService } from '../../../../../../shared/services/interactions.service';
+import { MaVariablesService } from './services/ma-variables.service';
 
 export interface DialogData {
   animal: string;
@@ -15,7 +16,7 @@ export interface DialogData {
   styleUrls: ['./manage-access.component.scss']
 })
 export class ManageAccessComponent implements OnInit {
-  allUsers=[];
+  
   selectedUsers=[]
   allRoles=[];
   showForm=false;
@@ -28,16 +29,27 @@ export class ManageAccessComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public initiativesSvc: InitiativesService,
     private _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService
+    private _interactionsService:InteractionsService,
+    public _maVariablesService:MaVariablesService
   ) { }
 
   ngOnInit(): void {
+    this.getAllUsers();
    this.getAllRoles().then(()=>{
     this.getUsersByInitiative();
   }).catch((err)=>{
 
   });
+
+
    
+  }
+
+  getAllUsers(){
+    this.initiativesSvc.getAllUsers().subscribe(resp=>{
+      this._maVariablesService.allUsers = resp.response.users;
+      console.log(this._maVariablesService.allUsers)
+    })
   }
 
   onNoClick(): void {
