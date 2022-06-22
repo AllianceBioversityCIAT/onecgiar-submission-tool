@@ -16,7 +16,6 @@ import { InteractionsService } from '../../../../../../../shared/services/intera
 export class ChallengeStatementComponent implements OnInit {
   challengeStatementForm: FormGroup;
   showfrom = false;
-  extraValidation = false;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -34,7 +33,6 @@ export class ChallengeStatementComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Challenge statement')
     this.getContext();
-    this.formChanges();
   }
 
   upserInfo(){
@@ -57,12 +55,6 @@ export class ChallengeStatementComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       console.log(err);
-    })
-  }
-
-  formChanges(){
-    this.challengeStatementForm.valueChanges.subscribe(resp=>{
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.challengeStatementForm.get("challenge_statement").value, 500);
     })
   }
 
