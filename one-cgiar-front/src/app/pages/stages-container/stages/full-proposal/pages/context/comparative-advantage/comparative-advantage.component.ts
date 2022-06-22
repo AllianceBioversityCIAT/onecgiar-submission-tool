@@ -18,7 +18,6 @@ export class ComparativeAdvantageComponent implements OnInit {
   showfrom = false;
   citationColAndTable={table_name: "context", col_name: "comparative_advantage", active: true}
   citationsList=[];
-  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -39,7 +38,6 @@ export class ComparativeAdvantageComponent implements OnInit {
     this._initiativesService.setTitle('Comparative advantage')
     this.getContext();
     this.getLinks();
-    this.formChanges();
   }
 
   getLinks(){
@@ -62,7 +60,7 @@ export class ComparativeAdvantageComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid  && this.extraValidation?
+      this.contextForm.valid?
       this._interactionsService.successMessage('Comparative advantage has been saved'):
       this._interactionsService.warningMessage('Comparative advantage has been saved, but there are incomplete fields')
     })
@@ -87,13 +85,4 @@ export class ComparativeAdvantageComponent implements OnInit {
       //console.log("errorerekkasssssssssssssssdasda");
     })
   }
-
-  formChanges(){
-    this.contextForm.valueChanges.subscribe(resp=>{
-      //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("comparative_advantage").value, 250);
-    })
-  }
-
-
 }
