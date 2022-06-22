@@ -29,6 +29,7 @@ export class MaUserCardComponent implements OnInit {
   // }
   removeUser(user){
     user.active = false;
+    user.selected = false;
   }
 
   checkRoleId(){

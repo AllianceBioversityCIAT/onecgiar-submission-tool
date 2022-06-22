@@ -6,7 +6,7 @@ import {Narratives} from '../entity/Narratives';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
-import {Roles} from '../entity/Roles';
+import { Roles } from '../entity/Roles';
 import {Stages} from '../entity/Stages';
 import {StagesMeta} from '../entity/StagesMeta';
 import {TOCs} from '../entity/TOCs';
@@ -778,7 +778,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
   let newUsrByInitv: InitiativesByUsers;
   try {
     let usersByInitiative = await initvUsrsRepo.find({
-      where: {initiative: initiativeId},
+      where: {initiative: initiativeId, user:userId},
       relations: ['role', 'user']
     });
     const user = await userRepo.findOne(userId);
@@ -799,6 +799,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     }
 
     if (usersByInitiative.length > 0) {
+      usersByInitiative[0]['user']['is_active'] = (active != undefined? active: usersByInitiative[0]['user']['is_active']);
       newUsrByInitv = new InitiativesByUsers();
       newUsrByInitv.active = active;
       newUsrByInitv.role = role;

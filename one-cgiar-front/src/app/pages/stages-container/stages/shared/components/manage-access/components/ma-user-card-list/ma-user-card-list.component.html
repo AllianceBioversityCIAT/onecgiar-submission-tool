@@ -11,5 +11,5 @@
 </div>
 
 <div class="local_grid {{this._maVariablesService.orderBox ? 'grid-box': 'grid-column' }}">
-    <app-ma-user-card (onSelectOptionEvent)="onSelectOptionInItem()" [roles]="roles" [user]="user" *ngFor="let user of users"></app-ma-user-card>
+    <app-ma-user-card (onSelectOptionEvent)="onSelectOptionInItem()" [roles]="roles" [user]="user" [hidden]="user.active == 0" *ngFor="let user of users"></app-ma-user-card>
 </div>
