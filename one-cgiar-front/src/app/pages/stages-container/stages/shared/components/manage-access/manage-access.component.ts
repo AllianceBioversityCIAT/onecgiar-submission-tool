@@ -32,8 +32,12 @@ export class ManageAccessComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   this.getAllRoles();
-   this.getUsersByInitiative();
+   this.getAllRoles().then(()=>{
+    this.getUsersByInitiative();
+  }).catch((err)=>{
+
+  });
+   
   }
 
   onNoClick(): void {
@@ -41,28 +45,40 @@ export class ManageAccessComponent implements OnInit {
   }
 
   reloadSelectRoleComp(){
-    this.getAllRoles();
-    this.getUsersByInitiative();
-    this.showForm = false;
-    setTimeout(() => {
-    this.showForm = true;
-    }, 500);
+    this.getAllRoles().then(()=>{
+      this.getUsersByInitiative();
+      this.showForm = false;
+      setTimeout(() => {
+      this.showForm = true;
+      }, 500);
+    }).catch((err)=>{
+
+    });
+    
   }
 
-  getAllRoles(){
+  async getAllRoles(){
+
+    return new Promise((resolve, reject) => { 
+
+      this.initiativesSvc.getAllRoles().subscribe(roles=>{
+        this.allRoles = roles.data;
+        // console.log(roles.data);
+        for (let index = 0; index < this.allRoles.length; index++) {
+          if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
+            this.allRoles.splice(index,1)
+          }
+          if (this.allRoles[index].acronym == "GUEST" && this.allRoles[index].id == 4) {
+            this.allRoles.splice(index,1)
+          }
+        }
+        resolve(null)
+      },err=>{reject()},()=>{this.rolesLoaded = true})
+
+
+     })
     
-    this.initiativesSvc.getAllRoles().subscribe(roles=>{
-      this.allRoles = roles.data;
-      // console.log(roles.data);
-      for (let index = 0; index < this.allRoles.length; index++) {
-        if (this.allRoles[index].acronym == "ADM" && this.allRoles[index].id == 1) {
-          this.allRoles.splice(index,1)
-        }
-        if (this.allRoles[index].acronym == "GUEST" && this.allRoles[index].id == 4) {
-          this.allRoles.splice(index,1)
-        }
-      }
-    },err=>{},()=>{this.rolesLoaded = true})
+
   }
 
   removeInactiveUsers(){
