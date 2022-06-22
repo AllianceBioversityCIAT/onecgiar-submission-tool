@@ -98,10 +98,10 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { context }
    */
   async getContext() {
-    // get initiative by stage id from intitiative
+    // get initiative by stage id from initiative
     const initvStgId: string = this.initvStgId_;
     try {
-      // contex sql query
+      // context sql query
       const contextQuery = `SELECT * FROM context WHERE initvStgId = ${initvStgId}`;
 
       const context = await this.queryRunner.query(contextQuery);
@@ -254,7 +254,8 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /***
-   * GET ALL WP PROPOSAL
+   * GET ALL WORK PACKAGES FULL PROPOSAL
+   * Is only for stage full proposal
    */
   async requestAllWorkPackagesProposal() {
     try {
@@ -279,8 +280,7 @@ export class ProposalHandler extends InitiativeStageHandler {
            on wp.initvStgId  = init.id
         WHERE init.stageId = 3
          AND wp.active = 1
-        ORDER BY initiativeId asc;
-                    `;
+        ORDER BY initiativeId asc;`;
 
       var workPackages = await this.queryRunner.query(WPquery);
       const regions = await this.queryRunner.query(REquery);
@@ -303,23 +303,25 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       return workPackages;
     } catch (error) {
-      throw new BaseError('Get All work packages', 400, error.message, false);
+      throw new BaseError('Get All work packages for stage Full Proposal', 400, error.message, false);
     }
   }
 
   /**
-   * GET ALL WP
+   ** GET ALL WORK PACKAGES
+   * !THIS FUNCTION IS USED BY CLARISA
+   * It is used from the previews API
    */
   async requestAllWorkPackages() {
-    // const initvStgId: string = this.initvStgId_;
-    // const initvStg = await this.initvStage
 
     try {
+      /* query Countries */
       let COquery = `
               SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
                WHERE active = 1
                GROUP BY id,country_id`,
+      /* query Regions */
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
@@ -328,17 +330,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                 `,
         WPquery = `
         SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
-        wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
-        wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
-        wp.wp_official_code 
-         FROM work_packages wp
-         JOIN initiatives_by_stages init
-           on wp.initvStgId  = init.id
-        WHERE wp.active = 1
-        ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc
-                    `;
+               wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
+               wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+               wp.wp_official_code, init.active  as initiative_status
+          FROM work_packages wp
+          JOIN initiatives_by_stages init
+            on wp.initvStgId  = init.id
+         WHERE wp.active = 1
+         ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc`;
 
-      // var workPackages = await wpRepo.find({ where: { active: 1 } });
       var workPackages = await this.queryRunner.query(WPquery);
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
@@ -346,7 +346,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       if (workPackages == undefined || workPackages.length == 0) {
         workPackages = [];
       } else {
-        // Map Initiatives
+        // Map Regions and Countries into WP
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
             return reg.wrkPkgId === wp.id;
@@ -360,7 +360,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       return workPackages;
     } catch (error) {
-      throw new BaseError('Get All work packages', 400, error.message, false);
+      throw new BaseError('Get All work packages to all stages', 400, error.message, false);
     }
   }
 
