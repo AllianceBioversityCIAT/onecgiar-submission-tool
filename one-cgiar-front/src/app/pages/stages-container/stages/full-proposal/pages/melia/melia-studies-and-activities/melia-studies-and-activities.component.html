@@ -68,13 +68,13 @@
                         <ibdc-select-multiple [options]="{
                             required: null,
                             inputTitle: this.attr_list_config[4].name,
-                            selectItemName:'name',
+                            selectItemName:'displayName',
                             selectItemId:'initiativeId',
-                            frontendSearchAttribute:'name',
+                            frontendSearchAttribute:'displayName',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
                             savedList:{
                                 list:item.initiatives,
-                                selectItemName:'name',
+                                selectItemName:'displayName',
                                 selectItemId:'initiativeId',
                                 idToSave:'id',
                                 labelName:'initiatives'

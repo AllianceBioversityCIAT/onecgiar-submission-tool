@@ -2087,7 +2087,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
-      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id
+      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id and ibms.active = 1
       left join initiatives i on i.id = ibms.initiativeId 
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1

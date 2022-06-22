@@ -308,6 +308,7 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/list`).pipe(map(res => {
       res.response.initiatives.map(initiatives => {
         initiatives.initiativeId = initiatives.id;
+        initiatives.displayName =  `${initiatives.official_code} - ${initiatives.acronym ? initiatives.acronym + ' -': ''}  ${initiatives.name}`
         delete initiatives.id;
       })
       return res;
