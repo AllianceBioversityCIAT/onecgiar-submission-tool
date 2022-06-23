@@ -29,6 +29,8 @@ export class MaUserCardComponent implements OnInit {
   // }
   removeUser(user){
     user.active = false;
+    const userFinded = this._maVariablesService.allUsers.find(userItem=>userItem.userId == user.userId);
+    if (userFinded) userFinded.selected = false;
   }
 
   checkRoleId(){

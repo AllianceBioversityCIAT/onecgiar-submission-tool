@@ -43,8 +43,8 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Participatory design process')
     this.getContext();
-    this.formChanges();
     this.getLinks();
+    this.formChanges();
   }
 
   getLinks(){
@@ -94,9 +94,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value);
     })
   }
+
 
 }

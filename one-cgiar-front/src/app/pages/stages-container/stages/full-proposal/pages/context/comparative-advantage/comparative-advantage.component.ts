@@ -91,9 +91,8 @@ export class ComparativeAdvantageComponent implements OnInit {
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
       //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("comparative_advantage").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("comparative_advantage").value);
     })
   }
-
 
 }

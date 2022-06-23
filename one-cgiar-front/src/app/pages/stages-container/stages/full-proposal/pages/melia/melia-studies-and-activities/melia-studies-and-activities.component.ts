@@ -18,6 +18,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   attr_list_config: AttributesListConfiguration[] = [
     {
+      attribute: 'id',
+      name: "ID",
+    },
+    {
       attribute: 'type_melia',
       name: "Type of MELIA study or activity",
     },
@@ -135,7 +139,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         this.list.map((melia: any) => {
           melia.initiatives.map(mapInit => {
             initiatives.response.initiatives.forEach(initItem => {
-              if (initItem.initiativeId == mapInit.initiativeId) mapInit.name = initItem.name;
+              if (initItem.initiativeId == mapInit.initiativeId) {
+                mapInit.name = initItem.name;
+                mapInit.displayName = initItem.displayName
+              } 
             })
           })
           // this._dataControlService.showinitiatives = true;

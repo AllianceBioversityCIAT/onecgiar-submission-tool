@@ -223,7 +223,8 @@ export class InitiativeHandler extends InitiativeStageHandler {
                 initiatives_by_users initvUsr
             LEFT JOIN users users ON users.id = initvUsr.userId
             WHERE
-                initiativeId = ${initiativeId};
+                initiativeId = ${initiativeId} AND
+                initvUsr.active = 1;
     `;
     const users = await this.queryRunner.query(querySql);
     return users;

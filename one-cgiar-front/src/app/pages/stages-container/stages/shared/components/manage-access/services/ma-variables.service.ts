@@ -6,6 +6,9 @@ import { Injectable } from '@angular/core';
 export class MaVariablesService {
  
   constructor() { }
+
+  allUsers=[];
+
   get orderBox(){
     return localStorage.getItem('orderBox') == 'true' ? true : false;
   }

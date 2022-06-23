@@ -190,7 +190,8 @@ export async function getAllWorkPackagesProposal(req: Request, res: Response) {
 }
 
 /**
- * GET ALL WORK PACKAGES
+ ** GET ALL WORK PACKAGES
+ * ! THIS CONTROLLER IS USED BY CLARISA
  * @param req
  * @param res { workpackages }
  * @returns
@@ -204,7 +205,7 @@ export async function getAllWorkPackages(req: Request, res: Response) {
     const workpackages = await fullPposal.requestAllWorkPackages();
 
     res.json(
-      new ResponseHandler('Full Proposal: All Work Package.', {workpackages})
+      new ResponseHandler('Full Proposal: All Work Packages.', {workpackages})
     );
   } catch (error) {
     return res.status(error.httpCode).json(error);
@@ -658,7 +659,7 @@ export async function getProjectionBenefitsByImpact(
 
 /**
  * PATCH IMPACT STRATEGIES
- * @param req impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners
+ * @param req impact_strategies_id, active, challenge_prioritization, research_questions, component_work_package, performance_results, human_capacity, partners
  * @param res { impactStrategies }
  * @returns { impactStrategies }
  */
@@ -783,7 +784,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
  * @returns melia
  */
 export async function patchMeliaPlan(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+  const {initiativeId, ubication, stageId} = req.params;
 
   const {melia_plan} = req.body.data ? JSON.parse(req.body.data) : req.body;
 
@@ -798,7 +799,7 @@ export async function patchMeliaPlan(req: Request, res: Response) {
     // get stage
 
     stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id: stageId}
     });
 
     // get initiative by stage : proposal

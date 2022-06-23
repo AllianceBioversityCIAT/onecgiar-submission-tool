@@ -247,7 +247,7 @@ export class PreviewsDomain {
              AND active = 1
                )
               `,
-        opportinitiesQuery = `
+        opportunitiesQuery = `
               SELECT id,opportunities_description,
                      risk_assessment_id,active
               FROM opportunities opp
@@ -266,10 +266,10 @@ export class PreviewsDomain {
 
       const managePlan = await this.queryRunner.query(managePlanQuery);
       const risk = await this.queryRunner.query(riskAssessmentQuery);
-      const opportinities = await this.queryRunner.query(opportinitiesQuery);
+      const opportunities = await this.queryRunner.query(opportunitiesQuery);
 
       risk.map((ri) => {
-        ri['opportinities'] = opportinities.filter((op) => {
+        ri['opportunities'] = opportunities.filter((op) => {
           return op.risk_assessment_id === ri.id;
         });
       });

@@ -17,28 +17,29 @@
                 <div class="custom-container-dialog">
                     <br>
                     <div class="row" style="margin: 0px 50px;">
-                        <div class="col-sm-6" *ngIf="false">
-                            <mat-form-field style="width: 100%;">
-                                <mat-label>Add users</mat-label>
-                                <p class="description_text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi perferendis quaerat dolores ut qui repellat vero modi alias iusto!</p>
-                                <input matInput placeholder="Search users" animate__fadeInLeft>
-                            </mat-form-field>
-                            <div class="scroll_container">
-                                <mat-card class="no_selected_users pointer" *ngFor="let user of allUsers">
-                                    <div class="row">
-                                        <span class="title_card col-sm-6"> <strong>{{user.first_name}}
-                                                {{user.last_name}}</strong></span>
-                                        <span class="title_card col-sm-6">{{user.email}}</span>
-                                    </div>
-                                    <mat-icon class="person_add">person_add</mat-icon>
-                                </mat-card>
-                            </div>
 
-                        </div>
  
                         <div class="col-sm-12" *ngIf="showForm">
+
+                            <ibdc-select-multiple [options]="{
+                                required:false,
+                                inputTitle:'Please select users to enable access to this initiative and assign each users a role',
+                                selectItemName:'firstN_lastN_email',
+                                selectList: this._maVariablesService.allUsers,
+                                selectItemId:'userId',
+                                frontendSearchAttribute:'firstN_lastN_email',
+                                readOnlyVariable: this._initiativesService.initiative.readonly,
+                                hideSavedList: true,
+                                savedList:{
+                                    list:this.selectedUsers,
+                                    selectItemId:'userId',
+                                    selectItemName:'firstN_lastN_email',
+                                    idToSave:'id',
+                                    labelName:'regions'
+                                }}">
+                            </ibdc-select-multiple>
                               
-                               <ibdc-select-multiple [options]="{
+                               <!-- <ibdc-select-multiple [options]="{
                                 required:false,
                                 inputTitle:'Please select users to enable access to this initiative and assign each users a role',
                                 selectItemName:'firstN_lastN_email',
@@ -58,7 +59,7 @@
                                     functionName:'getAllUsers',
                                     objectName:['response','users']
                                 }
-                               }"></ibdc-select-multiple>
+                               }"></ibdc-select-multiple> -->
 
                         </div>
                         <!-- <div class="col-12">

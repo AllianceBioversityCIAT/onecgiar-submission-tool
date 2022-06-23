@@ -16,7 +16,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   citationColAndTable={table_name: "context", col_name: "key_learnings", active: true}
-  citationsList=[]
+  citationsList=[];
   extraValidation = false;
 
   constructor(
@@ -90,7 +90,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
       //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value);
     })
   }
 

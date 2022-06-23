@@ -16,7 +16,7 @@ export class PrioritySettingComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   citationColAndTable={table_name: "context", col_name: "priority_setting", active: true}
-  citationsList=[]
+  citationsList=[];
   extraValidation = false;
 
   constructor(
@@ -88,8 +88,9 @@ export class PrioritySettingComponent implements OnInit {
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
       //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("priority_setting").value, 500);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("priority_setting").value);
     })
   }
+
 
 }
