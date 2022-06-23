@@ -1022,9 +1022,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           END AS VALIDATION
          FROM risk_assessment  
          WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
-  OR (SELECT SUM(a.validation * 1) - count(a.validation)
+  OR (SELECT SUM(a.validation * 1) - count(a.opid)
            FROM
-           (SELECT ri.id,
+           (SELECT ri.id, op.id as opid,
               CASE
       WHEN op.opportunities_description IS NULL
                 OR op.opportunities_description = ''
