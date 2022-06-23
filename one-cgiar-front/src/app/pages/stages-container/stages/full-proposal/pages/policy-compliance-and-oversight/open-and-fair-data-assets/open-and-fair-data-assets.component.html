@@ -6,7 +6,7 @@
     
         <div class="row" *ngIf="this.showForm">
             <div class="col-12">
-                <app-section-alerts-pack [sectionForm]="sectionForm"></app-section-alerts-pack>
+                <app-section-alerts-pack [sectionForm]="sectionForm"  [extraValidation]="this.extraValidation"></app-section-alerts-pack>
             </div>
             <div class="col-12">
                 <div class="check_box_with_text">

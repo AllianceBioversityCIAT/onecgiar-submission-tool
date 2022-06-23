@@ -20,6 +20,7 @@ export class MeliaPlanComponent implements OnInit {
     section : "melia",
     updateFiles : []
   };
+  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -35,6 +36,7 @@ export class MeliaPlanComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Melia plan');
     this.getMeliaPlan();
+    this.formChanges();
   }
 
   getMeliaPlan(){
@@ -60,12 +62,16 @@ export class MeliaPlanComponent implements OnInit {
       console.log("saveMeliaPlan");
       console.log(resp);
       this.getMeliaPlan();
-      this.secionForm.valid?
+      this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Melia plan has been saved'):
       this._interactionsService.warningMessage('Melia plan has been saved, but there are incomplete fields')
     })
+  }
 
-    
+  formChanges(){
+    this.secionForm.valueChanges.subscribe(resp=>{
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value);
+    })
   }
 
 }

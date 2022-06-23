@@ -23,6 +23,7 @@ export class ImpactAreaIsComponent implements OnInit {
   institutionsTypesDisableList = [];
   savedList = [];
   iaID;
+  extraValidation = false;
 
   firstTab = true;
 
@@ -56,10 +57,23 @@ export class ImpactAreaIsComponent implements OnInit {
     // console.log("Reload");
   }
 
+  formChanges(){
+    this.sectionForm.valueChanges.subscribe(resp=>{
+      // console.log("changes");
+      this.extraValidation = 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("challenge_priorization").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("research_questions").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("component_work_package").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("performance_results").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("human_capacity").value);
+    })
+  }
+
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Impact area');
     let reload = false;
+    this.formChanges();
     this.getCLARISAInstitutions();
     this.getInstitutionsTypes();
     this.activatedRoute.params.subscribe((routeResp: any) => {
