@@ -784,7 +784,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
  * @returns melia
  */
 export async function patchMeliaPlan(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+  const {initiativeId, ubication, stageId} = req.params;
 
   const {melia_plan} = req.body.data ? JSON.parse(req.body.data) : req.body;
 
@@ -799,7 +799,7 @@ export async function patchMeliaPlan(req: Request, res: Response) {
     // get stage
 
     stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id: stageId}
     });
 
     // get initiative by stage : proposal

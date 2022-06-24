@@ -22,6 +22,7 @@ export class ManagementPlanComponent implements OnInit {
     section : "management-plan",
     updateFiles : []
   };
+  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -37,6 +38,7 @@ export class ManagementPlanComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Management plan');
     this.getManagePlan();
+    this.formChanges();
   }
 
   getManagePlan(){
@@ -65,13 +67,17 @@ export class ManagementPlanComponent implements OnInit {
       console.log("management-plan");
       console.log(resp);
       this.getManagePlan();
-      this.managementPlanForm.valid?
+      this.managementPlanForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
     })
-
-    
   }
 
+  formChanges(){
+    this.managementPlanForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.managementPlanForm.get("example").value);
+    })
+  }
 
 }

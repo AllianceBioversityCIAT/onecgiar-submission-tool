@@ -14,6 +14,7 @@ import { AttributesListConfiguration } from '../../../../../../shared/components
 export class InnovationPackagesAndSrpComponent implements OnInit {
   secionForm: FormGroup;
   showForm = false;
+  extraValidation = false;
   configAtribute:AttributesListConfiguration[] = [
       {
         attribute: 'year1',
@@ -48,7 +49,8 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Innovation Packages and Scaling Readiness Plan')
-    this.getInnovationPackages()
+    this.getInnovationPackages();
+    this.formChanges();
     this.getTracks();
   }
   getInnovationPackages(){
@@ -64,11 +66,17 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
   saveSection(){
     this._initiativesService.saveInnovationPackages(this.secionForm.value).subscribe(resp=>{
       this.secionForm.controls['id'].setValue(resp.response.innovationPackages.upsertedInnovationPackages.id);
-      this.secionForm.valid?
+      this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Innovation Packages and Scaling Readiness Plan has been saved'):
       this._interactionsService.warningMessage('Innovation Packages and Scaling Readiness Plan has been saved, but there are incomplete fields')
     })
     this.updateTracks();
+  }
+
+  formChanges(){
+    this.secionForm.valueChanges.subscribe(resp=>{
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("key_principles").value);
+    })
   }
 
   getTracks(){

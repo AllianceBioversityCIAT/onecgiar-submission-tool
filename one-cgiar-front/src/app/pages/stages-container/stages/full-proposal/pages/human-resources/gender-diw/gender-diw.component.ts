@@ -20,6 +20,8 @@ export class GenderDiwComponent implements OnInit {
     section : "gender",
     updateFiles : []
   };
+  extraValidation = false;
+
   constructor(
     public _initiativesService:InitiativesService,
     private _interactionsService:InteractionsService,
@@ -34,6 +36,7 @@ export class GenderDiwComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Gender, diversity and inclusion in the workplace');
     this.getHumanResources();
+    this.formChanges();
   }
 
   getHumanResources(){
@@ -59,15 +62,19 @@ export class GenderDiwComponent implements OnInit {
 
     formData.append('data', JSON.stringify(this.data));
     this._initiativesService.saveHumanResources(formData,'9.human-resources').subscribe(resp=>{
-      //console.log("Human resources");
-      //console.log(resp);
       this.getHumanResources();
-      this.secionForm.valid ?
+      this.secionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources  has been saved, but there are incomplete fields');
     })
 
-    
+  }
+
+  formChanges(){
+    this.secionForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value);
+    })
   }
 
 }

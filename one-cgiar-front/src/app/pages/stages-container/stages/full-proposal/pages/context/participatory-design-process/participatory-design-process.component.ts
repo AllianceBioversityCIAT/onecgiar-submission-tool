@@ -23,6 +23,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   showform = false;
   citationColAndTable={table_name: "context", col_name: "participatory_design", active: true}
   citationsList=[];
+  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -43,6 +44,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     this._initiativesService.setTitle('Participatory design process')
     this.getContext();
     this.getLinks();
+    this.formChanges();
   }
 
   getLinks(){
@@ -64,7 +66,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid  &&  this.extraValidation?
       this._interactionsService.successMessage('Participatory design process has been saved'):
       this._interactionsService.warningMessage('Participatory design process has been saved, but there are incomplete fields');
     })
@@ -87,6 +89,12 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
       this.spinnerService.hide('spinner');
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
+    })
+  }
+
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value);
     })
   }
 

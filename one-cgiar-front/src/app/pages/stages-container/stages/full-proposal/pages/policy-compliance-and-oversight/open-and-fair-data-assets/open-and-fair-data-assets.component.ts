@@ -13,6 +13,7 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
 export class OpenAndFairDataAssetsComponent implements OnInit {
   sectionForm: FormGroup;
   showForm = false;
+  extraValidation = false;
   constructor(
    public _initiativesService:InitiativesService,
    private _interactionsService:InteractionsService,
@@ -29,6 +30,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Open and FAIR data assets');
     this.getPolicyCompliance();
+    this.formChanges();
   }
 
   saveSection(){
@@ -38,7 +40,7 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
     this._initiativesService.savePolicyCompliance(body).subscribe(resp=>{
       console.log(resp);
       this.sectionForm.controls['id'].setValue(resp.response.policyComplianceOversight.upsertedPolicyCompliance.id);
-      this.sectionForm.valid?
+      this.sectionForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Open and FAIR data assets has been saved'):
       this._interactionsService.warningMessage('Open and FAIR data assets has been saved, but there are incomplete fields')
     })
@@ -62,5 +64,10 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
     })
   }
 
-
+  formChanges(){
+    this.sectionForm.valueChanges.subscribe(resp=>{
+      console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("open_fair_data_details").value);
+    })
+  }
 }

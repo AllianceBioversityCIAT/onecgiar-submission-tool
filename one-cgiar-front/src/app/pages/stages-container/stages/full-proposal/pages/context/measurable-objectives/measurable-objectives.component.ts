@@ -18,6 +18,7 @@ import { DataControlService } from '../../../../../../../shared/services/data-co
 export class MeasurableObjectivesComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
+  extraValidation = false;
   initiativeOutcomeList:EOIData []=[];
   toc_id:number|string;
   constructor(
@@ -51,7 +52,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   upserInfo(){
     this._fullProposalService.patchContext(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id,this.contextForm.value).subscribe(resp=>{
       this.contextForm.controls['contextId'].setValue(resp?.response?.context?.id);
-      this.contextForm.valid?
+      this.contextForm.valid && this.extraValidation?
       this._interactionsService.successMessage('Measurable three-year outcomes has been saved'):
       this._interactionsService.warningMessage('Measurable three-year outcomes has been saved, but there are incomplete fields')
     })
@@ -69,5 +70,13 @@ export class MeasurableObjectivesComponent implements OnInit {
       //console.log("errorerekkasssssssssssssssdasda");
     })
   }
+
+  formChanges(){
+    this.contextForm.valueChanges.subscribe(resp=>{
+      //console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("smart_objectives").value);
+    })
+  }
+
 
 }
