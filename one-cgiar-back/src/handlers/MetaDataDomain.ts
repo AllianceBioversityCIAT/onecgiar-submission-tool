@@ -1822,27 +1822,32 @@ WHERE ini.id = ${this.initvStgId_}
 		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
     char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
               FROM context WHERE initvStgId = ini.id ) < 1
-    OR (CASE
-      WHEN
-      (SELECT SUM(1) as firstValidation FROM results rs
-        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
-      AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) IS NULL 
-        OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) = '')
-      THEN  FALSE
-    ELSE CASE
-      WHEN 
-          (SELECT SUM(1) 
-        FROM results rs 
-          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3) IS NOT NULL AND
-      (  SELECT count(rsi.name) - sum(IF(rsi.name is null || rsi.name = '', 0, 1)) as validation
-        FROM results rs 
-          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-        WHERE rs.initvStgId = ${this.initvStgId_}  ) = 0
-      THEN TRUE
-          ELSE FALSE
-          END
-    END) = 0
+    OR (
+      CASE
+          when
+          /* validation 01 */
+          (SELECT count(rs.id)  
+          	FROM results rs
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) > 0 and
+          /* validation 02 */  	
+          (SELECT sum(if(rs.result_title is null or rs.result_title = '', 0, 1)) - count(rs.id) 
+          			FROM results rs 
+          			WHERE rs.initvStgId = ini.id 
+          				AND rs.result_type_id = 3 
+          				and rs.active = 1) = 0 and
+          /* validation 03 */				
+          (SELECT count(rsi.id) - sum(IF(rsi.name is null || rsi.name = '', 0, 1))
+            FROM results rs 
+            left JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) = 0
+        THEN true
+        ELSE false
+        END
+    ) = 0
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1935,36 +1940,40 @@ WHERE ini.id = ${this.initvStgId_}
   AND sec.id = subsec.sectionId
       AND sec.description='context'
     AND subsec.description = 'challenge-statement';`,
-        measurableObjectivesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        measurableObjectivesSQL = `
+        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
-          WHEN
-          (SELECT SUM(1) as firstValidation FROM results rs
-            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 ) IS NULL 
-          AND((SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) IS NULL 
-            OR (SELECT result_title FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3 GROUP BY rs.initvStgId,  rs.result_title) = '')
-          THEN  FALSE
-        ELSE CASE
-          WHEN 
-              (SELECT SUM(1) 
+          when
+          /* validation 01 */
+          (SELECT count(rs.id)  
+          	FROM results rs
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) > 0 and
+          /* validation 02 */  	
+          (SELECT sum(if(rs.result_title is null or rs.result_title = '', 0, 1)) - count(rs.id) 
+          			FROM results rs 
+          			WHERE rs.initvStgId = ini.id 
+          				AND rs.result_type_id = 3 
+          				and rs.active = 1) = 0 and
+          /* validation 03 */				
+          (SELECT count(rsi.id) - sum(IF(rsi.name is null || rsi.name = '', 0, 1))
             FROM results rs 
-              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-            WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 3) IS NOT NULL AND
-          (  SELECT count(rsi.name) - sum(IF(rsi.name is null || rsi.name = '', 0, 1)) as validation
-            FROM results rs 
-              INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-            WHERE rs.initvStgId = ${this.initvStgId_}  ) = 0
-          THEN TRUE
-              ELSE FALSE
-              END
+            left JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) = 0
+        THEN true
+        ELSE false
         END as validation
       FROM initiatives_by_stages ini
-             JOIN sections_meta sec
-           JOIN subsections_meta subsec
-       WHERE ini.id = ${this.initvStgId_}
+        JOIN sections_meta sec
+        JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-          AND sec.id = subsec.sectionId
-              AND sec.description='context'
-            AND subsec.description = 'measurable-objectives';`,
+      	AND sec.id = subsec.sectionId
+        AND sec.description='context'
+        AND subsec.description = 'measurable-objectives';`,
         learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 

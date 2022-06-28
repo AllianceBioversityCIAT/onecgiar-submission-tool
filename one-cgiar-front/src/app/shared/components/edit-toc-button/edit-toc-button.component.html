@@ -1,8 +1,14 @@
-<div class="edit-toc-button" [ngClass]="{'hide': !this.imageLoad, 'animate__animated animate__swing animate__delay-2s':this.imageLoad}">
-    <div class="title">
-        {{this._initiativesService.initiative.readonly ? 'See' :  this.title}}
+<div class="flex">
+    <div class="edit-toc-button" [ngClass]="{'hide': !this.imageLoad, 'animate__animated animate__swing animate__delay-2s hover-animation':this.imageLoad && this._initiativesService.initiative.status != 'Approved', 'inactive':this._initiativesService.initiative.status == 'Approved'}">
+        <div class="title">
+            {{this.title}}
+        </div>
+        <div class="image_container">
+            <img (load)="this.imageLoad = true" (error)="this.imageLoad = true" class="image" [ngClass]="{'img-filter':this._initiativesService.initiative.status == 'Approved'}" src="assets/images/ToC_Logo.png" alt="" srcset="">
+        </div>
+        <div *ngIf="this._initiativesService.initiative.status == 'Approved'" class="filter"></div>
     </div>
-    <div class="image_container">
-        <img (load)="this.imageLoad = true" (error)="this.imageLoad = true" class="image" src="assets/images/ToC_Logo.png" alt="" srcset="">
+    <div *ngIf="this._initiativesService.initiative.status == 'Approved'" style="margin-top: 20px; width: 500px; text-align: center;">
+        It is <strong>not possible to edit this ToC</strong> because the initaitive is currently closed and no edits are allowed to be <strong>done</strong>
     </div>
 </div>

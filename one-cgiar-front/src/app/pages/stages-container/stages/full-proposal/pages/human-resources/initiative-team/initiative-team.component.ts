@@ -133,7 +133,7 @@ export class InitiativeTeamComponent implements OnInit {
   //   this.data.id = this.data.id == undefined ? null : this.data.id;
 
   //   formData.append('data', JSON.stringify(this.data));
-  //   this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources',3).subscribe(resp=>{
+  //   this._initiativesService.saveHumanResources(formData,this._initiativesService.initiative.id,'9.human-resources').subscribe(resp=>{
   //     console.log("saveHumanResources");
   //     console.log(resp);
   //     this._dataValidatorsService.validateFilesArray(this.filesList,this.filesSavedList)?

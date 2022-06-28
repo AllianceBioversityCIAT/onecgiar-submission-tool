@@ -46,7 +46,7 @@ export class PartnersRequestComponent implements OnInit {
 
       name: new FormControl(null, Validators.required),
       acronym: new FormControl(null),
-      websiteLink: new FormControl(null, Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/)),
+      websiteLink: new FormControl(null, Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/)),
       institutionTypeCode: new FormControl(null, Validators.required),
       hqCountryIso: new FormControl(null, Validators.required),
       externalUserMail: new FormControl(null),
