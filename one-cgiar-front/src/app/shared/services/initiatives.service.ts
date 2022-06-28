@@ -598,38 +598,38 @@ export class InitiativesService {
 
   //? previews
 
-  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
+  getPreviewHumanResources(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${this.initiative.stageId}`);
   }
 
   getPreviewPartnersData(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
   }
 
-  getPreviewGeographicScopeData(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${stageId}`);
+  getPreviewGeographicScopeData(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${this.initiative.stageId}`);
   }
 
-  getPreviewPartners(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${stageId}`);
+  getPreviewPartners(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${this.initiative.stageId}`);
   }
 
-  getPreviewRiskAssessment(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${stageId}`);
+  getPreviewRiskAssessment(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${this.initiative.stageId}`);
   }
 
-  getPreviewProjectedBenefits(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${stageId}`);
+  getPreviewProjectedBenefits(initiativeId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${this.initiative.stageId}`);
   }
 
-  getLinks(body, initiativeID, stageID) {
-    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${stageID}`, body);
+  getLinks(body, initiativeID) {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${this.initiative.stageId}`, body);
   }
 
-  async addLinks(citationList, initiativeID, stageID) {
+  async addLinks(citationList, initiativeID) {
     let promiseList = [];
     citationList.forEach(citation => {
-      if (!citation?.citationId || citation?.edited) promiseList.push(this.addLink(citation, initiativeID, stageID).toPromise());
+      if (!citation?.citationId || citation?.edited) promiseList.push(this.addLink(citation, initiativeID, this.initiative.stageId).toPromise());
     });
 
     await Promise.all(promiseList).then(values => {

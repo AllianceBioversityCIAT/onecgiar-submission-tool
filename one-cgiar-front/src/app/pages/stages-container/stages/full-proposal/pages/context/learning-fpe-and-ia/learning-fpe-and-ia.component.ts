@@ -41,7 +41,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   }
 
   getLinks(){
-    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id,3).subscribe(resp=>{
+    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id).subscribe(resp=>{
       this.citationsList = resp.response.getLinks;
       this.citationsList.map(resp=>{
         resp.citationId = resp.id
@@ -67,7 +67,7 @@ export class LearningFpeAndIaComponent implements OnInit {
     })
     //save links
     this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
-      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id,3).then(resp=>{
+      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id).then(resp=>{
         this.getLinks();
       })
       
