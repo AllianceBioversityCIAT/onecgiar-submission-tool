@@ -9,6 +9,7 @@
     position: relative;
     cursor: pointer;
     transition: all .3s ease-out;
+    margin: 10px auto;
 
     &::before{
         content: '';
@@ -58,4 +59,8 @@
     height: 0px;
     width: 0px;
     overflow: hidden;
+}
+
+.flex{
+
 }
