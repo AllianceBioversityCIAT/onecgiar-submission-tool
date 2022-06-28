@@ -61,6 +61,8 @@
     overflow: hidden;
 }
 
-.flex{
-
+.inactive{
+    &::before{
+        background-color: #646464 !important;
+    }
 }
