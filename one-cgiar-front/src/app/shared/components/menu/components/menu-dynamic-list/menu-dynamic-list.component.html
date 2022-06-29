@@ -14,7 +14,7 @@
                 </div>
              </div>
             <div class="icon">
-                <i class="material-icons-outlined material-icons" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">{{this.type == 'sub-section' ?'task_alt':'analytics'}}</i>
+                <i class="material-icons-outlined material-icons" [hidden]="this.hideCheck" [style.color]="fieldsCompleted?'var(--ibdc-secondary-color)':'#d3d3d3'">{{this.type == 'sub-section' ?'task_alt':'analytics'}}</i>
             </div>
         </div>
 

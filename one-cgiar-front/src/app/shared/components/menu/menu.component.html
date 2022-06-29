@@ -32,6 +32,7 @@
                             <div content *ngIf="subsections?.dynamicList?.length">
                                 <app-menu-dynamic-list 
                                 *ngFor="let dynamicList of subsections?.dynamicList"
+                                [hideCheck]="dynamicList.frontRoute == 'partners-no-impact-area'"
                                 [showTocIcon]="dynamicList.hasOwnProperty('acronym')"
                                 [fieldsCompleted]="dynamicList?.fieldsCompleted" 
                                 [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')">
