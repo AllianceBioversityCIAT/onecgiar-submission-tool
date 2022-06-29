@@ -642,7 +642,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
             THEN TRUE
             ELSE FALSE
             END) = 0, 1, 0) as validation_region_contries
-            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 1
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0 and msa.active = 1) = 1
                 THEN TRUE
                 ELSE FALSE
                 END
