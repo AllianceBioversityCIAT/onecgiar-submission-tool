@@ -693,7 +693,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
       OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -731,7 +731,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
             THEN TRUE
             ELSE FALSE
             END) = 0, 1, 0) as validation_region_contries
-            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 1
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0 and msa.active = 1) = 1
                 THEN TRUE
                 ELSE FALSE
                 END
