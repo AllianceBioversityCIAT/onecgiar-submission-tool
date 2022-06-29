@@ -1832,12 +1832,15 @@ export class ProposalHandler extends InitiativeStageHandler {
           
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,wp.acronym wp_acronym,re.result_type_id as result_type,re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,
+               wp.acronym wp_acronym,re.result_type_id as result_type,
+               re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
    left join work_packages wp 
-          on wp.id = re.work_package_id 
+          on wp.wp_official_code = re.work_package_id 
+          AND wp.initvStgId = re.initvStgId
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1
         order by re.result_type_id,wp.id;

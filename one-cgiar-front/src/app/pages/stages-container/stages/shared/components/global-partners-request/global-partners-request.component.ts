@@ -183,7 +183,8 @@ export class GlobalPartnersRequestComponent implements OnInit {
     // console.log(itemFinded);
     // console.log(itemFindedIndex);
     // console.log(this.institutionsTypes);
-    let finisd = this.institutionsTypes.find((savedItem:any)=>savedItem.code == option.code).selected = false;
+    let itemTOdeselect = this.institutionsTypes.find((savedItem:any)=>savedItem.code == option.code);
+    if (itemTOdeselect) itemTOdeselect.selected = false;
     // console.log(finisd);
 
     if (itemFinded) {
