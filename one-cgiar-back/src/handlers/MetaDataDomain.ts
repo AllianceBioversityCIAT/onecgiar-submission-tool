@@ -1645,7 +1645,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
     WHERE ini.id = ${this.initvStgId_}
       AND sec.stageId= ini.stageId
       AND ini.id = imp.initvStgId
-	  AND sec.id = subsec.sectionId
+      AND imp.active  = 1
+	    AND sec.id = subsec.sectionId
       AND sec.description='impact-statements'
       AND subsec.description = 'impact-areas'`;
 
