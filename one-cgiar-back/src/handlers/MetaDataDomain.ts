@@ -2101,77 +2101,7 @@ WHERE ini.id = ${this.initvStgId_}
       for (let index = 1; index < 6; index++) {
         // Validate Sections
         let validationProjectionBenefitsSQL = `
-        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,
-        CASE
-      WHEN (
-      SELECT SUM(a.validation * 1) - count(a.validation)
-        FROM
-        (SELECT
-        CASE 
-        WHEN pb.impact_area_indicator_id IS NULL
-        OR pb.impact_area_indicator_id = ''
-        OR pb.impact_area_id IS NULL
-        OR pb.impact_area_id= ''
-        OR pb.notes IS NULL
-        OR pb.notes= ''
-        OR if(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-        char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
-        OR pb.depth_scale_id IS NULL
-        OR pb.depth_scale_id= ''
-        OR pb.probability_id IS NULL
-        OR pb.probability_id= ''
-        THEN FALSE
-           ELSE TRUE
-        END AS VALIDATION
-        FROM projection_benefits pb
-        WHERE pb.initvStgId = ini.id
-        AND pb.impact_area_id=${index}
-        )as a ) IS NULL  
-        OR (
-        SELECT SUM(a.validation * 1) - count(a.validation)
-        FROM
-        (SELECT
-        CASE 
-        WHEN pb.impact_area_indicator_id IS NULL
-        OR pb.impact_area_indicator_id = ''
-        OR pb.impact_area_id IS NULL
-        OR pb.impact_area_id= ''
-        OR pb.notes IS NULL
-        OR pb.notes= ''
-        OR if(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-        char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
-        OR pb.depth_scale_id IS NULL
-        OR pb.depth_scale_id= ''
-        OR pb.probability_id IS NULL
-        OR pb.probability_id= ''
-        THEN FALSE
-           ELSE TRUE
-        END AS VALIDATION
-        FROM projection_benefits pb
-        WHERE pb.initvStgId = ini.id
-        AND pb.impact_area_id=${index}
-        )as a)<> 0     
-         OR (
-          SELECT SUM(a.validation * 1) - count(a.validation)
-           FROM
-         (SELECT pb.id,
-           CASE 
-            WHEN d.breadth_value IS NULL
-              OR d.breadth_value =''
-              OR d.depthDescriptionId IS NULL
-              OR d.depthDescriptionId = ''
-           THEN FALSE
-                   ELSE TRUE
-        END AS VALIDATION
-           FROM dimensions d
-            RIGHT JOIN projection_benefits pb
-           ON d.projectionId = pb.id
-          WHERE pb.initvStgId = ini.id
-            AND pb.depth_scale_id not in (4)) AS a
-         )<>0
-               THEN FALSE
-                 ELSE TRUE
-                 END AS validation
+        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 1 as validation
                  FROM initiatives_by_stages ini
                  JOIN sections_meta sec
                JOIN subsections_meta subsec
@@ -2241,13 +2171,13 @@ WHERE ini.id = ${this.initvStgId_}
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
          GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id `;
-
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
       );
 
       validationProjectionBenefitsImpact.map((pbi) => {
         pbi.validation = parseInt(pbi.validation);
+        validationProjectionBenefits[0].validation *= pbi.validation;
       });
 
       validationProjectionBenefits.map((pb) => {
