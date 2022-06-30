@@ -21,6 +21,7 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class StagesMenuComponent implements OnInit {
   private user = JSON.parse(localStorage.getItem('user')) || null;
+  roleIdLoaded = false;
   toolTipText:string;
 
   constructor(
@@ -193,6 +194,7 @@ export class StagesMenuComponent implements OnInit {
       // console.log(resp?.response?.roles[0]?.name)
        this.initiativesSvc.initiative.userRoleName = resp?.response?.roles[0]?.name;
        this.initiativesSvc.initiative.userRoleId = resp?.response?.roles[0]?.roleId;
+      this.roleIdLoaded = true;
       //  console.log(this.initiativesSvc.initiative.userRoleName)
       // this.initiativesSvc.setTWKAttributes();
       let validations = ()=>{
@@ -208,7 +210,7 @@ export class StagesMenuComponent implements OnInit {
       // console.log(this.initiativesSvc.initiative.readonly)
       // console.log(resp?.response?.roles[0]?.roleId)
    
-    })
+    },(err)=>{ this.roleIdLoaded = true;})
 
   }
 
