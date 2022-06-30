@@ -3,7 +3,7 @@
     <!-- <div class="platform_backgorund"></div> -->
    
         <div class="left_menu" #menu>
-            <app-menu class="animate__animated animate__fadeIn" *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
+            <app-menu class="animate__animated animate__fadeIn" *ngIf="this.initiativesSvc?.initiative?.id && this.roleIdLoaded"></app-menu>
             <!-- <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
                 <span class="open_menu_icon material-icons">
                     menu

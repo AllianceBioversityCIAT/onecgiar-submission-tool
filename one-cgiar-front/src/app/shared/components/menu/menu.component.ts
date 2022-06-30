@@ -471,12 +471,15 @@ export class MenuComponent implements OnInit {
   }
 
   isValidRol(){
-    setTimeout(() => {
+
+    console.log(this.initiativesSvc?.initiative?.userRoleId);
+
+
       [1,2,3].forEach(el => {
         if(el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
       });
       if(this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
-    },1000);
+  
      
     
   }
