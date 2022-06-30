@@ -537,12 +537,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
                                       (SELECT  SUM(num) - count(num)     
                                   FROM (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(updated_response,'<(\/?p)>',' '),'<([^>]+)>','') IS NULL, 0,1) as num
                                     FROM isdc_responses 
-                                  WHERE initvStgId = ${this.initvStgId_}) as num ) = 0
+                                  WHERE initvStgId = ini.id and is_deleted = 0) as num ) = 0
                                             THEN TRUE
                                     WHEN
-                                    (SELECT ISNULL(SUM(1))
-                                  FROM isdc_responses 
-                                  WHERE initvStgId = ${this.initvStgId_}) = 1
+                                    (SELECT if(count(isr.id) > 0, 0, 1)
+                                    FROM isdc_responses isr
+                                    WHERE isr.initvStgId = ini.id) = 1
                                             THEN TRUE
                                               ELSE FALSE
                                               END AS validation
@@ -580,51 +580,74 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN 
     /* MEDIA PLAN */ 
-    (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NOT NULL 
-      AND (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) != ''
-      AND (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-      char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1 AND
+    (CASE
+    WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
+     THEN FALSE
+       ELSE TRUE
+       END) = 1 AND
       
       /* TABLE B */ 
-      ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
-      (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
-          (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
-            FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0) AND
+      (CASE
+        WHEN
+        ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+          (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+              (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+                FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0)
+        THEN  TRUE
+      ELSE FALSE
+      END = 1) AND
             
        /* TABLE A */      
-  ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) > 0 AND
-    (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ${this.initvStgId_} AND iisgt.active = 1) = 0) AND
-        ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) > 0 AND
-        (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ${this.initvStgId_} AND aii.active = 1) = 0) AND
-        ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) > 0 AND
-        (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0) AND
+  (CASE
+    WHEN
+    ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+    (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+        ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+        (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+        ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
+        (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+    THEN  TRUE
+  ELSE FALSE
+  END = 1) AND
         
        /* TABLE C */ 
-  ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+  (CASE
+    WHEN
+    ((SELECT COUNT(rs.id) as firstValidation FROM results rs
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 ) > 0 AND
     (SELECT COUNT(rs.id) as firstValidation FROM results rs
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 ) > 0 )AND
     ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) = 0 AND
-    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0) AND
-    ((SELECT COUNT(rsi.id) 
+    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0)
+    THEN  CASE
+    WHEN 
+        ((SELECT COUNT(rsi.id) 
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
       WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) > 0 AND
     (SELECT COUNT(rsi.id) 
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0) AND
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0)
+    THEN TRUE
+        ELSE FALSE
+        END
+  ELSE FALSE
+  END = 1) AND
       
       /* MELIA STUDIES */ 
       (CASE
         WHEN
-          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
-                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL and msa.active = 1) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1)AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
@@ -648,7 +671,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                 END
           END
         ELSE FALSE
-        END ) = 1
+        END = 1)
      THEN TRUE
        ELSE FALSE
        END AS validation
@@ -708,12 +731,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
         validateStudiesSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
         WHEN
-          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL) = 
-                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_})AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_}) = 0 
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL and msa.active = 1) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1)AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
@@ -912,59 +935,75 @@ export class MetaDataHandler extends InitiativeStageHandler {
       let validationManagementPlanSQL = `
       SELECT sec.id as sectionId,sec.description, 
         CASE
-      WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-        char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
-        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "management_gantt"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "management_gantt"
-                        AND active = 1 ) IS NULL
-  OR ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
-          FROM
-	   (SELECT risks_achieving_impact,
-          CASE 
-          WHEN risks_achieving_impact IS NULL
-			OR risks_achieving_impact = ''
-			OR description_risk IS NULL
-            OR description_risk = ''
-			OR if(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-      char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
-            OR likelihood IS NULL
-            OR likelihood = ''
-            OR impact IS NULL
-            OR impact = ''
-            OR risk_score IS NULL
-            OR risk_score = ''
-		  THEN FALSE
+      WHEN 
+      (CASE
+        WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
+          OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
+          OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+          char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+          FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
+         THEN FALSE
            ELSE TRUE
-            END AS VALIDATION
-           FROM risk_assessment  
-           WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
-           OR (SELECT SUM(a.validation * 1) - count(a.validation)
-           FROM
-           (SELECT ri.id,
-              CASE
-      WHEN op.opportunities_description IS NULL
-                OR op.opportunities_description = ''
-                OR if(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-                char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+           END = 1) and
+          
+        (CASE
+          WHEN 
+          ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
+            FROM
+       (SELECT risks_achieving_impact,
+            CASE 
+            WHEN risks_achieving_impact IS NULL
+        OR risks_achieving_impact = ''
+        OR description_risk IS NULL
+              OR description_risk = ''
+        OR if(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+              OR likelihood IS NULL
+              OR likelihood = ''
+              OR impact IS NULL
+              OR impact = ''
+              OR risk_score IS NULL
+              OR risk_score = ''
+        THEN FALSE
+             ELSE TRUE
+              END AS VALIDATION
+             FROM risk_assessment  
+             WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+      OR (SELECT SUM(a.validation * 1) - count(a.opid)
+               FROM
+               (SELECT ri.id, op.id as opid,
+                  CASE
+          WHEN op.opportunities_description IS NULL
+                    OR op.opportunities_description = ''
+                    OR if(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+               THEN FALSE
+               ELSE TRUE
+                END AS VALIDATION
+               FROM opportunities op
+            RIGHT JOIN risk_assessment ri
+           ON op.risk_assessment_id = ri.id
+         WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
            THEN FALSE
-           ELSE TRUE
-            END AS VALIDATION
-           FROM opportunities op
-        RIGHT JOIN risk_assessment ri
-       ON op.risk_assessment_id = ri.id
-     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
-       THEN FALSE
-         ELSE TRUE
+             ELSE TRUE
+             END = 1) and
+
+        (CASE
+          WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                          WHERE initvStgId = ini.id
+                            AND active = 1)
+                            AND section = "management_gantt"
+                            AND active = 1 ) = ''
+              OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                          WHERE initvStgId = ini.id
+                            AND active = 1)
+                            AND section = "management_gantt"
+                            AND active = 1 ) IS NULL
+           THEN FALSE
+             ELSE TRUE
+             END = 1)
+       THEN true
+         ELSE false
          END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
