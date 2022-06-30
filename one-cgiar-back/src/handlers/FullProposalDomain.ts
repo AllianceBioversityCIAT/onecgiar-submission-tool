@@ -333,13 +333,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        SELECT init.initiativeId as initiative_id, i.official_code, init.stageId as stage_id,
                wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
                wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
                wp.wp_official_code, init.active  as initiative_status
           FROM work_packages wp
           JOIN initiatives_by_stages init
             on wp.initvStgId  = init.id
+          JOIN initiatives i
+			      on i.id = init.initiativeId
          WHERE wp.active = 1
          ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc`;
 
