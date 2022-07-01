@@ -32,6 +32,7 @@ export class PreviewsDomain {
         AND i.initvStgId = gi.initvStgId
         AND i.initvStgId = ${initiativeId}
         AND i.active > 0
+        AND p.active > 0
        ORDER BY ini.id asc   
             `;
 
