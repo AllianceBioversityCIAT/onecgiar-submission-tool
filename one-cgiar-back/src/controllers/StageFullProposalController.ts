@@ -1974,12 +1974,14 @@ export async function getEndofInitiativeOutcome(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const eoi = await fullPposal.requestEndofInitiativeOutcomes();
+    const eoiLastUpdate = await fullPposal.getLastUpdateEoi();
 
     res.json(
       new ResponseHandler(
         'Full Proposal:Get End of Initiative Outcome for Initiativa',
         {
-          eoi
+          eoi,
+          eoiLastUpdate
         }
       )
     );

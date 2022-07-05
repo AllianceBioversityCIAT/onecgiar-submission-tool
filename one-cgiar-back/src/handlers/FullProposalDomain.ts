@@ -3730,6 +3730,34 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  async getLastUpdateEoi (){
+    const initvStg = await this.setInitvStage();
+    try {
+      const resultsQuery = `
+      SELECT re.initvStgId,  max(rt.updated_at) as updated_at 
+      FROM results re
+      join results_types rt 
+        on rt.id = re.result_type_id 
+  left join work_packages wp 
+        on wp.id = re.work_package_id 
+     WHERE re.initvStgId = ${initvStg.id}
+       AND rt.id  = 3
+       AND re.active =1
+       group by re.initvStgId, rt.updated_at
+      order by re.result_type_id,wp.id;
+    `;
+    const result = await this.queryRunner.query(resultsQuery);
+    return result[0];
+    } catch (error) {
+      throw new BaseError(
+        'Request EOI last update: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
   async insertInitiativeApproval(user_id, initiativeId, is_approved) {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
