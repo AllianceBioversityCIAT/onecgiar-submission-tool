@@ -29,6 +29,7 @@ export class IsdcStatusComponent implements OnInit {
                                                             responses: parseInt(e.responses), 
                                                             total_comments:parseInt(e.total_comments), 
                                                             average: parseInt(e.average)}));
+                                                            console.log(this.listStatus)
     });
   }
 

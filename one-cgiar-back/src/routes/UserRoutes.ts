@@ -34,7 +34,7 @@ router.get(
 
 // update user
 router.put(
-  '/:id([0-9]+)',
+  '/',
   [checkJwt, checkRole('users', 'updateAny')],
   user.updateUser
 );

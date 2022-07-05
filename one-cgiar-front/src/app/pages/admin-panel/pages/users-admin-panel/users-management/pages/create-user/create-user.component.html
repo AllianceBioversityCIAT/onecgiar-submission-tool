@@ -1,0 +1,45 @@
+<div class="container">
+    <hr>
+    <div class="grid p-fluid">
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">Roles</span>
+                <p-dropdown autoDisplayFirst="true" [options]="this.roles" [(ngModel)]="this.newUser.roles[0]" optionLabel="name" optionValue="code"></p-dropdown>         
+            </div>
+        </div>
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">First name</span>
+                <input type="text" [(ngModel)]="this.newUser.first_name" pInputText placeholder="First name">         
+            </div>
+        </div>
+
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">Last name</span>
+                <input type="text" [(ngModel)]="this.newUser.last_name" pInputText placeholder="Last name">         
+            </div>
+        </div>
+        
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">E-mail</span>
+                <input [(ngModel)]="this.newUser.email" type="text" pInputText placeholder="E-mail" (change)="isCgiar()">       
+            </div>
+        </div>
+                
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">Password</span>
+                <input [(ngModel)]="this.newUser.password" type="text" pInputText placeholder="Password" [disabled]="this.newUser.is_cgiar">      
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="col-12 md:col-4 margin">
+        <div>
+            <button pButton (click)="close()" style="margin-right: 15px;" type="button" label="Cancel" class="p-button-warning"></button>
+            <button pButton (click)="createUser()" type="button" label="Create" class="p-button-success"></button>    
+        </div>
+    </div>
+</div>

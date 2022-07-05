@@ -14,11 +14,6 @@ export class AdminPanelComponent implements OnInit {
   ngOnInit(): void {
     this.items = [
       {
-        label: 'User reporting',
-        icon: 'pi pi-fw pi-users',
-        routerLink: '/admin/users'
-      },
-      {
         label: 'Completeness status',
         icon: 'pi pi-fw pi-comment',
         expanded: true,
@@ -33,6 +28,23 @@ export class AdminPanelComponent implements OnInit {
             icon: 'pi pi-fw pi-bookmark',
             routerLink: '/admin/toc-reporting'
           }
+        ]
+      },
+      {
+        label: 'Users management',
+        icon: 'pi pi-fw pi-users',
+        expanded: true,
+        items:[
+          {
+            label: 'User reporting',
+            icon: 'pi pi-fw pi-bookmark',
+            routerLink: '/admin/users-reporting'
+          },
+          {
+            label: 'User management',
+            icon: 'pi pi-fw pi-users',
+            routerLink: '/admin/users-management'
+          },
         ]
       }
     ]

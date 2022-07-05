@@ -8,7 +8,7 @@ const routes: Routes = [
     component: AdminPanelComponent,
     children: [
       {
-        path: 'users', 
+        path: 'users-reporting', 
         loadChildren: () => import('./pages/admin-users/admin-users.module').then((m) => m.AdminUsersModule),
       },
       {
@@ -19,7 +19,11 @@ const routes: Routes = [
         path: 'toc-reporting', 
         loadChildren: () => import('./pages/completeness-status/toc-reporting/toc-reporting.module').then((m) => m.TocReportingModule),
       },
-      { path: '**', pathMatch: 'full', redirectTo: 'users' }
+      {
+        path: 'users-management', 
+        loadChildren: () => import('./pages/users-admin-panel/users-management/users-management.module').then((m) => m.UsersManagementModule),
+      },
+      { path: '**', pathMatch: 'full', redirectTo: 'users-reporting' }
     ]
   }
 
