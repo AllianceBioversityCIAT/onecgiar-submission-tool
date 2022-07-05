@@ -8,12 +8,12 @@
         <ibdc-alert [options]="{text: 'The End of Initiative Outcomes (EoI Outcomes) listed below are coming from the Theory of Change board. If you want to update them, please click the edit button below.', 
                                 type:'info'}"></ibdc-alert>
     </div>
-    <div class="center_flex" style="margin: 35px 0 25px 0;">
+    <div class="center_flex" style="margin: 35px 0 0 0;">
         <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
 
     <div class="content_date">
-        <div class="updated_at">
+        <div class="updated_at" *ngIf="this.initiativeOutcomeList">
             <app-toggle-format-date [date]="this.lasUpdate"></app-toggle-format-date>
           </div>
     </div>
