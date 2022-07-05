@@ -13,7 +13,7 @@
     </div>
 
     <div class="content_date">
-        <div class="updated_at" *ngIf="this.initiativeOutcomeList">
+        <div class="updated_at" *ngIf="this.initiativeOutcomeList.length">
             <app-toggle-format-date [date]="this.lasUpdate"></app-toggle-format-date>
           </div>
     </div>
