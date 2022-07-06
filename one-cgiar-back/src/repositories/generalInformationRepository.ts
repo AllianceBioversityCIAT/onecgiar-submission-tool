@@ -6,7 +6,7 @@ export class GeneralInformationRepository extends Repository<GeneralInformation>
   async requestSummary(initvStg) {
     const budgetRepo = getRepository(Budget);
 
-    let GIquery = ` 
+    const GIquery = ` 
                 SELECT
                     initvStgs.id AS initvStgId,
                     general.id AS generalInformationId,
