@@ -21,3 +21,10 @@
     border-radius: 10px;
     overflow: hidden;
 }
+
+.routerInit{
+    cursor: pointer;
+    &:hover{
+       font-weight: bold;
+    }
+}

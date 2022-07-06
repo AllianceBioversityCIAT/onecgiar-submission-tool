@@ -12,6 +12,8 @@ import { DatePipe } from '@angular/common';
 export class AdminUsersComponent implements OnInit {
 
   usersList = [];
+  loading: boolean = true;
+
   constructor( 
     private _manageExcelService:ManageExcelService,
     private _interactionsService:InitiativesService,
@@ -24,6 +26,7 @@ export class AdminUsersComponent implements OnInit {
   getUsersWithInitiativesInformation(){
     this._interactionsService.getUsersWithInitiativesInformation().subscribe(resp=>{
       this.usersList = resp.data;
+      this.loading = false;
     })
   }
 

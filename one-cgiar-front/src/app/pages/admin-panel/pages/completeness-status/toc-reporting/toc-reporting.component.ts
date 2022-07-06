@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 export class TocReportingComponent implements OnInit {
 
   listReporting: Array<any> = [];
+  loading: boolean = true;
 
   constructor( 
     private _manageExcelService:ManageExcelService,
@@ -25,6 +26,7 @@ export class TocReportingComponent implements OnInit {
   getISDCStatus(){
     this._initiativesService.getTOCReporting().subscribe(e => {
       this.listReporting = e.response.TOCResponses;
+      this.loading = false;
     });
   }
 

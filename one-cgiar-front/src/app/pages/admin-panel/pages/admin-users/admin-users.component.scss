@@ -2,3 +2,16 @@
     border-radius: 10px;
     overflow: hidden;
 }
+
+.routerInit{
+    cursor: pointer;
+    &:hover{
+       font-weight: bold;
+    }
+}
+
+tr{
+    td{
+        word-wrap: break-word;
+    }
+}

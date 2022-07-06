@@ -53,7 +53,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       getUsersByInitiatives = await this.queryRunner.query(
         `select  i.official_code as official_code,i.name as initiative_name, 
            CONCAT(u.first_name," ",u.last_name) as  user_name,u.email,
-           r.name as role, u.last_login
+           r.name as role, u.last_login, i.id as initId
              from initiatives_by_users ibu
         left join users u on ibu.userId = u.id
              join roles_by_users rbu on u.id = rbu.user_id

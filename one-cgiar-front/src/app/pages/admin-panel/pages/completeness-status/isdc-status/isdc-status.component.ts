@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 export class IsdcStatusComponent implements OnInit {
 
   listStatus: Array<any> = [];
+  loading: boolean = true;
 
   constructor( 
     private _manageExcelService:ManageExcelService,
@@ -29,7 +30,7 @@ export class IsdcStatusComponent implements OnInit {
                                                             responses: parseInt(e.responses), 
                                                             total_comments:parseInt(e.total_comments), 
                                                             average: parseInt(e.average)}));
-                                                            console.log(this.listStatus)
+      this.loading = false;
     });
   }
 
