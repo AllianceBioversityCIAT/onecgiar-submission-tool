@@ -40,8 +40,6 @@ export class TaImpactAreaComponent implements OnInit {
         })
         ).subscribe((resp:tableAData)=>{
         this.tableAData = resp;
-        
-        // console.log(this.tableAData)
       })
     });
   
@@ -56,6 +54,7 @@ interface tableAData {
   global_targets: GlobalTarget[];
   impact_areas_indicators: ImpactAreasIndicator[];
   sdg_targets: SdgTarget[];
+  updated_at: Array<{udate_at:string}>
 }
 
 interface SdgTarget {

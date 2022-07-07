@@ -1833,6 +1833,15 @@ export class ProposalHandler extends InitiativeStageHandler {
           AND outi.active =1;
           
         `,
+        outIndicatorsQueryLastUpdate = `
+        SELECT outi.initvStgId, max(couti.updated_at) as updated_at
+         FROM init_action_areas_out_indicators outi
+    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
+           ON outi.outcomes_indicators_id = couti.outcome_indicator_id
+          and outi.outcome_id  = couti.outcome_id 
+        WHERE outi.initvStgId =${initvStg.id}
+          AND outi.active =1;
+        `,
         resultsQuery = `
         SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,
                wp.acronym wp_acronym,re.result_type_id as result_type,
@@ -1875,7 +1884,52 @@ export class ProposalHandler extends InitiativeStageHandler {
        WHERE co.results_id in (SELECT re.id
         FROM results re
        WHERE re.initvStgId = ${initvStg.id}
-         AND re.active =1);`;
+         AND re.active =1);`,
+      lastUpdateTableASql = `
+      select 
+case 
+	when d.updated_at >= g.updated_at and d.updated_at >= s.updated_at then d.updated_at
+	when g.updated_at >= d.updated_at and g.updated_at >= s.updated_at then g.updated_at 
+	when s.updated_at  >= d.updated_at and d.updated_at >= g.updated_at then s.updated_at 
+	else d.updated_at
+end as udate_at
+from  initiatives_by_stages ibs 
+	left join(SELECT max(csdt.updated_at) as updated_at, sdt.initvStgId 
+          FROM init_impact_area_sdg_targets sdt
+          JOIN clarisa_sdg_targets csdt
+            ON sdt.sdg_target_id = csdt.id
+         WHERE sdt.initvStgId = ${initvStg.id}
+           AND sdt.active =1) as s on s.initvStgId = ibs.id
+	
+	left join (SELECT Max(outi.updated_at) as updated_at, outi.initvStgId 
+         FROM init_action_areas_out_indicators outi
+    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
+           ON outi.outcomes_indicators_id = couti.outcome_indicator_id
+          and outi.outcome_id  = couti.outcome_id 
+        WHERE outi.initvStgId = ${initvStg.id}
+          AND outi.active =1) as d on d.initvStgId = ibs.id
+          
+    left join (SELECT max(igt.updated_at) as updated_at, igt.initvStgId
+                  FROM init_impact_area_global_targets igt
+                  JOIN clarisa_global_targets cgt
+                    ON igt.global_target_id = cgt.id
+                 WHERE igt.initvStgId =${initvStg.id}
+                   AND igt.active =1) as g on g.initvStgId = ibs.id
+                   
+	where  ibs.id = ${initvStg.id}
+      `,
+      lastUpdateTableCSql = `
+      SELECT max(re.updated_at) as updated_at
+        FROM results re
+        join results_types rt 
+          on rt.id = re.result_type_id 
+   left join work_packages wp 
+          on wp.wp_official_code = re.work_package_id 
+          AND wp.initvStgId = re.initvStgId
+       WHERE re.initvStgId = ${initvStg.id}
+         AND re.active =1
+        order by re.result_type_id,wp.id;
+      `;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
@@ -1889,6 +1943,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       //TABLE A
 
       const globalTargets = await this.queryRunner.query(globalTargetsQuery);
+      const lasUpdateTableA = await this.queryRunner.query(lastUpdateTableASql);
       const impactAreasIndicators = await this.queryRunner.query(
         impactAreasIndicatorsQuery
       );
@@ -1896,7 +1951,8 @@ export class ProposalHandler extends InitiativeStageHandler {
       const tableA = {
         global_targets: globalTargets,
         impact_areas_indicators: impactAreasIndicators,
-        sdg_targets: sdgTargets
+        sdg_targets: sdgTargets,
+        updated_at: lasUpdateTableA
       };
 
       //TABLE B
@@ -1904,7 +1960,11 @@ export class ProposalHandler extends InitiativeStageHandler {
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
+      const actionAreasOutcomesIndicatorsLastUpdate = await this.queryRunner.query(
+        outIndicatorsQueryLastUpdate
+      );
       const tableB = {
+        update_at: actionAreasOutcomesIndicatorsLastUpdate,
         action_areas_outcomes_indicators: actionAreasOutcomesIndicators
       };
 
@@ -1915,6 +1975,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         resultsIndicatorsQuery
       );
       const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
+      const lastUpdateTableC = await this.queryRunner.query(lastUpdateTableCSql);
       const resultsCountries = await this.queryRunner.query(
         resultsCountriesQuery
       );
@@ -1935,7 +1996,10 @@ export class ProposalHandler extends InitiativeStageHandler {
         res['geo_scope'] = {regions: reg, countries: cou};
       });
 
-      const tableC = {results: results};
+      const tableC = {
+                        results: results,
+                        updated_at: lastUpdateTableC
+                      };
 
       return {
         meliaPlan: meliaPlan[0],

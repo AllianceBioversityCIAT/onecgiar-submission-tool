@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { UsersService } from '../../../../admin/services/users.service';
 import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
-import {CreateUserComponent} from './pages/create-user/create-user.component';
 import { CreateUserService } from './service/create-user.service';
-import { KeyValue } from '@angular/common';
 import {MessageService} from 'primeng/api';
 
 

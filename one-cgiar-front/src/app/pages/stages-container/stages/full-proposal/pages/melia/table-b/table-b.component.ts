@@ -28,6 +28,7 @@ export class TableBComponent implements OnInit {
 
 interface TableBData {
   action_areas_outcomes_indicators: ActionAreasOutcomesIndicator[];
+  update_at: Array<{updated_at:string, initvStgId:number}>;
 }
 
 interface ActionAreasOutcomesIndicator {

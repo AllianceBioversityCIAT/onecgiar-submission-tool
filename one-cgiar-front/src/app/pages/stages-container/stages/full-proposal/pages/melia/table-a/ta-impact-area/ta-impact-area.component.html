@@ -8,6 +8,11 @@
     <div class="center_flex" style="margin: 10px 0;">
         <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
+    <div class="content_date">
+        <div class="updated_at" *ngIf="this.tableAData?.updated_at.length">
+            <app-toggle-format-date [date]="this.tableAData?.updated_at[0].udate_at"></app-toggle-format-date>
+          </div>
+    </div>
 
     <!-- <ibdc-alert [options]="{htmlText: this.htmlText, type:'info'}"></ibdc-alert> -->
     <br>

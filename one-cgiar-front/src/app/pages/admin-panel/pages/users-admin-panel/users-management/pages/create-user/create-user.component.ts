@@ -60,7 +60,7 @@ export class CreateUserComponent implements OnInit {
         last_name: '',
         is_active: 1,
         password:'',
-        roles: [5],
+        roles: [4],
         is_cgiar: false
       };
     });
@@ -68,10 +68,8 @@ export class CreateUserComponent implements OnInit {
 
   getRoles(){
     this._usersService.getRoles().subscribe(e => {
-      e.data.forEach(el => {
-        this.roles.push({code:el.id, name:el.name});
-      });
-      this.newUser.roles[0] = 5;
+      this.roles = e.data.filter(el => el.id == 1 || el.id == 4).map(el => ({code:el.id, name:el.name}));
+      this.newUser.roles[0] = 4;
     });
   }
 
