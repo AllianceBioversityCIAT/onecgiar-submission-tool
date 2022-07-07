@@ -1,3 +1,9 @@
 <div class="read-more-container">
-    <ng-content select="[content]"></ng-content>
+    <div class="all-text" [@expandable]="this.collapse?'collapse':'expand'">
+        <ng-content select="[content]"></ng-content>
+        <div class="local-filter" *ngIf="this.collapse"></div>
+    </div> 
+    <div (click)="toggle()" class="read-more-button" [ngClass]="{'rotate-icon': !this.collapse}">{{this.collapse?'read more':'read less'}}
+        <i class="material-icons">arrow_downward</i>
+    </div>
 </div>
