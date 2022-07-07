@@ -13,7 +13,7 @@ export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
   listToSave : any[] = [];
-  lastUpdate: any[];
+  lastUpdate: string;
   // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
@@ -28,7 +28,7 @@ export class TableCComponent implements OnInit {
       // console.log(this.resultDataList);
       this.convertDataToUseInTable(resp.results);
       this.listToSave = resp.results;
-      this.lastUpdate = resp.updated_at;
+      this.lastUpdate = resp?.updated_at[0].updated_at;
     })
   }
 

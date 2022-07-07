@@ -14,8 +14,8 @@
     <br>
 
     <div class="content_date">
-        <div class="updated_at" *ngIf="this.tableBData.update_at.length">
-            <app-toggle-format-date [date]="this.tableBData.update_at[0].updated_at"></app-toggle-format-date>
+        <div class="updated_at" *ngIf="this.tableBData?.update_at[0].updated_at">
+            <app-toggle-format-date [date]="this.tableBData?.update_at[0].updated_at"></app-toggle-format-date>
           </div>
     </div>
 
