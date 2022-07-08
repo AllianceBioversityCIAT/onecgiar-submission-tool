@@ -5,6 +5,8 @@ import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
 import { CreateUserService } from './service/create-user.service';
 import {MessageService} from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -23,7 +25,9 @@ export class UsersManagementComponent implements OnInit {
   constructor(public _usersService: UsersService,
               public _dialogService: DialogService,
               public _createUserService: CreateUserService,
-              private _messageService: MessageService) { }
+              private _messageService: MessageService,
+              private _manageExcelService:ManageExcelService,
+              public datepipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -73,6 +77,34 @@ export class UsersManagementComponent implements OnInit {
 
   isCgiar(email){
     return /cgiar.org/.test(email);
+  }
+
+  exportExcel() {
+    import("xlsx").then(xlsx => {
+      const dateStamp = new Date();
+      const xlsExport = this.userList.map(e=>({id:e.id,
+                                                    first_name:e.first_name,
+                                                    last_name:e.last_name,
+                                                    email:e.email,
+                                                    active:e.is_active,
+                                                    last_login:e.last_login
+                                                  }));
+      const worksheet = xlsx.utils.json_to_sheet(xlsExport);
+      var wscols = [
+        {wpx:50},
+        {wpx:50},
+        {wpx:50},
+        {wpx:80},
+        {wpx:50},
+        {wpx:50}
+    ];
+    
+    worksheet['!cols'] = wscols;
+      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+      this._manageExcelService.saveAsExcelFile(excelBuffer, `Users Management_${this.datepipe.transform(dateStamp,'yyyyLLdd_HHmmSS')}`);
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {TableModule} from 'primeng/table';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {ButtonModule} from 'primeng/button';
@@ -33,6 +33,6 @@ import { CreateUserService } from './service/create-user.service';
     CreateUserModule,
     ToastModule
   ],
-  providers:[DialogService, CreateUserService]
+  providers:[DialogService, CreateUserService, DatePipe]
 })
 export class UsersManagementModule { }
