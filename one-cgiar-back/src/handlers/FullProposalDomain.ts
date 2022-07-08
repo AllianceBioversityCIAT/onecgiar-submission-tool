@@ -1830,7 +1830,8 @@ export class ProposalHandler extends InitiativeStageHandler {
            ON outi.outcomes_indicators_id = couti.outcome_indicator_id
           and outi.outcome_id  = couti.outcome_id 
         WHERE outi.initvStgId =${initvStg.id}
-          AND outi.active =1;
+          AND outi.active =1
+          order by couti.outcome_id asc;
           
         `,
         outIndicatorsQueryLastUpdate = `
