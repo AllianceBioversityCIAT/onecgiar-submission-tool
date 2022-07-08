@@ -43,13 +43,13 @@ export class CreateUserComponent implements OnInit {
     valid = this.newUser.first_name?valid:false
     valid = this.newUser.last_name?valid:false
     valid = this.newUser.email?valid:false
-    valid = this.newUser.password?valid:this.newUser.is_cgiar;
+    valid = this.newUser.password.length >= 8?valid:this.newUser.is_cgiar;
     return valid;
   }
 
   createUser(){
     if(!this.validData()){
-      this._interactionsService.warningMessage('There are empty required fields.');
+      this._interactionsService.warningMessage('Mandatory fields are incomplete');
       return;
     }
     this._usersService.new(this.newUser).subscribe(e => {

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { UsersService } from '../../../../admin/services/users.service';
 import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
 import { CreateUserService } from './service/create-user.service';
 import {MessageService} from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class UsersManagementComponent implements OnInit {
   public selectUser: UsersInterface;
   private cloneUser: { [s: number]: UsersInterface } = {};
   ref: DynamicDialogRef;
+  localOnCloseModal: Subscription;
 
   constructor(public _usersService: UsersService,
               public _dialogService: DialogService,
@@ -25,6 +27,9 @@ export class UsersManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsers();
+    this.localOnCloseModal = this._createUserService.$onLoadUserList.subscribe(e => {
+      this.getAllUsers();
+    });
   }
 
   show() {
@@ -35,6 +40,10 @@ export class UsersManagementComponent implements OnInit {
     this._usersService.getAll().subscribe(us => {
       this.userList = us['data'].map(el => ({...el, password: ''}));
     })
+  }
+
+  ngOnDestroy(): void {
+    this.localOnCloseModal.unsubscribe();
   }
 
   clear(table: Table) {
