@@ -1858,7 +1858,8 @@ export async function getProjectedBenefits(req: Request, res: Response) {
 
 export async function getProjectedProbabilities(req: Request, res: Response) {
   try {
-    const probabilities = await clarisa.requestProjectedProbabilities();
+    const initiativeshandler = new InitiativeHandler();
+    const probabilities = await initiativeshandler.requestProjectedProbabilities();
     res.json(new ResponseHandler('Requested probabilities.', {probabilities}));
   } catch (error) {
     console.log(error);
