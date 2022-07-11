@@ -122,7 +122,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     console.log(this._initiativesService.initiative.id)
     this._initiativesService.getmeliaStudActiByInitId().pipe(map(res => res?.response?.meliaStudiesActivities)).subscribe((resp: MeliaStudiesAndActivities[]) => {
       console.log(resp)
-      this.list = resp;
+      this.list = resp.map(el => {
+        return {...el, is_global: el.is_global? true: false};
+      });
 
       this.list.forEach(melia => {
         this.geographicScopes.push(new FormGroup({
