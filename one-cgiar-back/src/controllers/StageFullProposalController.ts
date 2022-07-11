@@ -2000,7 +2000,7 @@ export async function postInitiativeApproval(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {user_id, initiativeId, is_approved} = req.body;
+  const {user_id, initiativeId, is_approved, approved_reason} = req.body;
 
   try {
     // create new full proposal object
@@ -2009,7 +2009,8 @@ export async function postInitiativeApproval(
     const newInitvApproval = await fullPposal.insertInitiativeApproval(
       user_id,
       initiativeId,
-      is_approved
+      is_approved,
+      approved_reason
     );
 
     console.log(newInitvApproval);
