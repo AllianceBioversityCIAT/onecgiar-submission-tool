@@ -3823,14 +3823,15 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async insertInitiativeApproval(user_id, initiativeId, is_approved) {
+  async insertInitiativeApproval(user_id, initiativeId, is_approved, approved_reason) {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const newInitvApproval = await initvApprovalRepo.create({
         user_id,
         initiativeId,
-        is_approved
+        is_approved,
+        approved_reason
       });
       await initvApprovalRepo.save(newInitvApproval);
 
