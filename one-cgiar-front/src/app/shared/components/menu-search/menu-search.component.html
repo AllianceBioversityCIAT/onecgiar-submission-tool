@@ -1,0 +1,13 @@
+<div class="dev-menu-search" *ngIf="this._menuSearchService.show">
+    <div class="content animate__animated animate__fadeIn">
+        <div class="title">Menu <i class="material-icons" (click)="this._menuSearchService.show = false">cancel</i></div>
+        <div class="separation">
+            <div class="input-search">
+                <input type="text" [(ngModel)]="textSearch">
+                <i class="material-icons">search</i>
+            </div>
+            <div class="section animate__animated animate__fadeIn" *ngFor="let item of [{name:'Algo11'},{name:'Algo12'},{name:'Algo22'}] | searchByText:textSearch:'name'">{{item.name}}</div>
+        </div>
+    </div>
+    <div class="bg-filter" (click)="this._menuSearchService.show = false"></div> 
+</div>
