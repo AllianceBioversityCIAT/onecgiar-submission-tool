@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
   statuses: any[];
   statusTextObj = {};
   currentUser;
-  btnSubmitIsEnable:boolean = false;
+  btnSubmitIsEnable: boolean = false;
 
   // stageUrl;
   constructor(
@@ -144,17 +144,17 @@ export class MenuComponent implements OnInit {
     // console.log('onConfirmAssessment', this.localMenuChangesubscribtion$)
     // this.spinnerService.show("submission_spinner");
     this.initiativesSvc.updateSubmissionStatus(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId, updateObj)
-    .subscribe(
-      resp => {
-        // this.spinnerService.hide("submission_spinner");
-        console.log(resp)
-      },
-      err => {
-        // this.spinnerService.hide("submission_spinner");
-        console.log(err);
-        this._interactionsService.errorMessage(err.error?.description, 2000);
-      }
-    )
+      .subscribe(
+        resp => {
+          // this.spinnerService.hide("submission_spinner");
+          console.log(resp)
+        },
+        err => {
+          // this.spinnerService.hide("submission_spinner");
+          console.log(err);
+          this._interactionsService.errorMessage(err.error?.description, 2000);
+        }
+      )
   }
 
   // * Asssessment management
@@ -179,32 +179,32 @@ export class MenuComponent implements OnInit {
 
   }
 
-  mapDataInMenu(list, attributeName:"subsections"|"dynamicList"|"reports", stageId:number, sectionId?:number, subSectionId?:number ) {
+  mapDataInMenu(list, attributeName: "subsections" | "dynamicList" | "reports", stageId: number, sectionId?: number, subSectionId?: number) {
     if (!this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)) return;
     let elementFinded;
     elementFinded = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId);
 
     if (stageId && sectionId)
-    elementFinded = elementFinded.sections.find((section) => section.sectionId == sectionId);
+      elementFinded = elementFinded.sections.find((section) => section.sectionId == sectionId);
     if (stageId && sectionId && subSectionId)
-    elementFinded =  elementFinded.subsections.find((subSection) => subSection.subSectionId == subSectionId);
+      elementFinded = elementFinded.subsections.find((subSection) => subSection.subSectionId == subSectionId);
 
     if (elementFinded[attributeName]?.length) {
-      list.map(item=>{
+      list.map(item => {
         elementFinded[attributeName].push(item);
       })
-    }else{
+    } else {
       elementFinded[attributeName] = list;
     }
- 
+
   }
 
-  mapWorkPackagesInStage({stageId, sectionId, subSectionId }) {
+  mapWorkPackagesInStage({ stageId, sectionId, subSectionId }) {
     if (this.initiativesSvc.initiative.stageId === stageId) {
       this.initiativesSvc.getWpsFpByInititative().subscribe((wpsResp) => {
         // console.log(wpsResp);
         if (stageId == 4) {
-          wpsResp.response.workpackage.map(wpItem=>{            
+          wpsResp.response.workpackage.map(wpItem => {
             wpItem.id = wpItem?.wp_official_code;
 
             // console.log(wpItem)
@@ -212,10 +212,10 @@ export class MenuComponent implements OnInit {
           // wp_official_code
         }
         // console.log(wpsResp);
-       
+
         let wpss = new ListToMap(wpsResp.response.workpackage, 'work-package/', 'work-package', 'showName', 'acronym').getList();
         // console.log(wpss)
-        this.mapDataInMenu(wpss,"dynamicList",stageId, sectionId, subSectionId);
+        this.mapDataInMenu(wpss, "dynamicList", stageId, sectionId, subSectionId);
         this._dataControlService.wpMaped = true;
       }, (err) => {
         console.log(err);
@@ -264,70 +264,70 @@ export class MenuComponent implements OnInit {
         this.mapWorkPackagesInStage(fullProposalISDCData);
 
         let pobList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(pobList,'dynamicList', 3, 1, 8 );
+        this.mapDataInMenu(pobList, 'dynamicList', 3, 1, 8);
 
         let pobISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(pobISDCList,'dynamicList', 4, 21, 46 );
+        this.mapDataInMenu(pobISDCList, 'dynamicList', 4, 21, 46);
 
         let impactStatementsList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(impactStatementsList,'dynamicList', 3, 7, 16 );
+        this.mapDataInMenu(impactStatementsList, 'dynamicList', 3, 7, 16);
 
         let impactStatementsISDCList = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(impactStatementsISDCList,'dynamicList', 4, 25, 50 );
+        this.mapDataInMenu(impactStatementsISDCList, 'dynamicList', 4, 25, 50);
 
         let tableAImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(tableAImpactArea,'dynamicList', 3, 8, 37 );
+        this.mapDataInMenu(tableAImpactArea, 'dynamicList', 3, 8, 37);
 
         let tableAISDCImpactArea = new ListToMap(this.impacAreasList, 'impact-area/', 'impact-area', 'id', 'name').getList();
-        this.mapDataInMenu(tableAISDCImpactArea,'dynamicList', 4, 26, 62 );
+        this.mapDataInMenu(tableAISDCImpactArea, 'dynamicList', 4, 26, 62);
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           display_name: 'Risk assessment report',
           description: 'mpara-reports'
-        }],"reports",3, 9)
+        }], "reports", 3, 9)
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           display_name: 'Risk assessment report',
           description: 'mpara-reports'
-        }],"reports",4, 27)
+        }], "reports", 4, 27)
 
         this.mapDataInMenu([{
           display_name: 'Human Resources report',
           description: 'human-resources-reports'
-        }],"reports",3, 15)
+        }], "reports", 3, 15)
 
         this.mapDataInMenu([{
           display_name: 'Human Resources report',
           description: 'human-resources-reports'
-        }],"reports",4, 29)
+        }], "reports", 4, 29)
 
-        this.mapDataInMenu( [
+        this.mapDataInMenu([
           {
-          name: 'Partners not related to any Impact Area',
-          frontRoute: 'partners-no-impact-area'
-        }],"dynamicList",3, 7, 16);
+            name: 'Partners not related to any Impact Area',
+            frontRoute: 'partners-no-impact-area'
+          }], "dynamicList", 3, 7, 16);
 
 
-        this.mapDataInMenu( [
-          {
-            name: 'Partners list summary report',
-            frontRoute: 'is-reports'
-          }
-        ],"reports",3, 7, 16);
-
-
-        this.mapDataInMenu( [
+        this.mapDataInMenu([
           {
             name: 'Partners list summary report',
             frontRoute: 'is-reports'
           }
-        ],"reports",4, 25, 50);
-        
-        this.mapDataInMenu( [
+        ], "reports", 3, 7, 16);
+
+
+        this.mapDataInMenu([
           {
-          name: 'Partners not related to any Impact Area',
-          frontRoute: 'partners-no-impact-area'
-        }],"dynamicList",4, 25, 50);
+            name: 'Partners list summary report',
+            frontRoute: 'is-reports'
+          }
+        ], "reports", 4, 25, 50);
+
+        this.mapDataInMenu([
+          {
+            name: 'Partners not related to any Impact Area',
+            frontRoute: 'partners-no-impact-area'
+          }], "dynamicList", 4, 25, 50);
 
 
 
@@ -353,25 +353,25 @@ export class MenuComponent implements OnInit {
 
         // );
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
-        }],"reports",3, 5, 12);
+        }], "reports", 3, 5, 12);
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           name: 'Geographic scope summary report',
           frontRoute: 'wp-reports'
-        }],"reports",4, 23, 49);
+        }], "reports", 4, 23, 49);
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
-        }],"reports",3, 1, 8);
+        }], "reports", 3, 1, 8);
 
-        this.mapDataInMenu( [{
+        this.mapDataInMenu([{
           name: 'Projection of benefits summary report',
           frontRoute: 'pob-reports'
-        }],"reports",4, 21, 46);
+        }], "reports", 4, 21, 46);
 
         if (this.impacAreasList.length) {
           this._dataControlService.pobMaped = true;
@@ -470,41 +470,53 @@ export class MenuComponent implements OnInit {
     return this.subMenusFormValidation[stageName][subMenu];
   }
 
-  isValidRol(){
+  isValidRol() {
 
     console.log(this.initiativesSvc?.initiative?.userRoleId);
 
 
-      [1,2,3].forEach(el => {
-        if(el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
-      });
-      if(this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
-  
-     
-    
+    [1, 2, 3].forEach(el => {
+      if (el == this.initiativesSvc?.initiative?.userRoleId) this.btnSubmitIsEnable = true;
+    });
+    if (this._dataControlService.isAdmin) this.btnSubmitIsEnable = true;
+
+
+
   }
 
-  submitBtn(){
-    if(this._dataControlService.isdcFeedbackValidation?.validation){
+  submitBtn() {
+    if (this._dataControlService.isdcFeedbackValidation?.validation) {
       const configAlert = {
-        title:'',
-        text:`The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> is about to be approved. Please note that further changes cannot be made once approved.`,
-        icon:'warning',
-        confirmButtonColor:'#4caf50',
-        confirmText:'Yes, approve it!'
+        title: '',
+        text: `The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> is about to be approved. Please note that further changes cannot be made once approved.`,
+        icon: 'warning',
+        confirmButtonColor: '#4caf50',
+        confirmText: 'Yes, approve it!',
+        input: 'textarea',
+        inputLabel: 'Feel free to leave a comment on the approval of the initiative (optional)',
+        inputPlaceholder: 'Type your comment here...',
+        inputAttributes: {
+          'aria-label': 'Type your comment here'
+        },
+        showCancelButton: true
       }
-      this._interactionsService.customConfirmationModal(configAlert,(decision) => {
-        if(!decision) return;
+      this._interactionsService.confirmationInputModal(configAlert, (response) => {
+        console.log(response);
+        
+        if (!response.isConfirmed) return;
         const body = {
           "user_id": this.auth.userValue.id,
           "initiativeId": this.initiativesSvc.initiative.id,
-          "is_approved": true
+          "is_approved": true,
+          "approved_reason": response.value
         };
+        console.log(body);
+        
         this.initiativesSvc.postApproveInitiative(body).subscribe(res => {
           this.initiativesSvc.initiative.readonly = true;
           this.initiativesSvc.initiative.status = 'Approved';
         });
-        this._interactionsService.simpleCustomConfirmModal({type:'success', title:'Success', text:'The initiative was approved correctly', confirmButtonText:'Ok'});
+        this._interactionsService.simpleCustomConfirmModal({ type: 'success', title: 'Success', text: 'The initiative was approved correctly', confirmButtonText: 'Ok' });
       })
     }
   }
