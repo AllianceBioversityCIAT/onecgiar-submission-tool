@@ -10,7 +10,7 @@ export class SearchByTextPipe implements PipeTransform {
     if (word == '' ) return list;
     if (list) {
       for (const item of list) {
-        if (item[attributeName].toUpperCase().indexOf(word?.toUpperCase())>-1) {
+        if (item[attributeName]?.toUpperCase().indexOf(word?.toUpperCase())>-1) {
           array.push(item);
         }
         
