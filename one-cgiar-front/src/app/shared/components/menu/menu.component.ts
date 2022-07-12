@@ -12,6 +12,7 @@ import { UtilsHandler } from '../../utils/utils';
 import { map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UtilsService } from '../../services/utils.service';
+import { MenuSearchService } from '../menu-search/menu-search.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -48,10 +49,10 @@ export class MenuComponent implements OnInit {
     private auth: AuthService,
     public initiativesSvc: InitiativesService,
     public stgMenuSvc: StagesMenuService,
-    private spinnerService: NgxSpinnerService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService,
-    public _utilsService: UtilsService
+    public _utilsService: UtilsService,
+    public _menuSearchService:MenuSearchService
   ) { }
 
 

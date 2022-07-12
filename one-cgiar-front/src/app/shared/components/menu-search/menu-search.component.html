@@ -1,0 +1,15 @@
+<div class="dev-menu-search" *ngIf="this._menuSearchService.show">
+    <div class="content animate__animated animate__fadeIn">
+        <div class="title">Menu <i class="material-icons" (click)="this._menuSearchService.show = false">cancel</i></div>
+        <div class="separation">
+            <div class="input-search">
+                <input type="text" [(ngModel)]="textSearch">
+                <i class="material-icons">search</i>
+            </div>
+           <div class="sections custom_scroll">
+                <div class="section section-{{item?.lvl}}  animate__animated animate__fadeIn" (click)="this._menuSearchService.show = false;textSearch=''" [routerLink]="item.router" [ngClass]="{'disabled': item.disabled}" *ngFor="let item of sectionsList | searchByText:textSearch:'display_name'">{{item.display_name}}</div>
+           </div>
+        </div>
+    </div>
+    <div class="bg-filter" (click)="this._menuSearchService.show = false"></div> 
+</div>
