@@ -5,6 +5,7 @@ import { ActivatedRoute, NavigationStart, Router, Event as NavigationEvent } fro
 import { Subject } from 'rxjs';
 import { environment } from '../environments/environment';
 // import { NgxHotjarService } from 'ngx-hotjar';
+import { DataControlService } from './shared/services/data-control.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private utilsSvc: UtilsService, 
     public router: Router,
+    public _dataControlService:DataControlService
     // public hjService:NgxHotjarService
     ) {}
 

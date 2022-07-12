@@ -9,4 +9,4 @@
         </div>
     </div>
     <app-jwt-expiration-subscription></app-jwt-expiration-subscription>
-    <app-menu-search></app-menu-search>
+    <app-menu-search *ngIf="this._dataControlService.userMenu.length"></app-menu-search>

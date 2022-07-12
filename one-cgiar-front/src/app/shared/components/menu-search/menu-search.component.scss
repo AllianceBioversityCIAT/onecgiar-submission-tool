@@ -17,7 +17,6 @@
       z-index: 1;
       width: 700px;
       border-radius: 10px 10px 5px 5px;
-  
       .title {
         color: white;
         text-align: center;
@@ -60,9 +59,30 @@
           }
         }
   
-  
-        .section {
-          color: white;
+        .sections{
+          max-height: 70vh;
+          overflow-y: scroll;
+          padding-right: 5px;
+          .section {
+            color: white;
+            padding: 10px;
+            transition: all cubic-bezier(0.645, 0.045, 0.355, 1) .3s;
+            cursor: pointer;
+            border-radius: 4px;
+            &:hover{
+              background-color: #1f1f1fcb
+            }
+          }
+          .disabled{
+            color: gray;
+            cursor: not-allowed;
+          }
+          .section-1{
+            margin-top: 15px;
+          }
+          .section-2{
+            margin-left: 30px !important;
+          }
         }
       }
   
