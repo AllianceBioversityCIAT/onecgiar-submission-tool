@@ -30,7 +30,11 @@ export class MenuSearchComponent implements OnInit {
     sections.map(sectionItem=>{
       this.sectionsList.push({...sectionItem,lvl:1, disabled: !!sectionItem.subsections.length, router:utlBase+sectionItem.description})
       sectionItem.subsections.map(subsectionITem=>{
-        this.sectionsList.push({...subsectionITem,lvl:2,router:utlBase+sectionItem.description+'/'+subsectionITem.description})
+        this.sectionsList.push({...subsectionITem,lvl:2, disabled: !!subsectionITem.dynamicList?.length,router:utlBase+sectionItem.description+'/'+subsectionITem.description})
+        if(!subsectionITem.dynamicList?.length)return;
+        subsectionITem?.dynamicList.map(dynamicListITem=>{
+          this.sectionsList.push({...dynamicListITem,display_name: dynamicListITem.showName,lvl:3,router:utlBase+sectionItem.description+'/'+subsectionITem.description+'/'+dynamicListITem.frontRoute+dynamicListITem.id})
+        })
       })
     })
     console.log(this.sectionsList)

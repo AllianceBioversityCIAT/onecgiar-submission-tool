@@ -15,7 +15,7 @@
       background-color: rgba(0, 0, 0, 0.404);
       position: relative;
       z-index: 1;
-      width: 700px;
+      width: 50vw;
       border-radius: 10px 10px 5px 5px;
       .title {
         color: white;
@@ -74,14 +74,18 @@
             }
           }
           .disabled{
-            color: gray;
+            color: var(--ibdc-secondary-color);
             cursor: not-allowed;
+            pointer-events: none;
           }
           .section-1{
             margin-top: 15px;
           }
           .section-2{
             margin-left: 30px !important;
+          }
+          .section-3{
+            margin-left: 60px !important;
           }
         }
       }
