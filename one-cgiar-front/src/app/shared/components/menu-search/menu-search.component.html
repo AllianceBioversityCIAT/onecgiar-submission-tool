@@ -1,17 +1,22 @@
 <div class="dev-menu-search" *ngIf="this._menuSearchService.show">
     <div class="content animate__animated animate__fadeIn">
-        <div class="title">Menu <i class="material-icons" (click)="this._menuSearchService.show = false">cancel</i></div>
+        <div class="title"> Menu - section finder <i class="material-icons" (click)="this._menuSearchService.show = false">cancel</i></div>
         <div class="separation">
             <div class="input-search">
-                <input type="text" [(ngModel)]="textSearch">
+                <input type="text" [(ngModel)]="textSearch" placeholder="e.g. General information">
                 <i class="material-icons">search</i>
             </div>
            <div class="sections custom_scroll">
-                <div class="section section-{{item?.lvl}}  animate__animated animate__fadeIn" 
-                    (click)="this._menuSearchService.show = false;textSearch=''" 
-                    [routerLink]="item.router" 
-                    [ngClass]="{'disabled': item.disabled}" 
-                    *ngFor="let item of sectionsList | searchByText:textSearch:'display_name'">{{item.display_name}}</div>
+                <div class="section-1  animate__animated animate__fadeIn" (click)="this._menuSearchService.show = false; textSearch=''" [routerLink]="section.router" *ngFor="let section of this._dataControlService.userMenu | menuSearch:textSearch">
+                    <div class="section" [ngClass]="{'disabled': section.disabled}">{{section.display_name}}</div>
+                    <div class="section-2  animate__animated animate__fadeIn" (click)="this._menuSearchService.show = false; textSearch=''" [routerLink]="subSection.router" *ngFor="let subSection of section.subsections">
+                        <div class="section"  [ngClass]="{'disabled': subSection.disabled}">{{subSection.display_name}}</div>
+                        <div class="section-3  animate__animated animate__fadeIn" (click)="this._menuSearchService.show = false; textSearch=''" [routerLink]="dynamicList.router" *ngFor="let dynamicList of subSection.dynamicList">
+                            <div class="section"  [ngClass]="{'disabled': dynamicList.disabled}">{{dynamicList.display_name}}</div>
+                           
+                        </div>
+                    </div>
+                </div>
            </div>
         </div>
     </div>
