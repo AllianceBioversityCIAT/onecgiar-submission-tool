@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { InitiativesService } from '../../shared/services/initiatives.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,11 +8,17 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./admin-panel.component.scss']
 })
 export class AdminPanelComponent implements OnInit {
-  constructor() { }
+  constructor(
+    private _initiativesService:InitiativesService
+  ) { }
 
   items: MenuItem[];
 
   ngOnInit(): void {
+    this._initiativesService.initiative.id = null;
+    this._initiativesService.initiative.stageId = null;
+    this._initiativesService.initiative.stageName = null;
+    this._initiativesService.initiative.exactStageName = null;
     this.items = [
       {
         label: 'Completeness status',
