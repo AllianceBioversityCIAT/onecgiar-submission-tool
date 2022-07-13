@@ -6,7 +6,7 @@ export class ProjectedProbabilitiesRepository extends Repository<ProjectedProbab
     async deleteAll(){
         try {
             const deleteQuery = `
-                delete from projected_probabilities;
+                delete from clarisa_projected_probabilities;
             `;
             let resultDelete = await this.query(deleteQuery);
             return resultDelete; 

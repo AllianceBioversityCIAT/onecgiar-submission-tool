@@ -53,7 +53,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       getUsersByInitiatives = await this.queryRunner.query(
         `select  i.official_code as official_code,i.name as initiative_name, 
            CONCAT(u.first_name," ",u.last_name) as  user_name,u.email,
-           r.name as role, u.last_login, i.id as initId
+           r.name as role, u.last_login, i.id as initId, ibs.stageId
              from initiatives_by_users ibu
         left join users u on ibu.userId = u.id
              join roles_by_users rbu on u.id = rbu.user_id
@@ -257,7 +257,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
   async requestProjectedProbabilities() {
     const querySql = `
         SELECT * 
-        FROM  projected_probabilities
+        FROM  clarisa_projected_probabilities
     `;
     const projectedData = await this.queryRunner.query(querySql);
     return projectedData;

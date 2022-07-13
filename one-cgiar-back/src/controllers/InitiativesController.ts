@@ -614,22 +614,21 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 
   let initiatives,
     initvSQL = ` 
-        SELECT
+    SELECT
             initvStg.id AS initvStgId,
+            initiative.id as initId,
             stage.description AS currentStage,
             stage.id AS currentStageId,
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
-            -- initvStg.statusId AS initvStageStatus,
-            (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS initvStageStatus,
-            (SELECT id FROM stages WHERE active = true) AS activeStageId,
-            (SELECT description FROM stages WHERE active = true) AS activeStageName           
-
+            s.status,
+            stage.id AS activeStageId
         FROM
             initiatives_by_users initvStgUsr
-        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
+        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId and initvStg.active > 0
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
         LEFT JOIN initiatives initiative ON initiative.id = initvStg.initiativeId
+        left join statuses s on s.id = initvStg.statusId
         WHERE
             initvStgUsr.userId = ${userId}
     `;

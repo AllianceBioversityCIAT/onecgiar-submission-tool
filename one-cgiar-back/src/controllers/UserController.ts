@@ -369,7 +369,7 @@ export const getUsersByInitiatives = async (
   try {
     const usersByInitiativesList =
       await initiativeshandler.getUsersByInitiativesList();
-    console.log(usersByInitiativesList);
+    
 
     return res.json({
       data: usersByInitiativesList,

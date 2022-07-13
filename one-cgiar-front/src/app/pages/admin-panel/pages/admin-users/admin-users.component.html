@@ -71,8 +71,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-user>
                 <tr>
-                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/full-proposal-isdc-feedback/general-information"><strong>{{user.official_code}}</strong></td>
-                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/full-proposal-isdc-feedback/general-information">{{user.initiative_name}}</td>
+                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information"><strong>{{user.official_code}}</strong></td>
+                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information">{{user.initiative_name}}</td>
                     <td>{{user.user_name}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.role}}</td>

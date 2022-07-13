@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
 import { DatePipe } from '@angular/common';
+import { DataControlService } from '../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-toc-reporting',
@@ -17,7 +18,8 @@ export class TocReportingComponent implements OnInit {
   constructor( 
     private _manageExcelService:ManageExcelService,
     private _initiativesService: InitiativesService,
-    public datepipe: DatePipe ) { }
+    public datepipe: DatePipe,
+    public _dataControlService: DataControlService ) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
