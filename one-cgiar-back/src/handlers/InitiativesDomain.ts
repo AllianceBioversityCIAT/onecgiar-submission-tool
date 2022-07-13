@@ -108,7 +108,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       initvStg.active AS active,
       initvStg.stageId AS stageId,
       (SELECT description FROM stages WHERE id = initvStg.stageId) AS description,
-      (select if(count(ibu.id) > 0, true, false) from initiatives_by_users ibu where ibu.initiativeId  = initiative.id and ibu.userId = ${userId}) as inInit
+      (select if(count(ibu.id) > 0, true, false) from initiatives_by_users ibu where ibu.initiativeId  = initiative.id and ibu.userId = ${userId} and ibu.active > 0) as inInit
       FROM
           initiatives initiative
       LEFT JOIN initiatives_by_stages initvStg 
