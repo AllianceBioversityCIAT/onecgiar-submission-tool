@@ -49,13 +49,6 @@ export class HomeComponent implements OnInit {
         this.data = data;
         data.map((initiative:any)=>{
           initiative.acronym_and_name = initiative?.acronym ? (initiative.acronym +  ' - ' + initiative.name) : initiative.name; 
-          this._initiativesService.getInitiativesByUser().subscribe(e => {
-            e.forEach(element => {
-              if(element.initId === initiative.id){
-                initiative.inInit = true
-              }
-            });
-          })
         })
         // data.map(item=>{
         //   if (item.stageId == 3) {

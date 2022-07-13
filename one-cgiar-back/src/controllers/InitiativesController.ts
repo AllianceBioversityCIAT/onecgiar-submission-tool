@@ -483,11 +483,12 @@ export async function removeBudget(req: Request, res: Response) {
  */
 export async function getInitiatives(req: Request, res: Response) {
   try {
+    const {userId} = res.locals.jwtPayload;
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
 
     // Get active initiatives and detail
-    let initiatives = await initiativeshandler.getAllInitiatives();
+    let initiatives = await initiativeshandler.getAllInitiatives(userId);
 
     if (initiatives.length == 0)
       res.json(

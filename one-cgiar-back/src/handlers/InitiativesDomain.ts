@@ -91,7 +91,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
     }
   }
   /** Get all initiatives for main table */
-  async getAllInitiatives() {
+  async getAllInitiatives(userId) {
     let allInitiatives,
       stagesInitiatives,
       initvActiveSQL = ` 
@@ -107,12 +107,13 @@ export class InitiativeHandler extends InitiativeStageHandler {
       (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
       initvStg.active AS active,
       initvStg.stageId AS stageId,
-      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
+      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description,
+      (select if(count(ibu.id) > 0, true, false) from initiatives_by_users ibu where ibu.initiativeId  = initiative.id and ibu.userId = ${userId}) as inInit
       FROM
           initiatives initiative
       LEFT JOIN initiatives_by_stages initvStg 
       ON initvStg.initiativeId = initiative.id
-      LEFT JOIN stages stage 
+      LEFT JOIN stages stage  
       ON stage.id = initvStg.stageId
       WHERE  initvStg.active = 1
       ORDER BY id
