@@ -4,6 +4,7 @@
         [userMenu]="this._dataControlService.userMenu"></app-menu-stage> -->
     <div class="menu-title">
         Menu
+        <i class="material-icons" (click)="this._menuSearchService.show = true">search</i>
     </div>
     <div class="menu_content">
         <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">

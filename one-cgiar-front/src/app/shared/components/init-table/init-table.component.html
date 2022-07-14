@@ -37,7 +37,18 @@
                 </td>
                 <td>
                     <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
-                    <a class="initiative_link"> <strong>{{initiative?.acronym ? (initiative.acronym +  ' - ') : ''}}</strong>{{initiative.name}}</a></td>
+                    <div class="align">
+                        <div class="icons">
+                            <div class="icon icon_toc" *ngIf="initiative.inInit" routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information">
+                                <i _ngcontent-ohd-c75="" class="material-icons inInit" *ngIf="initiative.inInit">account_circle</i>
+                                <div class="pop_text">
+                                    Member of the initiative team
+                                </div>
+                             </div>
+                        </div>
+                        <a class="initiative_link"> <strong>{{initiative?.acronym ? (initiative.acronym +  ' - ') : ''}}</strong>{{initiative.name}}</a>
+                    </div>    
+                </td>
                 <td style="max-width: 100px !important; width: 100px;">
                     <a class="link"  routerLink="/initiatives/{{initiative.id}}/stages/{{this._dataControlService.getStageRouteByStageId(initiative.stageId)?.route}}/general-information"></a> 
                     {{initiative.status}}

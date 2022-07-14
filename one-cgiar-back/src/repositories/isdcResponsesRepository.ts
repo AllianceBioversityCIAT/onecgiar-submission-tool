@@ -10,7 +10,8 @@ export class IsdcResponsesRepository extends Repository<ISDCResponses> {
       CAST(count(num.num) AS UNSIGNED) as total_comments, 
       CAST(SUM(num.num) AS UNSIGNED) as responses, 
       CAST(count(num.num) - SUM(num.num) AS UNSIGNED) as pending, 
-      CAST((SUM(num.num)/count(num.num))*100 AS UNSIGNED) as average
+      CAST((SUM(num.num)/count(num.num))*100 AS UNSIGNED) as average,
+      ini.id as initId, ibs.stageId
     FROM (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(updated_response,'<(\/?p)>',' '),'<([^>]+)>','') IS NULL, 0,1) as num, initvStgId
                                         FROM isdc_responses where is_deleted = 0 ) as num
     JOIN initiatives_by_stages ibs ON ibs.id = num.initvStgId

@@ -1,0 +1,56 @@
+<div class="container">
+    <hr>
+    <div class="grid p-fluid">
+        <div class="col-12 md:col-4 margin">
+            <label style="font-size: 12px;
+                            margin-left: 0.5rem;
+                            margin-bottom: 0px;">Roles</label>
+            <p-dropdown autoDisplayFirst="true" [options]="this.roles" [(ngModel)]="this.newUser.roles[0]" optionLabel="name" optionValue="code"></p-dropdown>         
+        </div>
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-float-label">
+                    <input  [(ngModel)]="this.newUser.first_name" id="float-input" type="text" pInputText> 
+                    <label for="float-input">First name</label>
+                </span>   
+            </div>
+        </div>
+
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-float-label">
+                    <input  [(ngModel)]="this.newUser.last_name" id="float-input" type="text" pInputText> 
+                    <label for="float-input">Last name</label>
+                </span>        
+            </div>
+        </div>
+        
+        <div class="col-12 md:col-4 margin">
+            <div class="p-inputgroup">
+                <span class="p-float-label">
+                    <input  [(ngModel)]="this.newUser.email" id="float-input" type="text" (change)="isCgiar()" pInputText> 
+                    <label for="float-input">E-mail</label>
+                </span>         
+            </div>
+        </div>
+                
+        <div class="col-12 md:col-4 margin" *ngIf="!this.newUser.is_cgiar">
+            <div class="p-inputgroup">
+                <span class="p-float-label">
+                    <input  [(ngModel)]="this.newUser.password" id="float-input" type="text" pInputText> 
+                    <label for="float-input">Password</label>
+                    <span style="position: absolute;
+                    top: 35px;
+                    font-size: 10px;">The password must be longer than 8 characters</span>
+                </span>    
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="col-12 md:col-4 margin">
+        <div>
+            <button pButton (click)="close()" style="margin-right: 15px;" type="button" label="Close" class="p-button-warning"></button>
+            <button pButton (click)="createUser()" type="button" label="Create" class="p-button-success"></button>    
+        </div>
+    </div>
+</div>

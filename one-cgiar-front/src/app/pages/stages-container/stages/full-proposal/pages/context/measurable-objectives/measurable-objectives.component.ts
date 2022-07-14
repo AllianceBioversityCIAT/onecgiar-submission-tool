@@ -21,6 +21,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   extraValidation = false;
   initiativeOutcomeList:EOIData []=[];
   toc_id:number|string;
+  lasUpdate: string;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -44,7 +45,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   getEndOfInitiativeOutcome(){
     console.log("getEndOfInitiativeOutcome")
     this._initiativesService.getEndOfInitiativeOutcome().pipe(map(res=>res?.response)).subscribe(resp=>{
-      console.log(resp?.eoi);
+      this.lasUpdate = resp?.eoiLastUpdate?.updated_at
       this.initiativeOutcomeList = resp?.eoi;
     })
   }

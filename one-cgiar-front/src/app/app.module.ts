@@ -41,6 +41,9 @@ import { HttpRequestInterceptor } from './shared/interceptors/http-request.inter
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { AppErrorHandler } from './shared/utils/app-error-handler';
 import { GoogleAnalyticsModule } from './shared/components/google-analytics/google-analytics.module';
+import { SearchByTextPipe } from './shared/pipes/search-by-text.pipe';
+import { MenuSearchComponent } from './shared/components/menu-search/menu-search.component';
+import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +51,9 @@ import { GoogleAnalyticsModule } from './shared/components/google-analytics/goog
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
     CreateUserModalComponent,
+    SearchByTextPipe,
+    MenuSearchPipe,
+    MenuSearchComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

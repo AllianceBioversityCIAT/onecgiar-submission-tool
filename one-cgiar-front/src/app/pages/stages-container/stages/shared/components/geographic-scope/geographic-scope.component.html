@@ -29,10 +29,13 @@
             </div>
             <br>
         </div>
+        <div class="col-sm-12 horizontal_padding" style="height: 35px;" *ngIf="this.localForm.value.is_global == null">
+            Please select the <strong>global dimension</strong> before selecting a region or country.
+        </div>
         <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6 horizontal_padding" *ngIf="this.regionsSelectedList != null">
+        <div class="col-6 horizontal_padding" [ngClass]="{'disabled': this.localForm.value.is_global == null}"  *ngIf="this.regionsSelectedList != null">
             <div class="box_container">
                 <ibdc-select-multiple [options]="{
                     required: !this.localForm.value.is_global,
@@ -60,7 +63,7 @@
         <div class="col-6 horizontal_padding" *ngIf="this.countriesSelectedList == null">
             <app-geographic-scope-skeleton></app-geographic-scope-skeleton>
         </div>
-        <div class="col-6  horizontal_padding" *ngIf="this.countriesSelectedList != null">
+        <div class="col-6  horizontal_padding" [ngClass]="{'disabled': this.localForm.value.is_global == null}" *ngIf="this.countriesSelectedList != null">
             <div class="box_container">
             <ibdc-select-multiple [options]="{
                 required: !this.localForm.value.is_global,

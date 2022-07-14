@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
 import { DatePipe } from '@angular/common';
+import { DataControlService } from '../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-toc-reporting',
@@ -12,11 +13,13 @@ import { DatePipe } from '@angular/common';
 export class TocReportingComponent implements OnInit {
 
   listReporting: Array<any> = [];
+  loading: boolean = true;
 
   constructor( 
     private _manageExcelService:ManageExcelService,
     private _initiativesService: InitiativesService,
-    public datepipe: DatePipe ) { }
+    public datepipe: DatePipe,
+    public _dataControlService: DataControlService ) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
@@ -25,6 +28,7 @@ export class TocReportingComponent implements OnInit {
   getISDCStatus(){
     this._initiativesService.getTOCReporting().subscribe(e => {
       this.listReporting = e.response.TOCResponses;
+      this.loading = false;
     });
   }
 

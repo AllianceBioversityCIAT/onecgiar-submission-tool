@@ -1,7 +1,7 @@
 <div class="card-container">
     <section-title name="Users reporting"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
-        <p-table #dt1 [globalFilterFields]="['official_code','initiative_name','user_name','email']" styleClass="p-datatable-gridlines" [value]="usersList"
+        <p-table #dt1 [lazy]="true" [loading]="loading" [globalFilterFields]="['official_code','initiative_name','user_name','email']" styleClass="p-datatable-gridlines" [value]="usersList"
             scrollHeight="calc(80vh - 100px)" [scrollable]="true">
             <ng-template pTemplate="caption">
                 <div style="display: flex; justify-content: space-between;">
@@ -39,7 +39,7 @@
                         </div>
                     </th>
                     <th>
-                        <div class="flex justify-content-center align-items-center">
+                        <div class="flex justify-content-center align-items-center" style="">
                             Email
                             <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
                         </div>
@@ -71,8 +71,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-user>
                 <tr>
-                    <td><strong>{{user.official_code}}</strong></td>
-                    <td>{{user.initiative_name}}</td>
+                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information"><strong>{{user.official_code}}</strong></td>
+                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information">{{user.initiative_name}}</td>
                     <td>{{user.user_name}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.role}}</td>

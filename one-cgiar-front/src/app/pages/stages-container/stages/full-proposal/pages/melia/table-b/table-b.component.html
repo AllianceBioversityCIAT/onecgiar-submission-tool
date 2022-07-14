@@ -7,11 +7,17 @@
                                 type:'info'}"></ibdc-alert>
     </div>
       
-    <div class="center_flex" style="margin: 30px 0 10px 0;">
+    <div class="center_flex" style="margin: 30px 0 0 0;">
         <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
 
     <br>
+
+    <div class="content_date">
+        <div class="updated_at" *ngIf="this.tableBData?.update_at[0].updated_at">
+            <app-toggle-format-date [date]="this.tableBData?.update_at[0].updated_at"></app-toggle-format-date>
+          </div>
+    </div>
 
     <div class="box ibd-shadow-2">
         <div class="title">

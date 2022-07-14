@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../../stages-container/stages/full-proposal/services/manage-excel.service';
 import { DatePipe } from '@angular/common';
+import { DataControlService } from '../../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-isdc-status',
@@ -12,11 +13,13 @@ import { DatePipe } from '@angular/common';
 export class IsdcStatusComponent implements OnInit {
 
   listStatus: Array<any> = [];
+  loading: boolean = true;
 
   constructor( 
     private _manageExcelService:ManageExcelService,
     private _initiativesService: InitiativesService,
-    public datepipe: DatePipe) { }
+    public datepipe: DatePipe,
+    public _dataControlService: DataControlService) { }
 
   ngOnInit(): void {
     this.getISDCStatus();
@@ -29,6 +32,8 @@ export class IsdcStatusComponent implements OnInit {
                                                             responses: parseInt(e.responses), 
                                                             total_comments:parseInt(e.total_comments), 
                                                             average: parseInt(e.average)}));
+                                                            console.log(this.listStatus);
+      this.loading = false;
     });
   }
 

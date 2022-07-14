@@ -256,18 +256,17 @@ export const createUsers = async (req: Request, res: Response) => {
 // update new user
 export const updateUser = async (req: Request, res: Response) => {
   let user;
-  const {id} = req.params;
-  const {firstname, lastname, email, password, roles, is_cgiar} = req.body;
+  const {first_name, last_name, email, password, is_active, id} = req.body;
 
   const userRepository = getRepository(Users);
   try {
     user = await userRepository.findOne(id);
-    user.firstname = firstname;
-    user.lastname = lastname;
+    user.first_name = first_name;
+    user.last_name = last_name;
     user.email = email;
-    user.password = password;
-    user.roles = roles;
-    user.is_cgiar = is_cgiar;
+    user.is_cgiar = /cgiar.org/.test(email);
+    user.password = password > 7 && !user.is_cgiar?password:user.password;
+    user.is_active = is_active;
 
     const validationOpt = {validationError: {target: false, value: false}};
     const errors = await validate(user, validationOpt);
@@ -275,7 +274,7 @@ export const updateUser = async (req: Request, res: Response) => {
       return res.status(400).json(errors);
     }
 
-    if (!is_cgiar) {
+    if (!user.is_cgiar && password > 8) {
       user.hashPassword();
     }
 
@@ -370,7 +369,7 @@ export const getUsersByInitiatives = async (
   try {
     const usersByInitiativesList =
       await initiativeshandler.getUsersByInitiativesList();
-    console.log(usersByInitiativesList);
+    
 
     return res.json({
       data: usersByInitiativesList,

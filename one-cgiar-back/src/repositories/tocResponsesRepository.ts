@@ -6,7 +6,7 @@ export class TocResponsesRepository extends Repository<TOCs> {
   async findTocProgressReporting(stageId) {
 
     try {
-      const tocProgressReportingQuery = `SELECT i.official_code, i.name, ibs.id,
+      const tocProgressReportingQuery = `SELECT i.official_code, i.name, ibs.id, i.id as initId, ibs.stageId,
       CAST((select count(result_type_id)
                from results r2
               where r2.initvStgId  = r.initvStgId

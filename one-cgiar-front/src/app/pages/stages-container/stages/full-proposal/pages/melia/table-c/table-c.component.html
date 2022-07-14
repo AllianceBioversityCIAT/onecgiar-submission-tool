@@ -10,7 +10,11 @@
     <div class="center_flex" style="margin: 10px 0;">
         <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
-
+    <div class="content_date">
+        <div class="updated_at" *ngIf="this.lastUpdate">
+            <app-toggle-format-date [date]="this.lastUpdate"></app-toggle-format-date>
+          </div>
+    </div>
 
 
     <!-- <p>The following information is in read mode . Please refer to the <a href="http://">theory of change platform</a> and the <a href="http://">MELIA Guidance</a> to edit it.</p> -->

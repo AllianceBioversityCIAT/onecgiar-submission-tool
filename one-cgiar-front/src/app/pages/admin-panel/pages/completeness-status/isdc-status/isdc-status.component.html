@@ -2,7 +2,7 @@
     <section-title name="ISDC Comments status"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
         <div class="card">
-            <p-table #dt1 [value]="this.listStatus" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
+            <p-table #dt1 [lazy]="true" [loading]="loading" [value]="this.listStatus" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
                 scrollHeight="calc(80vh - 100px)">
                 <ng-template pTemplate="caption">
                     <div style="display: flex; justify-content: space-between;">
@@ -67,8 +67,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-init>
                     <tr>
-                        <td style="width: 100px;"><strong>{{init.official_code}}</strong></td>
-                        <td style="width: 350px;">{{init.name}}</td>
+                        <td style="width: 100px;" class="routerInit" routerLink="/initiatives/{{init.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(init.stageId)?.route}}/general-information"><strong>{{init.official_code}}</strong></td>
+                        <td style="width: 350px;" class="routerInit" routerLink="/initiatives/{{init.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(init.stageId)?.route}}/general-information">{{init.name}}</td>
                         <td class="col_num"><strong>{{init.total_comments}}</strong></td>
                         <td class="col_num">{{init.responses}}</td>
                         <td class="col_num">{{init.pending}}</td>

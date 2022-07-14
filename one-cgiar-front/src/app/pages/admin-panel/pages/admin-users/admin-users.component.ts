@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { InitiativesService } from '../../../../shared/services/initiatives.service';
 import { ManageExcelService } from '../../../stages-container/stages/full-proposal/services/manage-excel.service';
 import { DatePipe } from '@angular/common';
+import { DataControlService } from '../../../../shared/services/data-control.service';
 
 @Component({
   selector: 'app-admin-users',
@@ -12,10 +13,13 @@ import { DatePipe } from '@angular/common';
 export class AdminUsersComponent implements OnInit {
 
   usersList = [];
+  loading: boolean = true;
+
   constructor( 
     private _manageExcelService:ManageExcelService,
     private _interactionsService:InitiativesService,
-    public datepipe: DatePipe) { }
+    public datepipe: DatePipe,
+    public _dataControlService: DataControlService) { }
 
   ngOnInit(): void {
     this.getUsersWithInitiativesInformation();
@@ -24,6 +28,7 @@ export class AdminUsersComponent implements OnInit {
   getUsersWithInitiativesInformation(){
     this._interactionsService.getUsersWithInitiativesInformation().subscribe(resp=>{
       this.usersList = resp.data;
+      this.loading = false;
     })
   }
 
