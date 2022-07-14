@@ -48,6 +48,7 @@ export class TableCComponent implements OnInit {
           wp_acronym: result?.wp_acronym, 
           wp_name: result?.wp_name,
           rowSpan: 1, 
+          is_global: result?.is_global,
           geo_scope: this.compactGeoData(result['geo_scope'])
         }) ;
 
@@ -61,6 +62,7 @@ export class TableCComponent implements OnInit {
               wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
               wp_name: result?.wp_name,
+              is_global: result?.is_global,
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
             });

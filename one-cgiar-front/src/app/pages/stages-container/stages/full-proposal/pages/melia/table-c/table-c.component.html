@@ -69,7 +69,7 @@
                         <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not provided'}}</td>
                         <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.wp_acronym && resultData?.wp_name ? '' : 'Not applicable'}} {{resultData?.wp_acronym || ''}}{{resultData?.wp_acronym ? ': ' : ''}} {{resultData?.wp_name || ''}}</td>
                         <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not provided'}}</td>
-                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not provided'"></td>
+                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.is_global?'Global':resultData?.geo_scope || 'Not provided'"></td>
                         <td class="t_col_2">{{resultData?.indicator_name || 'Not provided'}}</td>
                         <td class="t_col_3">{{resultData?.unit_measurement  || 'Not provided'}}</td>
                         <td class="t_col_4">{{resultData?.data_source || 'Not provided'}}</td>
