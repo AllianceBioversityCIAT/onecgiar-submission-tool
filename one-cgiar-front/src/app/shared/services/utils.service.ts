@@ -27,7 +27,7 @@ export class UtilsService {
   }
 
   goToEditToc(){
-    if(this._initiativesService.initiative.status == 'Approved') return;
+    if(this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1) return;
     this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((toc_id) => {
       console.log(toc_id)
       console.log(this._authService?.userValue?.id)

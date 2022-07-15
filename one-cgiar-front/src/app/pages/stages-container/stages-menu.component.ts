@@ -199,7 +199,7 @@ export class StagesMenuComponent implements OnInit {
       // this.initiativesSvc.setTWKAttributes();
       let validations = ()=>{
         // console.log(resp?.response?.roles[0]?.roleId)
-        if (this.user?.roles[0].id === 1 && initiative?.status == 'Editing') return false
+        if (this.user?.roles[0].id === 1 || initiative?.status == 'Editing') return false
         if (resp?.response?.roles[0]?.roleId !== 4 &&  resp?.response?.roles[0]?.roleId != undefined && initiative?.status == 'Editing') return false
 
    

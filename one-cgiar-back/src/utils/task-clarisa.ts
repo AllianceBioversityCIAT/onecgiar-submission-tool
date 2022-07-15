@@ -702,10 +702,16 @@ export const createProjectProbabilities = async () => {
   console.log('40.start create Projected Probabilities');
   try {
     await deleteProjectedProbabilities();
-    const projectedProbabilities = await clarisa.requestProjectedProbabilities();
+    let insertData: any[] = [];
+    let projectedProbabilities = await clarisa.requestProjectedProbabilities();
     if(projectedProbabilities.length > 0){
+      projectedProbabilities.forEach(el => {
+        insertData.push({ id: el.probabilityID,
+                          name: el.probabilityName,
+                          description: el.probabilityDescription});
+      });
       const repositoryProjectedProbabilities = getCustomRepository(ProjectedProbabilitiesRepository);
-      await repositoryProjectedProbabilities.save(projectedProbabilities);
+      await repositoryProjectedProbabilities.save(insertData);
       console.log('42.end Projected Probabilities');
     }else{
       console.log('Issues with Clarisa');
