@@ -257,7 +257,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
 
   async requestProjectedProbabilities() {
     const querySql = `
-        SELECT * 
+        SELECT id as probabilityID, name as probabilityName, description as probabilityDescription
         FROM  clarisa_projected_probabilities
     `;
     const projectedData = await this.queryRunner.query(querySql);

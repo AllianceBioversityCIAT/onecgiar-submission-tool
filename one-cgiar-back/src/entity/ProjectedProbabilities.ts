@@ -4,13 +4,13 @@ import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 @Entity('clarisa_projected_probabilities')
 export class ProjectedProbabilities extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
-  probabilityID: number;
+  id: number;
 
   @Column({type: 'text'})
-  probabilityName: string;
+  name: string;
 
   @Column({type: 'text'})
-  probabilityDescription: string;
+  description: string;
 
   @Column({type: 'tinyint'})
   active: boolean;
