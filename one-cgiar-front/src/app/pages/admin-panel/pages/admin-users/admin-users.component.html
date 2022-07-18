@@ -1,7 +1,7 @@
 <div class="card-container">
     <section-title name="Users reporting"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
-        <p-table #dt1 [lazy]="true" [loading]="loading" [globalFilterFields]="['official_code','initiative_name','user_name','email']" styleClass="p-datatable-gridlines" [value]="usersList"
+        <p-table #dt1 [loading]="loading" [globalFilterFields]="['official_code','initiative_name','user_name','email']" styleClass="p-datatable-gridlines" [value]="usersList"
             scrollHeight="calc(80vh - 100px)" [scrollable]="true">
             <ng-template pTemplate="caption">
                 <div style="display: flex; justify-content: space-between;">
@@ -39,7 +39,7 @@
                         </div>
                     </th>
                     <th>
-                        <div class="flex justify-content-center align-items-center" style="">
+                        <div class="flex justify-content-center align-items-center">
                             Email
                             <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
                         </div>
