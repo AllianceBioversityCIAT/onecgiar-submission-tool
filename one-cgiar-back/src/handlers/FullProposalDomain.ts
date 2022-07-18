@@ -2370,7 +2370,7 @@ from  initiatives_by_stages ibs
         riskAssessmentQuery = `
                 SELECT id,risks_achieving_impact,risks_theme,
                        description_risk,likelihood,impact,
-                       risk_score,manage_plan_risk_id,active,add_by_user
+                       risk_score,manage_plan_risk_id,active,add_by_user, risk_id 
                  FROM risk_assessment
                 WHERE manage_plan_risk_id in (
                 SELECT id
@@ -2468,6 +2468,7 @@ from  initiatives_by_stages ibs
             newRiskAssessment.active = risk.active;
             newRiskAssessment.manage_plan_risk_id = managePlanRiskId;
             newRiskAssessment.add_by_user = risk.add_by_user;
+            newRiskAssessment.risk_id = risk.risk_id;
 
             /**UPDATE RISK ASSESSMENT */
             if (newRiskAssessment.id !== null) {
