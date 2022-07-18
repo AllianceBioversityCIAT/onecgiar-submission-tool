@@ -3,7 +3,7 @@
     <p-toast position="top-right"></p-toast>
     <div class="section-container animate__animated animate__fadeIn">
         <div class="card">
-            <p-table #dt1 [value]="this.userList" dataKey="id" editMode="row" styleClass="p-datatable-gridlines" [globalFilterFields]="['first_name','last_name','email']" [scrollable]="true"
+            <p-table #dt1 [value]="this.userList" [loading]="loading" dataKey="id" editMode="row" styleClass="p-datatable-gridlines" [globalFilterFields]="['first_name','last_name','email']" [scrollable]="true"
                 scrollHeight="calc(80vh - 100px)">
                 <ng-template pTemplate="caption">
                     <div style="display: flex; justify-content: space-between;">
