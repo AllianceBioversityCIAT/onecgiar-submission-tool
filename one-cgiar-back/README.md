@@ -20,8 +20,6 @@ In the root of **one-cgiar-back** folder you have to create the following files:
 ```
 PORT=3000
 HOST_DB= localhost
-HOST = '0.0.0.0'
-jwtSecret = 'wsorvRas133'
 clarisa = http://clarisatest.ciat.cgiar.org/api/
 clarisa_user = XXXX
 clarisa_password = XXXX
@@ -71,11 +69,10 @@ clarisa_password = XXXX
 Then, inside of the **src** folder you have to create a folder called **config** and inside of this folder, create a file and call it: **config.ts** next, add the next code lines:
 ```
 export default {
-    jwtSecret: 'iurnva@vjffs',
     active_directory: {
-        url: 'ldap://ciatroot3.cgiarad.org:3268',
-        baseDN: 'DC=CGIARAD, DC=ORG',
-        domain: "cgiar.org"
+        url: 'ldap://xxxxx',
+        baseDN: 'DC=xxxx, DC=xx',
+        domain: "xxxxx"
     }
 };
 ```
