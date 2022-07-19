@@ -14,14 +14,15 @@
     </div>
 
 
-
-    <div class="justify_content_end save-button-section" [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
-        <div (click)="saveSection()">
-            <ibdc-save-button
+<div class="justify_content_end save-button-section"
+    [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)"
+    *ngIf="!_initiativesService.initiative.readonly">
+    <div (click)="saveSection()">
+        <ibdc-save-button
             [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
         </ibdc-save-button>
-        </div>
     </div>
+</div>
 
 
 
