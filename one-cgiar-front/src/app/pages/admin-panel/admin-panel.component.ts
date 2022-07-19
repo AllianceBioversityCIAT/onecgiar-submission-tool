@@ -57,5 +57,25 @@ export class AdminPanelComponent implements OnInit {
     ]
   }
 
+  activeMenu(event) {
+    let node;
+    if(event.target.parentNode.tagName != 'DIV' && !(event.target.parentNode.classList.contains('p-panelmenu-header-link') || event.target.parentNode.classList.contains('p-panelmenu-header'))){
+      let headerNode = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+      if (event.target.tagName === "A") {
+        node = event.target;
+        headerNode = headerNode.firstChild.firstChild;
+      } else {
+        headerNode = headerNode.parentNode.firstChild.firstChild;
+        node = event.target.parentNode;
+      }
+      const itemActive = document.querySelectorAll('.active-b, .active-h')
+      for (let i = 0; i < itemActive.length; i++) {
+        itemActive[i].classList.remove("active-b","active-h");
+      }
+      node.classList.add("active-b");
+      headerNode.classList.add("active-h");
+    }
+  }
+
 
 }

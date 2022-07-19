@@ -26,3 +26,38 @@
     max-height: calc(100vh - 50px);
     padding: 20px 30px;
 }
+
+::ng-deep{
+    p-panelmenu{
+        div{
+            div{
+                .active-h{
+                    background-color: #e4fff3 !important;
+                    &:hover{
+                        background-color: #ccf6e3 !important;
+                    }
+                }
+
+                div{
+                    div{
+                        p-panelmenusub{
+                            ul{
+                                li{
+                                    .active-b{
+                                        background-color: #3aa777 ;
+                                        &:hover{
+                                            background: #136d46  !important;
+                                        }
+                                        span{
+                                            color: white !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
