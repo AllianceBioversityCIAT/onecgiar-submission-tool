@@ -39,6 +39,7 @@ export class RiskAssessmentItemComponent implements OnInit {
       // console.log("chnge");
       this.updateForm();
     })
+    if ((!this.riskAssessment.risks_achieving_impact && !this.riskAssessment.risks_achieving_impact_created)) this.riskTitleEditableIsActive = true;
   }
 
   activeRiskTitleEditable(){

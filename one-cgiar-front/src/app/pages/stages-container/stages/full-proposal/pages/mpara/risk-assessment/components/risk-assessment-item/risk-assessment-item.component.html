@@ -23,7 +23,7 @@
         </div>
 
 
-        <div *ngIf="selectList === true" class="animate__animated animate__fadeInLeftBig">
+        <div *ngIf="this.risksList.length" [hidden]="selectList !== true" class="animate__animated animate__fadeInLeftBig">
             
             
             <ibdc-select-ngmodel-no-repeat (select)="mapTheme($event)" [options]="
