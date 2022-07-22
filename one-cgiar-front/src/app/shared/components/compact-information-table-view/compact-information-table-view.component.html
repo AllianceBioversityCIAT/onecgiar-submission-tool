@@ -1,4 +1,9 @@
 <div class="toggle-view-button-container">
+    <div *ngIf="this.exportDocx">
+        <div class="export-word" (click)="this.downloadDocx()" *ngIf="this.list.length; else noData">
+            <span>Export to Word</span>
+         </div>
+    </div>
     <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length; else noData">
         <span>{{this.showTableViewVariable ? 'Go to Edit view' : 'Go to Table view'}} </span>
      </div>

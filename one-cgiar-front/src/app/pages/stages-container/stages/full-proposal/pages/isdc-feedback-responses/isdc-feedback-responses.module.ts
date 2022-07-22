@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -29,7 +29,6 @@ import {ButtonModule} from 'primeng/button';
     CompactInformationTableViewModule,
     CollapsibleContainerModule,
     ButtonModule
-  ],
-  providers:[DatePipe]
+  ]
 })
 export class IsdcFeedbackResponsesModule { }
