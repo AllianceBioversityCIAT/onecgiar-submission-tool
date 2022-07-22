@@ -106,8 +106,8 @@ export class ManageDocxService {
       let complexRow: complexFlat[] = [];
       config.forEach((cell) => {
         complexRow.push({
-          links: el[cell.attribute].match(regexLink),
-          textArray: el[cell.attribute].replace(regexLink, '(:[:link:]:)').split(/\(:\[|\]:\)/g)
+          links: el[cell.attribute]?el[cell.attribute].match(regexLink):null,
+          textArray: el[cell.attribute]?el[cell.attribute].replace(regexLink, '(:[:link:]:)').split(/\(:\[|\]:\)/g):[]
         })
       });
       complexBodyFlat.push(complexRow);
