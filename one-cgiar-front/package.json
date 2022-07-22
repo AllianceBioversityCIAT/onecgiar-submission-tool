@@ -35,6 +35,7 @@
     "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.2.0",
+    "docx": "^7.4.1",
     "file-saver": "^2.0.5",
     "jasmine": "^4.2.0",
     "ibd-angular-components": "file:ibdc/ibd-angular-components-3.3.8.tgz",

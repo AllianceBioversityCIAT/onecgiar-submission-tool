@@ -10,7 +10,8 @@ import { map } from 'rxjs/operators';
 import { FullProposalService } from '../../../../../../shared/services/full-proposal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
-
+import {ManageDocxService} from '../../services/manage-docx.service';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-isdc-feedback-responses',
   templateUrl: './isdc-feedback-responses.component.html',
@@ -48,7 +49,9 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     public _fullProposalService:FullProposalService,
     public _dataControlService:DataControlService,
-    private _authService:AuthService
+    private _authService:AuthService,
+    private _manageDocxService:ManageDocxService,
+    private _date: DatePipe
   ) {
     this.contextForm = new FormGroup({
       participatory_design: new FormControl(null, Validators.required),
@@ -75,6 +78,16 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     },err=>{
       //console.log("errorerekkasssssssssssssssdasda");
     })
+  }
+
+  download() {
+    const dateStamp = new Date();
+    this._manageDocxService.createExport(
+      this.attr_list_config, 
+      this.list, 
+      this._date.transform(dateStamp,'yyyyLLdd_HHmmSS'),
+      'ISDC Feedback Responses', 
+      true);
   }
 
   onSubmitRecommendations(){
