@@ -24,10 +24,10 @@ export class ManageDocxService {
   private regexHtml: RegExp = /(<([^>]+)>)/g;
   private regexSpacing: RegExp = /(\s+\s)|(&nbsp;)/g;
   private regexFormat: regexFormat = {
-    links: /<\s*a[^>]*>(.*?)<\s*\/\s*a>/g,
-    bold: /<\s*b[^>]*>(.*?)<\s*\/\s*b>|<\s*strong[^>]*>(.*?)<\s*\/\s*strong>/g,
-    italic: /<\s*i[^>]*>(.*?)<\s*\/\s*i>|<\s*em[^>]*>(.*?)<\s*\/\s*em>/g,
-    points: /<\s*li[^>]*>(.*?)<\s*\/\s*li>/g,
+    links: /<\s*a[^>]*>((.*\n.*?)|.*?)<\s*\/\s*a>/g,
+    bold: /<\s*b[^>]*>((.*\n.*?)|.*?)<\s*\/\s*b>|<\s*strong[^>]*>((.*\n.*?)|.*?)<\s*\/\s*strong>/g,
+    italic: /<\s*i[^>]*>((.*\n.*?)|.*?)<\s*\/\s*i>|<\s*em[^>]*>((.*\n.*?)|.*?)<\s*\/\s*em>/g,
+    points: /<\s*li[^>]*>((.*\n.*?)|.*?)<\s*\/\s*li>/g,
     lineBreak: /<\s*\/\s*p>/g
   };
   private configDocx: configDocx = {
