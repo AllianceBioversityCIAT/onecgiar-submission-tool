@@ -1,7 +1,7 @@
 <div class="toggle-view-button-container">
     <div *ngIf="this.exportDocx">
-        <div class="export-word" (click)="this.downloadDocx()" *ngIf="this.list.length; else noData">
-            <span>Export to Word</span>
+        <div class="export-word" (click)="this.downloadDocx()" *ngIf="this.list.length">
+            <span>Export to Doc <i style="margin-left: 5px;" class="pi pi-file"></i></span>
          </div>
     </div>
     <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length; else noData">

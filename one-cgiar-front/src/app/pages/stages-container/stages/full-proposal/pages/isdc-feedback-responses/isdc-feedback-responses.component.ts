@@ -21,6 +21,7 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
   extraValidation = false;
   showform = false;
   constList = [];
+  actionArea: string = '';
   list:ParticipatoryProcess[] = [];
   contextForm: FormGroup;
   attr_list_config: AttributesListConfiguration[] = [
@@ -37,6 +38,21 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
       name: "Updated Response based on progress after initial 6 month inception to 30 June",
       required: true,
       styles:{'min-width':'200px'}
+    }
+  ];
+
+  configHeaderDocx: AttributesListConfiguration[] = [
+    {
+      attribute: 'isdc_recommendation',
+      name: "ISDC recommendation",
+    },
+    {
+      attribute: 'response',
+      name: "Initiative response",
+    },
+    {
+      attribute: 'updated_response',
+      name: "Updated Response – Inception Period"
     }
   ];
   
@@ -61,6 +77,9 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     document.addEventListener('keydown', () => {
       this.initExtraValidation();
     });
+    this._initiativesService.getSummary().pipe(map(resp => resp.response.generalInformation.action_area_description)).subscribe((resp: string) => {
+      this.actionArea = resp
+    })
   }
 
   getContext(){
