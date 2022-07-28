@@ -850,7 +850,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return dim.projectionId === pb.id;
         });
 
-        pb['depthScalesList'] = depthScalesList.filter((dim) => {
+        pb['depthScaleList'] = depthScalesList.filter((dim) => {
           return dim.projectionBenefitsId === pb.id;
         });
       });
@@ -911,7 +911,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           return dim.projectionId === pb.id;
         });
 
-        pb['depthScalesList'] = depthScalesList.filter((dim) => {
+        pb['depthScaleList'] = depthScalesList.filter((dim) => {
           return dim.projectionBenefitsId === pb.id;
         });
       });
