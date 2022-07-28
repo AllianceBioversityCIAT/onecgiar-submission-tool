@@ -226,7 +226,7 @@ export class StagesMenuComponent implements OnInit {
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
       if (this.initiativesSvc.initiative.stageId == 4) this._dataControlService.isdcFeedbackValidation = resp?.response.isdcFeedBack;
       //  console.log(resp?.response.isdcFeedBack)
-      console.log(resp)
+      // console.log(resp)
       if (!resp?.response) return;
       Object.keys(resp?.response).map(key => {
         let stageId = this.initiativesSvc.initiative.stageId;

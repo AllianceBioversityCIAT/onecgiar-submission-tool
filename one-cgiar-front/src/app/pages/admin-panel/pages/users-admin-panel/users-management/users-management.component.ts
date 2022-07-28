@@ -19,6 +19,7 @@ export class UsersManagementComponent implements OnInit {
   public userList: Array<UsersInterface>;
   public selectUser: UsersInterface;
   private cloneUser: { [s: number]: UsersInterface } = {};
+  loading: boolean = true;
   ref: DynamicDialogRef;
   localOnCloseModal: Subscription;
 
@@ -43,6 +44,7 @@ export class UsersManagementComponent implements OnInit {
   getAllUsers(){
     this._usersService.getAll().subscribe(us => {
       this.userList = us['data'].map(el => ({...el, password: ''}));
+      this.loading = false;
     })
   }
 

@@ -473,7 +473,7 @@ export class MenuComponent implements OnInit {
 
   isValidRol() {
 
-    console.log(this.initiativesSvc?.initiative?.userRoleId);
+    // console.log(this.initiativesSvc?.initiative?.userRoleId);
 
 
     [1, 2, 3].forEach(el => {

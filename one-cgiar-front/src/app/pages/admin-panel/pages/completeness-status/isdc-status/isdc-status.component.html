@@ -2,7 +2,7 @@
     <section-title name="ISDC Comments status"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
         <div class="card">
-            <p-table #dt1 [lazy]="true" [loading]="loading" [value]="this.listStatus" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
+            <p-table #dt1 [loading]="loading" [value]="this.listStatus" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
                 scrollHeight="calc(80vh - 100px)">
                 <ng-template pTemplate="caption">
                     <div style="display: flex; justify-content: space-between;">

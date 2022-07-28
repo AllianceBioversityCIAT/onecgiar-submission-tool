@@ -708,7 +708,8 @@ export const createProjectProbabilities = async () => {
       projectedProbabilities.forEach(el => {
         insertData.push({ id: el.probabilityID,
                           name: el.probabilityName,
-                          description: el.probabilityDescription});
+                          description: el.probabilityDescription,
+                          active: 1});
       });
       const repositoryProjectedProbabilities = getCustomRepository(ProjectedProbabilitiesRepository);
       await repositoryProjectedProbabilities.save(insertData);

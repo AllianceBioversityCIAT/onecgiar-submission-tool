@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AttributesListConfiguration } from './CompactInformationTableView.interface';
 import { InitiativesService } from '../../services/initiatives.service';
+import { ManageDocxService } from '../../../pages/stages-container/stages/full-proposal/services/manage-docx.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-compact-information-table-view',
@@ -15,6 +17,8 @@ export class CompactInformationTableViewComponent implements OnInit {
   @Input() msgNoData: string = "";
   @Input() showTableViewVariable:boolean = true;
   @Input() localId: boolean = false;
+  @Input() exportDocx: boolean = false;
+  @Input() configExport: configDocx;
   @Output() buttonViewEvent = new EventEmitter();
   @Output() onEdit = new EventEmitter();
   
@@ -22,12 +26,26 @@ export class CompactInformationTableViewComponent implements OnInit {
 
 
   constructor(
-    public _initiativesService:InitiativesService
+    public _initiativesService:InitiativesService,
+    private _manageDocxService:ManageDocxService,
+    private _date: DatePipe
   ) { }
 
   ngOnInit(): void {
     console.log(this.list)
     console.log(this.attr_list_config)
+  }
+
+  downloadDocx() {
+    if(!this.exportDocx) return;
+    const dateStamp = new Date();
+    this._manageDocxService.createExport(
+      this.configExport.configHeaderTable, 
+      this.list, 
+      this._date.transform(dateStamp,'yyyyLLdd_HHmmSS'),
+      this.configExport.actionArea,
+      this.configExport.subtex, 
+      this.configExport.complex);
   }
 
   onbuttonViewEvent(){
@@ -70,5 +88,12 @@ export class CompactInformationTableViewComponent implements OnInit {
     }
   }
 
+}
+
+interface configDocx{
+  complex: boolean,
+  subtex: string,
+  actionArea: string,
+  configHeaderTable: any[]
 }
 
