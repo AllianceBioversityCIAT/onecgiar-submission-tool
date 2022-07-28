@@ -63,6 +63,7 @@ export class ImpactAreaComponent implements OnInit {
 
 
   saveForm(){
+    console.log("saveForm")
     this.indicatorsListPOBSavedList.map(item=>{
       console.log(item.dimensions);
       item.dimensions.map(dimesion=>dimesion.depthDescription = dimesion.description)
@@ -70,7 +71,9 @@ export class ImpactAreaComponent implements OnInit {
 
     let cont = 0;
     let indicatorsSavedList:boolean[] = [];
+    console.log(this.indicatorsListPOBSavedList)
     this.indicatorsListPOBSavedList.map(item=>{
+      console.log(item)
       this._initiativesService.patchPOBenefitsFp(item).subscribe(resp=>{
         indicatorsSavedList.push(true);
         cont++
@@ -78,7 +81,6 @@ export class ImpactAreaComponent implements OnInit {
           this.reloadComponent()
         }
       },err=>(console.log(err),()=>{indicatorsSavedList.push(false)}))
-
     })
 
     this.validateAllIndicatorsSaved(indicatorsSavedList);

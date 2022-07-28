@@ -42,6 +42,24 @@
              selectList: this.depthScalesList
             }">
             ></ibdc-select>
+
+            <ibdc-select-multiple [options]="{
+                inputTitle:'Choose a depth scale',
+                selectList: this.depthScalesList,
+                selectItemName:'depthScaleName',
+                selectItemId:'depthScaleId',
+                hideSavedList: true,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: this.depthScaleList,
+                    selectItemId:'depthScaleId',
+                    selectItemName:'depthScaleName',
+                    idToSave:'depthScaleId',
+                    labelName:'depthScaleName'
+                }
+            }"></ibdc-select-multiple>
+            
         </div>
     </div>
     <hr *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
