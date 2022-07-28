@@ -8,6 +8,7 @@ import {ProposalHandler} from '../handlers/FullProposalDomain';
 import {ResponseHandler} from '../handlers/Response';
 import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
+import { DepthScales } from '../entity/DepthScales';
 
 /**
  * ***************************
@@ -505,7 +506,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     probabilityName,
     impact_area_active,
     active,
-    dimensions
+    dimensions,
+    depthScaleList
   } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -546,7 +548,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
       probabilityName,
       impact_area_active,
       active,
-      dimensions
+      dimensions,
+      depthScaleList
     );
 
     res.json(
