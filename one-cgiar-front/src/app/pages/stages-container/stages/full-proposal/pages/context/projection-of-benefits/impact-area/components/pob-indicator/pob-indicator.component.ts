@@ -56,7 +56,7 @@ export class PobIndicatorComponent implements OnInit {
         this.indicatorsListPOBSavediItem[keyName] = this.pobImpactAreaForm.value[keyName];
       })
       this.indicatorsListPOBSavediItem.dimensions = this.dimensionsList;
-      this.indicatorsListPOBSavediItem.depthScaleList = this.depthScaleList;
+      // this.indicatorsListPOBSavediItem.depthScaleList = this.depthScaleList;
     }
     })
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
