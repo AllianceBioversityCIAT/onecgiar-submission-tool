@@ -738,9 +738,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         let isSave: any;
         const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
         if(returnData){
-          isSave = {...returnData, active: el.active};
+          isSave = {...returnData, active: !!el.active};
         }else{
-          isSave = {depthScalesId:el.depthScaleId, active:el.active, projectionBenefitsId:projectionBenefitsId};
+          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId};
         }
 
         await projectionBenefitsDepthScalesRepo.save(isSave);

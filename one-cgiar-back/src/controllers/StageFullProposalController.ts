@@ -510,8 +510,6 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     depthScaleList
   } = req.body;
 
-  console.log(depthScaleList)
-
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
