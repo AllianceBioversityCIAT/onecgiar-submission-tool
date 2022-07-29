@@ -64,7 +64,7 @@ export class PobIndicatorComponent implements OnInit {
         this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.impactAreaIndicatorName);
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
         this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
-        console.log(this.depthScalesList )
+        // console.log(this.depthScalesList )
         this.reloadDepthScale();
         // this.showDepthScale = true;
         this.reloadDimensions();

@@ -49,6 +49,7 @@
                 selectItemName:'depthScaleName',
                 selectItemId:'depthScaleId',
                 hideSavedList: true,
+                shadow: false,
                 frontendSearchAttribute:'acronym_name',
                 readOnlyVariable: this._initiativesService.initiative.readonly,
                 savedList:{
@@ -59,6 +60,13 @@
                     labelName:'depthScaleName'
                 }
             }"></ibdc-select-multiple>
+
+            <div *ngFor="let depthScaleItem of this.indicatorsListPOBSavediItem.depthScaleList">
+                <app-multiple-select-item 
+                [object]="depthScaleItem"
+                [attr]="'name'"
+                ></app-multiple-select-item>
+            </div>
             
         </div>
     </div>

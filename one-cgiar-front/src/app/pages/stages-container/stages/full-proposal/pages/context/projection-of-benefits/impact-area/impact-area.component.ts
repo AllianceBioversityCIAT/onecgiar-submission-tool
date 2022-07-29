@@ -52,6 +52,7 @@ export class ImpactAreaComponent implements OnInit {
       }else{
         this._initiativesService.getPOBenefitsFpByImpactArea(this._initiativesService.initiative.stageId,this._initiativesService.initiative.id, routeResp.pobIaID).subscribe(resp => {
           this.indicatorsListPOBSavedList = resp.response.projectionBenefitsByImpact;
+          console.log(resp.response.projectionBenefitsByImpact)
         })
       }
       
@@ -75,6 +76,7 @@ export class ImpactAreaComponent implements OnInit {
     this.indicatorsListPOBSavedList.map(item=>{
       console.log(item)
       this._initiativesService.patchPOBenefitsFp(item).subscribe(resp=>{
+        console.log(resp)
         indicatorsSavedList.push(true);
         cont++
         if (cont == this.indicatorsListPOBSavedList.length) {
