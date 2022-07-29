@@ -735,21 +735,21 @@ export class ProposalHandler extends InitiativeStageHandler {
     //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
 
     try {
-      projectedScales = await projectionBenefitsDepthScalesRepo.find({where: {projectionBenefitsId: newWorkProjectionBenefits.id}});
-      
+      /*projectedScales = await projectionBenefitsDepthScalesRepo.find({where: {projectionBenefitsId: newWorkProjectionBenefits.id}});
       if(projectedScales.length > 0){
-        projectedScales.map(el => {
+        projectedScales = projectedScales.map(el => {
+          el.active = false;
           depthScaleList.forEach(scale => {
             if(el.id === scale.id){
               el.active = scale.selected;
             }
           });
+          return el
         })
-        console.log(projectedScales)
       }else{
-        projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
-      }
-      
+        projectedScales = depthScaleList.map(el => ({id:el.id, depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
+      }*/
+      projectedScales = depthScaleList.map(el => ({id:el.id, depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
       await projectionBenefitsDepthScalesRepo.save(projectedScales);
 
       if (newWorkProjectionBenefits.id !== null) {
