@@ -828,7 +828,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                  AND active = 1
                 `,
         depthScalesListQuery = `
-                select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name from projection_benefits_depth_scales pbds 
+                select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName from projection_benefits_depth_scales pbds 
                 inner join depth_scales ds on ds.id = pbds.depthScalesId 
               where pbds.projectionBenefitsId in (SELECT  id
                     FROM projection_benefits
@@ -890,7 +890,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1
                     `,
         depthScalesListQuery = `
-        select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name from projection_benefits_depth_scales pbds 
+        select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName  from projection_benefits_depth_scales pbds 
 		    inner join depth_scales ds on ds.id = pbds.depthScalesId 
 			where pbds.projectionBenefitsId in (SELECT  id
             FROM projection_benefits
