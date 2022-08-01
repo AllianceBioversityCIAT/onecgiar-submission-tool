@@ -1,1 +1,4 @@
-<div class="select_item"> - {{this.object[this.attr]}} </div>
+<div class="select_item" [hidden]="this.object.active === false">
+    <div class="name">{{this.object[this.attr]}}</div>
+    <!-- <i class="material-icons" (click)="onRemove()">remove_circle</i> -->
+</div>

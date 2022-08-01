@@ -11,7 +11,13 @@ export class MultipleSelectItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.object);
+  }
+
+  onRemove(){
+    this.object.selected = false;
+    console.log(this.object)
+    // this.object.active = false;
+   
   }
 
 }

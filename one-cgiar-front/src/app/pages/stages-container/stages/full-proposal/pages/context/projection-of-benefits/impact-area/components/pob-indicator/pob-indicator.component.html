@@ -61,11 +61,15 @@
                 }
             }"></ibdc-select-multiple>
 
-            <div *ngFor="let depthScaleItem of this.indicatorsListPOBSavediItem.depthScaleList">
-                <app-multiple-select-item 
-                [object]="depthScaleItem"
-                [attr]="'depthScaleName'"
-                ></app-multiple-select-item>
+            <div class="items_container" *ngIf="checkActives()">
+                <div class="items">
+                    <div *ngFor="let depthScaleItem of this.indicatorsListPOBSavediItem.depthScaleList">
+                        <app-multiple-select-item 
+                        [object]="depthScaleItem"
+                        [attr]="'depthScaleName'"
+                        ></app-multiple-select-item>
+                    </div>
+                </div>
             </div>
             
         </div>
