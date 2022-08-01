@@ -13,7 +13,8 @@ export class depthScalesProjectedBenefitsReplica1659382681789 implements Migrati
                                         pb.id as projectionBenefitsId, 
                                         pb.depth_scale_id as depthScalesId 
                                 from projection_benefits pb 
-                                where pb.depth_scale_id is not null;`);
+                                where pb.depth_scale_id is not null
+                                and pb.active > 0;`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
