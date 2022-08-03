@@ -33,6 +33,7 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;
@@ -42,6 +43,8 @@ export class NavbarComponent implements OnInit {
         this.role = roles?.name;
       }
     });
+
+    this._pusherService.listenTocChange();
 
     /**
      ** START SOCKET PRESENCE CHANEL

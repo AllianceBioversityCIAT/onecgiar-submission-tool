@@ -101,6 +101,23 @@ export class PusherService {
     return text.split(' ').map(item=>item[0]).join('');
   }
 
+  listenTocChange(){
+    console.log("listenTocChange")
+    this.pusher = new Pusher(environment.pusher.key, {
+      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${2}/${284}`,
+      cluster: environment.pusher.cluster,
+      encrypted: true,
+    });
+
+    var channel = this.pusher.subscribe("toc-id-123");
+    channel.bind("updateToc", (data) => {
+      // Method to be dispatched on trigger.
+      console.log(data)
+      console.log("trigger")
+    });
+
+  }
+
  start(OSTRoute:string, userId, initiativeId){
   if (this.beforeRoute) this.pusher.unsubscribe('presence-ost'+this.beforeRoute);
     

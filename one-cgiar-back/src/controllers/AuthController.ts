@@ -239,14 +239,13 @@ export async function validateToCToken(req: Request, res: Response) {
 }
 
 export async function pusherUpdate(req: Request, res: Response) {
-  const tocStatus = req.body.tocStatus;
+  const tocStatus = 'example';
 
   try {
-    pusher.trigger('events-channel', 'new-status', {
-      tocStatus: `${tocStatus}`
-    });
+    pusher.trigger("toc-id-123", "updateToc", { message: "hello world" });
 
-    // res.send(authResponse);
+    // pusher.trigger('my-channel', 'my-event', {:message => 'hello world'})
+    res.json({response: {user_info: 'userInfo'}});
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }
