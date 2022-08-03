@@ -40,9 +40,10 @@ export class CompactInformationTableViewComponent implements OnInit {
     if(!this.exportDocx) return;
     const dateStamp = new Date();
     this._manageDocxService.createExport(
-      this.attr_list_config, 
+      this.configExport.configHeaderTable, 
       this.list, 
       this._date.transform(dateStamp,'yyyyLLdd_HHmmSS'),
+      this.configExport.actionArea,
       this.configExport.subtex, 
       this.configExport.complex);
   }
@@ -91,6 +92,8 @@ export class CompactInformationTableViewComponent implements OnInit {
 
 interface configDocx{
   complex: boolean,
-  subtex: string
+  subtex: string,
+  actionArea: string,
+  configHeaderTable: any[]
 }
 

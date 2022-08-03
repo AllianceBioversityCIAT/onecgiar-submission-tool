@@ -6,6 +6,7 @@ import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activi
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -133,9 +134,14 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
       console.log(this.geographicScopes);
 
+      forkJoin({
+        initiatives: this._initiativesService.getInitiativesList(),
+        regions: this._initiativesService.getCLARISARegions(''),
+        countries: this._initiativesService.getCLARISACountries()
+      }).subscribe(({initiatives, regions, countries}) => {
 
-      //MAP INITIATIVES
-      this._initiativesService.getInitiativesList().subscribe(initiatives => {
+
+        //Map Initiatives
         this.list.map((melia: any) => {
           melia.initiatives.map(mapInit => {
             initiatives.response.initiatives.forEach(initItem => {
@@ -146,10 +152,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
             })
           })
           // this._dataControlService.showinitiatives = true;
-        })
-      });
-      //MAP REGIONS
-      this._initiativesService.getCLARISARegions('').subscribe(regions => {
+        });
+
+
+        //Map Regions
         this.list.map((melia: any) => {
           melia.regions.map(mapReg => {
             regions.response.regions.forEach(regionItem => {
@@ -157,11 +163,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
             })
           })
           // this._dataControlService.showRegions = true;
-        })
-      });
+        });
 
-      //MAP COUNTRIES
-      this._initiativesService.getCLARISACountries().subscribe(countries => {
+
+        //Map Countries
         this.list.map((melia: any) => {
           melia.countries.map(mapCoun => {
             countries.response.countries.forEach(countryItem => {
@@ -170,12 +175,15 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
           })
         });
+        
 
         this.formatGeographicScope(this.list);
-        // this._dataControlService.showCountries = true;
-      })
-        ;
-    })
+
+      });
+
+
+
+    });
   }
 
   saveSection() {

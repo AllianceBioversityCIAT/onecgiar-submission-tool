@@ -19,7 +19,9 @@
             [exportDocx]="true"
             [configExport]="{
                 complex: true,
-                subtex: 'ISDC Feedback Responses'
+                subtex: 'ISDC Feedback Responses',
+                actionArea: this.actionArea,
+                configHeaderTable: this.configHeaderDocx
             }"
             tableTitle="{{this._initiativesService.initiative.official_code + ': ' + this._initiativesService.initiative.name}}">
         </app-compact-information-table-view>

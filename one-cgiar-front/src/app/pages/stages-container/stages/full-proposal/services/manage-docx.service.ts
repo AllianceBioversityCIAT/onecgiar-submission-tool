@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InitiativesService } from '../../../../../shared/services/initiatives.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Packer,
   Document,
@@ -9,9 +10,13 @@ import {
   Paragraph,
   HeadingLevel,
   TextRun,
-  ExternalHyperlink
+  ExternalHyperlink,
+  PageOrientation,
+  ImageRun,
+  TextWrappingType,
+  HorizontalPositionRelativeFrom,
+  VerticalPositionRelativeFrom
 } from "docx";
-
 
 
 @Injectable({
@@ -19,17 +24,30 @@ import {
 })
 export class ManageDocxService {
 
-  private regexHtml: RegExp = /(<([^>]+)>)|&nbsp;/g;
+  private regexHtml: RegExp = /(<([^>]+)>)/g;
+  private regexSpacing: RegExp = /(\s+\s)|(&nbsp;)/g;
+  private regexFormat: regexFormat = {
+    links: /<\s*a[^>]*>((.*\n.*?)|.*?)<\s*\/\s*a>/g,
+    bold: /<\s*b[^>]*>((.*\n.*?)|.*?)<\s*\/\s*b>|<\s*strong[^>]*>((.*\n.*?)|.*?)<\s*\/\s*strong>/g,
+    italic: /<\s*i[^>]*>((.*\n.*?)|.*?)<\s*\/\s*i>|<\s*em[^>]*>((.*\n.*?)|.*?)<\s*\/\s*em>/g,
+    points: /<\s*li[^>]*>((.*\n.*?)|.*?)<\s*\/\s*li>/g,
+    lineBreak: /<\s*\/\s*p>/g
+  };
+  private configDocx: configDocx = {
+    font: 'Arial',
+    orientation: 'LANDSCAPE'
+  }
 
-  constructor(private _initiativesService: InitiativesService) { }
+  constructor(private _initiativesService: InitiativesService,
+    private http: HttpClient) { }
 
-  public createExport(configHeader: configList[], configBody: any[], date: string, section: string = '', complex: boolean = false) {
+  public createExport(configHeader: configList[], configBody: any[], date: string, actionArea:string, section: string = '', complex: boolean = false, configDoc: configDocx = this.configDocx) {
     const header = this.configHeader(configHeader);
     const body = this.configBody(configHeader, configBody, complex);
     const table = new Table({
       rows: [header, ...body]
     });
-    this.packageDocument(table, date, section);
+    this.packageDocument(table, date, actionArea, section);
   }
 
   private configHeader(config: configList[]): any {
@@ -37,6 +55,12 @@ export class ManageDocxService {
     config.forEach(el => {
       headerConfig.push(
         new TableCell({
+          margins: {
+            bottom: 200,
+            left: 200,
+            right: 200,
+            top: 200
+          },
           shading: {
             fill: 'EEEEEE'
           },
@@ -51,6 +75,7 @@ export class ManageDocxService {
                 new TextRun({
                   text: el.name,
                   bold: true,
+                  font: this.configDocx.font
                 })
               ]
             })
@@ -77,8 +102,22 @@ export class ManageDocxService {
         config.forEach(cell => {
           row.push(
             new TableCell({
+              margins: {
+                bottom: 200,
+                left: 200,
+                right: 200,
+                top: 200
+              },
               children: [
-                new Paragraph(el[cell.attribute].replace(this.regexHtml, ''))
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: el[cell.attribute].replace(this.regexHtml, ''),
+                      style: "Hyperlink",
+                      font: this.configDocx.font
+                    })
+                  ]
+                })
               ]
             })
           )
@@ -99,15 +138,17 @@ export class ManageDocxService {
     return this.convertFlatToCompoundBody(complexFlat);
   }
 
-  private convertBodyToComplexBody(body: any[], config: configList[]): complexFlat[][]{
-    const regexLink = /<\s*a[^>]*>(.*?)<\s*\/\s*a>/g;
+  private convertBodyToComplexBody(body: any[], config: configList[]): complexFlat[][] {
     let complexBodyFlat: complexFlat[][] = [];
     body.forEach((el) => {
       let complexRow: complexFlat[] = [];
       config.forEach((cell) => {
         complexRow.push({
-          links: el[cell.attribute]?el[cell.attribute].match(regexLink):null,
-          textArray: el[cell.attribute]?el[cell.attribute].replace(regexLink, '(:[:link:]:)').split(/\(:\[|\]:\)/g):[]
+          links: el[cell.attribute] ? el[cell.attribute].match(this.regexFormat.links) : null,
+          bold: el[cell.attribute] ? el[cell.attribute].match(this.regexFormat.bold) : null,
+          italic: el[cell.attribute] ? el[cell.attribute].match(this.regexFormat.italic) : null,
+          points: el[cell.attribute] ? el[cell.attribute].match(this.regexFormat.points) : null,
+          textArray: el[cell.attribute] ? this.getFormats(el[cell.attribute]) : []
         })
       });
       complexBodyFlat.push(complexRow);
@@ -116,7 +157,21 @@ export class ManageDocxService {
     return complexBodyFlat;
   }
 
-  private convertFlatToCompoundBody(flatBody: complexFlat[][]){
+  private getFormats(data: string): string[][] {
+    let formats: string[][] = [];
+    const formatsReplace = data.replace(this.regexFormat.points, '(:[:points:]:)')
+      .replace(this.regexFormat.links, '(:[:link:]:)')
+      .replace(this.regexFormat.bold, '(:[:bold:]:)')
+      .replace(this.regexFormat.italic, '(:[:italic:]:)')
+      .replace(/<([\/p^>]+)>|<([\/ul^>]+)>/g, '(:[:jump:]:)')
+      .split('(:[:jump:]:)').filter(el => el != '\n  ' && el != '');
+    formatsReplace.forEach(el => {
+      formats.push(el.split(/\(:\[|\]:\)/g));
+    })
+    return formats;
+  }
+
+  private convertFlatToCompoundBody(flatBody: complexFlat[][]) {
     let complexBody: any[] = [];
     flatBody.forEach(el => {
       let complexRow: any[] = [];
@@ -131,76 +186,197 @@ export class ManageDocxService {
     return complexBody;
   }
 
-  private asingDataComplex(cell: complexFlat){
-    let countCovert: number = 0;
+  private asingDataComplex(cell: complexFlat) {
+    let countCovert = {
+      link: 0,
+      bold: 0,
+      italic: 0,
+      points: 0
+    };
+    let isList: boolean = false;
+    let contentParagraph: any[] = [];
     let complexCell: any[] = [];
+    let complexPoint: Paragraph[] = [];
     cell.textArray.forEach((data) => {
-      if(/:link:/.test(data)){
-        complexCell.push(
-          new ExternalHyperlink({
-            link: cell.links[countCovert].replace(/<.+href="|".+/g,''),
-            children:[
-              new TextRun({
-                text: cell.links[countCovert].replace(/(<([^>]+)>)/g,''),
-                style: "Hyperlink"
-              })
-            ]
-          })
-          
-        );
-        countCovert++;
-      }else{
-        complexCell.push(
-          new TextRun({
-            text: data.replace(this.regexHtml, '')
-          })
-        );
-      }
-    })
+      complexCell = [];
+      data.forEach(el => {
+        if (/:link:/.test(el)) {
+          complexCell.push(
+            new ExternalHyperlink({
+              link: cell.links[countCovert.link].replace(/<.+href="|".+/g, ''),
+              children: [
+                new TextRun({
+                  text: cell.links[countCovert.link].replace(this.regexSpacing, ' ').replace(this.regexHtml, ''),
+                  style: "Hyperlink",
+                  font: this.configDocx.font
+                })
+              ]
+            })
 
+          );
+          countCovert.link++;
+        } else if (/:bold:/.test(el)) {
+          complexCell.push(
+            new TextRun({
+              text: cell.bold[countCovert.bold].replace(this.regexSpacing, ' ').replace(this.regexHtml, ''),
+              bold: true,
+              font: this.configDocx.font
+            })
+          );
+          countCovert.bold++;
+        } else if (/:italic:/.test(el)) {
+          complexCell.push(
+            new TextRun({
+              text: cell.italic[countCovert.italic].replace(this.regexSpacing, ' ').replace(this.regexHtml, ''),
+              italics: true,
+              font: this.configDocx.font
+            })
+          );
+          countCovert.italic++;
+        } else if (/:points:/.test(el)) {
+          complexPoint.push(
+            new Paragraph({
+              bullet: {
+                level: 0
+              },
+              children: [
+                new TextRun({
+                  text: cell.points[countCovert.points].replace(this.regexSpacing, ' ').replace(this.regexHtml, ''),
+                  font: this.configDocx.font
+                })
+              ]
+            })
+          );
+          isList = true;
+          countCovert.points++;
+        } else {
+          complexCell.push(
+            new TextRun({
+              text: el.replace(this.regexSpacing, ' ').replace(this.regexHtml, ''),
+              font: this.configDocx.font
+            })
+          );
+        }
+      });
+
+      if (isList) {
+        contentParagraph.push(
+          ...complexPoint,
+          new Paragraph({
+            children: []
+          })
+        )
+        isList = false;
+      } else {
+        contentParagraph.push(
+          new Paragraph({
+            children: complexCell
+          }),
+          new Paragraph({
+            children: []
+          })
+        )
+      }
+
+
+    })
     return new TableCell({
-      children: [
-        new Paragraph({
-          children: complexCell
-        })
-      ]
+      margins: {
+        bottom: 200,
+        left: 200,
+        right: 200,
+        top: 200
+      },
+      children: contentParagraph
     });
   }
 
-  private packageDocument(table: Table, date: string, section: string) {
-    const doc = new Document({
-      sections: [
-        {
-          children: [
-            new Paragraph({
-              text: "One CGIAR Submission Tool",
-              heading: HeadingLevel.TITLE
-            }),
-            new Paragraph({
-              text: `${this._initiativesService.initiative.official_code}: ${this._initiativesService.initiative.name}`,
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              text: section,
-              heading: HeadingLevel.HEADING_2,
-              spacing: {
-                after: 200
+  private packageDocument(table: Table, date: string, actionArea:string, section: string) {
+    this.http.get('../../../../../../assets/images/cgiar_logo.png', {
+      headers: new HttpHeaders({
+        'Accept': 'image/png',
+      }),
+      responseType: 'arraybuffer'
+    }).subscribe(el => {
+      const doc = new Document({
+        sections: [
+          {
+            properties: {
+              page: {
+                size: {
+                  orientation: PageOrientation.LANDSCAPE
+                }
               }
-            }),
-            table
-          ]
-        }
-      ]
-    });
+            },
+            children: [
+              new Paragraph({
+                children: [
+                  new ImageRun({
+                    data: el,
+                    transformation: {
+                      width: 97,
+                      height: 114,
+                  },
+                  floating: {
+                    margins:{
+                      right: 300000
+                    },
+                    horizontalPosition:{
+                      offset: 914400
+                    },
+                    verticalPosition:{
+                      offset: 914400
+                    },
+                    wrap: {
+                      type: TextWrappingType.SQUARE
+                    }
+                  }
+                  })
+                ]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [
+                  new TextRun({
+                    text: actionArea,
+                    font: this.configDocx.font
+                  })
+                ]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [
+                  new TextRun({
+                    text: `${this._initiativesService.initiative.official_code}: ${this._initiativesService.initiative.name}`,
+                    font: this.configDocx.font
+                  })
+                ]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_2,
+                children: [
+                  new TextRun({
+                    text: section,
+                    font: this.configDocx.font
+                  })
+                ]
+              }),
+              table
+            ]
+          }
+        ]
+      });
 
-    Packer.toBlob(doc).then(blob => {
-      import("file-saver").then(FileSaver => {
-        FileSaver.saveAs(
-          blob,
-          `${this._initiativesService.initiative.official_code}_ISDC_Feedback_Responses_${date}.docx`
-        )
+      Packer.toBlob(doc).then(blob => {
+        import("file-saver").then(FileSaver => {
+          FileSaver.saveAs(
+            blob,
+            `${this._initiativesService.initiative.official_code}_ISDC_Feedback_Responses_${date}.docx`
+          )
+        })
       })
     })
+
   }
 
 }
@@ -211,7 +387,22 @@ interface configList {
 }
 
 interface complexFlat {
-  links: any[],
-  textArray: any[]
+  links: any[];
+  bold: any[];
+  italic: any[];
+  textArray: any[];
+  points: any[];
 }
 
+interface regexFormat {
+  links: RegExp;
+  bold: RegExp;
+  italic: RegExp;
+  lineBreak: RegExp;
+  points: RegExp;
+}
+
+interface configDocx {
+  orientation?: 'LANDSCAPE' | 'PORTRAIT';
+  font?: 'Arial';
+}
