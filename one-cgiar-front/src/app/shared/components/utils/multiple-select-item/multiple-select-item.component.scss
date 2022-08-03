@@ -1,0 +1,18 @@
+.select_item{
+    background-color: white;
+    box-shadow: 0px 0px 5px #00000018;
+    padding: 5px 10px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    .name{
+
+    }
+    i{
+        margin-left: 10px;
+        color: rgb(255, 88, 88);
+        cursor: pointer;
+    }
+}

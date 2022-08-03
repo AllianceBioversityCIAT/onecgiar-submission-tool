@@ -1,5 +1,5 @@
 
-<div>
+<div *ngIf="sectionId != 31 && sectionId != 32 || this._dataControlService.isAdmin">
 
     <a 
     [attr.href]="this.haveContent ? null : this.customRouterLink" 

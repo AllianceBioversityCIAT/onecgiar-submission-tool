@@ -9,6 +9,7 @@ import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeHandler} from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
+import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -700,8 +701,12 @@ export class ProposalHandler extends InitiativeStageHandler {
     probabilityName?,
     impact_area_active?,
     active?,
-    dimensions?
+    dimensions?,
+    depthScaleList?
   ) {
+
+    const depthScalesRepo = getRepository(entities.DepthScales);
+    const projectionBenefitsDepthScalesRepo = getRepository(ProjectionBenefitsDepthScales);
     const projBeneRepo = getRepository(entities.ProjectionBenefits);
     const dimensionsRepo = getRepository(entities.Dimensions);
     const initvStg = await this.setInitvStage();
@@ -726,7 +731,21 @@ export class ProposalHandler extends InitiativeStageHandler {
     newWorkProjectionBenefits.wrkPkg = null;
     newWorkProjectionBenefits.active = active;
 
+    //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
+
     try {
+      depthScaleList.forEach(async el => {
+        let isSave: any;
+        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
+        if(returnData){
+          isSave = {...returnData, active: !!el.active};
+        }else{
+          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId};
+        }
+
+        await projectionBenefitsDepthScalesRepo.save(isSave);
+      });
+
       if (newWorkProjectionBenefits.id !== null) {
         var savedProjectionBenefits = await projBeneRepo.findOne(
           newWorkProjectionBenefits.id
@@ -807,14 +826,27 @@ export class ProposalHandler extends InitiativeStageHandler {
                 FROM projection_benefits
                WHERE initvStgId = ${initvStg.id})
                  AND active = 1
-                `;
+                `,
+        depthScalesListQuery = `
+                select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName from projection_benefits_depth_scales pbds 
+                inner join depth_scales ds on ds.id = pbds.depthScalesId 
+              where pbds.projectionBenefitsId in (SELECT  id
+                    FROM projection_benefits
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                  AND pbds.active > 0;`;
 
+      const depthScalesList = await this.queryRunner.query(depthScalesListQuery);
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
 
       projectBenefits.map((pb) => {
         pb['dimensions'] = dimensions.filter((dim) => {
           return dim.projectionId === pb.id;
+        });
+
+        pb['depthScaleList'] = depthScalesList.filter((dim) => {
+          return dim.projectionBenefitsId === pb.id;
         });
       });
 
@@ -856,14 +888,27 @@ export class ProposalHandler extends InitiativeStageHandler {
                     FROM projection_benefits
                    WHERE initvStgId = ${initvStg.id})
                      AND active = 1
-                    `;
+                    `,
+        depthScalesListQuery = `
+        select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName  from projection_benefits_depth_scales pbds 
+		    inner join depth_scales ds on ds.id = pbds.depthScalesId 
+			where pbds.projectionBenefitsId in (SELECT  id
+            FROM projection_benefits
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1)
+             AND pbds.active > 0;`;
 
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
+      const depthScalesList = await this.queryRunner.query(depthScalesListQuery);
 
       projectBenefits.map((pb) => {
         pb['dimensions'] = dimensions.filter((dim) => {
           return dim.projectionId === pb.id;
+        });
+
+        pb['depthScaleList'] = depthScalesList.filter((dim) => {
+          return dim.projectionBenefitsId === pb.id;
         });
       });
 

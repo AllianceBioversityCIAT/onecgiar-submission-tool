@@ -20,6 +20,7 @@ export class PobIndicatorComponent implements OnInit {
   showDimensions = false;
   showDepthScale = false;
   formUpdated = false;
+  depthScaleList = [];
   // originalIndicatorId=null;
   constructor(
     public _initiativesService:InitiativesService,
@@ -40,6 +41,10 @@ export class PobIndicatorComponent implements OnInit {
     });
    }
 
+   checkActives(){
+    return this.indicatorsListPOBSavediItem.depthScaleList.some(item=>item.active == true)
+   }
+
   ngOnInit(): void {
   
     this.showDepthScale = true;
@@ -55,6 +60,7 @@ export class PobIndicatorComponent implements OnInit {
         this.indicatorsListPOBSavediItem[keyName] = this.pobImpactAreaForm.value[keyName];
       })
       this.indicatorsListPOBSavediItem.dimensions = this.dimensionsList;
+      // this.indicatorsListPOBSavediItem.depthScaleList = this.depthScaleList;
     }
     })
     this.pobImpactAreaForm.get('impactAreaIndicator').valueChanges.subscribe(resp=>{
@@ -62,6 +68,7 @@ export class PobIndicatorComponent implements OnInit {
         this.pobImpactAreaForm.controls['impactAreaIndicatorName'].setValue(this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.impactAreaIndicatorName);
         this.depthDescriptionsList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.weightingValues;
         this.depthScalesList = this.indicatorsList.find(item=>item.impactAreaIndicator == resp)?.depthScales;
+        // console.log(this.depthScalesList )
         this.reloadDepthScale();
         // this.showDepthScale = true;
         this.reloadDimensions();

@@ -14,6 +14,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
 import {ToastModule} from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ReadMoreContainerComponent } from './read-more-container/read-more-container.component';
+import { MultipleSelectItemComponent } from './multiple-select-item/multiple-select-item.component';
 
 const mycomponents = [
   SectionTitleComponent,
@@ -24,7 +25,8 @@ const mycomponents = [
   InformationButtonComponent,
   ItemInformationButtonComponent,
   ClipboardIconComponent,
-  ReadMoreContainerComponent
+  ReadMoreContainerComponent,
+  MultipleSelectItemComponent
 ];
 const myModules = [
   IbdAngularComponentsModule,

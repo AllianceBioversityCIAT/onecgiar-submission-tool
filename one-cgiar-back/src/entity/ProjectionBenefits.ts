@@ -4,9 +4,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne
+  OneToOne,
+  OneToMany
 } from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import { ProjectionBenefitsDepthScales } from './ProjectionBenefitsDepthScales';
 import {WorkPackages} from './WorkPackages';
 
 @Entity('projection_benefits')
@@ -56,4 +58,7 @@ export class ProjectionBenefits extends UpdatedCreatedAt {
 
   @Column({length: '500'})
   probability_name: string;
+
+  @OneToMany(() => ProjectionBenefitsDepthScales, (projectionBenefitsDepthScales) => projectionBenefitsDepthScales.projectionBenefitsId)
+  projectionBenefitsDepthScales: ProjectionBenefitsDepthScales[];
 }

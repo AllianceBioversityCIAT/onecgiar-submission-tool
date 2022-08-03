@@ -13,6 +13,20 @@
     }
 }
 
+.items_container{
+    width: 100%; 
+    box-sizing: border-box;
+    margin-top: -58px; 
+    border-radius: 10px;
+    // margin-left: 10px;
+    padding: 10px 12px; 
+    background-color: #ededed;
+    box-shadow: 0px 0px 5px rgb(230, 230, 230);
+    .items{
+        width: max-content; 
+    }
+}
+
 .custom_card{
     position: relative;
     background-color: #fafafefe;

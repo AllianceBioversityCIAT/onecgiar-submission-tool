@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="col-12" *ngIf="showDepthScale && this.pobImpactAreaForm.value.impactAreaIndicator">
-            <ibdc-select [options]="
+            <!-- <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Choose a depth scale',
@@ -41,7 +41,37 @@
              readOnlyVariable: this._initiativesService.initiative.readonly,
              selectList: this.depthScalesList
             }">
-            ></ibdc-select>
+            ></ibdc-select> -->
+
+            <ibdc-select-multiple [options]="{
+                inputTitle:'Choose multiple depth scale',
+                selectList: this.depthScalesList,
+                selectItemName:'depthScaleName',
+                selectItemId:'depthScaleId',
+                hideSavedList: true,
+                shadow: false,
+                frontendSearchAttribute:'acronym_name',
+                readOnlyVariable: this._initiativesService.initiative.readonly,
+                savedList:{
+                    list: this.indicatorsListPOBSavediItem.depthScaleList,
+                    selectItemId:'depthScaleId',
+                    selectItemName:'depthScaleName',
+                    idToSave:'depthScaleId',
+                    labelName:'depthScaleName'
+                }
+            }"></ibdc-select-multiple>
+
+            <div class="items_container" *ngIf="checkActives()">
+                <div class="items">
+                    <div *ngFor="let depthScaleItem of this.indicatorsListPOBSavediItem.depthScaleList">
+                        <app-multiple-select-item 
+                        [object]="depthScaleItem"
+                        [attr]="'depthScaleName'"
+                        ></app-multiple-select-item>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
     <hr *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">
