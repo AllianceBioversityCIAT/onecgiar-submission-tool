@@ -1,7 +1,7 @@
 <div class="card-container">
     <section-title name="Users reporting"></section-title>
     <div class="section-container animate__animated animate__fadeIn">
-        <p-table #dt1 [loading]="loading" [globalFilterFields]="['official_code','initiative_name','user_name','email']" styleClass="p-datatable-gridlines" [value]="usersList"
+        <p-table #dt1 [loading]="loading" [globalFilterFields]="['official_code','initiative_name','user_name','email','generalRole', 'initRole']" styleClass="p-datatable-gridlines" [value]="usersList"
             scrollHeight="calc(80vh - 100px)" [scrollable]="true">
             <ng-template pTemplate="caption">
                 <div style="display: flex; justify-content: space-between;">
@@ -44,20 +44,11 @@
                             <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
                         </div>
                     </th>
-                    <th pSortableColumn="role">
+                    <th pSortableColumn="generalRole">
                         <div class="flex justify-content-center align-items-center">
                             Role
-                            <p-sortIcon field="role"></p-sortIcon>
-                            <p-columnFilter type="text" field="role" display="menu">
-                                <!-- <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                    <p-dropdown [ngModel]="value" [options]="roles" (onChange)="filter($event.value)"
-                                        placeholder="Any">
-                                        <ng-template let-option pTemplate="item">
-                                            <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
-                                        </ng-template>
-                                    </p-dropdown>
-                                </ng-template> -->
-                            </p-columnFilter>
+                            <p-sortIcon field="generalRole"></p-sortIcon>
+                            <p-columnFilter type="text" field="generalRole" display="menu"></p-columnFilter>
                         </div>
                     </th>
                     <th pSortableColumn="last_login">
@@ -71,11 +62,34 @@
             </ng-template>
             <ng-template pTemplate="body" let-user>
                 <tr>
-                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information"><strong>{{user.official_code}}</strong></td>
-                    <td class="routerInit" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information">{{user.initiative_name}}</td>
+                    <td class="routerInit" *ngIf="user.official_code" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information">
+                        <strong>
+                            {{user.official_code}}
+                        </strong>
+                    </td>
+                    <td *ngIf="!user.official_code">
+                        <i style="font-size: 10px;">
+                            Not applicable
+                        </i>
+                    </td>
+                    <td class="routerInit" *ngIf="user.initiative_name" routerLink="/initiatives/{{user.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(user.stageId)?.route}}/general-information">
+                        {{user.initiative_name}}
+                    </td>
+                    <td *ngIf="!user.initiative_name">
+                        <i style="font-size: 10px;">
+                            Not applicable
+                        </i>
+                    </td>
                     <td>{{user.user_name}}</td>
                     <td>{{user.email}}</td>
-                    <td>{{user.role}}</td>
+                    <td>
+                        <p>
+                            <strong>General Role: </strong> {{user.generalRole}}
+                        </p>
+                        <p>
+                            <strong>Initiative Role: </strong>{{user.initRole?user.initRole:'Not applicable'}}
+                        </p>
+                    </td>
                     <td>
                         <app-toggle-format-date *ngIf="user?.last_login" [date]="user.last_login">
                         </app-toggle-format-date>
