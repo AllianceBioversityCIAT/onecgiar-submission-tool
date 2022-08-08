@@ -734,17 +734,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
 
     try {
-      depthScaleList.forEach(async el => {
-        let isSave: any;
-        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
-        if(returnData){
-          isSave = {...returnData, active: !!el.active};
-        }else{
-          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId};
-        }
-
-        await projectionBenefitsDepthScalesRepo.save(isSave);
-      });
 
       if (newWorkProjectionBenefits.id !== null) {
         var savedProjectionBenefits = await projBeneRepo.findOne(
@@ -789,6 +778,17 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
+      depthScaleList.forEach(async el => {
+        let isSave: any;
+        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
+        if(returnData){
+          isSave = {...returnData, active: !!el.active};
+        }else{
+          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId?projectionBenefitsId:upsertedPjectionBenefits.id};
+        }
+
+        await projectionBenefitsDepthScalesRepo.save(isSave);
+      });
       return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
