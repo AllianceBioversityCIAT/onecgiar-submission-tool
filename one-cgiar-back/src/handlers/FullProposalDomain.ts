@@ -907,9 +907,9 @@ export class ProposalHandler extends InitiativeStageHandler {
           return dim.projectionId === pb.id;
         });
 
-        pb['depthScaleList'] = depthScalesList.filter((dim) => {
+        pb['depthScaleList'] = depthScalesList?depthScalesList.filter((dim) => {
           return dim.projectionBenefitsId === pb.id;
-        });
+        }): [];
       });
 
       return projectBenefits;
