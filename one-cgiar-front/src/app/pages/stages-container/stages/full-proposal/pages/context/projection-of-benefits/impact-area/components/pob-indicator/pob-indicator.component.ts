@@ -42,11 +42,11 @@ export class PobIndicatorComponent implements OnInit {
    }
 
    checkActives(){
-    return this.indicatorsListPOBSavediItem.depthScaleList.some(item=>item.active == true)
+    return this.indicatorsListPOBSavediItem?.depthScaleList.some(item=>item.active == true)
    }
 
   ngOnInit(): void {
-  
+    this.indicatorsListPOBSavediItem.depthScaleList = this.indicatorsListPOBSavediItem.depthScaleList?this.indicatorsListPOBSavediItem.depthScaleList: [];  
     this.showDepthScale = true;
 
     this.updateForm(this.indicatorsListPOBSavediItem);
