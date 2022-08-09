@@ -906,7 +906,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                     FROM projection_benefits
                    WHERE initvStgId = ${initvStg.id}
                      AND active = 1)
-                  AND pbds.active > 0;;`;
+                  AND pbds.active > 0;`;
 
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
