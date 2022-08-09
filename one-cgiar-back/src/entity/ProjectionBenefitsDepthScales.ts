@@ -11,9 +11,8 @@ export class ProjectionBenefitsDepthScales{
     @JoinColumn({name: 'projectionBenefitsId'})
     projectionBenefitsId: ProjectionBenefits;
 
-    @ManyToOne(() => DepthScales, (depthScales ) => depthScales.projectionBenefitsDepthScales)
-    @JoinColumn({name: 'depthScalesId'})
-    depthScalesId: ProjectionBenefits;
+    @Column({name: 'depthScalesId'})
+    depthScalesId: number;
 
     @Column()
     active: boolean;
