@@ -78,6 +78,17 @@ export class PobIndicatorComponent implements OnInit {
 
     })
   }
+
+  cleanDepthScaleList(){
+    this.indicatorsListPOBSavediItem.depthScaleList.map(item=>{
+      item.active = false;
+      item.selected = false;
+    })
+    this.depthScalesList.map(item=>{
+      item.selected = false;
+    })
+  }
+
   getIndicatorName(impactAreaIndicatorId){
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
