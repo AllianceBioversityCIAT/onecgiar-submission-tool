@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { EOIData } from './interfaces/EOIData.interface';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -29,7 +30,8 @@ export class MeasurableObjectivesComponent implements OnInit {
     private _interactionsService:InteractionsService,
     private _dataValidatorsService:DataValidatorsService,
     public _utilsService:UtilsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    private _pusherService:PusherService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),
@@ -40,6 +42,9 @@ export class MeasurableObjectivesComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Measurable three-year outcomes')
     this.getEndOfInitiativeOutcome();
+    this._pusherService.listenTocChange('measurable-objectives',()=>{
+      this.getEndOfInitiativeOutcome();
+    });
   }
 
   getEndOfInitiativeOutcome(){
