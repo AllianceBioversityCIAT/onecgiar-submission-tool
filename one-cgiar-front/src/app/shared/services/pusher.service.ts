@@ -101,19 +101,21 @@ export class PusherService {
     return text.split(' ').map(item=>item[0]).join('');
   }
 
-  listenTocChange(){
+  listenTocChange(sectionName:string,callback){
     console.log("listenTocChange")
-    this.pusher = new Pusher(environment.pusher.key, {
-      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${2}/${284}`,
-      cluster: environment.pusher.cluster,
-      encrypted: true,
-    });
-
-    var channel = this.pusher.subscribe("toc-id-123");
+    console.log(this._authService.userValue.id)
+    // this.pusher = new Pusher(environment.pusher.key, {
+    //   authEndpoint: `${environment.apiUrl}/auth/pusherauth/${this._initiativesService.initiative.id}/${this._authService.userValue.id}`,
+    //   cluster: environment.pusher.cluster,
+    //   encrypted: true,
+    // });
+    console.log(`Chanel: ${sectionName}-${this._initiativesService.initiative.id}`)
+    var channel = this.pusher.subscribe(`${sectionName}-${this._initiativesService.initiative.id}`);
     channel.bind("updateToc", (data) => {
       // Method to be dispatched on trigger.
-      console.log(data)
+      // console.log(data)
       console.log("trigger")
+      callback();
     });
 
   }

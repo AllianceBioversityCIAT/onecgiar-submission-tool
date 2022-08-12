@@ -44,7 +44,6 @@ export class NavbarComponent implements OnInit {
       }
     });
 
-    this._pusherService.listenTocChange();
 
     /**
      ** START SOCKET PRESENCE CHANEL

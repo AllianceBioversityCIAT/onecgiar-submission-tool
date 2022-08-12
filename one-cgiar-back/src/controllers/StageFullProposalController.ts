@@ -9,6 +9,7 @@ import {ResponseHandler} from '../handlers/Response';
 import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
 import { DepthScales } from '../entity/DepthScales';
+import Pusher from 'pusher';
 
 /**
  * ***************************
@@ -1685,6 +1686,14 @@ export async function getInnovationPackages(req: Request, res: Response) {
   }
 }
 
+const pusher = new Pusher({
+  appId: `${process.env.PUSHER_APP_ID}`,
+  key: `${process.env.PUSHER_API_KEY}`,
+  secret: `${process.env.PUSHER_API_SECRET}`,
+  cluster: `${process.env.PUSHER_APP_CLUSTER}`,
+  useTLS: true
+});
+
 /**
  * PATCH TOCS
  * @param req tocId,narrative, diagram, type, active
@@ -1726,7 +1735,8 @@ export async function patchTocs(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const tocs = await fullPposal.upsertTocs(toc);
-
+    console.log(toc);
+    pusher.trigger("full-initiative-toc-"+initiativeId, "updateToc", { message: "hello world" });
     res.json(
       new ResponseHandler('Full Proposal:Patch TOC', {
         tocs
@@ -1747,7 +1757,9 @@ export async function patchTocs(req: Request, res: Response) {
 export async function getTocByInitiative(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
   const toc = req.body;
-
+  console.log("__________________");
+  console.log(req.body);
+  console.log("_____________________________");
   //Validate stage
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1775,7 +1787,7 @@ export async function getTocByInitiative(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const fullInitiativeToc = await fullPposal.requestFullInitiativeToc();
-
+    console.log(fullInitiativeToc);
     res.json(
       new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
         fullInitiativeToc
