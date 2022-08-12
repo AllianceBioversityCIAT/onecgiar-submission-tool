@@ -9,7 +9,7 @@ import {ResponseHandler} from '../handlers/Response';
 import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
 import { DepthScales } from '../entity/DepthScales';
-import Pusher from 'pusher';
+import { pusherOST } from '../utils/pusher-util';
 
 /**
  * ***************************
@@ -1686,13 +1686,6 @@ export async function getInnovationPackages(req: Request, res: Response) {
   }
 }
 
-const pusher = new Pusher({
-  appId: `${process.env.PUSHER_APP_ID}`,
-  key: `${process.env.PUSHER_API_KEY}`,
-  secret: `${process.env.PUSHER_API_SECRET}`,
-  cluster: `${process.env.PUSHER_APP_CLUSTER}`,
-  useTLS: true
-});
 
 /**
  * PATCH TOCS
@@ -1736,7 +1729,7 @@ export async function patchTocs(req: Request, res: Response) {
 
     const tocs = await fullPposal.upsertTocs(toc);
     console.log(toc);
-    pusher.trigger("full-initiative-toc-"+initiativeId, "updateToc", { message: "hello world" });
+    pusherOST.tocTrigger('full-initiative-toc', initiativeId);
     res.json(
       new ResponseHandler('Full Proposal:Patch TOC', {
         tocs
