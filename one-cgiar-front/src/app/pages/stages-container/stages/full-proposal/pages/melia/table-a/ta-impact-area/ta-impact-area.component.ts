@@ -25,9 +25,10 @@ export class TaImpactAreaComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Table A');
     this.activatedRouteSubsription();
+
+
     this._pusherService.listenTocChange('table-a',()=>{
-      console.log('table-a')
-    }, ''+this.currentImpactAreaId);
+    },this.currentImpactAreaId);
   }
 
   activatedRouteSubsription(){

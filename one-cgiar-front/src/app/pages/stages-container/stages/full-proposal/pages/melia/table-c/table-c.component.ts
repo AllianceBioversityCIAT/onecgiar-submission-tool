@@ -26,9 +26,12 @@ export class TableCComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Table C');
     this.getMeliaResultFramework();
-    this._pusherService.listenTocChange('table-c',()=>{
-      this.getMeliaResultFramework();
-    });
+    this._initiativesService.getInitvStgId().subscribe(resp => {
+      this._initiativesService.initvStgId = resp.response;
+      this._pusherService.listenTocChange('table-c',()=>{
+        this.getMeliaResultFramework();
+      });
+    })
   }
 
   getMeliaResultFramework(){

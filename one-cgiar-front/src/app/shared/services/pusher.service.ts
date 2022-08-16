@@ -101,7 +101,7 @@ export class PusherService {
     return text.split(' ').map(item=>item[0]).join('');
   }
 
-  listenTocChange(sectionName:string,callback, subItemId?: string){
+  listenTocChange(sectionName:string,callback, subItemId?: string | number){
     var channel = this.pusher.subscribe(`${sectionName}-${this._initiativesService.initiative.id}${subItemId?`-${subItemId}`:``}`);
     channel.bind("updateToc", (data) => {
       callback();
