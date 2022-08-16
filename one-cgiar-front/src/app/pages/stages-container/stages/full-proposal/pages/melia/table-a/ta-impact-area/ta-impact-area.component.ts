@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-ta-impact-area',
@@ -17,13 +18,16 @@ export class TaImpactAreaComponent implements OnInit {
   constructor(
     private _initiativesService:InitiativesService,
     private activatedRoute:ActivatedRoute,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
     ) { }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Table A');
     this.activatedRouteSubsription();
-
+    this._pusherService.listenTocChange('table-a',()=>{
+      console.log('table-a')
+    }, ''+this.currentImpactAreaId);
   }
 
   activatedRouteSubsription(){
