@@ -32,8 +32,21 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: boolean) => (this.opened = res));
 
+      this.copyTokenToClipboard();
+
   }
 
+  copyTokenToClipboard(){
+    if (environment.production) return;
+    document.onkeyup = function () {
+      var e = e || window.event; // for IE to cover IEs window event-object
+      if(e.altKey && e.which == 84) {
+        navigator.clipboard.writeText(JSON.parse(localStorage.getItem('user'))?.token);
+        alert('Token copied to clipboard');
+        return false;
+      }
+    }
+  }
   
 
   ngOnDestroy(): void {
