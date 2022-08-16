@@ -101,14 +101,25 @@ export class PusherService {
     return text.split(' ').map(item=>item[0]).join('');
   }
 
+  // beforeTocChanel = ''
   listenTocChange(sectionName:string,callback, subItemId?: string | number){
+    this.pusherToc.disconnect();
+    this.instancePusher();
     const channelName = `${sectionName}-${this._initiativesService.initiative.id}${subItemId?`-${subItemId}`:``}`;
-    const channel = this.pusher.subscribe(channelName);
+    const channel = this.pusherToc.subscribe(channelName);
     console.log(`In: ${channelName}`)
     channel.bind("updateToc", (data) => {
       callback();
     });
 
+  }
+  pusherToc: any;
+  instancePusher(){
+    this.pusherToc = new Pusher(environment.pusher.key, {
+      authEndpoint: `${environment.apiUrl}/auth/pusherauth/${this._initiativesService.initiative}/${this._authService.userValue.id}`,
+      cluster: environment.pusher.cluster,
+      encrypted: true,
+    });
   }
 
  start(OSTRoute:string, userId, initiativeId){
