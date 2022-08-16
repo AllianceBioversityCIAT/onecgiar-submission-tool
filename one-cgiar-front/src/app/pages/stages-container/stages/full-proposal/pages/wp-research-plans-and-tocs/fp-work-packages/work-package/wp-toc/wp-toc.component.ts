@@ -32,7 +32,7 @@ export class WpTocComponent implements OnInit {
 
   ngOnInit(): void {
     this.getWpById();
-    this._pusherService.listenTocChange('full-initiative-toc',()=>{
+    this._pusherService.listenTocChange('wp-toc',()=>{
       this.getWpById();
     });
   }
