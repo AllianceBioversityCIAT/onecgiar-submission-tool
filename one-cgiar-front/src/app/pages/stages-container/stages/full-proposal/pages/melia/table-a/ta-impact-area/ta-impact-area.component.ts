@@ -28,26 +28,31 @@ export class TaImpactAreaComponent implements OnInit {
 
 
     this._pusherService.listenTocChange('table-a',()=>{
-    },this.currentImpactAreaId);
+      this.getMeliaResultFramework();
+    });
   }
 
   activatedRouteSubsription(){
     
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.currentImpactAreaId = routeResp.id;
-      this._initiativesService.getMeliaResultFramework().pipe(
-        map(res=>res.response.melia.resultFramework.tableA),
-        map((res:tableAData)=>{
-          res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == routeResp.id);
-          res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == routeResp.id);
-          res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == routeResp.id);
-          return res
-        })
-        ).subscribe((resp:tableAData)=>{
-        this.tableAData = resp;
-      })
+      this.getMeliaResultFramework();
     });
   
+  }
+
+  getMeliaResultFramework(){
+    this._initiativesService.getMeliaResultFramework().pipe(
+      map(res=>res.response.melia.resultFramework.tableA),
+      map((res:tableAData)=>{
+        res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        return res
+      })
+      ).subscribe((resp:tableAData)=>{
+      this.tableAData = resp;
+    })
   }
 
 
