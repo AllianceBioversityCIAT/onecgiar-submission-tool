@@ -11,6 +11,7 @@ import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
 import { pusherOST } from '../utils/pusher-util';
+import { initiativeParser } from '../utils/initiative-parser';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1797,7 +1798,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsCountries
       );
       if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
-        pusherOST.tocTrigger( 'table-c', initvStgId )
+        let {initiativeId, stageId} = await initiativeParser.getInitParams(initvStgId);
+        console.log(initiativeId)
+        pusherOST.tocTrigger( 'table-c', initiativeId )
       }
       return {
         upsertResults: resultsArray,
