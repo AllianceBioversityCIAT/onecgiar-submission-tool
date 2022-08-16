@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { InitiativesService } from '../../../../../../../shared/services/initiatives.service';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-table-b',
@@ -13,16 +14,23 @@ export class TableBComponent implements OnInit {
   // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
-    public _utilsService:UtilsService
-
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
     ) { }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Table B')
+    this._pusherService.listenTocChange('table-b',()=>{
+      this.getMeliaResultFramework();
+    });
+  }
+
+  getMeliaResultFramework(){
     this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableB)).subscribe((resp:TableBData)=>{
       this.tableBData = resp;
     })
   }
+
 
 }
 

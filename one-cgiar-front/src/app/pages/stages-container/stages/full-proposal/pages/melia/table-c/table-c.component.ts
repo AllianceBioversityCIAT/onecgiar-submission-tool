@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { map } from 'rxjs/operators';
 import { ManageExcelService } from '../../../services/manage-excel.service';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-table-c',
@@ -18,11 +19,19 @@ export class TableCComponent implements OnInit {
   constructor( 
     private _initiativesService:InitiativesService,
     private _manageExcelService:ManageExcelService,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
     ) { }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Table C');
+    this.getMeliaResultFramework();
+    this._pusherService.listenTocChange('table-c',()=>{
+      this.getMeliaResultFramework();
+    });
+  }
+
+  getMeliaResultFramework(){
     this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC)).subscribe((resp:{results:ResultData[],updated_at:{updated_at:string}[]})=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
