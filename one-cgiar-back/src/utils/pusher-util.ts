@@ -10,7 +10,7 @@ export module pusherOST{
         useTLS: true
       });
 
-    export const tocTrigger = (sectionName: string, initiativeId: string, subItemId?: string) => {
+    export const tocTrigger = (sectionName: string, initiativeId: string, subItemId?: any) => {
         pusher.trigger(`${sectionName}-${initiativeId}${subItemId?`-${subItemId}`:``}`, "updateToc", { message: "hello world" });
     }
 }

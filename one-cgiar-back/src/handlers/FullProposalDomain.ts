@@ -7,9 +7,10 @@ import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository
 import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
+import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
+import { pusherOST } from '../utils/pusher-util';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1795,7 +1796,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsCountries: any = await resultsCountriesRepo.save(
         mergeResultsCountries
       );
-
+      if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
+        pusherOST.tocTrigger( 'table-c', initvStgId )
+      }
       return {
         upsertResults: resultsArray,
         upsertResultsIndicators,
