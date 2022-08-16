@@ -1696,6 +1696,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
 export async function patchTocs(req: Request, res: Response) {
   const {initiativeId} = req.params;
   const toc = req.body;
+  pusherOST.tocTrigger('wp-toc',initiativeId);
 
   //Validate stage
   const initvStgRepo = getRepository(InitiativesByStages);
