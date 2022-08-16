@@ -32,8 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: boolean) => (this.opened = res));
 
-      this.copyTokenToClipboard();
-
+    this.copyTokenToClipboard();
   }
 
   copyTokenToClipboard(){
