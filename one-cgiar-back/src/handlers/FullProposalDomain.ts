@@ -1524,7 +1524,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
       // console.log(upsertedSdgTargets);
-
+      if(mergeSdgTargets.length > 0 || mergeImpactIndicators.length > 0 || mergeGlobalTarget.length > 0){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-a', initiativeId )
+      }
       return {
         upsertedGlobalTargets,
         upsertedImpactIndicators,
@@ -1609,6 +1612,11 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
         mergeOutcomesIndicators
       );
+
+      if(mergeOutcomesIndicators.length > 0 ){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-b', initiativeId )
+      }
 
       return {upsertedOutcomesIndicators};
     } catch (error) {
@@ -1798,8 +1806,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsCountries
       );
       if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
-        let {initiativeId, stageId} = await initiativeParser.getInitParams(initvStgId);
-        console.log(initiativeId)
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
         pusherOST.tocTrigger( 'table-c', initiativeId )
       }
       return {
