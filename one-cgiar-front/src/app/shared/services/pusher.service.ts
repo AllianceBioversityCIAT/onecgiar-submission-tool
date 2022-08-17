@@ -103,7 +103,8 @@ export class PusherService {
 
   // beforeTocChanel = ''
   listenTocChange(sectionName:string,callback, subItemId?: string | number){
-    this.pusherToc.disconnect();
+    if (this.pusherToc) this.pusherToc.disconnect();
+    
     this.instancePusher();
     const channelName = `${sectionName}-${this._initiativesService.initiative.id}${subItemId?`-${subItemId}`:``}`;
     const channel = this.pusherToc.subscribe(channelName);

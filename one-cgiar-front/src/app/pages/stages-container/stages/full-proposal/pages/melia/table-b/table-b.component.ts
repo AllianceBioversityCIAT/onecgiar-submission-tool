@@ -21,7 +21,7 @@ export class TableBComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Table B')
     this.getMeliaResultFramework();
-    this._pusherService.listenTocChange('table-b',()=>{
+    this._pusherService.listenTocChange('table-b-outcomes',()=>{
       this.getMeliaResultFramework();
     });
   }
