@@ -1607,7 +1607,6 @@ export class ProposalHandler extends InitiativeStageHandler {
        * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
-
       // Save data
       let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
         mergeOutcomesIndicators
@@ -1615,7 +1614,7 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       if(mergeOutcomesIndicators.length > 0 ){
         let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger( 'table-b', initiativeId )
+        pusherOST.tocTrigger( 'table-b-outcomes', initiativeId );
       }
 
       return {upsertedOutcomesIndicators};
