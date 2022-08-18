@@ -1349,34 +1349,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
       //Validations Sections
 
       let validationFinancialResourcesSQL = `
-      SELECT sec.id as sectionId,sec.description, 
-      CASE
-          WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
-            FROM(
-      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-      FROM financial_resources_years fy
-      WHERE fy.financialResourcesId in (
-      SELECT fr.id
-      FROM financial_resources fr
-      WHERE fr.initvStgId = ini.id)
-      Group by fy.financialResourcesId) as a) IS NULL 
-            OR (SELECT SUM(a.validation * 1) - count(a.validation)
-            FROM(
-      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-      FROM financial_resources_years fy
-      WHERE fy.financialResourcesId in (
-      SELECT fr.id
-      FROM financial_resources fr
-      WHERE fr.initvStgId = ini.id)
-      Group by fy.financialResourcesId) as a) <>0
-           THEN FALSE
-             ELSE TRUE
-             END AS validation
-           FROM initiatives_by_stages ini
-           JOIN sections_meta sec
-          WHERE ini.id = ${this.initvStgId_}
-            AND sec.stageId= ini.stageId
-            AND sec.description='financial-resources'`;
+      SELECT sec.id as sectionId,sec.description, 1 AS validation
+      FROM initiatives_by_stages ini
+        inner join sections_meta sec on sec.stageId = ini.stageId 
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.description = 'financial-resources/budget';`;
 
       var financialResources = await this.queryRunner.query(
         validationFinancialResourcesSQL
@@ -1388,47 +1365,94 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       //Validations subSections
 
-      let validationBudgetSQL = `
-        
-      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
-      CASE
-       WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
-         FROM(
-    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-    FROM financial_resources_years fy
-    WHERE fy.financialResourcesId in (
-    SELECT fr.id
-    FROM financial_resources fr
-    WHERE fr.initvStgId = ini.id)
-    Group by fy.financialResourcesId) as a) IS NULL 
-         OR (SELECT SUM(a.validation * 1) - count(a.validation)
-         FROM(
-    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-    FROM financial_resources_years fy
-    WHERE fy.financialResourcesId in (
-    SELECT fr.id
-    FROM financial_resources fr
-    WHERE fr.initvStgId = ini.id)
-    Group by fy.financialResourcesId) as a) <>0
-        THEN FALSE
-          ELSE TRUE
-          END AS validation
-        FROM initiatives_by_stages ini
-        JOIN sections_meta sec
-      JOIN subsections_meta subsec
-       WHERE ini.id = ${this.initvStgId_}
-         AND sec.stageId= ini.stageId
-         AND sec.description='financial-resources'
-         AND subsec.description = 'budget'
-        `;
+      const validationGeographyBreakdownSQL = `
+      select sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  case
+      	when
+      		( select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id ) 
+      			= 
+      		(select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      			inner join financial_resources_years fry ON fry.financialResourcesId = fr.id 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id )
+      	then case 
+      		when 
+            
+      		(select if(sum(res.valid) = (select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id),1,0) as valid from (select if(sum(if(fry.value != '' , 1, 0)) = 3, 1,0) as valid
+      from financial_resources_years fry 
+      	inner join financial_resources fr on fr.id = fry.financialResourcesId 
+      where fr.financial_type  = 'geographic_breakdown'
+      	and fr.initvStgId = ibs2.id
+      group by if(fr.financial_type_id is not null, fr.financial_type_id, fr.col_name  )) as res) > 0		
+      		then true
+      		else false
+      	end
+      	else false
+      end as validation
+      from initiatives_by_stages ibs2 
+       inner join sections_meta sec on sec.stageId = ibs2.stageId 
+       inner join subsections_meta subsec on subsec.sectionId = sec.id 
+                WHERE ibs2.id = ${this.initvStgId_}
+                  AND sec.description='financial-resources/budget'
+      			AND subsec.description = 'geography-breakdown';
+      `,
+      validationActivityBreakdownSQL = `
+      select sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  case
+      	when
+      		( select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id ) 
+      			= 
+      		(select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      			inner join financial_resources_years fry ON fry.financialResourcesId = fr.id 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id )
+      	then case 
+      		when 
+      		(select if(sum(res.valid) = (select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id),1,0) as valid from (select if(sum(if(fry.value != '' , 1, 0)) = 3, 1,0) as valid
+      from financial_resources_years fry 
+      	inner join financial_resources fr on fr.id = fry.financialResourcesId 
+      where fr.financial_type  = 'activity_breakdown'
+      	and fr.initvStgId = ibs2.id
+      group by if(fr.financial_type_id is not null, fr.financial_type_id, fr.col_name  )) as res) > 0		
+      		then true
+      		else false
+      	end
+      	else false
+      end as validation
+      from initiatives_by_stages ibs2 
+       inner join sections_meta sec on sec.stageId = ibs2.stageId 
+       inner join subsections_meta subsec on subsec.sectionId = sec.id 
+                WHERE ibs2.id = ${this.initvStgId_}
+                  AND sec.description='financial-resources/budget'
+      			AND subsec.description = 'activity-breakdown';
+      `;
 
-      var budget = await this.queryRunner.query(validationBudgetSQL);
+      let validationGeographyBreakdown = await this.queryRunner.query(validationGeographyBreakdownSQL);
+      let validationActivityBreakdown = await this.queryRunner.query(validationActivityBreakdownSQL);
 
-      budget[0].validation = parseInt(budget[0].validation);
+      validationGeographyBreakdown[0].validation = parseInt(validationGeographyBreakdown[0].validation);
+      validationActivityBreakdown[0].validation = parseInt(validationActivityBreakdown[0].validation);
+
+      financialResources[0].validation *= validationGeographyBreakdown[0].validation * validationActivityBreakdown[0].validation;
 
       financialResources.map((fin) => {
         fin['subSections'] = [
-          budget.find((bu) => {
+          validationGeographyBreakdown.find((bu) => {
+            return (bu.sectionId = fin.sectionId);
+          }),
+          validationActivityBreakdown.find((bu) => {
             return (bu.sectionId = fin.sectionId);
           })
         ];

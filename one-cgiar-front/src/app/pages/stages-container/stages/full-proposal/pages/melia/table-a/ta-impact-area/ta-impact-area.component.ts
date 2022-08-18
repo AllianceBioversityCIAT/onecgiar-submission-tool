@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../../shared/services/init
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-ta-impact-area',
@@ -17,32 +18,41 @@ export class TaImpactAreaComponent implements OnInit {
   constructor(
     private _initiativesService:InitiativesService,
     private activatedRoute:ActivatedRoute,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
     ) { }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Table A');
     this.activatedRouteSubsription();
 
+
+    this._pusherService.listenTocChange('table-a',()=>{
+      this.getMeliaResultFramework();
+    });
   }
 
   activatedRouteSubsription(){
     
     this.activatedRoute.params.subscribe((routeResp: any) => {
       this.currentImpactAreaId = routeResp.id;
-      this._initiativesService.getMeliaResultFramework().pipe(
-        map(res=>res.response.melia.resultFramework.tableA),
-        map((res:tableAData)=>{
-          res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == routeResp.id);
-          res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == routeResp.id);
-          res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == routeResp.id);
-          return res
-        })
-        ).subscribe((resp:tableAData)=>{
-        this.tableAData = resp;
-      })
+      this.getMeliaResultFramework();
     });
   
+  }
+
+  getMeliaResultFramework(){
+    this._initiativesService.getMeliaResultFramework().pipe(
+      map(res=>res.response.melia.resultFramework.tableA),
+      map((res:tableAData)=>{
+        res.global_targets = res?.global_targets?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        res.impact_areas_indicators = res.impact_areas_indicators?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        res.sdg_targets = res.sdg_targets?.filter(item=>item.impact_area_id == this.currentImpactAreaId);
+        return res
+      })
+      ).subscribe((resp:tableAData)=>{
+      this.tableAData = resp;
+    })
   }
 
 

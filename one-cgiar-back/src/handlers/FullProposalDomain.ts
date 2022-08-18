@@ -7,9 +7,11 @@ import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository
 import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
+import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
+import { pusherOST } from '../utils/pusher-util';
+import { initiativeParser } from '../utils/initiative-parser';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -734,17 +736,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
 
     try {
-      depthScaleList.forEach(async el => {
-        let isSave: any;
-        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
-        if(returnData){
-          isSave = {...returnData, active: !!el.active};
-        }else{
-          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId};
-        }
-
-        await projectionBenefitsDepthScalesRepo.save(isSave);
-      });
 
       if (newWorkProjectionBenefits.id !== null) {
         var savedProjectionBenefits = await projBeneRepo.findOne(
@@ -789,6 +780,17 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
+      depthScaleList.forEach(async el => {
+        let isSave: any;
+        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
+        if(returnData){
+          isSave = {...returnData, active: !!el.active};
+        }else{
+          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId?projectionBenefitsId:upsertedPjectionBenefits.id};
+        }
+
+        await projectionBenefitsDepthScalesRepo.save(isSave);
+      });
       return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
@@ -828,13 +830,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                  AND active = 1
                 `,
         depthScalesListQuery = `
-                select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName from projection_benefits_depth_scales pbds 
-                inner join depth_scales ds on ds.id = pbds.depthScalesId 
-              where pbds.projectionBenefitsId in (SELECT  id
-                    FROM projection_benefits
-                   WHERE initvStgId = ${initvStg.id}
-                     AND active = 1)
-                  AND pbds.active > 0;`;
+        select pbds.id, pbds.projectionBenefitsId, pbds.active, res.id as depthScaleId, res.name as depthScaleName from projection_benefits_depth_scales pbds 
+        inner join (select distinct(depthScale.id), depthScale.name 
+              from clarisa_projected_benefits cpb, json_table(cpb.depthScales , '$[*]' columns(
+                          id int path '$.depthScaleId',
+                      name text path '$.depthScaleName'
+                      )) depthScale
+                order by depthScale.id asc ) res on res.id = pbds.depthScalesId 
+      where pbds.projectionBenefitsId in (SELECT  id
+            FROM projection_benefits
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1)
+          AND pbds.active > 0;`;
 
       const depthScalesList = await this.queryRunner.query(depthScalesListQuery);
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
@@ -890,13 +897,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                      AND active = 1
                     `,
         depthScalesListQuery = `
-        select pbds.id, pbds.projectionBenefitsId, pbds.active, ds.id as depthScaleId, ds.name as depthScaleName  from projection_benefits_depth_scales pbds 
-		    inner join depth_scales ds on ds.id = pbds.depthScalesId 
-			where pbds.projectionBenefitsId in (SELECT  id
-            FROM projection_benefits
-           WHERE initvStgId = ${initvStg.id}
-             AND active = 1)
-             AND pbds.active > 0;`;
+        select pbds.id, pbds.projectionBenefitsId, pbds.active, res.id as depthScaleId, res.name as depthScaleName from projection_benefits_depth_scales pbds 
+                inner join (select distinct(depthScale.id), depthScale.name 
+                			from clarisa_projected_benefits cpb, json_table(cpb.depthScales , '$[*]' columns(
+													        id int path '$.depthScaleId',
+															name text path '$.depthScaleName'
+															)) depthScale
+												order by depthScale.id asc ) res on res.id = pbds.depthScalesId 
+              where pbds.projectionBenefitsId in (SELECT  id
+                    FROM projection_benefits
+                   WHERE initvStgId = ${initvStg.id}
+                     AND active = 1)
+                  AND pbds.active > 0;`;
 
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
@@ -907,9 +919,9 @@ export class ProposalHandler extends InitiativeStageHandler {
           return dim.projectionId === pb.id;
         });
 
-        pb['depthScaleList'] = depthScalesList.filter((dim) => {
+        pb['depthScaleList'] = depthScalesList?depthScalesList.filter((dim) => {
           return dim.projectionBenefitsId === pb.id;
-        });
+        }): [];
       });
 
       return projectBenefits;
@@ -1522,7 +1534,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
       // console.log(upsertedSdgTargets);
-
+      if(mergeSdgTargets.length > 0 || mergeImpactIndicators.length > 0 || mergeGlobalTarget.length > 0){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-a', initiativeId )
+      }
       return {
         upsertedGlobalTargets,
         upsertedImpactIndicators,
@@ -1602,11 +1617,15 @@ export class ProposalHandler extends InitiativeStageHandler {
        * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
-
       // Save data
       let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
         mergeOutcomesIndicators
       );
+
+      if(mergeOutcomesIndicators.length > 0 ){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-b-outcomes', initiativeId );
+      }
 
       return {upsertedOutcomesIndicators};
     } catch (error) {
@@ -1795,7 +1814,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsCountries: any = await resultsCountriesRepo.save(
         mergeResultsCountries
       );
-
+      if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-c', initiativeId )
+      }
       return {
         upsertResults: resultsArray,
         upsertResultsIndicators,

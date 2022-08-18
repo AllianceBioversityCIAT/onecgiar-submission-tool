@@ -419,8 +419,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users 
-  getInitvStgId(initiativeId, stageId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${initiativeId}/${stageId}`);
+  getInitvStgId(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${this.initiative.id}/${this.initiative.stageId}`);
     // api/initiatives/get-initvStgId/2/3
   }
 

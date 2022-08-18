@@ -42,11 +42,11 @@ export class PobIndicatorComponent implements OnInit {
    }
 
    checkActives(){
-    return this.indicatorsListPOBSavediItem.depthScaleList.some(item=>item.active == true)
+    return this.indicatorsListPOBSavediItem?.depthScaleList.some(item=>item.active == true)
    }
 
   ngOnInit(): void {
-  
+    this.indicatorsListPOBSavediItem.depthScaleList = this.indicatorsListPOBSavediItem.depthScaleList?this.indicatorsListPOBSavediItem.depthScaleList: [];  
     this.showDepthScale = true;
 
     this.updateForm(this.indicatorsListPOBSavediItem);
@@ -78,6 +78,17 @@ export class PobIndicatorComponent implements OnInit {
 
     })
   }
+
+  cleanDepthScaleList(){
+    this.indicatorsListPOBSavediItem.depthScaleList.map(item=>{
+      item.active = false;
+      item.selected = false;
+    })
+    this.depthScalesList.map(item=>{
+      item.selected = false;
+    })
+  }
+
   getIndicatorName(impactAreaIndicatorId){
     return this.indicatorsList.find(item=>item.impactAreaIndicator == impactAreaIndicatorId)?.impactAreaIndicatorName;
   }
