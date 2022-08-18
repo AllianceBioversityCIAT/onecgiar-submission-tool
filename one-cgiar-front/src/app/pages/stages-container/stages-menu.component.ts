@@ -72,7 +72,7 @@ export class StagesMenuComponent implements OnInit {
 
     // TODO stageId 3 condition
     if (this.initiativesSvc.initiative.stageId === 3) {
-      this.initiativesSvc.getInitvStgId(this.initiativesSvc.initiative.id, 3).subscribe(resp => {
+      this.initiativesSvc.getInitvStgId().subscribe(resp => {
         this.initiativesSvc.initvStgId = resp.response;
       })
     }

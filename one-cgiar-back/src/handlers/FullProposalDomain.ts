@@ -7,9 +7,11 @@ import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository
 import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import {InitiativeHandler} from './InitiativesDomain';
+import { InitiativeHandler } from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
+import { pusherOST } from '../utils/pusher-util';
+import { initiativeParser } from '../utils/initiative-parser';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1532,7 +1534,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
       // console.log(upsertedSdgTargets);
-
+      if(mergeSdgTargets.length > 0 || mergeImpactIndicators.length > 0 || mergeGlobalTarget.length > 0){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-a', initiativeId )
+      }
       return {
         upsertedGlobalTargets,
         upsertedImpactIndicators,
@@ -1612,11 +1617,15 @@ export class ProposalHandler extends InitiativeStageHandler {
        * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
-
       // Save data
       let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
         mergeOutcomesIndicators
       );
+
+      if(mergeOutcomesIndicators.length > 0 ){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-b-outcomes', initiativeId );
+      }
 
       return {upsertedOutcomesIndicators};
     } catch (error) {
@@ -1805,7 +1814,10 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsCountries: any = await resultsCountriesRepo.save(
         mergeResultsCountries
       );
-
+      if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
+        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
+        pusherOST.tocTrigger( 'table-c', initiativeId )
+      }
       return {
         upsertResults: resultsArray,
         upsertResultsIndicators,

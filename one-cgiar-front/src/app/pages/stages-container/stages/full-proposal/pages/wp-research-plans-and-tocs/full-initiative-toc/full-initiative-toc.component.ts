@@ -4,6 +4,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { map } from 'rxjs/operators';
 import Viewer from 'viewerjs';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-full-initiative-toc',
@@ -20,13 +21,17 @@ export class FullInitiativeTocComponent implements OnInit {
   constructor(
     public _initiativesService: InitiativesService,
     public http: HttpClient,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
   ) { 
   }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Full initiative Toc')
     this.getProposalTocByInitiativeId();
+    this._pusherService.listenTocChange('full-initiative-toc',()=>{
+      this.getProposalTocByInitiativeId();
+    });
   }
 
   getProposalTocByInitiativeId(){
