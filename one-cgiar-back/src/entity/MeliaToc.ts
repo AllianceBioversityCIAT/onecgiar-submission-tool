@@ -7,6 +7,7 @@ import {
   import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import { MeliaStudiesActivities } from './MeliaStudiesActivities';
 import { Results } from './Results';
+import { InitiativesByStages } from './InititativesByStages';
   @Entity('melia_toc')
   export class MeliaToc {
     @PrimaryGeneratedColumn()
@@ -17,6 +18,9 @@ import { Results } from './Results';
 
     @ManyToOne(() => Results, (results) => results.id)
     outcomeId: Results;
+
+    @ManyToOne(() => InitiativesByStages, (init) => init.id)
+    initvStgId: InitiativesByStages;
 
     @Column('tinyint')
     active: number;

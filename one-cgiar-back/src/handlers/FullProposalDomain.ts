@@ -12,6 +12,7 @@ import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
 import { pusherOST } from '../utils/pusher-util';
 import { initiativeParser } from '../utils/initiative-parser';
+import { MeliaToc } from '../entity/MeliaToc';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -2093,12 +2094,15 @@ from  initiatives_by_stages ibs
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
+    const meliaToc = getRepository(MeliaToc);
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
     let regionsMeliaStd = [];
     let countriesMeliaStd = [];
     let initiativesMeliaStd = [];
+
+
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -2212,14 +2216,15 @@ from  initiatives_by_stages ibs
       		r.result_title as resultTitle, 
       		rt.id as typeId, 
       		rt.name as typeName,
-      		if(mt.id is null, 0, 1) as selected,
-          mt.meliaIdId as meliaId
+      		wp.acronym  as wpAcronym,
+      		wp.name  as wpName,
+      		wp.id as wpId
       from results r 
       	inner join results_types rt on rt.id = r.result_type_id 
-      	left join melia_toc mt on mt.outcomeIdId = r.id 
-      						and mt.active > 0
+      	left join work_packages wp on wp.id = r.work_package_id 
       	where r.initvStgId = ${initvStg.id}
-      	and r.active > 0`);
+      	and r.active > 0
+      `);
         return results;
     } catch (error) {
       throw new BaseError(
@@ -2256,6 +2261,17 @@ from  initiatives_by_stages ibs
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1
       group by id`);
+
+      let meliasResultsSelect = await this.queryRunner.query(`
+      select mt.id, 
+          mt.active, 
+          mt.meliaIdId, 
+          mt.outcomeIdId, 
+          mt.initvStgIdId 
+      from melia_toc mt 
+        where mt.initvStgIdId = ${initvStg.id}
+        and mt.active > 0
+      `);
 
       let countries = await this.queryRunner
         .query(`SELECT id,country_id,initvStgId,meliaStudyId
@@ -2302,6 +2318,10 @@ from  initiatives_by_stages ibs
           melia['initiatives'] = initiatives.filter((init) => {
             return init.meliaStudyId === melia.id;
           });
+
+          melia['selectResults'] = meliasResultsSelect.filter((res) => {
+            return res.meliaIdId === melia.id;
+          })
         });
       }
 
