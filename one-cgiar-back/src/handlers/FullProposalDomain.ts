@@ -2094,7 +2094,7 @@ from  initiatives_by_stages ibs
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
-    const meliaToc = getRepository(MeliaToc);
+    const meliaTocRepo = getRepository(MeliaToc);
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
@@ -2110,9 +2110,10 @@ from  initiatives_by_stages ibs
           : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
-
+        let meliaDataId: number;
         if (element.id) {
           const newMeliaStudiesActivities = new MeliaStudiesActivities();
+          meliaDataId = element.id;
 
           newMeliaStudiesActivities.id = element.id ? element.id : null;
           newMeliaStudiesActivities.initvStgId = initvStg.id;
@@ -2159,11 +2160,14 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
-
+          
           //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
             newMeliaStudy
           );
+
+          meliaDataId = newMeliaResponse.id;
+
           element.countries.map((coun) => {
             coun.meliaStudyId = newMeliaResponse.id;
           });
@@ -2180,6 +2184,30 @@ from  initiatives_by_stages ibs
             element.initiatives || []
           );
         }
+
+        const saveLinkResult: MeliaToc[] = [];
+          for (let rindex = 0; index < element.selectResults.length; rindex++) {
+            const {id, resultId, active} = element.selectResults[rindex];
+            if(id){
+              let resultData: MeliaToc = await meliaTocRepo.findOne(id);
+              resultData.active = active;
+              saveLinkResult.push(resultData);
+            }else{
+              let newData: MeliaToc = {
+                active: active,
+                id: null,
+                initvStgId: initvStg.id,
+                meliaId: meliaDataId,
+                outcomeId: resultId                   
+              }
+
+              saveLinkResult.push(newData);
+            }
+            
+          }
+
+          const updateResultMeliaResponse = await meliaTocRepo.save(saveLinkResult);
+        
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(

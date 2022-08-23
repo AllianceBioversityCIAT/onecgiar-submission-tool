@@ -14,13 +14,13 @@ import { InitiativesByStages } from './InititativesByStages';
     id: number;
 
     @ManyToOne(() => MeliaStudiesActivities, (melia) => melia.id)
-    meliaId: MeliaStudiesActivities;
+    meliaId: number;
 
     @ManyToOne(() => Results, (results) => results.id)
-    outcomeId: Results;
+    outcomeId: number;
 
     @ManyToOne(() => InitiativesByStages, (init) => init.id)
-    initvStgId: InitiativesByStages;
+    initvStgId: number;
 
     @Column('tinyint')
     active: number;
