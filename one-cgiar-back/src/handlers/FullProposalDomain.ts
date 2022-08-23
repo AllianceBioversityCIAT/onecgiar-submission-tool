@@ -2212,7 +2212,7 @@ from  initiatives_by_stages ibs
     const initvStg = await this.setInitvStage();
     try {
       let results = await this.queryRunner.query(`
-      select 	r.id, 
+      select 	r.id as resultId, 
       		r.result_title as resultTitle, 
       		rt.id as typeId, 
       		rt.name as typeName,
