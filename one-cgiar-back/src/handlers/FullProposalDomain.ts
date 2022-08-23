@@ -2204,6 +2204,33 @@ from  initiatives_by_stages ibs
     }
   }
 
+  async requestSelectResultsByMelias(){
+    const initvStg = await this.setInitvStage();
+    try {
+      let results = await this.queryRunner.query(`
+      select 	r.id, 
+      		r.result_title as resultTitle, 
+      		rt.id as typeId, 
+      		rt.name as typeName,
+      		if(mt.id is null, 0, 1) as selected,
+          mt.meliaIdId as meliaId
+      from results r 
+      	inner join results_types rt on rt.id = r.result_type_id 
+      	left join melia_toc mt on mt.outcomeIdId = r.id 
+      						and mt.active > 0
+      	where r.initvStgId = ${initvStg.id}
+      	and r.active > 0`);
+        return results;
+    } catch (error) {
+      throw new BaseError(
+        'GET Results by MELIA studies and activities: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
   async requestMeliaStudiesActivities() {
     const initvStg = await this.setInitvStage();
     const meliaStudiesActivitiesRepo = getRepository(

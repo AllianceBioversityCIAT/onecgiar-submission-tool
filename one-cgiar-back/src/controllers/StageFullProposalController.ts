@@ -1093,10 +1093,14 @@ export async function getMeliaStudiesActivities(
 
     const meliaStudiesActivities =
       await fullPposal.requestMeliaStudiesActivities();
+    
+    const resultsByMelia = 
+    await fullPposal.requestSelectResultsByMelias();
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
-        meliaStudiesActivities
+        meliaStudiesActivities,
+        resultsByMelia
       })
     );
   } catch (error) {
