@@ -46,6 +46,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       attribute: 'geographic_scope',
       name: "Geographic Scope"
     },
+    {
+      attribute: 'resultsHtml',
+      name: "TOC EOI Outcomes, WP Outcomes, WP Outputs"
+    },
   ]
   showTableViewVariable = true;
   meliaStudyTypes = [];
@@ -124,6 +128,18 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     return list.some(item=>item.active == true)
    }
 
+   resultToHtml(){
+    this.list.map((listItem:any)=>{
+      console.log(listItem)
+      listItem.selectResults.map(resultItem=>{
+        console.log(resultItem)
+        if (!resultItem?.resultTitle) return;
+        listItem.resultsHtml += `<p>${resultItem?.resultTitle}</p>`;
+      })
+     
+    })
+   }
+
   getmeliaStudActiByInitId() {
     this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
       this.resultsByMeliaList = resp?.response?.resultsByMelia;
@@ -138,6 +154,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         })
         );
       });
+
+      this.resultToHtml()
 
       forkJoin({
         initiatives: this._initiativesService.getInitiativesList(),
@@ -238,4 +256,5 @@ interface ResultsByMelia {
   wpAcronym?: string;
   wpName?: string;
   wpId?: number;
+  resultsHtml?:string
 }

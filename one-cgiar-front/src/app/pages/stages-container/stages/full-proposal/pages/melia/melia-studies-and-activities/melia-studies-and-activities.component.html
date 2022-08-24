@@ -54,7 +54,7 @@
                         </ibdc-text-area-field>
                         <ibdc-simple-text [options]="{inputTitle:this.attr_list_config[2].name,value: item[this.attr_list_config[2].attribute], required: false}" textAlign='justify'></ibdc-simple-text>
 
-                        <ibdc-select-multiple *ngIf="this.resultsByMeliaList.length" [options]="{
+                        <ibdc-select-multiple *ngIf="this.resultsByMeliaList.length" (onSelectOptionE)="resultToHtml()" [options]="{
                             inputTitle:'TOC EOI Outcomes, WP Outcomes, WP Outputs',
                             selectList:this.resultsByMeliaList,
                             selectItemName:'resultTitle',

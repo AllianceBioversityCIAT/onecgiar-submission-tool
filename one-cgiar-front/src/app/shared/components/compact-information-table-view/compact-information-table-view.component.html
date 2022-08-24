@@ -25,7 +25,7 @@
     <tbody>
         <tr *ngFor="let item of this.list; let i=index" [hidden]="item?.active === false" style="position: relative;">
             <td *ngIf="this.localId"><strong>{{i+1}}</strong></td> 
-            <td *ngFor="let key of this.attr_list_config" [innerHTML]="item[key?.attribute]" [ngClass]="{'warning': !item[key?.attribute]?.length  && key?.attribute != 'id'}"></td> 
+            <td *ngFor="let key of this.attr_list_config" [ngClass]="{'warning': !item[key?.attribute]?.length  && key?.attribute != 'id'}"><div class="container_scroll-y" [innerHTML]="item[key?.attribute]"></div></td> 
             <td *ngIf="!this._initiativesService.initiative.readonly" class="edit-th"><div class="material-icons editable-icon" (click)="editItem(item)">edit</div></td>
             <td *ngIf="!this._initiativesService.initiative.readonly && this.canDelete" style="padding-left: 70px;" class="delete-th"></td>
             <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly && this.canDelete"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>
