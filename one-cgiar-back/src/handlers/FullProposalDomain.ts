@@ -2199,20 +2199,21 @@ from  initiatives_by_stages ibs
           );
         }
 
-        const saveLinkResult: MeliaToc[] = [];
+        const saveLinkResult: MeliaTocData[] = [];
           for (let rindex = 0; index < element.selectResults.length; rindex++) {
-            const {id, resultId, active} = element.selectResults[rindex];
-            if(id){
-              let resultData: MeliaToc = await meliaTocRepo.findOne(id);
-              resultData.active = active;
+            const selectedResults = element.selectResults[rindex];
+
+            if(selectedResults === undefined) break;
+            if(!!selectedResults.id){
+              let resultData: MeliaTocData = await meliaTocRepo.findOne(selectedResults.id);
+              resultData.active = selectedResults.active?1:0;
               saveLinkResult.push(resultData);
             }else{
-              let newData: MeliaToc = {
-                active: active,
-                id: null,
+              let newData:MeliaTocData = {
+                active: selectedResults.active?1:0,
                 initvStgId: initvStg.id,
                 meliaId: meliaDataId,
-                outcomeId: resultId                   
+                outcomeId: selectedResults.resultId             
               }
 
               saveLinkResult.push(newData);
@@ -4110,4 +4111,12 @@ from  initiatives_by_stages ibs
       throw new BaseError('Get Tracks error', 400, error.message, false);
     }
   }
+}
+
+interface MeliaTocData{
+  active: number;
+  id?: number;
+  initvStgId: number;
+  meliaId: number;
+  outcomeId: number;   
 }
