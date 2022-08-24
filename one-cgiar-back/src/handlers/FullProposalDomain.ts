@@ -2314,7 +2314,8 @@ from  initiatives_by_stages ibs
           r.id as resultId, 
       	  r.result_title as resultTitle, 
       	  rt.id as typeId, 
-      	  rt.name as typeName
+      	  rt.name as typeName,
+      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
       from melia_toc mt 
       	inner join results r on r.id = mt.outcomeIdId 
       	inner join results_types rt on rt.id = r.result_type_id 
