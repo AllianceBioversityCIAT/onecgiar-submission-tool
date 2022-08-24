@@ -2261,7 +2261,8 @@ from  initiatives_by_stages ibs
       		rt.name as typeName,
       		wp.acronym  as wpAcronym,
       		wp.name  as wpName,
-      		wp.id as wpId
+      		wp.id as wpId,
+      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
       from results r 
       	inner join results_types rt on rt.id = r.result_type_id 
       	left join work_packages wp on wp.id = r.work_package_id 
