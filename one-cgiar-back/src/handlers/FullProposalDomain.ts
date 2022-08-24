@@ -2218,7 +2218,7 @@ from  initiatives_by_stages ibs
 
               saveLinkResult.push(newData);
             }
-            
+
           }
 
           const updateResultMeliaResponse = await meliaTocRepo.save(saveLinkResult);
@@ -2310,8 +2310,14 @@ from  initiatives_by_stages ibs
           mt.active, 
           mt.meliaIdId, 
           mt.outcomeIdId, 
-          mt.initvStgIdId 
+          mt.initvStgIdId,
+          r.id as resultId, 
+      	  r.result_title as resultTitle, 
+      	  rt.id as typeId, 
+      	  rt.name as typeName
       from melia_toc mt 
+      	inner join results r on r.id = mt.outcomeIdId 
+      	inner join results_types rt on rt.id = r.result_type_id 
         where mt.initvStgIdId = ${initvStg.id}
         and mt.active > 0
       `);
