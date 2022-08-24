@@ -131,11 +131,13 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
    resultToHtml(){
     this.list.map((listItem:any)=>{
       console.log(listItem)
+      let resultsHtml = "";
       listItem.selectResults.map(resultItem=>{
         console.log(resultItem)
-        if (!resultItem?.resultTitle) return;
-        listItem.resultsHtml += `<p>${resultItem?.resultTitle}</p>`;
+        resultsHtml+='<p>'+resultItem?.resultTitle+'</p>';
       })
+
+      listItem.resultsHtml = resultsHtml;
      
     })
    }
