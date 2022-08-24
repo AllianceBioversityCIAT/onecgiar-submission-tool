@@ -1998,6 +1998,14 @@ from  initiatives_by_stages ibs
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1
         order by re.result_type_id,wp.id;
+      `,
+      resultsByMelia = `
+      select msa.id as meliaStudiesId, mt.outcomeIdId, cmst.name 
+      from melia_toc mt 
+      	inner join melia_studies_activities msa on msa.id = mt.meliaIdId 
+      	inner join clarisa_melia_study_types cmst on cmst.id = msa.type_melia_id 
+      where mt.initvStgIdId = ${initvStg.id}
+              and mt.active > 0;
       `;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
@@ -2043,6 +2051,8 @@ from  initiatives_by_stages ibs
       const resultsIndicators = await this.queryRunner.query(
         resultsIndicatorsQuery
       );
+
+      const meliaTocResult = await this.queryRunner.query(resultsByMelia);
       const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
       const lastUpdateTableC = await this.queryRunner.query(lastUpdateTableCSql);
       const resultsCountries = await this.queryRunner.query(
@@ -2053,6 +2063,10 @@ from  initiatives_by_stages ibs
         res['indicators'] = resultsIndicators.filter((resi) => {
           return res.id === resi.results_id;
         });
+
+        res['meliasStudies'] = meliaTocResult.filter((ms) => {
+          return res.id === ms.outcomeIdId;
+        })
 
         const reg = resultsRegions.filter((reg) => {
           return res.id === reg.results_id;
