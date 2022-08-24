@@ -58,6 +58,7 @@
                             inputTitle:'TOC EOI Outcomes, WP Outcomes, WP Outputs',
                             selectList:this.resultsByMeliaList,
                             selectItemName:'resultTitle',
+                            selectItemId:'resultId',
                             selectItemNameBold:'wpName',
                             intermediateText:'- WP:',
                             hideSavedList: true,
@@ -68,10 +69,20 @@
                                 list: item.selectResults,
                                 selectItemId:'resultId',
                                 selectItemName:'resultTitle',
-                                idToSave:'resultId',
+                                idToSave:'id',
                                 labelName:'resultTitle'
                             }
                         }"></ibdc-select-multiple>
+
+                        <div class="items_container" *ngIf="checkActives(item.selectResults)">
+                            <div class="items">
+                                <div>
+                                    <div *ngFor="let item of item.selectResults">
+                                        <app-multiple-select-item [object]="item" [attr]="'resultTitle'"></app-multiple-select-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- <ibdc-select-multiple [options]="{
                             inputTitle:'Choose multiple depth scale',

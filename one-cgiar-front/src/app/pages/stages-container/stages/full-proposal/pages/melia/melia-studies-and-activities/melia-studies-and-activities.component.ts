@@ -120,6 +120,10 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     }
   }
 
+  checkActives(list){
+    return list.some(item=>item.active == true)
+   }
+
   getmeliaStudActiByInitId() {
     this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
       this.resultsByMeliaList = resp?.response?.resultsByMelia;
