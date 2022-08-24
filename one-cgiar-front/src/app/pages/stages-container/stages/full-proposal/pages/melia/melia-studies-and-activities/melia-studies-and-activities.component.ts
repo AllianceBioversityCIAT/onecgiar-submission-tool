@@ -123,6 +123,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   getmeliaStudActiByInitId() {
     this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
       this.resultsByMeliaList = resp?.response?.resultsByMelia;
+      this.resultsByMeliaList.map(resultItem=>{
+        resultItem.id = null;
+      })
       console.log(resp.response)
       this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
