@@ -16,7 +16,7 @@ import { forkJoin } from 'rxjs';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   list: MeliaStudiesAndActivities[] = [];
-
+  resultsByMeliaList: ResultsByMelia[] = [];
   attr_list_config: AttributesListConfiguration[] = [
     {
       attribute: 'id',
@@ -69,7 +69,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     });
     this._initiativesService.getYears().subscribe( res => {
       this.years = res.response.years;
-      console.log('Years', this.years);
+      // console.log('Years', this.years);
     })
   }
 
@@ -96,7 +96,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         is_global: null,
         countries: [],
         regions: [],
-        initiatives: []
+        initiatives: [],
+        selectResults: []
       }
     )
     this.geographicScopes.push(new FormGroup({ is_global: new FormControl(this.list[this.list.length - 1].is_global) }));
@@ -120,19 +121,16 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   getmeliaStudActiByInitId() {
-    console.log(this._initiativesService.initiative.id)
-    this._initiativesService.getmeliaStudActiByInitId().pipe(map(res => res?.response?.meliaStudiesActivities)).subscribe((resp: MeliaStudiesAndActivities[]) => {
-      console.log(resp)
-      this.list = resp;
-
+    this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
+      this.resultsByMeliaList = resp?.response?.resultsByMelia;
+      console.log(resp.response)
+      this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
         this.geographicScopes.push(new FormGroup({
           is_global: new FormControl(melia.is_global),
         })
         );
       });
-
-      console.log(this.geographicScopes);
 
       forkJoin({
         initiatives: this._initiativesService.getInitiativesList(),
@@ -201,6 +199,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
       melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
+    console.log(this.list)
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
       console.log(resp);
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
@@ -222,4 +221,14 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     }
   }
 
+}
+
+interface ResultsByMelia {
+  id: number;
+  resultTitle: string;
+  typeId: number;
+  typeName: string;
+  wpAcronym?: string;
+  wpName?: string;
+  wpId?: number;
 }

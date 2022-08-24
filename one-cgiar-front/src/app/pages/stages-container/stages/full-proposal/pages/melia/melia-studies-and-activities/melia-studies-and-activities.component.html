@@ -28,6 +28,10 @@
                     <br><br>
                     <div class="fields">
 
+                        <div class="alert_container" style="margin: 20px 0 35px 0;">
+                            <ibdc-alert [options]="{text: 'If there is no item in the list, it is probably because information is missing in the TOC (Click here to go to edit toc).', type:'info'}"></ibdc-alert>
+                        </div>
+
                         <div class="mb-4">
                             <ibdc-select-field class="field"
                                 [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
@@ -48,6 +52,44 @@
                             [objectAtributteName]="this.attr_list_config[2].attribute"
                             [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                         </ibdc-text-area-field>
+                        <ibdc-simple-text [options]="{inputTitle:this.attr_list_config[2].name,value: item[this.attr_list_config[2].attribute], required: false}" textAlign='justify'></ibdc-simple-text>
+
+                        <ibdc-select-multiple *ngIf="this.resultsByMeliaList.length" [options]="{
+                            inputTitle:'TOC EOI Outcomes, WP Outcomes, WP Outputs',
+                            selectList:this.resultsByMeliaList,
+                            selectItemName:'resultTitle',
+                            selectItemNameBold:'wpName',
+                            intermediateText:'- WP:',
+                            hideSavedList: true,
+                            shadow: false,
+                            frontendSearchAttribute:'resultTitle',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list: item.selectResults,
+                                selectItemId:'resultId',
+                                selectItemName:'resultTitle',
+                                idToSave:'resultId',
+                                labelName:'resultTitle'
+                            }
+                        }"></ibdc-select-multiple>
+
+                        <!-- <ibdc-select-multiple [options]="{
+                            inputTitle:'Choose multiple depth scale',
+                            selectList: this.depthScalesList,
+                            selectItemName:'depthScaleName',
+                            selectItemId:'depthScaleId',
+                            hideSavedList: true,
+                            shadow: false,
+                            frontendSearchAttribute:'acronym_name',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list: this.indicatorsListPOBSavediItem.depthScaleList,
+                                selectItemId:'depthScaleId',
+                                selectItemName:'depthScaleName',
+                                idToSave:'depthScaleId',
+                                labelName:'depthScaleName'
+                            }
+                        }"></ibdc-select-multiple> -->
 
                         <div class="mb-4">
                             <ibdc-select-field class="field"
@@ -72,6 +114,7 @@
                             selectItemId:'initiativeId',
                             frontendSearchAttribute:'displayName',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
+                            description: 'Message',
                             savedList:{
                                 list:item.initiatives,
                                 selectItemName:'displayName',

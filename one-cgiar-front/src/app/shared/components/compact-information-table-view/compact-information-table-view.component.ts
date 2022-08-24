@@ -32,8 +32,6 @@ export class CompactInformationTableViewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.list)
-    console.log(this.attr_list_config)
   }
 
   downloadDocx() {
