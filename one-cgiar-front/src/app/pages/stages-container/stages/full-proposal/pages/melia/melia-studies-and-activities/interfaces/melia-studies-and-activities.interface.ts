@@ -16,4 +16,5 @@ export interface MeliaStudiesAndActivities {
   regions: [];
   initiatives: [];
   selectResults:[];
+  resultsByMeliaList?:any[];
 }

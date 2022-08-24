@@ -16,7 +16,6 @@ import { forkJoin } from 'rxjs';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   list: MeliaStudiesAndActivities[] = [];
-  resultsByMeliaList: ResultsByMelia[] = [];
   attr_list_config: AttributesListConfiguration[] = [
     {
       attribute: 'id',
@@ -130,11 +129,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
    resultToHtml(){
     this.list.map((listItem:any)=>{
-      console.log(listItem)
       let resultsHtml = "";
       listItem.selectResults.map(resultItem=>{
-        console.log(resultItem)
-        resultsHtml+='<p>'+resultItem?.resultTitle+'</p>';
+        resultsHtml+='<p>'+resultItem?.fullResultTitle+'</p>';
       })
 
       listItem.resultsHtml = resultsHtml;
@@ -144,13 +141,13 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   getmeliaStudActiByInitId() {
     this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
-      this.resultsByMeliaList = resp?.response?.resultsByMelia;
-      this.resultsByMeliaList.map(resultItem=>{
+      const resultsByMeliaList:ResultsByMelia[] = resp?.response?.resultsByMelia;
+      resultsByMeliaList.map(resultItem=>{
         resultItem.id = null;
       })
-      console.log(resp.response)
       this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
+        melia.resultsByMeliaList = JSON.parse(JSON.stringify(resultsByMeliaList))
         this.geographicScopes.push(new FormGroup({
           is_global: new FormControl(melia.is_global),
         })
