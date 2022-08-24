@@ -2200,26 +2200,26 @@ from  initiatives_by_stages ibs
         }
 
         const saveLinkResult: MeliaTocData[] = [];
-          for (let rindex = 0; index < element.selectResults.length; rindex++) {
-            const selectedResults = element.selectResults[rindex];
+        for (let rindex = 0; rindex < element.selectResults.length; rindex++) {
+          const selectedResults = element.selectResults[rindex];
 
-            if(selectedResults === undefined) break;
-            if(!!selectedResults.id){
-              let resultData: MeliaTocData = await meliaTocRepo.findOne(selectedResults.id);
-              resultData.active = selectedResults.active?1:0;
-              saveLinkResult.push(resultData);
-            }else{
-              let newData:MeliaTocData = {
-                active: selectedResults.active?1:0,
-                initvStgId: initvStg.id,
-                meliaId: meliaDataId,
-                outcomeId: selectedResults.resultId             
-              }
-
-              saveLinkResult.push(newData);
+          if(!!selectedResults.id){
+            let resultData: MeliaTocData = await meliaTocRepo.findOne(selectedResults.id);
+            resultData.active = selectedResults.active?1:0;
+            saveLinkResult.push(resultData);
+          }else{
+            let newData:MeliaTocData = {
+              active: selectedResults.active?1:0,
+              initvStgId: initvStg.id,
+              meliaId: meliaDataId,
+              outcomeId: selectedResults.resultId             
             }
-
+            
+            saveLinkResult.push(newData);
           }
+          
+        }
+        
 
           const updateResultMeliaResponse = await meliaTocRepo.save(saveLinkResult);
         
