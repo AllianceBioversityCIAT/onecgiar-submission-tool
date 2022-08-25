@@ -2104,7 +2104,7 @@ from  initiatives_by_stages ibs
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
-  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any) {
+  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any, userId?:number) {
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
@@ -2141,6 +2141,7 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudiesActivities.is_global = element.is_global;
           newMeliaStudiesActivities.active = element.active;
+          newMeliaStudiesActivities.updateUser = userId?userId:null;
 
           meliaStudiesActivitiesArray.push(
             toolsSbt.mergeData(
@@ -2174,6 +2175,7 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
+          newMeliaStudy.updateUser = userId?userId:null;
           
           //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
