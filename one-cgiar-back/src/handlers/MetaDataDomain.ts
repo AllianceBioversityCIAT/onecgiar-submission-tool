@@ -647,7 +647,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
           (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
           (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND 
+          ((select count(msa.id) from melia_studies_activities msa where msa.initvStgId = ini.id and msa.active > 0)-
+          (select count(distinct(mt.meliaIdId)) from melia_toc mt where mt.initvStgIdId = ini.id and mt.active > 0)) = 0
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
@@ -736,7 +738,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
           (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
           (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
-          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0  AND 
+          ((select count(msa.id) from melia_studies_activities msa where msa.initvStgId = ini.id and msa.active > 0)-
+          (select count(distinct(mt.meliaIdId)) from melia_toc mt where mt.initvStgIdId = ini.id and mt.active > 0)) = 0
         THEN CASE
         WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
         THEN TRUE
