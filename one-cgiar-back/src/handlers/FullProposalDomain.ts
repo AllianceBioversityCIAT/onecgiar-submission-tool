@@ -1696,9 +1696,8 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         upsertResults = await resultsRepo.save(mergeResult);
 
-        const deleteResouls: number[] = <Array<number>>upsertResults.filter(el => el.active == false).map(el => el.id);
-        if(deleteResouls.length > 0){
-          await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
+        if(!!upsertResults && upsertResults.active == false){
+          await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId = ${upsertResults.id}`);
         }
 
         resultsArray.push(upsertResults);
