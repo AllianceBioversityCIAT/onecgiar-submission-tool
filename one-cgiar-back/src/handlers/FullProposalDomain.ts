@@ -1810,7 +1810,9 @@ export class ProposalHandler extends InitiativeStageHandler {
       );
 
       const deleteResouls: number[] = <Array<number>>upsertResultsIndicators.filter(el => el.active == false).map(el => el.id);
-      await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
+      if(deleteResouls.length > 0){
+        await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
+      }
 
       let upsertResultsRegions: any = await resultsRegionsRepo.save(
         mergeResultsRegions
