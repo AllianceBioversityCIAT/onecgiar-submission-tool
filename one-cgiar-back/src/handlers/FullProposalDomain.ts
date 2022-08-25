@@ -1809,7 +1809,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeResultsIndicators
       );
 
-      const deleteResouls: number[] = <Array<number>>upsertResultsIndicators.filter(el => el.active == false).map(el => el.id);
+      const deleteResouls: number[] = <Array<number>>upsertResultsIndicators.filter(el => el.active == false).map(el => el.results_id);
       if(deleteResouls.length > 0){
         await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
       }
