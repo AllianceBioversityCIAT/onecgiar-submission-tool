@@ -1696,6 +1696,11 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         upsertResults = await resultsRepo.save(mergeResult);
 
+        const deleteResouls: number[] = <Array<number>>upsertResults.filter(el => el.active == false).map(el => el.id);
+        if(deleteResouls.length > 0){
+          await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
+        }
+
         resultsArray.push(upsertResults);
 
         result.indicators =
@@ -1808,11 +1813,6 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsIndicators: any = await resultsIndicatorsRepo.save(
         mergeResultsIndicators
       );
-
-      const deleteResouls: number[] = <Array<number>>upsertResultsIndicators.filter(el => el.active == false).map(el => el.results_id);
-      if(deleteResouls.length > 0){
-        await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId in (${deleteResouls.join()})`);
-      }
 
       let upsertResultsRegions: any = await resultsRegionsRepo.save(
         mergeResultsRegions
