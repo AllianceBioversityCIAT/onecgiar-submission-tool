@@ -47,7 +47,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     },
     {
       attribute: 'resultsHtml',
-      name: "TOC EOI Outcomes, WP Outcomes, WP Outputs"
+      name: "TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to"
     },
   ]
   showTableViewVariable = true;
