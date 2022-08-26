@@ -1697,7 +1697,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         upsertResults = await resultsRepo.save(mergeResult);
 
         if(!!upsertResults && upsertResults.active == false){
-          await this.queryRunner.query(`update melia_toc mt set mt.active = 0 where mt.outcomeIdId = ${upsertResults.id}`);
+          const responses = await this.queryRunner.query(`update melia_toc mt inner join results r on r.id = mt.outcomeIdId set mt.active = 0 where r.toc_result_id = '${upsertResults.toc_result_id}'`);
         }
 
         resultsArray.push(upsertResults);
@@ -2214,14 +2214,20 @@ from  initiatives_by_stages ibs
             resultData.active = selectedResults.active?1:0;
             saveLinkResult.push(resultData);
           }else{
-            let newData:MeliaTocData = {
-              active: selectedResults.active?1:0,
-              initvStgId: initvStg.id,
-              meliaId: meliaDataId,
-              outcomeId: selectedResults.resultId             
+            let data: MeliaTocData = await meliaTocRepo.findOne({where: {initvStgId: initvStg.id, meliaId: meliaDataId, outcomeId: selectedResults.resultId }});
+            if(data){
+              data.active = selectedResults.active?1:0
+              saveLinkResult.push(data);
+            }else{
+              let newData:MeliaTocData = {
+                active: selectedResults.active?1:0,
+                initvStgId: initvStg.id,
+                meliaId: meliaDataId,
+                outcomeId: selectedResults.resultId             
+              }
+              saveLinkResult.push(newData);
             }
             
-            saveLinkResult.push(newData);
           }
           
         }
