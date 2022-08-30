@@ -54,6 +54,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   meliaStudyTypes = [];
   geographicScopes: FormGroup[] = [];
   years: [];
+  htmlTextMeliaAlert = `If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information.`;
   constructor(
     public _initiativesService: InitiativesService,
     public _dataControlService: DataControlService,

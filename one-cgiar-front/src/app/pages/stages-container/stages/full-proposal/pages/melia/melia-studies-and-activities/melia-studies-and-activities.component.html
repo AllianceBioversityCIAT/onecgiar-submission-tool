@@ -27,9 +27,9 @@
                         [confirmDeleteModal]="true"></app-button-edit-or-delete>
                     <br><br>
                     <div class="fields">
-
+                        
                         <div class="alert_container" style="margin: 20px 0 35px 0;">
-                            <ibdc-alert [options]="{text: 'If there is no item in the list, it is probably because information is missing in the TOC (Click here to go to edit toc).', type:'info'}"></ibdc-alert>
+                            <ibdc-alert [options]="{htmlText: htmlTextMeliaAlert, type:'info'}"></ibdc-alert>
                         </div>
 
                         <div class="mb-4">
@@ -62,7 +62,8 @@
                         
                             <ibdc-select-multiple (onSelectOptionE)="resultToHtml()" [options]="{
                                                     inputTitle:this.attr_list_config[7].name,
-                                                    selectList:item.resultsByMeliaList || [],
+                                                    selectList: item.resultsByMeliaList || [],
+                                                    description:'If there is no item in the list, it is probably because information is missing in the TOC, please go to (table c) section and add information',
                                                     selectItemName:'fullResultTitle',
                                                     selectItemId:'resultId',
                                                     selectItemNameBold:'wpName',
@@ -91,6 +92,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- <div class="alert_container" style="margin: -40px 0 35px 20px;" *ngIf="!item?.resultsByMeliaList?.length">
+                                <ibdc-alert [options]="{text: 'If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information', type:'info'}"></ibdc-alert>
+                            </div> -->
                         </div>
 
 
