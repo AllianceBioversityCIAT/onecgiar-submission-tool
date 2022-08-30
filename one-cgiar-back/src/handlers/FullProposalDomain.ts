@@ -12,6 +12,7 @@ import {InitiativeStageHandler} from './InitiativeStageDomain';
 import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
 import { pusherOST } from '../utils/pusher-util';
 import { initiativeParser } from '../utils/initiative-parser';
+import { MeliaToc } from '../entity/MeliaToc';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -1695,6 +1696,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         upsertResults = await resultsRepo.save(mergeResult);
 
+        if(!!upsertResults && upsertResults.active == false){
+          const responses = await this.queryRunner.query(`update melia_toc mt inner join results r on r.id = mt.outcomeIdId set mt.active = 0 where r.toc_result_id = '${upsertResults.toc_result_id}'`);
+        }
+
         resultsArray.push(upsertResults);
 
         result.indicators =
@@ -1997,6 +2002,14 @@ from  initiatives_by_stages ibs
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1
         order by re.result_type_id,wp.id;
+      `,
+      resultsByMelia = `
+      select msa.id as meliaStudiesId, mt.outcomeIdId, cmst.name 
+      from melia_toc mt 
+      	inner join melia_studies_activities msa on msa.id = mt.meliaIdId 
+      	inner join clarisa_melia_study_types cmst on cmst.id = msa.type_melia_id 
+      where mt.initvStgIdId = ${initvStg.id}
+              and mt.active > 0;
       `;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
@@ -2042,6 +2055,8 @@ from  initiatives_by_stages ibs
       const resultsIndicators = await this.queryRunner.query(
         resultsIndicatorsQuery
       );
+
+      const meliaTocResult = await this.queryRunner.query(resultsByMelia);
       const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
       const lastUpdateTableC = await this.queryRunner.query(lastUpdateTableCSql);
       const resultsCountries = await this.queryRunner.query(
@@ -2052,6 +2067,10 @@ from  initiatives_by_stages ibs
         res['indicators'] = resultsIndicators.filter((resi) => {
           return res.id === resi.results_id;
         });
+
+        res['meliasStudies'] = meliaTocResult.filter((ms) => {
+          return res.id === ms.outcomeIdId;
+        })
 
         const reg = resultsRegions.filter((reg) => {
           return res.id === reg.results_id;
@@ -2089,16 +2108,19 @@ from  initiatives_by_stages ibs
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
-  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any) {
+  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any, userId?:number) {
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
+    const meliaTocRepo = getRepository(MeliaToc);
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
     let regionsMeliaStd = [];
     let countriesMeliaStd = [];
     let initiativesMeliaStd = [];
+
+
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -2106,9 +2128,10 @@ from  initiatives_by_stages ibs
           : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
-
+        let meliaDataId: number;
         if (element.id) {
           const newMeliaStudiesActivities = new MeliaStudiesActivities();
+          meliaDataId = element.id;
 
           newMeliaStudiesActivities.id = element.id ? element.id : null;
           newMeliaStudiesActivities.initvStgId = initvStg.id;
@@ -2122,6 +2145,7 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudiesActivities.is_global = element.is_global;
           newMeliaStudiesActivities.active = element.active;
+          newMeliaStudiesActivities.updateUser = userId?userId:null;
 
           meliaStudiesActivitiesArray.push(
             toolsSbt.mergeData(
@@ -2155,11 +2179,15 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
-
+          newMeliaStudy.updateUser = userId?userId:null;
+          
           //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
             newMeliaStudy
           );
+
+          meliaDataId = newMeliaResponse.id;
+
           element.countries.map((coun) => {
             coun.meliaStudyId = newMeliaResponse.id;
           });
@@ -2176,6 +2204,37 @@ from  initiatives_by_stages ibs
             element.initiatives || []
           );
         }
+
+        const saveLinkResult: MeliaTocData[] = [];
+        for (let rindex = 0; rindex < element.selectResults.length; rindex++) {
+          const selectedResults = element.selectResults[rindex];
+
+          if(!!selectedResults.id){
+            let resultData: MeliaTocData = await meliaTocRepo.findOne(selectedResults.id);
+            resultData.active = selectedResults.active?1:0;
+            saveLinkResult.push(resultData);
+          }else{
+            let data: MeliaTocData = await meliaTocRepo.findOne({where: {initvStgId: initvStg.id, meliaId: meliaDataId, outcomeId: selectedResults.resultId }});
+            if(data){
+              data.active = selectedResults.active?1:0
+              saveLinkResult.push(data);
+            }else{
+              let newData:MeliaTocData = {
+                active: selectedResults.active?1:0,
+                initvStgId: initvStg.id,
+                meliaId: meliaDataId,
+                outcomeId: selectedResults.resultId             
+              }
+              saveLinkResult.push(newData);
+            }
+            
+          }
+          
+        }
+        
+
+          const updateResultMeliaResponse = await meliaTocRepo.save(saveLinkResult);
+        
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
@@ -2197,6 +2256,35 @@ from  initiatives_by_stages ibs
       console.log(error);
       throw new BaseError(
         'Upsert MELIA studies and activities: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async requestSelectResultsByMelias(){
+    const initvStg = await this.setInitvStage();
+    try {
+      let results = await this.queryRunner.query(`
+      select 	r.id as resultId, 
+      		r.result_title as resultTitle, 
+      		rt.id as typeId, 
+      		rt.name as typeName,
+      		wp.acronym  as wpAcronym,
+      		wp.name  as wpName,
+      		wp.id as wpId,
+      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
+      from results r 
+      	inner join results_types rt on rt.id = r.result_type_id 
+      	left join work_packages wp on wp.id = r.work_package_id 
+      	where r.initvStgId = ${initvStg.id}
+      	and r.active > 0
+      `);
+        return results;
+    } catch (error) {
+      throw new BaseError(
+        'GET Results by MELIA studies and activities: Full proposal',
         400,
         error.message,
         false
@@ -2229,6 +2317,24 @@ from  initiatives_by_stages ibs
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1
       group by id`);
+
+      let meliasResultsSelect = await this.queryRunner.query(`
+      select mt.id, 
+          mt.active, 
+          mt.meliaIdId, 
+          mt.outcomeIdId, 
+          mt.initvStgIdId,
+          r.id as resultId, 
+      	  r.result_title as resultTitle, 
+      	  rt.id as typeId, 
+      	  rt.name as typeName,
+      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
+      from melia_toc mt 
+      	inner join results r on r.id = mt.outcomeIdId 
+      	inner join results_types rt on rt.id = r.result_type_id 
+        where mt.initvStgIdId = ${initvStg.id}
+        and mt.active > 0
+      `);
 
       let countries = await this.queryRunner
         .query(`SELECT id,country_id,initvStgId,meliaStudyId
@@ -2275,6 +2381,10 @@ from  initiatives_by_stages ibs
           melia['initiatives'] = initiatives.filter((init) => {
             return init.meliaStudyId === melia.id;
           });
+
+          melia['selectResults'] = meliasResultsSelect.filter((res) => {
+            return res.meliaIdId === melia.id;
+          })
         });
       }
 
@@ -4021,4 +4131,12 @@ from  initiatives_by_stages ibs
       throw new BaseError('Get Tracks error', 400, error.message, false);
     }
   }
+}
+
+interface MeliaTocData{
+  active: number;
+  id?: number;
+  initvStgId: number;
+  meliaId: number;
+  outcomeId: number;   
 }

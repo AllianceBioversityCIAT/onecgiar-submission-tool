@@ -1013,7 +1013,7 @@ export async function patchMeliaStudiesActivities(
 ): Promise<Response> {
   const {stageId, initiativeId} = req.params;
   const meliaStudiesActivitiesData = req.body;
-
+  const {userId} = res.locals.jwtPayload;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1041,7 +1041,7 @@ export async function patchMeliaStudiesActivities(
     const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
 
     const meliaStudiesActivities =
-      await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData);
+      await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData, userId);
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
@@ -1093,10 +1093,14 @@ export async function getMeliaStudiesActivities(
 
     const meliaStudiesActivities =
       await fullPposal.requestMeliaStudiesActivities();
+    
+    const resultsByMelia = 
+    await fullPposal.requestSelectResultsByMelias();
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
-        meliaStudiesActivities
+        meliaStudiesActivities,
+        resultsByMelia
       })
     );
   } catch (error) {

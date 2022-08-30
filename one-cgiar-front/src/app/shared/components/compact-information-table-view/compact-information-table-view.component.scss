@@ -10,6 +10,32 @@
   .local-col {}
 }
 
+.container_scroll-y{
+  overflow-y: auto;
+  max-height: 300px;
+  /* width */
+  &::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;
+  border-radius: 100px;
+}
+
+/* Handle */
+  &::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 100px;
+}
+
+/* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;

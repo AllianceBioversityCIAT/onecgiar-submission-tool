@@ -16,7 +16,6 @@ import { forkJoin } from 'rxjs';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   list: MeliaStudiesAndActivities[] = [];
-
   attr_list_config: AttributesListConfiguration[] = [
     {
       attribute: 'id',
@@ -46,11 +45,16 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       attribute: 'geographic_scope',
       name: "Geographic Scope"
     },
+    {
+      attribute: 'resultsHtml',
+      name: "TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to"
+    },
   ]
   showTableViewVariable = true;
   meliaStudyTypes = [];
   geographicScopes: FormGroup[] = [];
   years: [];
+  htmlTextMeliaAlert = `If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information.`;
   constructor(
     public _initiativesService: InitiativesService,
     public _dataControlService: DataControlService,
@@ -69,7 +73,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     });
     this._initiativesService.getYears().subscribe( res => {
       this.years = res.response.years;
-      console.log('Years', this.years);
+      // console.log('Years', this.years);
     })
   }
 
@@ -96,7 +100,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         is_global: null,
         countries: [],
         regions: [],
-        initiatives: []
+        initiatives: [],
+        selectResults: []
       }
     )
     this.geographicScopes.push(new FormGroup({ is_global: new FormControl(this.list[this.list.length - 1].is_global) }));
@@ -119,20 +124,38 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     }
   }
 
-  getmeliaStudActiByInitId() {
-    console.log(this._initiativesService.initiative.id)
-    this._initiativesService.getmeliaStudActiByInitId().pipe(map(res => res?.response?.meliaStudiesActivities)).subscribe((resp: MeliaStudiesAndActivities[]) => {
-      console.log(resp)
-      this.list = resp;
+  checkActives(list){
+    return list.some(item=>item.active == true)
+   }
 
+   resultToHtml(){
+    this.list.map((listItem:any)=>{
+      let resultsHtml = "";
+      listItem.selectResults.map(resultItem=>{
+        resultsHtml+='<p>'+resultItem?.fullResultTitle+'</p>';
+      })
+
+      listItem.resultsHtml = resultsHtml;
+     
+    })
+   }
+
+  getmeliaStudActiByInitId() {
+    this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
+      const resultsByMeliaList:ResultsByMelia[] = resp?.response?.resultsByMelia;
+      resultsByMeliaList.map(resultItem=>{
+        resultItem.id = null;
+      })
+      this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
+        melia.resultsByMeliaList = JSON.parse(JSON.stringify(resultsByMeliaList))
         this.geographicScopes.push(new FormGroup({
           is_global: new FormControl(melia.is_global),
         })
         );
       });
 
-      console.log(this.geographicScopes);
+      this.resultToHtml()
 
       forkJoin({
         initiatives: this._initiativesService.getInitiativesList(),
@@ -201,6 +224,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
       melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
+    console.log(this.list)
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
       console.log(resp);
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
@@ -222,4 +246,15 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     }
   }
 
+}
+
+interface ResultsByMelia {
+  id: number;
+  resultTitle: string;
+  typeId: number;
+  typeName: string;
+  wpAcronym?: string;
+  wpName?: string;
+  wpId?: number;
+  resultsHtml?:string
 }
