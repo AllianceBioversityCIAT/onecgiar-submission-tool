@@ -13,6 +13,7 @@ import { UtilsService } from '../../shared/services/utils.service';
 import { PusherService } from '../../shared/services/pusher.service';
 import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 import { AuthService } from '../../shared/services/auth.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-stages-menu',
@@ -225,7 +226,13 @@ export class StagesMenuComponent implements OnInit {
     // console.log('id ',this.initiativesSvc.initiative.id)
     this.initiativesSvc.getSectionsValidation(this.initiativesSvc.initiative.id, this.initiativesSvc.initiative.stageId).subscribe(resp => {
       if (this.initiativesSvc.initiative.stageId == 4) this._dataControlService.isdcFeedbackValidation = resp?.response.isdcFeedBack;
-      //  console.log(resp?.response.isdcFeedBack)
+      if(resp?.response.melia.subSections){
+        resp?.response.melia.subSections.forEach(element => {
+           if(element.subseDescripton === "melia-studies-and-activities"){
+            this._dataControlService.meliaStudiesValidation = element;
+           } 
+        });
+      }
       // console.log(resp)
       if (!resp?.response) return;
       Object.keys(resp?.response).map(key => {

@@ -486,7 +486,7 @@ export class MenuComponent implements OnInit {
   }
 
   submitBtn() {
-    if (this._dataControlService.isdcFeedbackValidation?.validation) {
+    if (this._dataControlService.isdcFeedbackValidation?.validation && this._dataControlService.meliaStudiesValidation?.validation) {
       const configAlert = {
         title: '',
         text: `The <strong>${this.initiativesSvc.initiative.official_code}: ${this.initiativesSvc.initiative.name}</strong> is about to be approved. Please note that further changes cannot be made once approved.`,
