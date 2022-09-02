@@ -47,7 +47,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     },
     {
       attribute: 'resultsHtml',
-      name: "TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to"
+      name: "TOC EOI Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to"
     },
   ]
   showTableViewVariable = true;
@@ -145,6 +145,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       const resultsByMeliaList:ResultsByMelia[] = resp?.response?.resultsByMelia;
       resultsByMeliaList.map(resultItem=>{
         resultItem.id = null;
+        resultItem.fullResultTitle = `(${resultItem.typeName}) ${resultItem.resultTitle || 'Name not provided'}`
       })
       this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
@@ -210,7 +211,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
   }
 
   saveSection() {
-    console.log(this.list)
+    // console.log(this.list[0].selectResults)
 
     //Update is global from formControl to body
     for (let i = 0; i < this.list.length; i++) {
@@ -224,9 +225,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
       melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
-    console.log(this.list)
+    // console.log(this.list)
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
-      console.log(resp);
+      // console.log(resp);
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
       // this._interactionsService.warningMessage('MELIA studies and activities has been saved, but there are incomplete fields');
       this.getmeliaStudActiByInitId();
@@ -257,4 +258,5 @@ interface ResultsByMelia {
   wpName?: string;
   wpId?: number;
   resultsHtml?:string
+  fullResultTitle?:string;
 }

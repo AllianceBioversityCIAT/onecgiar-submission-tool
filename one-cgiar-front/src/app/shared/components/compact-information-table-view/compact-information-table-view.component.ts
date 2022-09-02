@@ -47,7 +47,7 @@ export class CompactInformationTableViewComponent implements OnInit {
   }
 
   onbuttonViewEvent(){
-    console.log("button event")
+    // console.log("button event")
     this.showTableViewVariable = !this.showTableViewVariable;
     this.buttonViewEvent.emit(this.showTableViewVariable);
   }
