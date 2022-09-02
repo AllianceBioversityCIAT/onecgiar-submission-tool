@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class MultipleSelectItemComponent implements OnInit {
   @Input() object: any;
   @Input() attr: any;
+  @Input() selectList: any[]=[];
   constructor() { }
 
   ngOnInit(): void {
@@ -15,9 +16,8 @@ export class MultipleSelectItemComponent implements OnInit {
 
   onRemove(){
     this.object.selected = false;
-    console.log(this.object)
-    // this.object.active = false;
-   
+    this.object.active = false;
+    this.selectList.find(item=> item.resultId == this.object.outcomeIdId)!.selected = false
   }
 
 }

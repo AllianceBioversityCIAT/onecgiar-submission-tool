@@ -68,7 +68,6 @@
                                                     selectItemId:'resultId',
                                                     selectItemNameBold:'wpName',
                                                     intermediateText:'- WP:',
-                                                    hideSavedList: true,
                                                     shadow: false,
                                                     frontendSearchAttribute:'fullResultTitle',
                                                     readOnlyVariable: this._initiativesService.initiative.readonly,
@@ -76,23 +75,23 @@
                                                     savedList:{
                                                         list: item.selectResults,
                                                         selectItemId:'resultId',
-                                                        selectItemName:'resultTitle',
+                                                        selectItemName:'fullResultTitle',
                                                         idToSave:'id',
                                                         labelName:'resultTitle'
                                                     }
                                                 }">
                             </ibdc-select-multiple>
 
-                            <div *ngIf="this._initiativesService.initiative.readonly" style="height: 30px;"></div>
-                            <div class="items_container" *ngIf="checkActives(item.selectResults)">
+                            <!-- <div *ngIf="this._initiativesService.initiative.readonly" style="height: 30px;"></div> -->
+                            <!-- <div class="items_container" *ngIf="checkActives(item.selectResults)">
                                 <div class="items">
                                     <div>
-                                        <div *ngFor="let item of item.selectResults">
-                                            <app-multiple-select-item [object]="item" [attr]="'resultTitle'"></app-multiple-select-item>
+                                        <div *ngFor="let selectResultItem of item.selectResults">
+                                            <app-multiple-select-item [object]="selectResultItem" [attr]="'resultTitle'" [selectList]="item.resultsByMeliaList" ></app-multiple-select-item>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- <div class="alert_container" style="margin: -40px 0 35px 20px;" *ngIf="!item?.resultsByMeliaList?.length">
                                 <ibdc-alert [options]="{text: 'If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information', type:'info'}"></ibdc-alert>
                             </div> -->
@@ -141,6 +140,7 @@
                             frontendSearchAttribute:'displayName',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
                             description: 'Message',
+                            closeWhenSelect: true,
                             savedList:{
                                 list:item.initiatives,
                                 selectItemName:'displayName',
