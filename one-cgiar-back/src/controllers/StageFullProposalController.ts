@@ -1955,6 +1955,24 @@ export async function getISDCResponses(
   }
 }
 
+export async function getAllEndofInitiativeOutcome(req: Request, res: Response){
+  try {
+    const fullPposal = new ProposalHandler();
+    const eoi_outcome_by_initiatives = await fullPposal.requestAllEndofInitiativeOutcomes();
+    res.json(
+      new ResponseHandler(
+        'Full Proposal:Get End of Initiative Outcome for all Initiativa',
+        {
+          eoi_outcome_by_initiatives
+        }
+      )
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
 
