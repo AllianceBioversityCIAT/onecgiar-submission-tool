@@ -3883,6 +3883,73 @@ from  initiatives_by_stages ibs
       }
     }
 
+
+  async requestAllEndofInitiativeOutcomes(){
+    try{
+      const queryEOI = `
+      select
+      i.id as initiative_id,
+      r.toc_result_id,
+      r.result_title -- ,
+      -- ri.id as indicator_id, 
+      -- ri.name as indicator_name, 
+      -- ri.unit_measurement, 
+      -- ri.baseline_value, 
+      -- ri.baseline_year,
+      -- ri.target_value, 
+      -- ri.target_year, 
+      -- ri.data_source, 
+      -- ri.data_collection_method as data_collection, 
+      -- ri.frequency_data_collection,
+      -- ri.created_at, 
+      -- rt.updated_at
+    from initiatives_by_stages ibs 
+      inner join initiatives i on i.id = ibs.initiativeId 
+                  and ibs.active > 0
+      inner join stages s on ibs.stageId = s.id 
+      inner join results r ON r.initvStgId = ibs.id 
+                  and r.result_type_id = 3
+                  and r.active > 0
+      inner join results_indicators ri on ri.results_id = r.id
+      inner join results_types rt on rt.id = r.result_type_id 
+      order by i.id asc;
+      `,
+      stageInitiativeQuery = `
+      select
+        i.id as initiative_id,
+        i.official_code as initiative_official_code,
+        i.name as initiative_name,
+        s.description as stage_name
+      from initiatives_by_stages ibs 
+        inner join initiatives i on i.id = ibs.initiativeId 
+                    and ibs.active > 0
+        inner join stages s on ibs.stageId = s.id
+        order by i.id asc;
+      `;
+      const EoiByInit = await this.queryRunner.query(stageInitiativeQuery);
+      const allEoi = await this.queryRunner.query(queryEOI);
+      EoiByInit.map(res => {
+        res['eoi_o'] = allEoi.filter((aeoi) => {
+          return res.initiative_id === aeoi.initiative_id;
+        });
+      })
+      EoiByInit.map(res => {
+        res.eoi_o.map(el => {
+          delete el.initiative_id;
+        })
+      })
+      return EoiByInit;
+    }catch(error){
+      console.log(error);
+      throw new BaseError(
+        'Request EOI By Initiative: Full proposal',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
   /**
    * * REQUEST EOI BY INITIATIVE
    * @returns eoi

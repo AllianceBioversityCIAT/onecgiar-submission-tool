@@ -334,6 +334,16 @@ router.get(
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.getEndofInitiativeOutcome
 );
+
+/**
+ ** GET END OF INITIATIVE OUTCOMES FROM TOC TOOL
+ *! TOC INTEGRATION
+ */
+ router.get(
+  '/eoi/all/initiatives',
+  [checkJwt, checkRole('initiatives', 'updateOwn')],
+  stagefull.getAllEndofInitiativeOutcome
+);
 /**
  ** POST INITIATIVES APPROVAL
  */
