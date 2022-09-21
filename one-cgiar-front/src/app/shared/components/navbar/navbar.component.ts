@@ -3,9 +3,14 @@ import { InteractionsService } from '../../services/interactions.service';
 import { AuthService } from '../../services/auth.service';
 import { PusherService } from '../../services/pusher.service';
 import { DataControlService } from '../../services/data-control.service';
-import { NavigationStart, Router, Event as NavigationEvent } from '@angular/router';
+import {
+  NavigationStart,
+  Router,
+  Event as NavigationEvent,
+} from '@angular/router';
 import { InitiativesService } from '../../services/initiatives.service';
 import { environment } from '../../../../environments/environment';
+import { PusherBlocked } from './cgiar-logo-svg/variables/pusher-blocked-routes';
 declare let gtag: (property: string, value: any, configs: any) => {};
 
 @Component({
@@ -22,18 +27,18 @@ export class NavbarComponent implements OnInit {
   tocStatus: any = true;
   count: any;
   messages = [];
+
   constructor(
     public authSvc: AuthService,
     public _interactionsService: InteractionsService,
     public _dataControlService: DataControlService,
     public pusherService: PusherService,
-    private router:Router,
-    private _pusherService:PusherService,
-    public _initiativesService:InitiativesService
+    private router: Router,
+    private _pusherService: PusherService,
+    public _initiativesService: InitiativesService
   ) {}
 
   ngOnInit(): void {
-
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;
@@ -44,38 +49,39 @@ export class NavbarComponent implements OnInit {
       }
     });
 
-
     /**
      ** START SOCKET PRESENCE CHANEL
      */
     // Set route and user for identify users online
     // /initiatives/1/stages/full-proposal/general-information
     //  setTimeout(() => {
-      // console.log(this.router.url)
+    // console.log(this.router.url)
     //  }, 1000);
     this.router.events.subscribe((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
         // console.log(event.url.split('/')[2])
-        if (!(event.url.split('/')[2])) return;
-        this.pusherService.start(event.url, this.user.id, event.url.split('/')[2]);
+
+        if (!event.url.split('/')[2]) return;
+        this.pusherService.start(
+          event.url,
+          this.user.id,
+          event.url.split('/')[2]
+        );
         this.pusherService.membersList = [];
         this._pusherService.continueEditing = false;
         this._pusherService.firstUser = false;
         this._pusherService.secondUser = null;
-        if (document.querySelector('.right_container'))document.querySelector('.right_container').scrollTop = 0;
+        if (document.querySelector('.right_container'))
+          document.querySelector('.right_container').scrollTop = 0;
         try {
           gtag('config', environment.googleAnalyticsId, {
-            page_path: event.url
+            page_path: event.url,
           });
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
- 
-    })
-
-
-
+    });
 
     // Get data from event socket
     // this.pusherService.channel.bind('new-status', (data) => {
@@ -83,17 +89,18 @@ export class NavbarComponent implements OnInit {
 
     //   this.tocStatus = data.status;
     // });
-
   }
 
-  getCurrentRole(){
+  getCurrentRole() {
     let initRole = this._initiativesService.initiative.userRoleName;
     let generalRole = this.authSvc?.lsUserRoles?.name;
-    let role = initRole ? initRole : ( this.authSvc.lsUserRoles?.id == 1 ? this.authSvc.lsUserRoles?.name : '')
-    return  role
+    let role = initRole
+      ? initRole
+      : this.authSvc.lsUserRoles?.id == 1
+      ? this.authSvc.lsUserRoles?.name
+      : '';
+    return role;
   }
-
-
 
   onExit(): void {
     if (window['Tawk_API']) window['Tawk_API'].minimize();
