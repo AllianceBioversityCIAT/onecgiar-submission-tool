@@ -359,11 +359,11 @@ export class ProposalHandler extends InitiativeStageHandler {
         // Map Regions and Countries into WP
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
-            return reg.wrkPkgId === wp.id;
+            return reg.wrkPkgId === wp.wp_id;
           });
 
           wp['countries'] = countries.filter((cou) => {
-            return cou.wrkPkgId === wp.id;
+            return cou.wrkPkgId === wp.wp_id;
           });
         });
       }
