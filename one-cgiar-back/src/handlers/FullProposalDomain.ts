@@ -279,13 +279,14 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        SELECT init.initiativeId as initiative_id,i.name as init_name, init.stageId as stage_id, 
           wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
           wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
           wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
            on wp.initvStgId  = init.id
+         inner join initiatives i on i.id = init.initiativeId 
         WHERE init.stageId = 3
          AND wp.active = 1
         ORDER BY initiativeId asc;`;
@@ -300,11 +301,11 @@ export class ProposalHandler extends InitiativeStageHandler {
         // Map Initiatives
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
-            return reg.wrkPkgId === wp.id;
+            return reg.wrkPkgId === wp.wp_id;
           });
 
           wp['countries'] = countries.filter((cou) => {
-            return cou.wrkPkgId === wp.id;
+            return cou.wrkPkgId === wp.wp_id;
           });
         });
       }
@@ -359,11 +360,11 @@ export class ProposalHandler extends InitiativeStageHandler {
         // Map Regions and Countries into WP
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
-            return reg.wrkPkgId === wp.id;
+            return reg.wrkPkgId === wp.wp_id;
           });
 
           wp['countries'] = countries.filter((cou) => {
-            return cou.wrkPkgId === wp.id;
+            return cou.wrkPkgId === wp.wp_id;
           });
         });
       }
