@@ -430,7 +430,7 @@ export async function getClaGlobalTargets() {
  */
 export async function getClaMeliaStudyTypes() {
   try {
-    const sdgTargets = await axios.get(clarisaHost + 'MELIA/study-types', {
+    const sdgTargets = await axios.get(clarisaHost + 'study-types', {
       auth: {
         username: process.env['clarisa_user'],
         password: process.env['clarisa_password']
