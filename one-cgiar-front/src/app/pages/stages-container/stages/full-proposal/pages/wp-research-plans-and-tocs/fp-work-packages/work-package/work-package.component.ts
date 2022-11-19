@@ -84,21 +84,29 @@ export class WorkPackageComponent implements OnInit {
 
   wpColorselected(stageId, sectionId, subSectionId, wpId){
     // select all wp 
-    let allWp = this._dataControlService.userMenu.find((menuItem) => menuItem.stageId == stageId)
-    .sections.find((section) => section.sectionId == sectionId)
-    .subsections.find((subSection) => subSection.subSectionId == subSectionId)
-    .dynamicList
-    // clean wp activeSection attribute
 
-    if (allWp) {
-      allWp.map(wp=>wp.activeSection = false)
+    // return true;
+
+    try {
+      let allWp = this._dataControlService.userMenu?.find((menuItem) => menuItem.stageId == stageId)
+      .sections?.find((section) => section.sectionId == sectionId)
+      .subsections?.find((subSection) => subSection.subSectionId == subSectionId)
+      .dynamicList
+      // clean wp activeSection attribute
+  
+      if (allWp) {
+        allWp.map(wp=>wp.activeSection = false)
+      }
+     
+      // select current wp
+      if (wpId != -1 && allWp) {
+        let sectionFinded = allWp.find((wp) => wp.id == wpId);
+        if (sectionFinded) sectionFinded.activeSection = true;
+      }
+    } catch (error) {
+      console.log(error)
     }
-   
-    // select current wp
-    if (wpId != -1 && allWp) {
-      let sectionFinded = allWp.find((wp) => wp.id == wpId);
-      if (sectionFinded) sectionFinded.activeSection = true;
-    }
+
      
   }
 
