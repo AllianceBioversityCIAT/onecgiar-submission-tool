@@ -113,6 +113,9 @@ export const upsertSummary = async (req: Request, res: Response) => {
     is_global
   } = req.body;
 
+
+
+
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -881,7 +884,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
  * @param res
  */
 export const createInitiative = async (req: Request, res: Response) => {
-  const {name, user, current_stage} = req.body;
+  const {name, user, current_stage, official_code, acronym} = req.body;
   const userRepository = getRepository(Users);
   const initiativesRepository = getRepository(Initiatives);
   const initiativesByUsersRepository = getRepository(InitiativesByUsers);
@@ -893,6 +896,8 @@ export const createInitiative = async (req: Request, res: Response) => {
   const initByUsr = new InitiativesByUsers();
   const newInitStg = new InitiativesByStages();
   initiative.name = name;
+  initiative.acronym = acronym;
+  initiative.official_code = official_code;
 
   try {
     const errors = await validate(initiative);
