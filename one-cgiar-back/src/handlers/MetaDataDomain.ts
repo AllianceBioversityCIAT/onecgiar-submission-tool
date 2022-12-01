@@ -618,21 +618,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
   (CASE
     WHEN
     ((SELECT COUNT(rs.id) as firstValidation FROM results rs
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 ) > 0 AND
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) > 0 AND
     (SELECT COUNT(rs.id) as firstValidation FROM results rs
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 ) > 0 )AND
-    ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) = 0 AND
-    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) = 0)
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) > 0 )AND
+    ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) = 0 AND
+    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) = 0)
     THEN  CASE
     WHEN 
         ((SELECT COUNT(rsi.id) 
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1) > 0 AND
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) > 0 AND
     (SELECT COUNT(rsi.id) 
       FROM results rs 
         INNER JOIN results_indicators rsi on rsi.results_id = rs.id
-      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2) > 0)
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) > 0)
     THEN TRUE
         ELSE FALSE
         END
