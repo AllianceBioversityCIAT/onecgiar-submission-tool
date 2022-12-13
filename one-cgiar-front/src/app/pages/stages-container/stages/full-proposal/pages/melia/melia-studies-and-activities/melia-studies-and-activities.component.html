@@ -59,7 +59,7 @@
                                 *ngIf="item[this.attr_list_config[2].attribute] || this._dataControlService.isAdmin"
                                 [objectAtributteName]="this.attr_list_config[2].attribute"
                                 [readOnlyVariable]="this._initiativesService?.initiative.readonly   || !this._dataControlService.isAdmin"
-                                [maxWords]="50"
+                                [maxWords]="50" [inputRequired]="false"
                                 [inputDescription]="'Text information available in this field will no longer be used. Please link this MELIA study/activity to a specific result from the Initiatives TOC from the list below'">
                             </ibdc-text-area-field>
 
