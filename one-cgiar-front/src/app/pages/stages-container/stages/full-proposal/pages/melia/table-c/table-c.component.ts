@@ -135,24 +135,39 @@ export class TableCComponent implements OnInit {
 
   exportBasicExcel(){
     let list = [];
+    console.log(this.listToSave);
+      
     this.listToSave.map(result=>{
-      result.indicators.map((indicator)=>{
+    
+        if (result.indicators.length > 0) {
+          result.indicators.map((indicator)=>{
+            list.push({
+              Result_type	: result?.type_name || 'Not provided',
+               Work_package: `${result?.wp_acronym && result?.wp_name ? '' : 'Not provided'}${result?.wp_acronym || ''}${result?.wp_acronym ? ': ' : ''} ${result?.wp_name || ''}`,
+               result_title: result?.result_title || 'Not provided',
+               geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
+               indicator_name: indicator?.indicator_name || 'Not provided',
+               unit_measurement: indicator?.unit_measurement || 'Not provided',
+               data_source: indicator?.data_source || 'Not provided',
+               data_collection_method: indicator?.data_collection || 'Not provided',
+               frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
+               baseline_value: indicator?.baseline_value || 'Not provided',
+               baseline_year: indicator?.target_value || 'Not provided',
+               target_year: indicator?.target_year || 'Not provided'
+               });
+         })
+        } else {
           list.push({
             Result_type	: result?.type_name || 'Not provided',
             Work_package: `${result?.wp_acronym && result?.wp_name ? '' : 'Not provided'}${result?.wp_acronym || ''}${result?.wp_acronym ? ': ' : ''} ${result?.wp_name || ''}`,
             result_title: result?.result_title || 'Not provided',
             geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
-            indicator_name: indicator?.indicator_name || 'Not provided',
-            unit_measurement: indicator?.unit_measurement || 'Not provided',
-            data_source: indicator?.data_source || 'Not provided',
-            data_collection_method: indicator?.data_collection || 'Not provided',
-            frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
-            baseline_value: indicator?.baseline_value || 'Not provided',
-            baseline_year: indicator?.target_value || 'Not provided',
-            target_year: indicator?.target_year || 'Not provided'
-            });
-      })
+            })
+          
+        }
+   
     })
+
     this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:300},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
   }
 
