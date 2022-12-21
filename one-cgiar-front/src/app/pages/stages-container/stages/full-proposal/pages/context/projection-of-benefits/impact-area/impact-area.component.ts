@@ -148,7 +148,7 @@ export class ImpactAreaComponent implements OnInit {
   }
     
   ngDoCheck(): void {
-    this.pobColorselected(3, 1, 8, this.pobIaID);
+//    this.pobColorselected(3, 1, 8, this.pobIaID);
   }
 
   ngOnDestroy(): void {
