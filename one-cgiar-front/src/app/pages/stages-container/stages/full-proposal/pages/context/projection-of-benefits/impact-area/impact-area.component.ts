@@ -152,7 +152,7 @@ export class ImpactAreaComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-   this.pobColorselected(3, 1, 8,-1)
+ //  this.pobColorselected(3, 1, 8,-1)
   }
 
 }

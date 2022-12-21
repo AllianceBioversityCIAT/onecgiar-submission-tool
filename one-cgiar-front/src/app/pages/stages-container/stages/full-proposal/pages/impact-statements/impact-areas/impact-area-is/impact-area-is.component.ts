@@ -135,7 +135,7 @@ export class ImpactAreaIsComponent implements OnInit {
   }
  
   ngOnDestroy(): void {
-   this.pobColorselected(3, 7, 16,-1)
+ //  this.pobColorselected(3, 7, 16,-1)
    this.cleanForm();
   }
 
