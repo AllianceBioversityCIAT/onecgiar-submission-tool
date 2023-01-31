@@ -2771,7 +2771,6 @@ export async function getTocResultDashboard(req: Request,res: Response) {
           ]
           };
           const message = await servicesInformation.splitInformation(narrative)
-         console.log(message);
          res.json({response: message})
           
       } catch (error) {
