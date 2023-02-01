@@ -3,5 +3,5 @@ export class TocActionAreaResultsDto{
     action_areas_id: string;
     statement: string;
     outcome_id:number;
-    is_active: string;
+    is_active: boolean;
 }

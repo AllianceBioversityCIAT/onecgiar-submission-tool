@@ -3,7 +3,7 @@ export class CreateSdgResultsDto{
 
   sdg_id: number;
 
-  sdg_contribution: number;
+  sdg_contribution: string;
 
   is_active: boolean;
 }
