@@ -17,7 +17,10 @@ export async function getTocResultDashboard(req: Request,res: Response) {
       let servicesInformation = new TocServicesResults();
       console.log(tocHost);
         const narrative = await axios.get(tocHost);
-          const message = await servicesInformation.splitInformation(narrative.data)
+        console.log(narrative);
+          
+        const message = await servicesInformation.splitInformation(narrative.data)
+
          res.json({response: message})
           
       } catch (error) {
