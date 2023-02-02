@@ -22,6 +22,7 @@ export async function getTocResultDashboard(req: Request,res: Response) {
           
       } catch (error) {
         
-        return error
+        console.log(error.response.data);
+    return res.status(error.response.status).json(error.response.data);
       }
 }
