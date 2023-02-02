@@ -7,7 +7,7 @@ export class createTableTocImpactAreaResults1675094115977 implements MigrationIn
         CREATE TABLE IF NOT EXISTS toc_impact_area_results (
             toc_result_id VARCHAR(50) NOT NULL,
             impact_area_id INT NOT NULL,
-            outcome_statement VARCHAR(100) NULL,
+            outcome_statement text NULL,
             is_active TINYINT NULL,
             PRIMARY KEY (toc_result_id),
             INDEX fk_toc_impact_area_results_clarisa_impact_areas1_idx (impact_area_id ASC) VISIBLE,

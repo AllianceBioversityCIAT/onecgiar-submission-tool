@@ -7,7 +7,7 @@ export class createTableSdgResults1675081934914 implements MigrationInterface {
             `CREATE TABLE IF NOT EXISTS toc_sdg_results (
                 toc_result_id VARCHAR(50) NOT NULL,
                 sdg_id INT NULL,
-                sdg_contribution VARCHAR(100) NULL,
+                sdg_contribution text NULL,
                 is_active TINYINT NULL,
                 PRIMARY KEY (toc_result_id))
               ENGINE = InnoDB;`

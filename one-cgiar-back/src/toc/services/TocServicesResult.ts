@@ -19,6 +19,27 @@ import { TocResultsActionAreaResultsDto } from '../dto/tocResultsActionAreaResul
 import { TocResultsImpactAreaResultsDto } from '../dto/tocResultsImpactAreaResults';
 import { TocResultsSdgResultsDto } from '../dto/tocResultsSdgResults';
 import { TocSdgResultsSdgTargets } from '../entity/tocSdgResultsSdgTargets';
+import { TocResultsIndicatorsDto } from '../dto/tocResultsIndicators';
+import { TocResultsRegionsDto } from '../dto/tocResultsRegions';
+import { TocResultsCountriesDto } from '../dto/tocResultsCountries';
+import { TocResults } from '../entity/tocResults';
+import { TocImpactAreaResults } from '../entity/tocImpactAreaResults';
+import { TocActionAreaResults } from '../entity/tocActionAreaResults';
+import { TocSdgResults } from '../entity/tocSdgResults';
+import { TocSdgResultsSdgIndicators } from '../entity/tocSdgResultsSdgIndicators';
+import { TocImpactAreaResultsGlobalTargets } from '../entity/tocImpactAreaResultsGlobalTargets';
+import { TocImpactAreaResultsImpactAreaIndicators } from '../entity/tocImpactAreaResultsImpactAreaIndicators';
+import { TocImpactAreaResultsSdgResults } from '../entity/tocImpactAreaResultsSdgResults';
+import { TocActionAreaResultsOutcomesIndicators } from '../entity/tocActionAreaResultsOutcomesIndicators';
+import { TocActionAreaResultsImpactAreaResults } from '../entity/tocActionAreaResultsImpactAreaResults';
+import { TocResultsActionAreaResults } from '../entity/tocResultsActionAreaResults';
+import { TocResultsImpactAreaResults } from '../entity/tocResultsImpactAreaResults';
+import { TocResultsSdgResults } from '../entity/tocResultsSdgResults';
+import { TocResultsIndicators } from '../entity/tocResultsIndicators';
+import { TocResultsCountries } from '../entity/tocResultsCountries';
+import { TocResultsRegions } from '../entity/tocResultsRegions';
+
+
 
 
 
@@ -38,7 +59,7 @@ export class TocServicesResults {
                         const action_area = await this.saveActionAreaResult(tocResultDashboard.action_area_results,impact_area_results)
                         if(action_area!= null && this.validatorType.validatorIsArray(action_area)){
                             const tocResult= await this.saveOutputOutcomeResults(tocResultDashboard.output_outcome_results,sdg_results,impact_area_results,action_area)
-                            return this.saveInDataBase(sdg_results);
+                            return await this.saveInDataBase(tocResult,sdg_results,impact_area_results,action_area);
                         }
                     }
                 }
@@ -146,8 +167,8 @@ export class TocServicesResults {
             objectImpactArea.global_targets.forEach(element => {
                 if(this.validatorType.existPropertyInObjectMul(element, ['global_target_id','active'])){
                     const relationGlobalTarget = new TocImpactAreaResultsGlobalTargetsDto;
-                    relationGlobalTarget.impact_area_toc_results_id = toc_result_id;
-                    relationGlobalTarget.global_traget = typeof element.global_target_id == 'number'? element.global_target_id : null;
+                    relationGlobalTarget.impact_area_toc_result_id = toc_result_id;
+                    relationGlobalTarget.global_target_id = typeof element.global_target_id == 'number'? element.global_target_id : null;
                     relationGlobalTarget.is_active = typeof element.active == 'boolean'? element.active : null;
                     if(this.validatorType.validExistNull(relationGlobalTarget)){
                         listValidGlobalTarget.push(relationGlobalTarget);
@@ -160,7 +181,7 @@ export class TocServicesResults {
                 if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
                     const relationSdg = new TocImpactAreaResultsSdgResultsDto;
                     relationSdg.impact_area_toc_result_id = toc_result_id;
-                    relationSdg.sdg_toc_results_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
+                    relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
                     relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
                     if(this.validatorType.validExistNull(relationSdg)){
                         listValidSdg.push(relationSdg);
@@ -235,7 +256,7 @@ export class TocServicesResults {
                 if(this.validatorType.existPropertyInObjectMul(element,['toc_result_id','active'])){
                     const relationImpactArea= new TocActionAreaResultsImpactAreaResultsDto;
                     relationImpactArea.action_area_toc_result_id = toc_result_id;
-                    relationImpactArea.impact_area_toc_result_is = typeof element.toc_result_id == 'string'&& this.validatorType.validExistIdImpact(impactAreaResults,element.toc_result_id) ? element.toc_result_id : null;
+                    relationImpactArea.impact_area_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistIdImpact(impactAreaResults,element.toc_result_id) ? element.toc_result_id : null;
                     relationImpactArea.is_active = typeof element.active == 'boolean'? element.active : null;
                     if(this.validatorType.validExistNull(relationImpactArea)){
                         listValidImpactArea.push(relationImpactArea);
@@ -253,7 +274,10 @@ export class TocServicesResults {
     async saveOutputOutcomeResults(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
         let listValidTocResult=[]
         if(this.validatorType.validatorIsArray(outputOutcomeResults)){
+            let con = 0
+            
             outputOutcomeResults.forEach(async element => {
+                
                 if(this.validatorType.existPropertyInObjectMul(element,['toc_result_id',
                 'result_type','wp_id','result_title','result_description','outcome_type',
                 'indicators','action_areas','impact_areas','sdgs','geo_scope'])){
@@ -266,10 +290,9 @@ export class TocServicesResults {
                     outPutComeDto.outcome_type = typeof element.outcome_type == 'string'? element.outcome_type : null;
                     outPutComeDto.is_active = true;
                     outPutComeDto.is_global = true;
-                    if(this.validatorType.validExistNull(outPutComeDto)){
                         const relation = await this.relationTocResults(element,element.toc_result_id,sdgResults,impactAreaResults,actionAreaResult)
                         listValidTocResult.push({outcome:outPutComeDto,relation:relation});
-                    }
+                    
                 }
             });
 
@@ -281,13 +304,16 @@ export class TocServicesResults {
         let listValidActionArea = []
         let listValidSdg = []
         let listValidImpact = []
+        let listValidIndicator = []
+        let listValidRegions = []
+        let listValidCountry = []
         if(this.validatorType.validatorIsArray(outputOutcomeResults.action_areas)){
             outputOutcomeResults.action_areas.forEach(element => {
                 if(this.validatorType.existPropertyInObjectMul(element,['toc_result_id','active'])){
                     const tocResultAction = new TocResultsActionAreaResultsDto;
                     tocResultAction.toc_result_id = toc_results_id;
                     tocResultAction.action_area_toc_result_id = typeof element.toc_result_id == 'string' && this.validatorType.validExistIdAction(actionAreaResult,element.toc_result_id)? element.toc_result_id : null;
-                    tocResultAction.is_active = typeof element.active == 'boolean'? element.active : null;
+                    //tocResultAction.is_active = typeof element.active == 'boolean'? element.active : null;
                     if(this.validatorType.validExistNull(tocResultAction)){
                         listValidActionArea.push(tocResultAction);
                     }
@@ -320,18 +346,361 @@ export class TocServicesResults {
                 }   
             });
         }
-        return {action_area: listValidActionArea, impact_area:listValidImpact, sdg:listValidSdg}
+        if(this.validatorType.validatorIsArray(outputOutcomeResults.indicators)){
+            outputOutcomeResults.indicators.forEach(element => {
+                if(this.validatorType.existPropertyInObjectMul(element,['unit_of_measurement',
+                'description','location','data_collection_source','baseline','id','type',
+                'data_collection_frequency','data_collection_method','target'])){
+                    const tocResultIndicator = new TocResultsIndicatorsDto; 
+                    tocResultIndicator.toc_result_indicator_id = typeof element.id == 'string'? element.id : null;           
+                    tocResultIndicator.toc_result_id = toc_results_id;
+                    tocResultIndicator.indicator_description = typeof element.description == 'string'? element.description : null;
+                    tocResultIndicator.unit_messurament = typeof element.unit_of_measurement == 'string'? element.unit_of_measurement : null;
+                    tocResultIndicator.baseline_date = typeof element.baseline.date == 'string'? element.baseline.date : null;
+                    tocResultIndicator.baseline_value = typeof element.baseline.value == 'string'? element.baseline.value : null;
+                    tocResultIndicator.data_collection_method = typeof element.data_collection_method == 'string'? element.data_collection_method : null;
+                    tocResultIndicator.data_colletion_source = typeof element.data_collection_source == 'string'? element.data_collection_source : null;
+                    tocResultIndicator.frequency_data_collection = typeof element.data_collection_frequency == 'string'? element.data_collection_frequency : null;
+                    tocResultIndicator.type_value = typeof element.type.name == 'string'? element.location : null;
+                    tocResultIndicator.location = typeof element.location == 'string'? element.location : null;
+                    tocResultIndicator.target_date = typeof element.target.date == 'string'? element.target.date : null;
+                    tocResultIndicator.target_value = typeof element.target.value == 'string'? element.target.value : null;
+                    tocResultIndicator.is_active = true;
+                    if(this.validatorType.existPropertyInObjectMul(element, ['country', 'region'])){
+                        let countries= '';
+                        let regions= '';
+                        if(this.validatorType.validatorIsArray(element.country)){
+                            element.country.forEach(elements => {
+                                countries += elements.country_id + ',';
+                            });
+                            tocResultIndicator.countries_id = countries;
+                        }
+                        if(this.validatorType.validatorIsArray(element.region)){
+                            element.region.forEach(elements => {
+                                regions += elements.region_id + ',';
+                            });
+                            tocResultIndicator.regions_id = regions;
+                        }
+                    }
+                    listValidIndicator.push(tocResultIndicator);
+                }
+            });
+        }
+        if(this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) && 
+            this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope) == false){
+                if(this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope.regions)){
+                    outputOutcomeResults.geo_scope.regions.forEach(element => {
+                        if(this.validatorType.existPropertyInObjectMul(element,['region_id','active'])){
+                            const tocResultRegions = new TocResultsRegionsDto;
+                            tocResultRegions.toc_result_id = toc_results_id;
+                            tocResultRegions.clarisa_regions_id = typeof element.region_id == 'number' ? element.region_id : null;
+                            tocResultRegions.is_active = typeof element.active == 'boolean'? element.active : null;
+                            if(this.validatorType.validExistNull(tocResultRegions)){
+                                listValidRegions.push(tocResultRegions)
+                            }
+                        }
+                        
+                    });
+                }
+                if(this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope.countries)){
+                    outputOutcomeResults.geo_scope.countries.forEach(element => {
+                        if(this.validatorType.existPropertyInObjectMul(element,['country_id','active'])){
+                            const tocResultcountries = new TocResultsCountriesDto;
+                            tocResultcountries.toc_result_id = toc_results_id;
+                            tocResultcountries.clarisa_countries_id = typeof element.country_id == 'number' ? element.country_id : null;
+                            tocResultcountries.is_active = typeof element.active == 'boolean'? element.active : null;
+                            if(this.validatorType.validExistNull(tocResultcountries)){
+                                listValidCountry.push(tocResultcountries)
+                            }
+                        }
+                        
+                    });
+                }
+        }
+        return {action_area: listValidActionArea, impact_area:listValidImpact, sdg:listValidSdg, indicator:listValidIndicator, regions: listValidRegions, countries: listValidCountry}
     }
 
-    async saveInDataBase(sdgResults:any){
-        const repoCusto = await getRepository(TocSdgResultsSdgTargets);
-        let listAux=[]
-        await sdgResults.forEach(element => {
-            element.relation.sdg_target.forEach(elements => {
-                listAux.push(elements)
+
+
+    //save in data base
+    async mappingSaveDb(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+        let listRegisterSdg = [];
+        let listAllSdgTarget = [];
+        let listAllSdgindicators = [];
+        let listAllActionAreaToc = [];
+        let listRegisterOutcome =[];
+        let listAllImpactAreaToc = [];
+        let listAllRegions= [];
+        let lisAllCountries = []; 
+        let listAllSdgtoc = [];
+        let listRegisterImpact = [];
+        let listAllGlobalTargets = [];
+        let listAllSgds = [];
+        let listAllImpactAreaIndicator = [];
+        let listAllOutCome = [];
+        let listAllImpact = [];
+        let listRegisterAction =[];
+        let listAllIndicators = [];
+        await sdgResults.forEach(async element => {
+            listRegisterSdg.push(element.sdg_results);
+            
+            await element.relation.sdg_target.forEach(elements => {
+                listAllSdgTarget.push(elements);
+            });
+            await element.relation.sdg_indicator.forEach(elements => {
+                listAllSdgindicators.push(elements);
+            });
+        });
+        
+        await outputOutcomeResults.forEach(async element => {
+            listRegisterOutcome.push(element.outcome);
+            await element.relation.action_area.forEach(elements => {
+                listAllActionAreaToc.push(elements)
+            });
+            await element.relation.impact_area.forEach(elements => {
+                listAllImpactAreaToc.push(elements)
+            });
+            await element.relation.regions.forEach(elements => {
+                listAllRegions.push(elements)
+            });
+            await element.relation.countries.forEach(elements => {
+                lisAllCountries.push(elements)
+            });
+            await element.relation.sdg.forEach(elements => {
+                listAllSdgtoc.push(elements)
+            });
+
+            await element.relation.indicator.forEach(elements => {
+                listAllIndicators.push(elements)
             });
         });
 
-        return await repoCusto.save(listAux)
+        await impactAreaResults.forEach(async element => {
+            listRegisterImpact.push(element.impact_area);
+            await element.relation.global_target.forEach(element => {
+                listAllGlobalTargets.push(element)
+            });
+            await element.relation.impact_indicator.forEach(element => {
+                listAllImpactAreaIndicator.push(element)
+            });
+
+            await element.relation.sdg.forEach(element => {
+                listAllSgds.push(element)
+            });
+
+        });
+
+        await actionAreaResult.forEach(async element => {
+            listRegisterAction.push(element.action_area);
+            await element.relation.outcome.forEach(element => {
+                listAllOutCome.push(element)
+            });
+            await element.relation.impact_area.forEach(element => {
+                listAllImpact.push(element)
+            });
+        });
+        
+        return {sdgs:{sdg: listRegisterSdg, targets:listAllSdgTarget, indicator:listAllSdgindicators}, 
+        impact:{impact:listRegisterImpact, global:listAllGlobalTargets,indicator : listAllImpactAreaIndicator, sdgs:listAllSgds}, 
+        action: {action:listRegisterAction, outcome:listAllOutCome, impact:listAllImpact}, 
+        outcome:{toc:listRegisterOutcome, action:listAllActionAreaToc,impact:listAllImpactAreaToc, sdg:listAllSdgtoc, regions:listAllRegions, country:lisAllCountries, indicator:listAllIndicators}};
+    }
+
+    async saveInDataBase(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+        
+        let informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
+        const sdgRepo = await getRepository(TocSdgResults);
+        console.log('1. Saving sdg');
+        
+        const sdgSave= await sdgRepo.save(informationSave.sdgs.sdg);
+        if(sdgSave != null && sdgSave.length > 0){
+            const sdgTarget = await getRepository(TocSdgResultsSdgTargets);
+            let sdgTargetSave ;
+            try {
+                console.log('2. Saving Sdg_target ');
+                sdgTargetSave = await sdgTarget.save(informationSave.sdgs.targets);
+            } catch (error) {
+                return error
+            }
+           if(sdgTargetSave != null){
+            const sdgIndicators = await getRepository(TocSdgResultsSdgIndicators);
+            let sdgSaveIndicator 
+            try {
+                console.log('3. Saving sdg_indicator ');
+                sdgSaveIndicator = await sdgIndicators.save(informationSave.sdgs.indicator)
+            } catch (error) {
+                return error
+            }
+           }
+           const repoImpactArea = await getRepository(TocImpactAreaResults);
+           let saveImpactArea;
+           console.log('4. Saving Impact Area ');
+           try {
+            saveImpactArea = await repoImpactArea.save(informationSave.impact.impact);
+           } catch (error) {
+            return error;
+           }
+           if(saveImpactArea != null){
+            let saveImpactGlobal;
+            let saveImpactIndicator;
+            let saveImpactSdg;
+            const repoImpactGlobal = await getRepository(TocImpactAreaResultsGlobalTargets);
+            try {
+                console.log('5. Saving Impact Area global target ');
+                saveImpactGlobal = await repoImpactGlobal.save(informationSave.impact.global)
+            } catch (error) {
+                return error
+            }
+            if(saveImpactGlobal != null){
+                const  repoImpactIndicator = await getRepository(TocImpactAreaResultsImpactAreaIndicators);
+                try {
+                    console.log('6. Saving Impact Area Indicator');
+                    saveImpactIndicator = await repoImpactIndicator.save(informationSave.impact.indicator);
+                } catch (error) {
+                    return error;
+                }
+            }
+            if( saveImpactIndicator !=null){
+                const  repoImpactsdg = await getRepository(TocImpactAreaResultsSdgResults);
+                try {
+                    console.log('7. Saving Impact Area Sdg ');
+                    saveImpactSdg = await repoImpactsdg.save(informationSave.impact.sdgs);
+                } catch (error) {
+                    return error
+                }
+            }
+            const repoActionAre = await getRepository(TocActionAreaResults);
+            console.log('8. Saving action Area ');
+            const actionAreaSave = repoActionAre.save(informationSave.action.action);
+            if(actionAreaSave != null){
+                const repoActionOutcome = await getRepository(TocActionAreaResultsOutcomesIndicators)
+                let saveActionOutcome;
+                let saveActionImpact;
+                try {
+                    console.log('9. Saving action Area outcome');
+                    saveActionOutcome = repoActionOutcome.save(informationSave.action.outcome);
+                } catch (error) {
+                    return error;
+                }
+                if(saveActionOutcome != null){
+                    const repoActionImpact = await getRepository(TocActionAreaResultsImpactAreaResults)
+                    try {
+                        console.log('10. Saving action Area impact area');
+                        saveActionImpact = await repoActionImpact.save(informationSave.action.impact)
+                    } catch (error) {
+                        return error;
+                    }
+                }
+                const repoOutcomeToc = await getRepository(TocResults);
+                let saveTocResults;
+                try {
+                    console.log('11. Saving Toc result');
+                    saveTocResults = await repoOutcomeToc.save(informationSave.outcome.toc);
+                } catch (error) {
+                    return error;
+                }
+                if(saveTocResults != null){
+                    const repoActionAreasTocResults = await getRepository(TocResultsActionAreaResults)
+                    let actionAreasTocResult;
+                    let impactAreaTocResult;
+                    let sdgTocResult;
+                    let indicatorTocResult;
+                    let countryTocResult;
+                    let regionTocResult;
+                    try {
+                        //console.log(informationSave.outcome.action);
+                        console.log('12. Saving toc result action area');
+                        actionAreasTocResult = await repoActionAreasTocResults.save(informationSave.outcome.action);
+                    } catch (error) {
+                        return error
+                    }
+                    if(actionAreasTocResult != null){
+                        const repoImpactAreaTocResult = await getRepository(TocResultsImpactAreaResults);
+                        try {
+                            console.log('13. Saving toc result impact area');
+                            impactAreaTocResult = await repoImpactAreaTocResult.save(informationSave.outcome.impact);
+                        } catch (error) {
+                            return error
+                        }
+                    }
+                    if(impactAreaTocResult != null){
+                        const repoSdgTocResult = await getRepository(TocResultsSdgResults);
+                        try {
+                            console.log('14. Saving toc result sdg');
+                            sdgTocResult = await repoSdgTocResult.save(informationSave.outcome.sdg);
+                        } catch (error) {
+                            return error
+                        }
+                    }
+                    if(sdgTocResult != null){
+                        const repoIndicatorTocResult = await getRepository(TocResultsIndicators);
+                        try {
+                            console.log('15. Saving toc result indicator');
+                            indicatorTocResult = await repoIndicatorTocResult.save(informationSave.outcome.indicator);
+                        } catch (error) {
+                            return error
+                        }
+                    }
+                    if(indicatorTocResult != null){
+                        const repoCountriesTocResult = await getRepository(TocResultsCountries);
+                        try {
+                            console.log('16. Saving toc result country');
+                            countryTocResult = await repoCountriesTocResult.save(informationSave.outcome.country);
+                        } catch (error) {
+                            return error
+                        }
+                    }
+                    if(countryTocResult != null){
+                        const repoRegionsTocResult = await getRepository(TocResultsRegions);
+                        try {
+                            console.log('17. Saving toc result region');
+                            regionTocResult = await repoRegionsTocResult.save(informationSave.outcome.regions);
+                            return { Message: 'Finish saving toc board in submission tool', Information:informationSave};
+                        } catch (error) {
+                            return error
+                        }
+                    }
+
+                }
+            }
+            }
+
+            
+        }
+        
+        /*
+        if(informationSave != null){
+            const sdgRepo = await getRepository(TocSdgResults);
+            try {
+                const listSdg= await sdgRepo.save(informationSave.sdg);
+                if(listSdg != null){
+                    const impactRepo = await getRepository(TocImpactAreaResults);
+                    try {
+                        const impact= await impactRepo.save(informationSave.impact);
+                        if(impact != null){
+                            const actionRepo = await getRepository(TocActionAreaResults);
+                            try {
+                                const action= await actionRepo.save(informationSave.action);
+                                if(action != null){
+                                    const outcome = await getRepository(TocResults);
+                                    try {
+                                        return await outcome.save(informationSave.outcome);
+                                    } catch (error) {
+                                        return error
+                                    }
+                                }
+                            } catch (error) {
+                                return error
+                            }
+                        }
+                    } catch (error) {
+                        return error
+                    }
+                }
+            } catch (error) {
+                return error
+            }
+        }
+        */
     }
 }

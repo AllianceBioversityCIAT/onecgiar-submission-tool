@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Request, Response} from 'express';
 import {TocServicesResults} from '../services/TocServicesResult'
-const tocHost = 'https://toc.loc.codeobia.com/api/toc/75ebe59f-457b-4574-a772-b3db2b27f9df/dashboard-result';
+const tocHost = 'https://toc.loc.codeobia.com/api/toc/16c17bd0-0d40-423f-aa90-6572034d95da/dashboard-result';
 
 /**
  *GET TOC Result Dashboard

@@ -16,11 +16,7 @@ export class createTableTocResultsRegions1675094433702 implements MigrationInter
                   REFERENCES toc_results (toc_result_id)
                   ON DELETE NO ACTION
                   ON UPDATE NO ACTION,
-                CONSTRAINT fk_toc_results_has_clarisa_regions_clarisa_regions1
-                  FOREIGN KEY (clarisa_regions_id)
-                  REFERENCES clarisa_regions (id)
-                  ON DELETE NO ACTION
-                  ON UPDATE NO ACTION)
+                
               ENGINE = InnoDB;`
         )
     }
