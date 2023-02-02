@@ -16,8 +16,12 @@ export async function getTocResultDashboard(req: Request,res: Response) {
     try {      
       let servicesInformation = new TocServicesResults();
       console.log(tocHost);
-        const narrative = await axios.get('https://toc.loc.codeobia.com/api/toc/cbf435de-b727-425f-a941-68915c869328/dashboard-result');
-        console.log(narrative);
+        const narrative =  await axios({
+          method: 'get',
+          url: 'https://toc.loc.codeobia.com/api/toc/28a54f3f-713f-4f3e-97ec-e312ed3f4b2d/dashboard-result',
+          timeout: 20000 // only wait for 2s
+      });
+        console.log(narrative.data);
           
         const message = await servicesInformation.splitInformation(narrative.data)
 
