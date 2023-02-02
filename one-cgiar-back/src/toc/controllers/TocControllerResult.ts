@@ -16,7 +16,7 @@ export async function getTocResultDashboard(req: Request,res: Response) {
     try {      
       let servicesInformation = new TocServicesResults();
       console.log(tocHost);
-        const narrative = await axios.get(tocHost);
+        const narrative = await axios.get('https://toc.loc.codeobia.com/api/toc/cbf435de-b727-425f-a941-68915c869328/dashboard-result');
         console.log(narrative);
           
         const message = await servicesInformation.splitInformation(narrative.data)
