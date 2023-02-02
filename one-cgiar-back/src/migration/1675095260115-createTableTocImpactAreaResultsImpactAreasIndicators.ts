@@ -15,11 +15,6 @@ export class createTableTocImpactAreaResultsImpactAreasIndicators1675095260115 i
                   FOREIGN KEY (impact_area_toc_result_id)
                   REFERENCES toc_impact_area_results (toc_result_id)
                   ON DELETE NO ACTION
-                  ON UPDATE NO ACTION,
-                CONSTRAINT fk_toc_impact_area_results_has_clarisa_impact_areas_indicator2
-                  FOREIGN KEY (impact_areas_indicators_id)
-                  REFERENCES clarisa_impact_areas_indicators (id)
-                  ON DELETE NO ACTION
                   ON UPDATE NO ACTION)
               ENGINE = InnoDB;`
         )
