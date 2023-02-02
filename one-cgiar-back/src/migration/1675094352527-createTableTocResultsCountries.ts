@@ -15,7 +15,7 @@ export class createTableTocResultsCountries1675094352527 implements MigrationInt
                   FOREIGN KEY (toc_result_id)
                   REFERENCES toc_results (toc_result_id)
                   ON DELETE NO ACTION
-                  ON UPDATE NO ACTION
+                  ON UPDATE NO ACTION)
               ENGINE = InnoDB;`
         )
     }
