@@ -177,14 +177,28 @@ export class TocServicesResults {
             });
         }
         if(this.validatorType.validatorIsArray(objectImpactArea.sdgs)){
+            
+            
             objectImpactArea.sdgs[0].forEach(element => {
+                
                 if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
                     const relationSdg = new TocImpactAreaResultsSdgResultsDto;
                     relationSdg.impact_area_toc_result_id = toc_result_id;
                     relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
                     relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
                     if(this.validatorType.validExistNull(relationSdg)){
-                        listValidSdg.push(relationSdg);
+                        if(objectImpactArea.sdgs[0].length >= 2 && listValidSdg.length == 0){
+                            listValidSdg.push(relationSdg);
+                        }
+                        else if(objectImpactArea.sdgs[0].length >= 2 && listValidSdg.length != 0){
+                            if(this.validatorType.validRepetInformation(listValidSdg,relationSdg)){
+                                listValidSdg.push(relationSdg);
+                            }
+                        }
+                        if(objectImpactArea.sdgs[0].length == 1){
+                            listValidSdg.push(relationSdg);
+                        }
+                        
                     }
                 }
             });
@@ -509,10 +523,14 @@ export class TocServicesResults {
     async saveInDataBase(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
         
         let informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
-        const sdgRepo = await getRepository(TocSdgResults);
+        let sdgRepo = await getRepository(TocSdgResults);
         console.log('1. Saving sdg');
-        
-        const sdgSave= await sdgRepo.save(informationSave.sdgs.sdg);
+        let sdgSave
+        try {
+            sdgSave = await sdgRepo.save(informationSave.sdgs.sdg);
+        } catch (error) {
+            return error
+        }
         if(sdgSave != null && sdgSave.length > 0){
             const sdgTarget = await getRepository(TocSdgResultsSdgTargets);
             let sdgTargetSave ;
@@ -571,14 +589,19 @@ export class TocServicesResults {
             }
             const repoActionAre = await getRepository(TocActionAreaResults);
             console.log('8. Saving action Area ');
-            const actionAreaSave = repoActionAre.save(informationSave.action.action);
+            let actionAreaSave
+            try {
+                actionAreaSave= await repoActionAre.save(informationSave.action.action);
+            } catch (error) {
+                return error
+            }
             if(actionAreaSave != null){
                 const repoActionOutcome = await getRepository(TocActionAreaResultsOutcomesIndicators)
                 let saveActionOutcome;
                 let saveActionImpact;
                 try {
                     console.log('9. Saving action Area outcome');
-                    saveActionOutcome = repoActionOutcome.save(informationSave.action.outcome);
+                    saveActionOutcome = await repoActionOutcome.save(informationSave.action.outcome);
                 } catch (error) {
                     return error;
                 }

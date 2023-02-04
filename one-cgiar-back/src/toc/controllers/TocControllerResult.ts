@@ -10,18 +10,18 @@ import {TocServicesResults} from '../services/TocServicesResult'
 
 export async function getTocResultDashboard(req: Request,res: Response) {
   
-  const id_toc = req.body.id_toc;
-  let tocHost = 'https://toc.loc.codeobia.com/api/toc/'+id_toc+'/dashboard-result';
+  const id_toc = await req.body.id_toc;
+  let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+id_toc+'/dashboard-result';
     console.log(tocHost);
     try {      
       let servicesInformation = new TocServicesResults();
       console.log(tocHost);
         const narrative =  await axios({
           method: 'get',
-          url: 'https://toc.loc.codeobia.com/api/toc/28a54f3f-713f-4f3e-97ec-e312ed3f4b2d/dashboard-result',
+          url: tocHost,
           timeout: 20000 // only wait for 2s
       });
-        console.log(narrative.data);
+        //console.log(narrative.data);
           
         const message = await servicesInformation.splitInformation(narrative.data)
 

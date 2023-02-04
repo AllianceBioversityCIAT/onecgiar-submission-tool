@@ -64,4 +64,14 @@ export class ValidatorTypes{
         });
        return estado; 
     }
+
+    async validRepetInformation(listValidate:any, data:any){
+        listValidate.forEach(element => {
+            if(element.sdg_toc_result_id.localeCompare(data.sdg_toc_result_id) == 0){
+                return false;
+            }
+        });
+
+        return true;
+    }
 }
