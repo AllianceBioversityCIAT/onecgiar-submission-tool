@@ -66,12 +66,33 @@ export class ValidatorTypes{
     }
 
     async validRepetInformation(listValidate:any, data:any){
+        let estado = true;
+        
         listValidate.forEach(element => {
             if(element.sdg_toc_result_id.localeCompare(data.sdg_toc_result_id) == 0){
-                return false;
+                estado = false;
+                console.log('entre');
+                
             }
         });
 
-        return true;
+        return estado;
     }
+
+    async deleteRepets(array:any){
+        let arrayReturn = []
+        let hash = {}
+        array.forEach(function(current) {
+            let exists
+            if(!hash[current.toc_result_id] == true){
+                hash[current.toc_result_id] = true;
+                arrayReturn.push(current);  
+            }
+
+          });
+          
+        return arrayReturn;
+    }
+
+    
 }

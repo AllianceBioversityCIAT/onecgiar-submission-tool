@@ -43,6 +43,7 @@ import { TocResultsRegions } from '../entity/tocResultsRegions';
 
 
 
+
 export class TocServicesResults {
 
     public queryRunner = getConnection().createQueryRunner().connection;
@@ -163,6 +164,7 @@ export class TocServicesResults {
         let listValidGlobalTarget = []
         let listValidImpactIndicator = []
         let listValidSdg = []
+        let noDuplicate;
         if(this.validatorType.validatorIsArray(objectImpactArea.global_targets)){
             objectImpactArea.global_targets.forEach(element => {
                 if(this.validatorType.existPropertyInObjectMul(element, ['global_target_id','active'])){
@@ -177,31 +179,19 @@ export class TocServicesResults {
             });
         }
         if(this.validatorType.validatorIsArray(objectImpactArea.sdgs)){
-            
-            
-            objectImpactArea.sdgs[0].forEach(element => {
+                noDuplicate = await this.validatorType.deleteRepets(objectImpactArea.sdgs[0])
                 
-                if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
-                    const relationSdg = new TocImpactAreaResultsSdgResultsDto;
-                    relationSdg.impact_area_toc_result_id = toc_result_id;
-                    relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
-                    relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
-                    if(this.validatorType.validExistNull(relationSdg)){
-                        if(objectImpactArea.sdgs[0].length >= 2 && listValidSdg.length == 0){
-                            listValidSdg.push(relationSdg);
+                noDuplicate.forEach(async element => {
+                    if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
+                        const relationSdg = new TocImpactAreaResultsSdgResultsDto;
+                        relationSdg.impact_area_toc_result_id = toc_result_id;
+                        relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
+                        relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
+                        if(this.validatorType.validExistNull(relationSdg)){
+                            listValidSdg.push(relationSdg)
                         }
-                        else if(objectImpactArea.sdgs[0].length >= 2 && listValidSdg.length != 0){
-                            if(this.validatorType.validRepetInformation(listValidSdg,relationSdg)){
-                                listValidSdg.push(relationSdg);
-                            }
-                        }
-                        if(objectImpactArea.sdgs[0].length == 1){
-                            listValidSdg.push(relationSdg);
-                        }
-                        
                     }
-                }
-            });
+                });
         }
         if(this.validatorType.validatorIsArray(objectImpactArea.impact_indicators)){
             objectImpactArea.impact_indicators.forEach(element => {
@@ -220,7 +210,7 @@ export class TocServicesResults {
         return {
             global_target: listValidGlobalTarget,
             impact_indicator:listValidImpactIndicator,
-            sdg:listValidSdg
+            sdg: listValidSdg
         }
     }
 
@@ -385,13 +375,13 @@ export class TocServicesResults {
                         let regions= '';
                         if(this.validatorType.validatorIsArray(element.country)){
                             element.country.forEach(elements => {
-                                countries += elements.country_id + ',';
+                                countries += elements.code + ',';
                             });
                             tocResultIndicator.countries_id = countries;
                         }
                         if(this.validatorType.validatorIsArray(element.region)){
                             element.region.forEach(elements => {
-                                regions += elements.region_id + ',';
+                                regions += elements.um49Code + ',';
                             });
                             tocResultIndicator.regions_id = regions;
                         }
