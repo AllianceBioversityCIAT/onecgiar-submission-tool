@@ -94,5 +94,16 @@ export class ValidatorTypes{
         return arrayReturn;
     }
 
+    async filterListRegister(array:any, id:string, identificator:string){
+        let estado = false;
+        array.filter((resp)=>{
+            if(resp[identificator] == id){
+                estado = true;
+            }
+        })
+
+        return estado;
+    }
+
     
 }

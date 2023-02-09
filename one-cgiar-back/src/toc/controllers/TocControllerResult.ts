@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Request, Response} from 'express';
 import {TocServicesResults} from '../services/TocServicesResult'
+import { TocResultServices } from '../services/TocResultServices';
 
 
 /**
@@ -11,7 +12,8 @@ import {TocServicesResults} from '../services/TocServicesResult'
 export async function getTocResultDashboard(req: Request,res: Response) {
   
   const id_toc = await req.body.id_toc;
-  let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+id_toc+'/dashboard-result';
+  
+  let tocHost = await 'https://toc.mel.cgiar.org/api/toc/048e886f-0970-49cf-9793-8e3f25366b9e/dashboard-result';
     console.log(tocHost);
     try {      
       let servicesInformation = new TocServicesResults();

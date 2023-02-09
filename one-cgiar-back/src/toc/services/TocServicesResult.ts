@@ -390,7 +390,8 @@ export class TocServicesResults {
                 }
             });
         }
-        if(this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) && 
+        if(this.validatorType.existPropertyInObject(outputOutcomeResults, 'geo_scope')){
+            if(this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) && 
             this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope) == false){
                 if(this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope.regions)){
                     outputOutcomeResults.geo_scope.regions.forEach(element => {
@@ -421,6 +422,9 @@ export class TocServicesResults {
                     });
                 }
         }
+            
+        }
+        
         return {action_area: listValidActionArea, impact_area:listValidImpact, sdg:listValidSdg, indicator:listValidIndicator, regions: listValidRegions, countries: listValidCountry}
     }
 
@@ -511,8 +515,14 @@ export class TocServicesResults {
     }
 
     async saveInDataBase(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+        let informationSave;
+        try {
+            informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
+        } catch (error) {
+            return error
+        }
+        console.log(informationSave);
         
-        let informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
         let sdgRepo = await getRepository(TocSdgResults);
         console.log('1. Saving sdg');
         let sdgSave
