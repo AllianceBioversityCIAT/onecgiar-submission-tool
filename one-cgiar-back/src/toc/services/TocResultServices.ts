@@ -37,8 +37,7 @@ export class TocResultServices{
                         sdgResultDto.toc_result_id = typeof resp.toc_result_id == 'string' ? resp.toc_result_id : null;
                         sdgResultDto.sdg_contribution = typeof resp.sdg_contribution == 'string' ? resp.sdg_contribution : null;
                         sdgResultDto.is_active = true;
-                        this.sdgTarget.delete(resp.toc_result_id);
-                        this.sdgIndicator.delete(resp.toc_result_id);
+                        this.validatorType.deletebyAllRelationOutcome(resp.toc_result_id);
                         await this.mappingRelationSdgResult(resp, resp.toc_result_id, relationSdgTarget, relationSdgIndicator)
                         listSdgSave.push(sdgResultDto)
                     }

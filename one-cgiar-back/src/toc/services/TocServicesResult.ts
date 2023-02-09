@@ -83,6 +83,7 @@ export class TocServicesResults {
                     sdgResultsDto.toc_result_id = typeof element.toc_result_id == 'string'? element.toc_result_id: null;
                     sdgResultsDto.sdg_contribution = typeof element.sdg_contribution == 'string'? element.sdg_contribution: null;
                     sdgResultsDto.is_active = true;
+                    this.validatorType.deletebyAllRelationSdgs(element.toc_result_id);
                     if(this.validatorType.validExistNull(sdgResultsDto)){
                         const relationSdg = await this.saveRelationSdgResults(element, element.toc_result_id);
                         if(typeof relationSdg == 'object'){
@@ -150,6 +151,7 @@ export class TocServicesResults {
                 impactAreadto.impact_area_id = typeof element.impact_area_id == 'number'? element.impact_area_id : null;
                 impactAreadto.toc_result_id = typeof element.toc_result_id == 'string'? element.toc_result_id : null;
                 impactAreadto.outcome_statement = typeof element.outcome_statement == 'string'? element.outcome_statement : null;
+                this.validatorType.deletebyAllRelationImpactAre(element.toc_result_id);
                 if(this.validatorType.validExistNull(impactAreadto)){
                     const relation = await this.saveRelationImpactArea(element,element.toc_result_id,sdgResults)
                     listValidImpactArea.push({impact_area: impactAreadto, relation: relation});
@@ -228,6 +230,7 @@ export class TocServicesResults {
                     actionAreaDto.outcome_id = typeof element.outcome_id == 'number'? element.outcome_id : null;
                     actionAreaDto.statement = typeof element.statement == 'string'? element.statement : null;
                     actionAreaDto.is_active = true;
+                    this.validatorType.deletebyAllRelationActionArea(element.toc_result_id);
                     if(this.validatorType.validExistNull(actionAreaDto)){
                         const relation = await this.relationActionAreaResults(element,impactAreaResulst,element.toc_result_id)
                         listValidActionArea.push({action_area:actionAreaDto, relation:relation});
@@ -294,6 +297,7 @@ export class TocServicesResults {
                     outPutComeDto.outcome_type = typeof element.outcome_type == 'string'? element.outcome_type : null;
                     outPutComeDto.is_active = true;
                     outPutComeDto.is_global = true;
+                    this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
                         const relation = await this.relationTocResults(element,element.toc_result_id,sdgResults,impactAreaResults,actionAreaResult)
                         listValidTocResult.push({outcome:outPutComeDto,relation:relation});
                     

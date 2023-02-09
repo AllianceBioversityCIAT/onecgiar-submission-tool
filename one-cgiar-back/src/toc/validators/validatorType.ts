@@ -1,6 +1,34 @@
+import {getConnection, getRepository, getCustomRepository} from 'typeorm';
 
+import { TocSdgResultsSdgIndicators } from '../entity/tocSdgResultsSdgIndicators';
+import { TocSdgResultsSdgTargets } from '../entity/tocSdgResultsSdgTargets';
+import { TocImpactAreaResultsGlobalTargets } from '../entity/tocImpactAreaResultsGlobalTargets';
+import { TocImpactAreaResultsImpactAreaIndicators } from '../entity/tocImpactAreaResultsImpactAreaIndicators';
+import { TocImpactAreaResultsSdgResults } from '../entity/tocImpactAreaResultsSdgResults';
+import { TocActionAreaResultsOutcomesIndicators } from '../entity/tocActionAreaResultsOutcomesIndicators';
+import { TocActionAreaResultsImpactAreaResults } from '../entity/tocActionAreaResultsImpactAreaResults';
+import { TocResultsIndicators } from '../entity/tocResultsIndicators';
+import { TocResultsActionAreaResults } from '../entity/tocResultsActionAreaResults';
+import { TocResultsImpactAreaResults } from '../entity/tocResultsImpactAreaResults';
+import { TocResultsSdgResults } from '../entity/tocResultsSdgResults';
+import { TocResultsRegions } from '../entity/tocResultsRegions';
+import { TocResultsCountries } from '../entity/tocResultsCountries';
 
 export class ValidatorTypes{
+    private sdgTarget = getRepository(TocSdgResultsSdgTargets);
+    private sdgIndicator = getRepository(TocSdgResultsSdgIndicators);
+    private globalTarget = getRepository(TocImpactAreaResultsGlobalTargets);
+    private impactAreaIndicator = getRepository(TocImpactAreaResultsImpactAreaIndicators);
+    private impactAreaSdg = getRepository(TocImpactAreaResultsSdgResults);
+    private outcomeIndicators = getRepository(TocActionAreaResultsOutcomesIndicators);
+    private impactAreas = getRepository(TocActionAreaResultsImpactAreaResults); 
+    private indicators = getRepository(TocResultsIndicators);
+    private tocActionArea = getRepository(TocResultsActionAreaResults);
+    private tocImpactArea = getRepository(TocResultsImpactAreaResults);
+    private tocSdg = getRepository(TocResultsSdgResults);
+    private tocRegions = getRepository(TocResultsRegions)
+    private tocCountries = getRepository(TocResultsCountries)
+
     async validatorIsObject(value:any){
         return value instanceof Object; 
     }
@@ -105,5 +133,33 @@ export class ValidatorTypes{
         return estado;
     }
 
+    async deletebyAllRelationSdgs(toc_result_id:string){
+        await this.sdgTarget.delete(toc_result_id)
+        await this.sdgIndicator.delete(toc_result_id)
+        return true;
+    }
+
+    async deletebyAllRelationImpactAre(toc_result_id:string){
+        await this.globalTarget.delete(toc_result_id)
+        await this.impactAreaIndicator.delete(toc_result_id)
+        await this.impactAreaSdg.delete(toc_result_id)
+        return true;
+    }
+
+    async deletebyAllRelationActionArea(toc_result_id:string){
+        await this.outcomeIndicators.delete(toc_result_id)
+        await this.impactAreas.delete(toc_result_id)
+        return true;
+    }
+
+    async deletebyAllRelationOutcome(toc_result_id:string){
+        await this.indicators.delete(toc_result_id)
+        await this.tocActionArea.delete(toc_result_id)
+        await this.tocImpactArea.delete(toc_result_id)
+        await this.tocSdg.delete(toc_result_id)
+        await this.tocRegions.delete(toc_result_id)
+        await this.tocCountries.delete(toc_result_id)
+        return true;
+    }
     
 }
