@@ -1909,7 +1909,7 @@ couti.action_area_name,
 JOIN clarisa_action_areas_outcomes_indicators couti
            ON outi.outcomes_indicators_id = couti.outcome_indicator_id
           and outi.outcome_id = couti.outcome_id
-          and (outi.action_area_id = null or outi.action_area_id = couti.action_area_id )
+          and if(outi.action_area_id is not null, outi.action_area_id = couti.action_area_id, couti.action_area_id = couti.action_area_id )
         WHERE outi.initvStgId = ${initvStg.id}
           AND outi.active =1
           order by couti.outcome_id asc;
