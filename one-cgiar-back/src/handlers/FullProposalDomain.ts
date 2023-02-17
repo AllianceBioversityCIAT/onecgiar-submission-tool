@@ -1595,6 +1595,7 @@ export class ProposalHandler extends InitiativeStageHandler {
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
         newActionAreasOutcomesIndicators.outcome_id = element.outcome_id;
+        newActionAreasOutcomesIndicators.action_area_id = element.action_area_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1895,14 +1896,21 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.outcome_id,couti.action_area_name,
-        couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
-        couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+        SELECT outi.initvStgId,outi.id, couti.id,
+outi.outcomes_indicators_id,
+couti.outcome_id,
+couti.action_area_name,
+        couti.outcome_id,couti.outcome_statement,
+        couti.outcome_indicator_id,
+        couti.outcome_indicator_smo_code,
+        couti.outcome_indicator_statement,
+        couti.action_area_id
          FROM init_action_areas_out_indicators outi
-    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
+JOIN clarisa_action_areas_outcomes_indicators couti
            ON outi.outcomes_indicators_id = couti.outcome_indicator_id
-          and outi.outcome_id  = couti.outcome_id 
-        WHERE outi.initvStgId =${initvStg.id}
+          and outi.outcome_id = couti.outcome_id
+          and if(outi.action_area_id is not null, outi.action_area_id = couti.action_area_id, couti.action_area_id = couti.action_area_id )
+        WHERE outi.initvStgId = ${initvStg.id}
           AND outi.active =1
           order by couti.outcome_id asc;
           
