@@ -18,4 +18,6 @@ export class TocResults{
     is_global:boolean;
     @Column()
     is_active:boolean;
+    @Column()
+    id_toc_initiative:string;
 }

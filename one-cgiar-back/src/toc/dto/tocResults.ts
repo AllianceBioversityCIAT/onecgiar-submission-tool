@@ -7,4 +7,5 @@ export class TocResultsDto{
     outcome_type:string;
     is_global:boolean;
     is_active:boolean;
+    id_toc_initiative:string;
 }

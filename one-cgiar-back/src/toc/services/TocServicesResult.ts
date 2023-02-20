@@ -50,7 +50,7 @@ export class TocServicesResults {
     public validatorType = new ValidatorTypes()
     public errorMessage = new ErrorValidators();
     
-    async splitInformation(tocResultDashboard:any){
+    async splitInformation(tocResultDashboard:any, idInitiativeToc:string){
         if(this.validatorType.existPropertyInObjectMul(tocResultDashboard,['sdg_results',
         'impact_area_results','action_area_results','output_outcome_results'])){
                 const sdg_results = await this.saveSdgResults(tocResultDashboard.sdg_results);
@@ -59,7 +59,7 @@ export class TocServicesResults {
                     if(impact_area_results!= null && this.validatorType.validatorIsArray(impact_area_results)){
                         const action_area = await this.saveActionAreaResult(tocResultDashboard.action_area_results,impact_area_results)
                         if(action_area!= null && this.validatorType.validatorIsArray(action_area)){
-                            const tocResult= await this.saveOutputOutcomeResults(tocResultDashboard.output_outcome_results,sdg_results,impact_area_results,action_area)
+                            const tocResult= await this.saveOutputOutcomeResults(tocResultDashboard.output_outcome_results,sdg_results,impact_area_results,action_area, idInitiativeToc)
                             return await this.saveInDataBase(tocResult,sdg_results,impact_area_results,action_area);
                         }
                     }
@@ -278,7 +278,7 @@ export class TocServicesResults {
 
     //mapping output_outcome_results
 
-    async saveOutputOutcomeResults(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+    async saveOutputOutcomeResults(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any, id_toc_initiative:string){
         let listValidTocResult=[]
         if(this.validatorType.validatorIsArray(outputOutcomeResults)){
             let con = 0
@@ -297,6 +297,7 @@ export class TocServicesResults {
                     outPutComeDto.outcome_type = typeof element.outcome_type == 'string'? element.outcome_type : null;
                     outPutComeDto.is_active = true;
                     outPutComeDto.is_global = true;
+                    outPutComeDto.id_toc_initiative = id_toc_initiative;
                     this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
                         const relation = await this.relationTocResults(element,element.toc_result_id,sdgResults,impactAreaResults,actionAreaResult)
                         listValidTocResult.push({outcome:outPutComeDto,relation:relation});
