@@ -109,7 +109,7 @@ export const getClaRegionsCgiar = async () => {
 // export const getClaInstitutions = async (req: Request, res: Response) => {
 export const getClaInstitutions = async () => {
   try {
-    const institutions = await axios.get(clarisaHost + 'institutionsSimple', {
+    const institutions = await axios.get(clarisaHost + 'old-institutions/simple', {
       auth: {
         username: process.env['clarisa_user'],
         password: process.env['clarisa_password']
