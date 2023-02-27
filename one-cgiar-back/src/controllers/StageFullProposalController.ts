@@ -859,6 +859,9 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
   const stageRepo = getRepository(Stages);
   let stage;
 
+    console.log(tableB);
+    
+
   try {
     // get stage
 
