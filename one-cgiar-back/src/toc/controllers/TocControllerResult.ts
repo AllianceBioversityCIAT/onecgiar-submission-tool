@@ -25,7 +25,7 @@ export async function getTocResultDashboard(req: Request,res: Response) {
       });
         //console.log(narrative.data);
           
-        const message = await servicesInformation.splitInformation(narrative.data)
+        const message = await servicesInformation.splitInformation(narrative.data, id_toc)
 
          res.json({response: message})
           
