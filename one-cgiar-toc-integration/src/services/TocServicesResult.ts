@@ -38,9 +38,29 @@ import { TocResultsCountries } from "../entities/tocResultsCountries";
 import { TocResultsRegions } from "../entities/tocResultsRegions";
 
 export class TocServicesResults {
-
   public validatorType = new ValidatorTypes();
   public errorMessage = new ErrorValidators();
+
+  async queryTest() {
+    let database = new Database();
+    let dbConn: Connection = await database.getConnection();
+
+    try {
+      const queryRunner = dbConn.createQueryRunner();
+      await queryRunner.connect();
+
+      const getInitiatives = await queryRunner.query(`
+      SELECT * FROM initiatives
+
+      `);
+
+      await queryRunner.release();
+
+      return { getInitiatives };
+    } catch (error) {
+      return { message: "getInitiatives" + error };
+    }
+  }
 
   async splitInformation(tocResultDashboard: any, idInitiativeToc: string) {
     if (

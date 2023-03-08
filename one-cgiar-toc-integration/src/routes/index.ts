@@ -3,7 +3,7 @@ import toc from "./tocRoutes";
 
 const Routes = Router();
 
-Routes.use("/toc", toc);
+Routes.use("/toc-integration", toc);
 
 
 export default Routes;

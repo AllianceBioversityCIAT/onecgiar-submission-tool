@@ -6,7 +6,7 @@ import 'reflect-metadata';
 
 const app = express();
 createConnection();
-app.set('port',3000)
+app.set('port',3800)
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

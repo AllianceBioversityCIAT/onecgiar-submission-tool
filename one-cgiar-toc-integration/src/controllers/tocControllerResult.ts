@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { TocServicesResults } from "../services/TocServicesResult";
 
 export class tocController {
-    
   async getTocResultDashboard(req: Request, res: Response) {
     const id_toc = await req.body.id_toc;
 
@@ -28,7 +27,22 @@ export class tocController {
       );
 
       res.json({ response: message });
-    } catch (error:any) {
+    } catch (error: any) {
+      console.log(error.response);
+      return res.status(error.response.status).json(error.response.data);
+    }
+  }
+
+  async getToc(req: Request, res: Response) {
+    try {
+      let servicesInformation = new TocServicesResults();
+
+      const message = await servicesInformation.queryTest(
+      );
+
+      res.json({ response: "Hello Toc", message });
+
+    } catch (error) {
       console.log(error.response);
       return res.status(error.response.status).json(error.response.data);
     }
