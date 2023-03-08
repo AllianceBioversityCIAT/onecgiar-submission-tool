@@ -1,3 +1,5 @@
+org: ciatdev
+app: one-cgiar-toc-integration
 service: one-cgiar-toc-integration
 frameworkVersion: '3'
 
@@ -7,6 +9,6 @@ provider:
 
 functions:
   api:
-    handler: index.handler
+    handler: handler.handler
     events:
       - httpApi: '*'
