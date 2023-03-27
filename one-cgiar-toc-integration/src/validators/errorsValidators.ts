@@ -12,5 +12,6 @@ export class ErrorValidators{
             dataError: listNotValid,
             status: status,
         }
+        
     }
 }

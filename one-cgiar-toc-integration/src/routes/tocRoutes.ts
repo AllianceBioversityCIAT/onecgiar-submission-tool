@@ -8,6 +8,6 @@ const TocResultDashboard = new tocController();
 router.post("/toc", TocResultDashboard.getTocResultDashboard);
 
 // Get test
-router.get("/toc", TocResultDashboard.getToc)
+router.get("/tocs", TocResultDashboard.getToc)
 
 export default router;

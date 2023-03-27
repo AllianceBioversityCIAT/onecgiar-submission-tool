@@ -63,6 +63,8 @@ export class TocServicesResults {
   }
 
   async splitInformation(tocResultDashboard: any, idInitiativeToc: string) {
+
+    
     if (
       this.validatorType.existPropertyInObjectMul(tocResultDashboard, [
         "sdg_results",

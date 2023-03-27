@@ -29,6 +29,7 @@ export class ValidatorTypes {
   }
 
   existPropertyInObjectMul(object: any, namesProperty: any) {
+    
     if (this.validatorIsArray(namesProperty)) {
       namesProperty.forEach((element) => {
         if (this.existPropertyInObject(object, element) == false) {
