@@ -37,6 +37,8 @@ import { TocResultsIndicators } from "../entities/tocResultsIndicators";
 import { TocResultsCountries } from "../entities/tocResultsCountries";
 import { TocResultsRegions } from "../entities/tocResultsRegions";
 
+import { SdgTarget } from "../entities/sdg_target";
+
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
   public errorMessage = new ErrorValidators();
@@ -55,6 +57,20 @@ export class TocServicesResults {
       `);
 
       await queryRunner.release();
+
+      return { getInitiatives };
+    } catch (error) {
+      return { message: "getInitiatives" + error };
+    }
+  }
+
+  async entitiesTest(){
+
+    let database = new Database();
+    let dbConn: Connection = await database.getConnection();
+    let iniciativeRepo = dbConn.getRepository(SdgTarget)
+    try {
+      let getInitiatives = await iniciativeRepo.find()
 
       return { getInitiatives };
     } catch (error) {

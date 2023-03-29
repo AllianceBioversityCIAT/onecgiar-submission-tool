@@ -48,4 +48,20 @@ export class tocController {
       return res.status(error.response.status).json(error.response.data);
     }
   }
+
+
+  async getTest(req: Request, res: Response){
+    try {
+      let servicesInformation = new TocServicesResults();
+
+      const message = await servicesInformation.entitiesTest(
+      );
+
+      res.json({ response: "Hello Toc", message });
+
+    } catch (error) {
+      console.log(error.response);
+      return res.status(error.response.status).json(error.response.data);
+    }
+  }
 }

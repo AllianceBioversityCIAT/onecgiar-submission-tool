@@ -10,4 +10,7 @@ router.post("/toc", TocResultDashboard.getTocResultDashboard);
 // Get test
 router.get("/tocs", TocResultDashboard.getToc)
 
+
+// Get test
+router.get("/test", TocResultDashboard.getTest)
 export default router;
