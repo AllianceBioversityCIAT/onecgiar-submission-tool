@@ -1,0 +1,6 @@
+node_modules
+.serverless
+ormconfig.json
+src/database/db.ts
+dist
+.env
