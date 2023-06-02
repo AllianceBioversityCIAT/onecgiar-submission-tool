@@ -1,14 +1,23 @@
 <div class="flex">
-    <div class="edit-toc-button" [ngClass]="{'hide': !this.imageLoad, 'animate__animated animate__swing animate__delay-2s hover-animation':this.imageLoad && this._initiativesService.initiative.status != 'Approved' || this.imageLoad && this._authService.lsUserRoles.id == 1 , 'inactive':this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1}">
+    <div class="edit-toc-button"
+        [ngClass]="{'hide': !this.imageLoad, 'hover-animation':this.imageLoad && this._initiativesService.initiative.status != 'Approved'}">
+        <!-- animate__animated animate__swing animate__delay-2s -->
+        <!-- && this._initiativesService.initiative.status != 'Approved' || this.imageLoad && this._authService.lsUserRoles.id == 1  -->
+        <!-- 'inactive':this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1 -->
         <div class="title">
             {{this.title}}
         </div>
         <div class="image_container">
-            <img (load)="this.imageLoad = true" (error)="this.imageLoad = true" class="image" [ngClass]="{'img-filter':this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1}" src="assets/images/ToC_Logo.png" alt="" srcset="">
+            <img (load)="showButton()" (error)="showButton()" class="image" src="assets/images/ToC_Logo.png" alt=""
+                srcset="">
+            <!-- [ngClass]="{'img-filter':this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1}" -->
         </div>
-        <div *ngIf="this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1" class="filter"></div>
+        <!-- <div *ngIf="this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1"
+            class="filter"></div> -->
     </div>
-    <div *ngIf="this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1" style="margin-top: 20px; width: 500px; text-align: center;">
-        It is <strong>not possible to edit this ToC</strong> because the initaitive is currently closed and no edits are allowed to be <strong>done</strong>
-    </div>
+    <!-- <div *ngIf="this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1"
+        style="margin-top: 20px; width: 500px; text-align: center;">
+        It is <strong>not possible to edit this ToC</strong> because the initaitive is currently closed and no edits are
+        allowed to be <strong>done</strong>
+    </div> -->
 </div>
