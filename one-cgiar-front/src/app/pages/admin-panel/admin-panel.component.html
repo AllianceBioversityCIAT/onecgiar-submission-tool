@@ -1,6 +1,6 @@
 <div class="admin_container">
     <div class="container_menu">
-        <p-panelMenu [model]="items" [style]="{'padding-right':'10px'}" (click) = "activeMenu($event)"></p-panelMenu>
+        <p-panelMenu [model]="items" [style]="{'padding-right':'10px'}" (click)="activeMenu($event)"></p-panelMenu>
     </div>
     <div class="right_container true" style="overflow-y: scroll;">
         <div class="local_container">
@@ -8,3 +8,4 @@
         </div>
     </div>
 </div>
+<app-footer></app-footer>
