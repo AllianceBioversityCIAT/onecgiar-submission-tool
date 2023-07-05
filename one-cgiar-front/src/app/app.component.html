@@ -1,12 +1,13 @@
-  <app-tawk-to></app-tawk-to>
-  <app-google-analytics></app-google-analytics>
-  <app-dev-tag *ngIf="!isDevModeToShowTag"></app-dev-tag>
-    <app-header></app-header>
-    <div class="local_grid">
-        <app-navbar></app-navbar>
-        <div class="router_container">
-            <div style="height: 100%;"><router-outlet></router-outlet></div>
-        </div>
-    </div>
-    <app-jwt-expiration-subscription></app-jwt-expiration-subscription>
-    <app-menu-search *ngIf="this._dataControlService.userMenu.length"></app-menu-search>
+<app-tawk-to></app-tawk-to>
+<app-google-analytics></app-google-analytics>
+<app-dev-tag *ngIf="!isDevModeToShowTag"></app-dev-tag>
+<app-header></app-header>
+<div class="local_grid">
+  <app-navbar></app-navbar>
+  <div class="router_container">
+    <div style="height: 100%;"><router-outlet></router-outlet></div>
+  </div>
+</div>
+<app-jwt-expiration-subscription></app-jwt-expiration-subscription>
+<app-menu-search *ngIf="this._dataControlService.userMenu.length"></app-menu-search>
+<app-contact-modal (close)="closeModal()" [showModal]="this.footerSE.displayContactUs"></app-contact-modal>

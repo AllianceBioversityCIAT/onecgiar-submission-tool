@@ -1,40 +1,19 @@
-<footer class="page-footer">
-  <div class="gray-cont">
-    <div class="black-line"></div>
-    <div class="container content">
-      <div class="row">
-        <div class="col-sm-2">
-          <i class="cgiar-logo"></i>
+<div class="blank_space" [ngClass]="{'floating': this.isFloating, 'floatingFix':this.isFloatingFix}">
+    <div class="footer" *ngIf="showIfRouteIsInList()">
+        <div class="content">
+            <div class="logo">
+                <img class="cgiar_logo" src="/assets/cgiar_logo.png" alt="" srcset="" />
+            </div>
+            <div class="texts">
+                <div class="buttons">
+                    <div class="f-button" (click)="this.footerSE.displayContactUs = true">Contact Us</div>
+                    <div class="point"></div>
+                    <a target="_blank" [href]="this.termsAndCondition" class="f-button">Terms and Conditions</a>
+                    <div class="point"></div>
+                    <a target="_blank" [href]="this.license" class="f-button">License</a>
+                </div>
+                <div class="rights">© 2023 CGIAR System Organization. All rights reserved.</div>
+            </div>
         </div>
-        <div class="col-sm-8 sections">
-
-          <div class="platform-name" routerLink="/home"><strong>One CGIAR </strong><div class="outline-font">Submission Tool</div></div>
-          <!-- <i class="cgiar-logo"></i> -->
-  
-          <div class="navbar-title" routerLink="/home" routerLinkActive="active" >Initiatives</div>
-          <div class="navbar-title" routerLink="/bi" routerLinkActive="active" >BI</div>
-    
-          <div class="contact" (click)="setModalStatus()"><div>Do you have any questions?</div></div>
-          <!-- <h5 class="title">Description</h5>
-          <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium at obcaecati blanditiis a aspernatur porro, ducimus fugiat quaerat natus suscipit?</p>
-        -->
-        </div>
-        <!-- <div class="col-sm-2 offset-l2 ">
-          <mat-list>
-            <mat-list-item class="title"> Menu </mat-list-item>
-            <mat-list-item> Initiatives </mat-list-item>
-          </mat-list>
-        
-        </div> -->
-      </div>
     </div>
-    <div class="footer-copyright">
-      <div class="container">
-      <!-- © 2020 Copyright Text -->
-      <!-- <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
-      </div>
-    </div>
-  </div>
-</footer>
-
-<app-contact-modal (close)="closeModal()" [showModal]="showModal"></app-contact-modal>
+</div>
