@@ -5,7 +5,7 @@
 
     .footer {
         width: 100%;
-        height: 80px;
+        height: 65px;
         color: white;
         display: flex;
         justify-content: center;
@@ -20,7 +20,7 @@
 
             .logo {
                 .cgiar_logo {
-                    width: 40px;
+                    width: 35px;
                     object-fit: cover;
                     filter: contrast(0) brightness(5);
                 }
@@ -84,4 +84,20 @@
     left: 0;
     transition: all ease-in-out .3s;
     z-index: 10;
+}
+
+.footer-blocker {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    height: 20px;
+    background-color: transparent;
+    z-index: 11;
+    transition: all ease-in-out .4s;
+
+}
+
+.footer-blocker-max {
+    height: 115px !important;
 }

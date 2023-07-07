@@ -1,4 +1,5 @@
-<div class="blank_space" [ngClass]="{'floating': this.isFloating, 'floatingFix':this.isFloatingFix}">
+<div class="blank_space" [ngClass]="{'floating': this.isFloating, 'floatingFix':this.isFloatingFix}"
+    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
     <div class="footer" *ngIf="showIfRouteIsInList()">
         <div class="content">
             <div class="logo">
@@ -17,3 +18,4 @@
         </div>
     </div>
 </div>
+<div class="footer-blocker" [ngClass]="{'footer-blocker-max': this.isHover}" *ngIf="this.isFloating"></div>
