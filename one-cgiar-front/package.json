@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host=0.0.0.0 --port=4200 --disable-host-check",
-    "build": "ng build",
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && ng serve --host=0.0.0.0 --port=4200 --disable-host-check",
+    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
