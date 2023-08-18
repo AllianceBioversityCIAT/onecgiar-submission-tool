@@ -1,0 +1,25 @@
+{
+  "name": "one-cgiar-toc-integration",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc ",
+    "dev": "tsc-watch --onSuccess \"node dist/index.js \""
+  },
+  "dependencies": {
+    "@types/morgan": "^1.9.4",
+    "axios": "^0.21.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "serverless-http": "^3.1.1",
+    "typeorm": "^0.2.41"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "tsc-watch": "^4.5.0"
+  }
+}
