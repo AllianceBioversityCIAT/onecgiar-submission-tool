@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getRepository} from 'typeorm';
+import { getRepository, QueryRunner } from 'typeorm';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
 import {Stages} from '../entity/Stages';
@@ -10,7 +10,8 @@ import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
 import { DepthScales } from '../entity/DepthScales';
 import { pusherOST } from '../utils/pusher-util';
-
+import axios from 'axios';
+import { type } from 'os';
 /**
  * ***************************
  * SECTIONS FOR PROPOSAL STAGE
@@ -858,8 +859,6 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   let stage;
-
-    console.log(tableB);
     
 
   try {
@@ -890,6 +889,50 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
     }
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const id_initiative = await this.QueryRunner(`select
+    ibs.initiativeId,
+    t.toc_id
+  from
+    tocs t
+  inner join (
+    select
+      max(t2.updated_at) as max_date,
+      t2.initvStgId
+    from
+      tocs t2
+    inner join initiatives_by_stages ibs2
+          on
+      t2.initvStgId = ibs2.id
+    where
+      t2.active > 0
+      and t2.type = 1
+    GROUP by
+      t2.initvStgId) tr on
+    tr.initvStgId = t.initvStgId
+    and tr.max_date = t.updated_at
+  inner join initiatives_by_stages ibs
+          on
+    t.initvStgId = ibs.id
+  where
+    t.active > 0
+    and t.type = 1 and ibs.initiativeId = ?
+  order by
+    ibs.initiativeId;`, [initiativeId]);
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    const params = {
+      "id_toc": id_initiative[0].toc_id,
+    }
+    if(id_initiative.length > 0){
+      let tocHost = await 'http://localhost:3800/api/toc-integration/toc';
+      const TocInformation =  await axios.post(
+        tocHost,
+        params,
+        {headers}
+      );
+    }
 
     /**
      * Validate if the initiative has old information
