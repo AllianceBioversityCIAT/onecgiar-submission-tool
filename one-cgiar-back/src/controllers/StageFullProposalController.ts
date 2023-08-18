@@ -890,42 +890,15 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
-    const id_initiative = await this.QueryRunner(`select
-    ibs.initiativeId,
-    t.toc_id
-  from
-    tocs t
-  inner join (
-    select
-      max(t2.updated_at) as max_date,
-      t2.initvStgId
-    from
-      tocs t2
-    inner join initiatives_by_stages ibs2
-          on
-      t2.initvStgId = ibs2.id
-    where
-      t2.active > 0
-      and t2.type = 1
-    GROUP by
-      t2.initvStgId) tr on
-    tr.initvStgId = t.initvStgId
-    and tr.max_date = t.updated_at
-  inner join initiatives_by_stages ibs
-          on
-    t.initvStgId = ibs.id
-  where
-    t.active > 0
-    and t.type = 1 and ibs.initiativeId = ?
-  order by
-    ibs.initiativeId;`, [initiativeId]);
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    const params = {
-      "id_toc": id_initiative[0].toc_id,
-    }
-    if(id_initiative.length > 0){
+    const tocId = await fullPposal.tocIntegration(initiativeId);
+    
+    if(tocId.length > 0){
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      const params = {
+        "id_toc": tocId[0].toc_id,
+      }
       let tocHost = await 'http://localhost:3800/api/toc-integration/toc';
       const TocInformation =  await axios.post(
         tocHost,
