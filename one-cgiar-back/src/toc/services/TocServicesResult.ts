@@ -43,13 +43,14 @@ import { TocResultsRegions } from '../entity/tocResultsRegions';
 
 
 
+
 export class TocServicesResults {
 
     public queryRunner = getConnection().createQueryRunner().connection;
     public validatorType = new ValidatorTypes()
     public errorMessage = new ErrorValidators();
     
-    async splitInformation(tocResultDashboard:any){
+    async splitInformation(tocResultDashboard:any, idInitiativeToc:string){
         if(this.validatorType.existPropertyInObjectMul(tocResultDashboard,['sdg_results',
         'impact_area_results','action_area_results','output_outcome_results'])){
                 const sdg_results = await this.saveSdgResults(tocResultDashboard.sdg_results);
@@ -58,7 +59,7 @@ export class TocServicesResults {
                     if(impact_area_results!= null && this.validatorType.validatorIsArray(impact_area_results)){
                         const action_area = await this.saveActionAreaResult(tocResultDashboard.action_area_results,impact_area_results)
                         if(action_area!= null && this.validatorType.validatorIsArray(action_area)){
-                            const tocResult= await this.saveOutputOutcomeResults(tocResultDashboard.output_outcome_results,sdg_results,impact_area_results,action_area)
+                            const tocResult= await this.saveOutputOutcomeResults(tocResultDashboard.output_outcome_results,sdg_results,impact_area_results,action_area, idInitiativeToc)
                             return await this.saveInDataBase(tocResult,sdg_results,impact_area_results,action_area);
                         }
                     }
@@ -82,6 +83,7 @@ export class TocServicesResults {
                     sdgResultsDto.toc_result_id = typeof element.toc_result_id == 'string'? element.toc_result_id: null;
                     sdgResultsDto.sdg_contribution = typeof element.sdg_contribution == 'string'? element.sdg_contribution: null;
                     sdgResultsDto.is_active = true;
+                    this.validatorType.deletebyAllRelationSdgs(element.toc_result_id);
                     if(this.validatorType.validExistNull(sdgResultsDto)){
                         const relationSdg = await this.saveRelationSdgResults(element, element.toc_result_id);
                         if(typeof relationSdg == 'object'){
@@ -149,6 +151,7 @@ export class TocServicesResults {
                 impactAreadto.impact_area_id = typeof element.impact_area_id == 'number'? element.impact_area_id : null;
                 impactAreadto.toc_result_id = typeof element.toc_result_id == 'string'? element.toc_result_id : null;
                 impactAreadto.outcome_statement = typeof element.outcome_statement == 'string'? element.outcome_statement : null;
+                this.validatorType.deletebyAllRelationImpactAre(element.toc_result_id);
                 if(this.validatorType.validExistNull(impactAreadto)){
                     const relation = await this.saveRelationImpactArea(element,element.toc_result_id,sdgResults)
                     listValidImpactArea.push({impact_area: impactAreadto, relation: relation});
@@ -163,6 +166,7 @@ export class TocServicesResults {
         let listValidGlobalTarget = []
         let listValidImpactIndicator = []
         let listValidSdg = []
+        let noDuplicate;
         if(this.validatorType.validatorIsArray(objectImpactArea.global_targets)){
             objectImpactArea.global_targets.forEach(element => {
                 if(this.validatorType.existPropertyInObjectMul(element, ['global_target_id','active'])){
@@ -177,17 +181,19 @@ export class TocServicesResults {
             });
         }
         if(this.validatorType.validatorIsArray(objectImpactArea.sdgs)){
-            objectImpactArea.sdgs[0].forEach(element => {
-                if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
-                    const relationSdg = new TocImpactAreaResultsSdgResultsDto;
-                    relationSdg.impact_area_toc_result_id = toc_result_id;
-                    relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
-                    relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
-                    if(this.validatorType.validExistNull(relationSdg)){
-                        listValidSdg.push(relationSdg);
+                noDuplicate = await this.validatorType.deleteRepets(objectImpactArea.sdgs[0])
+                
+                noDuplicate.forEach(async element => {
+                    if(this.validatorType.existPropertyInObjectMul(element, ['toc_result_id','active'])){
+                        const relationSdg = new TocImpactAreaResultsSdgResultsDto;
+                        relationSdg.impact_area_toc_result_id = toc_result_id;
+                        relationSdg.sdg_toc_result_id = typeof element.toc_result_id == 'string'&& this.validatorType.validExistId(sdgResults,element.toc_result_id) ? element.toc_result_id : null;
+                        relationSdg.is_active = typeof element.active == 'boolean'? element.active : null;
+                        if(this.validatorType.validExistNull(relationSdg)){
+                            listValidSdg.push(relationSdg)
+                        }
                     }
-                }
-            });
+                });
         }
         if(this.validatorType.validatorIsArray(objectImpactArea.impact_indicators)){
             objectImpactArea.impact_indicators.forEach(element => {
@@ -206,7 +212,7 @@ export class TocServicesResults {
         return {
             global_target: listValidGlobalTarget,
             impact_indicator:listValidImpactIndicator,
-            sdg:listValidSdg
+            sdg: listValidSdg
         }
     }
 
@@ -224,6 +230,7 @@ export class TocServicesResults {
                     actionAreaDto.outcome_id = typeof element.outcome_id == 'number'? element.outcome_id : null;
                     actionAreaDto.statement = typeof element.statement == 'string'? element.statement : null;
                     actionAreaDto.is_active = true;
+                    this.validatorType.deletebyAllRelationActionArea(element.toc_result_id);
                     if(this.validatorType.validExistNull(actionAreaDto)){
                         const relation = await this.relationActionAreaResults(element,impactAreaResulst,element.toc_result_id)
                         listValidActionArea.push({action_area:actionAreaDto, relation:relation});
@@ -271,7 +278,7 @@ export class TocServicesResults {
 
     //mapping output_outcome_results
 
-    async saveOutputOutcomeResults(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+    async saveOutputOutcomeResults(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any, id_toc_initiative:string){
         let listValidTocResult=[]
         if(this.validatorType.validatorIsArray(outputOutcomeResults)){
             let con = 0
@@ -290,6 +297,8 @@ export class TocServicesResults {
                     outPutComeDto.outcome_type = typeof element.outcome_type == 'string'? element.outcome_type : null;
                     outPutComeDto.is_active = true;
                     outPutComeDto.is_global = true;
+                    outPutComeDto.id_toc_initiative = id_toc_initiative;
+                    this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
                         const relation = await this.relationTocResults(element,element.toc_result_id,sdgResults,impactAreaResults,actionAreaResult)
                         listValidTocResult.push({outcome:outPutComeDto,relation:relation});
                     
@@ -371,13 +380,13 @@ export class TocServicesResults {
                         let regions= '';
                         if(this.validatorType.validatorIsArray(element.country)){
                             element.country.forEach(elements => {
-                                countries += elements.country_id + ',';
+                                countries += elements.code + ',';
                             });
                             tocResultIndicator.countries_id = countries;
                         }
                         if(this.validatorType.validatorIsArray(element.region)){
                             element.region.forEach(elements => {
-                                regions += elements.region_id + ',';
+                                regions += elements.um49Code + ',';
                             });
                             tocResultIndicator.regions_id = regions;
                         }
@@ -386,7 +395,8 @@ export class TocServicesResults {
                 }
             });
         }
-        if(this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) && 
+        if(this.validatorType.existPropertyInObject(outputOutcomeResults, 'geo_scope')){
+            if(this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) && 
             this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope) == false){
                 if(this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope.regions)){
                     outputOutcomeResults.geo_scope.regions.forEach(element => {
@@ -417,6 +427,9 @@ export class TocServicesResults {
                     });
                 }
         }
+            
+        }
+        
         return {action_area: listValidActionArea, impact_area:listValidImpact, sdg:listValidSdg, indicator:listValidIndicator, regions: listValidRegions, countries: listValidCountry}
     }
 
@@ -507,12 +520,22 @@ export class TocServicesResults {
     }
 
     async saveInDataBase(outputOutcomeResults:any, sdgResults:any, impactAreaResults:any, actionAreaResult:any){
+        let informationSave;
+        try {
+            informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
+        } catch (error) {
+            return error
+        }
+        console.log(informationSave);
         
-        let informationSave = await this.mappingSaveDb(outputOutcomeResults, sdgResults, impactAreaResults, actionAreaResult)
-        const sdgRepo = await getRepository(TocSdgResults);
+        let sdgRepo = await getRepository(TocSdgResults);
         console.log('1. Saving sdg');
-        
-        const sdgSave= await sdgRepo.save(informationSave.sdgs.sdg);
+        let sdgSave
+        try {
+            sdgSave = await sdgRepo.save(informationSave.sdgs.sdg);
+        } catch (error) {
+            return error
+        }
         if(sdgSave != null && sdgSave.length > 0){
             const sdgTarget = await getRepository(TocSdgResultsSdgTargets);
             let sdgTargetSave ;
@@ -571,14 +594,19 @@ export class TocServicesResults {
             }
             const repoActionAre = await getRepository(TocActionAreaResults);
             console.log('8. Saving action Area ');
-            const actionAreaSave = repoActionAre.save(informationSave.action.action);
+            let actionAreaSave
+            try {
+                actionAreaSave= await repoActionAre.save(informationSave.action.action);
+            } catch (error) {
+                return error
+            }
             if(actionAreaSave != null){
                 const repoActionOutcome = await getRepository(TocActionAreaResultsOutcomesIndicators)
                 let saveActionOutcome;
                 let saveActionImpact;
                 try {
                     console.log('9. Saving action Area outcome');
-                    saveActionOutcome = repoActionOutcome.save(informationSave.action.outcome);
+                    saveActionOutcome = await repoActionOutcome.save(informationSave.action.outcome);
                 } catch (error) {
                     return error;
                 }

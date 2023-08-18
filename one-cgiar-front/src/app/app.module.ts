@@ -9,7 +9,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
-
 //? Components
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
@@ -44,6 +43,7 @@ import { GoogleAnalyticsModule } from './shared/components/google-analytics/goog
 import { SearchByTextPipe } from './shared/pipes/search-by-text.pipe';
 import { MenuSearchComponent } from './shared/components/menu-search/menu-search.component';
 import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
+import { ContactModalModule } from './shared/components/contact-modal/contact-modal.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +53,7 @@ import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
     CreateUserModalComponent,
     SearchByTextPipe,
     MenuSearchPipe,
-    MenuSearchComponent
+    MenuSearchComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -83,14 +83,19 @@ import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
     HeaderModule,
     NavbarModule,
     DevTagModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ContactModalModule,
   ],
   providers: [
     CurrencyPipe,
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestInterceptor,
+      multi: true,
+    },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

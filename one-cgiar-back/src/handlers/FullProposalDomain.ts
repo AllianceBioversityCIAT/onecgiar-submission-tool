@@ -1,18 +1,18 @@
 import _ from 'lodash';
-import { getRepository, In, Not, getCustomRepository } from 'typeorm';
+import {getRepository, In, Not, getCustomRepository} from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import { IsdcResponsesRepository } from '../repositories/isdcResponsesRepository';
-import { TocResponsesRepository } from '../repositories/tocResponsesRepository';
+import {IsdcResponsesRepository} from '../repositories/isdcResponsesRepository';
+import {TocResponsesRepository} from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
-import { InitiativeHandler } from './InitiativesDomain';
+import {InitiativeHandler} from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
-import { ProjectionBenefitsDepthScales } from '../entity/ProjectionBenefitsDepthScales';
-import { pusherOST } from '../utils/pusher-util';
-import { initiativeParser } from '../utils/initiative-parser';
-import { MeliaToc } from '../entity/MeliaToc';
+import {ProjectionBenefitsDepthScales} from '../entity/ProjectionBenefitsDepthScales';
+import {pusherOST} from '../utils/pusher-util';
+import {initiativeParser} from '../utils/initiative-parser';
+import {MeliaToc} from '../entity/MeliaToc';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -208,7 +208,13 @@ export class ProposalHandler extends InitiativeStageHandler {
     const wpRepo = getRepository(entities.WorkPackages);
 
     try {
-      let workPackages: any = await wpRepo.find({where: {wp_official_code: wpOficialCode, active: 1, initvStgId:initvStgId}});
+      let workPackages: any = await wpRepo.find({
+        where: {
+          wp_official_code: wpOficialCode,
+          active: 1,
+          initvStgId: initvStgId
+        }
+      });
       let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
                WHERE wrkPkgId = ${workPackages[0].id}
@@ -312,7 +318,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       return workPackages;
     } catch (error) {
-      throw new BaseError('Get All work packages for stage Full Proposal', 400, error.message, false);
+      throw new BaseError(
+        'Get All work packages for stage Full Proposal',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
@@ -322,7 +333,6 @@ export class ProposalHandler extends InitiativeStageHandler {
    * It is used from the previews API
    */
   async requestAllWorkPackages() {
-
     try {
       /* query Countries */
       let COquery = `
@@ -330,7 +340,7 @@ export class ProposalHandler extends InitiativeStageHandler {
                 FROM countries_by_initiative_by_stage 
                WHERE active = 1
                GROUP BY id,country_id`,
-      /* query Regions */
+        /* query Regions */
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
@@ -371,7 +381,12 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       return workPackages;
     } catch (error) {
-      throw new BaseError('Get All work packages to all stages', 400, error.message, false);
+      throw new BaseError(
+        'Get All work packages to all stages',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
@@ -708,9 +723,10 @@ export class ProposalHandler extends InitiativeStageHandler {
     dimensions?,
     depthScaleList?
   ) {
-
     const depthScalesRepo = getRepository(entities.DepthScales);
-    const projectionBenefitsDepthScalesRepo = getRepository(ProjectionBenefitsDepthScales);
+    const projectionBenefitsDepthScalesRepo = getRepository(
+      ProjectionBenefitsDepthScales
+    );
     const projBeneRepo = getRepository(entities.ProjectionBenefits);
     const dimensionsRepo = getRepository(entities.Dimensions);
     const initvStg = await this.setInitvStage();
@@ -738,7 +754,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
 
     try {
-
       if (newWorkProjectionBenefits.id !== null) {
         var savedProjectionBenefits = await projBeneRepo.findOne(
           newWorkProjectionBenefits.id
@@ -782,13 +797,24 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      depthScaleList.forEach(async el => {
+      depthScaleList.forEach(async (el) => {
         let isSave: any;
-        const returnData = await projectionBenefitsDepthScalesRepo.findOne({where: {projectionBenefitsId: newWorkProjectionBenefits.id, depthScalesId:el.depthScaleId}});
-        if(returnData){
+        const returnData = await projectionBenefitsDepthScalesRepo.findOne({
+          where: {
+            projectionBenefitsId: newWorkProjectionBenefits.id,
+            depthScalesId: el.depthScaleId
+          }
+        });
+        if (returnData) {
           isSave = {...returnData, active: !!el.active};
-        }else{
-          isSave = {depthScalesId:el.depthScaleId, active:!!el.active, projectionBenefitsId:projectionBenefitsId?projectionBenefitsId:upsertedPjectionBenefits.id};
+        } else {
+          isSave = {
+            depthScalesId: el.depthScaleId,
+            active: !!el.active,
+            projectionBenefitsId: projectionBenefitsId
+              ? projectionBenefitsId
+              : upsertedPjectionBenefits.id
+          };
         }
 
         await projectionBenefitsDepthScalesRepo.save(isSave);
@@ -845,7 +871,9 @@ export class ProposalHandler extends InitiativeStageHandler {
              AND active = 1)
           AND pbds.active > 0;`;
 
-      const depthScalesList = await this.queryRunner.query(depthScalesListQuery);
+      const depthScalesList = await this.queryRunner.query(
+        depthScalesListQuery
+      );
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
 
@@ -914,16 +942,20 @@ export class ProposalHandler extends InitiativeStageHandler {
 
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
-      const depthScalesList = await this.queryRunner.query(depthScalesListQuery);
+      const depthScalesList = await this.queryRunner.query(
+        depthScalesListQuery
+      );
 
       projectBenefits.map((pb) => {
         pb['dimensions'] = dimensions.filter((dim) => {
           return dim.projectionId === pb.id;
         });
 
-        pb['depthScaleList'] = depthScalesList?depthScalesList.filter((dim) => {
-          return dim.projectionBenefitsId === pb.id;
-        }): [];
+        pb['depthScaleList'] = depthScalesList
+          ? depthScalesList.filter((dim) => {
+              return dim.projectionBenefitsId === pb.id;
+            })
+          : [];
       });
 
       return projectBenefits;
@@ -1536,9 +1568,13 @@ export class ProposalHandler extends InitiativeStageHandler {
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
       // console.log(upsertedSdgTargets);
-      if(mergeSdgTargets.length > 0 || mergeImpactIndicators.length > 0 || mergeGlobalTarget.length > 0){
+      if (
+        mergeSdgTargets.length > 0 ||
+        mergeImpactIndicators.length > 0 ||
+        mergeGlobalTarget.length > 0
+      ) {
         let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger( 'table-a', initiativeId )
+        pusherOST.tocTrigger('table-a', initiativeId);
       }
       return {
         upsertedGlobalTargets,
@@ -1595,6 +1631,8 @@ export class ProposalHandler extends InitiativeStageHandler {
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
         newActionAreasOutcomesIndicators.outcome_id = element.outcome_id;
+        newActionAreasOutcomesIndicators.action_area_id =
+          element.action_area_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1624,9 +1662,9 @@ export class ProposalHandler extends InitiativeStageHandler {
         mergeOutcomesIndicators
       );
 
-      if(mergeOutcomesIndicators.length > 0 ){
+      if (mergeOutcomesIndicators.length > 0) {
         let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger( 'table-b-outcomes', initiativeId );
+        pusherOST.tocTrigger('table-b-outcomes', initiativeId);
       }
 
       return {upsertedOutcomesIndicators};
@@ -1697,8 +1735,10 @@ export class ProposalHandler extends InitiativeStageHandler {
 
         upsertResults = await resultsRepo.save(mergeResult);
 
-        if(!!upsertResults && upsertResults.active == false){
-          const responses = await this.queryRunner.query(`update melia_toc mt inner join results r on r.id = mt.outcomeIdId set mt.active = 0 where r.toc_result_id = '${upsertResults.toc_result_id}'`);
+        if (!!upsertResults && upsertResults.active == false) {
+          const responses = await this.queryRunner.query(
+            `update melia_toc mt inner join results r on r.id = mt.outcomeIdId set mt.active = 0 where r.toc_result_id = '${upsertResults.toc_result_id}'`
+          );
         }
 
         resultsArray.push(upsertResults);
@@ -1820,9 +1860,13 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsCountries: any = await resultsCountriesRepo.save(
         mergeResultsCountries
       );
-      if(mergeResultsIndicators.length > 0 || mergeResultsRegions.length > 0 || mergeResultsCountries.length > 0){
+      if (
+        mergeResultsIndicators.length > 0 ||
+        mergeResultsRegions.length > 0 ||
+        mergeResultsCountries.length > 0
+      ) {
         let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger( 'table-c', initiativeId )
+        pusherOST.tocTrigger('table-c', initiativeId);
       }
       return {
         upsertResults: resultsArray,
@@ -1895,14 +1939,21 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.outcome_id,couti.action_area_name,
-        couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
-        couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
+        SELECT outi.initvStgId,outi.id, couti.id,
+outi.outcomes_indicators_id,
+couti.outcome_id,
+couti.action_area_name,
+        couti.outcome_id,couti.outcome_statement,
+        couti.outcome_indicator_id,
+        couti.outcome_indicator_smo_code,
+        couti.outcome_indicator_statement,
+        couti.action_area_id
          FROM init_action_areas_out_indicators outi
-    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
+JOIN clarisa_action_areas_outcomes_indicators couti
            ON outi.outcomes_indicators_id = couti.outcome_indicator_id
-          and outi.outcome_id  = couti.outcome_id 
-        WHERE outi.initvStgId =${initvStg.id}
+          and outi.outcome_id = couti.outcome_id
+          and if(outi.action_area_id is not null, outi.action_area_id = couti.action_area_id, couti.action_area_id = couti.action_area_id )
+        WHERE outi.initvStgId = ${initvStg.id}
           AND outi.active =1
           order by couti.outcome_id asc;
           
@@ -1959,7 +2010,7 @@ export class ProposalHandler extends InitiativeStageHandler {
         FROM results re
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1);`,
-      lastUpdateTableASql = `
+        lastUpdateTableASql = `
       select 
 case 
 	when d.updated_at >= g.updated_at and d.updated_at >= s.updated_at then d.updated_at
@@ -1992,7 +2043,7 @@ from  initiatives_by_stages ibs
                    
 	where  ibs.id = ${initvStg.id}
       `,
-      lastUpdateTableCSql = `
+        lastUpdateTableCSql = `
       SELECT max(re.updated_at) as updated_at
         FROM results re
         join results_types rt 
@@ -2004,7 +2055,7 @@ from  initiatives_by_stages ibs
          AND re.active =1
         order by re.result_type_id,wp.id;
       `,
-      resultsByMelia = `
+        resultsByMelia = `
       select msa.id as meliaStudiesId, mt.outcomeIdId, cmst.name 
       from melia_toc mt 
       	inner join melia_studies_activities msa on msa.id = mt.meliaIdId 
@@ -2042,9 +2093,8 @@ from  initiatives_by_stages ibs
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const actionAreasOutcomesIndicatorsLastUpdate = await this.queryRunner.query(
-        outIndicatorsQueryLastUpdate
-      );
+      const actionAreasOutcomesIndicatorsLastUpdate =
+        await this.queryRunner.query(outIndicatorsQueryLastUpdate);
       const tableB = {
         update_at: actionAreasOutcomesIndicatorsLastUpdate,
         action_areas_outcomes_indicators: actionAreasOutcomesIndicators
@@ -2059,7 +2109,9 @@ from  initiatives_by_stages ibs
 
       const meliaTocResult = await this.queryRunner.query(resultsByMelia);
       const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
-      const lastUpdateTableC = await this.queryRunner.query(lastUpdateTableCSql);
+      const lastUpdateTableC = await this.queryRunner.query(
+        lastUpdateTableCSql
+      );
       const resultsCountries = await this.queryRunner.query(
         resultsCountriesQuery
       );
@@ -2071,7 +2123,7 @@ from  initiatives_by_stages ibs
 
         res['meliasStudies'] = meliaTocResult.filter((ms) => {
           return res.id === ms.outcomeIdId;
-        })
+        });
 
         const reg = resultsRegions.filter((reg) => {
           return res.id === reg.results_id;
@@ -2085,9 +2137,9 @@ from  initiatives_by_stages ibs
       });
 
       const tableC = {
-                        results: results,
-                        updated_at: lastUpdateTableC
-                      };
+        results: results,
+        updated_at: lastUpdateTableC
+      };
 
       return {
         meliaPlan: meliaPlan[0],
@@ -2109,7 +2161,10 @@ from  initiatives_by_stages ibs
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
-  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any, userId?:number) {
+  async upsertMeliaStudiesActivities(
+    meliaStudiesActivitiesData: any,
+    userId?: number
+  ) {
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
@@ -2120,7 +2175,6 @@ from  initiatives_by_stages ibs
     let regionsMeliaStd = [];
     let countriesMeliaStd = [];
     let initiativesMeliaStd = [];
-
 
     try {
       meliaStudiesActivitiesData =
@@ -2146,7 +2200,7 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudiesActivities.is_global = element.is_global;
           newMeliaStudiesActivities.active = element.active;
-          newMeliaStudiesActivities.updateUser = userId?userId:null;
+          newMeliaStudiesActivities.updateUser = userId ? userId : null;
 
           meliaStudiesActivitiesArray.push(
             toolsSbt.mergeData(
@@ -2180,8 +2234,8 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
-          newMeliaStudy.updateUser = userId?userId:null;
-          
+          newMeliaStudy.updateUser = userId ? userId : null;
+
           //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
             newMeliaStudy
@@ -2210,32 +2264,38 @@ from  initiatives_by_stages ibs
         for (let rindex = 0; rindex < element.selectResults.length; rindex++) {
           const selectedResults = element.selectResults[rindex];
 
-          if(!!selectedResults.id){
-            let resultData: MeliaTocData = await meliaTocRepo.findOne(selectedResults.id);
-            resultData.active = selectedResults.active?1:0;
+          if (!!selectedResults.id) {
+            let resultData: MeliaTocData = await meliaTocRepo.findOne(
+              selectedResults.id
+            );
+            resultData.active = selectedResults.active ? 1 : 0;
             saveLinkResult.push(resultData);
-          }else{
-            let data: MeliaTocData = await meliaTocRepo.findOne({where: {initvStgId: initvStg.id, meliaId: meliaDataId, outcomeId: selectedResults.resultId }});
-            if(data){
-              data.active = selectedResults.active?1:0
-              saveLinkResult.push(data);
-            }else{
-              let newData:MeliaTocData = {
-                active: selectedResults.active?1:0,
+          } else {
+            let data: MeliaTocData = await meliaTocRepo.findOne({
+              where: {
                 initvStgId: initvStg.id,
                 meliaId: meliaDataId,
-                outcomeId: selectedResults.resultId             
+                outcomeId: selectedResults.resultId
               }
+            });
+            if (data) {
+              data.active = selectedResults.active ? 1 : 0;
+              saveLinkResult.push(data);
+            } else {
+              let newData: MeliaTocData = {
+                active: selectedResults.active ? 1 : 0,
+                initvStgId: initvStg.id,
+                meliaId: meliaDataId,
+                outcomeId: selectedResults.resultId
+              };
               saveLinkResult.push(newData);
             }
-            
           }
-          
         }
-        
 
-          const updateResultMeliaResponse = await meliaTocRepo.save(saveLinkResult);
-        
+        const updateResultMeliaResponse = await meliaTocRepo.save(
+          saveLinkResult
+        );
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
@@ -2264,7 +2324,7 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async requestSelectResultsByMelias(){
+  async requestSelectResultsByMelias() {
     const initvStg = await this.setInitvStage();
     try {
       let results = await this.queryRunner.query(`
@@ -2282,7 +2342,7 @@ from  initiatives_by_stages ibs
       	where r.initvStgId = ${initvStg.id}
       	and r.active > 0
       `);
-        return results;
+      return results;
     } catch (error) {
       throw new BaseError(
         'GET Results by MELIA studies and activities: Full proposal',
@@ -2385,7 +2445,7 @@ from  initiatives_by_stages ibs
 
           melia['selectResults'] = meliasResultsSelect.filter((res) => {
             return res.meliaIdId === melia.id;
-          })
+          });
         });
       }
 
@@ -2546,16 +2606,17 @@ from  initiatives_by_stages ibs
                      AND active = 1
                 `,
         riskAssessmentQuery = `
-                SELECT id,risks_achieving_impact,risks_theme,
-                       description_risk,likelihood,impact,
-                       risk_score,manage_plan_risk_id,active,add_by_user, risk_id 
-                 FROM risk_assessment
-                WHERE manage_plan_risk_id in (
-                SELECT id
-	              FROM manage_plan_risk
-                 WHERE initvStgId = ${initvStg.id}
-                   AND active = 1
-                     )
+        SELECT ra.id,ra.risks_achieving_impact,ra.risks_theme,
+               ra.description_risk,ra.likelihood,ra.impact,
+               ra.risk_score,ra.manage_plan_risk_id,ra.active,ra.add_by_user, ra.risk_id 
+        FROM risk_assessment ra
+        WHERE ra.manage_plan_risk_id in (
+          SELECT id
+          FROM manage_plan_risk
+           WHERE initvStgId = ${initvStg.id}
+             AND active = 1
+               )
+          and ra.active > 0;
                     `,
         opportinitiesQuery = `
                     SELECT id,opportunities_description,
@@ -3836,17 +3897,16 @@ from  initiatives_by_stages ibs
     }
   }
 
-    /**
-     **REQUEST ISDC RESPONSES STATUS
-     * @returns 
-     */
+  /**
+   **REQUEST ISDC RESPONSES STATUS
+   * @returns
+   */
   async requestISDCResponsesStatus(stageId) {
     const ISDCResponsesRepo = getCustomRepository(IsdcResponsesRepository);
 
     try {
-
-
-      const ISDCResponsesStatus = await ISDCResponsesRepo.findIsdcFeedbackStatus(stageId);
+      const ISDCResponsesStatus =
+        await ISDCResponsesRepo.findIsdcFeedbackStatus(stageId);
 
       return ISDCResponsesStatus;
     } catch (error) {
@@ -3860,33 +3920,31 @@ from  initiatives_by_stages ibs
     }
   }
 
-   /**
-     ** REQUEST ToC RESPONSES REPORTING
-     * @returns 
-     */
-    async requestTOCProgress(stageId) {
-      const tocResponsesRepo = getCustomRepository(TocResponsesRepository);
-  
-      try {
-  
-  
-        const tocResponsesReporting = await tocResponsesRepo.findTocProgressReporting(stageId);
-  
-        return tocResponsesReporting;
-      } catch (error) {
-        console.log(error);
-        throw new BaseError(
-          'REQUEST ToC Responses progress: Full proposal domain',
-          400,
-          error.message,
-          false
-        );
-      }
+  /**
+   ** REQUEST ToC RESPONSES REPORTING
+   * @returns
+   */
+  async requestTOCProgress(stageId) {
+    const tocResponsesRepo = getCustomRepository(TocResponsesRepository);
+
+    try {
+      const tocResponsesReporting =
+        await tocResponsesRepo.findTocProgressReporting(stageId);
+
+      return tocResponsesReporting;
+    } catch (error) {
+      console.log(error);
+      throw new BaseError(
+        'REQUEST ToC Responses progress: Full proposal domain',
+        400,
+        error.message,
+        false
+      );
     }
+  }
 
-
-  async requestAllEndofInitiativeOutcomes(){
-    try{
+  async requestAllEndofInitiativeOutcomes() {
+    try {
       const queryEOI = `
       select
       	i.id as initiative_id,
@@ -3903,7 +3961,7 @@ from  initiatives_by_stages ibs
       	inner join results_types rt on rt.id = r.result_type_id 
       	order by i.id asc;
       `,
-      stageInitiativeQuery = `
+        stageInitiativeQuery = `
       select
         i.id as initiative_id,
         i.official_code as initiative_official_code,
@@ -3917,18 +3975,18 @@ from  initiatives_by_stages ibs
       `;
       const EoiByInit = await this.queryRunner.query(stageInitiativeQuery);
       const allEoi = await this.queryRunner.query(queryEOI);
-      EoiByInit.map(res => {
+      EoiByInit.map((res) => {
         res['eoi_o'] = allEoi.filter((aeoi) => {
           return res.initiative_id === aeoi.initiative_id;
         });
-      })
-      EoiByInit.map(res => {
-        res.eoi_o.map(el => {
+      });
+      EoiByInit.map((res) => {
+        res.eoi_o.map((el) => {
           delete el.initiative_id;
-        })
-      })
+        });
+      });
       return EoiByInit;
-    }catch(error){
+    } catch (error) {
       console.log(error);
       throw new BaseError(
         'Request EOI By Initiative: Full proposal',
@@ -4029,7 +4087,7 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async getLastUpdateEoi (){
+  async getLastUpdateEoi() {
     const initvStg = await this.setInitvStage();
     try {
       const resultsQuery = `
@@ -4045,8 +4103,8 @@ from  initiatives_by_stages ibs
        group by re.initvStgId, rt.updated_at
       order by re.result_type_id,wp.id;
     `;
-    const result = await this.queryRunner.query(resultsQuery);
-    return result[0];
+      const result = await this.queryRunner.query(resultsQuery);
+      return result[0];
     } catch (error) {
       throw new BaseError(
         'Request EOI last update: Full proposal',
@@ -4057,7 +4115,12 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async insertInitiativeApproval(user_id, initiativeId, is_approved, approved_reason) {
+  async insertInitiativeApproval(
+    user_id,
+    initiativeId,
+    is_approved,
+    approved_reason
+  ) {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
@@ -4189,10 +4252,10 @@ from  initiatives_by_stages ibs
   }
 }
 
-interface MeliaTocData{
+interface MeliaTocData {
   active: number;
   id?: number;
   initvStgId: number;
   meliaId: number;
-  outcomeId: number;   
+  outcomeId: number;
 }

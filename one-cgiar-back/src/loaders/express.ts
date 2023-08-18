@@ -29,7 +29,7 @@ export default ({app}: {app: express.Application}) => {
   app.use(function (req, res, next) {
     res.setHeader(
       'Content-Security-Policy',
-      "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/*"
+      "script-src 'self' https://apis.google.com http://clarisatest.ciat.cgiar.org/api/ https://initiativestest.ciat.cgiar.org/apiClarisa/* https://toc.loc.codeobia.com/api/*"
     );
     res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
     // Website you wish to allow to connect
