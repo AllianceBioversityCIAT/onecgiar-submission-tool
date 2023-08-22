@@ -899,7 +899,7 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
       const params = {
         "id_toc": tocId[0].toc_id,
       }
-      let tocHost = await 'http://localhost:3800/api/toc-integration/toc';
+      let tocHost = await process.env.TOC_LAMBDA + '/toc';
       const TocInformation =  await axios.post(
         tocHost,
         params,
