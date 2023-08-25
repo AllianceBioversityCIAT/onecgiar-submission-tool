@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getRepository} from 'typeorm';
+import { getRepository, QueryRunner } from 'typeorm';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
 import {Stages} from '../entity/Stages';
@@ -10,7 +10,8 @@ import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
 import { DepthScales } from '../entity/DepthScales';
 import { pusherOST } from '../utils/pusher-util';
-
+import axios from 'axios';
+import { type } from 'os';
 /**
  * ***************************
  * SECTIONS FOR PROPOSAL STAGE
@@ -858,8 +859,6 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   let stage;
-
-    console.log(tableB);
     
 
   try {
@@ -890,6 +889,23 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
     }
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const tocId = await fullPposal.tocIntegration(initiativeId);
+    
+    if(tocId.length > 0){
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      const params = {
+        "id_toc": tocId[0].toc_id,
+      }
+      let tocHost = await process.env.TOC_LAMBDA + '/toc';
+      const TocInformation =  await axios.post(
+        tocHost,
+        params,
+        {headers}
+      );
+    }
 
     /**
      * Validate if the initiative has old information

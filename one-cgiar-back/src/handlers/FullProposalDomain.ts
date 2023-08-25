@@ -1423,6 +1423,40 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
+  async tocIntegration(initiativeId){
+    const toc_id = await  this.queryRunner.query(`select
+    ibs.initiativeId,
+    t.toc_id
+  from
+    tocs t
+  inner join (
+    select
+      max(t2.updated_at) as max_date,
+      t2.initvStgId
+    from
+      tocs t2
+    inner join initiatives_by_stages ibs2
+          on
+      t2.initvStgId = ibs2.id
+    where
+      t2.active > 0
+      and t2.type = 1
+    GROUP by
+      t2.initvStgId) tr on
+    tr.initvStgId = t.initvStgId
+    and tr.max_date = t.updated_at
+  inner join initiatives_by_stages ibs
+          on
+    t.initvStgId = ibs.id
+  where
+    t.active > 0
+    and t.type = 1 and ibs.initiativeId = ${initiativeId}
+  order by
+    ibs.initiativeId;`);
+
+    return toc_id;
+  }
+
   /**
    ** UPSERT TABLE A (Global Targets, Impacts Indicators and SDG Targets)
    * @param tableA
