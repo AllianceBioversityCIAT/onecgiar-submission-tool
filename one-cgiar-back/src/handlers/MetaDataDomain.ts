@@ -2259,7 +2259,7 @@ WHERE ini.id = ${this.initvStgId_}
          AND pb.active > 0
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
-         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id `;
+         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id, pb.id`;
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
       );
