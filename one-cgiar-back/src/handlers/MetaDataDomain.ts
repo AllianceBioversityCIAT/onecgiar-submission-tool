@@ -393,7 +393,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
           `;
 
           let workPackageArr = await this.queryRunner.query(validationWPSQL);
-
           if (workPackageArr.length > 0) {
             workPackage['validation'] = parseInt(workPackageArr[0].validation);
             workPackage['description'] = workPackageArr[0].description;
@@ -892,15 +891,18 @@ export class MetaDataHandler extends InitiativeStageHandler {
       validationTableC[0].validation = parseInt(validationTableC[0].validation);
       validationTableB[0].validation = parseInt(validationTableB[0].validation);
       validationTableA[0].validation = parseInt(validationTableA[0].validation);
-      validationSubTableA = validationSubTableA.map( sa => ({...sa, validation:parseInt(sa.validation)}));
+      validationSubTableA = validationSubTableA.map((sa) => ({
+        ...sa,
+        validation: parseInt(sa.validation)
+      }));
 
-      validationTableA.map(ta => {
+      validationTableA.map((ta) => {
         ta['dinamicList'] = [
-          ...validationSubTableA.filter(sa => {
-            return sa.sectionId == ta.sectionId
+          ...validationSubTableA.filter((sa) => {
+            return sa.sectionId == ta.sectionId;
           })
-        ]
-      })
+        ];
+      });
 
       validationMelia.map((me) => {
         me['subSections'] = [
@@ -1406,7 +1408,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
                   AND sec.description='financial-resources/budget'
       			AND subsec.description = 'geography-breakdown';
       `,
-      validationActivityBreakdownSQL = `
+        validationActivityBreakdownSQL = `
       select sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  case
       	when
       		( select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
@@ -1443,13 +1445,23 @@ export class MetaDataHandler extends InitiativeStageHandler {
       			AND subsec.description = 'activity-breakdown';
       `;
 
-      let validationGeographyBreakdown = await this.queryRunner.query(validationGeographyBreakdownSQL);
-      let validationActivityBreakdown = await this.queryRunner.query(validationActivityBreakdownSQL);
+      let validationGeographyBreakdown = await this.queryRunner.query(
+        validationGeographyBreakdownSQL
+      );
+      let validationActivityBreakdown = await this.queryRunner.query(
+        validationActivityBreakdownSQL
+      );
 
-      validationGeographyBreakdown[0].validation = parseInt(validationGeographyBreakdown[0].validation);
-      validationActivityBreakdown[0].validation = parseInt(validationActivityBreakdown[0].validation);
+      validationGeographyBreakdown[0].validation = parseInt(
+        validationGeographyBreakdown[0].validation
+      );
+      validationActivityBreakdown[0].validation = parseInt(
+        validationActivityBreakdown[0].validation
+      );
 
-      financialResources[0].validation *= validationGeographyBreakdown[0].validation * validationActivityBreakdown[0].validation;
+      financialResources[0].validation *=
+        validationGeographyBreakdown[0].validation *
+        validationActivityBreakdown[0].validation;
 
       financialResources.map((fin) => {
         fin['subSections'] = [
@@ -1726,22 +1738,28 @@ export class MetaDataHandler extends InitiativeStageHandler {
        AND sec.stageId= ini.stageId
        AND sec.description='work-package-research-plans-and-tocs';`;
 
-      let generalWorkPackages = await this.queryRunner.query(generalWorkPackagesQuery);
-      let {fullInitiativeToc, workPackage} = await this.validationSubsectionWorkPackages();
+      let generalWorkPackages = await this.queryRunner.query(
+        generalWorkPackagesQuery
+      );
+      let {fullInitiativeToc, workPackage} =
+        await this.validationSubsectionWorkPackages();
+      if (workPackage.length) {
+        generalWorkPackages[0].validation *=
+          workPackage[0].validation * fullInitiativeToc[0].validation;
+        generalWorkPackages.map((con) => {
+          con['subSections'] = [
+            workPackage.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            }),
+            fullInitiativeToc.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            })
+          ];
+        });
+      } else {
+        generalWorkPackages[0].validation = 1;
+      }
 
-      generalWorkPackages[0].validation *= workPackage[0].validation * fullInitiativeToc[0].validation;
-      generalWorkPackages.map((con) => {
-        con['subSections'] = [
-          workPackage.find((cha) => {
-            return (cha.sectionId = con.sectionId);
-          }),
-          fullInitiativeToc.find((cha) => {
-            return (cha.sectionId = con.sectionId);
-          })
-        ];
-      })
-
-      
       return generalWorkPackages[0];
     } catch (error) {
       throw new BaseError(
@@ -1753,9 +1771,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
     }
   }
 
-  async validationSubsectionWorkPackages(){
-    try{
-        let validationSubToc = `
+  async validationSubsectionWorkPackages() {
+    try {
+      let validationSubToc = `
         SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
 	case when (select count(t.id) - sum(if(REGEXP_REPLACE(REGEXP_REPLACE(t.narrative,'<(\/?p)>',' '),'<([^>]+)>','') = '' or t.narrative= null, 0, 1))
                         from tocs t
@@ -1839,16 +1857,22 @@ WHERE ini.id = ${this.initvStgId_}
       }
 
       let fullInitiativeToc = await this.queryRunner.query(validationSubToc);
-      if(fullInitiativeToc.length > 0){
-        fullInitiativeToc[0].validation = parseInt(fullInitiativeToc[0]?.validation);
-      }else{
+      if (fullInitiativeToc.length > 0) {
+        fullInitiativeToc[0].validation = parseInt(
+          fullInitiativeToc[0]?.validation
+        );
+      } else {
         fullInitiativeToc = [];
       }
 
-      return {workPackage,
-              fullInitiativeToc};
-    }catch (error) {
-      throw new BaseError('Get validations Subsection Context', 400, error.message, false);
+      return {workPackage, fullInitiativeToc};
+    } catch (error) {
+      throw new BaseError(
+        'Get validations Subsection Context',
+        400,
+        error.message,
+        false
+      );
     }
   }
 
@@ -2204,8 +2228,7 @@ WHERE ini.id = ${this.initvStgId_}
        OR pb.notes= ''
        OR if(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
        char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
-       OR pb.depth_scale_id IS NULL
-       OR pb.depth_scale_id= ''
+       OR (SELECT count(pbds.id) FROM projection_benefits_depth_scales pbds WHERE pbds.projectionBenefitsId = pb.id AND pbds.active > 0) = 0
          OR pb.probability_id IS NULL
        OR pb.probability_id= ''
        OR (select
@@ -2238,7 +2261,7 @@ WHERE ini.id = ${this.initvStgId_}
          AND pb.active > 0
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
-         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id `;
+         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id, pb.id`;
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
       );
