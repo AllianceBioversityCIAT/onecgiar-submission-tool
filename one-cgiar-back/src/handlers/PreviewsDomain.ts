@@ -61,8 +61,9 @@ export class PreviewsDomain {
     try {
       // retrieve preview projected benefits
       const impactAreasQuery = `
-            SELECT p.id,p.impact_area_id,p.impact_area_name
+            SELECT p.id,p.impact_area_id,cia.name as impact_area_name
               FROM projection_benefits p
+              LEFT JOIN clarisa_impact_areas cia ON cia.id = p.impact_area_id 
              WHERE p.initvStgId = ${initiativeId}
                AND p.active > 0
              ORDER BY p.impact_area_id asc;   
