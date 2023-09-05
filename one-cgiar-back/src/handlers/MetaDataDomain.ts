@@ -393,7 +393,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
           `;
 
           let workPackageArr = await this.queryRunner.query(validationWPSQL);
-
           if (workPackageArr.length > 0) {
             workPackage['validation'] = parseInt(workPackageArr[0].validation);
             workPackage['description'] = workPackageArr[0].description;
@@ -1744,19 +1743,22 @@ export class MetaDataHandler extends InitiativeStageHandler {
       );
       let {fullInitiativeToc, workPackage} =
         await this.validationSubsectionWorkPackages();
-
-      generalWorkPackages[0].validation *=
-        workPackage[0].validation * fullInitiativeToc[0].validation;
-      generalWorkPackages.map((con) => {
-        con['subSections'] = [
-          workPackage.find((cha) => {
-            return (cha.sectionId = con.sectionId);
-          }),
-          fullInitiativeToc.find((cha) => {
-            return (cha.sectionId = con.sectionId);
-          })
-        ];
-      });
+      if (workPackage.length) {
+        generalWorkPackages[0].validation *=
+          workPackage[0].validation * fullInitiativeToc[0].validation;
+        generalWorkPackages.map((con) => {
+          con['subSections'] = [
+            workPackage.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            }),
+            fullInitiativeToc.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            })
+          ];
+        });
+      } else {
+        generalWorkPackages[0].validation = 1;
+      }
 
       return generalWorkPackages[0];
     } catch (error) {
