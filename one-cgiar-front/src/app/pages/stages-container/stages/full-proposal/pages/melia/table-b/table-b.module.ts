@@ -7,7 +7,6 @@ import { UtilsModule } from '../../../../../../../shared/components/utils/utils.
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 import { EoiCardModule } from '../../context/measurable-objectives/components/eoi-card/eoi-card.module';
-import { ToggleFormatDateModule } from '../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -18,8 +17,7 @@ import { ToggleFormatDateModule } from '../../../../../../../shared/components/t
     UtilsModule,
     IbdAngularComponentsModule,
     EditTocButtonModule,
-    EoiCardModule,
-    ToggleFormatDateModule
+    EoiCardModule
   ]
 })
 export class TableBModule { }

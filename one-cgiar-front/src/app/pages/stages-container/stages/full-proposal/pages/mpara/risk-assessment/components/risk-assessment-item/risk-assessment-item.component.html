@@ -5,11 +5,11 @@
         </div>
         <br *ngIf="this.riskAssessment.add_by_user">
         <div class="risk_name" *ngIf="!riskTitleEditableIsActive">
-            <!-- {{this.riskAssessment.risks_achieving_impact}} -->
-            <div class="risks_theme" *ngIf="this.riskAssessment.risks_achieving_impact">Risk theme: <strong>{{this.riskAssessment.risks_theme || 'No theme'}}</strong> </div>
+            {{this.riskAssessment.risks_achieving_impact}}
+            <h5>Risk theme: <strong>{{this.riskAssessment.risks_theme}}</strong> </h5>
         </div>
         <div class="edit_button" *ngIf="!riskTitleEditableIsActive && !this._initiativesService?.initiative.readonly">
-            <app-button-edit-or-delete [ngCustomStyle]="{'margin-top':'8px'}" (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
+            <app-button-edit-or-delete (action)="activeRiskTitleEditable()" ></app-button-edit-or-delete>
         </div>
 
 
@@ -18,44 +18,48 @@
                 <div class="button_option ibd-shadow-3" (click)="this.selectList = true; this.riskAssessment.add_by_user = false">Choose risk</div>
             </div>
             <div  class="input">
-                <div class="button_option ibd-shadow-3" (click)="this.selectList = false; this.riskAssessment.add_by_user = true;">Create risk</div>
+                <div class="button_option ibd-shadow-3" (click)="this.selectList = false; this.riskAssessment.add_by_user = true">Create risk</div>
             </div>
         </div>
 
 
-        <div *ngIf="this.risksList.length" [hidden]="selectList !== true" class="animate__animated animate__fadeInLeftBig">
-            
-            
-            <ibdc-select-ngmodel-no-repeat (select)="mapTheme($event)" [options]="
-            {
-             required:true,
-             inputTitle:'Select Risk',
-             item: this.riskAssessment,   
-             itemName:'risks_achieving_impact',
-             selectList: this.risksList,
-             itemId:'risk_id',
-             frontendSearchAttribute:'risks_achieving_impact',
-             readOnlyVariable: this._initiativesService.initiative.readonly
-            }"></ibdc-select-ngmodel-no-repeat>
-
-            <!-- <ibdc-select-field
+        <div *ngIf="selectList === true" class="animate__animated animate__fadeInLeftBig">
+            <br>
+            <ibdc-select-field
             [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"  frontendSearchAttribute="risks_achieving_impact" inputTitle="Select Risk" selectableListAtributteName = 'risks_achieving_impact'
             [selectableList]="this.risksList"
-          ></ibdc-select-field> -->
+          ></ibdc-select-field>
         </div>
 
 
+        <!-- <ibdc-select *ngIf="selectList === true" [options]="
+        {
+         required:true,
+         inputTitle:'Select Risk',
+         form:riskAssessmentForm,
+         formControlId:'idBd',
+         selectItemId:'idBd',
+         formControlName:'risks_achieving_impact',
+         selectItemName:'risks_achieving_impact',
+         frontendSearchAttribute:'risks_achieving_impact',
+         readOnlyVariable: this._initiativesService.initiative.readonly,
+         selectList: this.risksList
+        }">
+        ></ibdc-select> -->
 
-        <div class="row animate__animated  animate__fadeInRightBig" style="margin-top: 20px;" *ngIf="selectList === false">
+        <div class="row animate__animated  animate__fadeInRightBig" *ngIf="selectList === false">
+            <div class="col-12">
+                <br>
+            </div>
             <div class="col-6">
                 <div class="ibdc-input-field-container">
-                    <ibdc-input-field inputTitle="Risks achieving impact" [rows]="1" [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact_created'"></ibdc-input-field>
+                    <ibdc-input-field inputTitle="Risks achieving impact" [rows]="1" [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_achieving_impact'"></ibdc-input-field>
                 </div>
             </div>
             <div class="col-6">
                 <div class="ibdc-input-field-container">
                     <ibdc-select-field
-                       [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_theme_created'" inputTitle="Risk theme" selectableListAtributteName = 'categoryName'
+                       [objectItem]="this.riskAssessment"  [objectAtributteName]="'risks_theme'" inputTitle="Risk theme" selectableListAtributteName = 'categoryName'
                        [selectableList]="[{id:1,categoryName:'Research'},{id:2,categoryName:'Research support'}]"
                      ></ibdc-select-field>
                  </div>
@@ -63,7 +67,7 @@
         </div>
 
 
-       
+        <br>
 
 
 
@@ -97,18 +101,21 @@
           ></ibdc-select-field>
         </div>
         <div class="col-6 margin-top-15">
-            <!-- <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text> -->
-            <div class="risks_score" *ngIf="this.riskAssessment.risks_achieving_impact">Risk Score: <strong>{{(this.riskAssessment.likelihood * this.riskAssessment.impact)}}</strong> </div>
+            <ibdc-simple-text [options]="{inputTitle:'Risk Score', value:(this.riskAssessment.likelihood * this.riskAssessment.impact)}"></ibdc-simple-text>
         </div>
-        <div class="col-6"></div>        
+        <div class="col-6"></div>
         <div class="col-12">
-            <hr style="margin-top: 20px;">
-            <div class="ibdc_basic_title" style="margin-bottom: 20px;">Proposed mitigation measurements</div>
+            <br>
+            <hr>
+            <br>
+        </div>
+        
+        <div class="col-12">
+            <div class="ibdc_basic_title">Opportunities</div>
             <div *ngFor="let opportunity of this.riskAssessment.opportinities">
                 <app-opportunity-item [hidden]="opportunity.active === false" [opportunity]="opportunity" ></app-opportunity-item>
             </div>
-            <app-add-button *ngIf="!this._initiativesService?.initiative.readonly" name="Add mitigation" (click)="AddOpportunity()"></app-add-button>
-            <!-- <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add mitigation" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button> -->
+            <button *ngIf="!this._initiativesService?.initiative.readonly" pButton type="button" label="Add opportunity" icon="pi pi-plus-circle"  (click)="AddOpportunity()"></button>
 
         </div>
         

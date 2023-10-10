@@ -1,16 +1,16 @@
 .item_top_five {
-    // background-color: #ffffff;
-    // border: 1px solid #f0f0f0;
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
     border-radius: 10px;
+    padding: 15px 50px 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
     overflow: hidden;
     margin-bottom: 10px;
-    // box-shadow: 0 3px 6px #bbbbbb40, 0 3px 6px #bbbbbb40;  
+    box-shadow: 0 3px 6px #bbbbbb40, 0 3px 6px #bbbbbb40;  
     .txt_area_container{
-      position: relative;
         width: 70%;
     }
   
@@ -21,7 +21,7 @@
       justify-content: center;
       align-items: center;
       padding: 6px 10px;
-      border-radius: 0px 5px 0px 5px;
+      border-radius: 0px 0px 0px 5px;
       cursor: pointer;
       position: absolute;
       top: 0;

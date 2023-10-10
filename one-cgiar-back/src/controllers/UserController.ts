@@ -8,7 +8,6 @@ import {HttpStatusCode} from '../interfaces/Constants';
 import {ResponseHandler} from '../handlers/Response';
 import {EntityNotFoundError} from 'typeorm/error/EntityNotFoundError';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
-import {InitiativeHandler} from '../handlers/InitiativesDomain';
 
 // get all users
 export const getUsers = async (
@@ -256,17 +255,18 @@ export const createUsers = async (req: Request, res: Response) => {
 // update new user
 export const updateUser = async (req: Request, res: Response) => {
   let user;
-  const {first_name, last_name, email, password, is_active, id} = req.body;
+  const {id} = req.params;
+  const {firstname, lastname, email, password, roles, is_cgiar} = req.body;
 
   const userRepository = getRepository(Users);
   try {
     user = await userRepository.findOne(id);
-    user.first_name = first_name;
-    user.last_name = last_name;
+    user.firstname = firstname;
+    user.lastname = lastname;
     user.email = email;
-    user.is_cgiar = /cgiar.org/.test(email);
-    user.password = password > 7 && !user.is_cgiar?password:user.password;
-    user.is_active = is_active;
+    user.password = password;
+    user.roles = roles;
+    user.is_cgiar = is_cgiar;
 
     const validationOpt = {validationError: {target: false, value: false}};
     const errors = await validate(user, validationOpt);
@@ -274,7 +274,7 @@ export const updateUser = async (req: Request, res: Response) => {
       return res.status(400).json(errors);
     }
 
-    if (!user.is_cgiar && password > 8) {
+    if (!is_cgiar) {
       user.hashPassword();
     }
 
@@ -358,36 +358,3 @@ export async function removeUser(req: Request, res: Response) {
     return error;
   }
 }
-
-// get users by initiatives
-export const getUsersByInitiatives = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  const initiativeshandler = new InitiativeHandler();
-
-  try {
-    const usersByInitiativesList =
-      await initiativeshandler.getUsersByInitiativesList();
-    
-
-    return res.json({
-      data: usersByInitiativesList,
-      msg: 'Users by initiatives list'
-    });
-  } catch (error) {
-    console.log(error);
-    if (
-      error instanceof QueryFailedError ||
-      error instanceof EntityNotFoundError
-    ) {
-      new BaseError(
-        'Bad Request',
-        HttpStatusCode.BAD_REQUEST,
-        error.message,
-        true
-      );
-    }
-    return res.status(404).json({msg: 'Something went wrong', data: error});
-  }
-};

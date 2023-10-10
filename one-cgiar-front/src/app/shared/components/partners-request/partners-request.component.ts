@@ -4,7 +4,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { InitiativesService } from '../../services/initiatives.service';
 import { InteractionsService } from '../../services/interactions.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-partners-request',
@@ -39,14 +38,13 @@ export class PartnersRequestComponent implements OnInit {
     public _initiativesService:InitiativesService,
     private spinnerService: NgxSpinnerService,
     private _interactionsService:InteractionsService,
-    public _authService:AuthService,
     private dialogRef: MatDialogRef<PartnersRequestComponent>
   ) { 
     this.partnersRequestForm = new FormGroup({
 
       name: new FormControl(null, Validators.required),
       acronym: new FormControl(null),
-      websiteLink: new FormControl(null, Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/)),
+      websiteLink: new FormControl(null, Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/)),
       institutionTypeCode: new FormControl(null, Validators.required),
       hqCountryIso: new FormControl(null, Validators.required),
       externalUserMail: new FormControl(null),
@@ -102,14 +100,10 @@ export class PartnersRequestComponent implements OnInit {
     let userData:any= JSON.parse(localStorage.getItem('user')) ;
     let commentArray = [
       'From: Submission Tool',
-      `Initiative ID: ${this._initiativesService.initiative.id} - ${this._initiativesService.initiative.name} \n`,
+      `Initiative ID: ${this._initiativesService?.initiative.official_code} \n`,
       // `InitiativeName: ${this.conceptInfo?.conceptName}`,
       `Stage: ${this._initiativesService?.initiative.stageName} \n`,
-      `Section: Key Partners`,
-      `User Id: ${JSON.parse(localStorage.getItem('user'))?.id}`,
-      `Initiative role: ${this._initiativesService?.initiative.userRoleName || 'No role'}`,
-      `Initiative status: ${this._initiativesService?.initiative.status || 'No status'}`,
-      `App role: ${this._authService?.lsUserRoles?.name}`
+      `Section: Key Partners`
     ]
     let result='';
     commentArray.forEach(text => {

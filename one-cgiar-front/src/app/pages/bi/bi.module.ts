@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { BiRoutingModule } from './bi-routing.module';
 import { BiComponent } from './bi.component';
-import { FooterModule } from '@app/shared/components/footer/footer.module';
+
 
 @NgModule({
   declarations: [BiComponent],
   exports: [BiComponent],
-  imports: [CommonModule, BiRoutingModule, FooterModule],
+  imports: [
+    CommonModule,
+    BiRoutingModule
+  ]
 })
-export class BiModule {}
+export class BiModule { }

@@ -15,6 +15,7 @@ export class ManagementPlanComponent implements OnInit {
   templatesUrlBase = environment.templatesUrlBase;
   managementPlanForm: FormGroup;
   showForm = false;
+  extraValidation = false;
   data = {
     id : null,
     management_plan : "",
@@ -22,7 +23,6 @@ export class ManagementPlanComponent implements OnInit {
     section : "management-plan",
     updateFiles : []
   };
-  extraValidation = false;
 
   constructor(
     public _initiativesService:InitiativesService,
@@ -71,12 +71,14 @@ export class ManagementPlanComponent implements OnInit {
       this._interactionsService.successMessage('Management plan has been saved'):
       this._interactionsService.warningMessage('Management plan has been saved, but there are incomplete fields')
     })
+
+    
   }
 
   formChanges(){
     this.managementPlanForm.valueChanges.subscribe(resp=>{
       console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.managementPlanForm.get("example").value);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.managementPlanForm.get("example").value, 250);
     })
   }
 

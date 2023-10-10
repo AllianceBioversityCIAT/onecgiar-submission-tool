@@ -25,9 +25,6 @@ export class RiskAssessment extends UpdatedCreatedAt {
   risk_score: number;
 
   @Column({type: 'int'})
-  risk_id: number;
-
-  @Column({type: 'int'})
   manage_plan_risk_id: number;
 
   @Column({type: 'tinyint'})

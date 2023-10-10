@@ -15,7 +15,6 @@ export class MenuDynamicListComponent implements OnInit {
   @Input() customRouterLink:string = '';
   @Input() fieldsCompleted:boolean = false;
   @Input() showTocIcon:boolean = false;
-  @Input() hideCheck:boolean = false;
   @Input() type: "sub-section"|"reports" = "sub-section";
 
   constructor(

@@ -1,104 +1,97 @@
 <app-initiative-status-information></app-initiative-status-information>
 <div class="elements_container animate__animated animate__fadeIn">
     <!-- <div class="platform_backgorund"></div> -->
-
-    <div class="left_menu" #menu>
-        <app-menu class="animate__animated animate__fadeIn"
-            *ngIf="this.initiativesSvc?.initiative?.id && this.roleIdLoaded"></app-menu>
-        <!-- <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
+   
+        <div class="left_menu" #menu>
+            <app-menu class="animate__animated animate__fadeIn" *ngIf="this.initiativesSvc?.initiative?.id"></app-menu>
+            <!-- <div class="open_menu_icon_container" (click)="toggleMenu(menu)">
                 <span class="open_menu_icon material-icons">
                     menu
                 </span>
             </div> -->
-    </div>
-    <!-- [ngStyle]="{'overflow-y': !this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing?'hidden':'scroll'}" -->
-    <div class="right_container {{this._pusherService.validaeFirstUserToEdit()}}" style="overflow-y: scroll;">
-
-        <div class="right_container_content">
-            <div [hidden]="this._pusherService.isTOC" class="no-edit-container"
-                *ngIf="!this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing">
-                <div class="alert  animate__animated  animate__tada">
-                    <div class="icon"><i class="material-icons">lock</i></div>
-                    <div class="description animate__animated animate__delay-2s animate__heartBeat">
-                        You may not edit this section at the moment because someone is working on it. <strong>click
-                            here</strong> to continue.
-                    </div>
-                    <br>
-                    <button pButton type="button" label="Edit"
-                        (click)="this._pusherService.continueEditing = true"></button>
-                </div>
-            </div>
-
-            <div class="capsule-header">
-
-                <div class="inner-capsule ibdc_bg_secondary_color">
-                    <div class="initIdContainer">
-                        <span class="text-description">
-                            Initiative ID:
-                        </span>
-                        <span class="initiative-id">{{this.initiativesSvc.initiative.official_code}}</span>
-                        <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
-                    </div>
-
-                </div>
-
-                <div class="capsule_right_content">
-
-                    <div class="users_online">
-                        <div class="description">
-                            <strong>{{this._pusherService.presenceChannel?.members.count}}</strong> user(s) online on
-                            this section
+        </div>
+        <!-- [ngStyle]="{'overflow-y': !this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing?'hidden':'scroll'}" -->
+        <div class="right_container {{this._pusherService.validaeFirstUserToEdit()}}" style="overflow-y: scroll;">
+            
+            <div class="right_container_content">
+                <div class="no-edit-container" *ngIf="!this._pusherService.validaeFirstUserToEdit() && !this._pusherService.continueEditing">
+                    <div class="alert  animate__animated  animate__tada">
+                        <div class="icon"><i class="material-icons">lock</i></div>
+                        <div class="description animate__animated animate__delay-2s animate__heartBeat">
+                            You may not edit this section at the moment because someone is working on it. <strong>click here</strong> to continue.
                         </div>
-                        <div class="user" [ngClass]="{'firstUser': !i && item.role !='Guest' && item.role}"
-                            *ngFor="let item of this._pusherService.membersList; let i=index">
-                            <div class="index">{{i+1}}</div>
-                            <div class="name"><strong class="nameinitials">{{item['nameinitials']}}</strong>
-                                <strong class="fullName">{{item['name']}}</strong>&nbsp; <span *ngIf="item['role']">{{'
-                                    - '+item['role']}}</span>&nbsp;
-                                <i *ngIf="!i && item.role !='Guest' && item.role" class="material-icons">edit</i>
+                        <br>
+                        <button pButton type="button" label="Edit" (click)="this._pusherService.continueEditing = true"></button>
+                    </div>
+                </div>
+    
+                <div class="capsule-header">
+    
+                    <div class="inner-capsule ibdc_bg_secondary_color">
+                        <div class="initIdContainer">
+                            <span class="text-description">
+                                Initiative ID: 
+                            </span>
+                            <span class="initiative-id">{{this.initiativesSvc.initiative.official_code}}</span>
+                            <!-- <span class="initiative-id">{{this.initiativesSvc.initiative.id}}</span> -->
+                        </div>
+                                          
+                    </div>
+    
+                    <div class="capsule_right_content">
+                       
+                        <div class="users_online">
+                            <div class="description">
+                                <strong>{{this._pusherService.presenceChannel?.members.count}}</strong> user(s) online on this section
+                            </div>
+                            <div class="user" [ngClass]="{'firstUser': !i && item.role !='Guest' && item.role}" *ngFor="let item of this._pusherService.membersList; let i=index">
+                                <div class="index">{{i+1}}</div>
+                                <div class="name"><strong class="nameinitials">{{item['nameinitials']}}</strong><strong class="fullName">{{item['name']}}</strong>&nbsp; <span *ngIf="item['role']">{{' - '+item['role']}}</span>&nbsp;<i *ngIf="!i && item.role !='Guest' && item.role" class="material-icons">edit</i></div>                    
                             </div>
                         </div>
+    
+                        <div class="manage_access_button_container">
+                            <button class="manage-button" mat-raised-button (click)="openDialog()" *ngIf="this._dataControlService.isAdmin">
+                                Manage access
+                                <mat-icon>settings</mat-icon>
+                            </button>
+                        </div>
+    
                     </div>
-
-                    <div class="manage_access_button_container">
-                        <button class="manage-button" mat-raised-button (click)="openDialog()"
-                            *ngIf="this._dataControlService.isAdmin">
-                            Manage access
-                            <mat-icon>settings</mat-icon>
-                        </button>
-                    </div>
-
+    
+    
+    
                 </div>
-
-
-
-            </div>
-
-            <div class="card-container">
-
-                <div class="initiative-identification ibdc_bg_secondary_color">
-                    <app-section-breadcrumb
-                        *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;"
-                        [sectionsList]="sectionsList"></app-section-breadcrumb>
-                    <!-- <div>
+                
+                <div class="card-container">
+    
+                    <div class="initiative-identification ibdc_bg_secondary_color">
+                        <app-section-breadcrumb *ngIf="this._dataControlService.userMenu.length && this._dataControlService.impactStatementsMaped;" [sectionsList]="sectionsList"></app-section-breadcrumb>              
+                        <!-- <div>
                             
                             <span style="margin:0px 5px;" *ngIf="this._dataControlService.breadcrumbItemTwo"> / </span>
                             <span class="initiative-id" *ngIf="this._dataControlService.breadcrumbItemTwo">{{this._dataControlService.breadcrumbItemTwo}}</span>
                         </div> -->
-                </div>
-
-                <div style="overflow: hidden; position: relative; min-height: calc(100vh - 180px);">
-                    <!-- <div >
+                    </div>
+    
+                    <div style="overflow: hidden; position: relative; min-height: calc(100vh - 180px);">
+                        <!-- <div >
                             <h1 *ngIf="this._pusherService.validaeFirstUserToEdit()">Soy el primero</h1>
                         </div> -->
-                    <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId">
-                    </router-outlet>
+                        <router-outlet *ngIf="this.initiativesSvc.initiative.id && this.initiativesSvc.initiative.stageId"></router-outlet>
+                    </div>
+       
                 </div>
-
             </div>
+
+            <!-- <div class="footer">
+                <app-footer></app-footer>
+            </div> -->
+
         </div>
-    </div>
-
-
+  
+    
 </div>
-<app-footer></app-footer>
+
+<!-- <app-footer></app-footer> -->
+

@@ -1,7 +1,7 @@
 <div [ngSwitch]="this._initiativesService.initiative.status">
 
     <div *ngSwitchCase="'Approved'" class="approved">
-      <strong>This initiative is currently closed and cannot be edited.</strong>   
+        Initiative <strong>{{this._initiativesService.initiative.name}}</strong> approved
     </div>
 
     <div *ngSwitchCase="false">

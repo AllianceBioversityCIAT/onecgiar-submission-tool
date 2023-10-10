@@ -83,7 +83,7 @@ router.get(
  *! TOC INTEGRATION
  */
 router.get(
-  '/package/:stageId([0-9]+)/:initiativeId([0-9]+)/:wrkPkgId([0-9]+)',
+  '/package/:wrkPkgId([0-9]+)',
   [checkJwt, checkRole('packages', 'readOwn')],
   stagefull.getWorkPackage
 );
@@ -197,24 +197,6 @@ router.get(
   '/participatory-design/isdc-responses/:initiativeId([0-9]+)/:stageId([0-9]+)',
   [checkJwt, checkRole('initiatives', 'readOwn')],
   stagefull.getISDCResponses
-);
-
-/**
- ** GET ISDC RESPONSES GENERAL STATUS 
- */
-router.get(
-  '/isdc-responses/status/:stageId([0-9]+)',
-  [checkJwt, checkRole('initiatives', 'readOwn')],
-  stagefull.getISDCResponsesStatus
-);
-
-/**
- ** GET ISDC RESPONSES GENERAL STATUS 
- */
- router.get(
-  '/toc-responses/reporting/:stageId([0-9]+)',
-  [checkJwt, checkRole('initiatives', 'readOwn')],
-  stagefull.getTOCResponsesReporting
 );
 
 /**
@@ -333,16 +315,6 @@ router.get(
   '/eoi/:stageId([0-9]+)/:initiativeId([0-9]+)',
   [checkJwt, checkRole('initiatives', 'updateOwn')],
   stagefull.getEndofInitiativeOutcome
-);
-
-/**
- ** GET END OF INITIATIVE OUTCOMES FROM TOC TOOL
- *! TOC INTEGRATION
- */
- router.get(
-  '/eoi/all/initiatives',
-  [checkJwt, checkRole('initiatives', 'updateOwn')],
-  stagefull.getAllEndofInitiativeOutcome
 );
 /**
  ** POST INITIATIVES APPROVAL

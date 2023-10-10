@@ -24,7 +24,7 @@ export class IsReportsComponent implements OnInit {
   }
 
   getPreviewPartners(){
-    this._initiativesService.getPreviewPartners(this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getPreviewPartners(this._initiativesService.initiative.id,3).subscribe(resp=>{
       this.previewPartners = resp.response.previewPartners
       if (!this.previewPartners.length) this.notArePreviewPartners = true;
       console.log(this.previewPartners);

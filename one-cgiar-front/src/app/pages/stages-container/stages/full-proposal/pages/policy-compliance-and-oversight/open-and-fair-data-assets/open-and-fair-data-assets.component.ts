@@ -67,7 +67,8 @@ export class OpenAndFairDataAssetsComponent implements OnInit {
   formChanges(){
     this.sectionForm.valueChanges.subscribe(resp=>{
       console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("open_fair_data_details").value);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("open_fair_data_details").value, 250);
     })
   }
+
 }

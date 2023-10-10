@@ -45,47 +45,6 @@ export class InitiativeHandler extends InitiativeStageHandler {
     }
   }
 
-  /** Get users by initiatives and roles */
-  async getUsersByInitiativesList() {
-    let getUsersByInitiatives;
-
-    try {
-      getUsersByInitiatives = await this.queryRunner.query(
-        `select i.official_code as official_code, 
-               i.name as initiative_name, 
-                 CONCAT(u.first_name," ",u.last_name) as  user_name,
-                 u.email,
-                 r.name as initRole, 
-                 r2.name as generalRole, 
-                 u.last_login, 
-                 i.id as initId, 
-                 ibs.stageId 
-          from users u
-            inner join roles_by_users rbu on u.id = rbu.user_id
-            left join initiatives_by_users ibu on ibu.userId = u.id 
-            left join roles r on ibu.roleId = r.id
-            left join roles r2 on rbu.role_id  = r2.id
-            left join initiatives i on ibu.initiativeId =i.id
-            left join initiatives_by_stages ibs on ibs.initiativeId = i.id
-          where (ibs.active > 0 
-            or ibs.active is null)
-            and 
-            (ibu.active > 0
-            or ibu.active is null)
-          order by i.id;`
-      );
-
-      return getUsersByInitiatives;
-    } catch (error) {
-      throw new BaseError(
-        'Get users by initiatives list',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
   /** Get existing initiatives without stage */
   async getInitiativesList() {
     let allInitiatives;
@@ -101,7 +60,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
     }
   }
   /** Get all initiatives for main table */
-  async getAllInitiatives(userId) {
+  async getAllInitiatives() {
     let allInitiatives,
       stagesInitiatives,
       initvActiveSQL = ` 
@@ -117,13 +76,12 @@ export class InitiativeHandler extends InitiativeStageHandler {
       (SELECT action_area_description FROM general_information WHERE initvStgId = initvStg.id) AS action_area_description,
       initvStg.active AS active,
       initvStg.stageId AS stageId,
-      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description,
-      (select if(count(ibu.id) > 0, true, false) from initiatives_by_users ibu where ibu.initiativeId  = initiative.id and ibu.userId = ${userId} and ibu.active > 0) as inInit
+      (SELECT description FROM stages WHERE id = initvStg.stageId) AS description
       FROM
           initiatives initiative
       LEFT JOIN initiatives_by_stages initvStg 
       ON initvStg.initiativeId = initiative.id
-      LEFT JOIN stages stage  
+      LEFT JOIN stages stage 
       ON stage.id = initvStg.stageId
       WHERE  initvStg.active = 1
       ORDER BY id
@@ -234,8 +192,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
                 initiatives_by_users initvUsr
             LEFT JOIN users users ON users.id = initvUsr.userId
             WHERE
-                initiativeId = ${initiativeId} AND
-                initvUsr.active = 1;
+                initiativeId = ${initiativeId};
     `;
     const users = await this.queryRunner.query(querySql);
     return users;
@@ -267,8 +224,8 @@ export class InitiativeHandler extends InitiativeStageHandler {
 
   async requestProjectedProbabilities() {
     const querySql = `
-        SELECT id as probabilityID, name as probabilityName, description as probabilityDescription
-        FROM  clarisa_projected_probabilities
+        SELECT * 
+        FROM  projected_probabilities
     `;
     const projectedData = await this.queryRunner.query(querySql);
     return projectedData;

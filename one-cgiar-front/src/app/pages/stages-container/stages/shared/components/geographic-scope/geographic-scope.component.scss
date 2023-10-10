@@ -25,27 +25,3 @@ form{
      text-align: center;
      font-size: 1.2em;
  }
-
- .disabled {
-     &::after{
-         content: '';
-         z-index: 4;
-         position: absolute;
-         width: 95%;
-         height: 100%;
-         top: 0;
-         border-radius: 5px;
-     }
-
-     & > p{
-         color: gray !important;
-     }
- }
-
- :host ::ng-deep .disabled div ibdc-select-multiple span div div div a p strong{
-    color: gray !important;
-}
-
-:host ::ng-deep .disabled div ibdc-select-multiple span div div div div p strong{
-    color: gray !important;
-}

@@ -12,7 +12,6 @@ import { StepTwoComponent } from './components/step-two/step-two.component';
 import {ButtonModule} from 'primeng/button';
 import { RiskAssessmentItemModule } from './components/risk-assessment-item/risk-assessment-item.module';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
-import { CollapsibleContainerModule } from '../../../../../../../shared/components/collapsible-container/collapsible-container.module';
 
 @NgModule({
   declarations: [RiskAssessmentComponent, StepOneComponent, StepTwoComponent],
@@ -24,8 +23,7 @@ import { CollapsibleContainerModule } from '../../../../../../../shared/componen
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
-    RiskAssessmentItemModule,
-    CollapsibleContainerModule
+    RiskAssessmentItemModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -3,7 +3,6 @@ import { MenuService } from '../../services/menu.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UtilsService } from '../../../../services/utils.service';
-import { DataControlService } from '../../../../services/data-control.service';
 
 @Component({
   selector: 'app-menu-section',
@@ -26,8 +25,7 @@ export class MenuSectionComponent implements OnInit {
   @Input() sectionId: number = null;
   constructor(
     public router: Router,
-    public _utilsService:UtilsService,
-    public _dataControlService: DataControlService
+    public _utilsService:UtilsService
   ) { }
 
   ngOnInit(): void {

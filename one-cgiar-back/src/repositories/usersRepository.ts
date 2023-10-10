@@ -25,6 +25,7 @@ export class UsersRepository extends Repository<Users> {
 
       typeof userInitRole === 'undefined' ? [] : userInitRole;
       if (userInitRole.length > 0) {
+        console.log(userInitRole);
 
         userInfo['userInitRole'] = userInitRole.filter((userInitRole) => {
           return userInfo.id === userInitRole.userId;

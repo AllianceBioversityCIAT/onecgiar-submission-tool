@@ -9,7 +9,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
+
 //? Components
+import { InitTableComponent } from './shared/components/init-table/init-table.component';
+import { HomeComponent } from './pages/home/home.component';
 import { CoordinatorModalComponent } from './shared/components/coordinator-modal/coordinator-modal.component';
 import { AddCoordinatorModalComponent } from './shared/components/add-coordinator-modal/add-coordinator-modal.component';
 import { CoordinatorFilterPipe } from './shared/pipes/coordinator-filter.pipe';
@@ -39,21 +42,15 @@ import { SidebarModule } from './shared/components/sidebar/sidebar.module';
 import { HttpRequestInterceptor } from './shared/interceptors/http-request.interceptor';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { AppErrorHandler } from './shared/utils/app-error-handler';
-import { GoogleAnalyticsModule } from './shared/components/google-analytics/google-analytics.module';
-import { SearchByTextPipe } from './shared/pipes/search-by-text.pipe';
-import { MenuSearchComponent } from './shared/components/menu-search/menu-search.component';
-import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
-import { ContactModalModule } from './shared/components/contact-modal/contact-modal.module';
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
+    InitTableComponent,
     CoordinatorModalComponent,
     AddCoordinatorModalComponent,
     CoordinatorFilterPipe,
     CreateUserModalComponent,
-    SearchByTextPipe,
-    MenuSearchPipe,
-    MenuSearchComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -66,7 +63,6 @@ import { ContactModalModule } from './shared/components/contact-modal/contact-mo
     FormsModule,
     SweetAlert2Module.forRoot(),
     QuillModule.forRoot(),
-    GoogleAnalyticsModule,
     // NgxHotjarModule.forRoot(environment.hotjar),
     // NgxHotjarRouterModule,
     MaterialModule,
@@ -83,19 +79,14 @@ import { ContactModalModule } from './shared/components/contact-modal/contact-mo
     HeaderModule,
     NavbarModule,
     DevTagModule,
-    NgxSpinnerModule,
-    ContactModalModule,
+    NgxSpinnerModule
   ],
   providers: [
     CurrencyPipe,
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpRequestInterceptor,
-      multi: true,
-    },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

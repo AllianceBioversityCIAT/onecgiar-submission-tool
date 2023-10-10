@@ -16,7 +16,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class CollapsibleContainerComponent implements OnInit {
   @Input() collapse:boolean = true;
-  @Input() contentStyles = {};
   constructor() { }
 
   ngOnInit(): void {

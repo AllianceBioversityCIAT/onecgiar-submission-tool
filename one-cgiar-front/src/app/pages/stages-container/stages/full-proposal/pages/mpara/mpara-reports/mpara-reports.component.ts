@@ -45,37 +45,35 @@ export class MparaReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Risk assessment preview');
-    this._initiativesService.getPreviewRiskAssessment(this._initiativesService.initiative.id).subscribe(resp=>{
-      // console.log(resp.response?.previewRiskAssessment?.managePlan?.riskassessment);
+    this._initiativesService.getPreviewRiskAssessment(this._initiativesService.initiative.id,3).subscribe(resp=>{
+      console.log(resp.response?.previewRiskAssessment?.managePlan?.riskassessment);
       if (!resp.response?.previewRiskAssessment?.managePlan?.riskassessment) return;
-      this.objectsTolist(resp.response?.previewRiskAssessment?.managePlan?.riskassessment);
+      this.objectsTolist(resp.response.previewRiskAssessment.managePlan.riskassessment);
     })
   }
 
   objectsTolist(previewList) {
-    // console.log(previewList)
     let i = 0;
     previewList?.map((riskA) => {
-      // console.log(riskA)
       let celIndex = i;
-      this.previewListCoverted.push(
-        { 
-          a: riskA?.risks_achieving_impact, 
-          b: riskA?.description_risk, 
-          c:  riskA?.likelihood, 
-          d: riskA?.impact, 
-          e: riskA?.risk_score, 
-          f: Array.isArray(riskA?.opportunities) ? riskA?.opportunities[0]?.opportunities_description : []
-        });
+      this.previewListCoverted.push({ a: riskA.risks_achieving_impact, b: riskA.description_risk, c:  riskA.likelihood, d: riskA.impact, e: riskA.risk_score, f:  riskA?.opportinities[0]?.opportunities_description});
       i++;
       
-      riskA?.opportunities?.map((opportiny, index) => {
+      riskA?.opportinities?.map((opportiny, index) => {
         if (index == 0) return;
         i++;
-        this.previewListCoverted.push({f: opportiny?.opportunities_description || ''});
+        this.previewListCoverted.push({ b: '', c: '', d: '', e: '', f: opportiny?.opportunities_description || ''});
       })
 
-      if (riskA?.opportunities?.length >= 2) this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
+      // if (!impactArea?.impactIndicators?.dimensions.length) {
+      //   i++;
+      //   this.previewListCoverted.push({ a: '', b: '', c: impactArea?.impactIndicators?.probability_name, rowspan:1 });
+      // }
+      // console.log('celIndex ',celIndex);
+      // console.log(this.previewListCoverted[celIndex]);
+      // console.log(this.previewListCoverted);
+      // console.log("------------------------------");
+      if (riskA?.opportinities.length >= 2) this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
       // this.previewListCoverted[celIndex].rowspan = (i + 1) - (celIndex+1) ;
       this.mergeList.push(
         { s: { r: celIndex+1, c: 0 }, e: { r: i, c: 0 } },

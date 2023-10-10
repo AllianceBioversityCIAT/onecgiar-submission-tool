@@ -1,18 +1,12 @@
 import _ from 'lodash';
-import {getRepository, In, Not, getCustomRepository} from 'typeorm';
+import {getRepository, In, Not} from 'typeorm';
 import * as entities from '../entity';
 import {MeliaStudiesActivities} from '../entity/MeliaStudiesActivities';
 import {ProposalSections} from '../interfaces/FullProposalSectionsInterface';
-import {IsdcResponsesRepository} from '../repositories/isdcResponsesRepository';
-import {TocResponsesRepository} from '../repositories/tocResponsesRepository';
 import {ToolsSbt} from '../utils/toolsSbt';
 import {BaseError} from './BaseError';
 import {InitiativeHandler} from './InitiativesDomain';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
-import {ProjectionBenefitsDepthScales} from '../entity/ProjectionBenefitsDepthScales';
-import {pusherOST} from '../utils/pusher-util';
-import {initiativeParser} from '../utils/initiative-parser';
-import {MeliaToc} from '../entity/MeliaToc';
 
 export class ProposalHandler extends InitiativeStageHandler {
   public sections: ProposalSections = <ProposalSections>{
@@ -102,10 +96,10 @@ export class ProposalHandler extends InitiativeStageHandler {
    * @returns { context }
    */
   async getContext() {
-    // get initiative by stage id from initiative
+    // get initiative by stage id from intitiative
     const initvStgId: string = this.initvStgId_;
     try {
-      // context sql query
+      // contex sql query
       const contextQuery = `SELECT * FROM context WHERE initvStgId = ${initvStgId}`;
 
       const context = await this.queryRunner.query(contextQuery);
@@ -138,31 +132,24 @@ export class ProposalHandler extends InitiativeStageHandler {
         /*eslint-disable*/
         WPquery = `
                     SELECT id, initvStgId,name, active, acronym,pathway_content,is_global,wp_official_code,
-                    CASE
-                    WHEN (SELECT acronym FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL 
-                      OR (SELECT acronym FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
-                      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-                      char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-                    FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id =wp.id) < 1
-                    OR (SELECT name FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL
-                    OR (SELECT name FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
-                    OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-                          FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) < 1
-		                OR (SELECT pathway_content FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) IS NULL
-                    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1  AND id = wp.id) = ''
-                    OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-                          FROM work_packages WHERE initvStgId = wp.initvStgId AND ACTIVE = 1 AND id = wp.id) < 1
-                     THEN FALSE
-                       ELSE case 
-                       when   (select is_global  FROM work_packages WHERE initvStgId  = wp.initvStgId and id = wp.id AND ACTIVE = 1 ) = 1
-                         OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1 ) > 0
-                    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = wp.initvStgId and wrkPkgId = wp.id AND ACTIVE = 1) > 0
-                       then TRUE
-                       else FALSE
-                       end
-                       END AS validateWP
+                    IF (
+                        name IS NULL
+                        OR name = ''
+                        OR pathway_content IS NULL
+                        OR pathway_content = ''
+                        OR acronym IS NULL
+                        OR acronym = ''
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 3 
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 30
+                        OR ((LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+                        - (LENGTH(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+                        OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE wrkPkgId = wp.id ) = 0
+                        OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE wrkPkgId = wp.id  ) = 0,
+                        false,
+                        true
+                    ) AS validateWP
                    FROM work_packages wp 
                   WHERE wp.initvStgId =  ${
                     initvStg.id ? initvStg.id : initvStg[0].id
@@ -202,28 +189,21 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  async getWorkPackageId(wpOficialCode) {
-    const initvStgId: string = this.initvStgId_;
-    //const initvStg = await this.initvStage
+  async getWorkPackageId(id) {
+    // const initvStgId: string = this.initvStgId_;
+    // const initvStg = await this.initvStage
     const wpRepo = getRepository(entities.WorkPackages);
 
     try {
-      let workPackages: any = await wpRepo.find({
-        where: {
-          wp_official_code: wpOficialCode,
-          active: 1,
-          initvStgId: initvStgId
-        }
-      });
       let COquery = `SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
-               WHERE wrkPkgId = ${workPackages[0].id}
+               WHERE wrkPkgId = ${id}
                  AND active = 1
               GROUP BY id,country_id`,
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
-                 WHERE wrkPkgId = ${workPackages[0].id}
+                 WHERE wrkPkgId = ${id}
                    AND active = 1
                 GROUP BY id,region_id
                 `,
@@ -232,9 +212,10 @@ export class ProposalHandler extends InitiativeStageHandler {
                   FROM tocs
                  WHERE active = 1
                   and type = 0
-                  and work_package_id = ${wpOficialCode}
+                  and work_package_id = ${id}
                 `;
 
+      var workPackages = await wpRepo.find({where: {id: id, active: 1}});
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
       const tocs = await this.queryRunner.query(tocQuery);
@@ -244,12 +225,12 @@ export class ProposalHandler extends InitiativeStageHandler {
       } else {
         // Map Geo
         workPackages.map((geo) => {
-          geo['regions'] = regions.filter((re) => {
-            return re.wrkPkgId === geo.id;
+          geo['regions'] = regions.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
           });
 
-          geo['countries'] = countries.filter((co) => {
-            return co.wrkPkgId === geo.id;
+          geo['countries'] = countries.filter((wp) => {
+            return wp.wrkPkgId === geo.id;
           });
         });
 
@@ -268,8 +249,7 @@ export class ProposalHandler extends InitiativeStageHandler {
   }
 
   /***
-   * GET ALL WORK PACKAGES FULL PROPOSAL
-   * Is only for stage full proposal
+   * GET ALL WP PROPOSAL
    */
   async requestAllWorkPackagesProposal() {
     try {
@@ -285,17 +265,17 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT init.initiativeId as initiative_id,i.name as init_name, init.stageId as stage_id, 
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
           wp.id as wp_id, wp.active, wp.name, wp.results, wp.pathway_content, 
           wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
           wp.wp_official_code 
          FROM work_packages wp
          JOIN initiatives_by_stages init
            on wp.initvStgId  = init.id
-         inner join initiatives i on i.id = init.initiativeId 
         WHERE init.stageId = 3
          AND wp.active = 1
-        ORDER BY initiativeId asc;`;
+        ORDER BY initiativeId asc;
+                    `;
 
       var workPackages = await this.queryRunner.query(WPquery);
       const regions = await this.queryRunner.query(REquery);
@@ -307,40 +287,34 @@ export class ProposalHandler extends InitiativeStageHandler {
         // Map Initiatives
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
-            return reg.wrkPkgId === wp.wp_id;
+            return reg.wrkPkgId === wp.id;
           });
 
           wp['countries'] = countries.filter((cou) => {
-            return cou.wrkPkgId === wp.wp_id;
+            return cou.wrkPkgId === wp.id;
           });
         });
       }
 
       return workPackages;
     } catch (error) {
-      throw new BaseError(
-        'Get All work packages for stage Full Proposal',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Get All work packages', 400, error.message, false);
     }
   }
 
   /**
-   ** GET ALL WORK PACKAGES
-   * !THIS FUNCTION IS USED BY CLARISA
-   * It is used from the previews API
+   * GET ALL WP
    */
   async requestAllWorkPackages() {
+    // const initvStgId: string = this.initvStgId_;
+    // const initvStg = await this.initvStage
+
     try {
-      /* query Countries */
       let COquery = `
               SELECT id,country_id,initvStgId,wrkPkgId
                 FROM countries_by_initiative_by_stage 
                WHERE active = 1
                GROUP BY id,country_id`,
-        /* query Regions */
         REquery = `
                 SELECT id,region_id,initvStgId,wrkPkgId
                   FROM regions_by_initiative_by_stage
@@ -348,18 +322,18 @@ export class ProposalHandler extends InitiativeStageHandler {
                 GROUP BY id,region_id
                 `,
         WPquery = `
-        SELECT init.initiativeId as initiative_id, i.official_code as init_official_code, init.stageId as stage_id,
-               wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
-               wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
-               wp.wp_official_code, init.active  as initiative_status
-          FROM work_packages wp
-          JOIN initiatives_by_stages init
-            on wp.initvStgId  = init.id
-          JOIN initiatives i
-			      on i.id = init.initiativeId
-         WHERE wp.active = 1
-         ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc`;
+        SELECT init.initiativeId as initiative_id,init.stageId as stage_id,
+        wp.id as wp_id,wp.wp_official_code, wp.active, wp.name, wp.results, wp.pathway_content, 
+        wp.is_global, wp.initvStgId, wp.created_at, wp.updated_at, wp.acronym,
+        wp.wp_official_code 
+         FROM work_packages wp
+         JOIN initiatives_by_stages init
+           on wp.initvStgId  = init.id
+        WHERE wp.active = 1
+        ORDER BY initiativeId asc, init.stageId asc,wp.wp_official_code asc
+                    `;
 
+      // var workPackages = await wpRepo.find({ where: { active: 1 } });
       var workPackages = await this.queryRunner.query(WPquery);
       const regions = await this.queryRunner.query(REquery);
       const countries = await this.queryRunner.query(COquery);
@@ -367,26 +341,21 @@ export class ProposalHandler extends InitiativeStageHandler {
       if (workPackages == undefined || workPackages.length == 0) {
         workPackages = [];
       } else {
-        // Map Regions and Countries into WP
+        // Map Initiatives
         workPackages.map((wp) => {
           wp['regions'] = regions.filter((reg) => {
-            return reg.wrkPkgId === wp.wp_id;
+            return reg.wrkPkgId === wp.id;
           });
 
           wp['countries'] = countries.filter((cou) => {
-            return cou.wrkPkgId === wp.wp_id;
+            return cou.wrkPkgId === wp.id;
           });
         });
       }
 
       return workPackages;
     } catch (error) {
-      throw new BaseError(
-        'Get All work packages to all stages',
-        400,
-        error.message,
-        false
-      );
+      throw new BaseError('Get All work packages', 400, error.message, false);
     }
   }
 
@@ -720,13 +689,8 @@ export class ProposalHandler extends InitiativeStageHandler {
     probabilityName?,
     impact_area_active?,
     active?,
-    dimensions?,
-    depthScaleList?
+    dimensions?
   ) {
-    const depthScalesRepo = getRepository(entities.DepthScales);
-    const projectionBenefitsDepthScalesRepo = getRepository(
-      ProjectionBenefitsDepthScales
-    );
     const projBeneRepo = getRepository(entities.ProjectionBenefits);
     const dimensionsRepo = getRepository(entities.Dimensions);
     const initvStg = await this.setInitvStage();
@@ -750,8 +714,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     newWorkProjectionBenefits.impact_area_active = impact_area_active;
     newWorkProjectionBenefits.wrkPkg = null;
     newWorkProjectionBenefits.active = active;
-
-    //projectedScales = depthScaleList.map(el => ({depthScalesId:el.depthScaleId, active:el.selected, projectionBenefitsId:projectionBenefitsId}));
 
     try {
       if (newWorkProjectionBenefits.id !== null) {
@@ -797,28 +759,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         }
       }
 
-      depthScaleList.forEach(async (el) => {
-        let isSave: any;
-        const returnData = await projectionBenefitsDepthScalesRepo.findOne({
-          where: {
-            projectionBenefitsId: newWorkProjectionBenefits.id,
-            depthScalesId: el.depthScaleId
-          }
-        });
-        if (returnData) {
-          isSave = {...returnData, active: !!el.active};
-        } else {
-          isSave = {
-            depthScalesId: el.depthScaleId,
-            active: !!el.active,
-            projectionBenefitsId: projectionBenefitsId
-              ? projectionBenefitsId
-              : upsertedPjectionBenefits.id
-          };
-        }
-
-        await projectionBenefitsDepthScalesRepo.save(isSave);
-      });
       return {upsertedPjectionBenefits, upsertedDimensions};
     } catch (error) {
       console.log(error);
@@ -856,34 +796,14 @@ export class ProposalHandler extends InitiativeStageHandler {
                 FROM projection_benefits
                WHERE initvStgId = ${initvStg.id})
                  AND active = 1
-                `,
-        depthScalesListQuery = `
-        select pbds.id, pbds.projectionBenefitsId, pbds.active, res.id as depthScaleId, res.name as depthScaleName from projection_benefits_depth_scales pbds 
-        inner join (select distinct(depthScale.id), depthScale.name 
-              from clarisa_projected_benefits cpb, json_table(cpb.depthScales , '$[*]' columns(
-                          id int path '$.depthScaleId',
-                      name text path '$.depthScaleName'
-                      )) depthScale
-                order by depthScale.id asc ) res on res.id = pbds.depthScalesId 
-      where pbds.projectionBenefitsId in (SELECT  id
-            FROM projection_benefits
-           WHERE initvStgId = ${initvStg.id}
-             AND active = 1)
-          AND pbds.active > 0;`;
+                `;
 
-      const depthScalesList = await this.queryRunner.query(
-        depthScalesListQuery
-      );
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
 
       projectBenefits.map((pb) => {
         pb['dimensions'] = dimensions.filter((dim) => {
           return dim.projectionId === pb.id;
-        });
-
-        pb['depthScaleList'] = depthScalesList.filter((dim) => {
-          return dim.projectionBenefitsId === pb.id;
         });
       });
 
@@ -925,37 +845,15 @@ export class ProposalHandler extends InitiativeStageHandler {
                     FROM projection_benefits
                    WHERE initvStgId = ${initvStg.id})
                      AND active = 1
-                    `,
-        depthScalesListQuery = `
-        select pbds.id, pbds.projectionBenefitsId, pbds.active, res.id as depthScaleId, res.name as depthScaleName from projection_benefits_depth_scales pbds 
-                inner join (select distinct(depthScale.id), depthScale.name 
-                			from clarisa_projected_benefits cpb, json_table(cpb.depthScales , '$[*]' columns(
-													        id int path '$.depthScaleId',
-															name text path '$.depthScaleName'
-															)) depthScale
-												order by depthScale.id asc ) res on res.id = pbds.depthScalesId 
-              where pbds.projectionBenefitsId in (SELECT  id
-                    FROM projection_benefits
-                   WHERE initvStgId = ${initvStg.id}
-                     AND active = 1)
-                  AND pbds.active > 0;`;
+                    `;
 
       const projectBenefits = await this.queryRunner.query(prjBenQuery);
       const dimensions = await this.queryRunner.query(dimensionsQuery);
-      const depthScalesList = await this.queryRunner.query(
-        depthScalesListQuery
-      );
 
       projectBenefits.map((pb) => {
         pb['dimensions'] = dimensions.filter((dim) => {
           return dim.projectionId === pb.id;
         });
-
-        pb['depthScaleList'] = depthScalesList
-          ? depthScalesList.filter((dim) => {
-              return dim.projectionBenefitsId === pb.id;
-            })
-          : [];
       });
 
       return projectBenefits;
@@ -1423,40 +1321,6 @@ export class ProposalHandler extends InitiativeStageHandler {
     }
   }
 
-  async tocIntegration(initiativeId){
-    const toc_id = await  this.queryRunner.query(`select
-    ibs.initiativeId,
-    t.toc_id
-  from
-    tocs t
-  inner join (
-    select
-      max(t2.updated_at) as max_date,
-      t2.initvStgId
-    from
-      tocs t2
-    inner join initiatives_by_stages ibs2
-          on
-      t2.initvStgId = ibs2.id
-    where
-      t2.active > 0
-      and t2.type = 1
-    GROUP by
-      t2.initvStgId) tr on
-    tr.initvStgId = t.initvStgId
-    and tr.max_date = t.updated_at
-  inner join initiatives_by_stages ibs
-          on
-    t.initvStgId = ibs.id
-  where
-    t.active > 0
-    and t.type = 1 and ibs.initiativeId = ${initiativeId}
-  order by
-    ibs.initiativeId;`);
-
-    return toc_id;
-  }
-
   /**
    ** UPSERT TABLE A (Global Targets, Impacts Indicators and SDG Targets)
    * @param tableA
@@ -1602,14 +1466,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       // Save data
       let upsertedSdgTargets = await initSdgTargetsRepo.save(mergeSdgTargets);
       // console.log(upsertedSdgTargets);
-      if (
-        mergeSdgTargets.length > 0 ||
-        mergeImpactIndicators.length > 0 ||
-        mergeGlobalTarget.length > 0
-      ) {
-        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger('table-a', initiativeId);
-      }
+
       return {
         upsertedGlobalTargets,
         upsertedImpactIndicators,
@@ -1665,8 +1522,6 @@ export class ProposalHandler extends InitiativeStageHandler {
           element.outcome_indicator_id;
         newActionAreasOutcomesIndicators.active = element.active;
         newActionAreasOutcomesIndicators.outcome_id = element.outcome_id;
-        newActionAreasOutcomesIndicators.action_area_id =
-          element.action_area_id;
 
         outcomesIndicators.push(
           toolsSbt.mergeData(
@@ -1691,15 +1546,11 @@ export class ProposalHandler extends InitiativeStageHandler {
        * SAVE Init Outcomes Indicator
        */
       let mergeOutcomesIndicators = await Promise.all(outcomesIndicators);
+
       // Save data
       let upsertedOutcomesIndicators = await initOutcomesIndicatorsRepo.save(
         mergeOutcomesIndicators
       );
-
-      if (mergeOutcomesIndicators.length > 0) {
-        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger('table-b-outcomes', initiativeId);
-      }
 
       return {upsertedOutcomesIndicators};
     } catch (error) {
@@ -1768,12 +1619,6 @@ export class ProposalHandler extends InitiativeStageHandler {
         );
 
         upsertResults = await resultsRepo.save(mergeResult);
-
-        if (!!upsertResults && upsertResults.active == false) {
-          const responses = await this.queryRunner.query(
-            `update melia_toc mt inner join results r on r.id = mt.outcomeIdId set mt.active = 0 where r.toc_result_id = '${upsertResults.toc_result_id}'`
-          );
-        }
 
         resultsArray.push(upsertResults);
 
@@ -1894,14 +1739,7 @@ export class ProposalHandler extends InitiativeStageHandler {
       let upsertResultsCountries: any = await resultsCountriesRepo.save(
         mergeResultsCountries
       );
-      if (
-        mergeResultsIndicators.length > 0 ||
-        mergeResultsRegions.length > 0 ||
-        mergeResultsCountries.length > 0
-      ) {
-        let {initiativeId} = await initiativeParser.getInitParams(initvStgId);
-        pusherOST.tocTrigger('table-c', initiativeId);
-      }
+
       return {
         upsertResults: resultsArray,
         upsertResultsIndicators,
@@ -1973,44 +1811,24 @@ export class ProposalHandler extends InitiativeStageHandler {
            AND sdt.active =1;
         `,
         outIndicatorsQuery = `
-        SELECT outi.initvStgId,outi.id, couti.id,
-outi.outcomes_indicators_id,
-couti.outcome_id,
-couti.action_area_name,
-        couti.outcome_id,couti.outcome_statement,
-        couti.outcome_indicator_id,
-        couti.outcome_indicator_smo_code,
-        couti.outcome_indicator_statement,
-        couti.action_area_id
-         FROM init_action_areas_out_indicators outi
-JOIN clarisa_action_areas_outcomes_indicators couti
-           ON outi.outcomes_indicators_id = couti.outcome_indicator_id
-          and outi.outcome_id = couti.outcome_id
-          and if(outi.action_area_id is not null, outi.action_area_id = couti.action_area_id, couti.action_area_id = couti.action_area_id )
-        WHERE outi.initvStgId = ${initvStg.id}
-          AND outi.active =1
-          order by couti.outcome_id asc;
-          
-        `,
-        outIndicatorsQueryLastUpdate = `
-        SELECT outi.initvStgId, max(couti.updated_at) as updated_at
+        SELECT outi.initvStgId,outi.id,outi.outcomes_indicators_id,couti.outcome_id,couti.action_area_name,
+        couti.outcome_id,couti.outcome_statement,couti.outcome_indicator_id,
+        couti.outcome_indicator_smo_code,couti.outcome_indicator_statement
          FROM init_action_areas_out_indicators outi
     LEFT JOIN clarisa_action_areas_outcomes_indicators couti
            ON outi.outcomes_indicators_id = couti.outcome_indicator_id
           and outi.outcome_id  = couti.outcome_id 
         WHERE outi.initvStgId =${initvStg.id}
           AND outi.active =1;
+          
         `,
         resultsQuery = `
-        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,
-               wp.acronym wp_acronym,re.result_type_id as result_type,
-               re.result_title,re.is_global,re.active
+        SELECT re.initvStgId,re.id,rt.name as type_name,wp.name as wp_name,wp.acronym wp_acronym,re.result_type_id as result_type,re.result_title,re.is_global,re.active
         FROM results re
         join results_types rt 
           on rt.id = re.result_type_id 
    left join work_packages wp 
-          on wp.wp_official_code = re.work_package_id 
-          AND wp.initvStgId = re.initvStgId
+          on wp.id = re.work_package_id 
        WHERE re.initvStgId = ${initvStg.id}
          AND re.active =1
         order by re.result_type_id,wp.id;
@@ -2043,60 +1861,7 @@ JOIN clarisa_action_areas_outcomes_indicators couti
        WHERE co.results_id in (SELECT re.id
         FROM results re
        WHERE re.initvStgId = ${initvStg.id}
-         AND re.active =1);`,
-        lastUpdateTableASql = `
-      select 
-case 
-	when d.updated_at >= g.updated_at and d.updated_at >= s.updated_at then d.updated_at
-	when g.updated_at >= d.updated_at and g.updated_at >= s.updated_at then g.updated_at 
-	when s.updated_at  >= d.updated_at and d.updated_at >= g.updated_at then s.updated_at 
-	else d.updated_at
-end as udate_at
-from  initiatives_by_stages ibs 
-	left join(SELECT max(csdt.updated_at) as updated_at, sdt.initvStgId 
-          FROM init_impact_area_sdg_targets sdt
-          JOIN clarisa_sdg_targets csdt
-            ON sdt.sdg_target_id = csdt.id
-         WHERE sdt.initvStgId = ${initvStg.id}
-           AND sdt.active =1) as s on s.initvStgId = ibs.id
-	
-	left join (SELECT Max(outi.updated_at) as updated_at, outi.initvStgId 
-         FROM init_action_areas_out_indicators outi
-    LEFT JOIN clarisa_action_areas_outcomes_indicators couti
-           ON outi.outcomes_indicators_id = couti.outcome_indicator_id
-          and outi.outcome_id  = couti.outcome_id 
-        WHERE outi.initvStgId = ${initvStg.id}
-          AND outi.active =1) as d on d.initvStgId = ibs.id
-          
-    left join (SELECT max(igt.updated_at) as updated_at, igt.initvStgId
-                  FROM init_impact_area_global_targets igt
-                  JOIN clarisa_global_targets cgt
-                    ON igt.global_target_id = cgt.id
-                 WHERE igt.initvStgId =${initvStg.id}
-                   AND igt.active =1) as g on g.initvStgId = ibs.id
-                   
-	where  ibs.id = ${initvStg.id}
-      `,
-        lastUpdateTableCSql = `
-      SELECT max(re.updated_at) as updated_at
-        FROM results re
-        join results_types rt 
-          on rt.id = re.result_type_id 
-   left join work_packages wp 
-          on wp.wp_official_code = re.work_package_id 
-          AND wp.initvStgId = re.initvStgId
-       WHERE re.initvStgId = ${initvStg.id}
-         AND re.active =1
-        order by re.result_type_id,wp.id;
-      `,
-        resultsByMelia = `
-      select msa.id as meliaStudiesId, mt.outcomeIdId, cmst.name 
-      from melia_toc mt 
-      	inner join melia_studies_activities msa on msa.id = mt.meliaIdId 
-      	inner join clarisa_melia_study_types cmst on cmst.id = msa.type_melia_id 
-      where mt.initvStgIdId = ${initvStg.id}
-              and mt.active > 0;
-      `;
+         AND re.active =1);`;
       // MELIA PLAN
       const meliaPlan = await this.queryRunner.query(meliaQuery);
       const files = await this.queryRunner.query(filesQuery);
@@ -2110,7 +1875,6 @@ from  initiatives_by_stages ibs
       //TABLE A
 
       const globalTargets = await this.queryRunner.query(globalTargetsQuery);
-      const lasUpdateTableA = await this.queryRunner.query(lastUpdateTableASql);
       const impactAreasIndicators = await this.queryRunner.query(
         impactAreasIndicatorsQuery
       );
@@ -2118,8 +1882,7 @@ from  initiatives_by_stages ibs
       const tableA = {
         global_targets: globalTargets,
         impact_areas_indicators: impactAreasIndicators,
-        sdg_targets: sdgTargets,
-        updated_at: lasUpdateTableA
+        sdg_targets: sdgTargets
       };
 
       //TABLE B
@@ -2127,10 +1890,7 @@ from  initiatives_by_stages ibs
       const actionAreasOutcomesIndicators = await this.queryRunner.query(
         outIndicatorsQuery
       );
-      const actionAreasOutcomesIndicatorsLastUpdate =
-        await this.queryRunner.query(outIndicatorsQueryLastUpdate);
       const tableB = {
-        update_at: actionAreasOutcomesIndicatorsLastUpdate,
         action_areas_outcomes_indicators: actionAreasOutcomesIndicators
       };
 
@@ -2140,12 +1900,7 @@ from  initiatives_by_stages ibs
       const resultsIndicators = await this.queryRunner.query(
         resultsIndicatorsQuery
       );
-
-      const meliaTocResult = await this.queryRunner.query(resultsByMelia);
       const resultsRegions = await this.queryRunner.query(resultsRegionsQuery);
-      const lastUpdateTableC = await this.queryRunner.query(
-        lastUpdateTableCSql
-      );
       const resultsCountries = await this.queryRunner.query(
         resultsCountriesQuery
       );
@@ -2153,10 +1908,6 @@ from  initiatives_by_stages ibs
       results.map((res) => {
         res['indicators'] = resultsIndicators.filter((resi) => {
           return res.id === resi.results_id;
-        });
-
-        res['meliasStudies'] = meliaTocResult.filter((ms) => {
-          return res.id === ms.outcomeIdId;
         });
 
         const reg = resultsRegions.filter((reg) => {
@@ -2170,10 +1921,7 @@ from  initiatives_by_stages ibs
         res['geo_scope'] = {regions: reg, countries: cou};
       });
 
-      const tableC = {
-        results: results,
-        updated_at: lastUpdateTableC
-      };
+      const tableC = {results: results};
 
       return {
         meliaPlan: meliaPlan[0],
@@ -2195,21 +1943,16 @@ from  initiatives_by_stages ibs
    * @param meliaStudiesActivitiesData
    * @returns meliaStudiesActivitiesSave
    */
-  async upsertMeliaStudiesActivities(
-    meliaStudiesActivitiesData: any,
-    userId?: number
-  ) {
+  async upsertMeliaStudiesActivities(meliaStudiesActivitiesData: any) {
     const meliaStudiesActivitiesRepo = getRepository(
       entities.MeliaStudiesActivities
     );
-    const meliaTocRepo = getRepository(MeliaToc);
     const initvStg = await this.setInitvStage();
     let toolsSbt = new ToolsSbt();
     let meliaStudiesActivitiesArray = [];
     let regionsMeliaStd = [];
     let countriesMeliaStd = [];
     let initiativesMeliaStd = [];
-
     try {
       meliaStudiesActivitiesData =
         typeof meliaStudiesActivitiesData === 'undefined'
@@ -2217,10 +1960,9 @@ from  initiatives_by_stages ibs
           : meliaStudiesActivitiesData;
       for (let index = 0; index < meliaStudiesActivitiesData.length; index++) {
         const element = meliaStudiesActivitiesData[index];
-        let meliaDataId: number;
+
         if (element.id) {
           const newMeliaStudiesActivities = new MeliaStudiesActivities();
-          meliaDataId = element.id;
 
           newMeliaStudiesActivities.id = element.id ? element.id : null;
           newMeliaStudiesActivities.initvStgId = initvStg.id;
@@ -2234,7 +1976,6 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudiesActivities.is_global = element.is_global;
           newMeliaStudiesActivities.active = element.active;
-          newMeliaStudiesActivities.updateUser = userId ? userId : null;
 
           meliaStudiesActivitiesArray.push(
             toolsSbt.mergeData(
@@ -2268,15 +2009,11 @@ from  initiatives_by_stages ibs
             element.management_decisions_learning;
           newMeliaStudy.is_global = element.is_global;
           newMeliaStudy.active = element.active;
-          newMeliaStudy.updateUser = userId ? userId : null;
 
           //Save new MELIA Studies to get ID and then save relations
           const newMeliaResponse = await meliaStudiesActivitiesRepo.save(
             newMeliaStudy
           );
-
-          meliaDataId = newMeliaResponse.id;
-
           element.countries.map((coun) => {
             coun.meliaStudyId = newMeliaResponse.id;
           });
@@ -2293,43 +2030,6 @@ from  initiatives_by_stages ibs
             element.initiatives || []
           );
         }
-
-        const saveLinkResult: MeliaTocData[] = [];
-        for (let rindex = 0; rindex < element.selectResults.length; rindex++) {
-          const selectedResults = element.selectResults[rindex];
-
-          if (!!selectedResults.id) {
-            let resultData: MeliaTocData = await meliaTocRepo.findOne(
-              selectedResults.id
-            );
-            resultData.active = selectedResults.active ? 1 : 0;
-            saveLinkResult.push(resultData);
-          } else {
-            let data: MeliaTocData = await meliaTocRepo.findOne({
-              where: {
-                initvStgId: initvStg.id,
-                meliaId: meliaDataId,
-                outcomeId: selectedResults.resultId
-              }
-            });
-            if (data) {
-              data.active = selectedResults.active ? 1 : 0;
-              saveLinkResult.push(data);
-            } else {
-              let newData: MeliaTocData = {
-                active: selectedResults.active ? 1 : 0,
-                initvStgId: initvStg.id,
-                meliaId: meliaDataId,
-                outcomeId: selectedResults.resultId
-              };
-              saveLinkResult.push(newData);
-            }
-          }
-        }
-
-        const updateResultMeliaResponse = await meliaTocRepo.save(
-          saveLinkResult
-        );
       }
 
       const upsertedGeoScope = await this.upsertGeoScopesMeliaStudies(
@@ -2358,35 +2058,6 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async requestSelectResultsByMelias() {
-    const initvStg = await this.setInitvStage();
-    try {
-      let results = await this.queryRunner.query(`
-      select 	r.id as resultId, 
-      		r.result_title as resultTitle, 
-      		rt.id as typeId, 
-      		rt.name as typeName,
-      		wp.acronym  as wpAcronym,
-      		wp.name  as wpName,
-      		wp.id as wpId,
-      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
-      from results r 
-      	inner join results_types rt on rt.id = r.result_type_id 
-      	left join work_packages wp on wp.id = r.work_package_id 
-      	where r.initvStgId = ${initvStg.id}
-      	and r.active > 0
-      `);
-      return results;
-    } catch (error) {
-      throw new BaseError(
-        'GET Results by MELIA studies and activities: Full proposal',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
   async requestMeliaStudiesActivities() {
     const initvStg = await this.setInitvStage();
     const meliaStudiesActivitiesRepo = getRepository(
@@ -2407,29 +2078,11 @@ from  initiatives_by_stages ibs
       msa.active
       FROM melia_studies_activities msa 
       left join clarisa_melia_study_types cmst on msa.type_melia_id = cmst.id
-      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id and ibms.active = 1
+      left join initiatives_by_melia_study ibms on ibms.meliaStudyId = msa.id
       left join initiatives i on i.id = ibms.initiativeId 
       WHERE msa.initvStgId = ${initvStg.id}
       and msa.active = 1
       group by id`);
-
-      let meliasResultsSelect = await this.queryRunner.query(`
-      select mt.id, 
-          mt.active, 
-          mt.meliaIdId, 
-          mt.outcomeIdId, 
-          mt.initvStgIdId,
-          r.id as resultId, 
-      	  r.result_title as resultTitle, 
-      	  rt.id as typeId, 
-      	  rt.name as typeName,
-      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
-      from melia_toc mt 
-      	inner join results r on r.id = mt.outcomeIdId 
-      	inner join results_types rt on rt.id = r.result_type_id 
-        where mt.initvStgIdId = ${initvStg.id}
-        and mt.active > 0
-      `);
 
       let countries = await this.queryRunner
         .query(`SELECT id,country_id,initvStgId,meliaStudyId
@@ -2475,10 +2128,6 @@ from  initiatives_by_stages ibs
           //Map initiatives
           melia['initiatives'] = initiatives.filter((init) => {
             return init.meliaStudyId === melia.id;
-          });
-
-          melia['selectResults'] = meliasResultsSelect.filter((res) => {
-            return res.meliaIdId === melia.id;
           });
         });
       }
@@ -2640,17 +2289,16 @@ from  initiatives_by_stages ibs
                      AND active = 1
                 `,
         riskAssessmentQuery = `
-        SELECT ra.id,ra.risks_achieving_impact,ra.risks_theme,
-               ra.description_risk,ra.likelihood,ra.impact,
-               ra.risk_score,ra.manage_plan_risk_id,ra.active,ra.add_by_user, ra.risk_id 
-        FROM risk_assessment ra
-        WHERE ra.manage_plan_risk_id in (
-          SELECT id
-          FROM manage_plan_risk
-           WHERE initvStgId = ${initvStg.id}
-             AND active = 1
-               )
-          and ra.active > 0;
+                SELECT id,risks_achieving_impact,risks_theme,
+                       description_risk,likelihood,impact,
+                       risk_score,manage_plan_risk_id,active,add_by_user
+                 FROM risk_assessment
+                WHERE manage_plan_risk_id in (
+                SELECT id
+	              FROM manage_plan_risk
+                 WHERE initvStgId = ${initvStg.id}
+                   AND active = 1
+                     )
                     `,
         opportinitiesQuery = `
                     SELECT id,opportunities_description,
@@ -2741,7 +2389,6 @@ from  initiatives_by_stages ibs
             newRiskAssessment.active = risk.active;
             newRiskAssessment.manage_plan_risk_id = managePlanRiskId;
             newRiskAssessment.add_by_user = risk.add_by_user;
-            newRiskAssessment.risk_id = risk.risk_id;
 
             /**UPDATE RISK ASSESSMENT */
             if (newRiskAssessment.id !== null) {
@@ -3932,106 +3579,6 @@ from  initiatives_by_stages ibs
   }
 
   /**
-   **REQUEST ISDC RESPONSES STATUS
-   * @returns
-   */
-  async requestISDCResponsesStatus(stageId) {
-    const ISDCResponsesRepo = getCustomRepository(IsdcResponsesRepository);
-
-    try {
-      const ISDCResponsesStatus =
-        await ISDCResponsesRepo.findIsdcFeedbackStatus(stageId);
-
-      return ISDCResponsesStatus;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError(
-        'REQUEST ISDC Responses status: Full proposal domain',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  /**
-   ** REQUEST ToC RESPONSES REPORTING
-   * @returns
-   */
-  async requestTOCProgress(stageId) {
-    const tocResponsesRepo = getCustomRepository(TocResponsesRepository);
-
-    try {
-      const tocResponsesReporting =
-        await tocResponsesRepo.findTocProgressReporting(stageId);
-
-      return tocResponsesReporting;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError(
-        'REQUEST ToC Responses progress: Full proposal domain',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  async requestAllEndofInitiativeOutcomes() {
-    try {
-      const queryEOI = `
-      select
-      	i.id as initiative_id,
-      	r.toc_result_id,
-      	r.result_title as short_title,
-      	r.result_description as outcome_statement
-      from initiatives_by_stages ibs 
-      	inner join initiatives i on i.id = ibs.initiativeId 
-      							and ibs.active > 0
-      	inner join stages s on ibs.stageId = s.id 
-      	inner join results r ON r.initvStgId = ibs.id 
-      							and r.result_type_id = 3
-      							and r.active > 0
-      	inner join results_types rt on rt.id = r.result_type_id 
-      	order by i.id asc;
-      `,
-        stageInitiativeQuery = `
-      select
-        i.id as initiative_id,
-        i.official_code as initiative_official_code,
-        i.name as initiative_name,
-        s.description as stage_name
-      from initiatives_by_stages ibs 
-        inner join initiatives i on i.id = ibs.initiativeId 
-                    and ibs.active > 0
-        inner join stages s on ibs.stageId = s.id
-        order by i.id asc;
-      `;
-      const EoiByInit = await this.queryRunner.query(stageInitiativeQuery);
-      const allEoi = await this.queryRunner.query(queryEOI);
-      EoiByInit.map((res) => {
-        res['eoi_o'] = allEoi.filter((aeoi) => {
-          return res.initiative_id === aeoi.initiative_id;
-        });
-      });
-      EoiByInit.map((res) => {
-        res.eoi_o.map((el) => {
-          delete el.initiative_id;
-        });
-      });
-      return EoiByInit;
-    } catch (error) {
-      console.log(error);
-      throw new BaseError(
-        'Request EOI By Initiative: Full proposal',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  /**
    * * REQUEST EOI BY INITIATIVE
    * @returns eoi
    */
@@ -4121,48 +3668,14 @@ from  initiatives_by_stages ibs
     }
   }
 
-  async getLastUpdateEoi() {
-    const initvStg = await this.setInitvStage();
-    try {
-      const resultsQuery = `
-      SELECT re.initvStgId,  max(rt.updated_at) as updated_at 
-      FROM results re
-      join results_types rt 
-        on rt.id = re.result_type_id 
-  left join work_packages wp 
-        on wp.id = re.work_package_id 
-     WHERE re.initvStgId = ${initvStg.id}
-       AND rt.id  = 3
-       AND re.active =1
-       group by re.initvStgId, rt.updated_at
-      order by re.result_type_id,wp.id;
-    `;
-      const result = await this.queryRunner.query(resultsQuery);
-      return result[0];
-    } catch (error) {
-      throw new BaseError(
-        'Request EOI last update: Full proposal',
-        400,
-        error.message,
-        false
-      );
-    }
-  }
-
-  async insertInitiativeApproval(
-    user_id,
-    initiativeId,
-    is_approved,
-    approved_reason
-  ) {
+  async insertInitiativeApproval(user_id, initiativeId, is_approved) {
     const initvApprovalRepo = await getRepository(entities.InitiativesApproval);
     const initvStageRepo = await getRepository(entities.InitiativesByStages);
     try {
       const newInitvApproval = await initvApprovalRepo.create({
         user_id,
         initiativeId,
-        is_approved,
-        approved_reason
+        is_approved
       });
       await initvApprovalRepo.save(newInitvApproval);
 
@@ -4284,12 +3797,4 @@ from  initiatives_by_stages ibs
       throw new BaseError('Get Tracks error', 400, error.message, false);
     }
   }
-}
-
-interface MeliaTocData {
-  active: number;
-  id?: number;
-  initvStgId: number;
-  meliaId: number;
-  outcomeId: number;
 }

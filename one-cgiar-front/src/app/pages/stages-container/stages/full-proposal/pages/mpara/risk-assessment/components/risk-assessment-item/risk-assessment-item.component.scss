@@ -2,31 +2,17 @@
     position: relative;
     background-color: #fafafefe;
     box-shadow: 0 3px 6px #cfcfcf88, 0 3px 6px #cfcfcf88;
-    // border-radius: 15px;
+    border-radius: 15px;
     width: 100%;
+    margin-top: 20px;
     padding: 20px;
+    // padding-top: 50px;
     overflow: hidden;
-    .risks_score{
-        background-color: #6690fc;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        width: max-content;
-        margin-bottom: 10px;
-    }
     .risk_header{
-        .risks_theme{
-            background-color: rgb(65, 65, 65);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            width: max-content;
-        }
         .create_by_tag{
             background-color: rgb(145, 91, 189);
             width: auto;
             padding: 5px 10px;
-            margin-top: 7px;
             position: absolute;
             top: 0;
             left: 0;
@@ -68,18 +54,16 @@
     }
 }
 
-
-
 .margin-top-15{
     margin-top: 15px;
 }
 
 .normal_border{
-    // border: 2px solid rgb(91,189,147); 
+    border: 2px solid rgb(91,189,147); 
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
 .manual_border{
-    // border: 2px solid rgb(145, 91, 189);  
+    border: 2px solid rgb(145, 91, 189);  
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }

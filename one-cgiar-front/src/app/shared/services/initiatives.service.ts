@@ -78,12 +78,12 @@ export class InitiativesService {
     // console.log(initUsers)
 
     try {
-      // console.log("setTitle")
+      console.log("setTitle")
       window['Tawk_API']?.setAttributes({
         'name': this.getUserInfo.name,
         'email': this.getUserInfo.email,
         'initiativename' :`
-        INIT ${this.initiative.id} - ${this.initiative.name || 'Home'}
+          ${this.initiative.name || 'Home'}
 
         `,
         'metadata' :`
@@ -192,7 +192,6 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/regions-cgiar?filter=${filterText}`).pipe(map(resp => {
       resp.response.regions.map(region => {
         region.region_id = region.id;
-        region.id = null;
       })
       return resp;
     }));;
@@ -308,7 +307,6 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/${sectionPath}/list`).pipe(map(res => {
       res.response.initiatives.map(initiatives => {
         initiatives.initiativeId = initiatives.id;
-        initiatives.displayName =  `${initiatives.official_code} - ${initiatives.acronym ? initiatives.acronym + ' -': ''}  ${initiatives.name}`
         delete initiatives.id;
       })
       return res;
@@ -419,8 +417,8 @@ export class InitiativesService {
   }
 
   // Query to get all the users 
-  getInitvStgId(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${this.initiative.id}/${this.initiative.stageId}`);
+  getInitvStgId(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/initiatives/get-initvStgId/${initiativeId}/${stageId}`);
     // api/initiatives/get-initvStgId/2/3
   }
 
@@ -523,17 +521,12 @@ export class InitiativesService {
   }
   // get all work packages by initiative with stage full proposal
   getWpsFpByInititative() {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`).pipe(map(resp => {
-      resp.response.workpackage.map(wp => {
-        wp.fieldsCompleted = wp?.validateWP;
-      })
-      return resp;
-    }));
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/packages/${this.initiative.stageId}/${this.initiative.id}`);
   }
 
   // get one work package by id with stage full proposal
   getWpById(wpID) {
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/package/${this.initiative.stageId}/${this.initiative.id}/${wpID}`);
+    return this.http.get<any>(`${environment.apiUrl}/stages-control/${this.initiative.stageName}/package/${wpID}`);
   }
 
   // get one work package by id with stage full proposal
@@ -598,38 +591,38 @@ export class InitiativesService {
 
   //? previews
 
-  getPreviewHumanResources(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${this.initiative.stageId}`);
+  getPreviewHumanResources(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/human-resources/${initiativeId}/${stageId}`);
   }
 
   getPreviewPartnersData(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/preview-partners`);
   }
 
-  getPreviewGeographicScopeData(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${this.initiative.stageId}`);
+  getPreviewGeographicScopeData(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/geographic-scope/${initiativeId}/${stageId}`);
   }
 
-  getPreviewPartners(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${this.initiative.stageId}`);
+  getPreviewPartners(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/partners/${initiativeId}/${stageId}`);
   }
 
-  getPreviewRiskAssessment(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${this.initiative.stageId}`);
+  getPreviewRiskAssessment(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/risk-assessment/${initiativeId}/${stageId}`);
   }
 
-  getPreviewProjectedBenefits(initiativeId): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${this.initiative.stageId}`);
+  getPreviewProjectedBenefits(initiativeId, stageId): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/previews/projected-benefits/${initiativeId}/${stageId}`);
   }
 
-  getLinks(body, initiativeID) {
-    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${this.initiative.stageId}`, body);
+  getLinks(body, initiativeID, stageID) {
+    return this.http.post<any>(`${environment.apiUrl}/initiatives/get-link/${initiativeID}/${stageID}`, body);
   }
 
-  async addLinks(citationList, initiativeID) {
+  async addLinks(citationList, initiativeID, stageID) {
     let promiseList = [];
     citationList.forEach(citation => {
-      if (!citation?.citationId || citation?.edited) promiseList.push(this.addLink(citation, initiativeID, this.initiative.stageId).toPromise());
+      if (!citation?.citationId || citation?.edited) promiseList.push(this.addLink(citation, initiativeID, stageID).toPromise());
     });
 
     await Promise.all(promiseList).then(values => {
@@ -709,14 +702,6 @@ export class InitiativesService {
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/participatory-design/isdc-responses/${this.initiative.id}/${this.initiative.stageId}`, body);
   }
 
-  getIsdcStatus(): Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/isdc-responses/status/4`);
-  }
-
-  getTOCReporting(): Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/stages-control/proposal/toc-responses/reporting/4`);
-  }
-
   patchTracksByInitiativeAndStageId(body){
     return this.http.patch<any>(`${environment.apiUrl}/stages-control/proposal/tracks/${this.initiative.stageId}/${this.initiative.id}`,body);
   }
@@ -735,8 +720,5 @@ export class InitiativesService {
     return this.http.get<any>(`${environment.apiUrl}/initiatives/years`);
   }
 
-  getUsersWithInitiativesInformation(): Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/users/initiatives`);
-  }
 
 }

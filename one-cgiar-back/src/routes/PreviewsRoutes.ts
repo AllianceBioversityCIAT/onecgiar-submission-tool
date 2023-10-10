@@ -38,7 +38,7 @@ const router = Router();
  *                 "initvStgId": 35,
  *                 "id": 2,
  *                 "name": "Accelerated Crop Improvement through Precision Genetic Technologies",
- *                 "official_code":"INIT-2"
+ *                 "oficial_code":"INIT-2"
  *                 "status": "Editing",
  *                 "action_area_id": "1",
  *                 "action_area_description": "Systems Transformation",
@@ -131,8 +131,6 @@ router.get(
 
 /**
  * GET ALL WORK PACKAGES
- * 
- * ! THIS SERVICE IS USED BY CLARISA
  */
 /**
  * @api {get} stages-control/proposal/packages Work package - Request All work packages
@@ -141,7 +139,7 @@ router.get(
  * @apiName GetAllWorkPackage
  * @apiGroup Proposal
  *
- * @apiDescription  Shows all work packages for CLARISA
+ * @apiDescription  Shows all work packages for Clarisas
  *
  * @apiExample Example usage:
  * https://initiativestest.ciat.cgiar.org/api/stages-control/proposal/packages
@@ -150,6 +148,7 @@ router.get(
  *
  * @apiHeader {String} auth
  *
+ * @apiParam {Number} initiativeId Id initiative
  *
  *
  * @apiSuccessExample Success-Response:
@@ -499,7 +498,7 @@ router.get(
  *                         "risk_score": 0,
  *                         "manage_plan_risk_id": 3,
  *                         "active": 1,
- *                         "opportunities": [
+ *                         "opportinities": [
  *                             {
  *                                 "id": 29,
  *                                 "opportunities_description": "test",
@@ -518,7 +517,43 @@ router.get(
  *                         "risk_score": 0,
  *                         "manage_plan_risk_id": 3,
  *                         "active": 1,
- *                         "opportunities": []
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 63,
+ *                         "risks_achieving_impact": "Conflicting intended or unintended consequences of technologies/innovations for natural resources, GHG emissions, and social and economic aspects impacting objectives and reputation",
+ *                         "risks_theme": "Cohesion",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 1,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 64,
+ *                         "risks_achieving_impact": "Data management and systems not fit for purpose or outdated affecting Initiative's efficiency",
+ *                         "risks_theme": "Operational",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 2,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
+ *                     },
+ *                     {
+ *                         "id": 65,
+ *                         "risks_achieving_impact": "Ethical/behavioural (i.e. failure to protect children and vulnerable adults), financial irregularity, data privacy incident leading to reputational event affecting Initiative",
+ *                         "risks_theme": "Ethical",
+ *                         "description_risk": "Failure to articulate a value proposition for the Initiative that outlines clearly the pathway from research to impact\n",
+ *                         "likelihood": 1,
+ *                         "impact": 4,
+ *                         "risk_score": 0,
+ *                         "manage_plan_risk_id": 3,
+ *                         "active": 1,
+ *                         "opportinities": []
  *                     }
  *                 ]
  *             }
@@ -613,7 +648,7 @@ router.get(
  *         "previewFinancialResources": {
  *             "financialResources": [
  *                 {
- *                     "description": "crosscutting_workpackages",
+ *                     "description": "crosscutting_wokpackages",
  *                     "year": "2022",
  *                     "value": "100"
  *                 },

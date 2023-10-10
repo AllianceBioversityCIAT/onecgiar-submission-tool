@@ -825,17 +825,15 @@ export class InitiativeStageHandler extends BaseValidation {
            GROUP BY a.id,a.initiativeId,a.stageId,a.active
         `);
 
-      // if (
-      //   this.intvStage_.stageId
-      //     ? this.intvStage_.stageId
-      //     : this.initvStgId_ > oldInitiative[0].stageId
-      // ) {
-      //   console.log(this.intvStage_.stageId, this.initvStgId_, oldInitiative[0].stageId, this.initvStgId_ > oldInitiative[0].stageId);
-        
-      //   oldInitiative[0].active = false;
+      if (
+        this.intvStage_.stageId
+          ? this.intvStage_.stageId
+          : this.initvStgId_ > oldInitiative[0].stageId
+      ) {
+        oldInitiative[0].active = false;
 
-      //   await this.initvStgRepo.save(oldInitiative[0]);
-      // }
+        await this.initvStgRepo.save(oldInitiative[0]);
+      }
 
       return this.intvStage_;
     } catch (error) {

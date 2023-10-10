@@ -43,12 +43,12 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Participatory design process')
     this.getContext();
-    this.getLinks();
     this.formChanges();
+    this.getLinks();
   }
 
   getLinks(){
-    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id).subscribe(resp=>{
+    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id,3).subscribe(resp=>{
       this.citationsList = resp.response.getLinks;
       this.citationsList.map(resp=>{
         resp.citationId = resp.id
@@ -72,7 +72,7 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
     })
     //save links
     this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
-      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id).then(resp=>{
+      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id,3).then(resp=>{
         this.getLinks();
       })
       
@@ -94,9 +94,9 @@ export class ParticipatoryDesignProcessComponent implements OnInit {
 
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value);
+      //console.log("changes");
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("participatory_design").value, 500);
     })
   }
-
 
 }

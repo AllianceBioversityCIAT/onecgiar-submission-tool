@@ -9,7 +9,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 // import { IbdAngularComponentsModule } from './../../../../../../../../../../../../ibd-angular-library/projects/ibd-angular-components/src/lib/ibd-angular-components.module'
 import { EditTocButtonModule } from '../../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
 import { EoiCardModule } from '../../../context/measurable-objectives/components/eoi-card/eoi-card.module';
-import { ToggleFormatDateModule } from '../../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 @NgModule({
   declarations: [TaImpactAreaComponent],
@@ -20,8 +19,7 @@ import { ToggleFormatDateModule } from '../../../../../../../../shared/component
     IaVisualReferenceModule,
     IbdAngularComponentsModule,
     EditTocButtonModule,
-    EoiCardModule,
-    ToggleFormatDateModule
+    EoiCardModule
   ]
 })
 export class TaImpactAreaModule { }

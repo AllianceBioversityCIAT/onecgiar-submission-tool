@@ -5,7 +5,6 @@ import { InitiativesService } from './initiatives.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
-import { InteractionsService } from './interactions.service';
 @Injectable()
 export class UtilsService {
   private sidebarOpened = new BehaviorSubject<boolean>(false);
@@ -14,8 +13,7 @@ export class UtilsService {
   constructor(
     private router:Router, 
     private _initiativesService:InitiativesService,
-    private _authService:AuthService,
-    private _interactionsService:InteractionsService
+    private _authService:AuthService
   ){}
 
   openSidebar(value: boolean): void {
@@ -27,7 +25,7 @@ export class UtilsService {
   }
 
   goToEditToc(){
-    if(this._initiativesService.initiative.status == 'Approved' && this._authService.lsUserRoles.id != 1) return;
+
     this._initiativesService.getProposalTocByInitiativeId().pipe(map(res=> res?.response?.fullInitiativeToc?.toc_id)).subscribe((toc_id) => {
       console.log(toc_id)
       console.log(this._authService?.userValue?.id)

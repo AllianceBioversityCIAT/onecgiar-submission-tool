@@ -32,7 +32,6 @@ export class PreviewsDomain {
         AND i.initvStgId = gi.initvStgId
         AND i.initvStgId = ${initiativeId}
         AND i.active > 0
-        AND p.active > 0
        ORDER BY ini.id asc   
             `;
 
@@ -61,9 +60,8 @@ export class PreviewsDomain {
     try {
       // retrieve preview projected benefits
       const impactAreasQuery = `
-            SELECT p.id,p.impact_area_id,cia.name as impact_area_name
+            SELECT p.id,p.impact_area_id,p.impact_area_name
               FROM projection_benefits p
-              LEFT JOIN clarisa_impact_areas cia ON cia.id = p.impact_area_id 
              WHERE p.initvStgId = ${initiativeId}
                AND p.active > 0
              ORDER BY p.impact_area_id asc;   
@@ -249,10 +247,10 @@ export class PreviewsDomain {
              AND active = 1
                )
               `,
-        opportunitiesQuery = `
+        opportinitiesQuery = `
               SELECT id,opportunities_description,
                      risk_assessment_id,active
-              FROM opportunities opp
+              FROM opportunities
              WHERE risk_assessment_id in (
              SELECT id
                FROM risk_assessment
@@ -260,7 +258,7 @@ export class PreviewsDomain {
              SELECT id
              FROM manage_plan_risk
               WHERE initvStgId = ${initiativeId}
-                AND opp.active = 1
+                AND active = 1
                )
               );
               
@@ -268,10 +266,10 @@ export class PreviewsDomain {
 
       const managePlan = await this.queryRunner.query(managePlanQuery);
       const risk = await this.queryRunner.query(riskAssessmentQuery);
-      const opportunities = await this.queryRunner.query(opportunitiesQuery);
+      const opportinities = await this.queryRunner.query(opportinitiesQuery);
 
       risk.map((ri) => {
-        ri['opportunities'] = opportunities.filter((op) => {
+        ri['opportinities'] = opportinities.filter((op) => {
           return op.risk_assessment_id === ri.id;
         });
       });
