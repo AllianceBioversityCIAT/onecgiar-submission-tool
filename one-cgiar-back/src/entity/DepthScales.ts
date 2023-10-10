@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
+import { ProjectionBenefitsDepthScales } from './ProjectionBenefitsDepthScales';
 
 @Entity('depth_scales')
 export class DepthScales extends UpdatedCreatedAt {
@@ -14,4 +15,7 @@ export class DepthScales extends UpdatedCreatedAt {
 
   @Column({type: 'tinyint'})
   active: boolean;
+
+  @OneToMany(() => ProjectionBenefitsDepthScales, (projectionBenefitsDepthScales) => projectionBenefitsDepthScales.projectionBenefitsId)
+  projectionBenefitsDepthScales: ProjectionBenefitsDepthScales[];
 }

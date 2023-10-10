@@ -7,7 +7,7 @@ export class InsertProjectedProbabilities1631113106403
   public async up(queryRunner: QueryRunner): Promise<void> {
     const projectedProbabilitiesRepo = getRepository(ProjectedProbabilities);
 
-    const rojectedProbabilitiesData = projectedProbabilitiesRepo.create([
+    /*const rojectedProbabilitiesData = projectedProbabilitiesRepo.create([
       {
         id: 1,
         name: 'Very high certainty',
@@ -40,7 +40,7 @@ export class InsertProjectedProbabilities1631113106403
 
     const res = await projectedProbabilitiesRepo.save(
       rojectedProbabilitiesData
-    );
+    );*/
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}

@@ -10,7 +10,11 @@
     <div class="center_flex" style="margin: 10px 0;">
         <app-edit-toc-button (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
     </div>
-
+    <div class="content_date">
+        <div class="updated_at" *ngIf="this.lastUpdate">
+            <app-toggle-format-date [date]="this.lastUpdate"></app-toggle-format-date>
+          </div>
+    </div>
 
 
     <!-- <p>The following information is in read mode . Please refer to the <a href="http://">theory of change platform</a> and the <a href="http://">MELIA Guidance</a> to edit it.</p> -->
@@ -63,9 +67,9 @@
                     <tr *ngFor="let resultData of resultDataList">
                         <!-- <td *ngIf="resultData.hasOwnProperty('result_title')" [attr.colspan]="3" >Result title: {{this.resultData?.result_title}}</td> -->
                         <td class="t_col_5" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.type_name || 'Not provided'}}</td>
-                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.wp_acronym || 'Not provided'}}</td>
+                        <td class="t_col_4" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.wp_acronym && resultData?.wp_name ? '' : 'Not applicable'}} {{resultData?.wp_acronym || ''}}{{resultData?.wp_acronym ? ': ' : ''}} {{resultData?.wp_name || ''}}</td>
                         <td class="t_col_1" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');">{{resultData?.result_title || 'Not provided'}}</td>
-                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.geo_scope || 'Not provided'"></td>
+                        <td class="t_col_2" [attr.rowspan]="resultData?.rowSpan" *ngIf="resultData?.hasOwnProperty('rowSpan');" [innerHTML]="resultData?.is_global?'Global':resultData?.geo_scope || 'Not provided'"></td>
                         <td class="t_col_2">{{resultData?.indicator_name || 'Not provided'}}</td>
                         <td class="t_col_3">{{resultData?.unit_measurement  || 'Not provided'}}</td>
                         <td class="t_col_4">{{resultData?.data_source || 'Not provided'}}</td>

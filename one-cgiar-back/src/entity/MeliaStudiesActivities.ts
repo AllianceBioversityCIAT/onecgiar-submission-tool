@@ -10,6 +10,7 @@ import {
 import {ClarisaMeliaStudyTypes} from './ClarisaMeliaStudyTypes';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByStages} from './InititativesByStages';
+import { Users } from './Users';
 
 @Entity('melia_studies_activities')
 export class MeliaStudiesActivities extends UpdatedCreatedAt {
@@ -49,4 +50,7 @@ export class MeliaStudiesActivities extends UpdatedCreatedAt {
   @OneToOne(() => InitiativesByStages)
   @JoinColumn()
   initvStg!: InitiativesByStages;
+
+  @ManyToOne(() => Users, (user) => user.id)
+  updateUser: number;
 }

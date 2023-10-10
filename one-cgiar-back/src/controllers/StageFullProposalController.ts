@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getRepository} from 'typeorm';
+import { getRepository, QueryRunner } from 'typeorm';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativeStageHandler} from '../handlers/InitiativeStageDomain';
 import {Stages} from '../entity/Stages';
@@ -8,7 +8,10 @@ import {ProposalHandler} from '../handlers/FullProposalDomain';
 import {ResponseHandler} from '../handlers/Response';
 import {WorkPackages} from '../entity/WorkPackages';
 import {InitiativesApproval} from '../entity';
-
+import { DepthScales } from '../entity/DepthScales';
+import { pusherOST } from '../utils/pusher-util';
+import axios from 'axios';
+import { type } from 'os';
 /**
  * ***************************
  * SECTIONS FOR PROPOSAL STAGE
@@ -124,11 +127,34 @@ export async function getWorkPackages(req: Request, res: Response) {
  * @returns
  */
 export async function getWorkPackage(req: Request, res: Response) {
-  const {wrkPkgId} = req.params;
+
+  const {stageId, initiativeId, wrkPkgId} = req.params;
+
+  const initvStgRepo = getRepository(InitiativesByStages);
+  const stageRepo = getRepository(Stages);
 
   try {
+    // get stage
+    const stage = await stageRepo.findOne({
+      where: {id: stageId}
+    });
+    // get initiative by stage : proposal
+    const initvStg: InitiativesByStages = await initvStgRepo.findOne({
+      where: {initiative: initiativeId, stage}
+    });
+
+    // if not initiative by stage, throw error
+    if (initvStg == null) {
+      throw new BaseError(
+        'Read Workpackage: Error',
+        400,
+        `Initiative not found in stage: ${stage.description}`,
+        false
+      );
+    }
+
     // create new full proposal object
-    const fullPposal = new ProposalHandler();
+    const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     // get workpackage from proposal object
     const workpackage = await fullPposal.getWorkPackageId(wrkPkgId);
@@ -167,7 +193,8 @@ export async function getAllWorkPackagesProposal(req: Request, res: Response) {
 }
 
 /**
- * GET ALL WORK PACKAGES
+ ** GET ALL WORK PACKAGES
+ * ! THIS CONTROLLER IS USED BY CLARISA
  * @param req
  * @param res { workpackages }
  * @returns
@@ -181,7 +208,7 @@ export async function getAllWorkPackages(req: Request, res: Response) {
     const workpackages = await fullPposal.requestAllWorkPackages();
 
     res.json(
-      new ResponseHandler('Full Proposal: All Work Package.', {workpackages})
+      new ResponseHandler('Full Proposal: All Work Packages.', {workpackages})
     );
   } catch (error) {
     return res.status(error.httpCode).json(error);
@@ -481,7 +508,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
     probabilityName,
     impact_area_active,
     active,
-    dimensions
+    dimensions,
+    depthScaleList
   } = req.body;
 
   const initvStgRepo = getRepository(InitiativesByStages);
@@ -522,7 +550,8 @@ export async function patchProjectionBenefits(req: Request, res: Response) {
       probabilityName,
       impact_area_active,
       active,
-      dimensions
+      dimensions,
+      depthScaleList
     );
 
     res.json(
@@ -635,7 +664,7 @@ export async function getProjectionBenefitsByImpact(
 
 /**
  * PATCH IMPACT STRATEGIES
- * @param req impact_strategies_id, active, challenge_priorization, research_questions, component_work_package, performance_results, human_capacity, partners
+ * @param req impact_strategies_id, active, challenge_prioritization, research_questions, component_work_package, performance_results, human_capacity, partners
  * @param res { impactStrategies }
  * @returns { impactStrategies }
  */
@@ -760,7 +789,7 @@ export async function getImpactStrategies(req: Request, res: Response) {
  * @returns melia
  */
 export async function patchMeliaPlan(req: Request, res: Response) {
-  const {initiativeId, ubication} = req.params;
+  const {initiativeId, ubication, stageId} = req.params;
 
   const {melia_plan} = req.body.data ? JSON.parse(req.body.data) : req.body;
 
@@ -775,7 +804,7 @@ export async function patchMeliaPlan(req: Request, res: Response) {
     // get stage
 
     stage = await stageRepo.findOne({
-      where: {description: 'Full Proposal'}
+      where: {id: stageId}
     });
 
     // get initiative by stage : proposal
@@ -830,6 +859,7 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
   let stage;
+    
 
   try {
     // get stage
@@ -859,6 +889,23 @@ export async function patchMeliaResultsFramework(req: Request, res: Response) {
     }
     // create new full proposal object
     const fullPposal = new ProposalHandler(initvStg.id.toString());
+
+    const tocId = await fullPposal.tocIntegration(initiativeId);
+    
+    if(tocId.length > 0){
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      const params = {
+        "id_toc": tocId[0].toc_id,
+      }
+      let tocHost = await process.env.TOC_LAMBDA + '/toc';
+      const TocInformation =  await axios.post(
+        tocHost,
+        params,
+        {headers}
+      );
+    }
 
     /**
      * Validate if the initiative has old information
@@ -985,7 +1032,7 @@ export async function patchMeliaStudiesActivities(
 ): Promise<Response> {
   const {stageId, initiativeId} = req.params;
   const meliaStudiesActivitiesData = req.body;
-
+  const {userId} = res.locals.jwtPayload;
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
 
@@ -1013,7 +1060,7 @@ export async function patchMeliaStudiesActivities(
     const initvStgObj = new InitiativeStageHandler(initvStg.id.toString());
 
     const meliaStudiesActivities =
-      await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData);
+      await fullPposal.upsertMeliaStudiesActivities(meliaStudiesActivitiesData, userId);
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
@@ -1065,10 +1112,14 @@ export async function getMeliaStudiesActivities(
 
     const meliaStudiesActivities =
       await fullPposal.requestMeliaStudiesActivities();
+    
+    const resultsByMelia = 
+    await fullPposal.requestSelectResultsByMelias();
 
     res.json(
       new ResponseHandler('Full Proposal: MELIA studies and activities.', {
-        meliaStudiesActivities
+        meliaStudiesActivities,
+        resultsByMelia
       })
     );
   } catch (error) {
@@ -1092,6 +1143,9 @@ export async function patchManagePlanAndFiles(req: Request, res: Response) {
 
   //melia section files
   const files = req['files'];
+
+  console.log(files);
+  
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1655,6 +1709,7 @@ export async function getInnovationPackages(req: Request, res: Response) {
   }
 }
 
+
 /**
  * PATCH TOCS
  * @param req tocId,narrative, diagram, type, active
@@ -1696,7 +1751,7 @@ export async function patchTocs(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const tocs = await fullPposal.upsertTocs(toc);
-
+    pusherOST.tocTrigger('full-initiative-toc', initiativeId);
     res.json(
       new ResponseHandler('Full Proposal:Patch TOC', {
         tocs
@@ -1717,7 +1772,9 @@ export async function patchTocs(req: Request, res: Response) {
 export async function getTocByInitiative(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
   const toc = req.body;
-
+  console.log("__________________");
+  console.log(req.body);
+  console.log("_____________________________");
   //Validate stage
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -1745,7 +1802,7 @@ export async function getTocByInitiative(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const fullInitiativeToc = await fullPposal.requestFullInitiativeToc();
-
+    console.log(fullInitiativeToc);
     res.json(
       new ResponseHandler('Full Proposal:Get Full Initiative ToC', {
         fullInitiativeToc
@@ -1859,6 +1916,82 @@ export async function getISDCResponses(
   }
 }
 
+/**
+ * GET ISDC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getISDCResponsesStatus(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const ISDCResponses = await fullPposal.requestISDCResponsesStatus(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ISDC Responses status.', {
+        ISDCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+/**
+ * GET ToC Responses
+ * @param req
+ * @param res
+ * @returns
+ */
+ export async function getTOCResponsesReporting(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const {stageId} = req.params;
+
+  try {
+    // create new full proposal object
+    const fullPposal = new ProposalHandler();
+
+    const TOCResponses = await fullPposal.requestTOCProgress(stageId);
+
+    res.json(
+      new ResponseHandler('Full Proposal: ToC Responses reporting.', {
+        TOCResponses
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
+export async function getAllEndofInitiativeOutcome(req: Request, res: Response){
+  try {
+    const fullPposal = new ProposalHandler();
+    const eoi_outcome_by_initiatives = await fullPposal.requestAllEndofInitiativeOutcomes();
+    res.json(
+      new ResponseHandler(
+        'Full Proposal:Get End of Initiative Outcome for all Initiativa',
+        {
+          eoi_outcome_by_initiatives
+        }
+      )
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(error.httpCode).json(error);
+  }
+}
+
 export async function getEndofInitiativeOutcome(req: Request, res: Response) {
   const {stageId, initiativeId} = req.params;
 
@@ -1889,12 +2022,14 @@ export async function getEndofInitiativeOutcome(req: Request, res: Response) {
     const fullPposal = new ProposalHandler(initvStg.id.toString());
 
     const eoi = await fullPposal.requestEndofInitiativeOutcomes();
+    const eoiLastUpdate = await fullPposal.getLastUpdateEoi();
 
     res.json(
       new ResponseHandler(
         'Full Proposal:Get End of Initiative Outcome for Initiativa',
         {
-          eoi
+          eoi,
+          eoiLastUpdate
         }
       )
     );
@@ -1913,7 +2048,7 @@ export async function postInitiativeApproval(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const {user_id, initiativeId, is_approved} = req.body;
+  const {user_id, initiativeId, is_approved, approved_reason} = req.body;
 
   try {
     // create new full proposal object
@@ -1922,7 +2057,8 @@ export async function postInitiativeApproval(
     const newInitvApproval = await fullPposal.insertInitiativeApproval(
       user_id,
       initiativeId,
-      is_approved
+      is_approved,
+      approved_reason
     );
 
     console.log(newInitvApproval);

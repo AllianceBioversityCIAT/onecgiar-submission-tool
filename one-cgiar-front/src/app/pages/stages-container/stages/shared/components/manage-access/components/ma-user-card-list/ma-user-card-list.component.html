@@ -1,0 +1,15 @@
+<div class="see_container">
+    <div class="text">
+        See:
+    </div>
+    <div class="material-icons icon" (click)="onSelectOption(true)">
+        border_all
+    </div>
+    <div class="material-icons icon" (click)="onSelectOption(false)">
+        reorder
+    </div>
+</div>
+
+<div class="local_grid {{this._maVariablesService.orderBox ? 'grid-box': 'grid-column' }}">
+    <app-ma-user-card (onSelectOptionEvent)="onSelectOptionInItem()" [roles]="roles" [user]="user" [hidden]="user.active == 0" *ngFor="let user of users"></app-ma-user-card>
+</div>

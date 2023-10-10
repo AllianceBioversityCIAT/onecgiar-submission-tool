@@ -6,7 +6,7 @@ import {Narratives} from '../entity/Narratives';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
-import {Roles} from '../entity/Roles';
+import { Roles } from '../entity/Roles';
 import {Stages} from '../entity/Stages';
 import {StagesMeta} from '../entity/StagesMeta';
 import {TOCs} from '../entity/TOCs';
@@ -112,6 +112,9 @@ export const upsertSummary = async (req: Request, res: Response) => {
     countries,
     is_global
   } = req.body;
+
+
+
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -483,11 +486,12 @@ export async function removeBudget(req: Request, res: Response) {
  */
 export async function getInitiatives(req: Request, res: Response) {
   try {
+    const {userId} = res.locals.jwtPayload;
     // create new Meta Data object
     const initiativeshandler = new InitiativeHandler();
 
     // Get active initiatives and detail
-    let initiatives = await initiativeshandler.getAllInitiatives();
+    let initiatives = await initiativeshandler.getAllInitiatives(userId);
 
     if (initiatives.length == 0)
       res.json(
@@ -614,22 +618,21 @@ export const getInitiativesByUser = async (req: Request, res: Response) => {
 
   let initiatives,
     initvSQL = ` 
-        SELECT
+    SELECT
             initvStg.id AS initvStgId,
+            initiative.id as initId,
             stage.description AS currentStage,
             stage.id AS currentStageId,
             initiative.name AS initiativeName,
             initvStg.active AS initvStageIsActive,
-            -- initvStg.statusId AS initvStageStatus,
-            (SELECT status FROM statuses WHERE id = initvStg.statusId ) AS initvStageStatus,
-            (SELECT id FROM stages WHERE active = true) AS activeStageId,
-            (SELECT description FROM stages WHERE active = true) AS activeStageName           
-
+            s.status,
+            stage.id AS activeStageId
         FROM
             initiatives_by_users initvStgUsr
-        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId
+        LEFT JOIN initiatives_by_stages initvStg ON initvStg.initiativeId = initvStgUsr.initiativeId and initvStg.active > 0
         LEFT JOIN stages stage ON stage.id = initvStg.stageId
         LEFT JOIN initiatives initiative ON initiative.id = initvStg.initiativeId
+        left join statuses s on s.id = initvStg.statusId
         WHERE
             initvStgUsr.userId = ${userId}
     `;
@@ -778,7 +781,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
   let newUsrByInitv: InitiativesByUsers;
   try {
     let usersByInitiative = await initvUsrsRepo.find({
-      where: {initiative: initiativeId},
+      where: {initiative: initiativeId, user:userId},
       relations: ['role', 'user']
     });
     const user = await userRepo.findOne(userId);
@@ -799,6 +802,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     }
 
     if (usersByInitiative.length > 0) {
+      usersByInitiative[0]['user']['is_active'] = (active != undefined? active: usersByInitiative[0]['user']['is_active']);
       newUsrByInitv = new InitiativesByUsers();
       newUsrByInitv.active = active;
       newUsrByInitv.role = role;
@@ -880,7 +884,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
  * @param res
  */
 export const createInitiative = async (req: Request, res: Response) => {
-  const {name, user, current_stage} = req.body;
+  const {name, user, current_stage, official_code, acronym} = req.body;
   const userRepository = getRepository(Users);
   const initiativesRepository = getRepository(Initiatives);
   const initiativesByUsersRepository = getRepository(InitiativesByUsers);
@@ -892,6 +896,8 @@ export const createInitiative = async (req: Request, res: Response) => {
   const initByUsr = new InitiativesByUsers();
   const newInitStg = new InitiativesByStages();
   initiative.name = name;
+  initiative.acronym = acronym;
+  initiative.official_code = official_code;
 
   try {
     const errors = await validate(initiative);
@@ -1857,7 +1863,8 @@ export async function getProjectedBenefits(req: Request, res: Response) {
 
 export async function getProjectedProbabilities(req: Request, res: Response) {
   try {
-    const probabilities = await clarisa.requestProjectedProbabilities();
+    const initiativeshandler = new InitiativeHandler();
+    const probabilities = await initiativeshandler.requestProjectedProbabilities();
     res.json(new ResponseHandler('Requested probabilities.', {probabilities}));
   } catch (error) {
     console.log(error);

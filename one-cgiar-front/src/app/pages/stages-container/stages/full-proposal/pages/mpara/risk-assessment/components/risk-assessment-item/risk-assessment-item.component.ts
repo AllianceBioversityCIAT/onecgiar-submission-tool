@@ -23,7 +23,7 @@ export class RiskAssessmentItemComponent implements OnInit {
       id:new FormControl(null),
       // risks_achieving_impact:new FormControl( null),
       description_risk:new FormControl( null),
-      idBd:new FormControl( null),
+      risk_id:new FormControl( null),
       // likelihood:new FormControl(null),
       impact:new FormControl(null),
       risk_score:new FormControl( null),
@@ -39,6 +39,7 @@ export class RiskAssessmentItemComponent implements OnInit {
       // console.log("chnge");
       this.updateForm();
     })
+    if ((!this.riskAssessment.risks_achieving_impact && !this.riskAssessment.risks_achieving_impact_created)) this.riskTitleEditableIsActive = true;
   }
 
   activeRiskTitleEditable(){
@@ -64,6 +65,13 @@ export class RiskAssessmentItemComponent implements OnInit {
     this.riskAssessmentForm.get("risk_score").setValue(this.riskAssessment?.risk_score)
     this.riskAssessmentForm.get("manage_plan_risk_id").setValue(this.riskAssessment?.manage_plan_risk_id)
 
+  }
+
+  mapTheme(e){
+    console.log("as")
+    console.log(e)
+    console.log(this.riskAssessment)
+    this.riskAssessment.risks_theme = e.risks_theme;
   }
 
   updateForm(){

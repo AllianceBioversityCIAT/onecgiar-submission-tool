@@ -14,6 +14,7 @@ import {
   validateToCtoken
 } from '../utils/auth-login';
 import {UsersRepository} from '../repositories/usersRepository';
+import ActiveDirectory from 'activedirectory';
 
 require('dotenv').config();
 const pusher = new Pusher({
@@ -23,12 +24,15 @@ const pusher = new Pusher({
   cluster: `${process.env.PUSHER_APP_CLUSTER}`,
   useTLS: true
 });
-const ActiveDirectory = require('activedirectory');
+
 const ad = new ActiveDirectory(config.active_directory);
 
 export const login = async (req: Request, res: Response) => {
   const {email, password} = req.body;
   try {
+    // const validUser = await searchByEmail(email + '');
+    // console.log(validUser);
+
     const {token, name, roles, id} = await utilLogin(email, password);
     res.json(
       new ResponseHandler('User logged.', {token, email, name, roles, id})
@@ -235,14 +239,13 @@ export async function validateToCToken(req: Request, res: Response) {
 }
 
 export async function pusherUpdate(req: Request, res: Response) {
-  const tocStatus = req.body.tocStatus;
+  const tocStatus = 'example';
 
   try {
-    pusher.trigger('events-channel', 'new-status', {
-      tocStatus: `${tocStatus}`
-    });
+    pusher.trigger("toc-id-123", "updateToc", { message: "hello world" });
 
-    // res.send(authResponse);
+    // pusher.trigger('my-channel', 'my-event', {:message => 'hello world'})
+    res.json({response: {user_info: 'userInfo'}});
   } catch (error) {
     return res.status(error.httpCode).json(error);
   }

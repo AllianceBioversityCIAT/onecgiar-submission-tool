@@ -10,6 +10,32 @@
   .local-col {}
 }
 
+.container_scroll-y{
+  overflow-y: auto;
+  max-height: 300px;
+  /* width */
+  &::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;
+  border-radius: 100px;
+}
+
+/* Handle */
+  &::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 100px;
+}
+
+/* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -34,9 +60,63 @@ tr:nth-child(even) {
 
 
 .toggle-view-button-container, .noDataInfo {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+
+
+  .export-word {
+    background-color: white;
+    border: 1px solid rgb(6, 143, 197);
+    color: rgb(6, 143, 197);
+    border-radius: 5px;
+    padding: 10px 25px;
+    margin-bottom: 20px;
+    position: absolute;
+    overflow: hidden;
+    left: 0px;
+    top: 0px;
+    cursor: pointer;
+
+    span {
+      position: relative;
+      z-index: 1;
+      transition: all ease-in-out .3s;
+      font-weight: 500;
+
+    }
+
+    &::after {
+      content: '';
+      background-color: rgb(6, 143, 197);
+      width: 1px;
+      height: 1px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transition: all ease-in-out .4s;
+      z-index: 0;
+      border-radius: 100px;
+      opacity: .5;
+    }
+
+    &:hover {
+      span {
+        color: white;
+        transition: all ease-in-out .3s;
+
+      }
+
+      &::after {
+        transform: scale(400);
+        transition: all ease-in-out .6s;
+        opacity: 1;
+      }
+    }
+
+
+  }
 
   .toggle-view-button {
     background-color: white;

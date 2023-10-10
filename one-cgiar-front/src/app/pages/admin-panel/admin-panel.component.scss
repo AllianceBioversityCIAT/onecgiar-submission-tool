@@ -1,0 +1,63 @@
+.local_container {
+    background-color: white;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.admin_container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+
+    .container_menu {
+        height: 100%;
+        max-height: calc(100vh - 50px);
+        color: white;
+        background-color: var(--ibdc-black-1);
+        padding: 8px 0px 8px 8px;
+    }
+}
+
+.right_container{
+    width: 100%;
+    max-height: calc(100vh - 50px);
+    padding: 20px 30px;
+}
+
+::ng-deep{
+    p-panelmenu{
+        div{
+            div{
+                .active-h{
+                    background-color: #e4fff3 !important;
+                    &:hover{
+                        background-color: #ccf6e3 !important;
+                    }
+                }
+
+                div{
+                    div{
+                        p-panelmenusub{
+                            ul{
+                                li{
+                                    .active-b{
+                                        background-color: #3aa777 ;
+                                        &:hover{
+                                            background: #136d46  !important;
+                                        }
+                                        span{
+                                            color: white !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

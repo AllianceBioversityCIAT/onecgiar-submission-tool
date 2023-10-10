@@ -15,4 +15,6 @@ export interface MeliaStudiesAndActivities {
   countries: [];
   regions: [];
   initiatives: [];
+  selectResults:[];
+  resultsByMeliaList?:any[];
 }

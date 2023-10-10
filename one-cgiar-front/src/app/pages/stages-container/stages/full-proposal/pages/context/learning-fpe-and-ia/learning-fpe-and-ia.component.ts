@@ -16,7 +16,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   contextForm: FormGroup;
   showform = false;
   citationColAndTable={table_name: "context", col_name: "key_learnings", active: true}
-  citationsList=[]
+  citationsList=[];
   extraValidation = false;
 
   constructor(
@@ -41,7 +41,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   }
 
   getLinks(){
-    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id,3).subscribe(resp=>{
+    this._initiativesService.getLinks(this.citationColAndTable,this._initiativesService.initiative.id).subscribe(resp=>{
       this.citationsList = resp.response.getLinks;
       this.citationsList.map(resp=>{
         resp.citationId = resp.id
@@ -67,7 +67,7 @@ export class LearningFpeAndIaComponent implements OnInit {
     })
     //save links
     this.addCitationColAndTableInList(this.citationsList,this.citationColAndTable).then(()=>{
-      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id,3).then(resp=>{
+      this._initiativesService.addLinks(this.citationsList,this._initiativesService.initiative.id).then(resp=>{
         this.getLinks();
       })
       
@@ -90,7 +90,7 @@ export class LearningFpeAndIaComponent implements OnInit {
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
       //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("key_learnings").value);
     })
   }
 

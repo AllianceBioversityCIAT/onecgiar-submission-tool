@@ -6,6 +6,7 @@ import { MeliaStudiesAndActivities } from './interfaces/melia-studies-and-activi
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
 import { InteractionsService } from '@app/shared/services/interactions.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -15,8 +16,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class MeliaStudiesAndActivitiesComponent implements OnInit {
   list: MeliaStudiesAndActivities[] = [];
-
   attr_list_config: AttributesListConfiguration[] = [
+    {
+      attribute: 'id',
+      name: "ID",
+    },
     {
       attribute: 'type_melia',
       name: "Type of MELIA study or activity",
@@ -41,11 +45,16 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       attribute: 'geographic_scope',
       name: "Geographic Scope"
     },
+    {
+      attribute: 'resultsHtml',
+      name: "TOC EOI Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to"
+    },
   ]
   showTableViewVariable = true;
   meliaStudyTypes = [];
   geographicScopes: FormGroup[] = [];
   years: [];
+  htmlTextMeliaAlert = `If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information.`;
   constructor(
     public _initiativesService: InitiativesService,
     public _dataControlService: DataControlService,
@@ -64,7 +73,7 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     });
     this._initiativesService.getYears().subscribe( res => {
       this.years = res.response.years;
-      console.log('Years', this.years);
+      // console.log('Years', this.years);
     })
   }
 
@@ -91,7 +100,8 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
         is_global: null,
         countries: [],
         regions: [],
-        initiatives: []
+        initiatives: [],
+        selectResults: []
       }
     )
     this.geographicScopes.push(new FormGroup({ is_global: new FormControl(this.list[this.list.length - 1].is_global) }));
@@ -114,47 +124,73 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
     }
   }
 
-  getmeliaStudActiByInitId() {
-    console.log(this._initiativesService.initiative.id)
-    this._initiativesService.getmeliaStudActiByInitId().pipe(map(res => res?.response?.meliaStudiesActivities)).subscribe((resp: MeliaStudiesAndActivities[]) => {
-      console.log(resp)
-      this.list = resp;
+  checkActives(list){
+    return list.some(item=>item.active == true)
+   }
 
+   resultToHtml(){
+    this.list.map((listItem:any)=>{
+      let resultsHtml = "";
+      listItem.selectResults.map(resultItem=>{
+        resultsHtml+='<p>'+resultItem?.fullResultTitle+'</p>';
+      })
+
+      listItem.resultsHtml = resultsHtml;
+     
+    })
+   }
+
+  getmeliaStudActiByInitId() {
+    this._initiativesService.getmeliaStudActiByInitId().subscribe((resp: any) => {
+      const resultsByMeliaList:ResultsByMelia[] = resp?.response?.resultsByMelia;
+      resultsByMeliaList.map(resultItem=>{
+        resultItem.id = null;
+        resultItem.fullResultTitle = `(${resultItem.typeName}) ${resultItem.resultTitle || 'Name not provided'}`
+      })
+      this.list = resp?.response?.meliaStudiesActivities;
       this.list.forEach(melia => {
+        melia.resultsByMeliaList = JSON.parse(JSON.stringify(resultsByMeliaList))
         this.geographicScopes.push(new FormGroup({
           is_global: new FormControl(melia.is_global),
         })
         );
       });
 
-      console.log(this.geographicScopes);
+      this.resultToHtml()
+
+      forkJoin({
+        initiatives: this._initiativesService.getInitiativesList(),
+        regions: this._initiativesService.getCLARISARegions(''),
+        countries: this._initiativesService.getCLARISACountries()
+      }).subscribe(({initiatives, regions, countries}) => {
 
 
-      //MAP INITIATIVES
-      this._initiativesService.getInitiativesList().subscribe(initiatives => {
+        //Map Initiatives
         this.list.map((melia: any) => {
           melia.initiatives.map(mapInit => {
             initiatives.response.initiatives.forEach(initItem => {
-              if (initItem.initiativeId == mapInit.initiativeId) mapInit.name = initItem.name;
+              if (initItem.initiativeId == mapInit.initiativeId) {
+                mapInit.name = initItem.name;
+                mapInit.displayName = initItem.displayName
+              } 
             })
           })
           // this._dataControlService.showinitiatives = true;
-        })
-      });
-      //MAP REGIONS
-      this._initiativesService.getCLARISARegions('').subscribe(regions => {
+        });
+
+
+        //Map Regions
         this.list.map((melia: any) => {
           melia.regions.map(mapReg => {
             regions.response.regions.forEach(regionItem => {
-              if (regionItem.id == mapReg.region_id) mapReg.name = regionItem.name;
+              if (regionItem.region_id == mapReg.region_id) mapReg.name = regionItem.name;
             })
           })
           // this._dataControlService.showRegions = true;
-        })
-      });
+        });
 
-      //MAP COUNTRIES
-      this._initiativesService.getCLARISACountries().subscribe(countries => {
+
+        //Map Countries
         this.list.map((melia: any) => {
           melia.countries.map(mapCoun => {
             countries.response.countries.forEach(countryItem => {
@@ -163,16 +199,19 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
           })
         });
+        
 
         this.formatGeographicScope(this.list);
-        // this._dataControlService.showCountries = true;
-      })
-        ;
-    })
+
+      });
+
+
+
+    });
   }
 
   saveSection() {
-    console.log(this.list)
+    // console.log(this.list[0].selectResults)
 
     //Update is global from formControl to body
     for (let i = 0; i < this.list.length; i++) {
@@ -186,8 +225,9 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
       melia.countries.map((coun: any) => coun.meliaStudyId = Number(melia.id));
       melia.initiatives.map((init: any) => init.meliaStudyId = Number(melia.id));
     }
+    // console.log(this.list)
     this._initiativesService.patchmeliaStudActiByInitId(this.list).subscribe(resp => {
-      console.log(resp);
+      // console.log(resp);
       this._interactionsService.successMessage('MELIA studies and activities has been saved');
       // this._interactionsService.warningMessage('MELIA studies and activities has been saved, but there are incomplete fields');
       this.getmeliaStudActiByInitId();
@@ -198,12 +238,25 @@ export class MeliaStudiesAndActivitiesComponent implements OnInit {
 
   formatGeographicScope(arrayMelias: MeliaStudiesAndActivities[]) {
     for (const melia of arrayMelias) {
-      melia['geographic_scope'] = `
-      <p><strong>Global scope: </strong>${melia.is_global ? 'Yes' : 'No'}</p>
+      melia['geographic_scope'] = melia.is_global == undefined ? 
+      null :
+      `<p><strong>Global scope: </strong>${melia.is_global == true ? 'Yes' : 'No'}</p>
       ${melia.regions.length ? `<p><strong>Regions: </strong>${melia.regions.map((coun: any) => coun.name).join(', ')}</p>` : ''}
       ${melia.countries.length ? `<p><strong>Countries: </strong>${melia.countries.map((coun: any) => coun.name).join(', ')}</p>` : ''}
       `
     }
   }
 
+}
+
+interface ResultsByMelia {
+  id: number;
+  resultTitle: string;
+  typeId: number;
+  typeName: string;
+  wpAcronym?: string;
+  wpName?: string;
+  wpId?: number;
+  resultsHtml?:string
+  fullResultTitle?:string;
 }

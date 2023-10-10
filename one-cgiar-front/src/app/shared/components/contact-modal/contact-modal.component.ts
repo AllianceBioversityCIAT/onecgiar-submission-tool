@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-contact-modal',
@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contact-modal.component.scss']
 })
 export class ContactModalComponent implements OnInit {
-
+  @Input() showModal: boolean = false;
+  @Output() close = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onclose(){
+    this.close.emit()
+  }
+
+  setModalStatus(){
+    this.showModal = !this.showModal;
+    console.log(this.showModal)
   }
 
 }

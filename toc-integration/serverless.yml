@@ -1,0 +1,14 @@
+org: ciatdev
+app: one-cgiar-toc-integration
+service: one-cgiar-toc-integration
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: '*'

@@ -23,15 +23,15 @@ export class UsersService {
       .pipe(catchError(this.handlerError));
   }
 
-  new(user: User): Observable<User> {
+  new(user): Observable<User> {
     return this.http
       .post<User>(`${environment.apiUrl}/users`, user)
       .pipe(catchError(this.handlerError));
   }
 
-  update(userId: number, user: User): Observable<User> {
+  update(user: any): Observable<User> {
     return this.http
-      .patch<User>(`${environment.apiUrl}/users/${userId}`, user)
+      .put<User>(`${environment.apiUrl}/users`, user)
       .pipe(catchError(this.handlerError));
   }
 
@@ -48,5 +48,9 @@ export class UsersService {
     }
     window.alert(errorMessage);
     return throwError(errorMessage);
+  }
+
+  getRoles(): Observable<any> {
+    return this.http.get<any[]>(`${environment.apiUrl}/roles`);
   }
 }

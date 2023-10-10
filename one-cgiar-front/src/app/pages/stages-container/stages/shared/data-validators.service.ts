@@ -148,33 +148,34 @@ export class DataValidatorsService {
 
 
 
-  wordCounterIsCorrect(textTocount,maxWords) {
-    let words = 0;
-    if (textTocount) {
-      let textReplaced = textTocount.replace(/(<(\/?p)>)|(&nbsp;)/gi, ' ').replace(/(<([^>]+)>)/gi, '');
-      let splitWords = textReplaced.split(' ')
-      if (splitWords.length) {
-        words = 0;
-        splitWords.map(item => {
-          if (item === '' || item === '\n' || item === '\t') return;
-          words++
-        })
+   wordCounterIsCorrect(textTocount,minWords = 1) {
+     let words = 0;
+     let validCountWords: boolean = false;
+     if (textTocount) {
+       let textReplaced = textTocount.replace(/(<(\/?p)>)|(&nbsp;)/gi, ' ').replace(/(<([^>]+)>)/gi, '');
+       let splitWords = textReplaced.split(' ')
+       if (splitWords.length) {
+         words = 0;
+         splitWords.map(item => {
+           if (item === '' || item === '\n' || item === '\t') return;
+           words++
+         })
 
-        if (words > maxWords) {
-          return false;
-        }else{
-          return true;
-        }
-      } else {
-        return true;
-      }
+         if (words < minWords) {
+          validCountWords = false;
+         }else{
+          validCountWords = true;
+         }
+       } else {
+        validCountWords = true;
+       }
 
-    } else {
-      return true;
-    }
+     } else {
+      validCountWords = true;
+     }
 
-
-  }
+     return validCountWords;
+   }
 
     
 // // no encuentra active true entonces solo false

@@ -10,10 +10,25 @@
     .navbar-options{
         display: flex;
         gap: 10px;
+        a{
+            text-decoration: none;
+            color: unset;
+        }
     }
 }
 .navbar-title.active{
-    background-color: #4f9e52b0 !important;
+    background-color: #3aa777 !important;
+    border-radius: 3px 3px 0px 0px;
+    // overflow: hidden;
+    &::before{
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: white;
+    }
 }
 .navbar-title {
 
@@ -21,19 +36,21 @@
     color: #fff;
     cursor: pointer;
     font-weight: 400;
-    font-size: 15px;
+    font-size: 13px;
     height: 40px;
     outline: none;
     padding: 1.3rem 1rem;
     transition: all ease .3s;
-    background-color: #666;
+    background: #136d46;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+    position: relative;
     &:hover{
         transition: all ease .3s;
-        background-color: rgb(68, 68, 68);
         border-radius: 3px;
+
     }
 }
 
@@ -75,10 +92,10 @@
         align-items: center;
         justify-content: center;
         // padding: 0.7rem 3.5rem;
-        background-color: white;
+        background-color: rgb(61, 61, 61);
         border-radius: 30px 100px 100px 30px;
         padding-left: 15px;
-        color: rgb(61, 61, 61);
+        color: white;
         i{
             margin-right: 7px;
         }
@@ -125,4 +142,28 @@
 .navbar-logout:hover {
     transition: all ease .3s;
     background: rgb(68, 68, 68);
+}
+
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 1400px) {
+    .platform-name{
+        width: max-content !important;
+        margin-right: 20px !important;
+    }
+    .navbar-title{
+        padding: 0px 6px !important;
+        font-weight: 400 !important;
+        font-size: 12px !important;
+        gap: 3px;
+    }
+    .navbar-options{
+        gap: 3px !important;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 1400px) {
+
 }

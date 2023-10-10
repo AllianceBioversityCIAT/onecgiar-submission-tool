@@ -1,17 +1,30 @@
 <div class="navbar-content" *ngIf="_interactionsService.showHeader">
     <div class="navbar-options">
-        <div class="cgiar-logo" routerLink="/home">
+        <a class="cgiar-logo" routerLink="/home">
             <app-cgiar-logo-svg></app-cgiar-logo-svg>
-        </div>
-        <div class="platform-name" routerLink="/home"><strong>One CGIAR </strong><div class="outline-font">Submission Tool</div></div>
+        </a>
+        <a class="platform-name" routerLink="/home"><strong>One CGIAR </strong>
+            <div class="outline-font">Submission Tool</div>
+        </a>
         <!-- <i class="cgiar-logo"></i> -->
 
-        <div class="navbar-title" routerLink="/home" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">Initiatives</div>
-        <div class="navbar-title" routerLink="/bi" routerLinkActive="active" (click)="_interactionsService.collapseHeader = false">BI</div>
+        <a class="navbar-title" routerLink="/home" routerLinkActive="active">Initiatives
+            <i class="material-icons">list</i>
+        </a>
+        <a class="navbar-title" routerLink="/bi" routerLinkActive="active">Business Intelligence Dashboard
+            <i class="material-icons">poll</i>
+        </a>
+        <a class="navbar-title"
+            href="https://cgiar-prms.notion.site/732dccbbf1aa497998e1014b6f0ff23d?v=353021775b8441499a6c20cad279da24"
+            target="_blank">FAQ
+            <i class="material-icons">contact_support</i>
+        </a>
+        <a class="navbar-title" *ngIf="this._dataControlService.isAdmin" routerLink="/admin"
+            routerLinkActive="active">Admin panel <i class="material-icons">admin_panel_settings</i></a>
         <!-- <div class="navbar-title">Users online {{ this.pusherService.presenceChannel?.members.count}}</div> -->
     </div>
     <div class="navbar-opt">
-        
+
         <div class="user-information">
             <i class="material-icons">account_circle</i>
             <div class="navbar-name">{{name}}</div>

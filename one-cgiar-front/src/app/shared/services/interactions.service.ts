@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class InteractionsService {
-  collapseHeader = false;
   showHeader = true;
   noWp = false;
   requests = [];
@@ -86,6 +85,26 @@ export class InteractionsService {
       backdrop: '#020d11a1'
     }).then((result) => {
       callback(result.isConfirmed);
+    })
+  }
+
+  confirmationInputModal(messageObj, callback) {
+    Swal.fire({
+      title: messageObj?.title ? messageObj.title : 'Are you sure?',
+      html: messageObj?.text ? messageObj.text : "You won't be able to revert this!",
+      icon: messageObj?.icon ? messageObj.icon : 'warning',
+      showCancelButton: messageObj?.cancelButton ? messageObj.cancelButton : true,
+      confirmButtonColor:  messageObj?.confirmButtonColor ? messageObj.confirmButtonColor:'#eb4444',
+      cancelButtonColor:  messageObj?.cancelButtonColor ? messageObj.cancelButtonColor:'#37474F',
+      confirmButtonText:  messageObj?.confirmText ? messageObj.confirmText:'Yes, delete it!',
+      reverseButtons: true,
+      backdrop: '#020d11a1',
+      input: messageObj?.input ? messageObj?.input : null,
+      inputLabel: messageObj?.inputLabel ? messageObj?.inputLabel : null,
+      inputPlaceholder: messageObj?.inputPlaceholder ? messageObj?.inputPlaceholder : null,
+      inputAttributes: messageObj?.inputAttributes ? messageObj?.inputAttributes : null,
+    }).then((result) => {
+      callback(result);
     })
   }
 
