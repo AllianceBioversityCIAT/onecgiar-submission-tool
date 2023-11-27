@@ -1534,40 +1534,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       // Validate Sections
       let validationContextSQL = `
         SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
-		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
-		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
-		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
-	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
-	    OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
+        1 as validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -1575,17 +1542,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
         AND sec.description='context';
         `;
 
-      var validationContext = await this.queryRunner.query(
+      const validationContext = await this.queryRunner.query(
         validationContextSQL
       );
 
-      validationContext[0].validation = parseInt(
-        validationContext[0].validation
-      );
-
-      generalValidations = validationContext[0].validation;
-
-      var {
+      const {
         challengeStatement,
         measurableObjectives,
         learning,
@@ -1594,6 +1555,19 @@ export class MetaDataHandler extends InitiativeStageHandler {
         participatory,
         projectionBenefits
       } = await this.validationSubsectionContext();
+
+      const constexGeneralValid: number =
+        parseInt(challengeStatement[0].validation) *
+        parseInt(measurableObjectives[0].validation) *
+        parseInt(learning[0].validation) *
+        parseInt(prioritySetting[0].validation) *
+        parseInt(comparativeAdvantage[0].validation) *
+        parseInt(participatory[0].validation) *
+        parseInt(projectionBenefits[0].validation);
+
+      validationContext[0].validation = constexGeneralValid;
+
+      generalValidations = validationContext[0].validation;
 
       validationContext.map((con) => {
         con['subSections'] = [
