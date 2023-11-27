@@ -6,7 +6,6 @@ import { WpDataControlService } from '../../services/wp-data-control.service';
 declare var $
 import Viewer from 'viewerjs';
 import { UtilsService } from '../../../../../../../../../shared/services/utils.service';
-import { PusherService } from '../../../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-wp-toc',
@@ -25,16 +24,12 @@ export class WpTocComponent implements OnInit {
     public _initiativesService: InitiativesService,
     private _wpDataControlService:WpDataControlService,
     public http: HttpClient,
-    public _utilsService:UtilsService,
-    private _pusherService:PusherService
+    public _utilsService:UtilsService
   ) { 
   }
 
   ngOnInit(): void {
     this.getWpById();
-    this._pusherService.listenTocChange('wp-toc',()=>{
-      this.getWpById();
-    });
   }
 
   getWpById(){

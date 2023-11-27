@@ -25,14 +25,14 @@ export class ResultsIndicators extends UpdatedCreatedAt {
   @Column({type: 'text'})
   baseline_value: string;
 
-  @Column({type: 'text', nullable: true})
-  baseline_year!: string;
+  @Column({type: 'int'})
+  baseline_year: number;
 
   @Column({type: 'text'})
   target_value: string;
 
-  @Column({type: 'text', nullable: true})
-  target_year!: string;
+  @Column({type: 'int'})
+  target_year: number;
 
   @Column({type: 'tinyint'})
   active: boolean;

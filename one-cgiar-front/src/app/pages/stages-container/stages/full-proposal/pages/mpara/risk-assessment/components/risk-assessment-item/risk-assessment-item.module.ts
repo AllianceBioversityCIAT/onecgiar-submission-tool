@@ -8,7 +8,6 @@ import { IbdAngularComponentsModule } from 'ibd-angular-components';
 import { ButtonModule } from 'primeng/button';
 import { OpportunityItemModule } from '../opportunity-item/opportunity-item.module';
 import { ButtonEditOrDeleteModule } from '../../../../../../shared/components/button-edit-or-delete/button-edit-or-delete.module';
-import { AddButtonModule } from '../../../../../../../../../shared/components/add-button/add-button.module';
 
 
 
@@ -24,8 +23,7 @@ import { AddButtonModule } from '../../../../../../../../../shared/components/ad
     IbdAngularComponentsModule,
     ButtonModule,
     OpportunityItemModule,
-    ButtonEditOrDeleteModule,
-    AddButtonModule
+    ButtonEditOrDeleteModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

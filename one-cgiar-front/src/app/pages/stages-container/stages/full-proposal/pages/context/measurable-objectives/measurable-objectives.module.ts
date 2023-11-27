@@ -10,7 +10,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { UtilsModule } from '../../../../../../../shared/components/utils/utils.module';
 import { EoiCardModule } from './components/eoi-card/eoi-card.module';
 import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
-import { ToggleFormatDateModule } from '../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -24,8 +23,7 @@ import { ToggleFormatDateModule } from '../../../../../../../shared/components/t
     ReactiveFormsModule,
     NgxSpinnerModule,
     EoiCardModule,
-    EditTocButtonModule,
-    ToggleFormatDateModule
+    EditTocButtonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

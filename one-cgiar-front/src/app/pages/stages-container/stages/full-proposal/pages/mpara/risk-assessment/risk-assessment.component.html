@@ -1,34 +1,8 @@
 <section-title name="Risk assessment"></section-title>
 
-<div class="section-container animate__animated animate__fadeIn" *ngIf="this.managementPlan?.riskassessment?.length">
+<div class="section-container animate__animated animate__fadeIn">
 
-    <div *ngFor="let riskAssessment of this.managementPlan?.riskassessment; let i=index" style="position: relative; z-index: 0;">
-        <app-collapsible-container [collapse]="true" [contentStyles]="{'padding': '0px'}">
-            <div header><strong style="margin-right: 5px;">{{i+1}} - {{riskAssessment?.risks_achieving_impact || 'No risk name'}}</strong></div>
-            <div content>
-                <app-risk-assessment-item  [riskAssessment]="riskAssessment" [managementPlan]="this.managementPlan" [risksList]="this.risksList">
-                </app-risk-assessment-item>
-            </div>
-        </app-collapsible-container>
-
-    </div>
-
-
-<div class="justify_content_end save-button-section"
-    [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)"
-    *ngIf="!_initiativesService.initiative.readonly">
-    <div (click)="saveSection()">
-        <ibdc-save-button
-            [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
-        </ibdc-save-button>
-    </div>
-</div>
-
-
-
-
-
-    <form (ngSubmit)="saveSection()" *ngIf="false">
+    <form (ngSubmit)="saveSection()" *ngIf="showForm">
 
 
         <!-- <div class="progress_information">
@@ -57,14 +31,14 @@
                             inputTitle:'Select top 5 risks',
                             selectList: this.risksList,
                             selectItemName:'risks_achieving_impact',
-                            selectItemId:'risk_id',
+                            selectItemId:'idBd',
                             frontendSearchAttribute:'risks_achieving_impact',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
                             savedList:{
                                 list:this.managementPlan.riskassessment,
-                                selectItemId:'risk_id',
+                                selectItemId:'idBd',
                                 selectItemName:'risks_achieving_impact',
-                                idToSave:'risk_id',
+                                idToSave:'idBd',
                                 labelName:'regions'
                             }
                            }"></ibdc-select-multiple>
@@ -131,7 +105,7 @@
 
             </div>
         </div>
-        <div class="justify_content_end save-button-section" [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
+        <div class="justify_content_end" [hidden]="(this._dataValidatorsService.countAtributeBooleanInArray(this.managementPlan?.riskassessment,'selected') != 5 && this.stepNumber == 1)" *ngIf="!_initiativesService.initiative.readonly">
             <ibdc-save-button
                 [options]="{readOnlyVariable: _initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}">
             </ibdc-save-button>

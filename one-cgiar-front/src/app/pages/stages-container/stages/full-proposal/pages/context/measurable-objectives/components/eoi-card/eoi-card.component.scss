@@ -24,18 +24,9 @@
             align-items: center;
             justify-content: center;
 
-            
             .title {
                 color: white;
-                font-weight: 500; 
-            }
-            .ellipsis{
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;  
-            }
-            .noellipsis{
-                padding-right: 10px;
+                font-weight: 500;
             }
 
             .line_1 {

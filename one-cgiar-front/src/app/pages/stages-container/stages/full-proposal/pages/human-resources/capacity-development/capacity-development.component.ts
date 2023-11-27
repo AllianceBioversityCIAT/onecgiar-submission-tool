@@ -65,7 +65,7 @@ export class CapacityDevelopmentComponent implements OnInit {
       //console.log("Human resources");
       //console.log(resp);
       this.getHumanResources();
-      this.secionForm.valid && this.extraValidation?
+      this.secionForm.valid && this.extraValidation ?
       this._interactionsService.successMessage('Human resources has been saved'):
       this._interactionsService.warningMessage('Human resources  has been saved, but there are incomplete fields')
     })
@@ -75,9 +75,9 @@ export class CapacityDevelopmentComponent implements OnInit {
 
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("example").value, 250);
+      //console.log(this.extraValidation);
     })
   }
-
 
 }

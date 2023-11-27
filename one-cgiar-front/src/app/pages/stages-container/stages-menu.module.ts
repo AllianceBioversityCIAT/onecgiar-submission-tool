@@ -14,15 +14,11 @@ import { MenuModule } from '../../shared/components/menu/menu.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { SectionBreadcrumbModule } from '../../shared/components/utils/section-breadcrumb/section-breadcrumb.module';
 import { MaterialModule } from '../../material.module';
-import { MaUserCardComponent } from './stages/shared/components/manage-access/components/ma-user-card/ma-user-card.component';
-import { MaUserCardListComponent } from './stages/shared/components/manage-access/components/ma-user-card-list/ma-user-card-list.component';
-import { ButtonEditOrDeleteModule } from './stages/shared/components/button-edit-or-delete/button-edit-or-delete.module';
 import { InitiativeStatusInformationComponent } from './stages/components/initiative-status-information/initiative-status-information.component';
 import { FooterModule } from '../../shared/components/footer/footer.module';
 
-
 @NgModule({
-  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, MaUserCardComponent, MaUserCardListComponent, InitiativeStatusInformationComponent],
+  declarations: [StagesMenuComponent, ManageAccessComponent, EditRolUserComponent, CreateUsersComponent, InitiativeStatusInformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
@@ -36,7 +32,6 @@ import { FooterModule } from '../../shared/components/footer/footer.module';
     MenuModule,
     TooltipModule,
     SectionBreadcrumbModule,
-    ButtonEditOrDeleteModule,
     FooterModule
   ]
 })

@@ -14,7 +14,6 @@ export class GeographicScopeComponent implements OnInit {
   @Input() regionsSelectedList;
   @Input() countriesSelectedList=[];
   @Input() localForm:FormGroup;
-  @Input() subject: String;
   showForm=false;
   constructor(
     public _initiativesService:InitiativesService,
@@ -26,12 +25,12 @@ export class GeographicScopeComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.localForm.get('is_global').value);
-    // console.log(this.regionsSelectedList)
+    console.log(this.regionsSelectedList)
     this.setIsGlobal(this.localForm.value.is_global);
   }
   
   setIsGlobal(value){
-    this.localForm.controls['is_global'].setValue(value);
+    this.localForm.controls['is_global'].setValue(value || false);
     // console.log(this.localForm.value.is_global);
   }
 

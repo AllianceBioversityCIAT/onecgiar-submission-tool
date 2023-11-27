@@ -109,7 +109,7 @@ export const getClaRegionsCgiar = async () => {
 // export const getClaInstitutions = async (req: Request, res: Response) => {
 export const getClaInstitutions = async () => {
   try {
-    const institutions = await axios.get(clarisaHost + 'old-institutions/simple', {
+    const institutions = await axios.get(clarisaHost + 'institutionsSimple', {
       auth: {
         username: process.env['clarisa_user'],
         password: process.env['clarisa_password']
@@ -206,9 +206,8 @@ export async function requestClaInstitution(req: Request, res: Response) {
         `);
     console.log(config[0].value);
     // global unit assigned to SBT **should come from DB config table
-    const misAcronym = config[0].value;
+    const cgiarEntity = config[0].value;
     // axios request body params
-
     const params = {
       name,
       acronym,
@@ -217,8 +216,7 @@ export async function requestClaInstitution(req: Request, res: Response) {
       hqCountryIso,
       externalUserMail,
       externalUserName,
-      externalUserComments,
-      misAcronym
+      externalUserComments
     };
 
     // axios header
@@ -229,7 +227,7 @@ export async function requestClaInstitution(req: Request, res: Response) {
     };
 
     const requestedInst = await axios.post(
-      clarisaHost + `partner-requests/create`,
+      clarisaHost + `${cgiarEntity}/institutions/institution-requests`,
       params,
       {headers}
     );
@@ -432,7 +430,7 @@ export async function getClaGlobalTargets() {
  */
 export async function getClaMeliaStudyTypes() {
   try {
-    const sdgTargets = await axios.get(clarisaHost + 'study-types', {
+    const sdgTargets = await axios.get(clarisaHost + 'MELIA/study-types', {
       auth: {
         username: process.env['clarisa_user'],
         password: process.env['clarisa_password']

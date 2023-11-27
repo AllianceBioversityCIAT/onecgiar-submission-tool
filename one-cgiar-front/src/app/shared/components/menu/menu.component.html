@@ -4,7 +4,6 @@
         [userMenu]="this._dataControlService.userMenu"></app-menu-stage> -->
     <div class="menu-title">
         Menu
-        <i class="material-icons" (click)="this._menuSearchService.show = true">search</i>
     </div>
     <div class="menu_content">
         <app-menu-stage [hidden]="stage?.stageId === 2 || !stage?.active" [collapse]="!stage?.active"   *ngFor="let stage of this._dataControlService.userMenu">
@@ -24,7 +23,7 @@
                     <div content>
                         <app-menu-sub-section 
                         *ngFor="let subsections of sections?.subsections"
-                        [noTitleDisplay]="subsections?.subSectionId == 16 || subsections?.subSectionId ==50"
+                        [noTitleDisplay]="subsections?.subSectionId == 16"
                         [showTocIcon]="validateShowIcon(subsections?.subSectionId)"
                         [fieldsCompleted]="subsections?.fieldsCompleted" 
                         [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections?.description+'/'+subsections?.description"  
@@ -33,7 +32,6 @@
                             <div content *ngIf="subsections?.dynamicList?.length">
                                 <app-menu-dynamic-list 
                                 *ngFor="let dynamicList of subsections?.dynamicList"
-                                [hideCheck]="dynamicList.frontRoute == 'partners-no-impact-area'"
                                 [showTocIcon]="dynamicList.hasOwnProperty('acronym')"
                                 [fieldsCompleted]="dynamicList?.fieldsCompleted" 
                                 [customRouterLink]="this._utilsService.stageBaseRoute+this._utilsService.convertToKebabCase(stage?.description)+'/'+sections.description+'/'+subsections.description+'/'+dynamicList.frontRoute+(dynamicList?.id ? dynamicList?.id : '')">
@@ -60,7 +58,7 @@
             </div>
         </app-menu-stage>
         <div *ngIf="(this.btnSubmitIsEnable && this.initiativesSvc?.initiative.status != 'Approved') && this.initiativesSvc.initiative.stageId === 4" class="approve_button_container" (click)="this.submitBtn()">
-            <div class="approve_button" [ngClass]="{'active': this._dataControlService.isdcFeedbackValidation?.validation && this._dataControlService.meliaStudiesValidation?.validation }"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
+            <div class="approve_button" [ngClass]="{'active': this._dataControlService.isdcFeedbackValidation?.validation }"> <div class="title">Approve</div>   <i class="material-icons">done</i></div>
           
         </div>
 
@@ -70,10 +68,8 @@
                                 'border-radius': '10px',
                                 'box-shadow':'unset',
                                 'text-align':'center'}">
-                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation || !this._dataControlService.meliaStudiesValidation?.validation">This button will be avaliable once the section 
-                    <strong [style]="{'color':'#6aa1f4'}"><a [style]="{'cursor':'pointer'}" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal-isdc-feedback/isdc-feedback-responses'">"ISDC Feedback responses"</a></strong> and 
-                    <strong [style]="{'color':'#6aa1f4'}"><a [style]="{'cursor':'pointer'}" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal-isdc-feedback/melia/melia-studies-and-activities'">"MELIA studies and activities"</a></strong> are complete</p> 
-                <p *ngIf="this._dataControlService.isdcFeedbackValidation?.validation && this._dataControlService.meliaStudiesValidation?.validation">The sections <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> and <strong [style]="{'color':'#6aa1f4'}">"MELIA studies and activities"</strong> are complete. Now you can approve the initiative</p>            
+                <p *ngIf="!this._dataControlService.isdcFeedbackValidation?.validation">This button will be avaliable once the section <strong [style]="{'color':'#6aa1f4'}"><a [style]="{'cursor':'pointer'}" [routerLink]="'/initiatives/'+this.initiativesSvc.initiative.id+'/stages/full-proposal-isdc-feedback/isdc-feedback-responses'">"ISDC Feedback responses"</a></strong> is complete (<i>see the top of the left menu</i>)</p> 
+                <p *ngIf="this._dataControlService.isdcFeedbackValidation?.validation">The section <strong [style]="{'color':'#6aa1f4'}">"ISDC Feedback responses"</strong> is complete. Now you can approve the initiative</p>            
             </p-card>
         </div>
 

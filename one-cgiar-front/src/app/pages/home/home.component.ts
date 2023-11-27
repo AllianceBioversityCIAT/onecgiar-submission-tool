@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
     this.initiativesSvc.initiative.stageId = null;
     this.initiativesSvc.initiative.stageName = null;
     this.initiativesSvc.initiative.exactStageName = null;
-    this._initiativesService.setTitle('Initiatives'); 
+    this._initiativesService.setTitle('Home'); 
     this.authSvc.user$.subscribe((user) => {
       if (user) {
         this.isUser = true;

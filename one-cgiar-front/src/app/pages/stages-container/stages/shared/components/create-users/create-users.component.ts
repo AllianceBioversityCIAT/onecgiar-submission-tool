@@ -13,9 +13,10 @@ export class CreateUsersComponent implements OnInit {
   @Input() allRoles;
   @Output() firstTab = new EventEmitter();
   @Output() realoadRoles = new EventEmitter();
-
+  showInitial = false;
   isCgiar = false;
   rolesExample=[1];
+  checkedCgiar=false;
   createUserForm: FormGroup;
   constructor(
     public _initiativesSvc: InitiativesService,
@@ -39,14 +40,13 @@ export class CreateUsersComponent implements OnInit {
     this.createUserForm.controls.is_cgiar.setValue(this.isCgiar);
     let body = this.createUserForm.value;
     body.password = this.isCgiar?null:body.password;
-    body.roles=[5];
+    body.roles=[4];
     body.initiativeId = this._initiativesSvc.initiative.id;
-    console.log(body)
     this._initiativesSvc.createUser(body).subscribe(resp=>{
       console.log("******************** Create user ********************");
       this.interactionsService.successMessage(`The user ${(resp.response.user.first_name?resp.response.user.first_name:'') +' '+ (resp.response.user.last_name?resp.response.user.last_name:'')} has been created`);
       this.firstTab.emit();
-
+      this.showInitial = false;
       this.createUserForm.reset();
     },
     err=>{
@@ -58,25 +58,26 @@ export class CreateUsersComponent implements OnInit {
   }
 
   validateEmail(){
-
+    this.showInitial = true;
+    this.checkedCgiar = true;
     let passInForm = this.createUserForm.get('password');
     if (this.createUserForm.value.email != null) {
       this.isCgiar = this.createUserForm.value.email.indexOf("@cgiar.org")>-1?true:false;
     }
     if (this.isCgiar) {
-      this.createUserForm.controls.password.setValue(null)
+      this.createUserForm.controls.first_name.setValue("cgiarfirstname");
+      this.createUserForm.controls.last_name.setValue("cgiarlastname")
       passInForm.clearValidators();
       passInForm.updateValueAndValidity();
     }else{
-
       this.createUserForm.controls.password.setValidators([Validators.required, Validators.minLength(8)]);
       passInForm.updateValueAndValidity();
     }
-
-
-    console.log("isCgiar: ",this.isCgiar)
-
-
   }
+
+  cleanCheckedCgiar(){
+    this.checkedCgiar = false;
+  }
+
 
 }

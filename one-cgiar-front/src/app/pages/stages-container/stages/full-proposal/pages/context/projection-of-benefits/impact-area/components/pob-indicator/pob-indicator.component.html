@@ -8,7 +8,7 @@
     <br>
     <div class="row">
         <div class="col-6">
-            <ibdc-select-ngmodel-no-repeat (select)="cleanDepthScaleList()"  [options]="
+            <ibdc-select-ngmodel-no-repeat [options]="
             {
              required:true,
              inputTitle:'Choose a breadth indicator '+(index+1),
@@ -22,13 +22,13 @@
         </div>
         <div class="col-6 center_metadata">
             <div class="metada_data_box">
-                <p><span class="metadata-title">Target  year:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetYear || 'Not defined'}}</p>
-                <p><span class="metadata-title">Unit:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetUnit || 'Not defined'}}</p>
-                <p><span class="metadata-title">Overall target value:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.value || 'Not defined'}}</p>
+                <p><span class="metadata-title">Target  year:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetYear || 'Not provided'}}</p>
+                <p><span class="metadata-title">Unit:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.targetUnit || 'Not provided'}}</p>
+                <p><span class="metadata-title">Target value:</span> {{getIndicatorMetaData(indicatorsListPOBSavediItem.impactAreaIndicator)?.value || 'Not provided'}}</p>
             </div>
         </div>
         <div class="col-12" *ngIf="showDepthScale && this.pobImpactAreaForm.value.impactAreaIndicator">
-            <!-- <ibdc-select [options]="
+            <ibdc-select [options]="
             {
              required:true,
              inputTitle:'Choose a depth scale',
@@ -41,37 +41,7 @@
              readOnlyVariable: this._initiativesService.initiative.readonly,
              selectList: this.depthScalesList
             }">
-            ></ibdc-select> -->
-
-            <ibdc-select-multiple [options]="{
-                inputTitle:'Choose multiple depth scale',
-                selectList: this.depthScalesList,
-                selectItemName:'depthScaleName',
-                selectItemId:'depthScaleId',
-                hideSavedList: true,
-                shadow: false,
-                frontendSearchAttribute:'acronym_name',
-                readOnlyVariable: this._initiativesService.initiative.readonly,
-                savedList:{
-                    list: this.indicatorsListPOBSavediItem.depthScaleList,
-                    selectItemId:'depthScaleId',
-                    selectItemName:'depthScaleName',
-                    idToSave:'depthScaleId',
-                    labelName:'depthScaleName'
-                }
-            }"></ibdc-select-multiple>
-
-            <div class="items_container" *ngIf="checkActives()">
-                <div class="items">
-                    <div *ngFor="let depthScaleItem of this.indicatorsListPOBSavediItem.depthScaleList">
-                        <app-multiple-select-item 
-                        [object]="depthScaleItem"
-                        [attr]="'depthScaleName'"
-                        ></app-multiple-select-item>
-                    </div>
-                </div>
-            </div>
-            
+            ></ibdc-select>
         </div>
     </div>
     <hr *ngIf="showDimensions && (this.pobImpactAreaForm.value.depthScaleId !== 4 && this.pobImpactAreaForm.value.depthScaleId)">

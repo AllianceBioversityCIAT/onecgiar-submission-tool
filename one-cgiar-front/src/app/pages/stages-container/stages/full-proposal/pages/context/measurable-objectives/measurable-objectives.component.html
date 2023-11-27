@@ -8,19 +8,14 @@
         <ibdc-alert [options]="{text: 'The End of Initiative Outcomes (EoI Outcomes) listed below are coming from the Theory of Change board. If you want to update them, please click the edit button below.', 
                                 type:'info'}"></ibdc-alert>
     </div>
-    <div class="center_flex" style="margin: 35px 0 0 0;">
+    <div class="center_flex" style="margin: 35px 0;">
         <app-edit-toc-button [showAlert]="true" (click)="this._utilsService.goToEditToc()"></app-edit-toc-button>
-    </div>
-
-    <div class="content_date">
-        <div class="updated_at" *ngIf="this.initiativeOutcomeList.length">
-            <app-toggle-format-date [date]="this.lasUpdate"></app-toggle-format-date>
-          </div>
     </div>
 
     <div class="eoi-list">
         <div class="eoi-card" *ngFor="let eoiData of this.initiativeOutcomeList">
-            <app-eoi-card [result_type]="this.eoiData?.result_type" [title]="this.eoiData?.type_name + '-' + this.eoiData?.result_title">
+            <app-eoi-card [result_type]="this.eoiData?.result_type">
+                <div title>{{this.eoiData?.type_name}} - {{this.eoiData?.result_title}}</div>
                 <div visible-content>
 
                     <div class="eoi-item" style="margin-top: 8px;">
@@ -57,12 +52,12 @@
                                 <div class="data"> <strong>Indicator name:</strong> {{indicator?.indicator_name}}</div>
                                 <div class="data"> <strong>Unit measurement:</strong> {{indicator?.unit_measurement}}
                                 </div>
-                                <div class="data"> <strong>Data source:</strong> {{indicator?.data_source}}</div>
-                                <div class="data"> <strong>Data collection:</strong> {{indicator?.data_collection}}
+                                <div class="data"> <strong>Data source:</strong> {{indicator?.unit_measurement}}</div>
+                                <div class="data"> <strong>Data collection:</strong> {{indicator?.unit_measurement}}
                                 </div>
                                 <div class="data"> <strong>Frequency data collection:</strong>
-                                    {{indicator?.frequency_data_collection}}</div>
-                                <div class="data"> <strong>Baseline value:</strong> {{indicator?.baseline_value}}
+                                    {{indicator?.unit_measurement}}</div>
+                                <div class="data"> <strong>Baseline value:</strong> {{indicator?.unit_measurement}}
                                 </div>
                                 <div class="data"> <strong>Baseline year:</strong> {{indicator?.baseline_year}}</div>
                                 <div class="data"> <strong>Target value:</strong> {{indicator?.target_year}}</div>

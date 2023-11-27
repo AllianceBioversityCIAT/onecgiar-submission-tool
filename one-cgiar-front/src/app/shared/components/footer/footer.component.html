@@ -1,21 +1,36 @@
-<div class="blank_space" [ngClass]="{'floating': this.isFloating, 'floatingFix':this.isFloatingFix}"
-    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-    <div class="footer" *ngIf="showIfRouteIsInList()">
-        <div class="content">
-            <div class="logo">
-                <img class="cgiar_logo" src="/assets/cgiar_logo.png" alt="" srcset="" />
-            </div>
-            <div class="texts">
-                <div class="buttons">
-                    <div class="f-button" (click)="this.footerSE.displayContactUs = true">Contact Us</div>
-                    <div class="point"></div>
-                    <a target="_blank" [href]="this.termsAndCondition" class="f-button">Terms and Conditions</a>
-                    <div class="point"></div>
-                    <a target="_blank" [href]="this.license" class="f-button">License</a>
-                </div>
-                <div class="rights">© 2023 CGIAR System Organization. All rights reserved.</div>
-            </div>
+<footer class="page-footer">
+  <div class="gray-cont">
+    <div class="black-line"></div>
+    <div class="container content">
+      <div class="row">
+        <div class="col-sm-2">
+          <i class="cgiar-logo"></i>
         </div>
+        <div class="col-sm-8">
+          <mat-list>
+            <mat-list-item class="title"> Description </mat-list-item>
+            <mat-list-item>
+              <p style="font-size: 15px;">This is a tool to submit OneCGIAR initiatives in their phases of: pre-concept, concept and full proposal.</p> 
+            </mat-list-item>
+          </mat-list>
+          <!-- <h5 class="title">Description</h5>
+          <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium at obcaecati blanditiis a aspernatur porro, ducimus fugiat quaerat natus suscipit?</p>
+        -->
+        </div>
+        <!-- <div class="col-sm-2 offset-l2 ">
+          <mat-list>
+            <mat-list-item class="title"> Menu </mat-list-item>
+            <mat-list-item> Initiatives </mat-list-item>
+          </mat-list>
+        
+        </div> -->
+      </div>
     </div>
-</div>
-<div class="footer-blocker" [ngClass]="{'footer-blocker-max': this.isHover}" *ngIf="this.isFloating"></div>
+    <div class="footer-copyright">
+      <div class="container">
+      © 2020 Copyright Text
+      <!-- <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
+      </div>
+    </div>
+  </div>
+</footer>

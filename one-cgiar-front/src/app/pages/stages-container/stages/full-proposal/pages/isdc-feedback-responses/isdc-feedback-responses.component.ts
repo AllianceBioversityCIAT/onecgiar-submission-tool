@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { FullProposalService } from '../../../../../../shared/services/full-proposal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataControlService } from '../../../../../../shared/services/data-control.service';
+
 @Component({
   selector: 'app-isdc-feedback-responses',
   templateUrl: './isdc-feedback-responses.component.html',
@@ -20,8 +21,6 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
   showTableViewVariable = true;
   extraValidation = false;
   showform = false;
-  constList = [];
-  actionArea: string = '';
   list:ParticipatoryProcess[] = [];
   contextForm: FormGroup;
   attr_list_config: AttributesListConfiguration[] = [
@@ -38,21 +37,6 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
       name: "Updated Response based on progress after initial 6 month inception to 30 June",
       required: true,
       styles:{'min-width':'200px'}
-    }
-  ];
-
-  configHeaderDocx: AttributesListConfiguration[] = [
-    {
-      attribute: 'isdc_recommendation',
-      name: "ISDC recommendation",
-    },
-    {
-      attribute: 'response',
-      name: "Initiative response",
-    },
-    {
-      attribute: 'updated_response',
-      name: "Updated Response – Inception Period"
     }
   ];
   
@@ -77,9 +61,6 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
     document.addEventListener('keydown', () => {
       this.initExtraValidation();
     });
-    this._initiativesService.getSummary().pipe(map(resp => resp.response.generalInformation.action_area_description)).subscribe((resp: string) => {
-      this.actionArea = resp
-    })
   }
 
   getContext(){
@@ -134,8 +115,7 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
       this._interactionsService.warningMessage('The information in this section has been saved, but there are incomplete fields.', 6000)
     })
     //save recommendations
-    console.log(this.changesFiltering())
-    this._initiativesService.patchRecommendationByInitId(this.changesFiltering()).subscribe(resp=>{
+    this._initiativesService.patchRecommendationByInitId(this.list).subscribe(resp=>{
       this.getRecommendationsByInitId();
       this.showTableViewVariable = true;
     })
@@ -144,20 +124,13 @@ export class IsdcFeedbackResponsesComponent implements OnInit {
   getRecommendationsByInitId(){
     if(this._initiativesService.initiative.stageId !== 4) return;
     this._initiativesService.getRecommendationsByInitId().pipe(map(res=>res?.response?.ISDCResponses)).subscribe((resp:ParticipatoryProcess[])=>{
-    this.list = resp;
-    this.constList = [];
-    this.list.forEach(e => this.constList.push(e.updated_response));
-    this.extraValidation = this.valideteInputTable();
+    this.list = resp.map(e => {
+      this.extraValidation = this.valideteInputTable();
+      return {...e, user_id: this._authService.userValue.id};
+    });
     this.initExtraValidation();
     //this.extraValidation = this.extraValidation && this.filterIncompleteData();
     })
-  }
-
-  changesFiltering(){
-    console.log(this.list[0].updated_response);
-    console.log(this.constList[0]);
-    let filterData = this.list.filter( (r, index) => r.updated_response != this.constList[index]); 
-    return filterData.map(e => ({...e, user_id: this._authService.userValue.id}));
   }
 
 }

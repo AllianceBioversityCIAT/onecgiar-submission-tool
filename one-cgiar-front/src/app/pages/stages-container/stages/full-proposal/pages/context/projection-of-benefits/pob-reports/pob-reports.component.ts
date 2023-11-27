@@ -46,7 +46,7 @@ export class PobReportsComponent implements OnInit {
   rarar = '2';
 
   getPreviewProjectedBenefits() {
-    this._initiativesService.getPreviewProjectedBenefits(this._initiativesService.initiative.id).subscribe(resp => {
+    this._initiativesService.getPreviewProjectedBenefits(this._initiativesService.initiative.id,3).subscribe(resp => {
       console.log(resp.response.previewProjectedBenefits.impactAreas);
       this.objectsTolist(resp.response.previewProjectedBenefits.impactAreas);
     })

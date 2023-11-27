@@ -43,10 +43,9 @@ export class DataControlService {
   incompleteFieldsText = 'Please make sure all required fields are completed accordingly';
   provideDocumentText = 'Provide link to any additional support document(s)';
   isdcFeedbackValidation = null;
-  meliaStudiesValidation = null;
 
   get isAdmin (){
-    return JSON.parse(localStorage.getItem('user'))?.roles[0]?.id == 1 ? true : false
+    return JSON.parse(localStorage.getItem('user')).roles[0]?.id == 1 ? true : false
   }
 
   EOIcolors = [];

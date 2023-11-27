@@ -1,11 +1,6 @@
 <div class="toggle-view-button-container">
-    <div *ngIf="this.exportDocx">
-        <div class="export-word" (click)="this.downloadDocx()" *ngIf="this.list.length">
-            <span>Export to Doc <i style="margin-left: 5px;" class="pi pi-file"></i></span>
-         </div>
-    </div>
     <div class="toggle-view-button" (click)="this.onbuttonViewEvent()" *ngIf="this.list.length; else noData">
-        <span>{{this.showTableViewVariable ? 'Go to Edit view' : 'Go to Table view'}} </span>
+        <span>{{this.showTableViewVariable ? 'Table view' : 'Editable view'}} </span>
      </div>
      <ng-template #noData>
         <div class="toggle-view-button">
@@ -25,7 +20,7 @@
     <tbody>
         <tr *ngFor="let item of this.list; let i=index" [hidden]="item?.active === false" style="position: relative;">
             <td *ngIf="this.localId"><strong>{{i+1}}</strong></td> 
-            <td *ngFor="let key of this.attr_list_config" [ngClass]="{'warning': !item[key?.attribute]?.length  && key?.attribute != 'id'}"><div class="container_scroll-y" [innerHTML]="item[key?.attribute]"></div></td> 
+            <td *ngFor="let key of this.attr_list_config" [innerHTML]="item[key?.attribute]" [ngClass]="{'warning': !item[key?.attribute]?.length}"></td> 
             <td *ngIf="!this._initiativesService.initiative.readonly" class="edit-th"><div class="material-icons editable-icon" (click)="editItem(item)">edit</div></td>
             <td *ngIf="!this._initiativesService.initiative.readonly && this.canDelete" style="padding-left: 70px;" class="delete-th"></td>
             <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly && this.canDelete"  type="delete" (action)="deleteItem(item, i)" [confirmDeleteModal]="true"></app-button-edit-or-delete>

@@ -6,7 +6,7 @@
         </div>
     </div>  
     <div class="content" [@expandable]="this.collapse?'collapse':'expand'">
-        <div class="content-container" [ngStyle]="this.contentStyles">
+        <div class="content-container">
             <ng-content select="[content]"></ng-content>
         </div>
     </div>

@@ -7,15 +7,15 @@
         <!-- <ibdc-textarea [options]="{inputTitle:'Opportunity description', form:opportunityForm, formControlName:'opportunities_description',
         readOnlyVariable: this._initiativesService.initiative.readonly,initialParagraphs:1,maxWords:50}">
         </ibdc-textarea> -->
-        <div class="icon_container" (click)="removeOpportunity()" *ngIf="!this._initiativesService?.initiative.readonly">
-            <span class="material-icons">delete</span>
-            <div class="delete_text">Delete</div>
-        </div>
         <ibdc-text-area-field 
-        inputTitle="Mitigation description" 
+        inputTitle="Opportunity description" 
         [objectItem]="this.opportunity"  
         [objectAtributteName]="'opportunities_description'"
         [readOnlyVariable]="this._initiativesService?.initiative.readonly"
         ></ibdc-text-area-field>
+    </div>
+    <div class="icon_container" (click)="removeOpportunity()" *ngIf="!this._initiativesService?.initiative.readonly">
+        <span class="material-icons">delete</span>
+        <div class="delete_text">Delete</div>
     </div>
 </div>

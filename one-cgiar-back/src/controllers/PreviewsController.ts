@@ -216,11 +216,11 @@ export async function getPreviewRiskAssessment(req: Request, res: Response) {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
 
-    // get initiative by stage
+    // get intiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
-    // if not initiative by stage, throw error
+    // if not intitiative by stage, throw error
     if (initvStg == null || initvStg == undefined) {
       throw new BaseError(
         'Previews: Error',
@@ -262,7 +262,7 @@ export async function getPreviewHumanResources(req: Request, res: Response) {
     // get stage
     const stage = await stageRepo.findOne({where: {id: stageId}});
 
-    // get initiative by stage
+    // get intiative by stage
     const initvStg: InitiativesByStages = await initvStgRepo.findOne({
       where: {initiative: initiativeId, stage}
     });
