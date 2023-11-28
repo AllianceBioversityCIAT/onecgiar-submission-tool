@@ -50,8 +50,7 @@ export class RiskAssessmentComponent implements OnInit {
 
   getRisksTheme(){
     this._initiativesService.getRisksTheme().subscribe(resp=>{
-      this.riskThemesList = resp.response.risks
-      // console.log(this.riskThemesList);
+      this.riskThemesList = resp.response.risksTheme
     })
   }
 
@@ -61,24 +60,12 @@ export class RiskAssessmentComponent implements OnInit {
       // console.log(response);
       response.map((res:any)=>{
         res.risks_achieving_impact = res.generic_risks
-        res.idBd = res.id;
+        res.risk_id = res.id;
         res.id = null;
       })
       this.risksList = response;
       this.riskListIsLoaded = true;
 
-    })
-  }
-
-  addRiskInTopFive(){
-    this.managementPlan?.riskassessment.push({
-      active:true,
-      id:null,
-      risks_achieving_impact:'',
-      selected: true,
-      editable: true,
-      risks_theme: '',
-      add_by_user: true
     })
   }
 
@@ -92,23 +79,32 @@ export class RiskAssessmentComponent implements OnInit {
     // console.log("Reload");
   }
 
-
-
-  steperValidation(response){
-    this.stepNumber = 1;
-    if (!response) return;
-    this.stepNumber = 2;
-  }
-
-
   getManagePlan() {
     this._initiativesService.getManagePlan('risk_assessment').subscribe(resp => {
       // console.log(resp)
       let response: managementPlan = resp.response.managePlanData;
-      this.steperValidation(response?.riskassessment?.length);
+      // console.log(response)
       if (response) this.managementPlan = response;
       if (!response?.riskassessment?.length) this.managementPlan.riskassessment = []
-      // console.log(response)
+      const completeArray = ()=>{
+        if (this.managementPlan.riskassessment?.length >= 5 || !Array.isArray(this.managementPlan.riskassessment)) return;
+        this.managementPlan.riskassessment.push(
+          {
+            active:true,
+            id:null,
+            risks_achieving_impact:'',
+            selected: true,
+            editable: true,
+            risks_theme: '',
+            add_by_user: false,
+            risks_theme_created:'',
+            risks_achieving_impact_created:''
+          }
+        )
+        return completeArray();
+      }
+      completeArray();
+      
       this.showForm = true;
     },
       err => { console.log(err);this.showForm = true; }
@@ -118,20 +114,22 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   calculateRiskScore(){
+    if(!this.risksList.length)return;
     this.managementPlan.riskassessment.map((riskAssessment:Riskassessment)=>{
       riskAssessment.risk_score = riskAssessment.likelihood * riskAssessment.impact
+      if (!riskAssessment.add_by_user) return;
+      if(riskAssessment.risks_achieving_impact_created) riskAssessment.risks_achieving_impact = riskAssessment.risks_achieving_impact_created;
+      if (riskAssessment.risks_theme_created) riskAssessment.risks_theme = riskAssessment.risks_theme_created;
+      riskAssessment.risk_id = null;
     })
   }
 
   saveSection() {
-    if (this.stepNumber == 1) this.managementPlan.riskassessment = this.managementPlan?.riskassessment.filter((item: any) => item.selected == true);
-
+    console.log("saveSection")
     let formData = new FormData();
     this.calculateRiskScore();
     formData.append('data', JSON.stringify(this.managementPlan));
-
-    console.log(this.managementPlan);
-
+    console.log(this.managementPlan)
     this._initiativesService.saveManagePlan(formData,'7.management-plan').subscribe(resp => {
 
       this.getManagePlan();

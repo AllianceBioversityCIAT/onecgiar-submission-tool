@@ -3,6 +3,7 @@ import { InitiativesService } from '../../../../../../../shared/services/initiat
 import { map } from 'rxjs/operators';
 import { ManageExcelService } from '../../../services/manage-excel.service';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-table-c',
@@ -13,21 +14,33 @@ export class TableCComponent implements OnInit {
   // resultDataList: ResultData[];
   resultDataList: any[] = [];
   listToSave : any[] = [];
+  lastUpdate: string;
   // htmlText = ' <p>The following information is in read mode . Please refer to the <a target="_blank" href="https://toc.mel.cgiar.org">theory of change platform</a> and the <a target="_blank" href="https://docs.google.com/document/d/1s6SVqaFhbme2l-iAyvuOPggY9sjhBeYl/edit">MELIA Guidance</a> to edit it.</p>'
   constructor( 
     private _initiativesService:InitiativesService,
     private _manageExcelService:ManageExcelService,
-    public _utilsService:UtilsService
+    public _utilsService:UtilsService,
+    private _pusherService:PusherService
     ) { }
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Table C');
-    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC.results)).subscribe((resp:ResultData[])=>{
+    this.getMeliaResultFramework();
+    this._initiativesService.getInitvStgId().subscribe(resp => {
+      this._initiativesService.initvStgId = resp.response;
+      this._pusherService.listenTocChange('table-c',()=>{
+        this.getMeliaResultFramework();
+      });
+    })
+  }
+
+  getMeliaResultFramework(){
+    this._initiativesService.getMeliaResultFramework().pipe(map(res=>res.response.melia.resultFramework.tableC)).subscribe((resp:{results:ResultData[],updated_at:{updated_at:string}[]})=>{
       // this.resultDataList = resp;
       // console.log(this.resultDataList);
-      this.convertDataToUseInTable(resp);
-      this.listToSave = resp;
-      console.log(resp)
+      this.convertDataToUseInTable(resp.results);
+      this.listToSave = resp.results;
+      this.lastUpdate = resp?.updated_at[0].updated_at;
     })
   }
 
@@ -45,7 +58,9 @@ export class TableCComponent implements OnInit {
           result_title: result?.result_title,
           type_name: result?.type_name,
           wp_acronym: result?.wp_acronym, 
+          wp_name: result?.wp_name,
           rowSpan: 1, 
+          is_global: result?.is_global,
           geo_scope: this.compactGeoData(result['geo_scope'])
         }) ;
 
@@ -58,6 +73,8 @@ export class TableCComponent implements OnInit {
               type_name: result?.type_name, 
               wp_acronym: result?.wp_acronym, 
               rowSpan: result?.indicators?.length, 
+              wp_name: result?.wp_name,
+              is_global: result?.is_global,
               geo_scope: this.compactGeoData(result['geo_scope']),
               ...indicator
             });
@@ -68,7 +85,7 @@ export class TableCComponent implements OnInit {
       })
     })
 
-    console.log(this.resultDataList)
+    // console.log(this.resultDataList)
   }
 
   compactGeoData(geo_scope){
@@ -118,25 +135,40 @@ export class TableCComponent implements OnInit {
 
   exportBasicExcel(){
     let list = [];
+    console.log(this.listToSave);
+      
     this.listToSave.map(result=>{
-      result.indicators.map((indicator)=>{
+    
+        if (result.indicators.length > 0) {
+          result.indicators.map((indicator)=>{
+            list.push({
+              Result_type	: result?.type_name || 'Not provided',
+               Work_package: `${result?.wp_acronym && result?.wp_name ? '' : 'Not provided'}${result?.wp_acronym || ''}${result?.wp_acronym ? ': ' : ''} ${result?.wp_name || ''}`,
+               result_title: result?.result_title || 'Not provided',
+               geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
+               indicator_name: indicator?.indicator_name || 'Not provided',
+               unit_measurement: indicator?.unit_measurement || 'Not provided',
+               data_source: indicator?.data_source || 'Not provided',
+               data_collection_method: indicator?.data_collection || 'Not provided',
+               frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
+               baseline_value: indicator?.baseline_value || 'Not provided',
+               baseline_year: indicator?.target_value || 'Not provided',
+               target_year: indicator?.target_year || 'Not provided'
+               });
+         })
+        } else {
           list.push({
             Result_type	: result?.type_name || 'Not provided',
-            Work_package:  result?.wp_acronym || 'Not provided',
+            Work_package: `${result?.wp_acronym && result?.wp_name ? '' : 'Not provided'}${result?.wp_acronym || ''}${result?.wp_acronym ? ': ' : ''} ${result?.wp_name || ''}`,
             result_title: result?.result_title || 'Not provided',
             geo_scope: this.compactGeoDataToExport(result['geo_scope']) || 'Not provided',
-            indicator_name: indicator?.indicator_name || 'Not provided',
-            unit_measurement: indicator?.unit_measurement || 'Not provided',
-            data_source: indicator?.data_source || 'Not provided',
-            data_collection_method: indicator?.data_collection || 'Not provided',
-            frequency_data_collection: indicator?.frequency_data_collection || 'Not provided',
-            baseline_value: indicator?.baseline_value || 'Not provided',
-            baseline_year: indicator?.target_value || 'Not provided',
-            target_year: indicator?.target_year || 'Not provided'
-            });
-      })
+            })
+          
+        }
+   
     })
-    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:100},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
+
+    this._manageExcelService.exportBasicExcel( list,'resultDataList',[{wpx:90},{wpx:300},{wpx:500},{wpx:100},{wpx:200},{wpx:200}])
   }
 
 }

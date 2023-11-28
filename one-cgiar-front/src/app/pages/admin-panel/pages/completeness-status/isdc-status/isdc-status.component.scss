@@ -1,0 +1,30 @@
+/*:host ::ng-deep{
+    p-progressbar{
+        div{
+            .p-progressbar-label {
+                color: #FFF;
+            }
+
+            .p-progressbar-value{
+                
+            }
+        } 
+    } 
+} */
+
+.col_num{
+    text-align: center !important;
+    width: 100px;
+}
+
+.card-container{
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.routerInit{
+    cursor: pointer;
+    &:hover{
+       font-weight: bold;
+    }
+}

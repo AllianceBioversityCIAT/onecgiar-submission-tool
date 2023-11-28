@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { EOIData } from './interfaces/EOIData.interface';
 import { UtilsService } from '../../../../../../../shared/services/utils.service';
 import { DataControlService } from '../../../../../../../shared/services/data-control.service';
+import { PusherService } from '../../../../../../../shared/services/pusher.service';
 
 @Component({
   selector: 'app-measurable-objectives',
@@ -21,6 +22,7 @@ export class MeasurableObjectivesComponent implements OnInit {
   extraValidation = false;
   initiativeOutcomeList:EOIData []=[];
   toc_id:number|string;
+  lasUpdate: string;
   constructor(
     public _initiativesService:InitiativesService,
     public _fullProposalService:FullProposalService,
@@ -28,7 +30,8 @@ export class MeasurableObjectivesComponent implements OnInit {
     private _interactionsService:InteractionsService,
     private _dataValidatorsService:DataValidatorsService,
     public _utilsService:UtilsService,
-    public _dataControlService:DataControlService
+    public _dataControlService:DataControlService,
+    private _pusherService:PusherService
   ) { 
     this.contextForm = new FormGroup({
       smart_objectives: new FormControl(null, Validators.required),
@@ -39,12 +42,15 @@ export class MeasurableObjectivesComponent implements OnInit {
   ngOnInit(): void {
     this._initiativesService.setTitle('Measurable three-year outcomes')
     this.getEndOfInitiativeOutcome();
+    this._pusherService.listenTocChange('table-b-outcomes',()=>{
+      this.getEndOfInitiativeOutcome();
+    });
   }
 
   getEndOfInitiativeOutcome(){
     console.log("getEndOfInitiativeOutcome")
     this._initiativesService.getEndOfInitiativeOutcome().pipe(map(res=>res?.response)).subscribe(resp=>{
-      console.log(resp?.eoi);
+      this.lasUpdate = resp?.eoiLastUpdate?.updated_at
       this.initiativeOutcomeList = resp?.eoi;
     })
   }
@@ -74,8 +80,9 @@ export class MeasurableObjectivesComponent implements OnInit {
   formChanges(){
     this.contextForm.valueChanges.subscribe(resp=>{
       //console.log("changes");
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("smart_objectives").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.contextForm.get("smart_objectives").value);
     })
   }
+
 
 }

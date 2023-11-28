@@ -3,7 +3,8 @@
 <div class="section-container animate__animated animate__fadeIn">
 
     <div class="alert_container" style="margin: 20px 0 35px 0;">
-        <ibdc-alert [options]="{text: 'If you are planning to carry out the same study in different years, please report every MELIA study separately.', type:'info'}"></ibdc-alert>
+        <ibdc-alert
+            [options]="{text: 'If you are planning to carry out the same study in different years, please report every MELIA study separately.', type:'info'}"></ibdc-alert>
     </div>
     <div style="padding-bottom: 2em;">
         <app-compact-information-table-view (buttonViewEvent)="this.getTabIndex($event)"
@@ -28,11 +29,15 @@
                     <br><br>
                     <div class="fields">
 
+                        <div class="alert_container" style="margin: 20px 0 35px 0;">
+                            <ibdc-alert [options]="{htmlText: htmlTextMeliaAlert, type:'info'}"></ibdc-alert>
+                        </div>
+
                         <div class="mb-4">
                             <ibdc-select-field class="field"
                                 [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
                                 [objectAtributteName]="'type_melia'" [objectAtributteId]="'type_melia_id'"
-                                [inputTitle]="attr_list_config[0].name" selectableListAtributteName='name'
+                                [inputTitle]="this.attr_list_config[1].name" selectableListAtributteName='name'
                                 selectableListAtributteId='id' [selectableList]="this.meliaStudyTypes"
                                 frontendSearchAttribute="name">
                             </ibdc-select-field>
@@ -44,37 +49,108 @@
                             </ibdc-text-area-field>
                         </div>
 
-                        <ibdc-text-area-field [inputTitle]="attr_list_config[1].name" [objectItem]="item"
-                            [objectAtributteName]="attr_list_config[1].attribute"
-                            [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
-                        </ibdc-text-area-field>
+                        <div class="results_toc_container">
+
+                            <ibdc-alert
+                                *ngIf="item[this.attr_list_config[2].attribute] || this._dataControlService.isAdmin"
+                                [options]="{text: 'Text information available in this field will no longer be used. Please link this MELIA study/activity to a specific result from the Initiatives TOC from the list below', type:'info'}"></ibdc-alert>
+
+                            <ibdc-text-area-field [inputTitle]="this.attr_list_config[2].name" [objectItem]="item"
+                                *ngIf="item[this.attr_list_config[2].attribute] || this._dataControlService.isAdmin"
+                                [objectAtributteName]="this.attr_list_config[2].attribute"
+                                [readOnlyVariable]="this._initiativesService?.initiative.readonly   || !this._dataControlService.isAdmin"
+                                [maxWords]="50" [inputRequired]="false"
+                                [inputDescription]="'Text information available in this field will no longer be used. Please link this MELIA study/activity to a specific result from the Initiatives TOC from the list below'">
+                            </ibdc-text-area-field>
+
+                            <!-- <ibdc-simple-text
+                                [options]="{inputTitle:'Text information available in this field will no longer be used. Please link this MELIA study/activity to a specific result from the Initiatives TOC from the list below.'}"
+                                textAlign='justify'></ibdc-simple-text> -->
+
+                            <ibdc-select-multiple (onSelectOptionE)="resultToHtml()" [options]="{
+                                                    inputTitle:this.attr_list_config[7].name,
+                                                    selectList: item.resultsByMeliaList || [],
+                                                    description:'If there is no item in the list, it is probably because information is missing in the TOC, please go to (table c) section and add information',
+                                                    selectItemName:'fullResultTitle',
+                                                    selectItemId:'resultId',
+                                                    selectItemNameBold:'wpName',
+                                                    intermediateText:'- WP:',
+                                                    shadow: false,
+                                                    frontendSearchAttribute:'fullResultTitle',
+                                                    readOnlyVariable: this._initiativesService.initiative.readonly,
+                                                    closeWhenSelect: true,
+                                                    savedList:{
+                                                        list: item.selectResults,
+                                                        selectItemId:'resultId',
+                                                        selectItemName:'fullResultTitle',
+                                                        idToSave:'id',
+                                                        labelName:'resultTitle'
+                                                    }
+                                                }">
+                            </ibdc-select-multiple>
+
+                            <!-- <div *ngIf="this._initiativesService.initiative.readonly" style="height: 30px;"></div> -->
+                            <!-- <div class="items_container" *ngIf="checkActives(item.selectResults)">
+                                <div class="items">
+                                    <div>
+                                        <div *ngFor="let selectResultItem of item.selectResults">
+                                            <app-multiple-select-item [object]="selectResultItem" [attr]="'resultTitle'" [selectList]="item.resultsByMeliaList" ></app-multiple-select-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="alert_container" style="margin: -40px 0 35px 20px;" *ngIf="!item?.resultsByMeliaList?.length">
+                                <ibdc-alert [options]="{text: 'If there is no item in the list  in the (TOC EIO Outcomes, WP Outcomes, WP Outputs this MELIA study/activity contribute to) field, it is probably because information is missing in the TOC, please go to (table c) section and add information', type:'info'}"></ibdc-alert>
+                            </div> -->
+                        </div>
+
+
+                        <!-- <ibdc-select-multiple [options]="{
+                            inputTitle:'Choose multiple depth scale',
+                            selectList: this.depthScalesList,
+                            selectItemName:'depthScaleName',
+                            selectItemId:'depthScaleId',
+                            hideSavedList: true,
+                            shadow: false,
+                            frontendSearchAttribute:'acronym_name',
+                            readOnlyVariable: this._initiativesService.initiative.readonly,
+                            savedList:{
+                                list: this.indicatorsListPOBSavediItem.depthScaleList,
+                                selectItemId:'depthScaleId',
+                                selectItemName:'depthScaleName',
+                                idToSave:'depthScaleId',
+                                labelName:'depthScaleName'
+                            }
+                        }"></ibdc-select-multiple> -->
 
                         <div class="mb-4">
                             <ibdc-select-field class="field"
                                 [readOnlyVariable]="this._initiativesService.initiative.readonly" [objectItem]="item"
                                 [objectAtributteName]="'anticipated_year_completion'"
                                 [objectAtributteId]="'anticipated_year_completion'"
-                                [inputTitle]="attr_list_config[2].name" selectableListAtributteName='year'
+                                [inputTitle]="this.attr_list_config[3].name" selectableListAtributteName='year'
                                 selectableListAtributteId='year' [selectableList]="this.years"
                                 frontendSearchAttribute="year">
                             </ibdc-select-field>
                         </div>
 
-                        <ibdc-text-area-field [inputTitle]="attr_list_config[4].name" [objectItem]="item"
-                            [objectAtributteName]="attr_list_config[4].attribute"
+                        <ibdc-text-area-field [inputTitle]="this.attr_list_config[5].name" [objectItem]="item"
+                            [objectAtributteName]="this.attr_list_config[5].attribute"
                             [readOnlyVariable]="this._initiativesService?.initiative.readonly" [maxWords]="50">
                         </ibdc-text-area-field>
 
                         <ibdc-select-multiple [options]="{
                             required: null,
-                            inputTitle: attr_list_config[3].name,
-                            selectItemName:'name',
+                            inputTitle: this.attr_list_config[4].name,
+                            selectItemName:'displayName',
                             selectItemId:'initiativeId',
-                            frontendSearchAttribute:'name',
+                            frontendSearchAttribute:'displayName',
                             readOnlyVariable: this._initiativesService.initiative.readonly,
+                            description: 'Message',
+                            closeWhenSelect: true,
                             savedList:{
                                 list:item.initiatives,
-                                selectItemName:'name',
+                                selectItemName:'displayName',
                                 selectItemId:'initiativeId',
                                 idToSave:'id',
                                 labelName:'initiatives'
@@ -88,7 +164,8 @@
 
                         <div class="col-sm-12">
                             <app-geographic-scope [localForm]="this.geographicScopes[i]"
-                                [regionsSelectedList]="item.regions" [countriesSelectedList]="item.countries">
+                                [regionsSelectedList]="item.regions" [countriesSelectedList]="item.countries"
+                                [subject]="'MELIA Study'">
                             </app-geographic-scope>
                         </div>
                     </div>

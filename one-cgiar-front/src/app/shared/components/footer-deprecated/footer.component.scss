@@ -1,0 +1,85 @@
+footer {
+  // background: url('/assets/images/login_background.jpg') top center no-repeat;
+  // background-size: cover!important;
+  // background-position: center;
+  background-color: rgb(32, 32, 32);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  // height: 500px;
+  .gray-cont{
+    position: relative;
+    background: rgba(34,34,34,.8);
+    width: 100%;
+    height: 100%;
+    .black-line{
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 10px;
+      color: red;
+      z-index: 1000;
+    }
+    .content{
+      padding: 80px 0px;
+      color: #d1d1d1;
+      .cgiar-logo {
+        content: url("/assets/images/cgiar_logo.png");
+        filter: contrast(0) brightness(5);
+        width: 5rem;
+      }
+      .title{
+        font-size: 30px !important;
+        font-weight: 500 !important;
+      }
+      mat-list{
+        mat-list-item {
+          color: white !important;
+          font-weight: 300;
+        }
+      }
+ 
+    }
+    .footer-copyright{
+      padding: 20px 0px;
+      width: 100%;
+      background: rgba(20, 20, 20, 0.884);
+      color: #d1d1d1;
+    }
+  }
+}
+// footer::before {
+//   content: "";
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   height: 100%;
+//   background: rgba(34,34,34,.8);
+// }
+
+.sections{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  div{
+    cursor: pointer;
+  }
+}
+
+.contact{
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  display: flex;
+  box-sizing: border-box;
+  border-left: 7px solid var(--ibdc-tertiary-color);
+  padding: 5px 10px;
+  transition: all ease .3s;
+
+  &:hover{
+    background-color: #087b833d;
+    transition: all ease .3s;
+  }
+}

@@ -49,7 +49,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Innovation Packages and Scaling Readiness Plan')
-    this.getInnovationPackages()
+    this.getInnovationPackages();
     this.formChanges();
     this.getTracks();
   }
@@ -75,7 +75,7 @@ export class InnovationPackagesAndSrpComponent implements OnInit {
 
   formChanges(){
     this.secionForm.valueChanges.subscribe(resp=>{
-      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("key_principles").value, 250);
+      this.extraValidation = this._dataValidatorsService.wordCounterIsCorrect(this.secionForm.get("key_principles").value);
     })
   }
 

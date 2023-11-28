@@ -35,5 +35,8 @@ export class InitiativesApproval extends UpdatedCreatedAt {
   is_approved: boolean;
 
   @Column({type: 'text'})
+  approved_reason: string;
+
+  @Column({type: 'text'})
   disapproved_reason: string;
 }

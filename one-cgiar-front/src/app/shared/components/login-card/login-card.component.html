@@ -1,57 +1,69 @@
-<div class="center_flex absolute_floating_login" [ngClass]="{'black-bg': validateShowBg()}" [style.left.vw]="this._dataControlService.x_position_login_animation"  style="height: 100%; width: 100%;">
-    <div class="card card-signin animate__animated  animate__backInUp animate__fast" >
+<div class="center_flex absolute_floating_login" [ngClass]="{'black-bg': validateShowBg()}"
+  [style.left.vw]="this._dataControlService.x_position_login_animation" style="height: 100%; width: 100%;">
+  <div class="card card-signin animate__animated  animate__backInUp animate__fast">
 
-      <div class="jwt-expired-alert" *ngIf="this.modeJwtExpired">
-        <div class="text background-color-tertiary">Your session has expired, please login again to continue accessing the online tool</div>
-      </div>
-
-      <div class="card_custom_header background-color-tertiary center_flex">
-        <h5 class="card-title text-center">Log In</h5>
-      </div>
-      <br>
-      <br>
-      <br>
-
-      <div class="card-body">
-        <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <mat-form-field class="full-width-input">
-            <input text="text" formControlName="email" matInput placeholder="Email" required />
-            <mat-error *ngIf="loginForm.get('email').hasError('email')">
-              Please enter a valid email address
-            </mat-error>
-            <mat-error *ngIf="loginForm.get('email').hasError('required')" >
-              Email is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-          <div style="margin-top: 5px;"></div>
-          <mat-form-field class="full-width-input separator">
-            <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password" required />
-            <mat-error *ngIf="loginForm.get('password').errors?.minlength">
-              The password must be longer than <strong>8</strong> characters 
-            </mat-error>
-            <mat-error *ngIf="loginForm.get('password').hasError('required')">
-              password is <strong>required</strong>
-            </mat-error>
-            <div mat-icon-button matSuffix>
-              <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-            </div>
-            <mat-error >
-              <!-- {{ loginForm.errorMessage }} -->
-            </mat-error>
-          </mat-form-field>
-          <button style="margin-top: 11px;" [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary">Log in</button>
-          <br><br>
-          <!-- <p class="color-tertiary change-password-text" (click)="this._dataControlService.x_position_login_animation = - 100"> change password </p> -->
-          <hr class="my-4">
-          <div class="note">
-            <span><strong>PLEASE NOTE:</strong> that by using the system, you consent to the information being used
-              by the
-              System Management Office. The information you input should therefore be complete and suitable for an
-              external
-              audience and funders.</span>
-          </div>
-        </form>
-      </div>
-
+    <div class="jwt-expired-alert" *ngIf="this.modeJwtExpired">
+      <div class="text background-color-tertiary">Your session has expired, please login again to continue accessing the
+        online tool</div>
     </div>
+
+    <div class="card_custom_header background-color-tertiary center_flex">
+      <h5 class="card-title text-center">Log In</h5>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    <div class="card-body">
+      <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <mat-form-field class="full-width-input">
+          <input text="text" formControlName="email" matInput placeholder="Email" required />
+          <mat-error *ngIf="loginForm.get('email').hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email').hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <div style="margin-top: 5px;"></div>
+        <mat-form-field class="full-width-input separator">
+          <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput placeholder="Password"
+            required />
+          <mat-error *ngIf="loginForm.get('password').errors?.minlength">
+            The password must be longer than <strong>8</strong> characters
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password').hasError('required')">
+            password is <strong>required</strong>
+          </mat-error>
+          <div mat-icon-button matSuffix>
+            <mat-icon (click)="hide = !hide">{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </div>
+          <mat-error>
+            <!-- {{ loginForm.errorMessage }} -->
+          </mat-error>
+        </mat-form-field>
+        <button style="margin-top: 11px;" [disabled]="loginForm.invalid" mat-raised-button type="submit"
+          color="primary">Log in</button>
+        <br><br>
+        <div class="contact" (click)="setModalStatus()">
+          <div>Do you have any questions?</div>
+        </div>
+        <br>
+        <!-- <p class="color-tertiary change-password-text" (click)="this._dataControlService.x_position_login_animation = - 100"> change password </p> -->
+        <hr class="my-4">
+        <div class="note">
+          <span><strong>PLEASE NOTE:</strong> that by using the system, you consent to the information being used
+            by the
+            System Management Office. The information you input should therefore be complete and suitable for an
+            external
+            audience and founders.</span>
+        </div>
+      </form>
+    </div>
+
   </div>
+</div>
+
+
+
+<app-footer></app-footer>

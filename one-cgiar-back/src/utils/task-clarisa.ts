@@ -1,4 +1,4 @@
-import {getRepository} from 'typeorm';
+import {getRepository, getCustomRepository} from 'typeorm';
 import {ClarisaInstitutions} from '../entity/ClarisaIntitutions';
 import * as clarisa from '../controllers/Clarisa';
 import {ClarisaImpactAreas} from '../entity/ClarisaImpactAreas';
@@ -13,6 +13,7 @@ import {ClarisaSdgTargets} from '../entity/ClarisaSdgTargets';
 import {ClarisaGlobalTargets} from '../entity/ClarisaGlobalTargets';
 import {ClarisaActionAreasOutcomesIndicators} from '../entity/ClarisaActionAreasOutcomesIndicators';
 import {ClarisaMeliaStudyTypes} from '../entity';
+import {ProjectedProbabilitiesRepository} from '../repositories/ProjectedProbabilitiesRepository';
 
 /**MAIN FUNCTION*/
 
@@ -30,6 +31,7 @@ export async function Main() {
   await createGlobalTargets();
   await createActionAreasOutIndicators();
   await createMeliaStudyTypes();
+  await createProjectProbabilities();
 }
 
 /**CLARISA IMPACT AREAS*/
@@ -167,6 +169,7 @@ export async function createInstitutions() {
           institutionType: element.institutionType,
           institutionTypeId: element.institutionTypeId
         });
+        console.log(cla);
         institutionsArray.push(cla);
       }
 
@@ -681,3 +684,44 @@ export async function createMeliaStudyTypes() {
     console.log('createMeliaStudyTypes', error);
   }
 }
+
+export const deleteProjectedProbabilities = async () => {
+  console.log('41.start delete Projected Probabilities');
+
+  try {
+    const repositoryProjectedProbabilities = getCustomRepository(
+      ProjectedProbabilitiesRepository
+    );
+    await repositoryProjectedProbabilities.deleteAll();
+  } catch (error) {
+    console.log('create Projected Probabilities', error);
+  }
+};
+
+export const createProjectProbabilities = async () => {
+  console.log('40.start create Projected Probabilities');
+  try {
+    await deleteProjectedProbabilities();
+    let insertData: any[] = [];
+    let projectedProbabilities = await clarisa.requestProjectedProbabilities();
+    if (projectedProbabilities.length > 0) {
+      projectedProbabilities.forEach((el) => {
+        insertData.push({
+          id: el.probabilityID,
+          name: el.probabilityName,
+          description: el.probabilityDescription,
+          active: 1
+        });
+      });
+      const repositoryProjectedProbabilities = getCustomRepository(
+        ProjectedProbabilitiesRepository
+      );
+      await repositoryProjectedProbabilities.save(insertData);
+      console.log('42.end Projected Probabilities');
+    } else {
+      console.log('Issues with Clarisa');
+    }
+  } catch (error) {
+    console.log('createMeliaStudyTypes', error);
+  }
+};

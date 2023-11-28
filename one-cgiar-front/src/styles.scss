@@ -227,16 +227,19 @@ button {
 
 //ibdc colors end
 
-:root{
-  --ibdc-primary-color: #272A30;
-  --ibdc-secondary-color: #5cc560;
-  --ibdc-active-color: #9ef1a1;
-  --ibdc-tertiary-color: #087b83;
-  --ibdc-text-color: #797979;
-  --ibdc-black-1: #1A1C1E;
-  --ibdc-black-2: #2b2d2e;
-  --ibdc-gray-1: #757575;
-  --ibdc-gray-2: #757575;
+
+.items_container{
+  width: 100%; 
+  box-sizing: border-box;
+  margin-top: -58px; 
+  border-radius: 10px;
+  // margin-left: 10px;
+  padding: 10px 12px; 
+  background-color: #ededed;
+  box-shadow: 0px 0px 5px rgb(230, 230, 230);
+  .items{
+      width: 100%; 
+  }
 }
 
 .viewer-backdrop{
@@ -246,7 +249,16 @@ button {
   background-position: center;
   background-size: cover;
 }
-
+.table-container{
+  .p-datatable-header{
+      background-color: var(--ibdc-secondary-color);
+  }
+  .p-datatable{
+    border-radius: 10px !important;
+    overflow: hidden;
+    border: 2px solid white;
+  }
+}
 .viewer-close{
   background-color: var(--ibdc-secondary-color) !important;
 }
@@ -324,4 +336,13 @@ button {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
+}
+
+
+.ql-editor {
+  resize: vertical !important;
+}
+
+.p-editor-content.ql-container.ql-snow {
+  height: unset !important;
 }

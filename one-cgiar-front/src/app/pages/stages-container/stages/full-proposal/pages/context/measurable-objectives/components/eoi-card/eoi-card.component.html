@@ -2,7 +2,8 @@
   <div class="eoi_card  {{expand ? 'expand-card  animate__animated animate__bounceIn' : 'no-expand-card'}}" [ngStyle]="{'z-index': expand ? 3 : 'unset', 'position': expand ? 'relative' : 'unset'}" [style.height]="expand ? 'auto' : '100%'">
     
     <div class="title_container"  [style.background]="this._dataControlService.EOIcolors[this.result_type]">
-      <div class="title"><ng-content select="[title]"></ng-content></div>
+      <!-- <ng-content class="asa" select="[title]"></ng-content> -->
+      <div class="title {{expand ? 'noellipsis' : 'ellipsis'}}">{{title}}</div>
       <div class="line_1"></div>
       <div class="line_2"></div>
       <div class="icon_container"  *ngIf="expand" (click)="expand = !expand">

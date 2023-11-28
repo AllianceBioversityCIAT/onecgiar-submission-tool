@@ -9,6 +9,7 @@ import { CollapsibleContainerModule } from '../../../../../../../shared/componen
 import {TableModule} from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { EditTocButtonModule } from '../../../../../../../shared/components/edit-toc-button/edit-toc-button.module';
+import { ToggleFormatDateModule } from '../../../../../../../shared/components/toggle-format-date/toggle-format-date.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { EditTocButtonModule } from '../../../../../../../shared/components/edit
     CollapsibleContainerModule,
     TableModule,
     ButtonModule,
-    EditTocButtonModule
+    EditTocButtonModule,
+    ToggleFormatDateModule
   ]
 })
 export class TableCModule { }

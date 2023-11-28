@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 
-@Entity('projected_probabilities')
+@Entity('clarisa_projected_probabilities')
 export class ProjectedProbabilities extends UpdatedCreatedAt {
   @PrimaryGeneratedColumn()
   id: number;

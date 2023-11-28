@@ -1,0 +1,147 @@
+<div class="card-container">
+    <section-title name="User management"></section-title>
+    <p-toast position="top-right"></p-toast>
+    <div class="section-container animate__animated animate__fadeIn">
+        <div class="card">
+            <p-table #dt1 [value]="this.userList" [loading]="loading" dataKey="id" editMode="row" styleClass="p-datatable-gridlines" [globalFilterFields]="['first_name','last_name','email']" [scrollable]="true"
+                scrollHeight="calc(80vh - 100px)">
+                <ng-template pTemplate="caption">
+                    <div style="display: flex; justify-content: space-between;">
+                        <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                            (click)="clear(dt1)"></button>
+                        <button style="margin-left: 10px;" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+                        <button style="margin-left: 10px;" (click)="show()"  label="Add user" pButton type="button" icon="pi pi-plus-circle" iconPos="left"></button>
+                        <span class="p-input-icon-left ml-auto">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search keyword" />
+                        </span>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="id" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                ID
+                                <p-sortIcon field="id"></p-sortIcon>
+                                <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="first_name" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                First name
+                                <p-sortIcon field="first_name"></p-sortIcon>
+                                <p-columnFilter type="text" field="first_name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="last_name" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Last name
+                                <p-sortIcon field="last_name"></p-sortIcon>
+                                <p-columnFilter type="text" field="last_name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="email" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                E-mail
+                                <p-sortIcon field="email"></p-sortIcon>
+                                <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Password
+                            </div>
+                        </th>
+                        <th pSortableColumn="is_active" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Active
+                                <p-sortIcon field="is_active"></p-sortIcon>
+                                <p-columnFilter type="text" field="is_active" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="last_login" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Last login
+                                <p-sortIcon field="last_login"></p-sortIcon>
+                                <p-columnFilter type="text" field="last_login" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Manage
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user let-editing="editing" let-ri="rowIndex">
+                    <tr [pEditableRow]="user" [ngClass]="{'inactive': user.is_active == 0}">
+                        
+                        <td class="col_num">
+                            <strong>{{user.id}}</strong>
+                        </td>
+                        <td class="col_num">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input [ngClass]="{'inactive':!user.is_active}" style="width: 100%;" pInputText type="text" [(ngModel)]="user.first_name">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{user.first_name}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="col_num">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input [ngClass]="{'inactive':!user.is_active}" style="width: 100%;" pInputText type="text" [(ngModel)]="user.last_name">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{user.last_name}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="col_num">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input [ngClass]="{'inactive':!user.is_active}" style="width: 100%;" pInputText type="text" [(ngModel)]="user.email">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{user.email}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="col_num">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input [disabled]="isCgiar(user.email)" [ngClass]="{'inactive':!user.is_active}" style="width: 100%;" pInputText type="text" [(ngModel)]="user.password">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    ***
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="col_num active">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <p-inputSwitch [(ngModel)]="user.is_active"></p-inputSwitch>
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{user.is_active == 1?'Active':'Inactive'}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="col_num">
+                            {{user.last_login}}
+                        </td>
+                        <td class="col_num" style="text-align:center">
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow [ngClass]="{'inactive-btn':!user.is_active}" icon="pi pi-pencil" (click)="onRowEditInit(user)" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow [ngClass]="{'inactive-btn':!user.is_active}" icon="pi pi-check" (click)="onRowEditSave(user)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow [ngClass]="{'inactive-btn':!user.is_active}" icon="pi pi-times" (click)="onRowEditCancel(user, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

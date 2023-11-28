@@ -25,7 +25,7 @@ export class HumanResourcesReportsComponent implements OnInit {
   }
 
   getPreviewHumanResources(){
-    this._initiativesService.getPreviewHumanResources(this._initiativesService.initiative.id,3).subscribe(resp=>{
+    this._initiativesService.getPreviewHumanResources(this._initiativesService.initiative.id).subscribe(resp=>{
       
       this.previewHumanResources = resp.response.previewHumanResources.initiativeTeam;
       console.log(this.previewHumanResources)

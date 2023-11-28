@@ -177,9 +177,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
      CASE
       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
 		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
-        OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM general_information WHERE initvStgId = ini.id) > 50
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(general_information,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(general_information,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(general_information,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM general_information WHERE initvStgId = ini.id) < 1
 	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1)) IS NULL
         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') AND active = TRUE AND initiativeId = ini.initiativeId LIMIT 1) ) IS NULL
@@ -223,9 +223,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
       WHEN (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) IS NULL
       OR (SELECT narrative FROM tocs WHERE initvStgId = ini.id ) = ''
-      OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>','')) 
-          - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-          FROM tocs WHERE initvStgId = ini.id) > 250
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(narrative,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+          FROM tocs WHERE initvStgId = ini.id) < 1
       OR (SELECT max(id) FROM files WHERE tocsId in (SELECT id FROM tocs
         WHERE initvStgId = ini.id
           AND active = 1)
@@ -275,39 +275,39 @@ export class MetaDataHandler extends InitiativeStageHandler {
 -- CHALLENGE STATEMENT (CONTEXT)
     WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) IS NULL
     OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id ) = ''
-    OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM context WHERE initvStgId = ini.id) > 250
+    OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM context WHERE initvStgId = ini.id) < 1
 -- HIGHLIGHTS
 		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) IS NULL
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1' ) = ''
-		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1') > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 1') < 1
 
 		OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) IS NULL
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2' ) = ''
-		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2') > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 2') < 1
 		
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) IS NULL
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3' ) = ''
-		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3') > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 3') < 1
     
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) IS NULL
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4' ) = ''
-		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4') > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 4') < 1
     
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) IS NULL
     OR (SELECT description FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5' ) = ''
-		OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5') > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM highlights WHERE initvStgId = ini.id AND name = 'Highlight 5') < 1
 
     THEN FALSE
     ELSE TRUE
@@ -367,19 +367,19 @@ export class MetaDataHandler extends InitiativeStageHandler {
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
           OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-          OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
+          OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+          char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) < 1
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) < 1
 		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) < 1
 	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
 		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
          THEN FALSE
@@ -393,7 +393,6 @@ export class MetaDataHandler extends InitiativeStageHandler {
           `;
 
           let workPackageArr = await this.queryRunner.query(validationWPSQL);
-
           if (workPackageArr.length > 0) {
             workPackage['validation'] = parseInt(workPackageArr[0].validation);
             workPackage['description'] = workPackageArr[0].description;
@@ -446,32 +445,40 @@ export class MetaDataHandler extends InitiativeStageHandler {
     try {
       /* eslint-disable */
       let validationGISQL = `
-   SELECT sec.id as sectionId,sec.description, 
-     CASE
-      WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
-		    OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
-        OR (SELECT char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) 
-        - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 AS wordcount 
-        FROM general_information WHERE initvStgId = ini.id) > 50
-	      OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
-        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
-        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
-        OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
-        OR (SELECT value FROM budget WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT value FROM budget WHERE initvStgId = ini.id)  < 1
-		    OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id OR wrkPkgId IS NULL) = 0
-	      OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id OR wrkPkgId IS NULL) = 0
-    THEN FALSE
-      ELSE TRUE
-      END AS validation
-    FROM initiatives_by_stages ini
-    JOIN sections_meta sec
-   WHERE ini.id = ${this.initvStgId_}
-     AND sec.stageId= ini.stageId
-     AND sec.description='general-information'`;
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+       WHEN (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) IS NULL 
+         OR (SELECT NAME FROM general_information WHERE initvStgId = ini.id ) = ''
+         OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+         char_length(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(NAME,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+         FROM general_information WHERE initvStgId = ini.id) < 1
+         OR (SELECT action_area_description FROM general_information WHERE initvStgId = ini.id ) IS NULL
+         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'SGD') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT id FROM users WHERE id = (SELECT userId FROM initiatives_by_users initvUsr WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1)) IS NULL
+         OR (SELECT CONCAT(first_name, " ", last_name) FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT email FROM users WHERE id = (SELECT userId FROM initiatives_by_users WHERE roleId = (SELECT id FROM roles WHERE acronym = 'PI') OR active = TRUE OR initiativeId = ini.id LIMIT 1) ) IS NULL
+         OR (SELECT value FROM budget WHERE initvStgId = ini.id) IS NULL 
+         OR (SELECT value FROM budget WHERE initvStgId = ini.id)  < 1
+     THEN FALSE
+       ELSE case 
+         when (select count(wp.id) - sum(wp.is_global) from work_packages wp where wp.initvStgId = ini.id) = 0
+         then true
+         else  case when 
+           (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and active = 1) > 0
+         OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and active = 1) > 0
+         then true
+         else false
+         end
+       end
+       
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='general-information'`;
 
       var validationGI = await this.queryRunner.query(validationGISQL);
 
@@ -490,9 +497,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) IS NULL 
         OR (SELECT key_principles FROM innovation_packages WHERE initvStgId = ini.id and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM innovation_packages WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_principles,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM innovation_packages WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -529,12 +536,12 @@ export class MetaDataHandler extends InitiativeStageHandler {
                                       (SELECT  SUM(num) - count(num)     
                                   FROM (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(updated_response,'<(\/?p)>',' '),'<([^>]+)>','') IS NULL, 0,1) as num
                                     FROM isdc_responses 
-                                  WHERE initvStgId = ${this.initvStgId_}) as num ) = 0
+                                  WHERE initvStgId = ini.id and is_deleted = 0) as num ) = 0
                                             THEN TRUE
                                     WHEN
-                                    (SELECT ISNULL(SUM(1))
-                                  FROM isdc_responses 
-                                  WHERE initvStgId = ${this.initvStgId_}) = 1
+                                    (SELECT if(count(isr.id) > 0, 0, 1)
+                                    FROM isdc_responses isr
+                                    WHERE isr.initvStgId = ini.id) = 1
                                             THEN TRUE
                                               ELSE FALSE
                                               END AS validation
@@ -568,41 +575,112 @@ export class MetaDataHandler extends InitiativeStageHandler {
        * Validation only over MELIA PLAN (missing validation with ToC data.)
        */
       let validationMeliaSQL = `
-        SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
-         - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
-        /* OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "result_framework"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "result_framework"
-                        AND active = 1 ) IS NULL
-        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "melia"
-                           AND active = 1 ) = ''
-        OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                         WHERE initvStgId = ini.id
-                           AND active = 1)
-                           AND section = "melia"
-                           AND active = 1 ) IS NULL */
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-      WHERE ini.id = ${this.initvStgId_}
-        AND sec.stageId= ini.stageId
-        AND sec.description='melia';`;
+      SELECT sec.id as sectionId,sec.description, 
+      CASE
+    WHEN 
+    /* MEDIA PLAN */ 
+    (CASE
+    WHEN (SELECT melia_plan FROM melia WHERE initvStgId = ini.id and active=1) IS NULL 
+      OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
+      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
+      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
+     THEN FALSE
+       ELSE TRUE
+       END) = 1 AND
+      
+      /* TABLE B */ 
+      (CASE
+        WHEN
+        ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+          (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+              (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+                FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0)
+        THEN  TRUE
+      ELSE FALSE
+      END = 1) AND
+            
+       /* TABLE A */      
+  (CASE
+    WHEN
+    ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+    (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+        ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+        (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+        ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
+        (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+    THEN  TRUE
+  ELSE FALSE
+  END = 1) AND
+        
+       /* TABLE C */ 
+  (CASE
+    WHEN
+    ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) > 0 AND
+    (SELECT COUNT(rs.id) as firstValidation FROM results rs
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) > 0 )AND
+    ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) = 0 AND
+    (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) = 0)
+    THEN  CASE
+    WHEN 
+        ((SELECT COUNT(rsi.id) 
+      FROM results rs 
+        INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) > 0 AND
+    (SELECT COUNT(rsi.id) 
+      FROM results rs 
+        INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+      WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) > 0)
+    THEN TRUE
+        ELSE FALSE
+        END
+  ELSE FALSE
+  END = 1) AND
+      
+      /* MELIA STUDIES */ 
+      (CASE
+        WHEN
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL and msa.active = 1) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1)AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND 
+          ((select count(msa.id) from melia_studies_activities msa where msa.initvStgId = ini.id and msa.active > 0)-
+          (select count(distinct(mt.meliaIdId)) from melia_toc mt where mt.initvStgIdId = ini.id and mt.active > 0)) = 0
+        THEN CASE
+        WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
+        THEN TRUE
+        ELSE CASE
+          WHEN 
+          (SELECT if(sum(CASE
+            WHEN 
+              ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) - count(CASE
+            WHEN ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) = 0, 1, 0) as validation_region_contries
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0 and msa.active = 1) = 1
+                THEN TRUE
+                ELSE FALSE
+                END
+          END
+        ELSE FALSE
+        END = 1)
+     THEN TRUE
+       ELSE FALSE
+       END AS validation
+     FROM initiatives_by_stages ini
+     JOIN sections_meta sec
+    WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.description='melia';`;
 
       var validationMelia = await this.queryRunner.query(validationMeliaSQL);
 
@@ -639,7 +717,7 @@ export class MetaDataHandler extends InitiativeStageHandler {
       OR (SELECT melia_plan FROM melia WHERE initvStgId = ini.id  and active=1) = ''
       OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(melia_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      FROM melia WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -651,29 +729,143 @@ export class MetaDataHandler extends InitiativeStageHandler {
   AND sec.id = subsec.sectionId
       AND sec.description='melia'
     AND subsec.description = 'melia-plan';`,
-        validateStudiesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
-      CASE
-    WHEN (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                       WHERE initvStgId = ini.id
-                         AND active = 1)
-                         AND section = "melia"
-                         AND active = 1 ) = ''
-      OR (SELECT max(id) FROM files WHERE meliaId in (SELECT id FROM melia
-                       WHERE initvStgId = ini.id
-                         AND active = 1)
-                         AND section = "melia"
-                         AND active = 1 ) IS NULL
-     THEN FALSE
-       ELSE TRUE
-       END AS validation
-     FROM initiatives_by_stages ini
-     JOIN sections_meta sec
-   JOIN subsections_meta subsec
-    WHERE ini.id = ${this.initvStgId_}
+        validateStudiesSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        CASE
+        WHEN
+          (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global IS NOT NULL and msa.active = 1) = 
+                (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1)AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.management_decisions_learning IS NULL OR msa.management_decisions_learning = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.result_title IS NULL OR msa.result_title = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.anticipated_year_completion IS NULL OR msa.anticipated_year_completion = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0 AND
+          (SELECT COUNT(msa.id) - SUM(IF(msa.type_melia_id IS NULL OR msa.type_melia_id = '', 0, 1)) FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} and msa.active = 1) = 0  AND 
+          ((select count(msa.id) from melia_studies_activities msa where msa.initvStgId = ini.id and msa.active > 0)-
+          (select count(distinct(mt.meliaIdId)) from melia_toc mt where mt.initvStgIdId = ini.id and mt.active > 0)) = 0
+        THEN CASE
+        WHEN (SELECT COUNT(msa.id) AS count FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0) = 0
+        THEN TRUE
+        ELSE CASE
+          WHEN 
+          (SELECT if(sum(CASE
+            WHEN 
+              ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) - count(CASE
+            WHEN ((SELECT COUNT(rms.id) FROM regions_by_melia_study rms WHERE rms.meliaStudyId = msa.id AND rms.active = 1) > 0 OR 
+              (SELECT COUNT(cms.id) FROM countries_by_melia_study cms WHERE cms.meliaStudyId = msa.id AND cms.active = 1) > 0)
+            THEN TRUE
+            ELSE FALSE
+            END) = 0, 1, 0) as validation_region_contries
+            FROM melia_studies_activities msa WHERE msa.initvStgId = ${this.initvStgId_} AND msa.is_global = 0 and msa.active = 1) = 1
+                THEN TRUE
+                ELSE FALSE
+                END
+          END
+        ELSE FALSE
+        END as validation
+      FROM initiatives_by_stages ini
+        JOIN sections_meta sec
+        JOIN subsections_meta subsec
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.stageId= ini.stageId
+        AND sec.id = subsec.sectionId
+        AND sec.description='melia'
+        AND subsec.description = 'melia-studies-and-activities';`,
+        validateTableC = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1  and rs.active>0) > 0 AND
+      (SELECT COUNT(rs.id) as firstValidation FROM results rs
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2  and rs.active>0) > 0 )AND
+      ((SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) = 0 AND
+      (SELECT COUNT(result_title) - SUM(IF(result_title IS NULL OR result_title = '', 0, 1)) as secondValidation FROM results rs WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) = 0)
+      THEN  CASE
+      WHEN 
+          ((SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 1 and rs.active>0) > 0 AND
+      (SELECT COUNT(rsi.id) 
+        FROM results rs 
+          INNER JOIN results_indicators rsi on rsi.results_id = rs.id
+        WHERE rs.initvStgId = ${this.initvStgId_} AND rs.result_type_id = 2 and rs.active>0) > 0)
+      THEN TRUE
+          ELSE FALSE
+          END
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+    AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-c';`,
+        validateTableB = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iniai.id) FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1 ) > 0 AND
+        (SELECT (COUNT(iniai.id) - SUM(IF(iniai.outcomes_indicators_id IS NULL OR iniai.outcomes_indicators_id = '',0,1))) + 
+            (COUNT(iniai.id) - SUM(IF(iniai.outcome_id IS NULL OR iniai.outcome_id = '',0,1)))
+              FROM init_action_areas_out_indicators iniai WHERE iniai.initvStgId = ${this.initvStgId_} AND iniai.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
       AND sec.stageId= ini.stageId
-  AND sec.id = subsec.sectionId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-b';`,
+        validateTableA = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
+          (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+       JOIN subsections_meta subsec
+   WHERE ini.id = ${this.initvStgId_}
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
+          AND sec.description='melia'
+        AND subsec.description = 'table-a';`,
+        validateSubTableA = `
+        SELECT sec.id as sectionId,pb.impact_area_id,subsec.id as subSectionId,subsec.description as subseDescripton, 
+    CASE
+      WHEN
+      ((SELECT COUNT(iisgt.id) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) > 0 AND
+      (SELECT COUNT(iisgt.id) - SUM(IF(iisgt.global_target_id IS NULL OR iisgt.global_target_id = '', 0, 1)) FROM init_impact_area_global_targets iisgt where iisgt.initvStgId = ini.id AND iisgt.active = 1) = 0) AND
+          ((SELECT COUNT(aii.id) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) > 0 AND
+          (SELECT COUNT(aii.id) - SUM(IF(aii.impact_indicator_id IS NULL OR aii.impact_indicator_id = '', 0, 1)) FROM init_impact_area_impact_indicators aii WHERE aii.initvStgId = ini.id AND aii.active = 1) = 0) AND
+          ((SELECT COUNT(sdgt.id) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ini.id AND sdgt.active = 1) > 0 AND
+          (SELECT 2*COUNT(sdgt.id) - (SUM(IF(sdgt.sdg_target_id IS NULL OR sdgt.sdg_target_id =  '', 0, 1)) + SUM(IF(sdgt.impact_area_id IS NULL OR sdgt.impact_area_id =  '', 0, 1))) FROM init_impact_area_sdg_targets sdgt WHERE sdgt.initvStgId = ${this.initvStgId_} AND sdgt.active = 1) = 0)
+      THEN  TRUE
+    ELSE FALSE
+    END as validation
+  FROM initiatives_by_stages ini
+       JOIN sections_meta sec
+       JOIN subsections_meta subsec
+       JOIN projection_benefits pb
+   WHERE ini.id = ${this.initvStgId_}
+      AND ini.id = pb.initvStgId
+      AND sec.stageId= ini.stageId
+      AND sec.id = subsec.sectionId
       AND sec.description='melia'
-    AND subsec.description = 'melia-studies-and-activities';`;
+      AND subsec.description = 'table-a';
+        `;
 
       // var validationResultFramework = await this.queryRunner.query(
       //   validateResultFrmwkSQL
@@ -682,6 +874,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
         validateMeliaPlanSQL
       );
       var validationStudies = await this.queryRunner.query(validateStudiesSQL);
+      var validationTableC = await this.queryRunner.query(validateTableC);
+      var validationTableB = await this.queryRunner.query(validateTableB);
+      var validationTableA = await this.queryRunner.query(validateTableA);
+      var validationSubTableA = await this.queryRunner.query(validateSubTableA);
 
       // validationResultFramework[0].validation = parseInt(
       //   validationResultFramework[0].validation
@@ -692,6 +888,21 @@ export class MetaDataHandler extends InitiativeStageHandler {
       validationStudies[0].validation = parseInt(
         validationStudies[0].validation
       );
+      validationTableC[0].validation = parseInt(validationTableC[0].validation);
+      validationTableB[0].validation = parseInt(validationTableB[0].validation);
+      validationTableA[0].validation = parseInt(validationTableA[0].validation);
+      validationSubTableA = validationSubTableA.map((sa) => ({
+        ...sa,
+        validation: parseInt(sa.validation)
+      }));
+
+      validationTableA.map((ta) => {
+        ta['dinamicList'] = [
+          ...validationSubTableA.filter((sa) => {
+            return sa.sectionId == ta.sectionId;
+          })
+        ];
+      });
 
       validationMelia.map((me) => {
         me['subSections'] = [
@@ -705,6 +916,15 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
           validationStudies.find((st) => {
             return (st.sectionId = me.sectionId);
+          }),
+          validationTableC.find((tc) => {
+            return (tc.sectionId = me.sectionId);
+          }),
+          validationTableB.find((tb) => {
+            return (tb.sectionId = me.sectionId);
+          }),
+          validationTableA.find((ta) => {
+            return (ta.sectionId = me.sectionId);
           })
         ];
       });
@@ -721,59 +941,75 @@ export class MetaDataHandler extends InitiativeStageHandler {
       let validationManagementPlanSQL = `
       SELECT sec.id as sectionId,sec.description, 
         CASE
-      WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
-        OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
-        OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "management_gantt"
-                        AND active = 1 ) = ''
-          OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
-                      WHERE initvStgId = ini.id
-                        AND active = 1)
-                        AND section = "management_gantt"
-                        AND active = 1 ) IS NULL
-  OR ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
-          FROM
-	   (SELECT risks_achieving_impact,
-          CASE 
-          WHEN risks_achieving_impact IS NULL
-			OR risks_achieving_impact = ''
-			OR description_risk IS NULL
-            OR description_risk = ''
-			OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
-            OR likelihood IS NULL
-            OR likelihood = ''
-            OR impact IS NULL
-            OR impact = ''
-            OR risk_score IS NULL
-            OR risk_score = ''
-		  THEN FALSE
+      WHEN 
+      (CASE
+        WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
+          OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
+          OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+          char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+          FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
+         THEN FALSE
            ELSE TRUE
-            END AS VALIDATION
-           FROM risk_assessment  
-           WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
-           OR (SELECT SUM(a.validation * 1) - count(a.validation)
-           FROM
-           (SELECT ri.id,
-              CASE
-      WHEN op.opportunities_description IS NULL
-                OR op.opportunities_description = ''
-                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+           END = 1) and
+          
+        (CASE
+          WHEN 
+          ISNULL((SELECT SUM(a.validation * 1) - count(a.validation)
+            FROM
+       (SELECT risks_achieving_impact,
+            CASE 
+            WHEN risks_achieving_impact IS NULL
+        OR risks_achieving_impact = ''
+        OR description_risk IS NULL
+              OR description_risk = ''
+        OR if(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+              OR likelihood IS NULL
+              OR likelihood = ''
+              OR impact IS NULL
+              OR impact = ''
+              OR risk_score IS NULL
+              OR risk_score = ''
+        THEN FALSE
+             ELSE TRUE
+              END AS VALIDATION
+             FROM risk_assessment  
+             WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
+      OR (SELECT SUM(a.validation * 1) - count(a.opid)
+               FROM
+               (SELECT ri.id, op.id as opid,
+                  CASE
+          WHEN op.opportunities_description IS NULL
+                    OR op.opportunities_description = ''
+                    OR if(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                    char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+               THEN FALSE
+               ELSE TRUE
+                END AS VALIDATION
+               FROM opportunities op
+            RIGHT JOIN risk_assessment ri
+           ON op.risk_assessment_id = ri.id
+         WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
            THEN FALSE
-           ELSE TRUE
-            END AS VALIDATION
-           FROM opportunities op
-        RIGHT JOIN risk_assessment ri
-       ON op.risk_assessment_id = ri.id
-     WHERE ri.manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id AND active = 1)) AS a) <> 0
-       THEN FALSE
-         ELSE TRUE
+             ELSE TRUE
+             END = 1) and
+
+        (CASE
+          WHEN (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                          WHERE initvStgId = ini.id
+                            AND active = 1)
+                            AND section = "management_gantt"
+                            AND active = 1 ) = ''
+              OR (SELECT max(id) FROM files WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk
+                          WHERE initvStgId = ini.id
+                            AND active = 1)
+                            AND section = "management_gantt"
+                            AND active = 1 ) IS NULL
+           THEN FALSE
+             ELSE TRUE
+             END = 1)
+       THEN true
+         ELSE false
          END AS validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
@@ -793,9 +1029,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT management_plan FROM manage_plan_risk WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')))
-       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(management_plan,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM manage_plan_risk WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -818,8 +1054,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
     OR risks_achieving_impact = ''
     OR description_risk IS NULL
           OR description_risk = ''
-    OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 100
+    OR if(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(description_risk,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
           OR likelihood IS NULL
           OR likelihood = ''
           OR impact IS NULL
@@ -831,14 +1067,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
           END AS VALIDATION
          FROM risk_assessment  
          WHERE manage_plan_risk_id in (SELECT id FROM manage_plan_risk WHERE initvStgId = ini.id  AND active = 1)) as a)) <> 0
-  OR (SELECT SUM(a.validation * 1) - count(a.validation)
+  OR (SELECT SUM(a.validation * 1) - count(a.opid)
            FROM
-           (SELECT ri.id,
+           (SELECT ri.id, op.id as opid,
               CASE
       WHEN op.opportunities_description IS NULL
                 OR op.opportunities_description = ''
-                OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 50
+                OR if(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+                char_length(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(op.opportunities_description,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
            THEN FALSE
            ELSE TRUE
             END AS VALIDATION
@@ -929,14 +1165,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')))
-       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
       OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
    OR(
         SELECT SUM(a.validation * 1) - count(a.validation)
          FROM
@@ -1041,9 +1277,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT gender_diversity_inclusion FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-      - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(gender_diversity_inclusion,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -1061,9 +1297,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id and active=1) IS NULL 
       OR (SELECT capacity_development FROM human_resources WHERE initvStgId = ini.id  and active=1) = ''
-      OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','')))
-       - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 500
+      OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+      char_length(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(capacity_development,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+      FROM human_resources WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -1119,34 +1355,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
       //Validations Sections
 
       let validationFinancialResourcesSQL = `
-      SELECT sec.id as sectionId,sec.description, 
-      CASE
-          WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
-            FROM(
-      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-      FROM financial_resources_years fy
-      WHERE fy.financialResourcesId in (
-      SELECT fr.id
-      FROM financial_resources fr
-      WHERE fr.initvStgId = ini.id)
-      Group by fy.financialResourcesId) as a) IS NULL 
-            OR (SELECT SUM(a.validation * 1) - count(a.validation)
-            FROM(
-      SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-      FROM financial_resources_years fy
-      WHERE fy.financialResourcesId in (
-      SELECT fr.id
-      FROM financial_resources fr
-      WHERE fr.initvStgId = ini.id)
-      Group by fy.financialResourcesId) as a) <>0
-           THEN FALSE
-             ELSE TRUE
-             END AS validation
-           FROM initiatives_by_stages ini
-           JOIN sections_meta sec
-          WHERE ini.id = ${this.initvStgId_}
-            AND sec.stageId= ini.stageId
-            AND sec.description='financial-resources'`;
+      SELECT sec.id as sectionId,sec.description, 1 AS validation
+      FROM initiatives_by_stages ini
+        inner join sections_meta sec on sec.stageId = ini.stageId 
+      WHERE ini.id = ${this.initvStgId_}
+        AND sec.description = 'financial-resources/budget';`;
 
       var financialResources = await this.queryRunner.query(
         validationFinancialResourcesSQL
@@ -1158,47 +1371,104 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
       //Validations subSections
 
-      let validationBudgetSQL = `
-        
-      SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
-      CASE
-       WHEN (SELECT SUM(a.validation * 1) - count(a.validation)
-         FROM(
-    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-    FROM financial_resources_years fy
-    WHERE fy.financialResourcesId in (
-    SELECT fr.id
-    FROM financial_resources fr
-    WHERE fr.initvStgId = ini.id)
-    Group by fy.financialResourcesId) as a) IS NULL 
-         OR (SELECT SUM(a.validation * 1) - count(a.validation)
-         FROM(
-    SELECT if(count(fy.financialResourcesId)=3,1,0) AS validation
-    FROM financial_resources_years fy
-    WHERE fy.financialResourcesId in (
-    SELECT fr.id
-    FROM financial_resources fr
-    WHERE fr.initvStgId = ini.id)
-    Group by fy.financialResourcesId) as a) <>0
-        THEN FALSE
-          ELSE TRUE
-          END AS validation
-        FROM initiatives_by_stages ini
-        JOIN sections_meta sec
-      JOIN subsections_meta subsec
-       WHERE ini.id = ${this.initvStgId_}
-         AND sec.stageId= ini.stageId
-         AND sec.description='financial-resources'
-         AND subsec.description = 'budget'
-        `;
+      const validationGeographyBreakdownSQL = `
+      select sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  case
+      	when
+      		( select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id ) 
+      			= 
+      		(select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      			inner join financial_resources_years fry ON fry.financialResourcesId = fr.id 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id )
+      	then case 
+      		when 
+            
+      		(select if(sum(res.valid) = (select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'geographic_breakdown'
+      			and fr.initvStgId = ibs2.id),1,0) as valid from (select if(sum(if(fry.value != '' , 1, 0)) = 3, 1,0) as valid
+      from financial_resources_years fry 
+      	inner join financial_resources fr on fr.id = fry.financialResourcesId 
+      where fr.financial_type  = 'geographic_breakdown'
+      	and fr.initvStgId = ibs2.id
+      group by if(fr.financial_type_id is not null, fr.financial_type_id, fr.col_name  )) as res) > 0		
+      		then true
+      		else false
+      	end
+      	else false
+      end as validation
+      from initiatives_by_stages ibs2 
+       inner join sections_meta sec on sec.stageId = ibs2.stageId 
+       inner join subsections_meta subsec on subsec.sectionId = sec.id 
+                WHERE ibs2.id = ${this.initvStgId_}
+                  AND sec.description='financial-resources/budget'
+      			AND subsec.description = 'geography-breakdown';
+      `,
+        validationActivityBreakdownSQL = `
+      select sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,  case
+      	when
+      		( select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id ) 
+      			= 
+      		(select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      			inner join financial_resources_years fry ON fry.financialResourcesId = fr.id 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id )
+      	then case 
+      		when 
+      		(select if(sum(res.valid) = (select count(distinct(if(fr.financial_type_id is null, fr.col_name , fr.financial_type_id))) as countValues 
+      		from financial_resources fr 
+      		where fr.financial_type  = 'activity_breakdown'
+      			and fr.initvStgId = ibs2.id),1,0) as valid from (select if(sum(if(fry.value != '' , 1, 0)) = 3, 1,0) as valid
+      from financial_resources_years fry 
+      	inner join financial_resources fr on fr.id = fry.financialResourcesId 
+      where fr.financial_type  = 'activity_breakdown'
+      	and fr.initvStgId = ibs2.id
+      group by if(fr.financial_type_id is not null, fr.financial_type_id, fr.col_name  )) as res) > 0		
+      		then true
+      		else false
+      	end
+      	else false
+      end as validation
+      from initiatives_by_stages ibs2 
+       inner join sections_meta sec on sec.stageId = ibs2.stageId 
+       inner join subsections_meta subsec on subsec.sectionId = sec.id 
+                WHERE ibs2.id = ${this.initvStgId_}
+                  AND sec.description='financial-resources/budget'
+      			AND subsec.description = 'activity-breakdown';
+      `;
 
-      var budget = await this.queryRunner.query(validationBudgetSQL);
+      let validationGeographyBreakdown = await this.queryRunner.query(
+        validationGeographyBreakdownSQL
+      );
+      let validationActivityBreakdown = await this.queryRunner.query(
+        validationActivityBreakdownSQL
+      );
 
-      budget[0].validation = parseInt(budget[0].validation);
+      validationGeographyBreakdown[0].validation = parseInt(
+        validationGeographyBreakdown[0].validation
+      );
+      validationActivityBreakdown[0].validation = parseInt(
+        validationActivityBreakdown[0].validation
+      );
+
+      financialResources[0].validation *=
+        validationGeographyBreakdown[0].validation *
+        validationActivityBreakdown[0].validation;
 
       financialResources.map((fin) => {
         fin['subSections'] = [
-          budget.find((bu) => {
+          validationGeographyBreakdown.find((bu) => {
+            return (bu.sectionId = fin.sectionId);
+          }),
+          validationActivityBreakdown.find((bu) => {
             return (bu.sectionId = fin.sectionId);
           })
         ];
@@ -1227,9 +1497,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
           OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
           OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
           OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-          OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-          FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+          OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+          char_length(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+          FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1268,9 +1538,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         OR (SELECT open_fair_data_policy FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
         OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1) IS NULL 
         OR (SELECT open_fair_data_details FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) > 250
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(open_fair_data_details,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM policy_compliance_oversight WHERE initvStgId = ini.id AND ACTIVE = 1 ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -1314,38 +1584,37 @@ export class MetaDataHandler extends InitiativeStageHandler {
   async validationImpactStrategies() {
     try {
       // 5 impact strategies
+      let multi = 1;
       for (let index = 1; index < 6; index++) {
-        var multi = 1;
-
         // Validate Sections
         let validationImpactStrategiesSQL = `
           SELECT sec.id as sectionId,sec.description, 
           CASE
         WHEN (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL 
           OR (SELECT challenge_priorization FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+            char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) < 1
             OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT research_questions FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) = ''
-            OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')))
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+            char_length(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) < 1
           OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT component_work_package FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+            char_length(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) < 1
           OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT performance_results FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1  AND impact_area_id = ${index}) = ''
-            OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) > 150
+            OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+            char_length(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) < 1
           OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) IS NULL
             OR (SELECT human_capacity FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index} ) = ''
-            OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-            - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) > 150
+            OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+            char_length(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM impact_strategies WHERE initvStgId = ini.id AND ACTIVE = 1 AND impact_area_id = ${index}) < 1
             OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =${index})  IS NULL
             OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id = ${index})   = ''
          THEN FALSE
@@ -1386,24 +1655,24 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
      WHEN (imp.challenge_priorization) IS NULL
       OR (challenge_priorization) = ''
-  OR (char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR if(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_priorization,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1 
   OR (research_questions) IS NULL
   OR (research_questions) = ''
-  OR (char_length(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) > 150
+  OR if(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(research_questions,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1 
   OR (component_work_package) IS NULL
   OR (component_work_package) = ''
-  OR (char_length(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR if(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(component_work_package,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1 
   OR (performance_results) IS NULL
   OR (performance_results) = ''
-  OR (char_length(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR if(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(performance_results,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
   OR (human_capacity) IS NULL
   OR (human_capacity) = ''
-  OR (char_length(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','')) 
-  - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) > 150
+  OR if(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(human_capacity,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
   OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id)  IS NULL
   OR (SELECT max(p.type_id) FROM impact_strategies i JOIN partners p WHERE i.id = p.impact_strategies_id AND i.initvStgId = ini.id AND p.active = 1 AND i.impact_area_id =imp.impact_area_id )   = ''
      THEN FALSE
@@ -1416,7 +1685,8 @@ export class MetaDataHandler extends InitiativeStageHandler {
     WHERE ini.id = ${this.initvStgId_}
       AND sec.stageId= ini.stageId
       AND ini.id = imp.initvStgId
-	  AND sec.id = subsec.sectionId
+      AND imp.active  = 1
+	    AND sec.id = subsec.sectionId
       AND sec.description='impact-statements'
       AND subsec.description = 'impact-areas'`;
 
@@ -1461,47 +1731,117 @@ export class MetaDataHandler extends InitiativeStageHandler {
 
   async validationWorkPackages() {
     try {
-      let getAllWpSQL = `
+      const generalWorkPackagesQuery = `SELECT sec.id as sectionId,sec.description, 1 AS validation
+      FROM initiatives_by_stages ini
+      JOIN sections_meta sec
+     WHERE ini.id = ${this.initvStgId_}
+       AND sec.stageId= ini.stageId
+       AND sec.description='work-package-research-plans-and-tocs';`;
+
+      let generalWorkPackages = await this.queryRunner.query(
+        generalWorkPackagesQuery
+      );
+      let {fullInitiativeToc, workPackage} =
+        await this.validationSubsectionWorkPackages();
+      if (workPackage.length) {
+        generalWorkPackages[0].validation *=
+          workPackage[0].validation * fullInitiativeToc[0].validation;
+        generalWorkPackages.map((con) => {
+          con['subSections'] = [
+            workPackage.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            }),
+            fullInitiativeToc.find((cha) => {
+              return (cha.sectionId = con.sectionId);
+            })
+          ];
+        });
+      } else {
+        generalWorkPackages[0].validation = 1;
+      }
+
+      return generalWorkPackages[0];
+    } catch (error) {
+      throw new BaseError(
+        'Get validations Work packages',
+        400,
+        error.message,
+        false
+      );
+    }
+  }
+
+  async validationSubsectionWorkPackages() {
+    try {
+      let validationSubToc = `
+        SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
+	case when (select count(t.id) - sum(if(REGEXP_REPLACE(REGEXP_REPLACE(t.narrative,'<(\/?p)>',' '),'<([^>]+)>','') = '' or t.narrative= null, 0, 1))
+                        from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) = 0 and
+			(select count(t.id) - sum(if(t.diagram = '' or t.diagram = null, 0, 1))
+                        from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) = 0 and
+			(select count(t.id)
+						from tocs t
+                        where initvStgId = ini.id and active = 1 and type = 1) > 0
+        then true
+        else false 
+        end as validation
+FROM initiatives_by_stages ini
+         JOIN sections_meta sec
+         join subsections_meta sm 
+WHERE ini.id = ${this.initvStgId_}
+          and sm.sectionId = sec.id 
+          AND sec.stageId= ini.stageId
+          AND sec.description='work-package-research-plans-and-tocs'
+          and sm.description = 'full-initiative-toc';
+        `;
+
+      const getAllWpSQL = `
       SELECT id FROM work_packages where initvStgId= ${this.initvStgId_} AND ACTIVE = 1
       `;
-
-      var allWorkPackages = await this.queryRunner.query(getAllWpSQL);
-
+      let allWorkPackages = await this.queryRunner.query(getAllWpSQL);
       if (allWorkPackages.length > 0) {
         // Get Work packages per initiative
+        let multi = 1;
         for (let index = 0; index < allWorkPackages.length; index++) {
           const wpId = allWorkPackages[index].id;
 
-          var multi = 1;
-
           let validationWPSQL = `
-          SELECT sec.id as sectionId,sec.description, 
+          SELECT sec.id as sectionId,sec.description, sm.id as subSectionId, sm.description  as subseDescripton,
           CASE
         WHEN (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL 
           OR (SELECT acronym FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-          OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-          - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) > 3
+          OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+          char_length(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(acronym,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+        FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id =${wpId}) < 1
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT name FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 30
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(name,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) < 1
 		    OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) IS NULL
         OR (SELECT pathway_content FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1  AND id = ${wpId}) = ''
-        OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-        - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) > 100
-	    	OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) = 0
-		    OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) = 0
+        OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+        char_length(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pathway_content,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM work_packages WHERE initvStgId = ini.id AND ACTIVE = 1 AND id = ${wpId}) < 1
          THEN FALSE
-           ELSE TRUE
+           ELSE case 
+	           	when   (select is_global  FROM work_packages WHERE initvStgId  = ini.id and id = ${wpId} AND ACTIVE = 1 ) = 1
+	           		OR (SELECT COUNT(id) FROM countries_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1 ) > 0
+		    		OR (SELECT COUNT(id) FROM regions_by_initiative_by_stage WHERE initvStgId = ini.id and wrkPkgId = ${wpId} AND ACTIVE = 1) > 0
+           		then TRUE
+           		else FALSE
+           		end
            END AS validation
          FROM initiatives_by_stages ini
          JOIN sections_meta sec
+         join subsections_meta sm 
         WHERE ini.id = ${this.initvStgId_}
+          and sm.sectionId = sec.id 
           AND sec.stageId= ini.stageId
-          AND sec.description='work-package-research-plans-and-tocs';
+          AND sec.description='work-package-research-plans-and-tocs'
+          and sm.description = 'work-packages';
           `;
 
           var workPackage = await this.queryRunner.query(validationWPSQL);
@@ -1516,10 +1856,19 @@ export class MetaDataHandler extends InitiativeStageHandler {
         workPackage = [];
       }
 
-      return workPackage[0];
+      let fullInitiativeToc = await this.queryRunner.query(validationSubToc);
+      if (fullInitiativeToc.length > 0) {
+        fullInitiativeToc[0].validation = parseInt(
+          fullInitiativeToc[0]?.validation
+        );
+      } else {
+        fullInitiativeToc = [];
+      }
+
+      return {workPackage, fullInitiativeToc};
     } catch (error) {
       throw new BaseError(
-        'Get validations Work packages',
+        'Get validations Subsection Context',
         400,
         error.message,
         false
@@ -1643,9 +1992,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
       CASE
     WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
       OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-  OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-  - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-            FROM context WHERE initvStgId = ini.id ) > 500
+  OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+  char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+            FROM context WHERE initvStgId = ini.id ) < 1
      THEN FALSE
        ELSE TRUE
        END AS validation
@@ -1657,31 +2006,47 @@ export class MetaDataHandler extends InitiativeStageHandler {
   AND sec.id = subsec.sectionId
       AND sec.description='context'
     AND subsec.description = 'challenge-statement';`,
-        measurableObjectivesSQL = `SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
+        measurableObjectivesSQL = `
+        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
-      WHEN (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1 ) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
-       FROM initiatives_by_stages ini
-       JOIN sections_meta sec
-	   JOIN subsections_meta subsec
+          when
+          /* validation 01 */
+          (SELECT count(rs.id)  
+          	FROM results rs
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) > 0 and
+          /* validation 02 */  	
+          (SELECT sum(if(rs.result_title is null or rs.result_title = '', 0, 1)) - count(rs.id) 
+          			FROM results rs 
+          			WHERE rs.initvStgId = ini.id 
+          				AND rs.result_type_id = 3 
+          				and rs.active = 1) = 0 and
+          /* validation 03 */				
+          (SELECT count(rsi.id) - sum(IF(rsi.name is null || rsi.name = '', 0, 1))
+            FROM results rs 
+            left JOIN results_indicators rsi on rsi.results_id = rs.id
+            WHERE rs.initvStgId = ini.id 
+            	AND rs.result_type_id = 3 
+            	and rs.active = 1) = 0
+        THEN true
+        ELSE false
+        END as validation
+      FROM initiatives_by_stages ini
+        JOIN sections_meta sec
+        JOIN subsections_meta subsec
       WHERE ini.id = ${this.initvStgId_}
         AND sec.stageId= ini.stageId
-		AND sec.id = subsec.sectionId
+      	AND sec.id = subsec.sectionId
         AND sec.description='context'
-	    AND subsec.description = 'measurable-objectives';`,
+        AND subsec.description = 'measurable-objectives';`,
         learningSQL = ` SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 
         CASE
       WHEN (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 250
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1697,9 +2062,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')))
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1715,9 +2080,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1733,9 +2098,9 @@ export class MetaDataHandler extends InitiativeStageHandler {
         CASE
       WHEN (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
         OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT (char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-    - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) > 500
+		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+    char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
+              FROM context WHERE initvStgId = ini.id ) < 1
        THEN FALSE
          ELSE TRUE
          END AS validation
@@ -1798,82 +2163,11 @@ export class MetaDataHandler extends InitiativeStageHandler {
   async validationsProjectionBenefits() {
     try {
       // 5 impact strategies
+      let multi = 1;
       for (let index = 1; index < 6; index++) {
-        var multi = 1;
-
         // Validate Sections
         let validationProjectionBenefitsSQL = `
-        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton,
-        CASE
-      WHEN (
-      SELECT SUM(a.validation * 1) - count(a.validation)
-        FROM
-        (SELECT
-        CASE 
-        WHEN pb.impact_area_indicator_id IS NULL
-        OR pb.impact_area_indicator_id = ''
-        OR pb.impact_area_id IS NULL
-        OR pb.impact_area_id= ''
-        OR pb.notes IS NULL
-        OR pb.notes= ''
-        OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
-        OR pb.depth_scale_id IS NULL
-        OR pb.depth_scale_id= ''
-        OR pb.probability_id IS NULL
-        OR pb.probability_id= ''
-        THEN FALSE
-           ELSE TRUE
-        END AS VALIDATION
-        FROM projection_benefits pb
-        WHERE pb.initvStgId = ini.id
-        AND pb.impact_area_id=${index}
-        )as a ) IS NULL  
-        OR (
-        SELECT SUM(a.validation * 1) - count(a.validation)
-        FROM
-        (SELECT
-        CASE 
-        WHEN pb.impact_area_indicator_id IS NULL
-        OR pb.impact_area_indicator_id = ''
-        OR pb.impact_area_id IS NULL
-        OR pb.impact_area_id= ''
-        OR pb.notes IS NULL
-        OR pb.notes= ''
-        OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-              - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
-        OR pb.depth_scale_id IS NULL
-        OR pb.depth_scale_id= ''
-        OR pb.probability_id IS NULL
-        OR pb.probability_id= ''
-        THEN FALSE
-           ELSE TRUE
-        END AS VALIDATION
-        FROM projection_benefits pb
-        WHERE pb.initvStgId = ini.id
-        AND pb.impact_area_id=${index}
-        )as a)<> 0     
-         OR (
-          SELECT SUM(a.validation * 1) - count(a.validation)
-           FROM
-         (SELECT pb.id,
-           CASE 
-            WHEN d.breadth_value IS NULL
-              OR d.breadth_value =''
-              OR d.depthDescriptionId IS NULL
-              OR d.depthDescriptionId = ''
-           THEN FALSE
-                   ELSE TRUE
-        END AS VALIDATION
-           FROM dimensions d
-            RIGHT JOIN projection_benefits pb
-           ON d.projectionId = pb.id
-          WHERE pb.initvStgId = ini.id
-            AND pb.depth_scale_id not in (4)) AS a
-         )<>0
-               THEN FALSE
-                 ELSE TRUE
-                 END AS validation
+        SELECT sec.id as sectionId,sec.description,subsec.id as subSectionId,subsec.description as subseDescripton, 1 as validation
                  FROM initiatives_by_stages ini
                  JOIN sections_meta sec
                JOIN subsections_meta subsec
@@ -1906,13 +2200,27 @@ export class MetaDataHandler extends InitiativeStageHandler {
        OR pb.impact_area_id= ''
        OR pb.notes IS NULL
        OR pb.notes= ''
-       OR ((char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''))) 
-                 - (char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1)) > 200
-       OR pb.depth_scale_id IS NULL
-       OR pb.depth_scale_id= ''
+       OR if(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
+       char_length(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(pb.notes,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) < 1
+       OR (SELECT count(pbds.id) FROM projection_benefits_depth_scales pbds WHERE pbds.projectionBenefitsId = pb.id AND pbds.active > 0) = 0
          OR pb.probability_id IS NULL
        OR pb.probability_id= ''
-     
+       OR (select
+        sum(CASE 
+         WHEN d.breadth_value IS NULL
+           OR d.breadth_value =''
+           OR d.depthDescriptionId IS NULL
+           OR d.depthDescriptionId = ''
+        THEN FALSE
+                ELSE TRUE
+     end) - count(d.id)
+        FROM dimensions d
+         RIGHT JOIN projection_benefits pb2
+        ON d.projectionId = pb2.id
+       WHERE pb2.initvStgId = ini.id
+         AND d.active = 1
+         AND pb2.depth_scale_id not in (4)
+         AND pb2.impact_area_id = pb.impact_area_id) <> 0 
       THEN FALSE
               ELSE TRUE
    END AS validation
@@ -1927,14 +2235,14 @@ export class MetaDataHandler extends InitiativeStageHandler {
          AND pb.active > 0
          AND sec.description='context'
          AND subsec.description = 'projection-of-benefits'
-         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id `;
-
+         GROUP BY sec.id,pb.impact_area_id,subsec.id,pb.impact_area_indicator_id,pb.notes,pb.depth_scale_id,pb.probability_id, pb.id`;
       var validationProjectionBenefitsImpact = await this.queryRunner.query(
         validationProjectionBenefitsImpactSQL
       );
 
       validationProjectionBenefitsImpact.map((pbi) => {
         pbi.validation = parseInt(pbi.validation);
+        validationProjectionBenefits[0].validation *= pbi.validation;
       });
 
       validationProjectionBenefits.map((pb) => {

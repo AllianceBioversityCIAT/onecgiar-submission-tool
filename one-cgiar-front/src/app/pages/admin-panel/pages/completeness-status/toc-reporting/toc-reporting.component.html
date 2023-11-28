@@ -1,0 +1,72 @@
+<div class="card-container">
+    <section-title name="ToC reporting"></section-title>
+    <div class="section-container animate__animated animate__fadeIn">
+        <div class="card">
+            <p-table #dt1 [loading]="loading" [value]="this.listReporting" styleClass="p-datatable-gridlines" [globalFilterFields]="['name','official_code']" [scrollable]="true"
+                scrollHeight="calc(80vh - 100px)">
+                <ng-template pTemplate="caption">
+                    <div style="display: flex; justify-content: space-between;">
+                        <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                            (click)="clear(dt1)"></button>
+                        <button style="margin-left: 10px;" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+
+                        <span class="p-input-icon-left ml-auto">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search keyword" />
+                        </span>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="official_code" style="width: 100px;">
+                            <div class="flex justify-content-center align-items-center">
+                                ID
+                                <p-sortIcon field="official_code"></p-sortIcon>
+                                <p-columnFilter type="text" field="official_code" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="name" style="width: 350px;">
+                            <div class="flex justify-content-center align-items-center">
+                                Initiative Name
+                                <p-sortIcon field="name"></p-sortIcon>
+                                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="output" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Outputs
+                                <p-sortIcon field="output"></p-sortIcon>
+                                <p-columnFilter type="text" field="output" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="outcome" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                Outcomes
+                                <p-sortIcon field="outcome"></p-sortIcon>
+                                <p-columnFilter type="text" field="outcome" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="eoi_outcome" class="col_num">
+                            <div class="flex justify-content-center align-items-center">
+                                EOI Outcomes
+                                <p-sortIcon field="eoi_outcome"></p-sortIcon>
+                                <p-columnFilter type="text" field="eoi_outcome" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-init>
+                    <tr>
+                        <td style="width: 100px;" class="routerInit" routerLink="/initiatives/{{init.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(init.stageId)?.route}}/general-information"><strong>{{init.official_code}}</strong></td>
+                        <td style="width: 350px;" class="routerInit" routerLink="/initiatives/{{init.initId}}/stages/{{this._dataControlService.getStageRouteByStageId(init.stageId)?.route}}/general-information">{{init.name}}</td>
+                        <td class="col_num" [ngClass]="{'alert': init.output == 0}">{{init.output}}</td>
+                        <td class="col_num" [ngClass]="{'alert': init.outcome == 0}">{{init.outcome}}</td>
+                        <td class="col_num" [ngClass]="{'alert': init.eoi_outcome == 0}">{{init.eoi_outcome}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

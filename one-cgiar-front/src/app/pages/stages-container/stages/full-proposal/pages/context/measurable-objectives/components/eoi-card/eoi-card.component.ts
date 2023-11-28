@@ -10,6 +10,7 @@ import { DataControlService } from '../../../../../../../../../shared/services/d
 export class EoiCardComponent implements OnInit {
   @Input() result_type: string;
   @Input() seemore: boolean = true;
+  @Input() title: string;
   constructor(public _dataControlService:DataControlService) { }
 
   expand = false;

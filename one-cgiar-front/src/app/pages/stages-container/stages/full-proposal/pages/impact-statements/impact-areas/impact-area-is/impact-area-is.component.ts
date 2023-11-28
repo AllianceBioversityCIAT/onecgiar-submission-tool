@@ -61,13 +61,14 @@ export class ImpactAreaIsComponent implements OnInit {
     this.sectionForm.valueChanges.subscribe(resp=>{
       // console.log("changes");
       this.extraValidation = 
-           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("challenge_priorization").value, 150) && 
-           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("research_questions").value, 150) && 
-           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("component_work_package").value, 150) && 
-           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("performance_results").value, 150) && 
-           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("human_capacity").value, 150);
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("challenge_priorization").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("research_questions").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("component_work_package").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("performance_results").value) && 
+           this._dataValidatorsService.wordCounterIsCorrect(this.sectionForm.get("human_capacity").value);
     })
   }
+
 
   ngOnInit(): void {
     this._initiativesService.setTitle('Impact area');
@@ -130,11 +131,11 @@ export class ImpactAreaIsComponent implements OnInit {
 
 
   ngDoCheck(): void {
-    this.pobColorselected(3, 7, 16, this.iaID);
+  //  this.pobColorselected(3, 7, 16, this.iaID);
   }
  
   ngOnDestroy(): void {
-   this.pobColorselected(3, 7, 16,-1)
+ //  this.pobColorselected(3, 7, 16,-1)
    this.cleanForm();
   }
 

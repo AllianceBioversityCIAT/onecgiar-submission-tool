@@ -5,6 +5,7 @@ import { InitiativesService } from './initiatives.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
+import { InteractionsService } from './interactions.service';
 @Injectable()
 export class UtilsService {
   private sidebarOpened = new BehaviorSubject<boolean>(false);

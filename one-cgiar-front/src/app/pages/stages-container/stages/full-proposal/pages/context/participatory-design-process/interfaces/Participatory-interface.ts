@@ -4,5 +4,5 @@ export interface ParticipatoryProcess {
     isdc_recommendation: string,
     response: string,
     updated_response: string,
-    user_id: number
+    user_id?: number
 }
