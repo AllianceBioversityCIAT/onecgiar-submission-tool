@@ -1883,66 +1883,7 @@ WHERE ini.id = ${this.initvStgId_}
       // Validate Sections
       let validationContextSQL = `
         SELECT sec.id as sectionId,sec.description, 
-        CASE
-      WHEN (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) IS NULL 
-        OR (SELECT challenge_statement FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(challenge_statement,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT smart_objectives FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(smart_objectives,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT key_learnings FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(key_learnings,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT priority_setting FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(priority_setting,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-	    OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT comparative_advantage FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(comparative_advantage,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-	    OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) IS NULL 
-		OR (SELECT participatory_design FROM context WHERE initvStgId = ini.id) = ''
-		OR (SELECT if(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','') = '', 0, 
-    char_length(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>','')) - char_length(REPLACE(REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(participatory_design,'<(\/?p)>',' '),'<([^>]+)>',''),'\r', '' ),'\n', ''),'\t', '' ), ' ', '')) + 1) AS wordcount 
-              FROM context WHERE initvStgId = ini.id ) < 1
-    OR (
-      CASE
-          when
-          /* validation 01 */
-          (SELECT count(rs.id)  
-          	FROM results rs
-            WHERE rs.initvStgId = ini.id 
-            	AND rs.result_type_id = 3 
-            	and rs.active = 1) > 0 and
-          /* validation 02 */  	
-          (SELECT sum(if(rs.result_title is null or rs.result_title = '', 0, 1)) - count(rs.id) 
-          			FROM results rs 
-          			WHERE rs.initvStgId = ini.id 
-          				AND rs.result_type_id = 3 
-          				and rs.active = 1) = 0 and
-          /* validation 03 */				
-          (SELECT count(rsi.id) - sum(IF(rsi.name is null || rsi.name = '', 0, 1))
-            FROM results rs 
-            left JOIN results_indicators rsi on rsi.results_id = rs.id
-            WHERE rs.initvStgId = ini.id 
-            	AND rs.result_type_id = 3 
-            	and rs.active = 1) = 0
-        THEN true
-        ELSE false
-        END
-    ) = 0
-       THEN FALSE
-         ELSE TRUE
-         END AS validation
+        1 as validation
        FROM initiatives_by_stages ini
        JOIN sections_meta sec
       WHERE ini.id = ${this.initvStgId_}
@@ -1954,12 +1895,6 @@ WHERE ini.id = ${this.initvStgId_}
         validationContextSQL
       );
 
-      validationContext[0].validation = parseInt(
-        validationContext[0].validation
-      );
-
-      generalValidations = validationContext[0].validation;
-
       var {
         challengeStatement,
         measurableObjectives,
@@ -1969,6 +1904,19 @@ WHERE ini.id = ${this.initvStgId_}
         participatory,
         projectionBenefits
       } = await this.validationSubsectionContext();
+
+      const constexGeneralValid: number =
+        parseInt(challengeStatement[0].validation) *
+        parseInt(measurableObjectives[0].validation) *
+        parseInt(learning[0].validation) *
+        parseInt(prioritySetting[0].validation) *
+        parseInt(comparativeAdvantage[0].validation) *
+        parseInt(participatory[0].validation) *
+        parseInt(projectionBenefits[0].validation);
+
+      validationContext[0].validation = constexGeneralValid;
+
+      generalValidations = validationContext[0].validation;
 
       validationContext.map((con) => {
         con['subSections'] = [
