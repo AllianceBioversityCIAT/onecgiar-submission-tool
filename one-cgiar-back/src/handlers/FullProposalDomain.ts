@@ -2423,10 +2423,13 @@ from  initiatives_by_stages ibs
       	  r.result_title as resultTitle, 
       	  rt.id as typeId, 
       	  rt.name as typeName,
-      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle
+      	  concat('(',rt.name,') ',r.result_title)  as fullResultTitle,
+          wp.wp_official_code 
       from melia_toc mt 
       	inner join results r on r.id = mt.outcomeIdId 
       	inner join results_types rt on rt.id = r.result_type_id 
+        left join work_packages wp on wp.wp_official_code = r.work_package_id 
+          AND wp.initvStgId = r.initvStgId
         where mt.initvStgIdId = ${initvStg.id}
         and mt.active > 0
       `);
