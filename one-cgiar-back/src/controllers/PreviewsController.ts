@@ -369,7 +369,7 @@ export async function getPreviewWorkPackages(req: Request, res: Response) {
       throw new BaseError(
         'Previews: Error',
         400,
-        `Previews not found in stage:` + initvStg.stage,
+        `Previews not found in stage:` + initvStg?.stage?.id || 'Unknown Stage',
         false
       );
     }
