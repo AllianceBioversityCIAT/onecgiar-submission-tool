@@ -20,13 +20,10 @@ export class InitiativeCreatorComponent implements OnInit {
     action_area_id: '',
     active: true,
     generalInformationId: null,
-  }
+    type: null
+  };
 
-  constructor(
-    private _initiativesService:InitiativesService,
-    private _interactionsService:InteractionsService,
-    public _dataControlService:DataControlService
-  ) { }
+  constructor(private _initiativesService: InitiativesService, private _interactionsService: InteractionsService, public _dataControlService: DataControlService) {}
 
   ngOnInit(): void {
     this.getActionAreas();
@@ -37,42 +34,34 @@ export class InitiativeCreatorComponent implements OnInit {
     this.display = true;
   }
 
-  fieldsValidations(){
-    console.log(this.createBody.name);
-    console.log(this.createBody.acronym);
-    console.log(this.createBody.action_area_id);
-    console.log(this.createBody.name && this.createBody.acronym &&  this.createBody.action_area_id);
-    return !(this.createBody.name && this.createBody.acronym &&  this.createBody.action_area_id);
+  fieldsValidations() {
+    const validateInit = !(this.createBody.name && this.createBody.acronym && this.createBody.action_area_id);
+    const validatePlat = !(this.createBody.name && this.createBody.acronym);
+    return this.createBody.type == 1 ? validateInit : validatePlat;
   }
 
-  getActionAreas(){
-    this._initiativesService.getActionAreas().subscribe(resp=>{
+  getActionAreas() {
+    this._initiativesService.getActionAreas().subscribe(resp => {
       // console.log(resp);
       this.actionAreasList = resp;
-    })
+    });
   }
 
   createInitiative() {
+    console.log('createInitiative');
+    this._initiativesService.createInitiative(this.createBody).subscribe(resp => {
+      this._interactionsService.successMessage('The initiative "' + resp?.response.generalInformation.name + '" was successfully created');
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+    });
 
-      console.log("createInitiative");
-      this._initiativesService.createInitiative(this.createBody).subscribe(resp => {
-        this._interactionsService.successMessage('The initiative "'+resp?.response.generalInformation.name+'" was successfully created')
-        setTimeout(() => {
-          location.reload();
-        }, 3000);
-      })
+    this._interactionsService.successMessage('Measurable three-year outcomes has been saved');
 
-
-      this._interactionsService.successMessage('Measurable three-year outcomes has been saved')
-
-      //? CLEAN form
-      this.createBody.name = '';
-      this.createBody.acronym = '';
-      this.createBody.action_area_description = '';
-      this.createBody.action_area_id = null;
-
-   
-
+    //? CLEAN form
+    this.createBody.name = '';
+    this.createBody.acronym = '';
+    this.createBody.action_area_description = '';
+    this.createBody.action_area_id = null;
   }
-
 }
