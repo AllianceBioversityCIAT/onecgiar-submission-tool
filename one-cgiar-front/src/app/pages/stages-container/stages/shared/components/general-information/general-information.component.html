@@ -1,138 +1,103 @@
 <section-title name="General information"></section-title>
 
 <div class="section-container animate__animated animate__fadeIn">
-    <br>
-    <div class="sekeletons_load" *ngIf="false">
-        <app-general-information-skeleton></app-general-information-skeleton>
-    </div>
-    <!-- <form [formGroup]="summaryForm" (ngSubmit)="getSummary()" class="general-information-form" -->
-        <form class="general-information-form">
-        <div class="row">
+  <br />
+  <div class="sekeletons_load" *ngIf="false">
+    <app-general-information-skeleton></app-general-information-skeleton>
+  </div>
+  <!-- <form [formGroup]="summaryForm" (ngSubmit)="getSummary()" class="general-information-form" -->
+  <form class="general-information-form">
+    <div class="row">
+      <div class="col-sm-6">
+        <ibdc-input-field [inputTitle]="this._initiativesService.initiative?.type != 3 ? 'Short name' : 'Short platform name'" [objectItem]="this.body?.generalInformation" [objectAtributteName]="'acronym'" [readOnlyVariable]="this._initiativesService.initiative.readonly || !this._dataControlService.isAdmin" [maxWords]="3"></ibdc-input-field>
+      </div>
 
-            <div class="col-sm-6">
-                <ibdc-input-field 
-                inputTitle="Short name" 
-                [objectItem]="this.body?.generalInformation"  
-                [objectAtributteName]="'acronym'"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly || !this._dataControlService.isAdmin"
-                [maxWords]="3"
-                ></ibdc-input-field>
-            </div>
+      <div class="col-sm-12">
+        <ibdc-text-area-field [inputTitle]="this._initiativesService.initiative?.type != 3 ? 'Initiative name' : 'Platform name'" [objectItem]="this.body?.generalInformation" [objectAtributteName]="'name'" [readOnlyVariable]="this._initiativesService?.initiative.readonly || !this._dataControlService.isAdmin" [maxWords]="50"></ibdc-text-area-field>
+      </div>
 
-            <div class="col-sm-12" >
-                <ibdc-text-area-field 
-                inputTitle="Initiative name" 
-                [objectItem]="this.body?.generalInformation"  
-                [objectAtributteName]="'name'"
-                [readOnlyVariable]="this._initiativesService?.initiative.readonly  || !this._dataControlService.isAdmin"
-                [maxWords]="50"
-                ></ibdc-text-area-field>
-            </div>
-
-            <div class="col-12">
-
-                <div class="leads_grid">
-                    <div>
-                        <mat-card>
-                            <div class="lead_content_grid">
-                                <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Lead name', value:this.body?.generalInformation.first_name||'Not provided'}"></ibdc-simple-text>
-                                </div>
-                                <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Lead email', value:this.body?.generalInformation.email||'Not provided'}"></ibdc-simple-text>
-                                </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                
-                            </div>
-                        </mat-card>
-                        <br>
-                    </div>
-
-                    <div>
-                        <mat-card>
-                            <div class="lead_content_grid">
-                                <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Co-Lead name', value: this.body?.generalInformation.co_first_name||'Not provided'}"></ibdc-simple-text>
-                                </div>
-                                <div style="min-width: max-content;">
-                                    <ibdc-simple-text [options]="{inputTitle:'Co-Lead email', value:this.body?.generalInformation.co_email||'Not provided'}"></ibdc-simple-text>
-                                </div>
-                                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog();setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                            </div>
-                        </mat-card>
-                        <br>
-                    </div>
+      <div class="col-12">
+        <div class="leads_grid">
+          <div>
+            <mat-card>
+              <div class="lead_content_grid">
+                <div style="min-width: max-content">
+                  <ibdc-simple-text [options]="{ inputTitle: this._initiativesService.initiative?.type != 3 ? 'Lead name' : 'Director name', value: this.body?.generalInformation.first_name || 'Not provided' }"></ibdc-simple-text>
                 </div>
-
-            </div>
-
-     
-            <div class="col-sm-12"></div>
-            <div class="col-sm-6">
-                <ibdc-select-field
-                [objectItem]="this.body?.generalInformation"  
-                [objectAtributteId]="'action_area_id'" 
-                [objectAtributteName]="'action_area_description'" 
-                inputTitle="Primary CGIAR Action Area" 
-                selectableListAtributteName = 'index_name'
-                selectableListAtributteId = 'id'
-                [selectableList]="this.actionAreasList"
-                [readOnlyVariable]="this._initiativesService.initiative.readonly"
-              ></ibdc-select-field>
-            </div>
-            <div class="col-sm-6" *ngIf="this.stageId != 2">
-                <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body?.budget" [readOnlyVariable]="this._initiativesService.initiative.readonly"  objectAtributteName="value"></ibdc-input-field>
-            </div>
-
-            <div class="col-12" *ngIf="this.stageId != 2">
-                <div class="blue_border">
-                    <section-sub-title name="Geographic scope summary"></section-sub-title>
-                    <div class="alert_container">
-                        <ibdc-alert [options]="{text: 'The geographic information that is being presented here is aggregated from the geographic scope entered for each of your work-packages. As a result, if you would like to edit the regions and countries, please go to the work-packages section.', 
-                                                type:'info'}"></ibdc-alert>
-                    </div>
-                    <div class="local_container">
-                        <div class="data_list">
-                            <div class="list_name">
-                                Regions
-                            </div>
-                            <div class="full_list">
-                                <div [hidden]="!this.body.geoScope.regions.length" class="element" *ngFor="let item of this.body.geoScope.regions; let i=index">
-                                    {{i+1}}. {{item.name}}
-                                </div>
-                                <app-text-not-data [hidden]="this.body.geoScope.regions.length" text="There are not Regions data"></app-text-not-data>
-                            </div>
-                        </div>
-                        <div class="rule"></div>
-                        <div class="data_list">
-                            <div class="list_name">
-                                Countries
-                            </div>
-                            <div class="full_list">
-                                <div [hidden]="!this.body.geoScope.countries.length" class="element" *ngFor="let item of this.body.geoScope.countries; let i=index">
-                                    {{i+1}}. {{item.name}}
-                                </div>
-                                <app-text-not-data [hidden]="this.body.geoScope.countries.length" text="There are not Countries"></app-text-not-data>
-                            </div>
-                        </div>
-                    </div>
+                <div style="min-width: max-content" *ngIf="this._initiativesService.initiative?.type != 3">
+                  <ibdc-simple-text [options]="{ inputTitle: 'Lead email', value: this.body?.generalInformation.email || 'Not provided' }"></ibdc-simple-text>
                 </div>
-            </div>
+                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog(); setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </mat-card>
+            <br />
+          </div>
 
-
+          <div>
+            <mat-card>
+              <div class="lead_content_grid">
+                <div style="min-width: max-content">
+                  <ibdc-simple-text [options]="{ inputTitle: this._initiativesService.initiative?.type != 3 ? 'Co-Lead name' : 'Manager name', value: this.body?.generalInformation.co_first_name || 'Not provided' }"></ibdc-simple-text>
+                </div>
+                <div style="min-width: max-content" *ngIf="this._initiativesService.initiative?.type != 3">
+                  <ibdc-simple-text [options]="{ inputTitle: 'Co-Lead email', value: this.body?.generalInformation.co_email || 'Not provided' }"></ibdc-simple-text>
+                </div>
+                <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog(); setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </mat-card>
+            <br />
+          </div>
         </div>
+      </div>
 
-        <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px;"></div>
+      <div class="col-sm-12"></div>
+      <div class="col-sm-6" *ngIf="this._initiativesService.initiative?.type != 3">
+        <ibdc-select-field [objectItem]="this.body?.generalInformation" [objectAtributteId]="'action_area_id'" [objectAtributteName]="'action_area_description'" inputTitle="Primary CGIAR Action Area" selectableListAtributteName="index_name" selectableListAtributteId="id" [selectableList]="this.actionAreasList" [readOnlyVariable]="this._initiativesService.initiative.readonly"></ibdc-select-field>
+      </div>
+      <div class="col-sm-6" *ngIf="this.stageId != 2">
+        <ibdc-input-field inputType="currency" inputTitle="Budget (USD)" [objectItem]="this.body?.budget" [readOnlyVariable]="this._initiativesService.initiative.readonly" objectAtributteName="value"></ibdc-input-field>
+      </div>
 
-    </form>
-
-    <div (click)="upsertSection()" class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
-        <ibdc-save-button  [options]="{readOnlyVariable: this._initiativesService.initiative.readonly,remember:true, minutesToRemember: this._dataControlService.minutesToRemeberSave}"></ibdc-save-button>
+      <div class="col-12" *ngIf="this.stageId != 2 && this._initiativesService.initiative?.type != 3">
+        <div class="blue_border">
+          <section-sub-title name="Geographic scope summary"></section-sub-title>
+          <div class="alert_container">
+            <ibdc-alert [options]="{ text: 'The geographic information that is being presented here is aggregated from the geographic scope entered for each of your work-packages. As a result, if you would like to edit the regions and countries, please go to the work-packages section.', type: 'info' }"></ibdc-alert>
+          </div>
+          <div class="local_container">
+            <div class="data_list">
+              <div class="list_name">Regions</div>
+              <div class="full_list">
+                <div [hidden]="!this.body.geoScope.regions.length" class="element" *ngFor="let item of this.body.geoScope.regions; let i = index">{{ i + 1 }}. {{ item.name }}</div>
+                <app-text-not-data [hidden]="this.body.geoScope.regions.length" text="There are not Regions data"></app-text-not-data>
+              </div>
+            </div>
+            <div class="rule"></div>
+            <div class="data_list">
+              <div class="list_name">Countries</div>
+              <div class="full_list">
+                <div [hidden]="!this.body.geoScope.countries.length" class="element" *ngFor="let item of this.body.geoScope.countries; let i = index">{{ i + 1 }}. {{ item.name }}</div>
+                <app-text-not-data [hidden]="this.body.geoScope.countries.length" text="There are not Countries"></app-text-not-data>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name='general-information'><br><br><br><br><p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner>
+    <div class="spacer" *ngIf="_initiativesService.initiative.readonly" style="margin-bottom: 100px"></div>
+  </form>
+
+  <div (click)="upsertSection()" class="general-information-save" *ngIf="!_initiativesService.initiative.readonly">
+    <ibdc-save-button [options]="{ readOnlyVariable: this._initiativesService.initiative.readonly, remember: true, minutesToRemember: this._dataControlService.minutesToRemeberSave }"></ibdc-save-button>
+  </div>
+
+  <ngx-spinner bdColor="#00151da1" type="ball-triangle-path" [fullScreen]="false" name="general-information"
+    ><br /><br /><br /><br />
+    <p style="font-size: 20px; color: white">Loading data...</p></ngx-spinner
+  >
 </div>
