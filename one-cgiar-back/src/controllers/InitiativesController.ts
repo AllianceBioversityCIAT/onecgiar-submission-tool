@@ -884,7 +884,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
  * @param res
  */
 export const createInitiative = async (req: Request, res: Response) => {
-  const {name, user, current_stage, official_code, acronym} = req.body;
+  const {name, user, current_stage, official_code, acronym, type} = req.body;
   const userRepository = getRepository(Users);
   const initiativesRepository = getRepository(Initiatives);
   const initiativesByUsersRepository = getRepository(InitiativesByUsers);
@@ -898,6 +898,7 @@ export const createInitiative = async (req: Request, res: Response) => {
   initiative.name = name;
   initiative.acronym = acronym;
   initiative.official_code = official_code;
+  initiative.type = type;
 
   try {
     const errors = await validate(initiative);
