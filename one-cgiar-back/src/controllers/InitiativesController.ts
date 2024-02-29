@@ -6,7 +6,7 @@ import {Narratives} from '../entity/Narratives';
 import {Initiatives} from '../entity/Initiatives';
 import {InitiativesByStages} from '../entity/InititativesByStages';
 import {InitiativesByUsers} from '../entity/InititativesByUsers';
-import { Roles } from '../entity/Roles';
+import {Roles} from '../entity/Roles';
 import {Stages} from '../entity/Stages';
 import {StagesMeta} from '../entity/StagesMeta';
 import {TOCs} from '../entity/TOCs';
@@ -112,9 +112,6 @@ export const upsertSummary = async (req: Request, res: Response) => {
     countries,
     is_global
   } = req.body;
-
-
-
 
   const initvStgRepo = getRepository(InitiativesByStages);
   const stageRepo = getRepository(Stages);
@@ -781,7 +778,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
   let newUsrByInitv: InitiativesByUsers;
   try {
     let usersByInitiative = await initvUsrsRepo.find({
-      where: {initiative: initiativeId, user:userId},
+      where: {initiative: initiativeId, user: userId},
       relations: ['role', 'user']
     });
     const user = await userRepo.findOne(userId);
@@ -802,7 +799,10 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
     }
 
     if (usersByInitiative.length > 0) {
-      usersByInitiative[0]['user']['is_active'] = (active != undefined? active: usersByInitiative[0]['user']['is_active']);
+      usersByInitiative[0]['user']['is_active'] =
+        active != undefined
+          ? active
+          : usersByInitiative[0]['user']['is_active'];
       newUsrByInitv = new InitiativesByUsers();
       newUsrByInitv.active = active;
       newUsrByInitv.role = role;
@@ -1864,7 +1864,8 @@ export async function getProjectedBenefits(req: Request, res: Response) {
 export async function getProjectedProbabilities(req: Request, res: Response) {
   try {
     const initiativeshandler = new InitiativeHandler();
-    const probabilities = await initiativeshandler.requestProjectedProbabilities();
+    const probabilities =
+      await initiativeshandler.requestProjectedProbabilities();
     res.json(new ResponseHandler('Requested probabilities.', {probabilities}));
   } catch (error) {
     console.log(error);

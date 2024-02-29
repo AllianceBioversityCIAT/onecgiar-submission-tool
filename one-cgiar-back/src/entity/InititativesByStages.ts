@@ -28,7 +28,10 @@ export class InitiativesByStages extends UpdatedCreatedAt {
   @ManyToOne(() => Initiatives, (initiative) => initiative.initvByStages)
   public initiative!: Initiatives;
 
+  @Column({type: 'int', nullable: true, name: 'statusId'})
+  statusId!: number;
+
   @OneToOne(() => Statuses)
-  @JoinColumn()
+  @JoinColumn({name: 'statusId'})
   status!: Statuses;
 }

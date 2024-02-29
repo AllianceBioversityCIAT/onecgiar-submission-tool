@@ -1,8 +1,16 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn
+} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {UpdatedCreatedAt} from './extends/UpdateCreateAt';
 import {InitiativesByUsers} from './InititativesByUsers';
 import {InitiativesByStages} from './InititativesByStages';
+import {InitiativeTypes} from './InitiativeTypes';
 
 @Entity('initiatives')
 export class Initiatives extends UpdatedCreatedAt {
@@ -19,6 +27,13 @@ export class Initiatives extends UpdatedCreatedAt {
   @Column()
   @IsNotEmpty()
   official_code: string;
+
+  @Column({type: 'int', nullable: true, name: 'type'})
+  type!: number;
+
+  @ManyToOne(() => InitiativeTypes, (initiativeType) => initiativeType.id)
+  @JoinColumn({name: 'type'})
+  type_obj!: InitiativeTypes;
 
   @OneToMany(
     () => InitiativesByUsers,

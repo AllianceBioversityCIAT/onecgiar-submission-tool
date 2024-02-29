@@ -6,18 +6,12 @@ import { DialogModule } from 'primeng/dialog';
 import { GeneralInformationModule } from '../general-information/general-information.module';
 import { ButtonModule } from 'primeng/button';
 import { IbdAngularComponentsModule } from 'ibd-angular-components';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [InitiativeCreatorComponent],
   exports: [InitiativeCreatorComponent],
-  imports: [
-    CommonModule,
-    AddButtonModule,
-    DialogModule,
-    GeneralInformationModule,
-    ButtonModule,
-    IbdAngularComponentsModule
-  ]
+  imports: [CommonModule, AddButtonModule, DialogModule, GeneralInformationModule, ButtonModule, IbdAngularComponentsModule, MatRadioModule, FormsModule]
 })
-export class InitiativeCreatorModule { }
+export class InitiativeCreatorModule {}

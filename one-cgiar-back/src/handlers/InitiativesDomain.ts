@@ -6,7 +6,7 @@ import {InitiativeStageHandler} from './InitiativeStageDomain';
 export class InitiativeHandler extends InitiativeStageHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
 
-  async createInitiativesByStage(name?, acronym?, stage?) {
+  async createInitiativesByStage(name?, acronym?, stage?, type?) {
     const initiativeRepo = getRepository(Initiatives);
     const initvStgRepo = getRepository(InitiativesByStages);
 
@@ -25,13 +25,14 @@ export class InitiativeHandler extends InitiativeStageHandler {
       newInitiative.name = name;
       newInitiative.acronym = acronym;
       newInitiative.official_code = official_code;
+      newInitiative.type = type;
 
       const savedInitiative: any = await initiativeRepo.save(newInitiative);
-
       newInitvStg.initiative = savedInitiative.id;
       newInitvStg.stage = stage.id;
       newInitvStg.active = true;
-
+      newInitvStg.statusId = 1;
+      console.log(newInitvStg, 'newInitvStg');
       const savedInitvStg = await initvStgRepo.save(newInitvStg);
 
       return {savedInitiative, savedInitvStg};
@@ -107,6 +108,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       initvActiveSQL = ` 
       SELECT
       initvStg.id AS initvStgId,
+      initiative.type as type,
       initiative.id AS id,
       initiative.acronym,
       initiative.name AS name,

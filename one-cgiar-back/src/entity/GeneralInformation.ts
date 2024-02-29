@@ -16,10 +16,10 @@ export class GeneralInformation extends UpdatedCreatedAt {
   @Column({type: 'text'})
   name: string;
 
-  @Column({type: 'int'})
+  @Column({type: 'int', nullable: true})
   action_area_id: number;
 
-  @Column({length: '1000'})
+  @Column({length: '500', type: 'varchar', nullable: true})
   action_area_description: string;
 
   @Column({type: 'text'})

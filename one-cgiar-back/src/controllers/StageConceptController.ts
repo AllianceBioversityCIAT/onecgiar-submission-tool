@@ -23,7 +23,8 @@ export async function createInitiative(req: Request, res: Response) {
     name,
     action_area_id,
     action_area_description,
-    acronym
+    acronym,
+    type
   } = req.body;
 
   const stageRepo = getRepository(Stages);
@@ -38,7 +39,8 @@ export async function createInitiative(req: Request, res: Response) {
     const newInitiative = await initiativeHandler.createInitiativesByStage(
       name,
       acronym,
-      stage
+      stage,
+      type
     );
 
     const initvStg: any = newInitiative.savedInitvStg.id;

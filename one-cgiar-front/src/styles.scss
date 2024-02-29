@@ -1,11 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~quill/dist/quill.core.css";
-@import "~quill/dist/quill.bubble.css";
-@import "~quill/dist/quill.snow.css";
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 // Plus imports for other components in your app.
 // Include the common styles for Angular Material. We include this here so that you only
@@ -26,8 +26,8 @@ $variable-page-theme: mat-light-theme(
     color: (
       primary: $variable-page-primary,
       accent: $variable-page-accent,
-      warn: $variable-page-warn,
-    ),
+      warn: $variable-page-warn
+    )
   )
 );
 // Include theme styles for core and each component used in your app.
@@ -35,19 +35,22 @@ $variable-page-theme: mat-light-theme(
 // that you are using.
 @include angular-material-theme($variable-page-theme);
 /* You can add global styles to this file, and also import other style files */
-html *:not(.pi,mat-icon,.material-icons) {
-  font-family: "Poppins", sans-serif !important;
+html *:not(.pi, mat-icon, .material-icons) {
+  font-family: 'Poppins', sans-serif !important;
 }
 html,
 body {
   height: 100%;
   font-size: 13px !important;
-  p{
+  p {
     font-size: 12.5px !important;
   }
 }
 
-.mat-list-base .mat-list-item, .mat-expansion-panel, .mat-expansion-panel-content, .mat-expansion-panel-header {
+.mat-list-base .mat-list-item,
+.mat-expansion-panel,
+.mat-expansion-panel-content,
+.mat-expansion-panel-header {
   font-size: 1em !important;
 }
 body {
@@ -66,11 +69,11 @@ body {
   padding: 0px 0px 24px 0px;
 }
 
-.dialog-no-padding-no-scroll .mat-dialog-content{
+.dialog-no-padding-no-scroll .mat-dialog-content {
   overflow-y: none !important;
 }
 
-.alert_text_red{
+.alert_text_red {
   color: rgb(221, 73, 73) !important;
 }
 
@@ -83,7 +86,9 @@ button {
 //   background-color: #fafafa !important;
 // }
 
-.mat-tab-body-content { overflow: hidden!important}
+.mat-tab-body-content {
+  overflow: hidden !important;
+}
 
 .icon_verify {
   position: absolute !important;
@@ -97,202 +102,200 @@ button {
 .icon_verify_valid {
   color: #4caf50;
 }
-.ibdc_button_template_container{
+.ibdc_button_template_container {
   // display: flex;
   // justify-content: center;
   // margin-left: 55px;
-  .ibdc_button_template{
+  .ibdc_button_template {
     border-radius: 50px;
     background-color: var(--ibdc-tertiary-color);
     font-weight: 500;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
-    transition: all ease .3s;
-    &:hover{
+    transition: all ease 0.3s;
+    &:hover {
       box-shadow: 0 3px 10px #aedab0b2, 0 3px 10px #aedab0b2;
-      transition: all ease .3s;
+      transition: all ease 0.3s;
       background-color: #6bd16f;
     }
   }
 }
 
-
 //primary
-.color-primary{
-  color: mat-color( $variable-page-primary) !important;
+.color-primary {
+  color: mat-color($variable-page-primary) !important;
 }
 
-.color-primary-2{
+.color-primary-2 {
   color: #023e52 !important;
 }
 
-.color-primary-3{
+.color-primary-3 {
   color: #014d66 !important;
 }
 
-.background-color-primary{
+.background-color-primary {
   // #37474F
   background-color: var(--ibdc-secondary-color) !important;
 }
 
-.background-color-primary-2{
+.background-color-primary-2 {
   background-color: #023e52 !important;
 }
 
-.background-color-primary-3{
-  background-color: var(--ibdc-secondary-color)!important;
+.background-color-primary-3 {
+  background-color: var(--ibdc-secondary-color) !important;
 }
 //secondary
-.color-secondary{
+.color-secondary {
   color: #087b83 !important;
 }
 
-.background-color-secondary{
+.background-color-secondary {
   background-color: #087b83 !important;
 }
 //tertiary
-.color-tertiary{
+.color-tertiary {
   color: #0aa375 !important;
 }
 
-.background-color-tertiary{
+.background-color-tertiary {
   background-color: #0aa375 !important;
 }
 
-.background-color-main-1{
-
+.background-color-main-1 {
 }
 
-.background-color-main-2{
+.background-color-main-2 {
   background-color: #f6f6f4 !important;
 }
 
-.color-accent{
-  color: mat-color( $variable-page-accent) !important;
+.color-accent {
+  color: mat-color($variable-page-accent) !important;
 }
 
-.background-color-accent{
-  background-color: mat-color( $variable-page-accent) !important;
+.background-color-accent {
+  background-color: mat-color($variable-page-accent) !important;
 }
 
-.color-warn{
-  color: mat-color( $variable-page-warn) !important;
+.color-warn {
+  color: mat-color($variable-page-warn) !important;
 }
 
-.background-color-warn{
-  background-color: mat-color( $variable-page-warn) !important;
+.background-color-warn {
+  background-color: mat-color($variable-page-warn) !important;
 }
-
 
 //ibdc Colors
 
-.ibdc_primary_color{
-  color: mat-color( $variable-page-primary) !important;
+.ibdc_primary_color {
+  color: mat-color($variable-page-primary) !important;
 }
 
-.ibdc_secondary_color{
+.ibdc_secondary_color {
   color: #087b83 !important;
 }
 
-.ibdc_bg_secondary_color{
+.ibdc_bg_secondary_color {
   background-color: #5cc560 !important;
 }
 
-.ibdc_asterisk{
+.ibdc_asterisk {
   color: #ff0000;
 }
 
-.ibdc_text_color{
+.ibdc_text_color {
   color: #797979;
 }
 
-.ibdc_basic_title{
+.ibdc_basic_title {
   color: var(--ibdc-tertiary-color);
   font-weight: 600;
   margin-bottom: 10px;
   font-size: 1.2em;
 }
 
-.ibdc_basic_description{
+.ibdc_basic_description {
   color: rgb(80, 80, 80);
   // margin-bottom: 10px;
   font-size: 12px;
 }
 
-.ibdc_green_gradient{
-  background: rgb(91,189,147);
-  background: linear-gradient(131deg, rgba(91,189,147,1) 0%, rgba(210,225,200,1) 100%);
+.ibdc_green_gradient {
+  background: rgb(91, 189, 147);
+  background: linear-gradient(131deg, rgba(91, 189, 147, 1) 0%, rgba(210, 225, 200, 1) 100%);
 }
 
 //ibdc colors end
 
-
-.items_container{
-  width: 100%; 
+.items_container {
+  width: 100%;
   box-sizing: border-box;
-  margin-top: -58px; 
+  margin-top: -58px;
   border-radius: 10px;
   // margin-left: 10px;
-  padding: 10px 12px; 
+  padding: 10px 12px;
   background-color: #ededed;
   box-shadow: 0px 0px 5px rgb(230, 230, 230);
-  .items{
-      width: 100%; 
+  .items {
+    width: 100%;
   }
 }
 
-.viewer-backdrop{
+.viewer-backdrop {
   // background-color: rgb(255, 255, 255) !important;
   background-image: url('/assets/images/platform_background.jpg') !important;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
-.table-container{
-  .p-datatable-header{
-      background-color: var(--ibdc-secondary-color);
+.table-container {
+  .p-datatable-header {
+    background-color: var(--ibdc-secondary-color);
   }
-  .p-datatable{
+  .p-datatable {
     border-radius: 10px !important;
     overflow: hidden;
     border: 2px solid white;
   }
 }
-.viewer-close{
+.viewer-close {
   background-color: var(--ibdc-secondary-color) !important;
 }
 
-
-.section_title{
+.section_title {
   font-weight: 700 !important;
 }
 
-
-.ia-1,.ia-2,.ia-3,.ia-4,.ia-5{
+.ia-1,
+.ia-2,
+.ia-3,
+.ia-4,
+.ia-5 {
   width: 8px;
   height: 25px;
   margin-right: 7px;
 }
 
-.ia-1{
-  background-color: #F07E27;
+.ia-1 {
+  background-color: #f07e27;
 }
 
-.ia-2{
-  background-color: #055F6B;
+.ia-2 {
+  background-color: #055f6b;
 }
 
-.ia-3{
-  background-color: #EB5B47;
+.ia-3 {
+  background-color: #eb5b47;
 }
 
-.ia-4{
-  background-color: #00A772;
+.ia-4 {
+  background-color: #00a772;
 }
 
-.ia-5{
-  background-color: #74B959;
+.ia-5 {
+  background-color: #74b959;
 }
 
 .custom_scroll::-webkit-scrollbar {
@@ -315,29 +318,27 @@ button {
   background: #555;
 }
 
-
-.eoi-item{
+.eoi-item {
   // display: flex;
   margin-top: 12px;
-  .eoi-item-title{
+  .eoi-item-title {
     color: rgb(17, 17, 17);
     font-weight: 700;
     margin-right: 5px;
     width: max-content;
   }
-  
-  .eoi-item-description{
+
+  .eoi-item-description {
     color: rgb(109, 109, 109);
   }
 }
 
-.eoi-list{
+.eoi-list {
   width: 100%;
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
-
 
 .ql-editor {
   resize: vertical !important;
@@ -345,4 +346,22 @@ button {
 
 .p-editor-content.ql-container.ql-snow {
   height: unset !important;
+}
+
+.p-dialog-header {
+  background-color: #678f7a !important;
+  padding: 10px !important;
+  color: white !important;
+}
+
+.p-dialog-header-close-icon {
+  color: white !important;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  background-color: #7cad94 !important;
+}
+
+.customdialog {
+  background-color: yellow !important;
 }
