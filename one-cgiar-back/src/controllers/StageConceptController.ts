@@ -8,7 +8,7 @@ import {ConceptHandler} from '../handlers/ConceptDomain';
 import {InitiativeHandler} from '../handlers/InitiativesDomain';
 import {ResponseHandler} from '../handlers/Response';
 
-const currentStage = 'Pre Concept';
+const currentStage = 'Full Proposal';
 
 /**
  * CREATE INITIATIVE
