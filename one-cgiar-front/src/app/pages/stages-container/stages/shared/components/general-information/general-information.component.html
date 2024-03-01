@@ -22,10 +22,10 @@
             <mat-card>
               <div class="lead_content_grid">
                 <div style="min-width: max-content">
-                  <ibdc-simple-text [options]="{ inputTitle: this._initiativesService.initiative?.type != 3 ? 'Lead name' : 'Director name', value: this.body?.generalInformation.first_name || 'Not provided' }"></ibdc-simple-text>
+                  <ibdc-simple-text [options]="{ inputTitle: (this._initiativesService.initiative?.type != 3 ? 'Lead' : 'Director') + ' name', value: this.body?.generalInformation.first_name || 'Not provided' }"></ibdc-simple-text>
                 </div>
-                <div style="min-width: max-content" *ngIf="this._initiativesService.initiative?.type != 3">
-                  <ibdc-simple-text [options]="{ inputTitle: 'Lead email', value: this.body?.generalInformation.email || 'Not provided' }"></ibdc-simple-text>
+                <div style="min-width: max-content">
+                  <ibdc-simple-text [options]="{ inputTitle: (this._initiativesService.initiative?.type != 3 ? 'Lead' : 'Director') + ' email', value: this.body?.generalInformation.email || 'Not provided' }"></ibdc-simple-text>
                 </div>
                 <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog(); setExpandWithUserId('Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
                   <mat-icon>edit</mat-icon>
@@ -39,10 +39,10 @@
             <mat-card>
               <div class="lead_content_grid">
                 <div style="min-width: max-content">
-                  <ibdc-simple-text [options]="{ inputTitle: this._initiativesService.initiative?.type != 3 ? 'Co-Lead name' : 'Manager name', value: this.body?.generalInformation.co_first_name || 'Not provided' }"></ibdc-simple-text>
+                  <ibdc-simple-text [options]="{ inputTitle: (this._initiativesService.initiative?.type != 3 ? 'Co-Lead' : 'Manager') + ' name', value: this.body?.generalInformation.co_first_name || 'Not provided' }"></ibdc-simple-text>
                 </div>
-                <div style="min-width: max-content" *ngIf="this._initiativesService.initiative?.type != 3">
-                  <ibdc-simple-text [options]="{ inputTitle: 'Co-Lead email', value: this.body?.generalInformation.co_email || 'Not provided' }"></ibdc-simple-text>
+                <div style="min-width: max-content">
+                  <ibdc-simple-text [options]="{ inputTitle: (this._initiativesService.initiative?.type != 3 ? 'Co-Lead' : 'Manager') + ' email', value: this.body?.generalInformation.co_email || 'Not provided' }"></ibdc-simple-text>
                 </div>
                 <button *ngIf="!_initiativesService.initiative.readonly && this._dataControlService.isAdmin" (click)="openDialog(); setExpandWithUserId('Co-Lead')" type="button" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
                   <mat-icon>edit</mat-icon>
