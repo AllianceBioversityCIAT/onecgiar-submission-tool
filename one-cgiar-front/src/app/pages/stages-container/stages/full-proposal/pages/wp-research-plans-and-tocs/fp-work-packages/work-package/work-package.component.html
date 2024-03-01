@@ -1,17 +1,12 @@
-<section-title name="Work package"></section-title>
+<section-title [name]="this._initiativesService.initiative?.type != 3 ? 'Work package' : 'functions/modules'"></section-title>
 
-<div class="section-container animate__animated animate__fadeIn" >
-
+<div class="section-container animate__animated animate__fadeIn">
   <div class="ibdc-tabs">
     <div class="ibdc-tab">
-      <div class="ibdc-tab_name notSelected" routerLinkActive="selected" routerLink="wp-general-info">
-        General information
-      </div>
+      <div class="ibdc-tab_name notSelected" routerLinkActive="selected" routerLink="wp-general-info">General information</div>
     </div>
     <div class="ibdc-tab">
-      <div class="ibdc-tab_name notSelected" routerLinkActive="selected" routerLink="wp-toc">
-        Theory of change
-      </div>
+      <div class="ibdc-tab_name notSelected" routerLinkActive="selected" routerLink="wp-toc">Theory of change</div>
     </div>
   </div>
 
@@ -19,10 +14,4 @@
     <router-outlet></router-outlet>
     <app-button-edit-or-delete *ngIf="!this._initiativesService.initiative.readonly && this._authService.lsUserRoles.id === 1" type="delete" (action)="deleteCurrentWP()" [confirmDeleteModal]="true"></app-button-edit-or-delete>
   </div>
-  
-
-
-
-
-
 </div>
