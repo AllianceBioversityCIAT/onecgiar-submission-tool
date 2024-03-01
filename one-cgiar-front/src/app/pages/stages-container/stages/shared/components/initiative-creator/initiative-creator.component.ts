@@ -50,7 +50,7 @@ export class InitiativeCreatorComponent implements OnInit {
   createInitiative() {
     console.log('createInitiative');
     this._initiativesService.createInitiative(this.createBody).subscribe(resp => {
-      this._interactionsService.successMessage('The initiative "' + resp?.response.generalInformation.name + '" was successfully created');
+      this._interactionsService.successMessage(`The ${this.createBody.type != 3 ? 'initiative' : 'platform'} ${resp?.response.generalInformation.name} was successfully created`);
       setTimeout(() => {
         location.reload();
       }, 3000);
