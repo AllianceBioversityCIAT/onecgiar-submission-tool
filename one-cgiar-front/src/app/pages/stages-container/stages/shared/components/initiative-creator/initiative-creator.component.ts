@@ -42,21 +42,18 @@ export class InitiativeCreatorComponent implements OnInit {
 
   getActionAreas() {
     this._initiativesService.getActionAreas().subscribe(resp => {
-      // console.log(resp);
       this.actionAreasList = resp;
     });
   }
 
   createInitiative() {
-    console.log('createInitiative');
+    !this.createBody.action_area_id && (this.createBody.action_area_id = null);
     this._initiativesService.createInitiative(this.createBody).subscribe(resp => {
       this._interactionsService.successMessage(`The ${this.createBody.type != 3 ? 'initiative' : 'platform'} ${resp?.response.generalInformation.name} was successfully created`);
       setTimeout(() => {
         location.reload();
       }, 3000);
     });
-
-    this._interactionsService.successMessage('Measurable three-year outcomes has been saved');
 
     //? CLEAN form
     this.createBody.name = '';
