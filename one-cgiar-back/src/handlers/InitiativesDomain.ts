@@ -19,7 +19,14 @@ export class InitiativeHandler extends InitiativeStageHandler {
         'SELECT MAX(ID) as lastId FROM initiatives'
       );
 
+      const lastOfficialCode = await this.queryRunner.query(
+        `SELECT id as lastId, official_code FROM initiatives where type = ${type} order by id desc limit 1`
+      );
+      const onlyOfficialCodeNumber =
+        lastOfficialCode?.[0].official_code.split('-')?.[1];
+      const nextCodeNumber = parseInt(onlyOfficialCodeNumber) + 1;
       const nextId = parseInt(lastId[0].lastId) + 1;
+
       let tempOfficialCode = '';
       switch (parseInt(`${type}`)) {
         case EntityType.INITIATIVE:
@@ -32,7 +39,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
           tempOfficialCode = 'PLAT-';
           break;
       }
-      const official_code = tempOfficialCode + nextId;
+      const official_code = tempOfficialCode + nextCodeNumber;
 
       newInitiative.id = nextId;
       newInitiative.name = name;
@@ -45,7 +52,6 @@ export class InitiativeHandler extends InitiativeStageHandler {
       newInitvStg.stage = stage.id;
       newInitvStg.active = true;
       newInitvStg.statusId = 1;
-      console.log(newInitvStg, 'newInitvStg');
       const savedInitvStg = await initvStgRepo.save(newInitvStg);
 
       return {savedInitiative, savedInitvStg};
