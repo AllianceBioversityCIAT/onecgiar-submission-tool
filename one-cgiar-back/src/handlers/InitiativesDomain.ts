@@ -2,6 +2,7 @@ import {getConnection, getRepository} from 'typeorm';
 import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
+import {EntityType} from '../global/enum/entity-type.enum';
 
 export class InitiativeHandler extends InitiativeStageHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
@@ -19,7 +20,19 @@ export class InitiativeHandler extends InitiativeStageHandler {
       );
 
       const nextId = parseInt(lastId[0].lastId) + 1;
-      const official_code = 'INIT-' + nextId;
+      let tempOfficialCode = '';
+      switch (parseInt(`${type}`)) {
+        case EntityType.INITIATIVE:
+          tempOfficialCode = 'INIT-';
+          break;
+        case EntityType.REGIONAL_INITIATIVE:
+          tempOfficialCode = 'RINIT-';
+          break;
+        case EntityType.PLATFORM:
+          tempOfficialCode = 'PLAT-';
+          break;
+      }
+      const official_code = tempOfficialCode + nextId;
 
       newInitiative.id = nextId;
       newInitiative.name = name;
