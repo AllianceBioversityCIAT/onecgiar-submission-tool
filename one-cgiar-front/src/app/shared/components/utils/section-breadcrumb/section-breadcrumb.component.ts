@@ -67,7 +67,7 @@ export class SectionBreadcrumbComponent implements OnInit {
         }
         console.log(this._initiativesService.initiative?.type);
         if (name === 'work-packages') {
-          return this._initiativesService.initiative?.type != 3 ? 'Work package' : 'functions/modules';
+          return this._initiativesService.initiative?.type != 3 ? 'Work package' : 'Key functions/modules';
         }
         if (name === 'work-package') {
           return null;
