@@ -12,13 +12,12 @@ export class WpsTableComponent implements OnInit {
   constructor(public _initiativesService: InitiativesService) {}
 
   ngOnInit(): void {
-    console.log(this._initiativesService.initiative.stageName);
     this._initiativesService.getWpsFpByInititative().subscribe(
       resp => {
         this.workPackagesList = resp.response.workpackage;
       },
       err => {
-        console.log(err);
+        console.error(err);
       }
     );
 
