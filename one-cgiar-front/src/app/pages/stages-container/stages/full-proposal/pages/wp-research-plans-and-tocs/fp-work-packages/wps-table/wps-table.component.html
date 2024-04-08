@@ -4,7 +4,7 @@
   <p-table [columns]="cols" [value]="workPackagesList" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" style="text-align: center">
+        <th *ngFor="let col of columns" scope="col" style="text-align: center">
           {{ col.header }}
         </th>
       </tr>
