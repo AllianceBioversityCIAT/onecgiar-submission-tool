@@ -76,7 +76,10 @@ export class MetaDataHandler extends InitiativeStageHandler {
     try {
       let subsections = this.queryRunner
         .query(` SELECT subsections.id as subSectionId,subsections.description,
-            subsections.display_name,subsections.single_section, subsections.sectionId,subsections.active,
+        if((SELECT i.\`type\`  FROM initiatives i  WHERE i.id  = ${initiativeId} LIMIT 1) = 3 
+        and subsections.description = 'work-packages' 
+        ,'3.2 Key functions/modules'
+        , subsections.display_name) as display_name,subsections.single_section, subsections.sectionId,subsections.active,
             subsections.visible,subsections.order,subsections.block
             FROM stages stages
             JOIN sections_meta sections

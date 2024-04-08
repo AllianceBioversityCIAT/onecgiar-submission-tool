@@ -2,11 +2,12 @@ import {getConnection, getRepository} from 'typeorm';
 import {Initiatives, InitiativesByStages} from '../entity/index';
 import {BaseError} from './BaseError';
 import {InitiativeStageHandler} from './InitiativeStageDomain';
+import {EntityType} from '../global/enum/entity-type.enum';
 
 export class InitiativeHandler extends InitiativeStageHandler {
   public queryRunner = getConnection().createQueryRunner().connection;
 
-  async createInitiativesByStage(name?, acronym?, stage?) {
+  async createInitiativesByStage(name?, acronym?, stage?, type?) {
     const initiativeRepo = getRepository(Initiatives);
     const initvStgRepo = getRepository(InitiativesByStages);
 
@@ -18,20 +19,39 @@ export class InitiativeHandler extends InitiativeStageHandler {
         'SELECT MAX(ID) as lastId FROM initiatives'
       );
 
+      const lastOfficialCode = await this.queryRunner.query(
+        `SELECT id as lastId, official_code FROM initiatives where type = ${type} order by id desc limit 1`
+      );
+      const onlyOfficialCodeNumber =
+        lastOfficialCode?.[0].official_code.split('-')?.[1];
+      const nextCodeNumber = parseInt(onlyOfficialCodeNumber) + 1;
       const nextId = parseInt(lastId[0].lastId) + 1;
-      const official_code = 'INIT-' + nextId;
+
+      let tempOfficialCode = '';
+      switch (parseInt(`${type}`)) {
+        case EntityType.INITIATIVE:
+          tempOfficialCode = 'INIT-';
+          break;
+        case EntityType.REGIONAL_INITIATIVE:
+          tempOfficialCode = 'RINIT-';
+          break;
+        case EntityType.PLATFORM:
+          tempOfficialCode = 'PLAT-';
+          break;
+      }
+      const official_code = tempOfficialCode + nextCodeNumber;
 
       newInitiative.id = nextId;
       newInitiative.name = name;
       newInitiative.acronym = acronym;
       newInitiative.official_code = official_code;
+      newInitiative.type = type;
 
       const savedInitiative: any = await initiativeRepo.save(newInitiative);
-
       newInitvStg.initiative = savedInitiative.id;
       newInitvStg.stage = stage.id;
       newInitvStg.active = true;
-
+      newInitvStg.statusId = 1;
       const savedInitvStg = await initvStgRepo.save(newInitvStg);
 
       return {savedInitiative, savedInitvStg};
@@ -107,6 +127,7 @@ export class InitiativeHandler extends InitiativeStageHandler {
       initvActiveSQL = ` 
       SELECT
       initvStg.id AS initvStgId,
+      initiative.type as type,
       initiative.id AS id,
       initiative.acronym,
       initiative.name AS name,
