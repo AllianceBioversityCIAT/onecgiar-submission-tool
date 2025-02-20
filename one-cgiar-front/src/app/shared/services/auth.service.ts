@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ServerResponse, User } from '../models/user.interface';
 import { environment } from '../../../environments/environment';
+import { ClarityService } from './clarity.service';
 
 const helper = new JwtHelperService();
 
@@ -16,7 +17,7 @@ export class AuthService {
 
   private user = new BehaviorSubject<ServerResponse>(null);
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private clarityService: ClarityService) {
     this.checkToken();
   }
   get user$(): Observable<ServerResponse> {
@@ -77,6 +78,7 @@ export class AuthService {
 
   private saveLocalStorage(response: ServerResponse): void {
     localStorage.setItem('user', JSON.stringify(response.response));
+    this.clarityService.updateUserInfo();
   }
 
   changePassword(body: any): Observable<ServerResponse> {

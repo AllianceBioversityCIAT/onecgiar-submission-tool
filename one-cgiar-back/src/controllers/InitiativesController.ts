@@ -800,9 +800,7 @@ export const assignUsersByInitiative = async (req: Request, res: Response) => {
 
     if (usersByInitiative.length > 0) {
       usersByInitiative[0]['user']['is_active'] =
-        active != undefined
-          ? active
-          : usersByInitiative[0]['user']['is_active'];
+        active ?? usersByInitiative[0]['user']['is_active'];
       newUsrByInitv = new InitiativesByUsers();
       newUsrByInitv.active = active;
       newUsrByInitv.role = role;

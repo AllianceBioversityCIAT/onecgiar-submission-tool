@@ -1,6 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +44,12 @@ import { SearchByTextPipe } from './shared/pipes/search-by-text.pipe';
 import { MenuSearchComponent } from './shared/components/menu-search/menu-search.component';
 import { MenuSearchPipe } from './shared/pipes/menu-search.pipe';
 import { ContactModalModule } from './shared/components/contact-modal/contact-modal.module';
+import { ClarityService } from './shared/services/clarity.service';
+
+function initializeClarityService(clarityService: ClarityService) {
+  return () => clarityService.init();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -95,6 +101,13 @@ import { ContactModalModule } from './shared/components/contact-modal/contact-mo
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        ClarityService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeClarityService,
+      deps: [ClarityService],
+      multi: true
+    },
   ],
   bootstrap: [AppComponent],
 })

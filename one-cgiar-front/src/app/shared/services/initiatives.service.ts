@@ -44,37 +44,21 @@ export class InitiativesService {
   TawkMetaData;
 
   constructor(public http: HttpClient, private titleService: Title, private _authService: AuthService) {}
-
-  // get initvStgId():string{
-  //   return this.initvStgId;
-  // }
-  // set initvStgId(val: string){
-  //   this.initvStgId = val;
-  // }
   setTitle(section) {
     this.titleService.setTitle((this.initiative.id ? `INIT ${this.initiative.id} - ` : '') + section);
     this.setTWKAttributes();
   }
 
   setTWKAttributes() {
-    // console.log(this.initiative.users)
     let initUsers = `
     Users assigned to the initiative\n`;
-    // if (this.initiative.users.length) {
     this.initiative.users.map(initUser => {
       initUsers += `${initUser?.last_name} ${initUser?.first_name} (${initUser?.role_acronym})\n`;
     });
 
     initUsers += `
       `;
-    // }else{
-    //   initUsers = '';
-    // }
-
-    // console.log(initUsers)
-
     try {
-      // console.log("setTitle")
       window['Tawk_API']?.setAttributes(
         {
           name: this.getUserInfo.name,
@@ -90,10 +74,9 @@ export class InitiativesService {
         App role: ${this._authService?.lsUserRoles?.name}
 
         `
-          // 'users': initUsers
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
     } catch (error) {}
@@ -642,11 +625,9 @@ export class InitiativesService {
     });
 
     await Promise.all(promiseList).then(
-      values => {
-        console.log(values);
-      },
+      values => {},
       err => {
-        console.log(err);
+        console.error(err);
       }
     );
   }
