@@ -57,4 +57,3 @@ API/node_modules/*
 /uploads/*
 .angular
 .vscode
-package-lock.json
